@@ -1,0 +1,119 @@
+# Saves today's closing data for every US-listed stock over $250M, right after the close.
+# Theme & Group Radar reads this repo at 4:35 PM ET.
+# Prices come from Yahoo Finance daily bars (one year per stock), so it also saves the 200-day SMA,
+# ADR% (20-day average of high / low - 1) and 10- and 20-day average dollar volume, today included.
+# Nasdaq's stock list is used only for the symbol list, because its prices run a day behind.
+# Two UTC times so it runs at about 4:06 PM ET in summer (EDT) and winter (EST); a run before 4 PM ET skips itself.
+name: Close snapshot
+
+on:
+  schedule:
+    - cron: "6 20 * * 1-5"
+    - cron: "6 21 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Save today's closes
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures as cf, datetime, json, os, sys, time, urllib.error, urllib.request, zoneinfo
+          NY = zoneinfo.ZoneInfo("America/New_York")
+          now = datetime.datetime.now(NY)
+          manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+          if not manual and (now.weekday() >= 5 or now.hour < 16):
+              print("Before 4 PM ET or a weekend: nothing to save.")
+              sys.exit(0)
+          H = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+               "Accept": "application/json, text/plain, */*", "Accept-Language": "en-US,en;q=0.9"}
+          def get(url, headers=H, timeout=30):
+              with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=timeout) as r:
+                  return json.load(r)
+
+          # 1) symbol list from Nasdaq's screener
+          NH = dict(H, Origin="https://www.nasdaq.com", Referer="https://www.nasdaq.com/")
+          syms = set()
+          for ex in ("nasdaq", "nyse", "amex"):
+              url = f"https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=25&offset=0&exchange={ex}&download=true"
+              rows = None
+              for attempt in range(3):
+                  try:
+                      rows = get(url, NH, 60)["data"]["rows"]
+                      break
+                  except Exception as e:
+                      print(f"{ex} list: attempt {attempt + 1} failed: {e}")
+                      time.sleep(10)
+              if not rows:
+                  sys.exit(f"could not download the {ex} list")
+              for r in rows:
+                  try:
+                      mc = float(r.get("marketCap") or 0)
+                  except ValueError:
+                      mc = 0
+                  s = (r.get("symbol") or "").strip()
+                  if s and mc >= 250e6 and "^" not in s:
+                      syms.add(s)
+          syms = sorted(syms)
+          print(f"{len(syms)} symbols")
+
+          # 2) a year of Yahoo daily bars per stock: today's bar plus the averages
+          avg = lambda xs: sum(xs) / len(xs)
+          def bars(sym):
+              url = "https://query1.finance.yahoo.com/v8/finance/chart/" + sym.replace("/", "-").replace(".", "-") + "?range=1y&interval=1d"
+              for attempt in range(5):
+                  try:
+                      res = get(url)["chart"]["result"][0]
+                      q = res["indicators"]["quote"][0]
+                      b = [(t, h, l, c, v) for t, h, l, c, v in zip(res.get("timestamp") or [], q.get("high") or [], q.get("low") or [],
+                                                                     q.get("close") or [], q.get("volume") or [])
+                           if c is not None and h is not None and l is not None]
+                      if len(b) < 2:
+                          return None
+                      t, h, l, c, v = b[-1]
+                      closes = [x[3] for x in b]
+                      rng = [x[1] / x[2] - 1 for x in b[-20:] if x[2]]
+                      dv = [x[3] * x[4] for x in b if x[4]]
+                      return {"symbol": sym, "date": datetime.datetime.fromtimestamp(t, NY).date().isoformat(),
+                              "close": round(c, 4), "prev_close": round(b[-2][3], 4), "volume": v,
+                              "high": round(h, 4), "low": round(l, 4),
+                              "sma200": round(avg(closes[-200:]), 4) if len(closes) >= 200 else None,
+                              "adr_20": round(avg(rng) * 100, 3) if len(rng) >= 15 else None,
+                              "dvol_10": round(avg(dv[-10:])) if len(dv) >= 8 else None,
+                              "dvol_20": round(avg(dv[-20:])) if len(dv) >= 16 else None}
+                  except urllib.error.HTTPError as e:
+                      if e.code == 404:
+                          return None
+                      time.sleep(4 * (attempt + 1))
+                  except Exception:
+                      time.sleep(4 * (attempt + 1))
+              return None
+
+          with cf.ThreadPoolExecutor(10) as pool:
+              out = [r for r in pool.map(bars, syms) if r]
+          print(f"{len(out)} stocks saved")
+          if len(out) < 0.8 * len(syms):
+              sys.exit(f"only {len(out)} of {len(syms)} stocks came back, not saving")
+          os.makedirs("close", exist_ok=True)
+          with open("close/latest.json", "w") as f:
+              json.dump({"saved_at": now.isoformat(timespec="seconds"), "rows": out}, f, separators=(",", ":"))
+          PY
+
+      - name: Commit snapshot
+        run: |
+          git config user.name "close-snapshot-bot"
+          git config user.email "close-snapshot-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "close snapshot $(TZ=America/New_York date +%F)"
+            git push
+          fi
