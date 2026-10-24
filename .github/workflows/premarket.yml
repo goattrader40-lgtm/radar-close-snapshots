@@ -1,0 +1,108 @@
+# Pre-market gap scan for Theme & Group Radar.
+# Runs at about 8:25 and 8:40 AM ET on weekdays. For every liquid stock in close/latest.json
+# (20-day average $ volume $15M+), it pulls today's pre-market 5-minute bars from Yahoo and saves
+# the gap vs the previous close, pre-market volume and $ volume to premarket/latest.json.
+# The portal's 8:47 AM run reads this file, applies your liquidity rules, grades the news and posts by 9:10.
+name: Pre-market scan
+
+on:
+  schedule:
+    - cron: "25,40 12 * * 1-5"   # 8:25 / 8:40 AM EDT
+    - cron: "25,40 13 * * 1-5"   # 8:25 / 8:40 AM EST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: premarket
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan pre-market gappers
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures as cf, datetime, json, os, sys, time, urllib.error, urllib.request, zoneinfo
+          NY = zoneinfo.ZoneInfo("America/New_York")
+          now = datetime.datetime.now(NY)
+          manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+          if not manual and (now.weekday() >= 5 or not (8 <= now.hour < 9 or (now.hour == 9 and now.minute < 25))):
+              print("Outside 8:00-9:25 AM ET on a weekday: nothing to do.")
+              sys.exit(0)
+          H = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+               "Accept": "application/json, text/plain, */*"}
+          def get(url, timeout=20):
+              with urllib.request.urlopen(urllib.request.Request(url, headers=H), timeout=timeout) as r:
+                  return json.load(r)
+
+          # universe: liquid names from the evening snapshot (their last close is the gap reference)
+          snap = json.load(open("close/latest.json"))["rows"]
+          base = {r["symbol"]: r for r in snap if (r.get("dvol_20") or 0) >= 15e6 and r.get("close")}
+          print(f"{len(base)} liquid symbols")
+          today = now.date()
+
+          def scan(sym):
+              url = ("https://query1.finance.yahoo.com/v8/finance/chart/" + sym.replace("/", "-").replace(".", "-")
+                     + "?range=2d&interval=5m&includePrePost=true")
+              for attempt in range(4):
+                  try:
+                      res = get(url)["chart"]["result"][0]
+                      q = res["indicators"]["quote"][0]
+                      bars = []
+                      for t, c, h, l, v in zip(res.get("timestamp") or [], q.get("close") or [], q.get("high") or [],
+                                               q.get("low") or [], q.get("volume") or []):
+                          ts = datetime.datetime.fromtimestamp(t, NY)
+                          if ts.date() == today and (ts.hour, ts.minute) < (9, 30) and c is not None:
+                              bars.append((ts, c, h or c, l or c, v or 0))
+                      if not bars:
+                          return None
+                      prev = base[sym]["close"] if base[sym].get("date") != str(today) else None
+                      if not prev:
+                          prev = (res.get("meta") or {}).get("chartPreviousClose")
+                      if not prev:
+                          return None
+                      last = bars[-1][1]
+                      vol = sum(b[4] for b in bars)
+                      dv = sum(b[1] * b[4] for b in bars)
+                      return {"symbol": sym, "prev_close": round(prev, 4), "pm_last": round(last, 4),
+                              "gap_pct": round((last / prev - 1) * 100, 2),
+                              "pm_high": round(max(b[2] for b in bars), 4), "pm_low": round(min(b[3] for b in bars), 4),
+                              "pm_volume": int(vol), "pm_dvol": round(dv), "last_bar": bars[-1][0].strftime("%H:%M")}
+                  except urllib.error.HTTPError as e:
+                      if e.code == 404:
+                          return None
+                      time.sleep(2 * (attempt + 1))
+                  except Exception:
+                      time.sleep(2 * (attempt + 1))
+              return None
+
+          with cf.ThreadPoolExecutor(12) as pool:
+              got = [r for r in pool.map(scan, sorted(base)) if r]
+          movers = [r for r in got if abs(r["gap_pct"]) >= 3]
+          print(f"{len(got)} with pre-market bars, {len(movers)} gapping 3%+ either way")
+          if len(got) < 0.3 * len(base):
+              sys.exit(f"only {len(got)} of {len(base)} came back, not saving")
+          os.makedirs("premarket", exist_ok=True)
+          with open("premarket/latest.json", "w") as f:
+              json.dump({"saved_at": now.isoformat(timespec="seconds"), "date": str(today),
+                         "scanned": len(got), "rows": sorted(movers, key=lambda r: -r["pm_dvol"])}, f, separators=(",", ":"))
+          PY
+
+      - name: Commit scan
+        run: |
+          git config user.name "close-snapshot-bot"
+          git config user.email "close-snapshot-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "pre-market scan $(TZ=America/New_York date '+%F %H:%M')"
+            git pull --rebase -q || true
+            git push
+          fi
