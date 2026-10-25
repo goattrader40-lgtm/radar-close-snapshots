@@ -35,6 +35,7 @@ LISTS = ["1-EP/GAP", "1-UPDAY", "2-POOL", "3-SETUPS"]
 SETUP_SCREENS = {"DAILY TIGHTNESS": "Tight", "PULLBACK TO 21EMA-MAIN": "PB 21", "PULLBACK TO 50EMA": "PB 50"}
 GRADE = {0: "", 1: "A+", 2: "A", 3: "B"}
 PBE_DAYS = 4   # MSF v29.1 'Today is at least the Nth day since the 20-day high' (21 / 50 EMA pullback triggers)
+PBE_NO_CLOSE_BELOW = 4   # MSF v29.10: no close below the trigger EMA in the last 4 days (yesterday included)
 
 
 def structure_hhhl(st, P):
@@ -241,10 +242,12 @@ def details(sym, st, d, entry, P):
         ema_triggers_tomorrow=[t for t, ok in (
             ("21 EMA", hb20 is not None and hb20 + 1 >= PBE_DAYS and r.ema10 > r.ema21 > r.ema50 > r.sma200 and r.liquid == 1 and r.above200 == 1
              and st.avgv30[i] >= 700000 and st.c[i] > r.ema50
-             and r.ema21 <= st.c[i] <= r.ema21 * (1 + r.adr / 100)),
+             and r.ema21 < st.c[i] <= r.ema21 * (1 + r.adr / 100)
+             and all(st.c[k] >= st.ema21[k] for k in range(i - PBE_NO_CLOSE_BELOW + 1, i + 1))),
             ("50 EMA", hb20 is not None and hb20 + 1 >= PBE_DAYS and r.ema50 > r.sma200 and r.liquid == 1 and r.above200 == 1
              and st.avgv30[i] >= 700000 and st.c[i] > r.ema50
-             and r.ema50 <= st.c[i] <= r.ema50 * (1 + r.adr / 100))) if ok],
+             and r.ema50 < st.c[i] <= r.ema50 * (1 + r.adr / 100)
+             and all(st.c[k] >= st.ema50[k] for k in range(i - PBE_NO_CLOSE_BELOW + 1, i + 1)))) if ok],
         twenty_day_high=fnum(hi20), days_since_20d_high=hb20,
     )
     out.update({k: v for k, v in entry.items() if k not in ("low",)})
