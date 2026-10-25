@@ -16,6 +16,9 @@ on:
       out:
         description: "Output file"
         default: "history/intraday_5m.json.gz"
+      range:
+        description: "How far back (Yahoo keeps about 60 days of 2m / 5m bars)"
+        default: "60d"
 
 permissions:
   contents: write
@@ -32,6 +35,7 @@ jobs:
           REQ: ${{ github.event.inputs.request || 'history/intraday_request.json' }}
           IVL: ${{ github.event.inputs.interval || '5m' }}
           OUT: ${{ github.event.inputs.out || 'history/intraday_5m.json.gz' }}
+          RNG: ${{ github.event.inputs.range || '60d' }}
         run: |
           python3 - <<'PY'
           import concurrent.futures as cf, datetime, gzip, json, os, sys, time, urllib.error, urllib.request, zoneinfo
@@ -44,7 +48,7 @@ jobs:
           def bars(item):
               sym, days = item
               want = set(days)
-              url = "https://query1.finance.yahoo.com/v8/finance/chart/" + sym.replace("/", "-").replace(".", "-") + "?range=60d&interval=" + os.environ["IVL"]
+              url = "https://query1.finance.yahoo.com/v8/finance/chart/" + sym.replace("/", "-").replace(".", "-") + "?range=" + os.environ["RNG"] + "&interval=" + os.environ["IVL"]
               for attempt in range(5):
                   try:
                       with urllib.request.urlopen(urllib.request.Request(url, headers=H), timeout=30) as r:
@@ -74,7 +78,7 @@ jobs:
                   if b:
                       data[sym] = b
           n = sum(len(v) for v in data.values())
-          print(len(data), "symbols,", n, "stock-days saved")
+          print(len(data), "symbols,", n, "stock-days saved", flush=True)
           if len(data) < 0.8 * len(req):
               sys.exit(f"only {len(data)} of {len(req)} came back, not saving")
           with gzip.open(os.environ["OUT"], "wt") as f:
