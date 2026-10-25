@@ -240,8 +240,10 @@ def details(sym, st, d, entry, P):
             level=fnum(r.cLvTrig), bigger_base=fnum(r.cBigBuy), flat_top=fnum(r.cFTBuy)).items() if v is not None},
         ema_triggers_tomorrow=[t for t, ok in (
             ("21 EMA", hb20 is not None and hb20 + 1 >= PBE_DAYS and r.ema10 > r.ema21 > r.ema50 and r.liquid == 1 and r.above200 == 1
+             and st.avgv30[i] >= 700000 and st.c[i] > r.ema50
              and r.ema21 <= st.c[i] <= r.ema21 * (1 + r.adr / 100)),
             ("50 EMA", hb20 is not None and hb20 + 1 >= PBE_DAYS and r.liquid == 1 and r.above200 == 1
+             and st.avgv30[i] >= 700000 and st.c[i] > r.ema50
              and r.ema50 <= st.c[i] <= r.ema50 * (1 + r.adr / 100))) if ok],
         twenty_day_high=fnum(hi20), days_since_20d_high=hb20,
     )
