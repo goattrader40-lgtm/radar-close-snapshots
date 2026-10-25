@@ -10,36 +10,36 @@ Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 
 
 | # | Symbol | Setup (last hit) | Grade | Pattern | Buy point | Away | Other entries | ADR | From |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | GTLB | Tight (Oct 21) | A+ | Tight flag | 57.89 | +2.9% |  | 5.1% | 1-UPDAY |
-| 2 | ZETA | Tight (Oct 23) | A+ | Base forming (no pattern yet) | 35.75 | +5.2% | armed: 21 EMA pullback | 5.2% | 2-POOL |
+| 1 | GTLB | PB 21 (Oct 16) | A+ | Tight flag | 57.89 | +2.9% |  | 5.1% | 1-UPDAY |
+| 2 | ZETA | PB 21 (Oct 19) | A+ | Base forming (no pattern yet) | 35.75 | +5.2% | armed: 21 EMA pullback | 5.2% | 2-POOL |
 | 3 | NTRA | Tight + PB 21 (Oct 23) | A+ | Qullamaggie breakout | 437.41 | +8.3% | pullback tight day 416.0, level 427.47, armed: 21 EMA pullback | 4.5% | 2-POOL |
-| 4 | DK | Tight + PB 50 (Oct 23) | A+ | Qullamaggie breakout | 82.27 | +10.6% | armed: 50 EMA pullback | 4.9% | 2-POOL |
+| 4 | DK | PB 50 (Oct 23) | A+ | Qullamaggie breakout | 82.27 | +10.6% | armed: 50 EMA pullback | 4.9% | 2-POOL |
 | 5 | XERS | PB 21 (Oct 23) | A+ | Qullamaggie breakout | 11.42 | +12.0% | level 11.42, armed: 21 EMA pullback | 6.2% | 2-POOL |
-| 6 | ECO | Tight + PB 21 (Oct 22) | A+ | Bull flag | 100.68 | +6.3% | flag trendline 94.51 | 4.7% | 2-POOL |
+| 6 | ECO | PB 21 (Oct 22) | A+ | Bull flag | 100.68 | +6.3% | flag trendline 94.51 | 4.7% | 2-POOL |
 | 7 | CLF | PB 21 (Oct 22) | A+ | Base forming (no pattern yet) | 14.58 | +4.9% |  | 6.3% | 1-EP/GAP |
 | 8 | SAIL | Tight + PB 21 (Oct 22) | A+ | Base breakout | 22.29 | +2.3% |  | 5.5% | 2-POOL |
 | 9 | ORIC | PB 21 (Oct 23) | A+ | Base forming (no pattern yet) | 14.68 | +11.5% | coil 13.49, pullback tight day 13.49 | 6.9% | 1-UPDAY |
 | 10 | GME | PB 21 (Oct 22) | A+ | Bull flag | 28.3 | +14.0% | flag trendline 25.64 | 4.4% | 1-UPDAY |
 | 11 | HUM | PB 21 (Oct 22) | A+ |  |  |  | armed: 21 EMA pullback | 3.9% | 2-POOL |
 | 12 | AI | PB 21 (Oct 19) | A+ |  |  |  |  | 5.3% | 1-EP/GAP |
-| 13 | NTSK | Tight + PB 21 (Oct 19) | A+ |  |  |  |  | 6.3% | 2-POOL |
+| 13 | NTSK | PB 21 (Oct 19) | A+ |  |  |  |  | 6.3% | 2-POOL |
 | 14 | SLN | Tight (Oct 23) | A | Tight flag | 19.69 | +0.1% |  | 4.8% | 1-EP/GAP |
 | 15 | IOT | Tight (Oct 22) | A | Cup (no handle) | 45.12 | +0.4% |  | 4.6% | 2-POOL |
-| 16 | CAI | Tight (Oct 23) | A | High tight flag | 32.89 | +2.8% | level 32.89, flat top 32.89 | 6.9% | 1-UPDAY |
-| 17 | SWKS | PB 21 (Oct 23) | A | Base breakout | 92.8 | +11.2% | armed: 21 EMA pullback | 4.6% | 2-POOL |
-| 18 | VSXY | Tight + PB 21 (Oct 22) | A | Base forming (no pattern yet) | 102.46 | +12.8% | armed: 21 EMA pullback | 5.3% | 2-POOL |
-| 19 | ESTC | Tight + PB 21 (Oct 20) | A | Cup (no handle) | 108.0 | +5.4% |  | 4.3% | 2-POOL |
-| 20 | ATRC | Tight (Oct 23) | A | High tight flag | 61.7 | +4.6% |  | 4.2% | 2-POOL |
-| 21 | RBRK | Tight (Oct 22) | A | Bull flag | 127.9 | -0.7% |  | 5.2% | 1-UPDAY |
+| 16 | SWKS | PB 21 (Oct 23) | A | Base breakout | 92.8 | +11.2% | armed: 21 EMA pullback | 4.6% | 2-POOL |
+| 17 | CAI | Tight (Oct 23) | A | High tight flag | 32.89 | +2.8% | level 32.89, flat top 32.89 | 6.9% | 1-UPDAY |
+| 18 | VSXY | PB 21 (Oct 22) | A | Base forming (no pattern yet) | 102.46 | +12.8% | armed: 21 EMA pullback | 5.3% | 2-POOL |
+| 19 | ESTC | PB 21 (Oct 20) | A | Cup (no handle) | 108.0 | +5.4% |  | 4.3% | 2-POOL |
+| 20 | ATRC | PB 21 (Oct 21) | A | High tight flag | 61.7 | +4.6% |  | 4.2% | 2-POOL |
+| 21 | RBRK | PB 21 (Oct 20) | A | Bull flag | 127.9 | -0.7% |  | 5.2% | 1-UPDAY |
 | 22 | ILMN | Tight + PB 21 (Oct 23) | A | Qullamaggie breakout | 309.35 | +14.8% | armed: 21 EMA pullback | 5.6% | 1-UPDAY |
-| 23 | AGIO | Tight (Oct 23) | A | Base forming (no pattern yet) | 44.09 | +19.2% |  | 4.2% | 1-UPDAY |
-| 24 | RELY | Tight (Oct 19) | A | Base forming (no pattern yet) | 27.48 | +10.7% |  | 3.8% | 1-UPDAY |
-| 25 | CBRL | Tight (Oct 23) | A | Base forming (no pattern yet) | 70.28 | +3.9% |  | 4.4% | 1-UPDAY |
-| 26 | LW | Tight (Oct 20) | A | Base forming (no pattern yet) | 55.7 | +3.5% | level 55.7 | 4.1% | 2-POOL |
-| 27 | DDOG | PB 21 (Oct 23) | A | Qullamaggie breakout | 300.68 | +11.5% | armed: 21 EMA pullback | 4.9% | 2-POOL |
-| 28 | CDNA | Tight (Oct 23) | A | Qullamaggie breakout | 72.71 | +5.1% | level 72.71 | 6.4% | 2-POOL |
-| 29 | LIND | PB 21 (Oct 23) | A | Qullamaggie breakout | 36.97 | +8.0% | pullback tight day 34.91, armed: 21 EMA pullback | 4.3% | 2-POOL |
-| 30 | CVI | PB 21 (Oct 23) | A | Base forming (no pattern yet) | 63.51 | +9.2% | armed: 21 EMA pullback | 5.2% | 2-POOL |
+| 23 | DDOG | PB 21 (Oct 23) | A | Qullamaggie breakout | 300.68 | +11.5% | armed: 21 EMA pullback | 4.9% | 2-POOL |
+| 24 | LIND | PB 21 (Oct 23) | A | Qullamaggie breakout | 36.97 | +8.0% | pullback tight day 34.91, armed: 21 EMA pullback | 4.3% | 2-POOL |
+| 25 | CVI | PB 21 (Oct 23) | A | Base forming (no pattern yet) | 63.51 | +9.2% | armed: 21 EMA pullback | 5.2% | 2-POOL |
+| 26 | FIVN | Tight + PB 21 (Oct 22) | A | High tight flag | 40.0 | +6.4% |  | 6.0% | 1-UPDAY |
+| 27 | FROG | PB 50 (Oct 22) | A | Base breakout | 105.76 | +5.1% |  | 6.2% | 2-POOL |
+| 28 | VLO | Tight + PB 21 (Oct 20) | A | Base forming (no pattern yet) | 461.52 | +10.1% |  | 3.9% | 2-POOL |
+| 29 | ACHC | PB 21 (Oct 19) | A | Base forming (no pattern yet) | 35.83 | +13.7% |  | 3.9% | 1-UPDAY |
+| 30 | GKOS | PB 21 + PB 50 (Oct 19) | A | Base forming (no pattern yet) | 191.62 | +7.1% |  | 4.5% | 1-UPDAY |
 
 ## Changes today
 
@@ -132,23 +132,21 @@ Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 
 | 2-POOL | WGO | removed | below the 200 SMA (weekly refresh) |
 | 2-POOL | WING | removed | below the 200 SMA (weekly refresh) |
 | 3-SETUPS | ADPT | added | PB 50 (from 1-UPDAY) |
-| 3-SETUPS | CBRL | added | Tight (from 1-UPDAY) |
+| 3-SETUPS | ARQT | added | Tight (from 1-UPDAY) |
+| 3-SETUPS | CAI | added | Tight (from 1-UPDAY) |
 | 3-SETUPS | DUOL | added | PB 50 (from 2-POOL) |
 | 3-SETUPS | FSLY | added | PB 50 (from 2-POOL) |
-| 3-SETUPS | FTRE | added | Tight (from 1-UPDAY) |
-| 3-SETUPS | GWRE | added | Tight (from 1-UPDAY) |
 | 3-SETUPS | MAT | added | PB 21 (from 2-POOL) |
 | 3-SETUPS | NET | added | PB 21 + PB 50 (from 1-UPDAY) |
 | 3-SETUPS | ORIC | added | PB 21 (from 1-UPDAY) |
 | 3-SETUPS | PANW | added | PB 21 (from 1-UPDAY) |
+| 3-SETUPS | SLN | added | Tight (from 1-EP/GAP) |
 | 3-SETUPS | SNOW | added | PB 50 (from 2-POOL) |
-| 3-SETUPS | UTHR | added | Tight (from 2-POOL) |
-| 3-SETUPS | WK | added | Tight (from 2-POOL) |
+| 3-SETUPS | SYRE | added | Tight (from 2-POOL) |
+| 3-SETUPS | XERS | added | PB 21 (from 2-POOL) |
 | 3-SETUPS | ABCL | removed | weekly trim to the best 30 |
-| 3-SETUPS | ACHC | removed | weekly trim to the best 30 |
 | 3-SETUPS | ADPT | removed | weekly trim to the best 30 |
 | 3-SETUPS | AMLX | removed | weekly trim to the best 30 |
-| 3-SETUPS | AMPL | removed | weekly trim to the best 30 |
 | 3-SETUPS | AMRX | removed | weekly trim to the best 30 |
 | 3-SETUPS | APPN | removed | weekly trim to the best 30 |
 | 3-SETUPS | ARQT | removed | weekly trim to the best 30 |
@@ -164,22 +162,13 @@ Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 
 | 3-SETUPS | CRWD | removed | weekly trim to the best 30 |
 | 3-SETUPS | CTVA | removed | weekly trim to the best 30 |
 | 3-SETUPS | DUOL | removed | weekly trim to the best 30 |
-| 3-SETUPS | ETSY | removed | weekly trim to the best 30 |
-| 3-SETUPS | FIGS | removed | weekly trim to the best 30 |
-| 3-SETUPS | FIVN | removed | weekly trim to the best 30 |
-| 3-SETUPS | FROG | removed | weekly trim to the best 30 |
 | 3-SETUPS | FSLY | removed | weekly trim to the best 30 |
-| 3-SETUPS | FTRE | removed | weekly trim to the best 30 |
 | 3-SETUPS | GH | removed | weekly trim to the best 30 |
-| 3-SETUPS | GKOS | removed | weekly trim to the best 30 |
-| 3-SETUPS | GO | removed | weekly trim to the best 30 |
 | 3-SETUPS | GRAL | removed | weekly trim to the best 30 |
-| 3-SETUPS | GWRE | removed | weekly trim to the best 30 |
 | 3-SETUPS | HTFL | removed | weekly trim to the best 30 |
 | 3-SETUPS | ICLR | removed | weekly trim to the best 30 |
 | 3-SETUPS | INSW | removed | weekly trim to the best 30 |
 | 3-SETUPS | IOVA | removed | weekly trim to the best 30 |
-| 3-SETUPS | KOD | removed | weekly trim to the best 30 |
 | 3-SETUPS | MAT | removed | weekly trim to the best 30 |
 | 3-SETUPS | MRVL | removed | 2 closes in a row below the 50 EMA |
 | 3-SETUPS | MRX | removed | 2 closes in a row below the 50 EMA |
@@ -196,36 +185,24 @@ Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 
 | 3-SETUPS | PANW | removed | weekly trim to the best 30 |
 | 3-SETUPS | PARR | removed | 2 closes in a row below the 50 EMA |
 | 3-SETUPS | PBF | removed | weekly trim to the best 30 |
-| 3-SETUPS | PCOR | removed | weekly trim to the best 30 |
 | 3-SETUPS | PCVX | removed | weekly trim to the best 30 |
 | 3-SETUPS | PRCH | removed | weekly trim to the best 30 |
-| 3-SETUPS | PRGO | removed | weekly trim to the best 30 |
 | 3-SETUPS | QLYS | removed | weekly trim to the best 30 |
 | 3-SETUPS | RGEN | removed | weekly trim to the best 30 |
-| 3-SETUPS | RLAY | removed | weekly trim to the best 30 |
 | 3-SETUPS | RNG | removed | weekly trim to the best 30 |
 | 3-SETUPS | RPD | removed | weekly trim to the best 30 |
-| 3-SETUPS | RVTY | removed | weekly trim to the best 30 |
-| 3-SETUPS | RXO | removed | weekly trim to the best 30 |
 | 3-SETUPS | S | removed | weekly trim to the best 30 |
 | 3-SETUPS | SHOP | removed | weekly trim to the best 30 |
 | 3-SETUPS | SNOW | removed | weekly trim to the best 30 |
 | 3-SETUPS | SYRE | removed | weekly trim to the best 30 |
-| 3-SETUPS | TEAM | removed | weekly trim to the best 30 |
 | 3-SETUPS | TEM | removed | weekly trim to the best 30 |
 | 3-SETUPS | TENB | removed | weekly trim to the best 30 |
 | 3-SETUPS | TRLV | removed | weekly trim to the best 30 |
 | 3-SETUPS | TWLO | removed | weekly trim to the best 30 |
 | 3-SETUPS | TWST | removed | 2 closes in a row below the 50 EMA |
 | 3-SETUPS | TXG | removed | weekly trim to the best 30 |
-| 3-SETUPS | UTHR | removed | weekly trim to the best 30 |
-| 3-SETUPS | VLO | removed | weekly trim to the best 30 |
 | 3-SETUPS | VSTS | removed | weekly trim to the best 30 |
-| 3-SETUPS | W | removed | weekly trim to the best 30 |
-| 3-SETUPS | WAY | removed | weekly trim to the best 30 |
-| 3-SETUPS | WK | removed | weekly trim to the best 30 |
 | 3-SETUPS | XNCR | removed | weekly trim to the best 30 |
-| 3-SETUPS | XP | removed | weekly trim to the best 30 |
 | 3-SETUPS | ZS | removed | weekly trim to the best 30 |
 
 ## 1-EP/GAP
