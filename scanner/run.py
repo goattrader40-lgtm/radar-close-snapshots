@@ -274,8 +274,9 @@ def write_outputs(state, stocks, cfg, P, log, d):
                settings=dict(higher_high_low=cfg["lists"]["setups_higher_high_low"], msf="v29.1" + (" + changes" if len(cfg["msf"]) > 1 else "")))
     with open(os.path.join(OUT, "latest.json"), "w") as f:
         json.dump(doc, f, indent=1)
-    with open(os.path.join(OUT, "history", d + ".json"), "w") as f:
-        json.dump(doc, f, separators=(",", ":"))
+    with open(os.path.join(OUT, "history", d + ".json"), "w") as f:   # the day's 3-SETUPS, list sizes and changes
+        json.dump({k: v for k, v in doc.items() if k != "lists"} | {"setups": full["3-SETUPS"],
+                  "lists": {n: [r["symbol"] for r in full[n]] for n in LISTS}}, f, separators=(",", ":"))
     # TradingView import files: one per list, a ### line per section
     for name in LISTS:
         secs = {}
