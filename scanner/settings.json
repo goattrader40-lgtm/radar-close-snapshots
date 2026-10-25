@@ -1,0 +1,45 @@
+{
+  "_about": "Your scanner settings. Every screener uses the 'standard' filters plus its own. Percent values are percents (10 = 10%).",
+
+  "standard": {
+    "min_price": 10,
+    "min_mcap": 700e6,
+    "max_mcap": 2e12,
+    "min_avg_vol_30d": 700000,
+    "min_dollar_vol_30d_millions": 20,
+    "min_adr": 4,
+    "above_ema50": true,
+    "low52_below_price_pct": 30,
+    "_low52": "TradingView wording 'Low 52W below Price by 30% or more' = the 52-week low is at most 70% of the price"
+  },
+
+  "screeners": {
+    "EP-GAPUP-BREAKOUT": {"gap_pct": 5, "rel_vol": 2.5},
+    "HOTTEST STOCKS": {"chg_pct": 4, "rel_vol": 1},
+    "50 EMA FIRST CLOSE": {"closes_below_before": 2},
+    "MOMENTUM-1W": {"perf_pct": 10, "bars": 5},
+    "MOMENTUM-1M": {"perf_pct": 25, "bars": 21},
+    "MOMENTUM-3M": {"perf_pct": 50, "bars": 63},
+    "MOMENTUM-6M": {"perf_pct": 50, "bars": 126, "above_sma200": true, "low52_below_price_pct": 50},
+    "DAILY TIGHTNESS": {"low52_below_price_pct": 40, "high52_above_price_max_pct": 30, "vol_below_avg30_pct": 20},
+    "PULLBACK TO 21EMA-MAIN": {"ema": 21, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
+    "PULLBACK TO 50EMA": {"ema": 50, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
+    "rel_vol_days": 10
+  },
+
+  "lists": {
+    "delete_after_closes_below_ema50": 2,
+    "new_mover_days_without_setup": 15,
+    "new_mover_lost_support": "close below the gap / up-day low",
+    "pool_refresh_weekday": 4,
+    "setups_max": 30,
+    "setups_need_above_sma200": true,
+    "setups_higher_high_low": "strict",
+    "_setups_higher_high_low": "strict = the last two swing highs and lows are rising (as MSF v29.1 grade) · structure = stays on until price breaks the last higher low · off",
+    "no_chase_1y_pct": 300
+  },
+
+  "msf": {
+    "_about": "MSF settings that differ from v29.1 (empty = v29.1 as written)"
+  }
+}
