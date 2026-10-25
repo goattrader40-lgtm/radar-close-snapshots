@@ -2,7 +2,7 @@
 
 The Pine script runs once per daily bar, oldest to newest; so does `run()` below. Offsets in the
 comments ("o bars ago") map to index i - o. Every setting from the Pine inputs is in DEFAULTS
-(v29.1) and V28 holds the old values, so both versions can be run on the same charts.
+(v29.2) and V28 holds the old values, so both versions can be run on the same charts.
 
 Differences from TradingView that cannot be avoided:
   * Relative volume on daily bars = day volume / average of the previous `volLook` days (on closed
@@ -40,7 +40,7 @@ DEFAULTS = dict(
     # 4 Ascending triangle
     atMin=10, atMax=65, atTol=2.0, atDep=30.0,
     # 5 Qullamaggie
-    qMin=10, qMax=40, qPrior=30.0, qDep=30.0, q50=85.0, qUndercut=3.0, qOne=1, qOnePct=80.0,
+    qMin=10, qMax=40, qPrior=30.0, qDep=30.0, q50=80.0, qUndercut=3.0, qOne=1, qOnePct=80.0,
     q50All=1,   # v29: the q50 rule applies to every pattern
     qUseEma=1,  # v29: counted on the daily 50 EMA (v28: 50 SMA)
     # 6 Flat base
@@ -59,7 +59,7 @@ DEFAULTS = dict(
     volLook=20, volEpX=2.0, volGbX=2.0, volHTF=3.0, volFP=0.0, volTF=0.7, volCup=0.0, volAT=0.0, volQ=0.0,
     volFB=2.0, volGen=0.0, volDeep=0.0, volLvl=0.0, volBig=0.0, volFT=0.0,
     # Grade
-    grAplLo=10.0, grAplHi=15.0, grAHi=20.0, grBHi=30.0, grHiAdr=8.0, gr200=0, grHHHL=1,
+    grAplLo=10.0, grAplHi=15.0, grAHi=20.0, grBHi=30.0, grHiAdr=8.0, gr200=0, grHHHL=0,
 )
 V28 = dict(DEFAULTS, minPrice=5.0, minDolVol=10.0, dolVolLen=20, coilInside=2, maxDep=50.0, deepMax=50.0,
            q50=80.0, q50All=0, qUseEma=0)

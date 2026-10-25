@@ -22,13 +22,15 @@ Standard filters on every screener: price ≥ $10, market cap $700M–$2T, 30-da
 price × 30-day average volume > $20M, ADR ≥ 4%, price above the daily 50 EMA, 52-week low at most 70% of the
 price ("Low 52W below Price by 30% or more").
 
-Into 3-SETUPS only if: above the 200 SMA, a higher high + higher low is in place, and not up 300%+ in a year.
-Each 3-SETUPS name also gets the Momentum Setup Finder (v29.1) columns: grade, pattern, buy point, coil /
+Into 3-SETUPS only if it is above the 200 SMA. (Higher high + higher low and the 300% no-chase rule are off — your
+choice, Oct 25; both are settings.) The grade shows setup quality only; it never blocks a move to 3-SETUPS.
+Each 3-SETUPS name also gets the Momentum Setup Finder (v29.2) columns: grade, pattern, buy point, coil /
 pullback / trendline / level / flat-top entries, and whether the 21 / 50 EMA intraday trigger is armed.
 
-Deletes: 2 closes in a row below the 50 EMA (any list) · 1-EP/GAP and 1-UPDAY: a close below the gap / up-day
-low, or 15 trading days without reaching 3-SETUPS · 2-POOL at the weekly refresh: below the 200 SMA,
-no longer liquid, up 300%+ · 3-SETUPS: a close below the 200 SMA, and a weekly trim to the best 30
+Deletes: 2 closes in a row below the 50 EMA (any list) · 1-EP/GAP and 1-UPDAY: 15 trading days without reaching
+3-SETUPS · 1-UPDAY: a close below the up-day low (a close below the gap low no longer deletes from 1-EP/GAP) ·
+2-POOL at the weekly refresh: below the 200 SMA, no longer liquid · 3-SETUPS: a close below the 200 SMA, and a weekly
+trim to the best 30
 (recent hit first, then grade, then MSF score).
 
 Not yet: FUNDAMENTAL-GROWTH (needs revenue data), orange / red flags, earnings dates.

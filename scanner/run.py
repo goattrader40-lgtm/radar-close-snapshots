@@ -108,6 +108,9 @@ def step(state, d, stocks, cfg, cal, log):
     today = {s: st for s, st in stocks.items() if d in st.pos}
     hits = {s: st.screens(st.pos[d], cfg) for s, st in today.items()}
 
+    def chased(st, i):   # no-chase rule (off when the setting is empty or 0)
+        return bool(L.get("no_chase_1y_pct")) and st.perf(i, 252) >= L["no_chase_1y_pct"]
+
     def remove(name, sym, why):
         lists[name].pop(sym, None)
         log.append(dict(date=d, list=name, sym=sym, action="removed", why=why))
@@ -123,7 +126,7 @@ def step(state, d, stocks, cfg, cal, log):
             e = lists[name][sym]
             if st.below50(i, nb):
                 remove(name, sym, f"{nb} closes in a row below the 50 EMA")
-            elif name in ("1-EP/GAP", "1-UPDAY") and st.c[i] < e["low"]:
+            elif ((name == "1-EP/GAP" and L["delete_below_gap_low"]) or (name == "1-UPDAY" and L["delete_below_upday_low"])) and st.c[i] < e["low"]:
                 remove(name, sym, "closed below the " + ("gap" if name == "1-EP/GAP" else "up-day") + f" low {e['low']}")
             elif name in ("1-EP/GAP", "1-UPDAY") and not e.get("promoted") and tdays_between(cal, e["added"], d) >= L["new_mover_days_without_setup"]:
                 remove(name, sym, f"{L['new_mover_days_without_setup']} trading days with no setup")
@@ -135,7 +138,7 @@ def step(state, d, stocks, cfg, cal, log):
                     remove(name, sym, "below the 200 SMA (weekly refresh)")
                 elif not (st.c[i] >= S["min_price"] and st.avgv30[i] > S["min_avg_vol_30d"] and st.dv30[i] > S["min_dollar_vol_30d_millions"]):
                     remove(name, sym, "no longer liquid (weekly refresh)")
-                elif st.perf(i, 252) >= L["no_chase_1y_pct"]:
+                elif chased(st, i):
                     remove(name, sym, f"up {L['no_chase_1y_pct']}%+ in a year (weekly refresh)")
 
     def add(name, sym, entry):
@@ -158,11 +161,11 @@ def step(state, d, stocks, cfg, cal, log):
             chg = round(100 * (st.c[i] / st.c[i - 1] - 1), 1)
             add("1-UPDAY", sym, dict(section=d, low=round(float(st.l[i]), 4), why=f"+{chg}%, rel vol {st.relvol[i]:.1f}"))
             lists["1-UPDAY"][sym].update(added=d, promoted=False)
-        if "50 EMA FIRST CLOSE" in h and st.perf(i, 252) < L["no_chase_1y_pct"] and sym not in lists["2-POOL"]:
+        if "50 EMA FIRST CLOSE" in h and not chased(st, i) and sym not in lists["2-POOL"]:
             add("2-POOL", sym, dict(section="50 EMA reclaim", why="first close back above the 50 EMA"))
         if weekly:
             mom = [n.replace("MOMENTUM-", "") for n in h if n.startswith("MOMENTUM-")]
-            if mom and st.perf(i, 252) < L["no_chase_1y_pct"]:
+            if mom and not chased(st, i):
                 add("2-POOL", sym, dict(section="Momentum", why="momentum " + "/".join(mom)))
     if weekly:
         state["pool_refresh"] = d
@@ -184,7 +187,7 @@ def step(state, d, stocks, cfg, cal, log):
             continue
         if not hhhl_ok(st, i, L["setups_higher_high_low"]):
             continue
-        if st.perf(i, 252) >= L["no_chase_1y_pct"]:
+        if chased(st, i):
             continue
         add("3-SETUPS", sym, dict(section=found[0], setups=found, last_hit=d, source=src, why=" + ".join(found) + f" (from {src})"))
         for name in ("1-EP/GAP", "1-UPDAY", "2-POOL"):
@@ -271,7 +274,7 @@ def write_outputs(state, stocks, cfg, P, log, d):
     changes = [x for x in log if x["date"] == d]
     doc = dict(date=d, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
                counts={n: len(full[n]) for n in LISTS}, changes_today=changes, lists=full,
-               settings=dict(higher_high_low=cfg["lists"]["setups_higher_high_low"], msf="v29.1" + (" + changes" if len(cfg["msf"]) > 1 else "")))
+               settings=dict(higher_high_low=cfg["lists"]["setups_higher_high_low"], msf="v29.2" + (" + changes" if len(cfg["msf"]) > 1 else "")))
     with open(os.path.join(OUT, "latest.json"), "w") as f:
         json.dump(doc, f, indent=1)
     with open(os.path.join(OUT, "history", d + ".json"), "w") as f:   # the day's 3-SETUPS, list sizes and changes

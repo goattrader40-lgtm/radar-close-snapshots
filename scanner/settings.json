@@ -30,16 +30,18 @@
   "lists": {
     "delete_after_closes_below_ema50": 2,
     "new_mover_days_without_setup": 15,
-    "new_mover_lost_support": "close below the gap / up-day low",
+    "delete_below_gap_low": false,
+    "delete_below_upday_low": true,
     "pool_refresh_weekday": 4,
     "setups_max": 30,
     "setups_need_above_sma200": true,
-    "setups_higher_high_low": "strict",
-    "_setups_higher_high_low": "strict = the last two swing highs and lows are rising (as MSF v29.1 grade) · structure = stays on until price breaks the last higher low · off",
-    "no_chase_1y_pct": 300
+    "setups_higher_high_low": "off",
+    "_setups_higher_high_low": "off (your choice, Oct 25) · strict = the last two swing highs and lows are rising · structure = stays on until price breaks the last higher low",
+    "no_chase_1y_pct": null,
+    "_no_chase_1y_pct": "off (your choice, Oct 25); a number (e.g. 300) skips stocks up that much in 12 months"
   },
 
   "msf": {
-    "_about": "MSF settings that differ from v29.1 (empty = v29.1 as written)"
+    "_about": "MSF settings that differ from v29.2 (empty = v29.2 as written)"
   }
 }
