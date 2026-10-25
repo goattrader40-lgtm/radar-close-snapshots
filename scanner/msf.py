@@ -2,7 +2,7 @@
 
 The Pine script runs once per daily bar, oldest to newest; so does `run()` below. Offsets in the
 comments ("o bars ago") map to index i - o. Every setting from the Pine inputs is in DEFAULTS
-(v29.2) and V28 holds the old values, so both versions can be run on the same charts.
+(v29.4) and V28 holds the old values, so both versions can be run on the same charts.
 
 Differences from TradingView that cannot be avoided:
   * Relative volume on daily bars = day volume / average of the previous `volLook` days (on closed
@@ -24,7 +24,7 @@ DEFAULTS = dict(
     gapAboveLo=30.0, nearPct=5.0, calcBars=400,
     # Your entries: 2nd-pullback tight day, coil
     swAdrX=1.5, swMinPct=6.0, swMaxPct=12.0, pbMin=2, pbMaxDepth=30.0, tightBodyX=0.35, tightUseRng=0,
-    tightRangeX=0.8, coilInside=1, coilEntryMother=0, coilBodyX=0.5, coilBodyAdr=0.5, coilOpenReq=0,
+    tightRangeX=0.8, coilInside=2, coilEntryMother=0, coilBodyX=0.5, coilBodyAdr=0.5, coilOpenReq=0,
     # Base finder
     maxLook=150, sigPct=30.0, olderNear=15.0, mergeDep=35.0, topTol=2.0, minBase=5, maxDep=37.0,
     priorLook=60, crashX=1.75, crashBars=15, bigOn=1, rearm=5,

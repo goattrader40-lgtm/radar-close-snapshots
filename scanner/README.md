@@ -25,7 +25,7 @@ under the 30-day average, and today's range ≤ 0.8 × the average range of the 
 
 Into 3-SETUPS only if it is above the 200 SMA. (Higher high + higher low and the 300% no-chase rule are off — your
 choice, Oct 25; both are settings.) The grade shows setup quality only; it never blocks a move to 3-SETUPS.
-Each 3-SETUPS name also gets the Momentum Setup Finder (v29.3, coil = 3 candles) columns: grade, pattern, buy point, coil /
+Each 3-SETUPS name also gets the Momentum Setup Finder (v29.4, coil = 3 candles) columns: grade, pattern, buy point, coil /
 pullback / trendline / level / flat-top entries, and whether the 21 / 50 EMA intraday trigger is armed.
 
 Deletes: 2 closes in a row below the 50 EMA (any list) · 1-EP/GAP and 1-UPDAY: 15 trading days without reaching

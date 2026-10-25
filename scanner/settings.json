@@ -43,8 +43,6 @@
   },
 
   "msf": {
-    "_about": "MSF settings that differ from the Pine script's defaults (v29.3)",
-    "coilInside": 2,
-    "_coilInside": "coil = mother bar + 2 inside days (3 candles) in the scanner — your choice, Oct 25; the Pine default is 1 (2 candles)"
+    "_about": "MSF settings that differ from the Pine script's defaults (v29.4; coil = 3 candles in both)"
   }
 }
