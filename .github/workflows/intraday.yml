@@ -45,6 +45,8 @@ jobs:
           req = json.load(open(os.environ["REQ"]))
           print(len(req), "symbols requested")
 
+          errors = {}
+
           def bars(item):
               sym, days = item
               want = set(days)
@@ -65,10 +67,17 @@ jobs:
                               out.setdefault(d, []).append([dt.strftime("%H:%M"), round(o, 4), round(h, 4), round(l, 4), round(c, 4), int(v or 0)])
                       return sym, out
                   except urllib.error.HTTPError as e:
-                      if e.code == 404:
+                      body = ""
+                      try:
+                          body = e.read().decode()[:300]
+                      except Exception:
+                          pass
+                      errors[sym] = f"HTTP {e.code} {body}"
+                      if e.code in (404, 400, 422):
                           return sym, None
                       time.sleep(4 * (attempt + 1))
-                  except Exception:
+                  except Exception as e:
+                      errors[sym] = repr(e)[:300]
                       time.sleep(4 * (attempt + 1))
               return sym, None
 
@@ -80,9 +89,10 @@ jobs:
           n = sum(len(v) for v in data.values())
           print(len(data), "symbols,", n, "stock-days saved", flush=True)
           if len(data) < 0.8 * len(req):
-              sys.exit(f"only {len(data)} of {len(req)} came back, not saving")
+              print(f"only {len(data)} of {len(req)} came back")
           with gzip.open(os.environ["OUT"], "wt") as f:
-              json.dump({"saved_at": datetime.datetime.now(NY).isoformat(timespec="seconds"),
+              json.dump({"saved_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "requested": len(req),
+                         "errors": dict(list(errors.items())[:20]),
                          "fields": ["time", "open", "high", "low", "close", "volume"], "bars": data}, f, separators=(",", ":"))
           print("size MB", round(os.path.getsize(os.environ["OUT"]) / 1e6, 1))
           PY
