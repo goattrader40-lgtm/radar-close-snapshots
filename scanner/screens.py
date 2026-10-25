@@ -44,6 +44,9 @@ class Stock:
         prev10[1:] = roll_mean(self.v, 10)[:-1]
         with np.errstate(divide="ignore", invalid="ignore"):
             self.relvol = self.v / prev10
+        rng = self.h - self.l
+        self.rng_avg10_prev = np.full(rng.size, np.nan)   # average day range of the previous 10 days
+        self.rng_avg10_prev[1:] = roll_mean(rng, 10)[:-1]
         self.low52 = roll_ext(self.l, 252, np.min)
         self.high52 = roll_ext(self.h, 252, np.max)
 
@@ -55,7 +58,7 @@ class Stock:
         return bool(c >= S["min_price"] and S["min_mcap"] <= self.mcap <= S["max_mcap"]
                     and self.avgv30[i] > S["min_avg_vol_30d"] and self.dv30[i] > S["min_dollar_vol_30d_millions"]
                     and self.adr[i] >= S["min_adr"] and (not S["above_ema50"] or self.ema50[i] < c)
-                    and self.low52[i] <= c * (1 - S["low52_below_price_pct"] / 100))
+                    and c >= self.low52[i] * (1 + S["min_pct_above_52w_low"] / 100))
 
     def below50(self, i, n):
         """closed below the daily 50 EMA on each of the last n days"""
@@ -89,7 +92,8 @@ class Stock:
                 hits.append(name)
         t = X["DAILY TIGHTNESS"]
         if std and self.low52[i] <= c * (1 - t["low52_below_price_pct"] / 100) and c <= self.high52[i] <= c * (1 + t["high52_above_price_max_pct"] / 100) \
-                and self.v[i] <= self.avgv30[i] * (1 - t["vol_below_avg30_pct"] / 100):
+                and self.v[i] <= self.avgv30[i] * (1 - t["vol_below_avg30_pct"] / 100) \
+                and (not t.get("range_vs_avg10_max") or self.h[i] - self.l[i] <= t["range_vs_avg10_max"] * self.rng_avg10_prev[i]):
             hits.append("DAILY TIGHTNESS")
         for name in ("PULLBACK TO 21EMA-MAIN", "PULLBACK TO 50EMA"):
             m = X[name]

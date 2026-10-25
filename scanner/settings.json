@@ -9,8 +9,8 @@
     "min_dollar_vol_30d_millions": 20,
     "min_adr": 4,
     "above_ema50": true,
-    "low52_below_price_pct": 30,
-    "_low52": "TradingView wording 'Low 52W below Price by 30% or more' = the 52-week low is at most 70% of the price"
+    "min_pct_above_52w_low": 30,
+    "_min_pct_above_52w_low": "price at least 30% above the 52-week low (your 'true 30%'; in TradingView: 'Price above Low 52W by 30% or more')"
   },
 
   "screeners": {
@@ -21,7 +21,8 @@
     "MOMENTUM-1M": {"perf_pct": 25, "bars": 21},
     "MOMENTUM-3M": {"perf_pct": 50, "bars": 63},
     "MOMENTUM-6M": {"perf_pct": 50, "bars": 126, "above_sma200": true, "low52_below_price_pct": 50},
-    "DAILY TIGHTNESS": {"low52_below_price_pct": 40, "high52_above_price_max_pct": 30, "vol_below_avg30_pct": 20},
+    "DAILY TIGHTNESS": {"low52_below_price_pct": 40, "high52_above_price_max_pct": 30, "vol_below_avg30_pct": 20, "range_vs_avg10_max": 0.8,
+                        "_range_vs_avg10_max": "today's high-low range at most 0.8 x the average range of the previous 10 days (same as MSF 'Tight day: range <= X x 10-day avg range'); 0 = off"},
     "PULLBACK TO 21EMA-MAIN": {"ema": 21, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
     "PULLBACK TO 50EMA": {"ema": 50, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
     "rel_vol_days": 10

@@ -19,8 +19,8 @@ Runs steps 1–3 of your TradingView workflow every trading day at about 4:40 PM
 | 3 | DAILY TIGHTNESS · PULLBACK TO 21EMA-MAIN · PULLBACK TO 50EMA, run on 1-EP/GAP + 1-UPDAY + 2-POOL | 3-SETUPS › Tight / PB 21 / PB 50 | daily |
 
 Standard filters on every screener: price ≥ $10, market cap $700M–$2T, 30-day average volume > 700K,
-price × 30-day average volume > $20M, ADR ≥ 4%, price above the daily 50 EMA, 52-week low at most 70% of the
-price ("Low 52W below Price by 30% or more").
+price × 30-day average volume > $20M, ADR ≥ 4%, price above the daily 50 EMA, price at least 30% above the
+52-week low. DAILY TIGHTNESS also needs today's range ≤ 0.8 × the average range of the previous 10 days.
 
 Into 3-SETUPS only if it is above the 200 SMA. (Higher high + higher low and the 300% no-chase rule are off — your
 choice, Oct 25; both are settings.) The grade shows setup quality only; it never blocks a move to 3-SETUPS.
