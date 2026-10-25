@@ -1,6 +1,6 @@
 {
  "date": "2026-10-23",
- "made_at": "2026-10-25T11:57:22+00:00",
+ "made_at": "2026-10-25T12:10:36+00:00",
  "counts": {
   "1-EP/GAP": 13,
   "1-UPDAY": 101,
@@ -419,7 +419,7 @@
    "list": "2-POOL",
    "sym": "AVPT",
    "action": "added",
-   "why": "momentum 1W/1M"
+   "why": "momentum 1W/1M/6M"
   },
   {
    "date": "2026-10-23",
@@ -503,7 +503,7 @@
    "list": "2-POOL",
    "sym": "GMAB",
    "action": "added",
-   "why": "momentum 1W/1M/3M"
+   "why": "momentum 1W/1M/3M/6M"
   },
   {
    "date": "2026-10-23",
@@ -559,7 +559,7 @@
    "list": "2-POOL",
    "sym": "NOW",
    "action": "added",
-   "why": "momentum 1W/3M"
+   "why": "momentum 1W/3M/6M"
   },
   {
    "date": "2026-10-23",
@@ -685,12 +685,19 @@
    "list": "2-POOL",
    "sym": "WK",
    "action": "added",
-   "why": "momentum 1W/3M"
+   "why": "momentum 1W/3M/6M"
   },
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "FTRE",
+   "action": "added",
+   "why": "Tight (from 1-UPDAY)"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "GWRE",
    "action": "added",
    "why": "Tight (from 1-UPDAY)"
   },
@@ -760,9 +767,30 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
+   "sym": "UTHR",
+   "action": "added",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
    "sym": "WK",
    "action": "added",
    "why": "Tight (from 2-POOL)"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "UTHR",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "FIVN",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
   },
   {
    "date": "2026-10-23",
@@ -809,6 +837,13 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
+   "sym": "PCOR",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
    "sym": "NCNO",
    "action": "removed",
    "why": "weekly trim to the best 30"
@@ -830,14 +865,28 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "MAT",
+   "sym": "ARQT",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "ARQT",
+   "sym": "PRGO",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "GWRE",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "MAT",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -852,6 +901,13 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "PRCH",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "WAY",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -1351,10 +1407,7 @@
     "ema21": 33.52,
     "ema50": 29.98,
     "sma200": 24.19,
-    "entries": {
-     "coil": 45.91,
-     "coil_stop": 45.69
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 45.95,
     "days_since_20d_high": 1,
@@ -1625,8 +1678,6 @@
     "ema50": 24.74,
     "sma200": 20.72,
     "entries": {
-     "coil": 28.89,
-     "coil_stop": 28.6,
      "level": 29.11
     },
     "ema_triggers_tomorrow": [],
@@ -2247,10 +2298,7 @@
     "ema21": 218.94,
     "ema50": 200.05,
     "sma200": 192.27,
-    "entries": {
-     "coil": 254.44,
-     "coil_stop": 239.33
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 259.39,
     "days_since_20d_high": 1,
@@ -2349,10 +2397,7 @@
     "ema21": 10.61,
     "ema50": 10.19,
     "sma200": 10.78,
-    "entries": {
-     "coil": 11.45,
-     "coil_stop": 10.87
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 11.6,
     "days_since_20d_high": 1,
@@ -2385,10 +2430,7 @@
     "ema21": 28.56,
     "ema50": 27.68,
     "sma200": 28.78,
-    "entries": {
-     "coil": 33.52,
-     "coil_stop": 30.25
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 34.59,
     "days_since_20d_high": 1,
@@ -2454,10 +2496,7 @@
     "ema21": 39.35,
     "ema50": 38.02,
     "sma200": 42.7,
-    "entries": {
-     "coil": 45.7,
-     "coil_stop": 43.04
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 45.8,
     "days_since_20d_high": 1,
@@ -2523,17 +2562,14 @@
     "ema21": 170.24,
     "ema50": 164.36,
     "sma200": 149.25,
-    "entries": {
-     "coil": 191.33,
-     "coil_stop": 180.0
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 191.99,
     "days_since_20d_high": 1,
     "section": "2026-10-22",
     "why": "+4.3%, rel vol 1.3",
     "added": "2026-10-22",
-    "promoted": false,
+    "promoted": true,
     "support_low": 180.0
    },
    {
@@ -2592,10 +2628,7 @@
     "ema21": 13.01,
     "ema50": 12.72,
     "sma200": 13.84,
-    "entries": {
-     "coil": 15.18,
-     "coil_stop": 14.28
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 15.23,
     "days_since_20d_high": 1,
@@ -2628,10 +2661,7 @@
     "ema21": 21.05,
     "ema50": 19.59,
     "sma200": 16.89,
-    "entries": {
-     "coil": 24.7,
-     "coil_stop": 22.6
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 25.1,
     "days_since_20d_high": 1,
@@ -2664,10 +2694,7 @@
     "ema21": 92.5,
     "ema50": 89.25,
     "sma200": 84.5,
-    "entries": {
-     "coil": 108.79,
-     "coil_stop": 100.03
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 110.77,
     "days_since_20d_high": 1,
@@ -2869,10 +2896,7 @@
     "ema21": 13.42,
     "ema50": 12.98,
     "sma200": 13.41,
-    "entries": {
-     "coil": 15.47,
-     "coil_stop": 14.84
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 15.52,
     "days_since_20d_high": 1,
@@ -2938,10 +2962,7 @@
     "ema21": 77.17,
     "ema50": 74.78,
     "sma200": 70.91,
-    "entries": {
-     "coil": 82.28,
-     "coil_stop": 78.3
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 84.19,
     "days_since_20d_high": 1,
@@ -2975,8 +2996,6 @@
     "ema50": 9.24,
     "sma200": 6.3,
     "entries": {
-     "coil": 9.35,
-     "coil_stop": 8.93,
      "pullback_tight_day": 9.95,
      "pullback_stop": 8.93
     },
@@ -3183,10 +3202,7 @@
     "ema21": 21.67,
     "ema50": 20.22,
     "sma200": 15.54,
-    "entries": {
-     "coil": 24.05,
-     "coil_stop": 23.24
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 24.84,
     "days_since_20d_high": 1,
@@ -4007,9 +4023,7 @@
     "ema50": 103.35,
     "sma200": 88.67,
     "entries": {
-     "breakout": 118.31,
-     "coil": 115.26,
-     "coil_stop": 110.76
+     "breakout": 118.31
     },
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 116.35,
@@ -4043,10 +4057,7 @@
     "ema21": 19.04,
     "ema50": 18.67,
     "sma200": 19.82,
-    "entries": {
-     "coil": 21.5,
-     "coil_stop": 19.99
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 21.63,
     "days_since_20d_high": 1,
@@ -4079,10 +4090,7 @@
     "ema21": 33.52,
     "ema50": 29.98,
     "sma200": 24.19,
-    "entries": {
-     "coil": 45.91,
-     "coil_stop": 45.69
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 45.95,
     "days_since_20d_high": 1,
@@ -4317,10 +4325,7 @@
     "ema21": 21.03,
     "ema50": 18.79,
     "sma200": 17.86,
-    "entries": {
-     "coil": 23.39,
-     "coil_stop": 22.38
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 23.73,
     "days_since_20d_high": 3,
@@ -4362,7 +4367,7 @@
     "section": "2026-10-15",
     "why": "+4.7%, rel vol 1.8",
     "added": "2026-10-15",
-    "promoted": false,
+    "promoted": true,
     "support_low": 55.23
    },
    {
@@ -4628,7 +4633,7 @@
     "section": "2026-10-15",
     "why": "+5.1%, rel vol 1.7",
     "added": "2026-10-15",
-    "promoted": false,
+    "promoted": true,
     "support_low": 26.88
    },
    {
@@ -4755,10 +4760,7 @@
     "ema21": 17.37,
     "ema50": 15.44,
     "sma200": 13.22,
-    "entries": {
-     "coil": 20.73,
-     "coil_stop": 20.02
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 20.86,
     "days_since_20d_high": 1,
@@ -4793,8 +4795,6 @@
     "sma200": 21.39,
     "entries": {
      "breakout": 32.89,
-     "coil": 32.16,
-     "coil_stop": 30.33,
      "level": 32.89,
      "flat_top": 32.89
     },
@@ -4830,10 +4830,7 @@
     "ema21": 206.83,
     "ema50": 173.13,
     "sma200": 82.16,
-    "entries": {
-     "coil": 206.97,
-     "coil_stop": 180.8
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 254.48,
     "days_since_20d_high": 2,
@@ -4866,10 +4863,7 @@
     "ema21": 119.4,
     "ema50": 110.27,
     "sma200": 76.77,
-    "entries": {
-     "coil": 123.61,
-     "coil_stop": 119.83
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [
      "21 EMA"
     ],
@@ -4904,10 +4898,7 @@
     "ema21": 298.61,
     "ema50": 287.07,
     "sma200": 249.7,
-    "entries": {
-     "coil": 336.88,
-     "coil_stop": 318.66
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 339.83,
     "days_since_20d_high": 1,
@@ -5345,10 +5336,7 @@
     "ema21": 298.61,
     "ema50": 287.07,
     "sma200": 249.7,
-    "entries": {
-     "coil": 336.88,
-     "coil_stop": 318.66
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 339.83,
     "days_since_20d_high": 1,
@@ -5591,42 +5579,6 @@
     "added": "2026-10-21"
    },
    {
-    "symbol": "RGEN",
-    "tv": "NASDAQ:RGEN",
-    "close": 176.93,
-    "chg_pct": -1.0,
-    "grade": "",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 20.8,
-    "pattern": "Base breakout",
-    "buy_point": 198.87,
-    "to_buy_point_pct": 12.4,
-    "base_bars": 20.0,
-    "base_depth_pct": 20.8,
-    "msf_score": 60,
-    "adr_pct": 5.2,
-    "rel_vol": 1.0,
-    "dollar_vol_30d_m": 216.0,
-    "perf_1m_pct": -7.0,
-    "perf_3m_pct": 35.0,
-    "off_52w_high_pct": 11.0,
-    "ema21": 177.89,
-    "ema50": 173.18,
-    "sma200": 144.39,
-    "entries": {
-     "breakout": 198.87
-    },
-    "ema_triggers_tomorrow": [
-     "50 EMA"
-    ],
-    "twenty_day_high": 198.87,
-    "days_since_20d_high": 19,
-    "section": "50 EMA reclaim",
-    "why": "first close back above the 50 EMA",
-    "added": "2026-10-09",
-    "promoted": true
-   },
-   {
     "symbol": "RLAY",
     "tv": "NASDAQ:RLAY",
     "close": 18.18,
@@ -5816,10 +5768,7 @@
     "ema21": 218.94,
     "ema50": 200.05,
     "sma200": 192.27,
-    "entries": {
-     "coil": 254.44,
-     "coil_stop": 239.33
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 259.39,
     "days_since_20d_high": 1,
@@ -6217,7 +6166,7 @@
     "twenty_day_high": 16.7,
     "days_since_20d_high": 0,
     "section": "Momentum",
-    "why": "momentum 1W/1M",
+    "why": "momentum 1W/1M/6M",
     "added": "2026-10-23"
    },
    {
@@ -6344,10 +6293,7 @@
     "ema21": 33.52,
     "ema50": 29.98,
     "sma200": 24.19,
-    "entries": {
-     "coil": 45.91,
-     "coil_stop": 45.69
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 45.95,
     "days_since_20d_high": 1,
@@ -6412,8 +6358,6 @@
     "sma200": 21.39,
     "entries": {
      "breakout": 32.89,
-     "coil": 32.16,
-     "coil_stop": 30.33,
      "level": 32.89,
      "flat_top": 32.89
     },
@@ -6482,8 +6426,6 @@
     "sma200": 32.26,
     "entries": {
      "breakout": 72.71,
-     "coil": 70.48,
-     "coil_stop": 66.84,
      "level": 72.71
     },
     "ema_triggers_tomorrow": [],
@@ -6562,7 +6504,7 @@
     "twenty_day_high": 31.07,
     "days_since_20d_high": 3,
     "section": "Momentum",
-    "why": "momentum 1W",
+    "why": "momentum 1W/6M",
     "added": "2026-10-09",
     "promoted": true
    },
@@ -6621,10 +6563,7 @@
     "ema21": 28.56,
     "ema50": 27.68,
     "sma200": 28.78,
-    "entries": {
-     "coil": 33.52,
-     "coil_stop": 30.25
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 34.59,
     "days_since_20d_high": 1,
@@ -6821,10 +6760,7 @@
     "ema21": 119.4,
     "ema50": 110.27,
     "sma200": 76.77,
-    "entries": {
-     "coil": 123.61,
-     "coil_stop": 119.83
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [
      "21 EMA"
     ],
@@ -7185,10 +7121,7 @@
     "ema21": 17.37,
     "ema50": 15.44,
     "sma200": 13.22,
-    "entries": {
-     "coil": 20.73,
-     "coil_stop": 20.02
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 20.86,
     "days_since_20d_high": 1,
@@ -7288,10 +7221,7 @@
     "ema21": 21.67,
     "ema50": 20.22,
     "sma200": 15.54,
-    "entries": {
-     "coil": 24.05,
-     "coil_stop": 23.24
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 24.84,
     "days_since_20d_high": 1,
@@ -7359,10 +7289,7 @@
     "ema21": 39.35,
     "ema50": 38.02,
     "sma200": 42.7,
-    "entries": {
-     "coil": 45.7,
-     "coil_stop": 43.04
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 45.8,
     "days_since_20d_high": 1,
@@ -7400,7 +7327,7 @@
     "twenty_day_high": 44.34,
     "days_since_20d_high": 0,
     "section": "Momentum",
-    "why": "momentum 1W/1M/3M",
+    "why": "momentum 1W/1M/3M/6M",
     "added": "2026-10-23"
    },
    {
@@ -7561,16 +7488,14 @@
     "ema21": 170.24,
     "ema50": 164.36,
     "sma200": 149.25,
-    "entries": {
-     "coil": 191.33,
-     "coil_stop": 180.0
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 191.99,
     "days_since_20d_high": 1,
     "section": "Momentum",
     "why": "momentum 1W/1M",
-    "added": "2026-10-05"
+    "added": "2026-10-05",
+    "promoted": true
    },
    {
     "symbol": "HNGE",
@@ -7898,10 +7823,7 @@
     "ema21": 13.01,
     "ema50": 12.72,
     "sma200": 13.84,
-    "entries": {
-     "coil": 15.18,
-     "coil_stop": 14.28
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 15.23,
     "days_since_20d_high": 1,
@@ -7968,16 +7890,13 @@
     "ema21": 21.05,
     "ema50": 19.59,
     "sma200": 16.89,
-    "entries": {
-     "coil": 24.7,
-     "coil_stop": 22.6
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 25.1,
     "days_since_20d_high": 1,
     "section": "Momentum",
     "why": "momentum 1W/1M/6M",
-    "added": "2026-10-16"
+    "added": "2026-10-09"
    },
    {
     "symbol": "KVYO",
@@ -8110,7 +8029,8 @@
     "days_since_20d_high": 1,
     "section": "Momentum",
     "why": "momentum 1W",
-    "added": "2026-10-16"
+    "added": "2026-10-16",
+    "promoted": true
    },
    {
     "symbol": "MANE",
@@ -8233,15 +8153,12 @@
     "ema21": 92.5,
     "ema50": 89.25,
     "sma200": 84.5,
-    "entries": {
-     "coil": 108.79,
-     "coil_stop": 100.03
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 110.77,
     "days_since_20d_high": 1,
     "section": "Momentum",
-    "why": "momentum 1W",
+    "why": "momentum 1W/6M",
     "added": "2026-10-14"
    },
    {
@@ -8301,10 +8218,7 @@
     "ema21": 206.83,
     "ema50": 173.13,
     "sma200": 82.16,
-    "entries": {
-     "coil": 206.97,
-     "coil_stop": 180.8
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 254.48,
     "days_since_20d_high": 2,
@@ -8440,7 +8354,7 @@
     "twenty_day_high": 159.5,
     "days_since_20d_high": 0,
     "section": "Momentum",
-    "why": "momentum 1W/3M",
+    "why": "momentum 1W/3M/6M",
     "added": "2026-10-23"
    },
    {
@@ -8505,8 +8419,6 @@
     "sma200": 261.62,
     "entries": {
      "breakout": 437.41,
-     "coil": 408.28,
-     "coil_stop": 383.76,
      "pullback_tight_day": 416.0,
      "pullback_stop": 383.76,
      "level": 427.47
@@ -8576,10 +8488,7 @@
     "ema21": 21.03,
     "ema50": 18.79,
     "sma200": 17.86,
-    "entries": {
-     "coil": 23.39,
-     "coil_stop": 22.38
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 23.73,
     "days_since_20d_high": 3,
@@ -8790,7 +8699,8 @@
     "days_since_20d_high": 0,
     "section": "Momentum",
     "why": "momentum 1W",
-    "added": "2026-10-05"
+    "added": "2026-10-05",
+    "promoted": true
    },
    {
     "symbol": "PCVX",
@@ -8949,7 +8859,8 @@
     "days_since_20d_high": 4,
     "section": "Momentum",
     "why": "momentum 3M",
-    "added": "2026-10-16"
+    "added": "2026-10-16",
+    "promoted": true
    },
    {
     "symbol": "QDEL",
@@ -9081,6 +8992,42 @@
     "promoted": true
    },
    {
+    "symbol": "RGEN",
+    "tv": "NASDAQ:RGEN",
+    "close": 176.93,
+    "chg_pct": -1.0,
+    "grade": "",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 20.8,
+    "pattern": "Base breakout",
+    "buy_point": 198.87,
+    "to_buy_point_pct": 12.4,
+    "base_bars": 20.0,
+    "base_depth_pct": 20.8,
+    "msf_score": 60,
+    "adr_pct": 5.2,
+    "rel_vol": 1.0,
+    "dollar_vol_30d_m": 216.0,
+    "perf_1m_pct": -7.0,
+    "perf_3m_pct": 35.0,
+    "off_52w_high_pct": 11.0,
+    "ema21": 177.89,
+    "ema50": 173.18,
+    "sma200": 144.39,
+    "entries": {
+     "breakout": 198.87
+    },
+    "ema_triggers_tomorrow": [
+     "50 EMA"
+    ],
+    "twenty_day_high": 198.87,
+    "days_since_20d_high": 19,
+    "section": "Momentum",
+    "why": "momentum 6M",
+    "added": "2026-10-09",
+    "promoted": true
+   },
+   {
     "symbol": "RHI",
     "tv": "NYSE:RHI",
     "close": 45.87,
@@ -9207,7 +9154,7 @@
     "twenty_day_high": 166.25,
     "days_since_20d_high": 13,
     "section": "Momentum",
-    "why": "momentum 1M",
+    "why": "momentum 1M/6M",
     "added": "2026-10-09",
     "promoted": true
    },
@@ -9235,8 +9182,6 @@
     "ema50": 24.74,
     "sma200": 20.72,
     "entries": {
-     "coil": 28.89,
-     "coil_stop": 28.6,
      "level": 29.11
     },
     "ema_triggers_tomorrow": [],
@@ -9337,9 +9282,7 @@
     "ema50": 153.05,
     "sma200": 129.88,
     "entries": {
-     "breakout": 180.88,
-     "coil": 170.3,
-     "coil_stop": 165.41
+     "breakout": 180.88
     },
     "ema_triggers_tomorrow": [
      "21 EMA"
@@ -9445,9 +9388,7 @@
     "ema50": 109.81,
     "sma200": 101.98,
     "entries": {
-     "breakout": 121.98,
-     "coil": 117.56,
-     "coil_stop": 117.03
+     "breakout": 121.98
     },
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 121.98,
@@ -9752,7 +9693,8 @@
     "days_since_20d_high": 0,
     "section": "Momentum",
     "why": "momentum 1W",
-    "added": "2026-10-23"
+    "added": "2026-10-23",
+    "promoted": true
    },
    {
     "symbol": "VCYT",
@@ -9808,10 +9750,7 @@
     "ema21": 13.42,
     "ema50": 12.98,
     "sma200": 13.41,
-    "entries": {
-     "coil": 15.47,
-     "coil_stop": 14.84
-    },
+    "entries": {},
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 15.52,
     "days_since_20d_high": 1,
@@ -9943,7 +9882,7 @@
     "twenty_day_high": 23.59,
     "days_since_20d_high": 1,
     "section": "Momentum",
-    "why": "momentum 1W",
+    "why": "momentum 1W/6M",
     "added": "2026-10-19"
    },
    {
@@ -10102,7 +10041,7 @@
     "twenty_day_high": 86.0,
     "days_since_20d_high": 0,
     "section": "Momentum",
-    "why": "momentum 1W/3M",
+    "why": "momentum 1W/3M/6M",
     "added": "2026-10-23",
     "promoted": true
    },
@@ -10174,8 +10113,8 @@
     "twenty_day_high": 11.42,
     "days_since_20d_high": 4,
     "section": "Momentum",
-    "why": "momentum 1M",
-    "added": "2026-10-09",
+    "why": "momentum 6M",
+    "added": "2026-10-05",
     "promoted": true
    },
    {
@@ -10450,8 +10389,6 @@
     "sma200": 261.62,
     "entries": {
      "breakout": 437.41,
-     "coil": 408.28,
-     "coil_stop": 383.76,
      "pullback_tight_day": 416.0,
      "pullback_stop": 383.76,
      "level": 427.47
@@ -10746,7 +10683,7 @@
     "last_hit": "2026-10-22",
     "source": "1-UPDAY",
     "why": "PB 21 (from 1-UPDAY)",
-    "added": "2026-10-22"
+    "added": "2026-10-21"
    },
    {
     "symbol": "HUM",
@@ -10960,8 +10897,6 @@
     "sma200": 21.39,
     "entries": {
      "breakout": 32.89,
-     "coil": 32.16,
-     "coil_stop": 30.33,
      "level": 32.89,
      "flat_top": 32.89
     },
@@ -11131,7 +11066,7 @@
     "last_hit": "2026-10-23",
     "source": "2-POOL",
     "why": "Tight (from 2-POOL)",
-    "added": "2026-10-05"
+    "added": "2026-10-12"
    },
    {
     "symbol": "RBRK",
@@ -11243,7 +11178,7 @@
     "setups": [
      "Tight"
     ],
-    "last_hit": "2026-10-21",
+    "last_hit": "2026-10-23",
     "source": "1-UPDAY",
     "why": "Tight (from 1-UPDAY)",
     "added": "2026-10-21"
@@ -11321,6 +11256,44 @@
     "added": "2026-10-23"
    },
    {
+    "symbol": "LW",
+    "tv": "NYSE:LW",
+    "close": 53.83,
+    "chg_pct": -2.4,
+    "grade": "A",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 4.5,
+    "pattern": "Base forming (no pattern yet)",
+    "buy_point": 55.7,
+    "to_buy_point_pct": 3.5,
+    "base_bars": 63.0,
+    "base_depth_pct": 27.0,
+    "msf_score": 70,
+    "adr_pct": 4.1,
+    "rel_vol": 0.7,
+    "dollar_vol_30d_m": 142.0,
+    "perf_1m_pct": 21.0,
+    "perf_3m_pct": 1.0,
+    "off_52w_high_pct": 19.7,
+    "ema21": 50.82,
+    "ema50": 49.62,
+    "sma200": 46.3,
+    "entries": {
+     "level": 55.7
+    },
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 55.44,
+    "days_since_20d_high": 1,
+    "section": "Tight",
+    "setups": [
+     "Tight"
+    ],
+    "last_hit": "2026-10-20",
+    "source": "2-POOL",
+    "why": "Tight (from 2-POOL)",
+    "added": "2026-10-20"
+   },
+   {
     "symbol": "DDOG",
     "tv": "NASDAQ:DDOG",
     "close": 269.65,
@@ -11385,8 +11358,6 @@
     "sma200": 32.26,
     "entries": {
      "breakout": 72.71,
-     "coil": 70.48,
-     "coil_stop": 66.84,
      "level": 72.71
     },
     "ema_triggers_tomorrow": [],
@@ -11480,50 +11451,11 @@
     "source": "2-POOL",
     "why": "PB 21 (from 2-POOL)",
     "added": "2026-10-22"
-   },
-   {
-    "symbol": "FIVN",
-    "tv": "NASDAQ:FIVN",
-    "close": 37.61,
-    "chg_pct": 7.2,
-    "grade": "A",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 7.6,
-    "pattern": "High tight flag",
-    "buy_point": 40.0,
-    "to_buy_point_pct": 6.4,
-    "base_bars": 24.0,
-    "base_depth_pct": 20.2,
-    "msf_score": 65,
-    "adr_pct": 6.0,
-    "rel_vol": 1.7,
-    "dollar_vol_30d_m": 85.0,
-    "perf_1m_pct": 3.0,
-    "perf_3m_pct": 47.0,
-    "off_52w_high_pct": 6.0,
-    "ema21": 34.71,
-    "ema50": 33.24,
-    "sma200": 23.69,
-    "entries": {
-     "breakout": 40.0
-    },
-    "ema_triggers_tomorrow": [],
-    "twenty_day_high": 38.34,
-    "days_since_20d_high": 0,
-    "section": "Tight",
-    "setups": [
-     "Tight",
-     "PB 21"
-    ],
-    "last_hit": "2026-10-22",
-    "source": "1-UPDAY",
-    "why": "Tight + PB 21 (from 1-UPDAY)",
-    "added": "2026-10-19"
    }
   ]
  },
  "settings": {
   "higher_high_low": "off",
-  "msf": "v29.2"
+  "msf": "v29.3 + coilInside=2"
  }
 }
