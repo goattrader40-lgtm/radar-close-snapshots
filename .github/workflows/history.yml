@@ -1,0 +1,105 @@
+# Saves 2 years of daily bars (open, high, low, close, volume) for every US-listed stock over $250M,
+# plus SPY / QQQ / IWM, into history/bars_2y.json.gz. Used to build and test the setup scanner
+# (pattern detection, grades, backtests). Run it by hand: Actions -> Price history -> Run workflow.
+name: Price history
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Save 2 years of daily bars
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures as cf, datetime, gzip, json, os, sys, time, urllib.error, urllib.request, zoneinfo
+          NY = zoneinfo.ZoneInfo("America/New_York")
+          H = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+               "Accept": "application/json, text/plain, */*", "Accept-Language": "en-US,en;q=0.9"}
+          def get(url, headers=H, timeout=30):
+              with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=timeout) as r:
+                  return json.load(r)
+
+          # 1) symbol list + market cap from Nasdaq's screener (same source as the close snapshot)
+          NH = dict(H, Origin="https://www.nasdaq.com", Referer="https://www.nasdaq.com/")
+          caps = {}
+          for ex in ("nasdaq", "nyse", "amex"):
+              url = f"https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=25&offset=0&exchange={ex}&download=true"
+              rows = None
+              for attempt in range(3):
+                  try:
+                      rows = get(url, NH, 60)["data"]["rows"]
+                      break
+                  except Exception as e:
+                      print(f"{ex} list: attempt {attempt + 1} failed: {e}")
+                      time.sleep(10)
+              if not rows:
+                  sys.exit(f"could not download the {ex} list")
+              for r in rows:
+                  try:
+                      mc = float(r.get("marketCap") or 0)
+                  except ValueError:
+                      mc = 0
+                  s = (r.get("symbol") or "").strip()
+                  if s and mc >= 250e6 and "^" not in s:
+                      caps[s] = mc
+          syms = sorted(caps) + ["SPY", "QQQ", "IWM"]
+          print(f"{len(syms)} symbols")
+
+          # 2) two years of Yahoo daily bars per symbol
+          def bars(sym):
+              url = "https://query1.finance.yahoo.com/v8/finance/chart/" + sym.replace("/", "-").replace(".", "-") + "?range=2y&interval=1d"
+              for attempt in range(5):
+                  try:
+                      res = get(url)["chart"]["result"][0]
+                      q = res["indicators"]["quote"][0]
+                      out = []
+                      for t, o, h, l, c, v in zip(res.get("timestamp") or [], q.get("open") or [], q.get("high") or [],
+                                                  q.get("low") or [], q.get("close") or [], q.get("volume") or []):
+                          if None in (o, h, l, c):
+                              continue
+                          d = datetime.datetime.fromtimestamp(t, NY).date().isoformat()
+                          out.append([d, round(o, 4), round(h, 4), round(l, 4), round(c, 4), int(v or 0)])
+                      return sym, out if len(out) >= 30 else None
+                  except urllib.error.HTTPError as e:
+                      if e.code == 404:
+                          return sym, None
+                      time.sleep(4 * (attempt + 1))
+                  except Exception:
+                      time.sleep(4 * (attempt + 1))
+              return sym, None
+
+          data = {}
+          with cf.ThreadPoolExecutor(10) as pool:
+              for sym, b in pool.map(bars, syms):
+                  if b:
+                      data[sym] = b
+          print(f"{len(data)} symbols saved")
+          if len(data) < 0.8 * len(syms):
+              sys.exit(f"only {len(data)} of {len(syms)} came back, not saving")
+          os.makedirs("history", exist_ok=True)
+          with gzip.open("history/bars_2y.json.gz", "wt") as f:
+              json.dump({"saved_at": datetime.datetime.now(NY).isoformat(timespec="seconds"),
+                         "fields": ["date", "open", "high", "low", "close", "volume"],
+                         "market_cap": caps, "bars": data}, f, separators=(",", ":"))
+          print("size MB", round(os.path.getsize("history/bars_2y.json.gz") / 1e6, 1))
+          PY
+
+      - name: Commit history
+        run: |
+          git config user.name "close-snapshot-bot"
+          git config user.email "close-snapshot-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "price history $(TZ=America/New_York date +%F)"
+            git push
+          fi
