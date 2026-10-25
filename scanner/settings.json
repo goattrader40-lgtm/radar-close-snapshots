@@ -20,8 +20,8 @@
     "MOMENTUM-1W": {"perf_pct": 10, "bars": 5},
     "MOMENTUM-1M": {"perf_pct": 25, "bars": 21},
     "MOMENTUM-3M": {"perf_pct": 50, "bars": 63},
-    "MOMENTUM-6M": {"perf_pct": 50, "bars": 126, "above_sma200": true, "low52_below_price_pct": 50},
-    "DAILY TIGHTNESS": {"low52_below_price_pct": 40, "high52_above_price_max_pct": 30, "vol_below_avg30_pct": 20, "range_vs_avg10_max": 0.8,
+    "MOMENTUM-6M": {"perf_pct": 50, "bars": 126, "above_sma200": true, "min_pct_above_52w_low": 50},
+    "DAILY TIGHTNESS": {"min_pct_above_52w_low": 40, "max_pct_below_52w_high": 30, "vol_below_avg30_pct": 20, "range_vs_avg10_max": 0.8,
                         "_range_vs_avg10_max": "today's high-low range at most 0.8 x the average range of the previous 10 days (same as MSF 'Tight day: range <= X x 10-day avg range'); 0 = off"},
     "PULLBACK TO 21EMA-MAIN": {"ema": 21, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
     "PULLBACK TO 50EMA": {"ema": 50, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
@@ -43,6 +43,8 @@
   },
 
   "msf": {
-    "_about": "MSF settings that differ from v29.2 (empty = v29.2 as written)"
+    "_about": "MSF settings that differ from the Pine script's defaults (v29.3)",
+    "coilInside": 2,
+    "_coilInside": "coil = mother bar + 2 inside days (3 candles) in the scanner — your choice, Oct 25; the Pine default is 1 (2 candles)"
   }
 }

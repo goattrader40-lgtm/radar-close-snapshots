@@ -86,12 +86,12 @@ class Stock:
             ok = std and self.perf(i, m["bars"]) > m["perf_pct"]
             if ok and m.get("above_sma200"):
                 ok = c > self.sma200[i]
-            if ok and m.get("low52_below_price_pct"):
-                ok = self.low52[i] <= c * (1 - m["low52_below_price_pct"] / 100)
+            if ok and m.get("min_pct_above_52w_low"):
+                ok = c >= self.low52[i] * (1 + m["min_pct_above_52w_low"] / 100)
             if ok:
                 hits.append(name)
         t = X["DAILY TIGHTNESS"]
-        if std and self.low52[i] <= c * (1 - t["low52_below_price_pct"] / 100) and c <= self.high52[i] <= c * (1 + t["high52_above_price_max_pct"] / 100) \
+        if std and c >= self.low52[i] * (1 + t["min_pct_above_52w_low"] / 100) and c >= self.high52[i] * (1 - t["max_pct_below_52w_high"] / 100) \
                 and self.v[i] <= self.avgv30[i] * (1 - t["vol_below_avg30_pct"] / 100) \
                 and (not t.get("range_vs_avg10_max") or self.h[i] - self.l[i] <= t["range_vs_avg10_max"] * self.rng_avg10_prev[i]):
             hits.append("DAILY TIGHTNESS")
