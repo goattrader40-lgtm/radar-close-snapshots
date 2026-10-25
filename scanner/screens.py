@@ -60,6 +60,15 @@ class Stock:
                     and self.adr[i] >= S["min_adr"] and (not S["above_ema50"] or self.ema50[i] < c)
                     and c >= self.low52[i] * (1 + S["min_pct_above_52w_low"] / 100))
 
+    def tight_day(self, k, t):
+        """a quiet day: volume at least X% under the 30-day average and a narrow range (DAILY TIGHTNESS settings)"""
+        if k < 1:
+            return False
+        ok = self.v[k] <= self.avgv30[k] * (1 - t["vol_below_avg30_pct"] / 100)
+        if t.get("range_vs_avg10_max"):
+            ok = ok and self.h[k] - self.l[k] <= t["range_vs_avg10_max"] * self.rng_avg10_prev[k]
+        return bool(ok)
+
     def below50(self, i, n):
         """closed below the daily 50 EMA on each of the last n days"""
         return i - n + 1 >= 0 and all(self.c[k] < self.ema50[k] for k in range(i - n + 1, i + 1))
@@ -91,9 +100,9 @@ class Stock:
             if ok:
                 hits.append(name)
         t = X["DAILY TIGHTNESS"]
+        n_need, n_look = t.get("min_tight_days", 1), t.get("within_last_days", 1)
         if std and c >= self.low52[i] * (1 + t["min_pct_above_52w_low"] / 100) and c >= self.high52[i] * (1 - t["max_pct_below_52w_high"] / 100) \
-                and self.v[i] <= self.avgv30[i] * (1 - t["vol_below_avg30_pct"] / 100) \
-                and (not t.get("range_vs_avg10_max") or self.h[i] - self.l[i] <= t["range_vs_avg10_max"] * self.rng_avg10_prev[i]):
+                and self.tight_day(i, t) and sum(self.tight_day(k, t) for k in range(max(0, i - n_look + 1), i + 1)) >= n_need:
             hits.append("DAILY TIGHTNESS")
         for name in ("PULLBACK TO 21EMA-MAIN", "PULLBACK TO 50EMA"):
             m = X[name]

@@ -21,7 +21,8 @@ Runs steps 1–3 of your TradingView workflow every trading day at about 4:40 PM
 Standard filters on every screener: price ≥ $10, market cap $700M–$2T, 30-day average volume > 700K,
 price × 30-day average volume > $20M, ADR ≥ 4%, price above the daily 50 EMA, price at least 30% above the
 52-week low. DAILY TIGHTNESS: 40%+ above the 52-week low, at most 30% below the 52-week high, volume at least 20%
-under the 30-day average, and today's range ≤ 0.8 × the average range of the previous 10 days.
+under the 30-day average, and today's range ≤ 0.8 × the average range of the previous 10 days; today and at least
+3 of the last 5 days must be tight days like that.
 
 Into 3-SETUPS only if it is above the 200 SMA. (Higher high + higher low and the 300% no-chase rule are off — your
 choice, Oct 25; both are settings.) The grade shows setup quality only; it never blocks a move to 3-SETUPS.

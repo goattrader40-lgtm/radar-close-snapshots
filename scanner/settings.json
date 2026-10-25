@@ -22,6 +22,8 @@
     "MOMENTUM-3M": {"perf_pct": 50, "bars": 63},
     "MOMENTUM-6M": {"perf_pct": 50, "bars": 126, "above_sma200": true, "min_pct_above_52w_low": 50},
     "DAILY TIGHTNESS": {"min_pct_above_52w_low": 40, "max_pct_below_52w_high": 30, "vol_below_avg30_pct": 20, "range_vs_avg10_max": 0.8,
+                        "min_tight_days": 3, "within_last_days": 5,
+                        "_min_tight_days": "today is a tight day and at least 3 of the last 5 days (today included) were tight (low volume + narrow range); set within_last_days to 3 for 3 in a row",
                         "_range_vs_avg10_max": "today's high-low range at most 0.8 x the average range of the previous 10 days (same as MSF 'Tight day: range <= X x 10-day avg range'); 0 = off"},
     "PULLBACK TO 21EMA-MAIN": {"ema": 21, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
     "PULLBACK TO 50EMA": {"ema": 50, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
