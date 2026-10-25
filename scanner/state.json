@@ -116,6 +116,13 @@
     "section": "2026-10-22",
     "why": "+7.7%, rel vol 1.1"
    },
+   "ADMA": {
+    "added": "2026-10-05",
+    "low": 9.62,
+    "promoted": false,
+    "section": "2026-10-05",
+    "why": "+4.0%, rel vol 1.1"
+   },
    "ADPT": {
     "added": "2026-10-23",
     "low": 23.82,
@@ -182,7 +189,7 @@
    "ASAN": {
     "added": "2026-10-23",
     "low": 11.515,
-    "promoted": true,
+    "promoted": false,
     "section": "2026-10-23",
     "why": "+4.5%, rel vol 1.1"
    },
@@ -245,7 +252,7 @@
    "CRL": {
     "added": "2026-10-21",
     "low": 313.83,
-    "promoted": true,
+    "promoted": false,
     "section": "2026-10-21",
     "why": "+9.3%, rel vol 3.1"
    },
@@ -259,7 +266,7 @@
    "DINO": {
     "added": "2026-10-08",
     "low": 117.27,
-    "promoted": true,
+    "promoted": false,
     "section": "2026-10-08",
     "why": "+4.4%, rel vol 1.1"
    },
@@ -497,14 +504,14 @@
    "MPC": {
     "added": "2026-10-08",
     "low": 447.59,
-    "promoted": true,
+    "promoted": false,
     "section": "2026-10-08",
     "why": "+4.8%, rel vol 1.4"
    },
    "MRNA": {
     "added": "2026-10-09",
     "low": 197.17,
-    "promoted": true,
+    "promoted": false,
     "section": "2026-10-09",
     "why": "+14.2%, rel vol 1.6"
    },
@@ -620,12 +627,26 @@
     "section": "2026-10-23",
     "why": "+6.6%, rel vol 1.4"
    },
+   "REAL": {
+    "added": "2026-10-15",
+    "low": 9.34,
+    "promoted": false,
+    "section": "2026-10-15",
+    "why": "+15.8%, rel vol 2.1"
+   },
    "RELY": {
     "added": "2026-10-15",
     "low": 23.455,
     "promoted": true,
     "section": "2026-10-15",
     "why": "+4.9%, rel vol 1.1"
+   },
+   "RH": {
+    "added": "2026-10-22",
+    "low": 124.88,
+    "promoted": false,
+    "section": "2026-10-22",
+    "why": "+9.5%, rel vol 1.8"
    },
    "RHI": {
     "added": "2026-10-22",
@@ -662,6 +683,20 @@
     "section": "2026-10-23",
     "why": "+8.6%, rel vol 1.5"
    },
+   "SGRY": {
+    "added": "2026-10-20",
+    "low": 14.77,
+    "promoted": false,
+    "section": "2026-10-20",
+    "why": "+5.3%, rel vol 3.3"
+   },
+   "SHAK": {
+    "added": "2026-10-08",
+    "low": 63.49,
+    "promoted": false,
+    "section": "2026-10-08",
+    "why": "+4.9%, rel vol 1.3"
+   },
    "TEAM": {
     "added": "2026-10-15",
     "low": 201.55,
@@ -675,6 +710,13 @@
     "promoted": false,
     "section": "2026-10-23",
     "why": "+6.2%, rel vol 1.4"
+   },
+   "TRU": {
+    "added": "2026-10-22",
+    "low": 78.17,
+    "promoted": false,
+    "section": "2026-10-22",
+    "why": "+5.7%, rel vol 1.2"
    },
    "TTAN": {
     "added": "2026-10-15",
@@ -725,6 +767,13 @@
     "section": "2026-10-15",
     "why": "+5.1%, rel vol 1.7"
    },
+   "WGO": {
+    "added": "2026-10-22",
+    "low": 25.22,
+    "promoted": false,
+    "section": "2026-10-22",
+    "why": "+11.4%, rel vol 1.8"
+   },
    "WIX": {
     "added": "2026-10-22",
     "low": 78.3,
@@ -749,7 +798,7 @@
    "ZYME": {
     "added": "2026-10-20",
     "low": 25.71,
-    "promoted": true,
+    "promoted": false,
     "section": "2026-10-20",
     "why": "+5.4%, rel vol 2.2"
    }
@@ -823,9 +872,14 @@
     "section": "Momentum",
     "why": "momentum 1W/1M/3M/6M"
    },
+   "ARQT": {
+    "added": "2026-10-09",
+    "promoted": true,
+    "section": "50 EMA reclaim",
+    "why": "first close back above the 50 EMA"
+   },
    "ASAN": {
     "added": "2026-10-23",
-    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W/1M/3M/6M"
    },
@@ -843,7 +897,6 @@
    },
    "AVPT": {
     "added": "2026-10-23",
-    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W/1M"
    },
@@ -894,7 +947,6 @@
    },
    "CERT": {
     "added": "2026-10-23",
-    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W/6M"
    },
@@ -929,6 +981,7 @@
    },
    "CTVA": {
     "added": "2026-10-09",
+    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W"
    },
@@ -1017,7 +1070,7 @@
     "why": "first close back above the 50 EMA"
    },
    "FIG": {
-    "added": "2026-10-23",
+    "added": "2026-10-21",
     "section": "Momentum",
     "why": "momentum 1W"
    },
@@ -1074,7 +1127,8 @@
     "why": "momentum 1W/1M/3M"
    },
    "GME": {
-    "added": "2026-10-09",
+    "added": "2026-10-05",
+    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1M"
    },
@@ -1160,7 +1214,7 @@
     "why": "momentum 1W"
    },
    "KD": {
-    "added": "2026-10-23",
+    "added": "2026-10-16",
     "section": "Momentum",
     "why": "momentum 1W/1M"
    },
@@ -1196,7 +1250,23 @@
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
+   "LW": {
+    "added": "2026-10-16",
+    "section": "Momentum",
+    "why": "momentum 1W"
+   },
    "MANE": {
+    "added": "2026-10-23",
+    "section": "Momentum",
+    "why": "momentum 1W"
+   },
+   "MAT": {
+    "added": "2026-10-16",
+    "promoted": true,
+    "section": "Momentum",
+    "why": "momentum 1M"
+   },
+   "MAZE": {
     "added": "2026-10-23",
     "section": "Momentum",
     "why": "momentum 1W"
@@ -1214,7 +1284,6 @@
    },
    "MRNA": {
     "added": "2026-10-05",
-    "promoted": true,
     "section": "Momentum",
     "why": "momentum 3M/6M"
    },
@@ -1311,7 +1380,7 @@
     "why": "momentum 6M"
    },
    "PCOR": {
-    "added": "2026-10-09",
+    "added": "2026-10-05",
     "section": "Momentum",
     "why": "momentum 1W"
    },
@@ -1323,7 +1392,6 @@
    },
    "PD": {
     "added": "2026-10-16",
-    "promoted": true,
     "section": "Momentum",
     "why": "momentum 3M/6M"
    },
@@ -1342,6 +1410,11 @@
     "added": "2026-10-16",
     "section": "Momentum",
     "why": "momentum 3M"
+   },
+   "QDEL": {
+    "added": "2026-10-23",
+    "section": "Momentum",
+    "why": "momentum 1M"
    },
    "QLYS": {
     "added": "2026-10-09",
@@ -1485,7 +1558,7 @@
     "why": "first close back above the 50 EMA"
    },
    "TTAN": {
-    "added": "2026-10-23",
+    "added": "2026-10-09",
     "section": "Momentum",
     "why": "momentum 1W/1M"
    },
@@ -1554,6 +1627,11 @@
     "section": "Momentum",
     "why": "momentum 6M"
    },
+   "WGO": {
+    "added": "2026-10-23",
+    "section": "Momentum",
+    "why": "momentum 1W"
+   },
    "WK": {
     "added": "2026-10-23",
     "promoted": true,
@@ -1562,7 +1640,6 @@
    },
    "WRBY": {
     "added": "2026-10-20",
-    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W"
    },
@@ -1598,7 +1675,6 @@
    },
    "ZYME": {
     "added": "2026-10-20",
-    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W"
    }
@@ -1606,7 +1682,7 @@
   "3-SETUPS": {
    "AGIO": {
     "added": "2026-10-21",
-    "last_hit": "2026-10-22",
+    "last_hit": "2026-10-21",
     "section": "Tight",
     "setups": [
      "Tight"
@@ -1625,7 +1701,7 @@
     "why": "PB 21 (from 1-EP/GAP)"
    },
    "ATRC": {
-    "added": "2026-10-12",
+    "added": "2026-10-05",
     "last_hit": "2026-10-23",
     "section": "Tight",
     "setups": [
@@ -1645,7 +1721,7 @@
     "why": "Tight (from 1-UPDAY)"
    },
    "CBRL": {
-    "added": "2026-10-20",
+    "added": "2026-10-23",
     "last_hit": "2026-10-23",
     "section": "Tight",
     "setups": [
@@ -1675,7 +1751,7 @@
     "why": "PB 21 (from 1-EP/GAP)"
    },
    "CVI": {
-    "added": "2026-10-19",
+    "added": "2026-10-22",
     "last_hit": "2026-10-23",
     "section": "PB 21",
     "setups": [
@@ -1687,13 +1763,12 @@
    "DDOG": {
     "added": "2026-10-19",
     "last_hit": "2026-10-23",
-    "section": "Tight",
+    "section": "PB 21",
     "setups": [
-     "Tight",
      "PB 21"
     ],
     "source": "2-POOL",
-    "why": "Tight + PB 21 (from 2-POOL)"
+    "why": "PB 21 (from 2-POOL)"
    },
    "DK": {
     "added": "2026-10-20",
@@ -1708,23 +1783,46 @@
    },
    "ECO": {
     "added": "2026-10-15",
-    "last_hit": "2026-10-23",
+    "last_hit": "2026-10-22",
     "section": "Tight",
     "setups": [
-     "Tight"
+     "Tight",
+     "PB 21"
     ],
     "source": "2-POOL",
-    "why": "Tight (from 2-POOL)"
+    "why": "Tight + PB 21 (from 2-POOL)"
    },
    "ESTC": {
     "added": "2026-10-19",
-    "last_hit": "2026-10-21",
+    "last_hit": "2026-10-20",
     "section": "Tight",
     "setups": [
-     "Tight"
+     "Tight",
+     "PB 21"
     ],
     "source": "2-POOL",
-    "why": "Tight (from 2-POOL)"
+    "why": "Tight + PB 21 (from 2-POOL)"
+   },
+   "FIVN": {
+    "added": "2026-10-19",
+    "last_hit": "2026-10-22",
+    "section": "Tight",
+    "setups": [
+     "Tight",
+     "PB 21"
+    ],
+    "source": "1-UPDAY",
+    "why": "Tight + PB 21 (from 1-UPDAY)"
+   },
+   "GME": {
+    "added": "2026-10-22",
+    "last_hit": "2026-10-22",
+    "section": "PB 21",
+    "setups": [
+     "PB 21"
+    ],
+    "source": "1-UPDAY",
+    "why": "PB 21 (from 1-UPDAY)"
    },
    "GTLB": {
     "added": "2026-10-16",
@@ -1758,8 +1856,8 @@
     "why": "Tight + PB 21 (from 1-UPDAY)"
    },
    "IOT": {
-    "added": "2026-10-12",
-    "last_hit": "2026-10-23",
+    "added": "2026-10-13",
+    "last_hit": "2026-10-22",
     "section": "Tight",
     "setups": [
      "Tight"
@@ -1767,18 +1865,18 @@
     "source": "2-POOL",
     "why": "Tight (from 2-POOL)"
    },
-   "IOVA": {
-    "added": "2026-10-12",
+   "LIND": {
+    "added": "2026-10-19",
     "last_hit": "2026-10-23",
-    "section": "Tight",
+    "section": "PB 21",
     "setups": [
-     "Tight"
+     "PB 21"
     ],
     "source": "2-POOL",
-    "why": "Tight (from 2-POOL)"
+    "why": "PB 21 (from 2-POOL)"
    },
    "NTRA": {
-    "added": "2026-10-09",
+    "added": "2026-10-12",
     "last_hit": "2026-10-23",
     "section": "Tight",
     "setups": [
@@ -1789,17 +1887,18 @@
     "why": "Tight + PB 21 (from 2-POOL)"
    },
    "NTSK": {
-    "added": "2026-10-14",
-    "last_hit": "2026-10-20",
+    "added": "2026-10-16",
+    "last_hit": "2026-10-19",
     "section": "Tight",
     "setups": [
-     "Tight"
+     "Tight",
+     "PB 21"
     ],
     "source": "2-POOL",
-    "why": "Tight (from 2-POOL)"
+    "why": "Tight + PB 21 (from 2-POOL)"
    },
    "ORIC": {
-    "added": "2026-10-22",
+    "added": "2026-10-23",
     "last_hit": "2026-10-23",
     "section": "PB 21",
     "setups": [
@@ -1807,16 +1906,6 @@
     ],
     "source": "1-UPDAY",
     "why": "PB 21 (from 1-UPDAY)"
-   },
-   "PD": {
-    "added": "2026-10-19",
-    "last_hit": "2026-10-19",
-    "section": "Tight",
-    "setups": [
-     "Tight"
-    ],
-    "source": "2-POOL",
-    "why": "Tight (from 2-POOL)"
    },
    "RBRK": {
     "added": "2026-10-20",
@@ -1830,23 +1919,13 @@
    },
    "RELY": {
     "added": "2026-10-19",
-    "last_hit": "2026-10-20",
+    "last_hit": "2026-10-19",
     "section": "Tight",
     "setups": [
      "Tight"
     ],
     "source": "1-UPDAY",
     "why": "Tight (from 1-UPDAY)"
-   },
-   "RVTY": {
-    "added": "2026-10-09",
-    "last_hit": "2026-10-20",
-    "section": "Tight",
-    "setups": [
-     "Tight"
-    ],
-    "source": "2-POOL",
-    "why": "Tight (from 2-POOL)"
    },
    "SAIL": {
     "added": "2026-10-20",
@@ -1881,17 +1960,7 @@
    },
    "VSXY": {
     "added": "2026-10-20",
-    "last_hit": "2026-10-23",
-    "section": "Tight",
-    "setups": [
-     "Tight"
-    ],
-    "source": "2-POOL",
-    "why": "Tight (from 2-POOL)"
-   },
-   "XERS": {
-    "added": "2026-10-21",
-    "last_hit": "2026-10-23",
+    "last_hit": "2026-10-22",
     "section": "Tight",
     "setups": [
      "Tight",
@@ -1900,8 +1969,18 @@
     "source": "2-POOL",
     "why": "Tight + PB 21 (from 2-POOL)"
    },
+   "XERS": {
+    "added": "2026-10-22",
+    "last_hit": "2026-10-23",
+    "section": "PB 21",
+    "setups": [
+     "PB 21"
+    ],
+    "source": "2-POOL",
+    "why": "PB 21 (from 2-POOL)"
+   },
    "ZETA": {
-    "added": "2026-10-12",
+    "added": "2026-10-14",
     "last_hit": "2026-10-23",
     "section": "Tight",
     "setups": [
@@ -1947,6 +2026,13 @@
    "list": "2-POOL",
    "sym": "ACHC",
    "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-05",
+   "list": "1-UPDAY",
+   "sym": "ADMA",
+   "why": "+4.0%, rel vol 1.1"
   },
   {
    "action": "added",
@@ -2386,6 +2472,13 @@
    "action": "added",
    "date": "2026-10-05",
    "list": "2-POOL",
+   "sym": "GME",
+   "why": "momentum 1M"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-05",
+   "list": "2-POOL",
    "sym": "GO",
    "why": "momentum 6M"
   },
@@ -2721,6 +2814,20 @@
   {
    "action": "added",
    "date": "2026-10-05",
+   "list": "1-UPDAY",
+   "sym": "PCOR",
+   "why": "+6.3%, rel vol 1.9"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-05",
+   "list": "2-POOL",
+   "sym": "PCOR",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-05",
    "list": "1-EP/GAP",
    "sym": "PCVX",
    "why": "gap +54.4%, rel vol 9.8"
@@ -2780,6 +2887,13 @@
    "list": "2-POOL",
    "sym": "RLAY",
    "why": "momentum 6M"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-05",
+   "list": "2-POOL",
+   "sym": "RMBS",
+   "why": "momentum 1M"
   },
   {
    "action": "added",
@@ -3163,13 +3277,6 @@
    "action": "added",
    "date": "2026-10-05",
    "list": "3-SETUPS",
-   "sym": "AFRM",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
    "sym": "CLF",
    "why": "PB 21 (from 1-UPDAY)"
   },
@@ -3177,36 +3284,8 @@
    "action": "added",
    "date": "2026-10-05",
    "list": "3-SETUPS",
-   "sym": "CORT",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
    "sym": "STX",
    "why": "PB 21 + PB 50 (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "TENB",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "ADPT",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "APPN",
-   "why": "Tight (from 2-POOL)"
   },
   {
    "action": "added",
@@ -3220,14 +3299,7 @@
    "date": "2026-10-05",
    "list": "3-SETUPS",
    "sym": "ATRC",
-   "why": "Tight + PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "AYA",
-   "why": "Tight (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -3262,13 +3334,6 @@
    "date": "2026-10-05",
    "list": "3-SETUPS",
    "sym": "CRWD",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "CVI",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -3352,36 +3417,8 @@
    "action": "added",
    "date": "2026-10-05",
    "list": "3-SETUPS",
-   "sym": "LITE",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "MPC",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "MRVL",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
    "sym": "NBIS",
    "why": "PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "OKTA",
-   "why": "Tight (from 2-POOL)"
   },
   {
    "action": "added",
@@ -3457,13 +3494,6 @@
    "action": "added",
    "date": "2026-10-05",
    "list": "3-SETUPS",
-   "sym": "SYRE",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
    "sym": "TER",
    "why": "Tight (from 2-POOL)"
   },
@@ -3478,13 +3508,6 @@
    "action": "added",
    "date": "2026-10-05",
    "list": "3-SETUPS",
-   "sym": "VLO",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
    "sym": "VSTS",
    "why": "PB 21 (from 2-POOL)"
   },
@@ -3493,7 +3516,7 @@
    "date": "2026-10-05",
    "list": "3-SETUPS",
    "sym": "WT",
-   "why": "Tight + PB 21 (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -3501,83 +3524,6 @@
    "list": "3-SETUPS",
    "sym": "XNCR",
    "why": "PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "CRWD",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "ELF",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "HPE",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "LITE",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "MRVL",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "OKTA",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "P",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "SEI",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "SMTC",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "PURR",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "AYA",
-   "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
@@ -3604,21 +3550,7 @@
    "action": "removed",
    "date": "2026-10-05",
    "list": "3-SETUPS",
-   "sym": "AFRM",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
    "sym": "CLF",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-05",
-   "list": "3-SETUPS",
-   "sym": "SYRE",
    "why": "weekly trim to the best 30"
   },
   {
@@ -3730,6 +3662,13 @@
    "action": "added",
    "date": "2026-10-06",
    "list": "1-UPDAY",
+   "sym": "FN",
+   "why": "+7.8%, rel vol 2.0"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-06",
+   "list": "1-UPDAY",
    "sym": "FPS",
    "why": "+6.1%, rel vol 1.1"
   },
@@ -3778,6 +3717,20 @@
   {
    "action": "added",
    "date": "2026-10-06",
+   "list": "1-UPDAY",
+   "sym": "PRIM",
+   "why": "+5.5%, rel vol 1.4"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-06",
+   "list": "2-POOL",
+   "sym": "RBLX",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-06",
    "list": "2-POOL",
    "sym": "RELY",
    "why": "first close back above the 50 EMA"
@@ -3788,6 +3741,13 @@
    "list": "1-UPDAY",
    "sym": "SEI",
    "why": "+6.6%, rel vol 1.4"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-06",
+   "list": "1-EP/GAP",
+   "sym": "TLN",
+   "why": "gap +5.2%, rel vol 2.9"
   },
   {
    "action": "added",
@@ -3828,7 +3788,7 @@
    "action": "added",
    "date": "2026-10-06",
    "list": "3-SETUPS",
-   "sym": "TEAM",
+   "sym": "TENB",
    "why": "Tight (from 1-UPDAY)"
   },
   {
@@ -3842,8 +3802,8 @@
    "action": "added",
    "date": "2026-10-06",
    "list": "3-SETUPS",
-   "sym": "AYA",
-   "why": "Tight (from 2-POOL)"
+   "sym": "APPN",
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -3863,21 +3823,7 @@
    "action": "added",
    "date": "2026-10-06",
    "list": "3-SETUPS",
-   "sym": "CRWD",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-06",
-   "list": "3-SETUPS",
    "sym": "DINO",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-06",
-   "list": "3-SETUPS",
-   "sym": "DK",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -3891,21 +3837,14 @@
    "action": "added",
    "date": "2026-10-06",
    "list": "3-SETUPS",
-   "sym": "HPE",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-06",
-   "list": "3-SETUPS",
-   "sym": "IOT",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-06",
-   "list": "3-SETUPS",
    "sym": "KOD",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-06",
+   "list": "3-SETUPS",
+   "sym": "MPC",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -3919,36 +3858,8 @@
    "action": "added",
    "date": "2026-10-06",
    "list": "3-SETUPS",
-   "sym": "OKTA",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-06",
-   "list": "3-SETUPS",
-   "sym": "P",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-06",
-   "list": "3-SETUPS",
-   "sym": "PARR",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-06",
-   "list": "3-SETUPS",
    "sym": "PBF",
    "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-06",
-   "list": "3-SETUPS",
-   "sym": "PURR",
-   "why": "Tight + PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -3976,20 +3887,20 @@
    "date": "2026-10-06",
    "list": "3-SETUPS",
    "sym": "RNG",
-   "why": "Tight + PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-06",
-   "list": "3-SETUPS",
-   "sym": "SMTC",
-   "why": "Tight (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-06",
    "list": "3-SETUPS",
    "sym": "VICR",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-06",
+   "list": "3-SETUPS",
+   "sym": "VLO",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -4129,6 +4040,20 @@
    "action": "added",
    "date": "2026-10-07",
    "list": "1-UPDAY",
+   "sym": "BSP",
+   "why": "+24.2%, rel vol 2.9"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-07",
+   "list": "2-POOL",
+   "sym": "BSP",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-07",
+   "list": "1-UPDAY",
    "sym": "GKOS",
    "why": "+6.6%, rel vol 1.7"
   },
@@ -4137,6 +4062,20 @@
    "date": "2026-10-07",
    "list": "2-POOL",
    "sym": "GKOS",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-07",
+   "list": "1-UPDAY",
+   "sym": "KVYO",
+   "why": "+4.9%, rel vol 1.5"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-07",
+   "list": "2-POOL",
+   "sym": "KVYO",
    "why": "first close back above the 50 EMA"
   },
   {
@@ -4158,7 +4097,14 @@
    "date": "2026-10-07",
    "list": "3-SETUPS",
    "sym": "HTFL",
-   "why": "Tight + PB 21 (from 1-UPDAY)"
+   "why": "PB 21 (from 1-UPDAY)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-07",
+   "list": "3-SETUPS",
+   "sym": "TEAM",
+   "why": "Tight (from 1-UPDAY)"
   },
   {
    "action": "added",
@@ -4178,8 +4124,8 @@
    "action": "added",
    "date": "2026-10-07",
    "list": "3-SETUPS",
-   "sym": "SEI",
-   "why": "Tight (from 1-UPDAY)"
+   "sym": "ADPT",
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -4213,6 +4159,20 @@
    "action": "added",
    "date": "2026-10-07",
    "list": "3-SETUPS",
+   "sym": "CVI",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-07",
+   "list": "3-SETUPS",
+   "sym": "DK",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-07",
+   "list": "3-SETUPS",
    "sym": "ECO",
    "why": "Tight (from 2-POOL)"
   },
@@ -4227,13 +4187,6 @@
    "action": "added",
    "date": "2026-10-07",
    "list": "3-SETUPS",
-   "sym": "FORM",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-07",
-   "list": "3-SETUPS",
    "sym": "GRAL",
    "why": "Tight (from 2-POOL)"
   },
@@ -4242,6 +4195,13 @@
    "date": "2026-10-07",
    "list": "3-SETUPS",
    "sym": "INTC",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-07",
+   "list": "3-SETUPS",
+   "sym": "IOT",
    "why": "PB 21 (from 2-POOL)"
   },
   {
@@ -4269,7 +4229,7 @@
    "action": "added",
    "date": "2026-10-07",
    "list": "3-SETUPS",
-   "sym": "SHOP",
+   "sym": "OKTA",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -4409,6 +4369,13 @@
    "action": "added",
    "date": "2026-10-08",
    "list": "2-POOL",
+   "sym": "CNXC",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
+   "list": "2-POOL",
    "sym": "CXW",
    "why": "first close back above the 50 EMA"
   },
@@ -4459,6 +4426,34 @@
    "date": "2026-10-08",
    "list": "2-POOL",
    "sym": "GEO",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
+   "list": "1-UPDAY",
+   "sym": "GLOB",
+   "why": "+4.4%, rel vol 1.0"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
+   "list": "2-POOL",
+   "sym": "GLOB",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
+   "list": "1-UPDAY",
+   "sym": "HUBS",
+   "why": "+5.3%, rel vol 1.4"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
+   "list": "2-POOL",
+   "sym": "HUBS",
    "why": "first close back above the 50 EMA"
   },
   {
@@ -4520,6 +4515,13 @@
   {
    "action": "added",
    "date": "2026-10-08",
+   "list": "2-POOL",
+   "sym": "RDDT",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
    "list": "1-UPDAY",
    "sym": "SECZ",
    "why": "+11.1%, rel vol 1.7"
@@ -4527,9 +4529,30 @@
   {
    "action": "added",
    "date": "2026-10-08",
+   "list": "1-UPDAY",
+   "sym": "SHAK",
+   "why": "+4.9%, rel vol 1.3"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
+   "list": "2-POOL",
+   "sym": "TTAN",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
    "list": "1-EP/GAP",
    "sym": "WOLF",
    "why": "gap +11.6%, rel vol 6.5"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
+   "list": "3-SETUPS",
+   "sym": "CORT",
+   "why": "Tight + PB 21 (from 1-UPDAY)"
   },
   {
    "action": "added",
@@ -4563,8 +4586,8 @@
    "action": "added",
    "date": "2026-10-08",
    "list": "3-SETUPS",
-   "sym": "CAI",
-   "why": "Tight (from 2-POOL)"
+   "sym": "AYA",
+   "why": "Tight + PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -4572,13 +4595,6 @@
    "list": "3-SETUPS",
    "sym": "ONTO",
    "why": "PB 50 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-08",
-   "list": "3-SETUPS",
-   "sym": "OSCR",
-   "why": "Tight (from 2-POOL)"
   },
   {
    "action": "added",
@@ -4593,6 +4609,20 @@
    "list": "3-SETUPS",
    "sym": "S",
    "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
+   "list": "3-SETUPS",
+   "sym": "SHOP",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-08",
+   "list": "3-SETUPS",
+   "sym": "SMMT",
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -4710,6 +4740,13 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "2-POOL",
+   "sym": "RMBS",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "2-POOL",
    "sym": "SECZ",
    "why": "below the 200 SMA (weekly refresh)"
   },
@@ -4773,8 +4810,64 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "2-POOL",
+   "sym": "RBLX",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "BSP",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "KVYO",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "2-POOL",
    "sym": "ZYME",
    "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "CNXC",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "GLOB",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "HUBS",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "RDDT",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "TTAN",
+   "why": "below the 200 SMA (weekly refresh)"
   },
   {
    "action": "removed",
@@ -4836,6 +4929,13 @@
    "action": "added",
    "date": "2026-10-09",
    "list": "2-POOL",
+   "sym": "ARQT",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
+   "list": "2-POOL",
    "sym": "ASAN",
    "why": "momentum 1W"
   },
@@ -4859,6 +4959,13 @@
    "list": "1-UPDAY",
    "sym": "CAI",
    "why": "+8.0%, rel vol 1.3"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "CEG",
+   "why": "momentum 1W"
   },
   {
    "action": "added",
@@ -4968,13 +5075,6 @@
   {
    "action": "added",
    "date": "2026-10-09",
-   "list": "2-POOL",
-   "sym": "GME",
-   "why": "momentum 1M"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-09",
    "list": "1-UPDAY",
    "sym": "HIMS",
    "why": "+10.2%, rel vol 1.8"
@@ -4985,6 +5085,13 @@
    "list": "1-UPDAY",
    "sym": "IBRX",
    "why": "+6.1%, rel vol 1.2"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "KVYO",
+   "why": "momentum 1W"
   },
   {
    "action": "added",
@@ -5052,9 +5159,16 @@
   {
    "action": "added",
    "date": "2026-10-09",
+   "list": "1-UPDAY",
+   "sym": "QDEL",
+   "why": "+8.1%, rel vol 1.7"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
    "list": "2-POOL",
-   "sym": "PCOR",
-   "why": "momentum 1W"
+   "sym": "QDEL",
+   "why": "first close back above the 50 EMA"
   },
   {
    "action": "added",
@@ -5069,6 +5183,13 @@
    "list": "2-POOL",
    "sym": "RGEN",
    "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "RMBS",
+   "why": "momentum 1M"
   },
   {
    "action": "added",
@@ -5108,9 +5229,37 @@
   {
    "action": "added",
    "date": "2026-10-09",
+   "list": "1-UPDAY",
+   "sym": "STNE",
+   "why": "+7.4%, rel vol 1.0"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "STNE",
+   "why": "momentum 1W"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
    "list": "2-POOL",
    "sym": "TGTX",
    "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "TLN",
+   "why": "momentum 1W"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
+   "list": "2-POOL",
+   "sym": "TTAN",
+   "why": "momentum 1M"
   },
   {
    "action": "added",
@@ -5144,21 +5293,7 @@
    "action": "added",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "MRVL",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
    "sym": "BRZE",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "INSW",
    "why": "Tight (from 1-UPDAY)"
   },
   {
@@ -5193,14 +5328,7 @@
    "action": "added",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "COHU",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "ILMN",
+   "sym": "FORM",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -5209,6 +5337,13 @@
    "list": "3-SETUPS",
    "sym": "LIND",
    "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
+   "sym": "PARR",
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -5242,20 +5377,6 @@
    "action": "added",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "RELY",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "CRL",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
    "sym": "KYMR",
    "why": "PB 21 + PB 50 (from 2-POOL)"
   },
@@ -5264,20 +5385,6 @@
    "date": "2026-10-09",
    "list": "3-SETUPS",
    "sym": "MDB",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "NTRA",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "OMDA",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -5312,34 +5419,6 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "LIND",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "CBRL",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "ATRC",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "FIVN",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
    "sym": "OMER",
    "why": "weekly trim to the best 30"
   },
@@ -5355,13 +5434,6 @@
    "date": "2026-10-09",
    "list": "3-SETUPS",
    "sym": "VIR",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "OSCR",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5389,14 +5461,14 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "PARR",
+   "sym": "ONTO",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "ONTO",
+   "sym": "PARR",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5452,14 +5524,14 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "APPN",
+   "sym": "RPD",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "RPD",
+   "sym": "APPN",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5473,35 +5545,7 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "ADPT",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "CVI",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "MPC",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "PANW",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "TEAM",
+   "sym": "SMMT",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5515,42 +5559,14 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "CRWD",
+   "sym": "TEAM",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "HPE",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "OKTA",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "P",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "RBRK",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "SHOP",
+   "sym": "ADPT",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5571,20 +5587,6 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "XMTR",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "INSW",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
    "sym": "CDNA",
    "why": "weekly trim to the best 30"
   },
@@ -5592,14 +5594,21 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "ILMN",
+   "sym": "HPE",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "VLO",
+   "sym": "PANW",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
+   "sym": "CVI",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5620,6 +5629,20 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
+   "sym": "SHOP",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
+   "sym": "XMTR",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
    "sym": "TENB",
    "why": "weekly trim to the best 30"
   },
@@ -5627,7 +5650,21 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
+   "sym": "MPC",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
    "sym": "PBF",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
+   "sym": "VLO",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5648,7 +5685,42 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
+   "sym": "OKTA",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
+   "sym": "P",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
    "sym": "DINO",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
+   "sym": "RBRK",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
+   "sym": "CRWD",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-09",
+   "list": "3-SETUPS",
+   "sym": "ELF",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5697,13 +5769,6 @@
    "action": "removed",
    "date": "2026-10-09",
    "list": "3-SETUPS",
-   "sym": "RELY",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
    "sym": "TGTX",
    "why": "weekly trim to the best 30"
   },
@@ -5726,13 +5791,6 @@
    "date": "2026-10-09",
    "list": "3-SETUPS",
    "sym": "DOCN",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "OMDA",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5775,13 +5833,6 @@
    "date": "2026-10-09",
    "list": "3-SETUPS",
    "sym": "VSXY",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-09",
-   "list": "3-SETUPS",
-   "sym": "CAI",
    "why": "weekly trim to the best 30"
   },
   {
@@ -5837,6 +5888,13 @@
    "action": "removed",
    "date": "2026-10-12",
    "list": "1-UPDAY",
+   "sym": "FN",
+   "why": "closed below the up-day low 456.91"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-12",
+   "list": "1-UPDAY",
    "sym": "FPS",
    "why": "closed below the up-day low 38.77"
   },
@@ -5846,6 +5904,13 @@
    "list": "1-UPDAY",
    "sym": "MRVL",
    "why": "closed below the up-day low 267.26"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-12",
+   "list": "1-UPDAY",
+   "sym": "GLOB",
+   "why": "2 closes in a row below the 50 EMA"
   },
   {
    "action": "removed",
@@ -5942,63 +6007,14 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
-   "sym": "AFRM",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "MRNA",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "TEAM",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "TENB",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
    "sym": "VIR",
-   "why": "Tight + PB 21 (from 1-UPDAY)"
+   "why": "PB 21 (from 1-UPDAY)"
   },
   {
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
    "sym": "XERS",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "DINO",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "MPC",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "AUGO",
    "why": "Tight (from 1-UPDAY)"
   },
   {
@@ -6019,20 +6035,6 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
-   "sym": "APPN",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "ATRC",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
    "sym": "AYA",
    "why": "Tight + PB 50 (from 2-POOL)"
   },
@@ -6047,42 +6049,21 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
-   "sym": "CBRL",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "CDNA",
-   "why": "Tight (from 2-POOL)"
+   "sym": "COHU",
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
    "sym": "CRWD",
-   "why": "Tight + PB 21 (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
    "sym": "CVI",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "DK",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "FIVN",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -6096,21 +6077,7 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
-   "sym": "HPE",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
    "sym": "ILMN",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "IOT",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -6124,6 +6091,13 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
+   "sym": "MRVL",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-12",
+   "list": "3-SETUPS",
    "sym": "MTSI",
    "why": "PB 21 (from 2-POOL)"
   },
@@ -6132,21 +6106,7 @@
    "date": "2026-10-12",
    "list": "3-SETUPS",
    "sym": "NET",
-   "why": "Tight + PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "OKTA",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "OMER",
-   "why": "Tight (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -6159,22 +6119,8 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
-   "sym": "PANW",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
    "sym": "PARR",
-   "why": "Tight + PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "PBF",
-   "why": "Tight (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -6187,8 +6133,8 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
-   "sym": "S",
-   "why": "Tight (from 2-POOL)"
+   "sym": "SMMT",
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -6215,36 +6161,8 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
-   "sym": "VLO",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "VSXY",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
    "sym": "XNCR",
    "why": "Tight + PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "ZETA",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-12",
-   "list": "3-SETUPS",
-   "sym": "RELY",
-   "why": "Tight (from 2-POOL)"
   },
   {
    "action": "added",
@@ -6264,6 +6182,13 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
+   "sym": "ARQT",
+   "why": "PB 21 + PB 50 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-12",
+   "list": "3-SETUPS",
    "sym": "MDB",
    "why": "Tight (from 2-POOL)"
   },
@@ -6271,14 +6196,14 @@
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
-   "sym": "OMDA",
-   "why": "Tight (from 2-POOL)"
+   "sym": "NTRA",
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
-   "sym": "QLYS",
+   "sym": "OMDA",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -6314,14 +6239,14 @@
    "date": "2026-10-12",
    "list": "3-SETUPS",
    "sym": "TH",
-   "why": "Tight + PB 50 (from 2-POOL)"
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-12",
    "list": "3-SETUPS",
    "sym": "WRBY",
-   "why": "Tight + PB 21 + PB 50 (from 2-POOL)"
+   "why": "PB 21 + PB 50 (from 2-POOL)"
   },
   {
    "action": "removed",
@@ -6343,6 +6268,13 @@
    "list": "1-UPDAY",
    "sym": "VIR",
    "why": "closed below the up-day low 10.92"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-13",
+   "list": "1-UPDAY",
+   "sym": "HUBS",
+   "why": "2 closes in a row below the 50 EMA"
   },
   {
    "action": "removed",
@@ -6471,6 +6403,13 @@
    "why": "2 closes in a row below the 50 EMA"
   },
   {
+   "action": "removed",
+   "date": "2026-10-13",
+   "list": "3-SETUPS",
+   "sym": "SMMT",
+   "why": "closed below the 200 SMA"
+  },
+  {
    "action": "added",
    "date": "2026-10-13",
    "list": "1-UPDAY",
@@ -6494,9 +6433,23 @@
   {
    "action": "added",
    "date": "2026-10-13",
+   "list": "2-POOL",
+   "sym": "CNXC",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-13",
    "list": "1-UPDAY",
    "sym": "DK",
    "why": "+4.4%, rel vol 1.5"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-13",
+   "list": "2-POOL",
+   "sym": "GLOB",
+   "why": "first close back above the 50 EMA"
   },
   {
    "action": "added",
@@ -6572,6 +6525,13 @@
    "action": "added",
    "date": "2026-10-13",
    "list": "3-SETUPS",
+   "sym": "AFRM",
+   "why": "Tight (from 1-UPDAY)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-13",
+   "list": "3-SETUPS",
    "sym": "FTRE",
    "why": "Tight (from 1-UPDAY)"
   },
@@ -6588,20 +6548,6 @@
    "list": "3-SETUPS",
    "sym": "CAI",
    "why": "Tight + PB 21 (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-13",
-   "list": "3-SETUPS",
-   "sym": "SNOW",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-13",
-   "list": "3-SETUPS",
-   "sym": "SHOP",
-   "why": "Tight (from 1-UPDAY)"
   },
   {
    "action": "added",
@@ -6628,6 +6574,13 @@
    "action": "added",
    "date": "2026-10-13",
    "list": "3-SETUPS",
+   "sym": "APPN",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-13",
+   "list": "3-SETUPS",
    "sym": "AZTA",
    "why": "Tight (from 2-POOL)"
   },
@@ -6642,15 +6595,15 @@
    "action": "added",
    "date": "2026-10-13",
    "list": "3-SETUPS",
-   "sym": "LIND",
-   "why": "Tight (from 2-POOL)"
+   "sym": "IOT",
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-13",
    "list": "3-SETUPS",
-   "sym": "RBRK",
-   "why": "Tight (from 2-POOL)"
+   "sym": "PANW",
+   "why": "Tight + PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -6665,13 +6618,6 @@
    "list": "3-SETUPS",
    "sym": "VICR",
    "why": "PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-13",
-   "list": "3-SETUPS",
-   "sym": "XMTR",
-   "why": "Tight (from 2-POOL)"
   },
   {
    "action": "added",
@@ -6721,6 +6667,20 @@
    "list": "1-UPDAY",
    "sym": "PENG",
    "why": "closed below the up-day low 70.75"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-14",
+   "list": "1-UPDAY",
+   "sym": "PRIM",
+   "why": "closed below the up-day low 81.16"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-14",
+   "list": "1-UPDAY",
+   "sym": "KVYO",
+   "why": "2 closes in a row below the 50 EMA"
   },
   {
    "action": "removed",
@@ -6777,6 +6737,13 @@
    "list": "1-UPDAY",
    "sym": "SNOW",
    "why": "closed below the up-day low 345.3"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-14",
+   "list": "1-UPDAY",
+   "sym": "STNE",
+   "why": "closed below the up-day low 11.63"
   },
   {
    "action": "removed",
@@ -6859,6 +6826,13 @@
    "action": "removed",
    "date": "2026-10-14",
    "list": "2-POOL",
+   "sym": "KVYO",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-14",
+   "list": "2-POOL",
    "sym": "MDB",
    "why": "2 closes in a row below the 50 EMA"
   },
@@ -6867,6 +6841,13 @@
    "date": "2026-10-14",
    "list": "2-POOL",
    "sym": "OMDA",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-14",
+   "list": "2-POOL",
+   "sym": "RMBS",
    "why": "2 closes in a row below the 50 EMA"
   },
   {
@@ -6964,6 +6945,13 @@
    "action": "added",
    "date": "2026-10-14",
    "list": "2-POOL",
+   "sym": "HUBS",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "2-POOL",
    "sym": "ICLR",
    "why": "first close back above the 50 EMA"
   },
@@ -6985,15 +6973,36 @@
    "action": "added",
    "date": "2026-10-14",
    "list": "3-SETUPS",
-   "sym": "NTSK",
+   "sym": "GKOS",
+   "why": "Tight + PB 21 + PB 50 (from 1-UPDAY)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
+   "sym": "VLO",
    "why": "Tight (from 1-UPDAY)"
   },
   {
    "action": "added",
    "date": "2026-10-14",
    "list": "3-SETUPS",
-   "sym": "GKOS",
-   "why": "Tight + PB 21 + PB 50 (from 1-UPDAY)"
+   "sym": "OKTA",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
+   "sym": "S",
+   "why": "PB 50 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
+   "sym": "TENB",
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -7006,8 +7015,57 @@
    "action": "added",
    "date": "2026-10-14",
    "list": "3-SETUPS",
+   "sym": "VSXY",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
+   "sym": "ZETA",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
+   "sym": "RELY",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
+   "sym": "AUGO",
+   "why": "PB 50 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
+   "sym": "CRL",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
+   "sym": "QLYS",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
+   "sym": "SNOW",
+   "why": "PB 50 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-14",
+   "list": "3-SETUPS",
    "sym": "ICLR",
-   "why": "Tight + PB 21 + PB 50 (from 2-POOL)"
+   "why": "PB 21 + PB 50 (from 2-POOL)"
   },
   {
    "action": "removed",
@@ -7258,7 +7316,14 @@
    "action": "removed",
    "date": "2026-10-15",
    "list": "3-SETUPS",
-   "sym": "MRVL",
+   "sym": "SMCI",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-15",
+   "list": "3-SETUPS",
+   "sym": "ERO",
    "why": "2 closes in a row below the 50 EMA"
   },
   {
@@ -7272,14 +7337,7 @@
    "action": "removed",
    "date": "2026-10-15",
    "list": "3-SETUPS",
-   "sym": "SMCI",
-   "why": "2 closes in a row below the 50 EMA"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-15",
-   "list": "3-SETUPS",
-   "sym": "ERO",
+   "sym": "MRVL",
    "why": "2 closes in a row below the 50 EMA"
   },
   {
@@ -7384,8 +7442,8 @@
    "action": "added",
    "date": "2026-10-15",
    "list": "1-UPDAY",
-   "sym": "BSP",
-   "why": "+4.3%, rel vol 1.5"
+   "sym": "COIN",
+   "why": "+6.3%, rel vol 1.1"
   },
   {
    "action": "added",
@@ -7440,6 +7498,20 @@
    "action": "added",
    "date": "2026-10-15",
    "list": "1-UPDAY",
+   "sym": "FIG",
+   "why": "+7.0%, rel vol 1.6"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "2-POOL",
+   "sym": "FIG",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "1-UPDAY",
    "sym": "FIVN",
    "why": "+6.1%, rel vol 1.0"
   },
@@ -7447,8 +7519,29 @@
    "action": "added",
    "date": "2026-10-15",
    "list": "1-UPDAY",
+   "sym": "GLOB",
+   "why": "+6.4%, rel vol 1.4"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "1-UPDAY",
    "sym": "GTLB",
    "why": "+5.2%, rel vol 1.0"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "1-UPDAY",
+   "sym": "KD",
+   "why": "+11.9%, rel vol 1.2"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "2-POOL",
+   "sym": "KD",
+   "why": "first close back above the 50 EMA"
   },
   {
    "action": "added",
@@ -7538,13 +7631,6 @@
    "action": "added",
    "date": "2026-10-15",
    "list": "1-UPDAY",
-   "sym": "PCOR",
-   "why": "+4.7%, rel vol 1.8"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-15",
-   "list": "1-UPDAY",
    "sym": "PEGA",
    "why": "+6.3%, rel vol 2.9"
   },
@@ -7553,6 +7639,13 @@
    "date": "2026-10-15",
    "list": "2-POOL",
    "sym": "PEGA",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "2-POOL",
+   "sym": "PLNT",
    "why": "first close back above the 50 EMA"
   },
   {
@@ -7568,6 +7661,27 @@
    "list": "1-UPDAY",
    "sym": "RBRK",
    "why": "+4.1%, rel vol 1.5"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "2-POOL",
+   "sym": "RDDT",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "1-UPDAY",
+   "sym": "REAL",
+   "why": "+15.8%, rel vol 2.1"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "2-POOL",
+   "sym": "REAL",
+   "why": "first close back above the 50 EMA"
   },
   {
    "action": "added",
@@ -7650,6 +7764,20 @@
    "action": "added",
    "date": "2026-10-15",
    "list": "3-SETUPS",
+   "sym": "PBF",
+   "why": "Tight (from 1-UPDAY)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "3-SETUPS",
+   "sym": "COIN",
+   "why": "PB 21 + PB 50 (from 1-UPDAY)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "3-SETUPS",
    "sym": "CRCL",
    "why": "PB 21 (from 1-UPDAY)"
   },
@@ -7664,6 +7792,20 @@
    "action": "added",
    "date": "2026-10-15",
    "list": "3-SETUPS",
+   "sym": "XMTR",
+   "why": "PB 50 (from 1-UPDAY)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "3-SETUPS",
+   "sym": "DK",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-15",
+   "list": "3-SETUPS",
    "sym": "ECO",
    "why": "PB 21 (from 2-POOL)"
   },
@@ -7671,8 +7813,8 @@
    "action": "added",
    "date": "2026-10-15",
    "list": "3-SETUPS",
-   "sym": "EAT",
-   "why": "Tight (from 2-POOL)"
+   "sym": "CTVA",
+   "why": "PB 21 + PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -7693,7 +7835,7 @@
    "date": "2026-10-15",
    "list": "3-SETUPS",
    "sym": "XNCR",
-   "why": "Tight + PB 50 (from 2-POOL)"
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "action": "removed",
@@ -7713,8 +7855,22 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "1-UPDAY",
+   "sym": "BSP",
+   "why": "closed below the up-day low 49.51"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "1-UPDAY",
    "sym": "MANE",
    "why": "closed below the up-day low 110.56"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "1-UPDAY",
+   "sym": "QDEL",
+   "why": "closed below the up-day low 13.33"
   },
   {
    "action": "removed",
@@ -7729,13 +7885,6 @@
    "list": "1-UPDAY",
    "sym": "AI",
    "why": "closed below the up-day low 11.34"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "1-UPDAY",
-   "sym": "BSP",
-   "why": "closed below the up-day low 49.51"
   },
   {
    "action": "removed",
@@ -7811,6 +7960,13 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "2-POOL",
+   "sym": "CEG",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
    "sym": "CRCL",
    "why": "below the 200 SMA (weekly refresh)"
   },
@@ -7832,6 +7988,13 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "2-POOL",
+   "sym": "QDEL",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
    "sym": "SECZ",
    "why": "below the 200 SMA (weekly refresh)"
   },
@@ -7839,7 +8002,49 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "2-POOL",
+   "sym": "STNE",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
    "sym": "ARXS",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "CNXC",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "GLOB",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "HUBS",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "FIG",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "KD",
    "why": "below the 200 SMA (weekly refresh)"
   },
   {
@@ -7859,15 +8064,29 @@
   {
    "action": "removed",
    "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "SEI",
-   "why": "2 closes in a row below the 50 EMA"
+   "list": "2-POOL",
+   "sym": "PLNT",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "RDDT",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "REAL",
+   "why": "below the 200 SMA (weekly refresh)"
   },
   {
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "HPE",
+   "sym": "SEI",
    "why": "2 closes in a row below the 50 EMA"
   },
   {
@@ -7890,6 +8109,13 @@
    "list": "3-SETUPS",
    "sym": "TWST",
    "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "3-SETUPS",
+   "sym": "COIN",
+   "why": "closed below the 200 SMA"
   },
   {
    "action": "removed",
@@ -7958,6 +8184,13 @@
    "action": "added",
    "date": "2026-10-16",
    "list": "2-POOL",
+   "sym": "KD",
+   "why": "momentum 1W"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-16",
+   "list": "2-POOL",
    "sym": "KSS",
    "why": "momentum 1M"
   },
@@ -7967,6 +8200,20 @@
    "list": "2-POOL",
    "sym": "LIFE",
    "why": "momentum 3M"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "LW",
+   "why": "momentum 1W"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "MAT",
+   "why": "momentum 1M"
   },
   {
    "action": "added",
@@ -7988,6 +8235,20 @@
    "list": "2-POOL",
    "sym": "SG",
    "why": "momentum 1M/3M"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "SHAK",
+   "why": "momentum 1M"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-16",
+   "list": "2-POOL",
+   "sym": "WING",
+   "why": "momentum 1M"
   },
   {
    "action": "added",
@@ -8042,13 +8303,6 @@
    "action": "added",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "GO",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
    "sym": "HNGE",
    "why": "PB 21 (from 2-POOL)"
   },
@@ -8063,6 +8317,13 @@
    "action": "added",
    "date": "2026-10-16",
    "list": "3-SETUPS",
+   "sym": "NTSK",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-16",
+   "list": "3-SETUPS",
    "sym": "OSCR",
    "why": "PB 50 (from 2-POOL)"
   },
@@ -8071,7 +8332,7 @@
    "date": "2026-10-16",
    "list": "3-SETUPS",
    "sym": "AYA",
-   "why": "Tight + PB 50 (from 2-POOL)"
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -8079,20 +8340,6 @@
    "list": "3-SETUPS",
    "sym": "HUM",
    "why": "PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "SG",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "CDNA",
-   "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
@@ -8112,7 +8359,7 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "DK",
+   "sym": "AMPL",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8126,7 +8373,7 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "AMPL",
+   "sym": "DK",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8161,13 +8408,6 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "RBRK",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
    "sym": "CHYM",
    "why": "weekly trim to the best 30"
   },
@@ -8176,6 +8416,13 @@
    "date": "2026-10-16",
    "list": "3-SETUPS",
    "sym": "AFRM",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "3-SETUPS",
+   "sym": "ARQT",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8196,21 +8443,7 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "SHOP",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "DINO",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "CVI",
+   "sym": "VLO",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8224,20 +8457,6 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "VLO",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "BRZE",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
    "sym": "WLTH",
    "why": "weekly trim to the best 30"
   },
@@ -8245,21 +8464,7 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "GO",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "SG",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "TEAM",
+   "sym": "CVI",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8280,14 +8485,7 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "MPC",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "CBRL",
+   "sym": "BRZE",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8315,14 +8513,14 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "RELY",
+   "sym": "SWKS",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "SWKS",
+   "sym": "RELY",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8336,14 +8534,14 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "P",
+   "sym": "DDOG",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "DDOG",
+   "sym": "P",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8364,14 +8562,14 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "CORT",
+   "sym": "FIVN",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "FIVN",
+   "sym": "CORT",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8413,13 +8611,6 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "CAI",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
    "sym": "AZTA",
    "why": "weekly trim to the best 30"
   },
@@ -8441,13 +8632,6 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "TWLO",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
    "sym": "SAIL",
    "why": "weekly trim to the best 30"
   },
@@ -8462,7 +8646,7 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "OMER",
+   "sym": "TXG",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8476,20 +8660,6 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "TXG",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
-   "sym": "XMTR",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-16",
-   "list": "3-SETUPS",
    "sym": "PCVX",
    "why": "weekly trim to the best 30"
   },
@@ -8497,7 +8667,7 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
-   "sym": "EAT",
+   "sym": "XMTR",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8532,6 +8702,13 @@
    "action": "removed",
    "date": "2026-10-16",
    "list": "3-SETUPS",
+   "sym": "TWLO",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "3-SETUPS",
    "sym": "CRWD",
    "why": "weekly trim to the best 30"
   },
@@ -8540,6 +8717,13 @@
    "date": "2026-10-16",
    "list": "3-SETUPS",
    "sym": "U",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "3-SETUPS",
+   "sym": "CAI",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8568,6 +8752,13 @@
    "date": "2026-10-16",
    "list": "3-SETUPS",
    "sym": "NAVN",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-16",
+   "list": "3-SETUPS",
+   "sym": "CBRL",
    "why": "weekly trim to the best 30"
   },
   {
@@ -8602,6 +8793,13 @@
    "action": "removed",
    "date": "2026-10-19",
    "list": "1-UPDAY",
+   "sym": "COIN",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-19",
+   "list": "1-UPDAY",
    "sym": "CRCL",
    "why": "2 closes in a row below the 50 EMA"
   },
@@ -8610,6 +8808,13 @@
    "date": "2026-10-19",
    "list": "1-UPDAY",
    "sym": "DUOL",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-19",
+   "list": "1-UPDAY",
+   "sym": "FIG",
    "why": "2 closes in a row below the 50 EMA"
   },
   {
@@ -8853,6 +9058,13 @@
   {
    "action": "added",
    "date": "2026-10-19",
+   "list": "1-UPDAY",
+   "sym": "MAZE",
+   "why": "+7.9%, rel vol 1.6"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-19",
    "list": "1-EP/GAP",
    "sym": "SLN",
    "why": "gap +125.6%, rel vol 56.3"
@@ -8884,13 +9096,6 @@
    "list": "2-POOL",
    "sym": "VRDN",
    "why": "first close back above the 50 EMA"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-19",
-   "list": "3-SETUPS",
-   "sym": "TEAM",
-   "why": "Tight (from 1-UPDAY)"
   },
   {
    "action": "added",
@@ -8994,27 +9199,6 @@
    "action": "added",
    "date": "2026-10-19",
    "list": "3-SETUPS",
-   "sym": "CVI",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-19",
-   "list": "3-SETUPS",
-   "sym": "HNGE",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-19",
-   "list": "3-SETUPS",
-   "sym": "KOD",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-19",
-   "list": "3-SETUPS",
    "sym": "LIND",
    "why": "PB 21 (from 2-POOL)"
   },
@@ -9030,7 +9214,7 @@
    "date": "2026-10-19",
    "list": "3-SETUPS",
    "sym": "OSCR",
-   "why": "Tight + PB 21 (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -9058,7 +9242,7 @@
    "date": "2026-10-19",
    "list": "3-SETUPS",
    "sym": "VLO",
-   "why": "Tight + PB 21 (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -9094,13 +9278,6 @@
    "list": "3-SETUPS",
    "sym": "ESTC",
    "why": "PB 21 (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-19",
-   "list": "3-SETUPS",
-   "sym": "PD",
-   "why": "Tight (from 2-POOL)"
   },
   {
    "action": "removed",
@@ -9217,13 +9394,6 @@
   {
    "action": "added",
    "date": "2026-10-20",
-   "list": "1-UPDAY",
-   "sym": "MAZE",
-   "why": "+9.3%, rel vol 1.8"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-20",
    "list": "2-POOL",
    "sym": "MSTR",
    "why": "first close back above the 50 EMA"
@@ -9288,6 +9458,13 @@
    "action": "added",
    "date": "2026-10-20",
    "list": "1-UPDAY",
+   "sym": "SGRY",
+   "why": "+5.3%, rel vol 3.3"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-20",
+   "list": "1-UPDAY",
    "sym": "SLS",
    "why": "+14.2%, rel vol 1.8"
   },
@@ -9296,6 +9473,20 @@
    "date": "2026-10-20",
    "list": "2-POOL",
    "sym": "SLS",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-20",
+   "list": "2-POOL",
+   "sym": "SMMT",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-20",
+   "list": "2-POOL",
+   "sym": "SRPT",
    "why": "first close back above the 50 EMA"
   },
   {
@@ -9386,14 +9577,7 @@
    "action": "added",
    "date": "2026-10-20",
    "list": "3-SETUPS",
-   "sym": "CBRL",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-20",
-   "list": "3-SETUPS",
-   "sym": "ETSY",
+   "sym": "TEAM",
    "why": "Tight (from 1-UPDAY)"
   },
   {
@@ -9401,14 +9585,14 @@
    "date": "2026-10-20",
    "list": "3-SETUPS",
    "sym": "AFRM",
-   "why": "Tight + PB 50 (from 1-UPDAY)"
+   "why": "PB 50 (from 1-UPDAY)"
   },
   {
    "action": "added",
    "date": "2026-10-20",
    "list": "3-SETUPS",
    "sym": "RBRK",
-   "why": "Tight + PB 21 (from 1-UPDAY)"
+   "why": "PB 21 (from 1-UPDAY)"
   },
   {
    "action": "added",
@@ -9457,21 +9641,21 @@
    "date": "2026-10-20",
    "list": "3-SETUPS",
    "sym": "PBF",
-   "why": "Tight + PB 21 (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-20",
    "list": "3-SETUPS",
    "sym": "VSXY",
-   "why": "Tight + PB 21 (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-20",
    "list": "3-SETUPS",
    "sym": "CORT",
-   "why": "Tight + PB 21 (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -9491,22 +9675,15 @@
    "action": "added",
    "date": "2026-10-20",
    "list": "3-SETUPS",
-   "sym": "RLAY",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-20",
-   "list": "3-SETUPS",
    "sym": "SAIL",
-   "why": "Tight + PB 50 (from 2-POOL)"
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-20",
    "list": "3-SETUPS",
    "sym": "TRLV",
-   "why": "Tight + PB 21 + PB 50 (from 2-POOL)"
+   "why": "PB 21 + PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -9520,14 +9697,14 @@
    "date": "2026-10-20",
    "list": "3-SETUPS",
    "sym": "VIR",
-   "why": "Tight + PB 50 (from 2-POOL)"
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
    "date": "2026-10-20",
    "list": "3-SETUPS",
    "sym": "XNCR",
-   "why": "Tight + PB 21 (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -9625,6 +9802,13 @@
    "date": "2026-10-21",
    "list": "2-POOL",
    "sym": "CRWD",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-21",
+   "list": "2-POOL",
+   "sym": "FIG",
    "why": "first close back above the 50 EMA"
   },
   {
@@ -9813,7 +9997,7 @@
    "action": "added",
    "date": "2026-10-21",
    "list": "3-SETUPS",
-   "sym": "XERS",
+   "sym": "ETSY",
    "why": "Tight (from 1-UPDAY)"
   },
   {
@@ -9828,13 +10012,6 @@
    "date": "2026-10-21",
    "list": "3-SETUPS",
    "sym": "AGIO",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-21",
-   "list": "3-SETUPS",
-   "sym": "SG",
    "why": "Tight (from 1-UPDAY)"
   },
   {
@@ -9862,21 +10039,7 @@
    "action": "added",
    "date": "2026-10-21",
    "list": "3-SETUPS",
-   "sym": "GRAL",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-21",
-   "list": "3-SETUPS",
    "sym": "SYRE",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-21",
-   "list": "3-SETUPS",
-   "sym": "WRBY",
    "why": "Tight (from 2-POOL)"
   },
   {
@@ -9905,7 +10068,7 @@
    "date": "2026-10-21",
    "list": "3-SETUPS",
    "sym": "NEO",
-   "why": "Tight + PB 50 (from 2-POOL)"
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -9996,6 +10159,13 @@
    "date": "2026-10-22",
    "list": "2-POOL",
    "sym": "RVMD",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-22",
+   "list": "2-POOL",
+   "sym": "SMMT",
    "why": "2 closes in a row below the 50 EMA"
   },
   {
@@ -10093,13 +10263,6 @@
    "action": "added",
    "date": "2026-10-22",
    "list": "1-UPDAY",
-   "sym": "GLOB",
-   "why": "+6.0%, rel vol 1.9"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-22",
-   "list": "1-UPDAY",
    "sym": "GO",
    "why": "+5.7%, rel vol 1.2"
   },
@@ -10109,13 +10272,6 @@
    "list": "1-UPDAY",
    "sym": "HUBS",
    "why": "+6.9%, rel vol 1.2"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-22",
-   "list": "1-UPDAY",
-   "sym": "KD",
-   "why": "+5.9%, rel vol 1.1"
   },
   {
    "action": "added",
@@ -10135,6 +10291,20 @@
    "action": "added",
    "date": "2026-10-22",
    "list": "1-UPDAY",
+   "sym": "RH",
+   "why": "+9.5%, rel vol 1.8"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "2-POOL",
+   "sym": "RH",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "1-UPDAY",
    "sym": "RHI",
    "why": "+8.8%, rel vol 1.7"
   },
@@ -10149,8 +10319,29 @@
    "action": "added",
    "date": "2026-10-22",
    "list": "1-UPDAY",
+   "sym": "TRU",
+   "why": "+5.7%, rel vol 1.2"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "1-UPDAY",
    "sym": "VERX",
    "why": "+4.4%, rel vol 1.4"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "1-UPDAY",
+   "sym": "WGO",
+   "why": "+11.4%, rel vol 1.8"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "2-POOL",
+   "sym": "WGO",
+   "why": "first close back above the 50 EMA"
   },
   {
    "action": "added",
@@ -10163,6 +10354,13 @@
    "action": "added",
    "date": "2026-10-22",
    "list": "3-SETUPS",
+   "sym": "XERS",
+   "why": "Tight (from 1-UPDAY)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "3-SETUPS",
    "sym": "FIGS",
    "why": "Tight (from 1-UPDAY)"
   },
@@ -10170,21 +10368,14 @@
    "action": "added",
    "date": "2026-10-22",
    "list": "3-SETUPS",
+   "sym": "GME",
+   "why": "PB 21 (from 1-UPDAY)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "3-SETUPS",
    "sym": "ARQT",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-22",
-   "list": "3-SETUPS",
-   "sym": "ORIC",
-   "why": "Tight (from 1-UPDAY)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-22",
-   "list": "3-SETUPS",
-   "sym": "ZYME",
    "why": "Tight (from 1-UPDAY)"
   },
   {
@@ -10205,8 +10396,43 @@
    "action": "added",
    "date": "2026-10-22",
    "list": "3-SETUPS",
+   "sym": "CVI",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "3-SETUPS",
+   "sym": "GRAL",
+   "why": "PB 21 (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "3-SETUPS",
+   "sym": "KOD",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "3-SETUPS",
+   "sym": "RLAY",
+   "why": "Tight (from 2-POOL)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-22",
+   "list": "3-SETUPS",
    "sym": "NEOG",
    "why": "Tight + PB 50 (from 2-POOL)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "1-EP/GAP",
+   "sym": "TLN",
+   "why": "2 closes in a row below the 50 EMA"
   },
   {
    "action": "removed",
@@ -10289,6 +10515,13 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "2-POOL",
+   "sym": "TLN",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "2-POOL",
    "sym": "ARXS",
    "why": "below the 200 SMA (weekly refresh)"
   },
@@ -10319,6 +10552,20 @@
    "list": "2-POOL",
    "sym": "SG",
    "why": "no longer liquid (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "SHAK",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "WING",
+   "why": "below the 200 SMA (weekly refresh)"
   },
   {
    "action": "removed",
@@ -10367,6 +10614,13 @@
    "date": "2026-10-23",
    "list": "2-POOL",
    "sym": "SLS",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "SRPT",
    "why": "2 closes in a row below the 50 EMA"
   },
   {
@@ -10449,15 +10703,29 @@
   {
    "action": "removed",
    "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "AUGO",
-   "why": "2 closes in a row below the 50 EMA"
+   "list": "2-POOL",
+   "sym": "RH",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "WGO",
+   "why": "below the 200 SMA (weekly refresh)"
   },
   {
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "PARR",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "AUGO",
    "why": "2 closes in a row below the 50 EMA"
   },
   {
@@ -10632,13 +10900,6 @@
    "action": "added",
    "date": "2026-10-23",
    "list": "2-POOL",
-   "sym": "FIG",
-   "why": "momentum 1W"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-23",
-   "list": "2-POOL",
    "sym": "FSLY",
    "why": "first close back above the 50 EMA"
   },
@@ -10674,13 +10935,6 @@
    "action": "added",
    "date": "2026-10-23",
    "list": "2-POOL",
-   "sym": "KD",
-   "why": "momentum 1W/1M"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-23",
-   "list": "2-POOL",
    "sym": "KVYO",
    "why": "momentum 1W/1M"
   },
@@ -10696,6 +10950,13 @@
    "date": "2026-10-23",
    "list": "2-POOL",
    "sym": "MANE",
+   "why": "momentum 1W"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "MAZE",
    "why": "momentum 1W"
   },
   {
@@ -10739,6 +11000,13 @@
    "list": "2-POOL",
    "sym": "PANW",
    "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "QDEL",
+   "why": "momentum 1M"
   },
   {
    "action": "added",
@@ -10793,13 +11061,6 @@
    "action": "added",
    "date": "2026-10-23",
    "list": "2-POOL",
-   "sym": "TTAN",
-   "why": "momentum 1W/1M"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-23",
-   "list": "2-POOL",
    "sym": "UTHR",
    "why": "momentum 1W"
   },
@@ -10835,6 +11096,13 @@
    "action": "added",
    "date": "2026-10-23",
    "list": "2-POOL",
+   "sym": "WGO",
+   "why": "momentum 1W"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-23",
+   "list": "2-POOL",
    "sym": "WK",
    "why": "momentum 1W/3M"
   },
@@ -10849,8 +11117,15 @@
    "action": "added",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "ASAN",
+   "sym": "CBRL",
    "why": "Tight (from 1-UPDAY)"
+  },
+  {
+   "action": "added",
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "ORIC",
+   "why": "PB 21 (from 1-UPDAY)"
   },
   {
    "action": "added",
@@ -10877,15 +11152,8 @@
    "action": "added",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "AVPT",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "action": "added",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "CERT",
-   "why": "Tight (from 2-POOL)"
+   "sym": "MAT",
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -10906,7 +11174,7 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "SNOW",
-   "why": "Tight + PB 50 (from 2-POOL)"
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "action": "added",
@@ -10919,27 +11187,6 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "LIND",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "CERT",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "FIVN",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
    "sym": "FROG",
    "why": "weekly trim to the best 30"
   },
@@ -10947,21 +11194,7 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "SG",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "ZYME",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "ACHC",
+   "sym": "VLO",
    "why": "weekly trim to the best 30"
   },
   {
@@ -10975,7 +11208,7 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "VLO",
+   "sym": "ACHC",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11017,7 +11250,7 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "W",
+   "sym": "MAT",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11031,21 +11264,7 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "CRL",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "TEAM",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "NAVN",
+   "sym": "W",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11053,13 +11272,6 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "PRCH",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "ETSY",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11074,20 +11286,6 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "FTRE",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "ASAN",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "AVPT",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11115,6 +11313,20 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
+   "sym": "NAVN",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "ETSY",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
    "sym": "TENB",
    "why": "weekly trim to the best 30"
   },
@@ -11136,6 +11348,13 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
+   "sym": "TEAM",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
    "sym": "GO",
    "why": "weekly trim to the best 30"
   },
@@ -11143,7 +11362,7 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "APPN",
+   "sym": "CRL",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11165,13 +11384,6 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "AMPL",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "HNGE",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11206,14 +11418,14 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "P",
+   "sym": "NEOG",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "NEOG",
+   "sym": "P",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11241,14 +11453,14 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "ASST",
+   "sym": "CTVA",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "WRBY",
+   "sym": "ASST",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11283,13 +11495,6 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "OKTA",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "action": "removed",
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
    "sym": "CRWD",
    "why": "weekly trim to the best 30"
   },
@@ -11298,6 +11503,13 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "INSW",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "OKTA",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11346,14 +11558,14 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "RLAY",
+   "sym": "TRLV",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "TRLV",
+   "sym": "RLAY",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11374,14 +11586,14 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "PBF",
+   "sym": "PCVX",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "PCVX",
+   "sym": "PBF",
    "why": "weekly trim to the best 30"
   },
   {
@@ -11402,6 +11614,20 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
+   "sym": "RVTY",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "IOVA",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "action": "removed",
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
    "sym": "XP",
    "why": "weekly trim to the best 30"
   },
@@ -11409,14 +11635,14 @@
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "RXO",
+   "sym": "APPN",
    "why": "weekly trim to the best 30"
   },
   {
    "action": "removed",
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "MRNA",
+   "sym": "RXO",
    "why": "weekly trim to the best 30"
   }
  ],

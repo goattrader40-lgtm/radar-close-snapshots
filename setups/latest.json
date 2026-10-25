@@ -1,13 +1,20 @@
 {
  "date": "2026-10-23",
- "made_at": "2026-10-25T11:43:26+00:00",
+ "made_at": "2026-10-25T11:57:22+00:00",
  "counts": {
   "1-EP/GAP": 13,
-  "1-UPDAY": 94,
-  "2-POOL": 149,
+  "1-UPDAY": 101,
+  "2-POOL": 155,
   "3-SETUPS": 30
  },
  "changes_today": [
+  {
+   "date": "2026-10-23",
+   "list": "1-EP/GAP",
+   "sym": "TLN",
+   "action": "removed",
+   "why": "2 closes in a row below the 50 EMA"
+  },
   {
    "date": "2026-10-23",
    "list": "1-EP/GAP",
@@ -88,6 +95,13 @@
   {
    "date": "2026-10-23",
    "list": "2-POOL",
+   "sym": "TLN",
+   "action": "removed",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "2-POOL",
    "sym": "ARXS",
    "action": "removed",
    "why": "below the 200 SMA (weekly refresh)"
@@ -119,6 +133,20 @@
    "sym": "SG",
    "action": "removed",
    "why": "no longer liquid (weekly refresh)"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "SHAK",
+   "action": "removed",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "WING",
+   "action": "removed",
+   "why": "below the 200 SMA (weekly refresh)"
   },
   {
    "date": "2026-10-23",
@@ -166,6 +194,13 @@
    "date": "2026-10-23",
    "list": "2-POOL",
    "sym": "SLS",
+   "action": "removed",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "SRPT",
    "action": "removed",
    "why": "2 closes in a row below the 50 EMA"
   },
@@ -248,15 +283,29 @@
   },
   {
    "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "RH",
+   "action": "removed",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "WGO",
+   "action": "removed",
+   "why": "below the 200 SMA (weekly refresh)"
+  },
+  {
+   "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "AUGO",
+   "sym": "PARR",
    "action": "removed",
    "why": "2 closes in a row below the 50 EMA"
   },
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "PARR",
+   "sym": "AUGO",
    "action": "removed",
    "why": "2 closes in a row below the 50 EMA"
   },
@@ -431,13 +480,6 @@
   {
    "date": "2026-10-23",
    "list": "2-POOL",
-   "sym": "FIG",
-   "action": "added",
-   "why": "momentum 1W"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "2-POOL",
    "sym": "FSLY",
    "action": "added",
    "why": "first close back above the 50 EMA"
@@ -473,13 +515,6 @@
   {
    "date": "2026-10-23",
    "list": "2-POOL",
-   "sym": "KD",
-   "action": "added",
-   "why": "momentum 1W/1M"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "2-POOL",
    "sym": "KVYO",
    "action": "added",
    "why": "momentum 1W/1M"
@@ -495,6 +530,13 @@
    "date": "2026-10-23",
    "list": "2-POOL",
    "sym": "MANE",
+   "action": "added",
+   "why": "momentum 1W"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "MAZE",
    "action": "added",
    "why": "momentum 1W"
   },
@@ -539,6 +581,13 @@
    "sym": "PANW",
    "action": "added",
    "why": "first close back above the 50 EMA"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "2-POOL",
+   "sym": "QDEL",
+   "action": "added",
+   "why": "momentum 1M"
   },
   {
    "date": "2026-10-23",
@@ -592,13 +641,6 @@
   {
    "date": "2026-10-23",
    "list": "2-POOL",
-   "sym": "TTAN",
-   "action": "added",
-   "why": "momentum 1W/1M"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "2-POOL",
    "sym": "UTHR",
    "action": "added",
    "why": "momentum 1W"
@@ -634,6 +676,13 @@
   {
    "date": "2026-10-23",
    "list": "2-POOL",
+   "sym": "WGO",
+   "action": "added",
+   "why": "momentum 1W"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "2-POOL",
    "sym": "WK",
    "action": "added",
    "why": "momentum 1W/3M"
@@ -648,9 +697,16 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "ASAN",
+   "sym": "CBRL",
    "action": "added",
    "why": "Tight (from 1-UPDAY)"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "ORIC",
+   "action": "added",
+   "why": "PB 21 (from 1-UPDAY)"
   },
   {
    "date": "2026-10-23",
@@ -676,16 +732,9 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "AVPT",
+   "sym": "MAT",
    "action": "added",
-   "why": "Tight (from 2-POOL)"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "CERT",
-   "action": "added",
-   "why": "Tight (from 2-POOL)"
+   "why": "PB 21 (from 2-POOL)"
   },
   {
    "date": "2026-10-23",
@@ -706,7 +755,7 @@
    "list": "3-SETUPS",
    "sym": "SNOW",
    "action": "added",
-   "why": "Tight + PB 50 (from 2-POOL)"
+   "why": "PB 50 (from 2-POOL)"
   },
   {
    "date": "2026-10-23",
@@ -718,27 +767,6 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "LIND",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "CERT",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "FIVN",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
    "sym": "FROG",
    "action": "removed",
    "why": "weekly trim to the best 30"
@@ -746,21 +774,7 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "SG",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "ZYME",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "ACHC",
+   "sym": "VLO",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -774,7 +788,7 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "VLO",
+   "sym": "ACHC",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -816,7 +830,7 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "W",
+   "sym": "MAT",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -830,21 +844,7 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "CRL",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "TEAM",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "NAVN",
+   "sym": "W",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -852,13 +852,6 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "PRCH",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "ETSY",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -873,20 +866,6 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "FTRE",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "ASAN",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "AVPT",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -914,6 +893,20 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
+   "sym": "NAVN",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "ETSY",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
    "sym": "TENB",
    "action": "removed",
    "why": "weekly trim to the best 30"
@@ -935,6 +928,13 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
+   "sym": "TEAM",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
    "sym": "GO",
    "action": "removed",
    "why": "weekly trim to the best 30"
@@ -942,7 +942,7 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "APPN",
+   "sym": "CRL",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -964,13 +964,6 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "AMPL",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
-   "sym": "HNGE",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -1005,14 +998,14 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "P",
+   "sym": "NEOG",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "NEOG",
+   "sym": "P",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -1040,14 +1033,14 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "ASST",
+   "sym": "CTVA",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "WRBY",
+   "sym": "ASST",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -1082,13 +1075,6 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "OKTA",
-   "action": "removed",
-   "why": "weekly trim to the best 30"
-  },
-  {
-   "date": "2026-10-23",
-   "list": "3-SETUPS",
    "sym": "CRWD",
    "action": "removed",
    "why": "weekly trim to the best 30"
@@ -1097,6 +1083,13 @@
    "date": "2026-10-23",
    "list": "3-SETUPS",
    "sym": "INSW",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "OKTA",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -1145,14 +1138,14 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "RLAY",
+   "sym": "TRLV",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "TRLV",
+   "sym": "RLAY",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -1173,14 +1166,14 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "PBF",
+   "sym": "PCVX",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "PCVX",
+   "sym": "PBF",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
@@ -1201,6 +1194,20 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
+   "sym": "RVTY",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
+   "sym": "IOVA",
+   "action": "removed",
+   "why": "weekly trim to the best 30"
+  },
+  {
+   "date": "2026-10-23",
+   "list": "3-SETUPS",
    "sym": "XP",
    "action": "removed",
    "why": "weekly trim to the best 30"
@@ -1208,14 +1215,14 @@
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "RXO",
+   "sym": "APPN",
    "action": "removed",
    "why": "weekly trim to the best 30"
   },
   {
    "date": "2026-10-23",
    "list": "3-SETUPS",
-   "sym": "MRNA",
+   "sym": "RXO",
    "action": "removed",
    "why": "weekly trim to the best 30"
   }
@@ -1736,7 +1743,7 @@
     "section": "2026-10-23",
     "why": "+4.5%, rel vol 1.1",
     "added": "2026-10-23",
-    "promoted": true,
+    "promoted": false,
     "support_low": 11.515
    },
    {
@@ -2706,6 +2713,39 @@
     "support_low": 22.19
    },
    {
+    "symbol": "RH",
+    "tv": "NYSE:RH",
+    "close": 137.43,
+    "chg_pct": -1.9,
+    "grade": "",
+    "higher_high_low": true,
+    "pullback_from_20d_high_pct": 4.1,
+    "pattern": "",
+    "buy_point": null,
+    "to_buy_point_pct": null,
+    "base_bars": null,
+    "base_depth_pct": null,
+    "msf_score": 0,
+    "adr_pct": 5.0,
+    "rel_vol": 0.9,
+    "dollar_vol_30d_m": 116.0,
+    "perf_1m_pct": 13.0,
+    "perf_3m_pct": -23.0,
+    "off_52w_high_pct": 42.6,
+    "ema21": 124.1,
+    "ema50": 132.78,
+    "sma200": 155.1,
+    "entries": {},
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 140.73,
+    "days_since_20d_high": 0,
+    "section": "2026-10-22",
+    "why": "+9.5%, rel vol 1.8",
+    "added": "2026-10-22",
+    "promoted": false,
+    "support_low": 124.88
+   },
+   {
     "symbol": "RHI",
     "tv": "NYSE:RHI",
     "close": 45.87,
@@ -2774,6 +2814,39 @@
     "support_low": 13.625
    },
    {
+    "symbol": "TRU",
+    "tv": "NYSE:TRU",
+    "close": 81.48,
+    "chg_pct": -2.4,
+    "grade": "",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 6.8,
+    "pattern": "Base forming (no pattern yet)",
+    "buy_point": 86.49,
+    "to_buy_point_pct": 6.1,
+    "base_bars": 63.0,
+    "base_depth_pct": 29.5,
+    "msf_score": 40,
+    "adr_pct": 4.7,
+    "rel_vol": 0.9,
+    "dollar_vol_30d_m": 254.0,
+    "perf_1m_pct": 21.0,
+    "perf_3m_pct": 5.0,
+    "off_52w_high_pct": 8.6,
+    "ema21": 72.95,
+    "ema50": 73.43,
+    "sma200": 74.32,
+    "entries": {},
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 83.86,
+    "days_since_20d_high": 1,
+    "section": "2026-10-22",
+    "why": "+5.7%, rel vol 1.2",
+    "added": "2026-10-22",
+    "promoted": false,
+    "support_low": 78.17
+   },
+   {
     "symbol": "VERX",
     "tv": "NASDAQ:VERX",
     "close": 15.39,
@@ -2808,6 +2881,39 @@
     "added": "2026-10-22",
     "promoted": false,
     "support_low": 14.835
+   },
+   {
+    "symbol": "WGO",
+    "tv": "NYSE:WGO",
+    "close": 28.65,
+    "chg_pct": 0.3,
+    "grade": "",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 5.5,
+    "pattern": "",
+    "buy_point": null,
+    "to_buy_point_pct": null,
+    "base_bars": null,
+    "base_depth_pct": null,
+    "msf_score": 0,
+    "adr_pct": 5.0,
+    "rel_vol": 0.9,
+    "dollar_vol_30d_m": 23.0,
+    "perf_1m_pct": 7.0,
+    "perf_3m_pct": -8.0,
+    "off_52w_high_pct": 42.9,
+    "ema21": 25.66,
+    "ema50": 27.09,
+    "sma200": 33.06,
+    "entries": {},
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 28.75,
+    "days_since_20d_high": 0,
+    "section": "2026-10-22",
+    "why": "+11.4%, rel vol 1.8",
+    "added": "2026-10-22",
+    "promoted": false,
+    "support_low": 25.22
    },
    {
     "symbol": "WIX",
@@ -3051,7 +3157,7 @@
     "section": "2026-10-21",
     "why": "+9.3%, rel vol 3.1",
     "added": "2026-10-21",
-    "promoted": true,
+    "promoted": false,
     "support_low": 313.83
    },
    {
@@ -3647,6 +3753,39 @@
     "support_low": 12.82
    },
    {
+    "symbol": "SGRY",
+    "tv": "NASDAQ:SGRY",
+    "close": 15.75,
+    "chg_pct": -0.9,
+    "grade": "A",
+    "higher_high_low": true,
+    "pullback_from_20d_high_pct": 3.1,
+    "pattern": "",
+    "buy_point": null,
+    "to_buy_point_pct": null,
+    "base_bars": null,
+    "base_depth_pct": null,
+    "msf_score": 0,
+    "adr_pct": 4.0,
+    "rel_vol": 1.8,
+    "dollar_vol_30d_m": 34.0,
+    "perf_1m_pct": 11.0,
+    "perf_3m_pct": 4.0,
+    "off_52w_high_pct": 32.8,
+    "ema21": 14.68,
+    "ema50": 14.52,
+    "sma200": 14.44,
+    "entries": {},
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 16.16,
+    "days_since_20d_high": 0,
+    "section": "2026-10-20",
+    "why": "+5.3%, rel vol 3.3",
+    "added": "2026-10-20",
+    "promoted": false,
+    "support_low": 14.77
+   },
+   {
     "symbol": "ZYME",
     "tv": "NASDAQ:ZYME",
     "close": 28.22,
@@ -3676,7 +3815,7 @@
     "section": "2026-10-20",
     "why": "+5.4%, rel vol 2.2",
     "added": "2026-10-20",
-    "promoted": true,
+    "promoted": false,
     "support_low": 25.71
    },
    {
@@ -4295,6 +4434,39 @@
     "support_low": 16.2
    },
    {
+    "symbol": "REAL",
+    "tv": "NASDAQ:REAL",
+    "close": 10.84,
+    "chg_pct": 3.4,
+    "grade": "",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 8.7,
+    "pattern": "",
+    "buy_point": null,
+    "to_buy_point_pct": null,
+    "base_bars": null,
+    "base_depth_pct": null,
+    "msf_score": 0,
+    "adr_pct": 5.1,
+    "rel_vol": 1.1,
+    "dollar_vol_30d_m": 32.0,
+    "perf_1m_pct": 22.0,
+    "perf_3m_pct": -7.0,
+    "off_52w_high_pct": 37.7,
+    "ema21": 10.04,
+    "ema50": 10.12,
+    "sma200": 11.14,
+    "entries": {},
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 11.15,
+    "days_since_20d_high": 2,
+    "section": "2026-10-15",
+    "why": "+15.8%, rel vol 2.1",
+    "added": "2026-10-15",
+    "promoted": false,
+    "support_low": 9.34
+   },
+   {
     "symbol": "RELY",
     "tv": "NASDAQ:RELY",
     "close": 24.82,
@@ -4668,7 +4840,7 @@
     "section": "2026-10-09",
     "why": "+14.2%, rel vol 1.6",
     "added": "2026-10-09",
-    "promoted": true,
+    "promoted": false,
     "support_low": 197.17
    },
    {
@@ -4706,7 +4878,7 @@
     "section": "2026-10-08",
     "why": "+4.4%, rel vol 1.1",
     "added": "2026-10-08",
-    "promoted": true,
+    "promoted": false,
     "support_low": 117.27
    },
    {
@@ -4810,8 +4982,41 @@
     "section": "2026-10-08",
     "why": "+4.8%, rel vol 1.4",
     "added": "2026-10-08",
-    "promoted": true,
+    "promoted": false,
     "support_low": 447.59
+   },
+   {
+    "symbol": "SHAK",
+    "tv": "NYSE:SHAK",
+    "close": 65.16,
+    "chg_pct": -4.0,
+    "grade": "",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 12.0,
+    "pattern": "",
+    "buy_point": null,
+    "to_buy_point_pct": null,
+    "base_bars": null,
+    "base_depth_pct": null,
+    "msf_score": 0,
+    "adr_pct": 4.1,
+    "rel_vol": 1.3,
+    "dollar_vol_30d_m": 95.0,
+    "perf_1m_pct": 13.0,
+    "perf_3m_pct": 6.0,
+    "off_52w_high_pct": 39.4,
+    "ema21": 66.37,
+    "ema50": 65.38,
+    "sma200": 75.75,
+    "entries": {},
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 72.89,
+    "days_since_20d_high": 3,
+    "section": "2026-10-08",
+    "why": "+4.9%, rel vol 1.3",
+    "added": "2026-10-08",
+    "promoted": false,
+    "support_low": 63.49
    },
    {
     "symbol": "GKOS",
@@ -4881,6 +5086,41 @@
     "added": "2026-10-06",
     "promoted": true,
     "support_low": 28.675
+   },
+   {
+    "symbol": "ADMA",
+    "tv": "NASDAQ:ADMA",
+    "close": 10.68,
+    "chg_pct": -2.5,
+    "grade": "",
+    "higher_high_low": true,
+    "pullback_from_20d_high_pct": 6.7,
+    "pattern": "",
+    "buy_point": null,
+    "to_buy_point_pct": null,
+    "base_bars": null,
+    "base_depth_pct": null,
+    "msf_score": 0,
+    "adr_pct": 3.9,
+    "rel_vol": 0.6,
+    "dollar_vol_30d_m": 34.0,
+    "perf_1m_pct": 12.0,
+    "perf_3m_pct": 26.0,
+    "off_52w_high_pct": 47.8,
+    "ema21": 10.41,
+    "ema50": 9.96,
+    "sma200": 11.12,
+    "entries": {
+     "level": 11.42
+    },
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 11.32,
+    "days_since_20d_high": 3,
+    "section": "2026-10-05",
+    "why": "+4.0%, rel vol 1.1",
+    "added": "2026-10-05",
+    "promoted": false,
+    "support_low": 9.62
    },
    {
     "symbol": "EFOR",
@@ -4979,6 +5219,38 @@
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA",
     "added": "2026-10-20",
+    "promoted": true
+   },
+   {
+    "symbol": "ARQT",
+    "tv": "NASDAQ:ARQT",
+    "close": 31.2,
+    "chg_pct": -3.1,
+    "grade": "A",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 7.2,
+    "pattern": "Base forming (no pattern yet)",
+    "buy_point": 33.3,
+    "to_buy_point_pct": 6.7,
+    "base_bars": 5.0,
+    "base_depth_pct": 12.9,
+    "msf_score": 50,
+    "adr_pct": 5.2,
+    "rel_vol": 0.7,
+    "dollar_vol_30d_m": 101.0,
+    "perf_1m_pct": 19.0,
+    "perf_3m_pct": 12.0,
+    "off_52w_high_pct": 6.3,
+    "ema21": 28.39,
+    "ema50": 26.93,
+    "sma200": 25.14,
+    "entries": {},
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 33.3,
+    "days_since_20d_high": 3,
+    "section": "50 EMA reclaim",
+    "why": "first close back above the 50 EMA",
+    "added": "2026-10-09",
     "promoted": true
    },
    {
@@ -5843,8 +6115,7 @@
     "days_since_20d_high": 0,
     "section": "Momentum",
     "why": "momentum 1W/1M/3M/6M",
-    "added": "2026-10-23",
-    "promoted": true
+    "added": "2026-10-23"
    },
    {
     "symbol": "ASST",
@@ -5947,8 +6218,7 @@
     "days_since_20d_high": 0,
     "section": "Momentum",
     "why": "momentum 1W/1M",
-    "added": "2026-10-23",
-    "promoted": true
+    "added": "2026-10-23"
    },
    {
     "symbol": "AZTA",
@@ -6255,8 +6525,7 @@
     "days_since_20d_high": 0,
     "section": "Momentum",
     "why": "momentum 1W/6M",
-    "added": "2026-10-23",
-    "promoted": true
+    "added": "2026-10-23"
    },
    {
     "symbol": "CHYM",
@@ -6456,7 +6725,8 @@
     "days_since_20d_high": 12,
     "section": "Momentum",
     "why": "momentum 1W",
-    "added": "2026-10-09"
+    "added": "2026-10-09",
+    "promoted": true
    },
    {
     "symbol": "CVI",
@@ -6890,7 +7160,7 @@
     "days_since_20d_high": 0,
     "section": "Momentum",
     "why": "momentum 1W",
-    "added": "2026-10-23"
+    "added": "2026-10-21"
    },
    {
     "symbol": "FIGS",
@@ -7165,7 +7435,8 @@
     "days_since_20d_high": 6,
     "section": "Momentum",
     "why": "momentum 1M",
-    "added": "2026-10-09"
+    "added": "2026-10-05",
+    "promoted": true
    },
    {
     "symbol": "GO",
@@ -7636,7 +7907,7 @@
     "days_since_20d_high": 1,
     "section": "Momentum",
     "why": "momentum 1W/1M",
-    "added": "2026-10-23"
+    "added": "2026-10-16"
    },
    {
     "symbol": "KOD",
@@ -7809,6 +8080,39 @@
     "promoted": true
    },
    {
+    "symbol": "LW",
+    "tv": "NYSE:LW",
+    "close": 53.83,
+    "chg_pct": -2.4,
+    "grade": "A",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 4.5,
+    "pattern": "Base forming (no pattern yet)",
+    "buy_point": 55.7,
+    "to_buy_point_pct": 3.5,
+    "base_bars": 63.0,
+    "base_depth_pct": 27.0,
+    "msf_score": 70,
+    "adr_pct": 4.1,
+    "rel_vol": 0.7,
+    "dollar_vol_30d_m": 142.0,
+    "perf_1m_pct": 21.0,
+    "perf_3m_pct": 1.0,
+    "off_52w_high_pct": 19.7,
+    "ema21": 50.82,
+    "ema50": 49.62,
+    "sma200": 46.3,
+    "entries": {
+     "level": 55.7
+    },
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 55.44,
+    "days_since_20d_high": 1,
+    "section": "Momentum",
+    "why": "momentum 1W",
+    "added": "2026-10-16"
+   },
+   {
     "symbol": "MANE",
     "tv": "NYSE:MANE",
     "close": 138.78,
@@ -7835,6 +8139,73 @@
     "ema_triggers_tomorrow": [],
     "twenty_day_high": 141.75,
     "days_since_20d_high": 1,
+    "section": "Momentum",
+    "why": "momentum 1W",
+    "added": "2026-10-23"
+   },
+   {
+    "symbol": "MAT",
+    "tv": "NASDAQ:MAT",
+    "close": 16.41,
+    "chg_pct": -3.1,
+    "grade": "A",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 5.9,
+    "pattern": "Base forming (no pattern yet)",
+    "buy_point": 17.43,
+    "to_buy_point_pct": 6.2,
+    "base_bars": 7.0,
+    "base_depth_pct": 5.9,
+    "msf_score": 50,
+    "adr_pct": 5.4,
+    "rel_vol": 0.7,
+    "dollar_vol_30d_m": 133.0,
+    "perf_1m_pct": 25.0,
+    "perf_3m_pct": 11.0,
+    "off_52w_high_pct": 27.0,
+    "ema21": 16.07,
+    "ema50": 15.28,
+    "sma200": 15.62,
+    "entries": {},
+    "ema_triggers_tomorrow": [
+     "21 EMA"
+    ],
+    "twenty_day_high": 17.43,
+    "days_since_20d_high": 6,
+    "section": "Momentum",
+    "why": "momentum 1M",
+    "added": "2026-10-16",
+    "promoted": true
+   },
+   {
+    "symbol": "MAZE",
+    "tv": "NASDAQ:MAZE",
+    "close": 31.01,
+    "chg_pct": -2.9,
+    "grade": "",
+    "higher_high_low": true,
+    "pullback_from_20d_high_pct": 8.0,
+    "pattern": "Base forming (no pattern yet)",
+    "buy_point": 33.5,
+    "to_buy_point_pct": 8.0,
+    "base_bars": 78.0,
+    "base_depth_pct": 34.5,
+    "msf_score": 40,
+    "adr_pct": 5.9,
+    "rel_vol": 0.5,
+    "dollar_vol_30d_m": 29.0,
+    "perf_1m_pct": 18.0,
+    "perf_3m_pct": 8.0,
+    "off_52w_high_pct": 42.2,
+    "ema21": 28.5,
+    "ema50": 27.66,
+    "sma200": 32.07,
+    "entries": {
+     "level": 33.5
+    },
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 33.19,
+    "days_since_20d_high": 2,
     "section": "Momentum",
     "why": "momentum 1W",
     "added": "2026-10-23"
@@ -7939,8 +8310,7 @@
     "days_since_20d_high": 2,
     "section": "Momentum",
     "why": "momentum 3M/6M",
-    "added": "2026-10-05",
-    "promoted": true
+    "added": "2026-10-05"
    },
    {
     "symbol": "NAVN",
@@ -8420,7 +8790,7 @@
     "days_since_20d_high": 0,
     "section": "Momentum",
     "why": "momentum 1W",
-    "added": "2026-10-09"
+    "added": "2026-10-05"
    },
    {
     "symbol": "PCVX",
@@ -8483,8 +8853,7 @@
     "days_since_20d_high": 5,
     "section": "Momentum",
     "why": "momentum 3M/6M",
-    "added": "2026-10-16",
-    "promoted": true
+    "added": "2026-10-16"
    },
    {
     "symbol": "PGY",
@@ -8581,6 +8950,37 @@
     "section": "Momentum",
     "why": "momentum 3M",
     "added": "2026-10-16"
+   },
+   {
+    "symbol": "QDEL",
+    "tv": "NASDAQ:QDEL",
+    "close": 13.73,
+    "chg_pct": 1.9,
+    "grade": "",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 15.0,
+    "pattern": "",
+    "buy_point": null,
+    "to_buy_point_pct": null,
+    "base_bars": null,
+    "base_depth_pct": null,
+    "msf_score": 0,
+    "adr_pct": 8.0,
+    "rel_vol": 0.6,
+    "dollar_vol_30d_m": 29.0,
+    "perf_1m_pct": 28.0,
+    "perf_3m_pct": -18.0,
+    "off_52w_high_pct": 61.4,
+    "ema21": 12.97,
+    "ema50": 13.1,
+    "sma200": 16.76,
+    "entries": {},
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 14.65,
+    "days_since_20d_high": 2,
+    "section": "Momentum",
+    "why": "momentum 1M",
+    "added": "2026-10-23"
    },
    {
     "symbol": "QLYS",
@@ -9251,7 +9651,7 @@
     "days_since_20d_high": 0,
     "section": "Momentum",
     "why": "momentum 1W/1M",
-    "added": "2026-10-23"
+    "added": "2026-10-09"
    },
    {
     "symbol": "TWLO",
@@ -9644,6 +10044,37 @@
     "promoted": true
    },
    {
+    "symbol": "WGO",
+    "tv": "NYSE:WGO",
+    "close": 28.65,
+    "chg_pct": 0.3,
+    "grade": "",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 5.5,
+    "pattern": "",
+    "buy_point": null,
+    "to_buy_point_pct": null,
+    "base_bars": null,
+    "base_depth_pct": null,
+    "msf_score": 0,
+    "adr_pct": 5.0,
+    "rel_vol": 0.9,
+    "dollar_vol_30d_m": 23.0,
+    "perf_1m_pct": 7.0,
+    "perf_3m_pct": -8.0,
+    "off_52w_high_pct": 42.9,
+    "ema21": 25.66,
+    "ema50": 27.09,
+    "sma200": 33.06,
+    "entries": {},
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 28.75,
+    "days_since_20d_high": 0,
+    "section": "Momentum",
+    "why": "momentum 1W",
+    "added": "2026-10-23"
+   },
+   {
     "symbol": "WK",
     "tv": "NYSE:WK",
     "close": 85.8,
@@ -9708,8 +10139,7 @@
     "days_since_20d_high": 16,
     "section": "Momentum",
     "why": "momentum 1W",
-    "added": "2026-10-20",
-    "promoted": true
+    "added": "2026-10-20"
    },
    {
     "symbol": "XERS",
@@ -9915,8 +10345,7 @@
     "days_since_20d_high": 1,
     "section": "Momentum",
     "why": "momentum 1W",
-    "added": "2026-10-20",
-    "promoted": true
+    "added": "2026-10-20"
    }
   ],
   "3-SETUPS": [
@@ -9959,85 +10388,6 @@
     "added": "2026-10-16"
    },
    {
-    "symbol": "RVTY",
-    "tv": "NYSE:RVTY",
-    "close": 158.77,
-    "chg_pct": 0.9,
-    "grade": "A+",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 11.8,
-    "pattern": "Qullamaggie breakout",
-    "buy_point": 166.25,
-    "to_buy_point_pct": 4.7,
-    "base_bars": 14.0,
-    "base_depth_pct": 11.8,
-    "msf_score": 80,
-    "adr_pct": 3.9,
-    "rel_vol": 0.7,
-    "dollar_vol_30d_m": 333.0,
-    "perf_1m_pct": 5.0,
-    "perf_3m_pct": 47.0,
-    "off_52w_high_pct": 4.5,
-    "ema21": 152.02,
-    "ema50": 141.8,
-    "sma200": 110.49,
-    "entries": {
-     "breakout": 166.25
-    },
-    "ema_triggers_tomorrow": [],
-    "twenty_day_high": 166.25,
-    "days_since_20d_high": 13,
-    "section": "Tight",
-    "setups": [
-     "Tight"
-    ],
-    "last_hit": "2026-10-20",
-    "source": "2-POOL",
-    "why": "Tight (from 2-POOL)",
-    "added": "2026-10-09"
-   },
-   {
-    "symbol": "IOVA",
-    "tv": "NASDAQ:IOVA",
-    "close": 14.09,
-    "chg_pct": -0.4,
-    "grade": "A+",
-    "higher_high_low": true,
-    "pullback_from_20d_high_pct": 11.9,
-    "pattern": "High tight flag",
-    "buy_point": 15.37,
-    "to_buy_point_pct": 9.1,
-    "base_bars": 19.0,
-    "base_depth_pct": 19.9,
-    "msf_score": 75,
-    "adr_pct": 7.2,
-    "rel_vol": 0.7,
-    "dollar_vol_30d_m": 233.0,
-    "perf_1m_pct": 30.0,
-    "perf_3m_pct": 188.0,
-    "off_52w_high_pct": 8.3,
-    "ema21": 13.45,
-    "ema50": 11.29,
-    "sma200": 5.59,
-    "entries": {
-     "breakout": 15.37,
-     "pullback_tight_day": 14.3,
-     "pullback_stop": 13.54,
-     "level": 15.37
-    },
-    "ema_triggers_tomorrow": [],
-    "twenty_day_high": 15.37,
-    "days_since_20d_high": 2,
-    "section": "Tight",
-    "setups": [
-     "Tight"
-    ],
-    "last_hit": "2026-10-23",
-    "source": "2-POOL",
-    "why": "Tight (from 2-POOL)",
-    "added": "2026-10-12"
-   },
-   {
     "symbol": "ZETA",
     "tv": "NYSE:ZETA",
     "close": 33.98,
@@ -10073,7 +10423,7 @@
     "last_hit": "2026-10-23",
     "source": "2-POOL",
     "why": "Tight (from 2-POOL)",
-    "added": "2026-10-12"
+    "added": "2026-10-14"
    },
    {
     "symbol": "NTRA",
@@ -10119,46 +10469,7 @@
     "last_hit": "2026-10-23",
     "source": "2-POOL",
     "why": "Tight + PB 21 (from 2-POOL)",
-    "added": "2026-10-09"
-   },
-   {
-    "symbol": "ECO",
-    "tv": "NYSE:ECO",
-    "close": 94.73,
-    "chg_pct": 5.2,
-    "grade": "A+",
-    "higher_high_low": true,
-    "pullback_from_20d_high_pct": 14.3,
-    "pattern": "Bull flag",
-    "buy_point": 100.68,
-    "to_buy_point_pct": 6.3,
-    "base_bars": 10.0,
-    "base_depth_pct": 14.3,
-    "msf_score": 65,
-    "adr_pct": 4.7,
-    "rel_vol": 0.7,
-    "dollar_vol_30d_m": 86.0,
-    "perf_1m_pct": 21.0,
-    "perf_3m_pct": 65.0,
-    "off_52w_high_pct": 5.9,
-    "ema21": 88.59,
-    "ema50": 80.57,
-    "sma200": 57.53,
-    "entries": {
-     "breakout": 100.68,
-     "flag_trendline": 94.51
-    },
-    "ema_triggers_tomorrow": [],
-    "twenty_day_high": 100.68,
-    "days_since_20d_high": 8,
-    "section": "Tight",
-    "setups": [
-     "Tight"
-    ],
-    "last_hit": "2026-10-23",
-    "source": "2-POOL",
-    "why": "Tight (from 2-POOL)",
-    "added": "2026-10-15"
+    "added": "2026-10-12"
    },
    {
     "symbol": "DK",
@@ -10233,15 +10544,54 @@
     ],
     "twenty_day_high": 11.42,
     "days_since_20d_high": 4,
+    "section": "PB 21",
+    "setups": [
+     "PB 21"
+    ],
+    "last_hit": "2026-10-23",
+    "source": "2-POOL",
+    "why": "PB 21 (from 2-POOL)",
+    "added": "2026-10-22"
+   },
+   {
+    "symbol": "ECO",
+    "tv": "NYSE:ECO",
+    "close": 94.73,
+    "chg_pct": 5.2,
+    "grade": "A+",
+    "higher_high_low": true,
+    "pullback_from_20d_high_pct": 14.3,
+    "pattern": "Bull flag",
+    "buy_point": 100.68,
+    "to_buy_point_pct": 6.3,
+    "base_bars": 10.0,
+    "base_depth_pct": 14.3,
+    "msf_score": 65,
+    "adr_pct": 4.7,
+    "rel_vol": 0.7,
+    "dollar_vol_30d_m": 86.0,
+    "perf_1m_pct": 21.0,
+    "perf_3m_pct": 65.0,
+    "off_52w_high_pct": 5.9,
+    "ema21": 88.59,
+    "ema50": 80.57,
+    "sma200": 57.53,
+    "entries": {
+     "breakout": 100.68,
+     "flag_trendline": 94.51
+    },
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 100.68,
+    "days_since_20d_high": 8,
     "section": "Tight",
     "setups": [
      "Tight",
      "PB 21"
     ],
-    "last_hit": "2026-10-23",
+    "last_hit": "2026-10-22",
     "source": "2-POOL",
     "why": "Tight + PB 21 (from 2-POOL)",
-    "added": "2026-10-21"
+    "added": "2026-10-15"
    },
    {
     "symbol": "CLF",
@@ -10357,6 +10707,45 @@
     "last_hit": "2026-10-23",
     "source": "1-UPDAY",
     "why": "PB 21 (from 1-UPDAY)",
+    "added": "2026-10-23"
+   },
+   {
+    "symbol": "GME",
+    "tv": "NYSE:GME",
+    "close": 24.82,
+    "chg_pct": -2.2,
+    "grade": "A+",
+    "higher_high_low": true,
+    "pullback_from_20d_high_pct": 13.0,
+    "pattern": "Bull flag",
+    "buy_point": 28.3,
+    "to_buy_point_pct": 14.0,
+    "base_bars": 8.0,
+    "base_depth_pct": 13.0,
+    "msf_score": 50,
+    "adr_pct": 4.4,
+    "rel_vol": 0.7,
+    "dollar_vol_30d_m": 263.0,
+    "perf_1m_pct": -1.0,
+    "perf_3m_pct": 15.0,
+    "off_52w_high_pct": 12.3,
+    "ema21": 25.34,
+    "ema50": 23.63,
+    "sma200": 22.62,
+    "entries": {
+     "breakout": 28.3,
+     "flag_trendline": 25.64
+    },
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 28.3,
+    "days_since_20d_high": 6,
+    "section": "PB 21",
+    "setups": [
+     "PB 21"
+    ],
+    "last_hit": "2026-10-22",
+    "source": "1-UPDAY",
+    "why": "PB 21 (from 1-UPDAY)",
     "added": "2026-10-22"
    },
    {
@@ -10398,42 +10787,6 @@
     "added": "2026-10-16"
    },
    {
-    "symbol": "NTSK",
-    "tv": "NASDAQ:NTSK",
-    "close": 24.28,
-    "chg_pct": 9.4,
-    "grade": "A+",
-    "higher_high_low": true,
-    "pullback_from_20d_high_pct": 10.5,
-    "pattern": "",
-    "buy_point": null,
-    "to_buy_point_pct": null,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 6.3,
-    "rel_vol": 1.2,
-    "dollar_vol_30d_m": 182.0,
-    "perf_1m_pct": 31.0,
-    "perf_3m_pct": 103.0,
-    "off_52w_high_pct": 2.8,
-    "ema21": 19.92,
-    "ema50": 17.8,
-    "sma200": 12.95,
-    "entries": {},
-    "ema_triggers_tomorrow": [],
-    "twenty_day_high": 24.4,
-    "days_since_20d_high": 0,
-    "section": "Tight",
-    "setups": [
-     "Tight"
-    ],
-    "last_hit": "2026-10-20",
-    "source": "2-POOL",
-    "why": "Tight (from 2-POOL)",
-    "added": "2026-10-14"
-   },
-   {
     "symbol": "AI",
     "tv": "NYSE:AI",
     "close": 12.46,
@@ -10470,42 +10823,41 @@
     "added": "2026-10-16"
    },
    {
-    "symbol": "IOT",
-    "tv": "NYSE:IOT",
-    "close": 44.92,
-    "chg_pct": 2.6,
-    "grade": "A",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 3.9,
-    "pattern": "Cup (no handle)",
-    "buy_point": 45.12,
-    "to_buy_point_pct": 0.4,
-    "base_bars": 55.0,
-    "base_depth_pct": 19.3,
-    "msf_score": 90,
-    "adr_pct": 4.6,
-    "rel_vol": 0.9,
-    "dollar_vol_30d_m": 217.0,
-    "perf_1m_pct": 14.0,
-    "perf_3m_pct": 27.0,
-    "off_52w_high_pct": 5.4,
-    "ema21": 41.48,
-    "ema50": 40.1,
-    "sma200": 34.03,
-    "entries": {
-     "breakout": 45.12
-    },
+    "symbol": "NTSK",
+    "tv": "NASDAQ:NTSK",
+    "close": 24.28,
+    "chg_pct": 9.4,
+    "grade": "A+",
+    "higher_high_low": true,
+    "pullback_from_20d_high_pct": 10.5,
+    "pattern": "",
+    "buy_point": null,
+    "to_buy_point_pct": null,
+    "base_bars": null,
+    "base_depth_pct": null,
+    "msf_score": 0,
+    "adr_pct": 6.3,
+    "rel_vol": 1.2,
+    "dollar_vol_30d_m": 182.0,
+    "perf_1m_pct": 31.0,
+    "perf_3m_pct": 103.0,
+    "off_52w_high_pct": 2.8,
+    "ema21": 19.92,
+    "ema50": 17.8,
+    "sma200": 12.95,
+    "entries": {},
     "ema_triggers_tomorrow": [],
-    "twenty_day_high": 44.98,
+    "twenty_day_high": 24.4,
     "days_since_20d_high": 0,
     "section": "Tight",
     "setups": [
-     "Tight"
+     "Tight",
+     "PB 21"
     ],
-    "last_hit": "2026-10-23",
+    "last_hit": "2026-10-19",
     "source": "2-POOL",
-    "why": "Tight (from 2-POOL)",
-    "added": "2026-10-12"
+    "why": "Tight + PB 21 (from 2-POOL)",
+    "added": "2026-10-16"
    },
    {
     "symbol": "SLN",
@@ -10544,6 +10896,44 @@
     "source": "1-EP/GAP",
     "why": "Tight (from 1-EP/GAP)",
     "added": "2026-10-21"
+   },
+   {
+    "symbol": "IOT",
+    "tv": "NYSE:IOT",
+    "close": 44.92,
+    "chg_pct": 2.6,
+    "grade": "A",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 3.9,
+    "pattern": "Cup (no handle)",
+    "buy_point": 45.12,
+    "to_buy_point_pct": 0.4,
+    "base_bars": 55.0,
+    "base_depth_pct": 19.3,
+    "msf_score": 90,
+    "adr_pct": 4.6,
+    "rel_vol": 0.9,
+    "dollar_vol_30d_m": 217.0,
+    "perf_1m_pct": 14.0,
+    "perf_3m_pct": 27.0,
+    "off_52w_high_pct": 5.4,
+    "ema21": 41.48,
+    "ema50": 40.1,
+    "sma200": 34.03,
+    "entries": {
+     "breakout": 45.12
+    },
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 44.98,
+    "days_since_20d_high": 0,
+    "section": "Tight",
+    "setups": [
+     "Tight"
+    ],
+    "last_hit": "2026-10-22",
+    "source": "2-POOL",
+    "why": "Tight (from 2-POOL)",
+    "added": "2026-10-13"
    },
    {
     "symbol": "CAI",
@@ -10658,11 +11048,12 @@
     "days_since_20d_high": 8,
     "section": "Tight",
     "setups": [
-     "Tight"
+     "Tight",
+     "PB 21"
     ],
-    "last_hit": "2026-10-23",
+    "last_hit": "2026-10-22",
     "source": "2-POOL",
-    "why": "Tight (from 2-POOL)",
+    "why": "Tight + PB 21 (from 2-POOL)",
     "added": "2026-10-20"
    },
    {
@@ -10696,11 +11087,12 @@
     "days_since_20d_high": 0,
     "section": "Tight",
     "setups": [
-     "Tight"
+     "Tight",
+     "PB 21"
     ],
-    "last_hit": "2026-10-21",
+    "last_hit": "2026-10-20",
     "source": "2-POOL",
-    "why": "Tight (from 2-POOL)",
+    "why": "Tight + PB 21 (from 2-POOL)",
     "added": "2026-10-19"
    },
    {
@@ -10739,7 +11131,7 @@
     "last_hit": "2026-10-23",
     "source": "2-POOL",
     "why": "Tight (from 2-POOL)",
-    "added": "2026-10-12"
+    "added": "2026-10-05"
    },
    {
     "symbol": "RBRK",
@@ -10778,42 +11170,6 @@
     "source": "1-UPDAY",
     "why": "Tight (from 1-UPDAY)",
     "added": "2026-10-20"
-   },
-   {
-    "symbol": "PD",
-    "tv": "NYSE:PD",
-    "close": 17.49,
-    "chg_pct": 1.5,
-    "grade": "A",
-    "higher_high_low": true,
-    "pullback_from_20d_high_pct": 9.0,
-    "pattern": "Base forming (no pattern yet)",
-    "buy_point": 17.55,
-    "to_buy_point_pct": 0.3,
-    "base_bars": 7.0,
-    "base_depth_pct": 9.0,
-    "msf_score": 80,
-    "adr_pct": 3.7,
-    "rel_vol": 1.0,
-    "dollar_vol_30d_m": 30.0,
-    "perf_1m_pct": 17.0,
-    "perf_3m_pct": 79.0,
-    "off_52w_high_pct": 0.3,
-    "ema21": 16.14,
-    "ema50": 14.66,
-    "sma200": 10.0,
-    "entries": {},
-    "ema_triggers_tomorrow": [],
-    "twenty_day_high": 17.55,
-    "days_since_20d_high": 5,
-    "section": "Tight",
-    "setups": [
-     "Tight"
-    ],
-    "last_hit": "2026-10-19",
-    "source": "2-POOL",
-    "why": "Tight (from 2-POOL)",
-    "added": "2026-10-19"
    },
    {
     "symbol": "ILMN",
@@ -10887,7 +11243,7 @@
     "setups": [
      "Tight"
     ],
-    "last_hit": "2026-10-22",
+    "last_hit": "2026-10-21",
     "source": "1-UPDAY",
     "why": "Tight (from 1-UPDAY)",
     "added": "2026-10-21"
@@ -10923,7 +11279,7 @@
     "setups": [
      "Tight"
     ],
-    "last_hit": "2026-10-20",
+    "last_hit": "2026-10-19",
     "source": "1-UPDAY",
     "why": "Tight (from 1-UPDAY)",
     "added": "2026-10-19"
@@ -10962,7 +11318,7 @@
     "last_hit": "2026-10-23",
     "source": "1-UPDAY",
     "why": "Tight (from 1-UPDAY)",
-    "added": "2026-10-20"
+    "added": "2026-10-23"
    },
    {
     "symbol": "DDOG",
@@ -10995,14 +11351,13 @@
     ],
     "twenty_day_high": 300.68,
     "days_since_20d_high": 9,
-    "section": "Tight",
+    "section": "PB 21",
     "setups": [
-     "Tight",
      "PB 21"
     ],
     "last_hit": "2026-10-23",
     "source": "2-POOL",
-    "why": "Tight + PB 21 (from 2-POOL)",
+    "why": "PB 21 (from 2-POOL)",
     "added": "2026-10-19"
    },
    {
@@ -11047,6 +11402,48 @@
     "added": "2026-10-19"
    },
    {
+    "symbol": "LIND",
+    "tv": "NASDAQ:LIND",
+    "close": 34.24,
+    "chg_pct": -2.9,
+    "grade": "A",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 9.5,
+    "pattern": "Qullamaggie breakout",
+    "buy_point": 36.97,
+    "to_buy_point_pct": 8.0,
+    "base_bars": 14.0,
+    "base_depth_pct": 9.5,
+    "msf_score": 65,
+    "adr_pct": 4.3,
+    "rel_vol": 0.8,
+    "dollar_vol_30d_m": 32.0,
+    "perf_1m_pct": 24.0,
+    "perf_3m_pct": 22.0,
+    "off_52w_high_pct": 7.4,
+    "ema21": 33.92,
+    "ema50": 31.73,
+    "sma200": 23.93,
+    "entries": {
+     "breakout": 36.97,
+     "pullback_tight_day": 34.91,
+     "pullback_stop": 33.71
+    },
+    "ema_triggers_tomorrow": [
+     "21 EMA"
+    ],
+    "twenty_day_high": 36.97,
+    "days_since_20d_high": 8,
+    "section": "PB 21",
+    "setups": [
+     "PB 21"
+    ],
+    "last_hit": "2026-10-23",
+    "source": "2-POOL",
+    "why": "PB 21 (from 2-POOL)",
+    "added": "2026-10-19"
+   },
+   {
     "symbol": "CVI",
     "tv": "NYSE:CVI",
     "close": 58.16,
@@ -11082,6 +11479,45 @@
     "last_hit": "2026-10-23",
     "source": "2-POOL",
     "why": "PB 21 (from 2-POOL)",
+    "added": "2026-10-22"
+   },
+   {
+    "symbol": "FIVN",
+    "tv": "NASDAQ:FIVN",
+    "close": 37.61,
+    "chg_pct": 7.2,
+    "grade": "A",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 7.6,
+    "pattern": "High tight flag",
+    "buy_point": 40.0,
+    "to_buy_point_pct": 6.4,
+    "base_bars": 24.0,
+    "base_depth_pct": 20.2,
+    "msf_score": 65,
+    "adr_pct": 6.0,
+    "rel_vol": 1.7,
+    "dollar_vol_30d_m": 85.0,
+    "perf_1m_pct": 3.0,
+    "perf_3m_pct": 47.0,
+    "off_52w_high_pct": 6.0,
+    "ema21": 34.71,
+    "ema50": 33.24,
+    "sma200": 23.69,
+    "entries": {
+     "breakout": 40.0
+    },
+    "ema_triggers_tomorrow": [],
+    "twenty_day_high": 38.34,
+    "days_since_20d_high": 0,
+    "section": "Tight",
+    "setups": [
+     "Tight",
+     "PB 21"
+    ],
+    "last_hit": "2026-10-22",
+    "source": "1-UPDAY",
+    "why": "Tight + PB 21 (from 1-UPDAY)",
     "added": "2026-10-19"
    }
   ]
