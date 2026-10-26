@@ -17,12 +17,12 @@ for s in sys.argv[2:]:
             sz = t["s"]; tot += sz
             if sz >= 100: big += sz
             for c in t.get("c") or []: conds[c] = conds.get(c, 0) + sz
-            hm = datetime.datetime.fromisoformat(t["t"].replace("Z", "+00:00")[:26] + "+00:00" if "." in t["t"] else t["t"].replace("Z", "+00:00")).astimezone(NY).strftime("%H:%M")
+            hm = datetime.datetime.fromisoformat(t["t"][:19] + "+00:00").astimezone(NY).strftime("%H:%M")
             b = by.setdefault(hm, [0, 0]); b[0] += sz; b[1] += sz if sz >= 100 else 0
         if not res.get("next_page_token"): break
         q["page_token"] = res["next_page_token"]
     cum, a, bb = {}, 0, 0
     for hm in sorted(by):
         a += by[hm][0]; bb += by[hm][1]; cum[hm] = [a, bb]
-    out[s] = {"total": tot, "no_odd_lots": big, "conditions": conds, "cum": cum}
+    out[s] = {"trades": sum(1 for _ in ()), "total": tot, "no_odd_lots": big, "conditions": conds, "cum": cum}
 json.dump(out, open(sys.argv[1], "w"))
