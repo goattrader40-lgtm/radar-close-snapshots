@@ -26,3 +26,4 @@ jobs:
             python3 radar/probe_vol.py /tmp/probe_vol.json NVDA AMD AAPL MU TSLA PBF CRWD XNCR AAOI LITE SNDK ICHR UCTT DK ARIS RKLB HOOD PLTR COHR IREN
             python3 radar/publish.py "volume probe" /tmp/probe_vol.json
           fi
+          if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi

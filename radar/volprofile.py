@@ -4,10 +4,12 @@
   python3 radar/volprofile.py <stocks.json> <out volprofile.json> [--days 20]
 
 For each stock: the last 20 complete regular sessions of Yahoo 5-minute bars (9:30-4:00 ET) give the
-volume traded from 9:30 up to each 5-minute mark. Yahoo's 5-minute bars miss some prints, so each day's
-curve is scaled to that day's full consolidated volume (Yahoo daily bar), the same volume the live quote
-reports. Output: {"date": last session used, "days": 20, "rows": {SYM: [78 numbers]}}, where number j is
-the 20-day average volume from 9:30 to 9:30 + 5*(j+1) minutes (the last one = average full-day volume).
+volume traded from 9:30 up to each 5-minute mark. Checked Oct 26, 2026: during the session the 5-minute bars
+add up to the live quote's volume (0.995-0.999 for most stocks); what they miss of the full day (about 13%)
+is the closing auction and late prints after 4:00, so the curves are NOT scaled up to the daily volume.
+A day whose bars add up to less than 60% or more than 110% of that day's daily-bar volume is a Yahoo data
+glitch and is skipped. Output: {"date": last session used, "days": 20, "rows": {SYM: [78 numbers]}}, where
+number j is the 20-day average volume from 9:30 to 9:30 + 5*(j+1) minutes.
 
 Relative volume at time = today's volume so far / that average at the same minute (interpolated).
 """
@@ -61,10 +63,11 @@ def profile(sym, days):
         tot = sum(bars)
         if d not in full or tot <= 0 or sum(1 for b in bars if b) < 60:   # skip half days and gappy days
             continue
-        k = full[d] / tot
-        acc, cum = 0.0, []
+        if not 0.6 <= tot / full[d] <= 1.1:                                 # Yahoo glitch day
+            continue
+        acc, cum = 0, []
         for b in bars:
-            acc += b * k
+            acc += b
             cum.append(acc)
         curves.append((d, cum))
         if len(curves) == days:
