@@ -145,6 +145,23 @@ def daily():
         log("volume curves failed:", e)
 
 
+def pm_once():
+    """one live pre-market scan -> premarket_live.json on radar-data"""
+    os.makedirs(OUT, exist_ok=True)
+    txt = data_file("stocks.json")
+    if not txt:
+        return False
+    p = os.path.join(OUT, "pm_stocks.json")
+    open(p, "w").write(txt)
+    r = sh(sys.executable, os.path.join(HERE, "pmlive.py"), p, os.path.join(OUT, "premarket_live.json"), check=False)
+    log("pre-market:", (r.stdout or r.stderr).strip()[-300:])
+    if r.returncode:
+        return False
+    sh(sys.executable, os.path.join(HERE, "publish.py"), "pre-market " + now().strftime("%F %H:%M"),
+       os.path.join(OUT, "premarket_live.json"))
+    return True
+
+
 def volprofile():
     """20-session intraday volume curves for relative volume at time (about 5-10 minutes)"""
     os.makedirs(OUT, exist_ok=True)
@@ -213,7 +230,7 @@ def day():
             volprofile()
         except Exception as e:
             log("volume curves failed:", e)
-    pm_started, snap_started, last_live = set(), None, None
+    pm_started, snap_started, last_live, last_pm = set(), None, None, None
     while True:
         t = now()
         if time.monotonic() - T0 > BUDGET:
@@ -226,6 +243,13 @@ def day():
                 pm_started.add(slot)
                 if slot == (8, 25) or not premarket_saved_today():
                     dispatch("premarket.yml")
+        # live pre-market scanner every 5 minutes, 7:00-9:29
+        if (7, 0) <= hm(t) < (9, 30) and (last_pm is None or (t - last_pm).total_seconds() >= 290):
+            last_pm = t
+            try:
+                pm_once()
+            except Exception as e:
+                log("pre-market scan failed:", e)
         # live prices every 5 minutes, 9:30-4:10
         if (9, 30) <= hm(t) <= (16, 10):
             due = last_live is None or (t - last_live).total_seconds() >= 290
@@ -249,8 +273,8 @@ def day():
             return
         # next tick: the next 5-minute mark during the session, else the next event
         nxt = t.replace(second=20, microsecond=0) + datetime.timedelta(minutes=5 - t.minute % 5)
-        if hm(t) < (8, 25):
-            nxt = min(nxt, t.replace(hour=8, minute=25, second=5, microsecond=0))
+        if hm(t) < (7, 0):
+            nxt = min(nxt, t.replace(hour=7, minute=0, second=5, microsecond=0))
         sleep_until(nxt)
 
 
@@ -261,6 +285,8 @@ if __name__ == "__main__":
         daily()
     elif mode == "volprofile":
         volprofile()
+    elif mode == "premarket":
+        pm_once()
     elif mode == "live":
         live_once()
     else:

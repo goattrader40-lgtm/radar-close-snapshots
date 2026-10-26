@@ -29,5 +29,6 @@ jobs:
             python3 radar/publish.py "volume probe" /tmp/probe_vol.json
           fi
           if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi
+          if [ "${{ inputs.cmd }}" = "premarket" ]; then python3 radar/day.py premarket; fi
           if [ "${{ inputs.cmd }}" = "alpaca" ]; then python3 radar/probe_alpaca.py /tmp/probe_alpaca.json AAPL,NVDA,CRWD,CIEN,TSLA,BE,AAOI,MU,AMD,PLTR && python3 radar/publish.py "alpaca probe" /tmp/probe_alpaca.json; fi
           if [ "${{ inputs.cmd }}" = "rvol" ]; then python3 radar/probe_rvol.py /tmp/probe_rvol.json CRWD TSLA CIEN BE AAOI NVDA && python3 radar/publish.py "rvol probe" /tmp/probe_rvol.json; fi

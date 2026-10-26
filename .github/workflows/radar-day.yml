@@ -1,5 +1,6 @@
 # Theme & Group Radar: runs the whole market day in one job (see radar/day.py).
-#   8:25 / 8:40 AM ET  starts the Pre-market scan
+#   7:00-9:29 AM ET   live pre-market scanner every 5 minutes -> radar-data
+#   8:25 / 8:40 AM ET  starts the Pre-market scan (the one the 8:47 grading uses)
 #   9:30 AM-4:10 PM    live prices every 5 minutes -> radar-data branch (the portal reads it)
 #   4:06 PM            starts the Close snapshot, then rebuilds themes, groups and gainers and updates the track record
 # Several start times, because GitHub's scheduler can skip runs; extra starts wait in line and stop
@@ -9,6 +10,10 @@ name: Radar day
 
 on:
   schedule:
+    - cron: "20 10 * * 1-5"    # 6:20 AM EDT (GitHub can start schedules late, so several tries before 7:00)
+    - cron: "40 10 * * 1-5"    # 6:40 AM EDT
+    - cron: "20 11 * * 1-5"    # 6:20 AM EST / 7:20 AM EDT
+    - cron: "40 11 * * 1-5"    # 6:40 AM EST / 7:40 AM EDT
     - cron: "5 12 * * 1-5"     # 8:05 AM EDT
     - cron: "5 13 * * 1-5"     # 8:05 AM EST
     - cron: "20 13 * * 1-5"    # 9:20 AM EDT
@@ -23,7 +28,7 @@ on:
         description: "day = the rest of today, daily = after-close refresh now, live = one live update now"
         default: "day"
         type: choice
-        options: [day, daily, live]
+        options: [day, daily, live, premarket, volprofile]
 
 permissions:
   contents: write
