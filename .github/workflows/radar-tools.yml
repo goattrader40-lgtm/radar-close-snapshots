@@ -1,0 +1,28 @@
+# One-off checks for Theme & Group Radar (run by hand; doesn't wait for the Radar day job).
+name: Radar tools
+on:
+  workflow_dispatch:
+    inputs:
+      cmd:
+        description: "Command to run (see radar/)"
+        default: "probe"
+permissions:
+  contents: write
+concurrency:
+  group: radar-tools
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "radar-bot"; git config user.email "radar-bot@users.noreply.github.com"
+          if [ "${{ inputs.cmd }}" = "probe" ]; then
+            python3 radar/probe_vol.py /tmp/probe_vol.json NVDA AMD AAPL MU TSLA PBF CRWD XNCR AAOI LITE SNDK ICHR UCTT DK ARIS RKLB HOOD PLTR COHR IREN
+            python3 radar/publish.py "volume probe" /tmp/probe_vol.json
+          fi
