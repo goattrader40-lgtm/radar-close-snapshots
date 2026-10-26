@@ -137,6 +137,10 @@ def daily():
         log("gradelog:", (r.stdout or r.stderr).strip()[-300:])
         if r.returncode == 0:
             files.append(p)
+    r = sh(sys.executable, os.path.join(HERE, "revenue.py"), os.path.join(OUT, "themes.json"), os.path.join(OUT, "revenue.json"), check=False)
+    log("revenue:", (r.stdout or r.stderr).strip()[-200:])
+    if r.returncode == 0:
+        files.append(os.path.join(OUT, "revenue.json"))
     sh(sys.executable, os.path.join(HERE, "publish.py"), "daily " + now().strftime("%F %H:%M"), *files)
     if gl and os.path.join(OUT, "gradelog.json") in files:   # dated copy of the track record, kept with history
         bk = os.path.join(OUT, "backup")
