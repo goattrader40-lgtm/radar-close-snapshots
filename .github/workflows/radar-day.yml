@@ -50,6 +50,8 @@ jobs:
       - name: Run
         env:
           GH_TOKEN: ${{ github.token }}
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
         run: |
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
