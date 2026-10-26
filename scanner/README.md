@@ -13,7 +13,7 @@ Runs steps 1–3 of your TradingView workflow every trading day at about 4:40 PM
 | Step | Screener (your filters + the standard ones) | Goes to | When |
 |---|---|---|---|
 | 1 | EP-GAPUP-BREAKOUT: gap > 5%, rel vol ≥ 2.5 | 1-EP/GAP, section = date | daily |
-| 1 | HOTTEST STOCKS: change > 4%, rel vol ≥ 1 | 1-UPDAY, section = date | daily |
+| 1 | HOTTEST STOCKS: change ≥ 4%, rel vol ≥ 1 | 1-UPDAY, section = date | daily |
 | 2 | 50 EMA FIRST CLOSE: first close above the 50 EMA after 2+ closes below | 2-POOL › 50 EMA reclaim | daily |
 | 2 | MOMENTUM-1W > 10% · 1M > 25% · 3M > 50% · 6M > 50% (+ above 200 SMA, 50%+ above the 52-week low) | 2-POOL › Momentum | weekly (Friday) |
 | 3 | DAILY TIGHTNESS · PULLBACK TO 21EMA-MAIN · PULLBACK TO 50EMA, run on 1-EP/GAP + 1-UPDAY + 2-POOL | 3-SETUPS › Tight / PB 21 / PB 50 | daily |
