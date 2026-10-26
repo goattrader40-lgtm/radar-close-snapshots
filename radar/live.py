@@ -4,7 +4,10 @@
   python3 radar/live.py <stocks.json> <themes.json> <out live.json> [--force]
 
 Pulls Yahoo quotes for every stock in stocks.json plus the theme ETFs, in batches, and writes
-live.json: {"saved_at", "date", "session", "n", "source", "rows": {SYM: [price, chg_1d %, volume, quote time]}}.
+live.json: {"saved_at", "date", "session", "n", "source",
+            "rows": {SYM: [price, chg_1d %, volume, quote time, relative volume at time]}}.
+Relative volume at time = today's volume from 9:30 to the quote time / the 20-session average volume from
+9:30 to the same minute (from volprofile.json, --profile <path>); null without a curve or before 9:31.
 Runs only from 9:30 AM to 4:10 PM ET on trading days unless --force is given (exits 3 = nothing to do).
 """
 import concurrent.futures as cf, datetime, http.cookiejar, json, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
@@ -89,8 +92,30 @@ class Yahoo:
         return None
 
 
+def rvol_at(vol, qtime, curve):
+    """today's volume so far / the average volume from 9:30 to the same minute"""
+    if not vol or not qtime or not curve:
+        return None
+    t = datetime.datetime.fromtimestamp(qtime, NY)
+    m = min(t.hour * 60 + t.minute + t.second / 60, 960) - 570       # minutes since 9:30, capped at 4:00
+    if m < 1:
+        return None
+    pos = m / 5                                                       # curve[j] = average through 9:30 + 5(j+1) min
+    j = int(pos)
+    lo = curve[j - 1] if j >= 1 else 0
+    hi = curve[min(j, len(curve) - 1)]
+    exp = lo + (hi - lo) * (pos - j) if j < len(curve) else curve[-1]
+    return round(vol / exp, 2) if exp > 0 else None
+
+
 def main():
     stocks_p, themes_p, out_p = sys.argv[1:4]
+    prof = {}
+    if "--profile" in sys.argv:
+        try:
+            prof = json.load(open(sys.argv[sys.argv.index("--profile") + 1]))["rows"]
+        except Exception as e:
+            print(f"no volume curves: {e}", file=sys.stderr)
     force = "--force" in sys.argv
     now = datetime.datetime.now(NY)
     if not force and (now.weekday() >= 5 or now.date().isoformat() in HOLIDAYS
@@ -118,6 +143,8 @@ def main():
                 if v:
                     got[s] = v
     rows = {ymap[k]: v for k, v in got.items() if k in ymap}
+    for s, v in rows.items():
+        v.append(rvol_at(v[2], v[3], prof.get(s)))
     if len(rows) < 300:
         sys.exit(f"only {len(rows)} quotes came back, not saving")
     times = sorted(v[3] for v in rows.values() if v[3])
@@ -125,6 +152,7 @@ def main():
     json.dump({"saved_at": now.isoformat(timespec="seconds"), "date": now.date().isoformat(), "session": session,
                "n": len(rows), "source": source, "rows": rows}, open(out_p, "w"), separators=(",", ":"))
     print(json.dumps({"saved_at": now.isoformat(timespec="seconds"), "session": session, "quotes": len(rows),
+                      "with_rvol": sum(1 for v in rows.values() if v[4] is not None),
                       "of": len(ymap), "source": source}))
 
 

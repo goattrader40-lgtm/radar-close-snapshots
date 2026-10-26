@@ -483,6 +483,8 @@ for s, r in latest.items():
     if not price: continue
     vols = [v for (_, _, v) in ser[-AVG_N:] if v is not None]
     avg = sum(vols) / len(vols) if len(vols) >= 10 else None
+    prev20 = [v for (_, _, v) in ser[-21:-1] if v is not None]
+    avg20 = sum(prev20) / len(prev20) if len(prev20) >= 10 else None
     if s in fd: sec, ind = fd[s]["sector"], fd[s]["industry"]
     elif votes[r["industry"]]: sec, ind = votes[r["industry"]].most_common(1)[0][0]
     else: sec, ind = (r["sector"] or "Other"), (r["industry"] or "Other")
@@ -507,7 +509,7 @@ for s, r in latest.items():
         "price": rd(price), "chg_1d": rd(c1), "chg_1w": None if stale else rd(compound(ser, 5)),
         "chg_1m": None if stale else rd(compound(ser, 21)), "chg_3m": None if stale else rd(compound(ser, M3)),
         "mcap_b": rd(mcap / 1e9), "volume": None if vol is None else int(vol), "avg_vol_30d": None if avg is None else int(avg),
-        "rel_vol": rd(vol / avg) if (avg and vol) else None,
+        "rel_vol": rd(vol / avg20) if (avg20 and vol) else None,   # full day vs the previous 20 sessions' average
         "adr_20": rd(adr), "dvol_10_m": rd(dv10 / 1e6, 1) if dv10 else None, "dvol_20_m": rd(dv20 / 1e6, 1) if dv20 else None,
         "sma200": rd(sma), "above_200": above, "vs_200": rd((price / sma - 1) * 100, 1) if sma and not stale else None,
         "sector": sec, "industry": ind, "industry_detail": r["industry"] or "Other",

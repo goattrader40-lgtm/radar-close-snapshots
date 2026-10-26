@@ -95,8 +95,13 @@ def live_once():
             log(f"no {name} on radar-data yet: run the daily refresh first")
             return False
         open(os.path.join(OUT, "base_" + name), "w").write(txt)
+    extra = []
+    vp = data_file("volprofile.json")
+    if vp:
+        open(os.path.join(OUT, "base_volprofile.json"), "w").write(vp)
+        extra = ["--profile", os.path.join(OUT, "base_volprofile.json")]
     r = sh(sys.executable, os.path.join(HERE, "live.py"), os.path.join(OUT, "base_stocks.json"),
-           os.path.join(OUT, "base_themes.json"), os.path.join(OUT, "live.json"), "--force", check=False)
+           os.path.join(OUT, "base_themes.json"), os.path.join(OUT, "live.json"), "--force", *extra, check=False)
     log("live:", (r.stdout or r.stderr).strip()[-300:])
     if r.returncode:
         return False
@@ -134,6 +139,37 @@ def daily():
                "gradelog backup " + now().strftime("%F"), dst, check=False)
         log("backup:", (r.stdout or r.stderr).strip()[-200:])
     log("daily refresh published")
+    try:
+        volprofile()
+    except Exception as e:
+        log("volume curves failed:", e)
+
+
+def volprofile():
+    """20-session intraday volume curves for relative volume at time (about 5-10 minutes)"""
+    os.makedirs(OUT, exist_ok=True)
+    txt = data_file("stocks.json")
+    if not txt:
+        return
+    p = os.path.join(OUT, "vp_stocks.json")
+    open(p, "w").write(txt)
+    r = sh(sys.executable, os.path.join(HERE, "volprofile.py"), p, os.path.join(OUT, "volprofile.json"), check=False)
+    log("volume curves:", (r.stdout or r.stderr).strip()[-300:])
+    if r.returncode == 0:
+        sh(sys.executable, os.path.join(HERE, "publish.py"), "volume curves " + now().strftime("%F %H:%M"),
+           os.path.join(OUT, "volprofile.json"))
+
+
+def volprofile_current():
+    """True when the curves already include the last complete session"""
+    try:
+        d = json.loads(data_file("volprofile.json"))["date"]
+    except Exception:
+        return False
+    prev = now().date() - datetime.timedelta(days=1)
+    while not trading_day(prev):
+        prev -= datetime.timedelta(days=1)
+    return d >= prev.isoformat()
 
 
 def day_done():
@@ -172,6 +208,11 @@ def day():
             daily()
         except Exception as e:
             log("catch-up refresh failed:", e)
+    if not volprofile_current() and hm(now()) < (16, 0):
+        try:
+            volprofile()
+        except Exception as e:
+            log("volume curves failed:", e)
     pm_started, snap_started, last_live = set(), None, None
     while True:
         t = now()
@@ -218,6 +259,8 @@ if __name__ == "__main__":
     os.chdir(os.path.dirname(HERE))
     if mode == "daily":
         daily()
+    elif mode == "volprofile":
+        volprofile()
     elif mode == "live":
         live_once()
     else:
