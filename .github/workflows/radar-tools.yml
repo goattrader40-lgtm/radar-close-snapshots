@@ -32,6 +32,7 @@ jobs:
           if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi
           if [ "${{ inputs.cmd }}" = "premarket" ]; then python3 radar/day.py premarket; fi
           if [ "${{ inputs.cmd }}" = "etfs" ]; then python3 radar/day.py etfs; fi
+          if [ "${{ inputs.cmd }}" = "pmvol" ]; then python3 radar/probe_pmvol.py /tmp/probe_pmvol.json INTC SMCI MU AXTI COHR AMD WDC SNDK PLTR LITE && python3 radar/publish.py "pm volume probe" /tmp/probe_pmvol.json; fi
           if [ "${{ inputs.cmd }}" = "revenue" ]; then
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             git show origin/radar-data:themes.json > /tmp/themes.json
