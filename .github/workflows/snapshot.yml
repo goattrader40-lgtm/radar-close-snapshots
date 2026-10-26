@@ -115,5 +115,6 @@ jobs:
             echo "No changes."
           else
             git commit -m "close snapshot $(TZ=America/New_York date +%F)"
+            git pull --rebase -q || true
             git push
           fi

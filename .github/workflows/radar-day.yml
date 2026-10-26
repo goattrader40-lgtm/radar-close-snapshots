@@ -1,0 +1,56 @@
+# Theme & Group Radar: runs the whole market day in one job (see radar/day.py).
+#   8:25 / 8:40 AM ET  starts the Pre-market scan
+#   9:30 AM-4:10 PM    live prices every 5 minutes -> radar-data branch (the portal reads it)
+#   4:06 PM            starts the Close snapshot, then rebuilds themes, groups and gainers and updates the track record
+# Several start times, because GitHub's scheduler can skip runs; extra starts wait in line and stop
+# right away when the day is already covered. Run by hand: Actions -> Radar day -> Run workflow
+# (mode "day" = the rest of today, "daily" = the after-close refresh now, "live" = one live update now).
+name: Radar day
+
+on:
+  schedule:
+    - cron: "5 12 * * 1-5"     # 8:05 AM EDT
+    - cron: "5 13 * * 1-5"     # 8:05 AM EST
+    - cron: "20 13 * * 1-5"    # 9:20 AM EDT
+    - cron: "20 14 * * 1-5"    # 9:20 AM EST
+    - cron: "0 16 * * 1-5"     # noon EDT
+    - cron: "0 17 * * 1-5"     # noon EST
+    - cron: "15 20 * * 1-5"    # 4:15 PM EDT
+    - cron: "15 21 * * 1-5"    # 4:15 PM EST
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "day = the rest of today, daily = after-close refresh now, live = one live update now"
+        default: "day"
+        type: choice
+        options: [day, daily, live]
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: radar-day
+  cancel-in-progress: false
+
+jobs:
+  day:
+    runs-on: ubuntu-latest
+    timeout-minutes: 358
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install --quiet numpy
+
+      - name: Run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          python3 radar/day.py "${{ inputs.mode || 'day' }}"
