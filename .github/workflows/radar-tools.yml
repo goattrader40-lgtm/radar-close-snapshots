@@ -27,3 +27,4 @@ jobs:
             python3 radar/publish.py "volume probe" /tmp/probe_vol.json
           fi
           if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi
+          if [ "${{ inputs.cmd }}" = "rvol" ]; then python3 radar/probe_rvol.py /tmp/probe_rvol.json CRWD TSLA CIEN NVDA && python3 radar/publish.py "rvol probe" /tmp/probe_rvol.json; fi
