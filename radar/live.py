@@ -8,6 +8,7 @@ live.json: {"saved_at", "date", "session", "n", "source",
             "rows": {SYM: [price, chg_1d %, volume, quote time, relative volume at time]}}.
 Relative volume at time = today's volume from 9:30 to the quote time / the 20-session average volume from
 9:30 to the same minute (from volprofile.json, --profile <path>); null without a curve or before 9:31.
+From 4:00 on it is the full day / the previous 20 sessions' full-day average (avg_vol_20 in stocks.json).
 Runs only from 9:30 AM to 4:10 PM ET on trading days unless --force is given (exits 3 = nothing to do).
 """
 import concurrent.futures as cf, datetime, http.cookiejar, json, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
@@ -92,12 +93,18 @@ class Yahoo:
         return None
 
 
-def rvol_at(vol, qtime, curve):
-    """today's volume so far / the average volume from 9:30 to the same minute"""
-    if not vol or not qtime or not curve:
+def rvol_at(vol, qtime, curve, avg20=None):
+    """today's volume so far / the average volume from 9:30 to the same minute.
+    From 4:00 the quote's volume includes the closing auction, which the curves (9:30-3:59) leave out, so it is
+    the full day / the previous 20 sessions' full-day average instead, the same number the after-close rebuild shows."""
+    if not vol or not qtime:
         return None
     t = datetime.datetime.fromtimestamp(qtime, NY)
-    m = min(t.hour * 60 + t.minute + t.second / 60, 960) - 570       # minutes since 9:30, capped at 4:00
+    if (t.hour, t.minute) >= (16, 0):
+        return round(vol / avg20, 2) if avg20 else None
+    if not curve:
+        return None
+    m = t.hour * 60 + t.minute + t.second / 60 - 570                 # minutes since 9:30
     if m < 1:
         return None
     pos = m / 5                                                       # curve[j] = average through 9:30 + 5(j+1) min
@@ -149,8 +156,9 @@ def main():
                 if v:
                     got[s] = v
     rows = {ymap[k]: v for k, v in got.items() if k in ymap}
+    avg20 = {r["symbol"]: r.get("avg_vol_20") for r in stocks}
     for s, v in rows.items():
-        v.append(rvol_at(v[2], v[3], prof.get(s)))
+        v.append(rvol_at(v[2], v[3], prof.get(s), avg20.get(s)))
     if len(rows) < 300:
         sys.exit(f"only {len(rows)} quotes came back, not saving")
     times = sorted(v[3] for v in rows.values() if v[3])
