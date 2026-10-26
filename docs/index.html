@@ -164,7 +164,7 @@
       <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
         <span class="tgr-seg" data-k="level"><button data-v="industry" aria-pressed="true">Broad</button><button data-v="industry_detail" aria-pressed="false">Detailed</button></span></span>
       <span class="tgr-ctl"><span class="tgr-lbl">Layout</span>
-        <span class="tgr-seg" data-k="tlay"><button data-v="area" aria-pressed="true">By area (main ETF on top)</button><button data-v="flat" aria-pressed="false">One ranked list</button></span></span>
+        <span class="tgr-seg" data-k="tlay"><button data-v="flat" aria-pressed="true">One ranked list</button><button data-v="area" aria-pressed="false">By area (main ETF on top)</button></span></span>
       <span class="tgr-ctl"><span class="tgr-lbl">Themes</span>
         <span class="tgr-seg" data-k="tset"><button data-v="all" aria-pressed="true">All</button><button data-v="core" aria-pressed="false">Your baskets</button><button data-v="auto" aria-pressed="false">Auto groups</button></span></span>
     </div>
@@ -172,7 +172,7 @@
     <div class="tgr-grid">
       <div class="tgr-card" id="themes-card">
         <div class="tgr-cardhead"><h2 id="themes-h">Themes</h2></div>
-        <p class="tgr-note">Each area starts with its main ETF (SMH for AI &amp; semis, IGV for software…): when it moves, most themes under it move with it. <b>vs ETF</b> = the theme's move minus that ETF's, so it shows which themes lead or lag their area. Your baskets, each with any extra names that pass the same co-movement test, plus auto groups the test found on its own. Only liquid names count and show: market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+. Strength = how tightly the whole group moves together: <span class="tgr-sdot s1"></span>0.6+ tight pack (Cybersecurity is 0.63), <span class="tgr-sdot s2"></span>0.45–0.6, <span class="tgr-sdot s3"></span>looser. Click a theme to list its names, or an industry chip to jump to that industry.</p>
+        <p class="tgr-note">Ranked across all themes; click any column to sort. <b>vs ETF</b> = the theme's move minus its area's main ETF (SMH for AI &amp; semis, IGV for software…), so it shows which themes lead or lag their area. Pick "By area" in Layout to see each area under its main ETF. Your baskets, each with any extra names that pass the same co-movement test, plus auto groups the test found on its own. Only liquid names count and show: market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+. Strength = how tightly the whole group moves together: <span class="tgr-sdot s1"></span>0.6+ tight pack (Cybersecurity is 0.63), <span class="tgr-sdot s2"></span>0.45–0.6, <span class="tgr-sdot s3"></span>looser. Click a theme to list its names, or an industry chip to jump to that industry.</p>
         <div class="tgr-scroll">
           <table class="tgr-table" id="theme-table">
             <thead><tr>
@@ -525,7 +525,7 @@ defCalc('industry_perf', {
 <script>
 (() => {
   /* ───────── state ───────── */
-  const S = { tlay: 'area', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', sort: {} };
+  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', sort: {} };
   const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
   const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
   const fitMap = (scores) => {
@@ -657,6 +657,7 @@ defCalc('industry_perf', {
       const b = e.target.closest('.tgr-th'); if (!b) return;
       const cur = S.sort[table.id];
       const key = b.dataset.sort;
+      if (table.id === 'theme-table') S.tlay = 'flat';   /* sorting a column always ranks every theme together */
       const textKey = ['theme', 'category', 'industry', 'symbol', 'name', 'ind', 'themes'].includes(key);
       S.sort[table.id] = { key, dir: cur && cur.key === key ? -cur.dir : textKey ? 1 : -1 };
       draw();
