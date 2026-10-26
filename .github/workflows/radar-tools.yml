@@ -33,6 +33,7 @@ jobs:
           if [ "${{ inputs.cmd }}" = "premarket" ]; then python3 radar/day.py premarket; fi
           if [ "${{ inputs.cmd }}" = "etfs" ]; then python3 radar/day.py etfs; fi
           if [ "${{ inputs.cmd }}" = "trades" ]; then python3 radar/probe_trades.py /tmp/probe_trades.json AMD INTC MU SNDK COHR SMCI WDC PLTR && python3 radar/publish.py "trades probe" /tmp/probe_trades.json; fi
+          if [ "${{ inputs.cmd }}" = "rvsrc" ]; then python3 radar/probe_rvsrc.py /tmp/probe_rvsrc.json SNDK LITE MXL INTC AMD && python3 radar/publish.py "rvol source probe" /tmp/probe_rvsrc.json; fi
           if [ "${{ inputs.cmd }}" = "pmvol" ]; then python3 radar/probe_pmvol.py /tmp/probe_pmvol.json INTC SMCI MU AXTI COHR AMD WDC SNDK PLTR LITE && python3 radar/publish.py "pm volume probe" /tmp/probe_pmvol.json; fi
           if [ "${{ inputs.cmd }}" = "revenue" ]; then
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
