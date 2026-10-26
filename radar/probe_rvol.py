@@ -10,14 +10,14 @@ def get(u):
 out = {}
 now = datetime.datetime.now(NY)
 for s in sys.argv[2:]:
-    for itv, rng in (("5m", "60d"), ("1m", "8d")):
-        b = f"https://query1.finance.yahoo.com/v8/finance/chart/{s}?includePrePost=false&interval={itv}&range={rng}"
+    for itv, rng, pp in (("5m", "60d", "false"), ("1m", "8d", "false"), ("5m_pp", "60d", "true")):
+        b = f"https://query1.finance.yahoo.com/v8/finance/chart/{s}?includePrePost={pp}&interval={itv.split('_')[0]}&range={rng}"
         r = get(b); q = r["indicators"]["quote"][0]
         days = {}
         for t, v in zip(r["timestamp"], q["volume"]):
             ts = datetime.datetime.fromtimestamp(t, NY)
             mins = ts.hour * 60 + ts.minute
-            if 570 <= mins < 960:
+            if (240 if pp == "true" else 570) <= mins < 960:
                 days.setdefault(str(ts.date()), []).append((mins, v or 0))
         out.setdefault(s, {})[itv] = {d: v for d, v in sorted(days.items())}
     d1 = get(f"https://query1.finance.yahoo.com/v8/finance/chart/{s}?interval=1d&range=3mo")
