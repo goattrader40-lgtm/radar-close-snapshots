@@ -347,7 +347,7 @@
         <label class="tgr-f"><input type="checkbox" data-pm="above200"> Above 200-day SMA</label>
         <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
       </div>
-      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET (Yahoo pre-market bars); this page picks each update up on its own. Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Clear a box to turn that filter off. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
+      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Clear a box to turn that filter off. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
       <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="pml-table">
@@ -1031,6 +1031,7 @@ defCalc('industry_perf', {
     else {
       const today = todayNY();
       ti.textContent = (PML.date === today ? 'Scan at ' : 'Last scan: ' + fDate(PML.date) + ', ') + fTime(PML.saved_at) + ' ET' +
+        (PML.vol_asof ? ' · pre-mkt volume to ' + PML.vol_asof : '') +
         (PML.date === today ? '' : ' · runs 7:00–9:29 AM ET on trading days');
     }
     const rows = pmRows().filter((r) => pmPass(r, PMF));

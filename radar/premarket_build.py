@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Pre-market gappers for Theme & Group Radar.
 
-  prepare <premarket/latest.json> <stocks.json> <out_dir> [n_grade_up] [n_grade_down]
+  prepare <premarket/latest.json> <stocks.json> <out_dir> [n_grade_up] [n_grade_down] [--live=premarket_live.json]
       Keeps gaps of 5%+ up or down that pass the liquidity rules (market cap $700M+, 30-day average volume 700K+ shares,
       20-day average $ volume $20M+, ADR% 3+), adds ADR%, theme, 200-day SMA and an EP badge, and writes
       <out_dir>/rows.json plus <out_dir>/to_grade.json (by pre-market $ volume: top 20 gap-ups and top 8 gap-downs).
@@ -26,8 +26,16 @@ def num(x):
         return None
 
 
-def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8):
+def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
     pm = json.load(open(pm_path))
+    # Yahoo's pre-market bars carry no volume; the live scanner file has it from Alpaca (consolidated tape)
+    if live_path and os.path.exists(live_path):
+        lv = json.load(open(live_path))
+        if lv.get("date") == pm.get("date"):
+            for g in pm.get("rows", []):
+                q = (lv.get("rows") or {}).get(g["symbol"])
+                if q:
+                    g["pm_volume"], g["pm_dvol"] = q[3], q[4]
     stocks = {r["symbol"]: r for r in json.load(open(stocks_path))}
     rows = []
     for g in pm.get("rows", []):
@@ -90,7 +98,8 @@ def finish(out, grades_path=None):
 
 if __name__ == "__main__":
     if sys.argv[1] == "prepare":
-        prepare(sys.argv[2], sys.argv[3], sys.argv[4], int(sys.argv[5]) if len(sys.argv) > 5 else 20,
-                int(sys.argv[6]) if len(sys.argv) > 6 else 8)
+        a = [x for x in sys.argv[2:] if not x.startswith("--live=")]
+        live = next((x.split("=", 1)[1] for x in sys.argv if x.startswith("--live=")), None)
+        prepare(a[0], a[1], a[2], int(a[3]) if len(a) > 3 else 20, int(a[4]) if len(a) > 4 else 8, live)
     else:
         finish(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
