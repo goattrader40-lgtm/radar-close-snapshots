@@ -85,7 +85,7 @@ class Stock:
         chg = 100 * (c / self.c[i - 1] - 1)
         if std and gap > X["EP-GAPUP-BREAKOUT"]["gap_pct"] and self.relvol[i] >= X["EP-GAPUP-BREAKOUT"]["rel_vol"]:
             hits.append("EP-GAPUP-BREAKOUT")
-        if std and chg > X["HOTTEST STOCKS"]["chg_pct"] and self.relvol[i] > X["HOTTEST STOCKS"]["rel_vol"]:
+        if std and chg > X["HOTTEST STOCKS"]["chg_pct"] and self.relvol[i] >= X["HOTTEST STOCKS"]["rel_vol"]:
             hits.append("HOTTEST STOCKS")
         nb = X["50 EMA FIRST CLOSE"]["closes_below_before"]
         if std and c > self.ema50[i] and self.below50(i - 1, nb):
