@@ -4,8 +4,9 @@
   python3 radar/probe_rvday.py <out.json> SYM ...   (run after the close; needs ALPACA_KEY_ID / ALPACA_SECRET)
 
 exact  = Alpaca SIP volume 9:30 -> minute / the previous 20 sessions' SIP volume 9:30 -> the same minute
-portal = Yahoo volume 9:30 -> minute (1-minute bars, which add up to the live quote) / the 5-minute curve
-         from those same 20 sessions, interpolated, as radar/live.py does
+portal = the same SIP volume / the 5-minute curve from those same 20 sessions, interpolated, as radar/live.py
+         does (so this checks the curve; Yahoo's 1-minute history bars are no stand-in for the live quote: on
+         Oct 26 they ran up to 11x the SIP volume. probe_rvlive.py checks the live quote during market hours)
 Also the full day (Yahoo quote now vs SIP daily bar) and the after-close number live.py now shows.
 """
 import datetime, json, os, statistics, sys, urllib.parse, urllib.request, zoneinfo
@@ -79,28 +80,20 @@ for s in syms:
     avg1 = [sum(c[m] for c in curves) / len(curves) for m in range(391)]
     curve5 = [round(avg1[5 * (j + 1)]) for j in range(78)]          # what volprofile.py saves
     sip = cum(md[day])
-    ych = json.loads(y.get(f"https://query1.finance.yahoo.com/v8/finance/chart/{s}?range=5d&interval=1m&includePrePost=false"))["chart"]["result"][0]
-    yv = [0] * 390
-    for t, v in zip(ych.get("timestamp") or [], ych["indicators"]["quote"][0].get("volume") or []):
-        ts = datetime.datetime.fromtimestamp(t, NY)
-        m = ts.hour * 60 + ts.minute - 570
-        if ts.date() == day and 0 <= m < 390:
-            yv[m] += v or 0
-    yc = cum(yv)
     pts, diffs = [], []
     for m in range(5, 391):
         t = datetime.datetime(day.year, day.month, day.day, 9, 30, tzinfo=NY) + datetime.timedelta(minutes=m)
         exact = sip[m] / avg1[m] if avg1[m] else None
-        portal = rvol_at(yc[m], t.timestamp() - 1e-3 if m == 390 else t.timestamp(), curve5)
+        portal = rvol_at(sip[m], t.timestamp() - 1e-3 if m == 390 else t.timestamp(), curve5)
         if exact and portal:
             diffs.append(portal / exact - 1)
             if m % 30 == 0 or m in (5, 15, 385, 390):
-                pts.append([t.strftime("%H:%M"), round(exact, 2), portal, round(yc[m] / sip[m], 3)])
+                pts.append([t.strftime("%H:%M"), round(exact, 2), portal])
     dd = {b["t"][:10]: b["v"] for b in daily.get(s, [])}
     prev_full = [dd[str(d)] for d in prev if str(d) in dd]
     q = quote.get(s)
     out["rows"][s] = {
-        "times [time, exact, portal, yahoo/sip volume]": pts,
+        "times [time, exact, portal]": pts,
         "portal_vs_exact_pct": {"median": round(100 * statistics.median(diffs), 1), "worst_low": round(100 * min(diffs), 1),
                                 "worst_high": round(100 * max(diffs), 1), "minutes": len(diffs)},
         "after_close": {"yahoo_quote_vol": q[2] if q else None, "sip_daily_vol": dd.get(str(day)),
