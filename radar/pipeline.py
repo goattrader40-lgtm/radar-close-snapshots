@@ -30,8 +30,11 @@ AVG_N = 30                  # sessions for average volume
 T = [
  # Baskets tested for co-movement (daily moves with the market's move removed, 120 sessions to Oct 22, 2026);
  # extra names and the Alt Managers / BDC / Industrial Automation / Agribusiness groups came from etf.net theme ETF holdings
- ("AI & Semis", "AI Chips & Accelerators", "SMH SOXX", "NVDA AMD AVGO TSM MRVL ARM INTC ALAB HIMX"),
- ("AI & Semis", "Memory & Storage", "DRAM", "MU SNDK WDC STX SIMO"),
+ # AI chips split (Oct 26, 2026, with the SMH move taken out): the big three and the CPU makers each trade as a pack;
+ # the old basket only moved with SMH (+0.06 beyond semis)
+ ("AI & Semis", "AI Compute (NVDA AVGO TSM)", "SMH SOXX", "NVDA AVGO TSM"),
+ ("AI & Semis", "CPUs (AMD INTC ARM)", "SMH SOXX", "AMD INTC ARM"),
+ ("AI & Semis", "Memory & Storage", "DRAM", "MU SNDK WDC STX"),
  # Semi equipment split (tested Oct 24-26, 2026, 120 and 60 sessions, with the shared semi move removed):
  # the big four front-end toolmakers and the subsystem suppliers each trade as their own pack
  # Oct 26, 2026 review (your OK): MARA GLXY -> Neoclouds only; ROST BURL TJX -> Off-price only; TXRH DRI -> Casual Dining only;
@@ -39,14 +42,15 @@ T = [
  ("AI & Semis", "Wafer Fab Equipment", "SMH SOXX", "ASML AMAT LRCX KLAC"),
  ("AI & Semis", "Semi Subsystems", "SOXX", "UCTT ICHR MKSI"),
  ("AI & Semis", "Semi Test & Packaging", "SOXX", "TER FORM COHU AEHR ONTO NVMI CAMT AMKR ENTG ACMR"),
- ("AI & Semis", "Power Semis (SiC-GaN-800V)", "XSD", "MPWR ON STM VICR NVTS POWI WOLF ALGM RMBS"),
- ("AI & Semis", "Analog & Auto Semis", "SOXX", "TXN ADI NXPI MCHP LSCC ON STM QCOM SYNA"),
+ ("AI & Semis", "GaN & SiC Power", "XSD", "NVTS WOLF VSH GFS"),
+ ("AI & Semis", "Analog & Auto Semis", "SOXX", "TXN ADI NXPI MCHP LSCC ON STM QCOM SYNA MPWR ALGM POWI RMBS"),
  ("AI & Semis", "AI Servers & ODMs", "RACK", "DELL SMCI HPE CLS JBL FLEX SANM NTAP P"),
  ("AI & Semis", "AI Networking", "RACK", "ANET CSCO CRDO ALAB NOK AVGO MRVL HPE CLS PENG"),
  ("AI & Semis", "Optics & CPO", "LYTE LUMA", "COHR LITE CIEN FN AAOI GLW MTSI AXTI POET SMTC VIAV TTMI TSEM MXL"),
  ("AI Infrastructure", "Data Center Power & Cooling", "GRID POWR", "VRT ETN GEV NVT HUBB MOD POWL TT CAT JCI CMI AMSC"),
  ("AI Infrastructure", "Data Center Builders & REITs", "DTCR PAVE", "EQIX DLR IRM FIX EME STRL MTZ PWR DY"),
- ("AI Infrastructure", "Power Generation (AI Power)", "XLU", "CEG VST NRG TLN BE"),
+ ("AI Infrastructure", "Power Generation (AI Power)", "XLU", "CEG VST NRG TLN"),
+ ("AI Infrastructure", "Fuel Cells & On-site Power", "HDRO", "BE FCEL PLUG"),
  ("AI Infrastructure", "Nuclear & Uranium", "NLR URA URNM", "CCJ OKLO SMR LEU NNE UEC UUUU NXE DNN XE"),
  ("AI Infrastructure", "Neoclouds & AI Hosting", "NCLD WGMI", "CRWV NBIS IREN CIFR WULF APLD GLXY HUT BTDR CORZ KEEL CLSK RIOT MARA"),
  ("Software", "Enterprise SaaS", "IGV", "CRM NOW ADBE INTU WDAY ADSK TEAM HUBS SAP DOCU ASAN FRSH PEGA BOX GWRE RNG BSY"),
@@ -384,10 +388,23 @@ try:
         return sum(v) / len(v) if v else 0
     incore = {x for m in core.values() for x in m}
     liquid = [x for x in univ if (num(latest[x]["marketCap"]) or 0) >= G_MCAP and avgvol(x) >= G_VOL]
+    # AI & semis: everything there moves with SMH, so an auto-added name must also track its group with the
+    # semi trade's move taken out (the average of all AI & semis basket names), at SEMI_FLOOR or better
+    cat_of = {th: c for c, th, _, _ in T}
+    semi_names = sorted({x for th, m in groups.items() if cat_of.get(th) == "AI & Semis" for x in m})
+    semi_f = Z[:, [col[x] for x in semi_names]].mean(1) if semi_names else None
+    def beyond(v):
+        return v - (np.dot(v, semi_f) / np.dot(semi_f, semi_f)) * semi_f
+    def beyond_fit(x, th):
+        m = [y for y in groups[th] if y != x]
+        return corr(beyond(Z[:, col[x]]), beyond(Z[:, [col[y] for y in m]].mean(1)))
+    SEMI_FLOOR = 0.15
     for x in liquid:
         if x in incore: continue
         th, sc = best_fit(x)
         if sc >= COH_FLOOR and sector(x) in {sector(y) for y in groups[th]}:
+            if cat_of.get(th) == "AI & Semis" and semi_f is not None and beyond_fit(x, th) < SEMI_FLOOR:
+                continue
             ext.setdefault(th, []).append((round(sc, 2), x))
     taken = incore | {x for v in ext.values() for _, x in v}
     def prune(names, min_n=5):
