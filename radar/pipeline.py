@@ -540,6 +540,7 @@ for s, r in latest.items():
         "ref_1w": None if stale or len(adj) < 5 else rd(adj[-5], 4),
         "ref_1m": None if stale or len(adj) < 21 else rd(adj[-21], 4),
         "ref_3m": None if stale or len(adj) < M3 else rd(adj[-M3], 4),
+        "low_52w": rd(snap_val(s, "low_52w"), 4), "high_52w": rd(snap_val(s, "high_52w"), 4),
     })
 out.sort(key=lambda x: -x["mcap_b"])
 

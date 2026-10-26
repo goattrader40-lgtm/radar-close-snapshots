@@ -41,6 +41,12 @@
   .tgr-table tr.umb td.key a { font-weight: 700; }
   .tgr-table tr.inarea td.key { padding-left: 1.4rem; }
   .tgr-etag { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 4px; border: 1px solid var(--color-border-line); font-size: .75em; color: var(--color-fg-muted); font-weight: 400; }
+  .tgr-cols { position: relative; font-size: var(--cds-font-size-caption); }
+  .tgr-cols summary { list-style: none; cursor: pointer; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 var(--cds-pad-sm); line-height: 1.8; background: var(--color-bg); }
+  .tgr-cols summary::-webkit-details-marker { display: none; }
+  .tgr-cols[open] summary { border-color: var(--color-fg-muted); }
+  .tgr-cols .box { position: absolute; right: 0; z-index: 5; margin-top: 4px; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); display: grid; gap: 3px; min-width: 12rem; max-height: 22rem; overflow: auto; box-shadow: 0 6px 18px rgb(0 0 0 / 12%); }
+  .tgr-cols label { display: flex; gap: 6px; align-items: center; white-space: nowrap; }
   .tgr-sub { margin: var(--cds-gap-sm) 0 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
   .tgr-ldot.bad { background: var(--color-bad); }
   /* Layout: header + takeaway, two tabs; each tab = two ranked tables side by side, then a drill-down list. */
@@ -226,7 +232,7 @@
       <div class="tgr-etfs" id="drill-umb" hidden></div>
       <div class="tgr-etfs" id="drill-etfs-wrap" hidden><span>Theme ETFs on TradingView:</span><span class="tgr-tks" id="drill-etfs"></span></div>
       <p class="tgr-note" id="drill-kind" hidden></p>
-      <p class="tgr-note">The number next to each ticker is its score: how closely it tracks the rest of this group (0 to 1, market move removed). <span class="tgr-fit f1">0.7+</span> tight, <span class="tgr-fit f2">0.6–0.7</span> moves with the group, <span class="tgr-fit f3">under 0.6</span> loose (greyed out). Tickers open the TradingView chart. <span class="tgr-auto">auto</span> = added by the co-movement test, not hand-picked. <span class="tgr-gdot" aria-hidden="true"></span> = passes your gainer filters today. ⚠ = a one-day move of 50%+ in the last 3 months, often a split or spin-off, so check the chart before trusting 1W/1M/3M. Last Q rev = revenue in the latest reported quarter (hover for which quarter); Rev growth = that quarter vs a year earlier (Yahoo, refreshed after each close). A dash means no price yet for the newest day; that listing fills in with the next update.</p>
+      <p class="tgr-note">The number next to each ticker is its score: how closely it tracks the rest of this group (0 to 1, market move removed). <span class="tgr-fit f1">0.7+</span> tight, <span class="tgr-fit f2">0.6–0.7</span> moves with the group, <span class="tgr-fit f3">under 0.6</span> loose (greyed out). Tickers open the TradingView chart. <span class="tgr-auto">auto</span> = added by the co-movement test, not hand-picked. <span class="tgr-gdot" aria-hidden="true"></span> = passes your gainer filters today. ⚠ = a one-day move of 50%+ in the last 3 months, often a split or spin-off, so check the chart before trusting 1W/1M/3M. Last Q rev = revenue in the latest reported quarter (hover for which quarter); Rev growth = that quarter vs a year earlier; Next Q est. growth = analysts' average revenue estimate for the quarter now under way vs a year earlier (hover for the estimate). Company guidance itself isn't in free data feeds, so this is the consensus, which usually sits close to guidance after a report (Yahoo, refreshed after each close). Use Columns to hide any column. A dash means no price yet for the newest day; that listing fills in with the next update.</p>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="drill-table">
           <thead><tr>
@@ -241,6 +247,7 @@
             <th class="num c2"><button class="tgr-th" data-sort="rel_vol" title="Volume from 9:30 to now ÷ the 20-day average volume from 9:30 to the same time (after the close: full day ÷ 20-day average)">Rel vol</button></th>
             <th class="num"><button class="tgr-th" data-sort="q_rev_m" title="Revenue in the company's latest reported quarter, $ millions">Last Q rev $M</button></th>
             <th class="num"><button class="tgr-th" data-sort="rev_growth" title="Latest quarter's revenue vs the same quarter a year earlier">Rev growth YoY</button></th>
+            <th class="num"><button class="tgr-th" data-sort="next_q_growth" title="Analysts' average revenue estimate for the quarter now under way vs the same quarter a year earlier (company guidance isn't in free data; the consensus usually tracks it after a report)">Next Q est. growth</button></th>
             <th class="c2" data-lvcol="1"><button class="tgr-th" data-sort="ind">Industry</button></th>
             <th class="c2">Themes</th>
           </tr></thead>
@@ -356,10 +363,11 @@
         <label class="tgr-f">Price × avg vol 30D ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-pm="dvol_m"> M</label>
         <label class="tgr-f">ADR ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-pm="adr"> %</label>
         <label class="tgr-f">Pre-mkt vol ≥ <input class="tgr-num" type="number" inputmode="decimal" step="10" min="0" data-pm="pmvol_k"> K</label>
+        <label class="tgr-f">52W low ≥ <input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-pm="low52"> % below price</label>
         <label class="tgr-f"><input type="checkbox" data-pm="above200"> Above 200-day SMA</label>
         <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
       </div>
-      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Clear a box to turn that filter off. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
+      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
       <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="pml-table">
@@ -378,6 +386,7 @@
             <th class="num c2"><button class="tgr-th" data-sort="rel_vol">Rel vol</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="below_low52" title="How far below the pre-market price the 52-week low is (TradingView's 'Low 52W below price by')">52W low below</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
             <th><button class="tgr-th" data-sort="themes">Themes</button></th>
           </tr></thead>
@@ -847,6 +856,7 @@ defCalc('industry_perf', {
       else if (c === 'themes') tr.append(chipCell(r.themes, 'theme', cols.includes('index') ? '' : 'c2'));
       else if (c === 'index') tr.append(h('td', 'c2', r.index || ''));
       else if (c === 'q_rev_m') { const v = REVOF(r.symbol); const td = h('td', 'num', v && v.q_rev_m !== null && v.q_rev_m !== undefined ? g1.format(v.q_rev_m) : '—'); if (v && v.q) td.title = v.q; tr.append(td); }
+      else if (c === 'next_q_growth') { const v = REVOF(r.symbol); const gr = v ? v.next_q_growth : null; const td = h('td', 'num ' + tone(gr), gr === null || gr === undefined ? '—' : (gr > 0 ? '+' : '') + g1.format(gr) + '%'); if (v && v.next_q_est_m) td.title = 'Estimate $' + g1.format(v.next_q_est_m) + 'M for the quarter ending ' + (v.next_q_end || '?') + (v.next_q_analysts ? ' (' + v.next_q_analysts + ' analysts)' : ''); tr.append(td); }
       else if (c === 'rev_growth') { const v = REVOF(r.symbol); const gr = v ? v.growth : null; tr.append(h('td', 'num ' + tone(gr), gr === null || gr === undefined ? '—' : (gr > 0 ? '+' : '') + g1.format(gr) + '%')); }
     });
     return tr;
@@ -854,7 +864,7 @@ defCalc('industry_perf', {
   const sortStocks = (rows, tableId, def) => {
     const spec = sortSpec(tableId, def);
     const val = (r) => (spec.key === 'ind' ? r[S.level] : spec.key === 'dvol' ? num(r[dvKey()]) :
-      spec.key === 'q_rev_m' ? num((REVOF(r.symbol) || {}).q_rev_m) : spec.key === 'rev_growth' ? num((REVOF(r.symbol) || {}).growth) : ['symbol', 'name', 'themes'].includes(spec.key) ? String(r[spec.key] || '') : num(r[spec.key]));
+      spec.key === 'q_rev_m' ? num((REVOF(r.symbol) || {}).q_rev_m) : spec.key === 'rev_growth' ? num((REVOF(r.symbol) || {}).growth) : spec.key === 'next_q_growth' ? num((REVOF(r.symbol) || {}).next_q_growth) : ['symbol', 'name', 'themes'].includes(spec.key) ? String(r[spec.key] || '') : num(r[spec.key]));
     rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
     markSort($('#' + tableId), spec);
   };
@@ -930,7 +940,7 @@ defCalc('industry_perf', {
     } else {
       sortStocks(rows, 'drill-table', { key: 'chg_' + S.period, dir: -1 });
     }
-    rows.forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'chg_1w', 'chg_1m', 'chg_3m', 'mcap_b', 'avg_vol_30d', 'rel_vol', 'q_rev_m', 'rev_growth', 'ind', 'themes'], symMap, extSet, fits)));
+    rows.forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'chg_1w', 'chg_1m', 'chg_3m', 'mcap_b', 'avg_vol_30d', 'rel_vol', 'q_rev_m', 'rev_growth', 'next_q_growth', 'ind', 'themes'], symMap, extSet, fits)));
   };
 
   const drawGainers = (symMap) => {
@@ -1036,7 +1046,7 @@ defCalc('industry_perf', {
   };
 
   /* live pre-market scanner: your TradingView "premarket-1" screen as the defaults */
-  const PMDEF = { dir: 'up', chg_min: 0.5, chg_max: 5, price: 5, mcap_b: 0.7, avgvol_k: 600, dvol_m: 20, adr: 4, pmvol_k: null, above200: false };
+  const PMDEF = { dir: 'up', chg_min: 0.5, chg_max: 5, price: 5, mcap_b: 0.7, avgvol_k: 600, dvol_m: 20, adr: 4, pmvol_k: null, low52: 30, above200: false };
   const PMF = Object.assign({}, PMDEF);
   const syncPm = () => {
     document.querySelectorAll('#pml-filters [data-pm]').forEach((el) => {
@@ -1072,6 +1082,7 @@ defCalc('industry_perf', {
         vs_200: num(r.sma200) ? Math.round((pm_last / num(r.sma200) - 1) * 1000) / 10 : null,
         above_200: num(r.sma200) ? pm_last > num(r.sma200) : null,
         tv_dvol_m: adv && num(r.price) ? (adv * num(r.price)) / 1e6 : null,
+        below_low52: num(r.low_52w) && pm_last ? ((pm_last - num(r.low_52w)) / pm_last) * 100 : null,   /* TradingView: 52W low is X% below price */
         ep: Math.abs(pm_chg) >= 10 && adv && pm_vol / adv >= 0.25,
         grade: g ? g.grade : '', g_reason: g ? (g.catalyst ? g.catalyst + ': ' : '') + (g.reason || '') : '' }));
     });
@@ -1088,6 +1099,7 @@ defCalc('industry_perf', {
     if (p.adr !== null && num(r.adr_20) !== null && num(r.adr_20) < p.adr) return false;
     if (p.pmvol_k !== null && r.pm_vol < p.pmvol_k * 1000) return false;
     if (p.above200 === true && r.above_200 === false) return false;
+    if (p.low52 !== null && r.below_low52 !== null && r.below_low52 < p.low52) return false;
     return true;
   };
   const drawPmLive = (symMap) => {
@@ -1117,7 +1129,7 @@ defCalc('industry_perf', {
     const gm = [...by].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]);
     if (!gm.length) ml.append(h('span', 'tgr-lbl', PML ? 'none' : '—'));
     gm.forEach(([t, n], i) => { if (i) ml.append(h('span', 'tgr-sep', ' | ')); const b = h('button', 'tgr-chip', t + ' (' + n + ')'); b.type = 'button'; b.dataset.kind = 'theme'; b.dataset.name = t; ml.append(b); });
-    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 16; tr.append(td); tb.append(tr); }
+    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 17; tr.append(td); tb.append(tr); }
     const pctTxt = (x) => (x === null || x === undefined ? '—' : (x > 0 ? '+' : '') + Number(x).toFixed(2) + '%');
     rows.slice(0, LIST_MAX).forEach((r) => {
       const tr = h('tr');
@@ -1131,6 +1143,7 @@ defCalc('industry_perf', {
         h('td', 'num c3', r.gap_x_adr === null ? '—' : r.gap_x_adr.toFixed(2) + '×'), h('td', 'num c2', fPrice(r.price)), c(r.chg_1d, 'c2'),
         h('td', 'num c2', fVol(r.volume)), h('td', 'num c2', fX(r.rel_vol)), h('td', 'num c3', fAdr(r.adr_20)),
         h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null ? '—' : (r.vs_200 > 0 ? '+' : '') + r.vs_200.toFixed(1) + '%'),
+        h('td', 'num c2', r.below_low52 === null ? '—' : r.below_low52.toFixed(1) + '%'),
         h('td', 'num c3', fCap(r.mcap_b)), chipCell(r.themes, 'theme', ''));
       tb.append(tr);
     });
@@ -1180,6 +1193,42 @@ defCalc('industry_perf', {
     else if (S.tab === 'gainers') drawGainers(symMap);
     else { drawPmLive(symMap); drawPremarket(symMap); drawTrack(); }
   }
+
+  /* ───────── column chooser: tick columns off to hide them (remembered in this browser) ───────── */
+  const colStyle = document.head.appendChild(document.createElement('style'));
+  const HIDDEN = {};
+  const applyCols = () => {
+    colStyle.textContent = Object.entries(HIDDEN).map(([id, set]) => [...set].map((i) => `#${id} th:nth-child(${i + 1}), #${id} td:nth-child(${i + 1}) { display: none !important; }`).join('\n')).join('\n');
+  };
+  const setupCols = (tableId, host) => {
+    const table = $('#' + tableId); if (!table || !host) return;
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem('radar-cols-' + tableId) || '[]'); } catch (e) { saved = []; }
+    const ths = [...table.querySelectorAll('thead th')];
+    const names = ths.map((th) => th.textContent.trim());
+    HIDDEN[tableId] = new Set(saved.map((n) => names.indexOf(n)).filter((i) => i > 0));
+    const d = h('details', 'tgr-cols'); d.append(h('summary', '', 'Columns'));
+    const box = h('div', 'box');
+    names.forEach((n, i) => {
+      if (i === 0) return;   /* the ticker / name column always shows */
+      const lab = h('label'); const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !HIDDEN[tableId].has(i);
+      cb.addEventListener('change', () => {
+        if (cb.checked) HIDDEN[tableId].delete(i); else HIDDEN[tableId].add(i);
+        try { localStorage.setItem('radar-cols-' + tableId, JSON.stringify([...HIDDEN[tableId]].map((k) => names[k]))); } catch (e) { /* private window */ }
+        applyCols();
+      });
+      lab.append(cb, h('span', '', n)); box.append(lab);
+    });
+    d.append(box); host.append(d);
+    document.addEventListener('click', (e) => { if (!d.contains(e.target)) d.open = false; });
+  };
+  setupCols('drill-table', $('#drill-card .tgr-cardhead .tgr-ctl'));
+  setupCols('g-table', $('#g-list-card .tgr-cardhead'));
+  setupCols('pml-table', $('#pml-card .tgr-cardhead'));
+  setupCols('pm-table', $('#pm-card') && (() => { const x = h('div', 'tgr-cardhead'); x.style.justifyContent = 'flex-end'; $('#pm-card').prepend(x); return x; })());
+  setupCols('theme-table', $('#themes-card .tgr-cardhead'));
+  setupCols('industry-table', $('#industries-card .tgr-cardhead'));
+  applyCols();
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };

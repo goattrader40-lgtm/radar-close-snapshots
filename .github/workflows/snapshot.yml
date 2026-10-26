@@ -1,7 +1,7 @@
 # Saves today's closing data for every US-listed stock over $250M, right after the close.
 # Theme & Group Radar reads this repo at 4:35 PM ET.
 # Prices come from Yahoo Finance daily bars (one year per stock), so it also saves the 200-day SMA,
-# ADR% (20-day average of high / low - 1) and 10- and 20-day average dollar volume, today included.
+# ADR% (20-day average of high / low - 1), 10- and 20-day average dollar volume and the 52-week high and low, today included.
 # Nasdaq's stock list is used only for the symbol list, because its prices run a day behind.
 # Two UTC times so it runs at about 4:06 PM ET in summer (EDT) and winter (EST); a run before 4 PM ET skips itself.
 name: Close snapshot
@@ -87,7 +87,8 @@ jobs:
                               "sma200": round(avg(closes[-200:]), 4) if len(closes) >= 200 else None,
                               "adr_20": round(avg(rng) * 100, 3) if len(rng) >= 15 else None,
                               "dvol_10": round(avg(dv[-10:])) if len(dv) >= 8 else None,
-                              "dvol_20": round(avg(dv[-20:])) if len(dv) >= 16 else None}
+                              "dvol_20": round(avg(dv[-20:])) if len(dv) >= 16 else None,
+                              "low_52w": round(min(x[2] for x in b[-252:]), 4), "high_52w": round(max(x[1] for x in b[-252:]), 4)}
                   except urllib.error.HTTPError as e:
                       if e.code == 404:
                           return None

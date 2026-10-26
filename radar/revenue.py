@@ -5,7 +5,9 @@
 
 Writes {"built_at", "rows": {SYM: {"q_rev_m": latest quarter's revenue $M, "q": that quarter (e.g. "3Q2026"),
 "growth": that quarter's revenue vs the same quarter a year earlier %, "rev_m": trailing-12-month revenue $M,
-"margin": profit margin %}}}.
+"margin": profit margin %, "next_q_growth": analysts' average revenue estimate for the quarter now under way vs the
+same quarter a year earlier %, "next_q_est_m": that estimate $M, "next_q_end": the quarter's end date}}}.
+Company guidance itself isn't in any free data feed; the analysts' consensus usually sits close to it after a report.
 """
 import concurrent.futures as cf, datetime, json, sys, time, urllib.parse, zoneinfo
 sys.path.insert(0, __file__.rsplit("/", 1)[0])
@@ -23,7 +25,7 @@ def main():
 
     def one(s):
         url = (f"https://query2.finance.yahoo.com/v10/finance/quoteSummary/{urllib.parse.quote(s.replace('/', '-'))}"
-               f"?modules=financialData,earnings&crumb={urllib.parse.quote(y.crumb)}")
+               f"?modules=financialData,earnings,earningsTrend&crumb={urllib.parse.quote(y.crumb)}")
         for attempt in range(3):
             try:
                 res = json.loads(y.get(url))["quoteSummary"]["result"][0]
@@ -33,7 +35,14 @@ def main():
                 qs = (((res.get("earnings") or {}).get("financialsChart") or {}).get("quarterly") or [])
                 last = qs[-1] if qs else {}
                 qrev = (last.get("revenue") or {}).get("raw")
+                tr = {t.get("period"): t for t in ((res.get("earningsTrend") or {}).get("trend") or [])}
+                nq = tr.get("0q") or {}
+                re_ = nq.get("revenueEstimate") or {}
+                eg = (re_.get("growth") or {}).get("raw")
+                ea = (re_.get("avg") or {}).get("raw")
                 return s, {"q_rev_m": None if qrev is None else round(qrev / 1e6, 1), "q": last.get("date"),
+                           "next_q_end": nq.get("endDate"), "next_q_est_m": None if ea is None else round(ea / 1e6, 1),
+                           "next_q_growth": None if eg is None else round(eg * 100, 1), "next_q_analysts": (re_.get("numberOfAnalysts") or {}).get("raw"),
                            "rev_m": None if rev is None else round(rev / 1e6, 1),
                            "growth": None if g("revenueGrowth") is None else round(g("revenueGrowth") * 100, 1),
                            "margin": None if g("profitMargins") is None else round(g("profitMargins") * 100, 1)}
