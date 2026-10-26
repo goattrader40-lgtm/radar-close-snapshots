@@ -88,65 +88,85 @@ ALPACA = "https://data.alpaca.markets/v2/stocks/bars"
 
 
 def alpaca_curves(syms, days):
-    """{sym: (last date, [78 cumulative averages])} from Alpaca SIP 5-minute bars, or None if unavailable."""
+    """{sym: (last date, [78 cumulative averages])} from Alpaca SIP 5-minute bars, or None if unavailable.
+    Asks for one regular session (9:30-4:00) at a time, so pre- and after-market bars aren't downloaded."""
+    import threading
     key, sec = os.environ.get("ALPACA_KEY_ID"), os.environ.get("ALPACA_SECRET")
     if not key or not sec:
         return None
     hdr = {"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": sec, "Accept": "application/json", "User-Agent": UA}
-    now = datetime.datetime.now(datetime.timezone.utc)
-    start = (now - datetime.timedelta(days=days * 7 // 5 + 12)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    end = (now - datetime.timedelta(minutes=16)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    asym = {s.replace("/", "."): s for s in syms}
-    bars = {}                                   # sym -> date -> [78 slot volumes]
-    calls, t_last = 0, 0.0
-    names = sorted(set(asym) | {"SPY"})
-    for i in range(0, len(names), 200):
-        chunk = names[i:i + 200]
-        token = None
-        while True:
-            q = {"symbols": ",".join(chunk), "timeframe": "5Min", "start": start, "end": end, "limit": 10000,
-                 "feed": "sip", "adjustment": "raw", "sort": "asc"}
-            if token:
-                q["page_token"] = token
-            url = ALPACA + "?" + urllib.parse.urlencode(q)
-            for attempt in range(5):
-                wait = 0.31 - (time.time() - t_last)          # stay under 200 calls a minute
+    lock, clock = threading.Lock(), [0.0]
+
+    def call(q):
+        url = ALPACA + "?" + urllib.parse.urlencode(q)
+        for attempt in range(6):
+            with lock:                                   # stay under 200 calls a minute across threads
+                wait = clock[0] + 0.32 - time.time()
                 if wait > 0:
                     time.sleep(wait)
-                t_last = time.time()
-                try:
-                    with urllib.request.urlopen(urllib.request.Request(url, headers=hdr), timeout=60) as r:
-                        res = json.load(r)
-                    break
-                except urllib.error.HTTPError as e:
-                    body = e.read().decode(errors="replace")[:300]
-                    if e.code in (401, 403):
-                        print(f"alpaca refused ({e.code}): {body}", file=sys.stderr)
-                        return None
-                    if attempt == 4:
-                        print(f"alpaca failed ({e.code}): {body}", file=sys.stderr)
-                        return None
-                    time.sleep(3 * (attempt + 1))
-                except Exception as e:
-                    if attempt == 4:
-                        print(f"alpaca failed: {e}", file=sys.stderr)
-                        return None
-                    time.sleep(3 * (attempt + 1))
-            calls += 1
+                clock[0] = time.time()
+            try:
+                with urllib.request.urlopen(urllib.request.Request(url, headers=hdr), timeout=60) as r:
+                    return json.load(r)
+            except urllib.error.HTTPError as e:
+                body = e.read().decode(errors="replace")[:300]
+                if e.code in (401, 403):
+                    raise RuntimeError(f"alpaca refused ({e.code}): {body}")
+                time.sleep(5 * (attempt + 1) if e.code == 429 else 2 * (attempt + 1))
+            except Exception:
+                time.sleep(2 * (attempt + 1))
+        raise RuntimeError("alpaca: too many failures")
+
+    # trading days from SPY's daily bars; today only once its session is complete
+    now = datetime.datetime.now(datetime.timezone.utc)
+    try:
+        res = call({"symbols": "SPY", "timeframe": "1Day", "feed": "sip", "adjustment": "raw",
+                    "start": (now - datetime.timedelta(days=days * 7 // 5 + 15)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "end": (now - datetime.timedelta(minutes=16)).strftime("%Y-%m-%dT%H:%M:%SZ")})
+    except Exception as e:
+        print(str(e), file=sys.stderr)
+        return None
+    unfinished = datetime.datetime.now(NY).date() if hm_now() < (16, 5) else None
+    sess = [datetime.datetime.fromisoformat(b["t"].replace("Z", "+00:00")).astimezone(NY).date()
+            for b in res.get("bars", {}).get("SPY", [])]
+    sess = [d for d in sess if d != unfinished][-(days + 3):]     # a few spare in case of half days
+    asym = {s.replace("/", "."): s for s in syms}
+    names = sorted(set(asym) | {"SPY"})
+    chunks = [names[i:i + 200] for i in range(0, len(names), 200)]
+    bars = {}                                        # sym -> date -> [78 slot volumes]
+    calls = [0]
+
+    def job(d, chunk):
+        t0 = datetime.datetime(d.year, d.month, d.day, 9, 30, tzinfo=NY).astimezone(datetime.timezone.utc)
+        q = {"symbols": ",".join(chunk), "timeframe": "5Min", "feed": "sip", "adjustment": "raw", "limit": 10000,
+             "start": t0.strftime("%Y-%m-%dT%H:%M:%SZ"),
+             "end": (t0 + datetime.timedelta(minutes=389)).strftime("%Y-%m-%dT%H:%M:%SZ")}
+        got = {}
+        while True:
+            res = call(q)
+            calls[0] += 1
             for sym, rows in (res.get("bars") or {}).items():
+                v = got.setdefault(sym, [0] * SLOTS)
                 for b in rows:
                     ts = datetime.datetime.fromisoformat(b["t"].replace("Z", "+00:00")).astimezone(NY)
                     j = ((ts.hour * 60 + ts.minute) - 570) // 5
                     if 0 <= j < SLOTS:
-                        bars.setdefault(sym, {}).setdefault(ts.date(), [0] * SLOTS)[j] += b.get("v") or 0
-            token = res.get("next_page_token")
-            if not token:
-                break
-    # full sessions = days SPY traded through the 3:55 PM bar (drops half days); today only once it's complete
+                        v[j] += b.get("v") or 0
+            if not res.get("next_page_token"):
+                return d, got
+            q["page_token"] = res["next_page_token"]
+
+    try:
+        with cf.ThreadPoolExecutor(4) as pool:
+            for d, got in pool.map(lambda a: job(*a), [(d, c) for d in sess for c in chunks]):
+                for sym, v in got.items():
+                    bars.setdefault(sym, {})[d] = v
+    except Exception as e:
+        print(f"alpaca failed: {e}", file=sys.stderr)
+        return None
     spy = bars.get("SPY", {})
-    unfinished = datetime.datetime.now(NY).date() if hm_now() < (16, 5) else None
-    full = sorted((d for d, v in spy.items() if v[-1] > 0 and d != unfinished), reverse=True)[:days]
-    print(f"alpaca: {calls} calls, {len(bars)} symbols with bars, sessions {full[-1] if full else '-'}..{full[0] if full else '-'}",
+    full = sorted((d for d in sess if d in spy and spy[d][-1] > 0), reverse=True)[:days]   # drops half days
+    print(f"alpaca: {calls[0]} calls, {len(bars)} symbols, sessions {full[-1] if full else '-'}..{full[0] if full else '-'}",
           file=sys.stderr)
     if len(full) < MIN_DAYS:
         return None
