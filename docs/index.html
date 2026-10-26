@@ -126,6 +126,7 @@
   .tgr-num:focus-visible, .tgr-f input[type=checkbox]:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
+  #wl-table td.nw { white-space: nowrap; }
   .tgr-auto { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; }
   .tgr-gdot { display: inline-block; width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-ok); margin-left: 5px; vertical-align: middle; }
   .tgr-pill { appearance: none; border: 1px solid var(--color-fg); background: var(--color-fg); color: var(--color-bg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
@@ -158,6 +159,7 @@
     <button class="tgr-tab" id="tab-groups" role="tab" aria-selected="true" aria-controls="groups" data-tab="groups">Groups &amp; themes</button>
     <button class="tgr-tab" id="tab-gainers" role="tab" aria-selected="false" aria-controls="gainers" data-tab="gainers">Gainers &amp; losers</button>
     <button class="tgr-tab" id="tab-premarket" role="tab" aria-selected="false" aria-controls="premarket" data-tab="premarket">Pre-market</button>
+    <button class="tgr-tab" id="tab-watchlist" role="tab" aria-selected="false" aria-controls="watchlist" data-tab="watchlist">Watchlist</button>
   </nav>
 
   <!-- ───────── Tab 1: groups & themes ───────── -->
@@ -447,6 +449,59 @@
     </div>
   </section>
 
+  <!-- ───────── Tab 4: watchlist (the setup scanner's lists) ───────── -->
+  <section class="tgr-page" id="watchlist" role="tabpanel" aria-labelledby="tab-watchlist" hidden>
+    <div class="tgr-card" id="wl-card">
+      <div class="tgr-cardhead">
+        <h2 id="wl-h">Watchlist</h2>
+        <span class="tgr-lbl" id="wl-time">—</span>
+      </div>
+      <div class="tgr-bar">
+        <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button></span>
+        <label class="tgr-f"><span class="tgr-lbl">Section</span> <select class="tgr-search" id="wl-sec" aria-label="Section"></select></label>
+        <input class="tgr-search" id="wl-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
+        <button class="tgr-lite" id="wl-dl" type="button">Download for TradingView</button>
+      </div>
+      <p class="tgr-note" id="wl-note"></p>
+      <p class="tgr-note">Your setup scanner's lists, rebuilt after each close (about 4:40 PM ET). 1-EP/GAP = gap over 5% on 2.5× relative volume; 1-UPDAY = up over 4% on above-normal volume; 2-POOL = a first close back above the 50 EMA, plus the weekly momentum leaders; 3-SETUPS = names from those three lists in a Tight, 21 EMA or 50 EMA pullback setup (above the 200 SMA). Names leave after 2 closes in a row below the 50 EMA, and 1-lists after 15 trading days without reaching 3-SETUPS. Price, Chg and Rel vol are live during market hours (otherwise the latest close), and Away = how far the buy point is above that price. Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 1 ADR above that EMA. Download for TradingView saves the list you're looking at as a file for TradingView's Watchlist menu → Import list.</p>
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="wl-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="section">Section</button></th>
+            <th><button class="tgr-th" data-sort="grade">Grade</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="pattern">Pattern</button></th>
+            <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
+            <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
+            <th class="num"><button class="tgr-th" data-sort="price">Price</button></th>
+            <th class="num"><button class="tgr-th" data-sort="chg_1d">Chg</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="rel_vol">Rel vol</button></th>
+            <th class="c2">Other entries</th>
+            <th class="num c3"><button class="tgr-th" data-sort="adr_pct">ADR%</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="perf_1m_pct">1M</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="perf_3m_pct">3M</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="off_52w_high_pct">Off 52W high</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="dollar_vol_30d_m">$ vol 30D $M</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="added">Added</button></th>
+            <th class="c3">Why</th>
+            <th class="c2">Themes</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="tgr-state dash-skeleton" data-for="setups"></div>
+      </div>
+    </div>
+    <div class="tgr-card" id="wl-changes-card">
+      <h2 id="wl-ch-h">Changes on the last scan</h2>
+      <div class="tgr-scroll">
+        <table class="tgr-table" id="wl-ch-table">
+          <thead><tr><th>Ticker</th><th>List</th><th></th><th>Why</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <p class="tgr-foot" id="foot">During market hours (9:30 AM–4:10 PM ET) prices update about every 5 minutes from Yahoo quotes, and this page checks for new data every 2 minutes on its own. Live 1D is today's change so far; live 1W, 1M and 3M compare today's price with the close 5, 21 and 63 sessions back; Rel vol is relative volume at time: volume from 9:30 to now ÷ the average of the last 20 sessions' volume from 9:30 to the same minute (from 5-minute bars on the consolidated tape via Alpaca, all US exchanges and off-exchange trades), so 2.00× at 11:50 means twice the usual volume by 11:50; it's rough in the first 5 minutes. After the close it's the full day ÷ the previous 20 sessions' average. Everything else (themes and their scores, ADR%, $ volume, 200-day SMA, averages) is rebuilt after each close, around 4:30 PM ET. Newest day comes from: <span id="src">—</span>; earlier days, volume and company details come from Nasdaq's daily list, which runs one session behind. ADR% (20-day average of high ÷ low − 1) comes from: <span id="adr-src">—</span>. $ volume averages price × shares over the last 10 or 20 sessions. Group figures are the median (or market-cap-weighted average) of the group's liquid members. Auto-added names and auto groups come from the co-movement test (daily moves with the market's move removed, 120 sessions, 0.6+ score with the group, market cap ≥ $700M and 700K+ shares a day), recomputed weekly, currently with data through <span id="grp-asof">—</span>. Broad industries come from FinanceDatabase; Detailed uses Nasdaq's own industry labels. Data and code: <a href="https://github.com/goattrader40-lgtm/radar-close-snapshots">your GitHub repo</a> (radar-data branch).</p>
 </div>
 </div>
@@ -536,7 +591,7 @@ defCalc('industry_perf', {
 <script>
 (() => {
   /* ───────── state ───────── */
-  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', sort: {} };
+  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', sort: {} };
   const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
   const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
   const fitMap = (scores) => {
@@ -669,7 +724,7 @@ defCalc('industry_perf', {
       const cur = S.sort[table.id];
       const key = b.dataset.sort;
       if (table.id === 'theme-table') S.tlay = 'flat';   /* sorting a column always ranks every theme together */
-      const textKey = ['theme', 'category', 'industry', 'symbol', 'name', 'ind', 'themes'].includes(key);
+      const textKey = ['theme', 'category', 'industry', 'symbol', 'name', 'ind', 'themes', 'section', 'pattern', 'added'].includes(key);
       S.sort[table.id] = { key, dir: cur && cur.key === key ? -cur.dir : textKey ? 1 : -1 };
       draw();
     });
@@ -691,6 +746,7 @@ defCalc('industry_perf', {
     $('#groups').hidden = S.tab !== 'groups';
     $('#gainers').hidden = S.tab !== 'gainers';
     $('#premarket').hidden = S.tab !== 'premarket';
+    $('#watchlist').hidden = S.tab !== 'watchlist';
   };
   document.querySelectorAll('.tgr-seg[data-k]').forEach((seg) => seg.addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
@@ -701,6 +757,7 @@ defCalc('industry_perf', {
     }
     if (seg.dataset.k === 'period') { delete S.sort['theme-table']; delete S.sort['industry-table']; delete S.sort['drill-table']; }
     if (seg.dataset.k === 'dord') delete S.sort['drill-table'];
+    if (seg.dataset.k === 'wl') { S.wlsec = ''; delete S.sort['wl-table']; }
     draw();
   }));
   const setP = (k, v) => { F[k] = v; draw(); };
@@ -726,7 +783,7 @@ defCalc('industry_perf', {
 
   /* selections: rows and chips */
   const select = (kind, name) => {
-    if (S.tab === 'premarket') { S.tab = 'groups'; history.replaceState(null, '', '#groups'); }   /* a theme chip on the pre-market list opens that theme */
+    if (S.tab === 'premarket' || S.tab === 'watchlist') { S.tab = 'groups'; history.replaceState(null, '', '#groups'); }   /* a theme chip on the pre-market or watchlist tab opens that theme */
     if (S.tab === 'groups') { S.sel = { kind, name }; S.q = ''; $('#drill-search').value = ''; draw(); $('#drill-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
     else { S.gsel = { kind, name }; draw(); $('#g-list-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   };
@@ -1149,6 +1206,107 @@ defCalc('industry_perf', {
     });
   };
 
+  /* watchlist: the setup scanner's lists, with today's live price on top */
+  const WL_LISTS = ['3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'];
+  const WL_ORDER = { '3-SETUPS': ['Tight', 'PB 21', 'PB 50'], '2-POOL': ['Momentum', '50 EMA reclaim', 'Growth'] };
+  const wlSecs = (list, rows) => {   /* same section order as the TradingView import files */
+    const have = [...new Set(rows.map((r) => r.section || ''))];
+    if (list.startsWith('1-')) return have.sort().reverse();
+    const ord = WL_ORDER[list] || [];
+    return ord.filter((x) => have.includes(x)).concat(have.filter((x) => !ord.includes(x)));
+  };
+  const secName = (list, sec) => (list.startsWith('1-') && /^\d{4}-\d{2}-\d{2}$/.test(sec) ? fDate(sec) : sec);
+  const p1 = (x, sign) => { const v = num(x); return v === null || isNaN(v) ? '—' : (sign && v > 0 ? '+' : '') + v.toFixed(1) + '%'; };
+  const wlRows = (symMap) => {
+    const doc = st('setups').status === 'ok' ? st('setups').data : null;
+    if (!doc || !doc.lists) return [];
+    return (doc.lists[S.wl] || []).map((r, i) => {
+      const m = symMap.get(r.symbol);
+      const price = m && num(m.price) !== null ? num(m.price) : num(r.close);
+      const ent = r.entries || {};
+      let other = Object.entries(ent).filter(([k]) => k !== 'breakout' && !k.endsWith('stop')).map(([k, v]) => k.replace(/_/g, ' ') + ' ' + v).join(', ');
+      if ((r.ema_triggers_tomorrow || []).length) other = (other ? other + ', ' : '') + 'armed: ' + r.ema_triggers_tomorrow.join(' + ') + ' pullback';
+      return Object.assign({}, r, { i, price, other,
+        chg_1d: m ? m.chg_1d : r.chg_pct, rel_vol: m ? m.rel_vol : r.rel_vol, themes: m ? m.themes : '', tv_symbol: (m && m.tv_symbol) || r.tv,
+        away: num(r.buy_point) && price ? r2((num(r.buy_point) / price - 1) * 100) : null });
+    });
+  };
+  const drawWatchlist = (symMap) => {
+    const table = $('#wl-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
+    setState('wl-table', ['setups']);
+    const doc = st('setups').status === 'ok' ? st('setups').data : null;
+    const all = wlRows(symMap);
+    document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
+    $('#wl-time').textContent = doc ? 'Scan of the ' + fDate(doc.date) + ' close' : st('setups').status === 'error' ? 'Could not load the lists' : '—';
+    /* section picker */
+    const secs = wlSecs(S.wl, all);
+    if (S.wlsec && !secs.includes(S.wlsec)) S.wlsec = '';
+    const sel = $('#wl-sec');
+    const want = [''].concat(secs).join('\n');
+    if (sel.dataset.opts !== S.wl + '\n' + want) {
+      sel.replaceChildren();
+      const o = h('option', '', 'All (' + all.length + ')'); o.value = ''; sel.append(o);
+      secs.forEach((x) => { const op = h('option', '', secName(S.wl, x) + ' (' + all.filter((r) => (r.section || '') === x).length + ')'); op.value = x; sel.append(op); });
+      sel.dataset.opts = S.wl + '\n' + want;
+    }
+    sel.value = S.wlsec;
+    const q = S.wlq.toUpperCase();
+    const rows = all.filter((r) => (!S.wlsec || (r.section || '') === S.wlsec) && (!q || r.symbol.includes(q)));
+    const b = rowsOf('build')[0];
+    $('#wl-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' names in ' + S.wl + '. Prices: ' +
+      (LIVE_ON ? 'live at ' + fTime(LIVE.saved_at) + ' ET' : b ? 'the ' + fDate(b.asof) + ' close' : '—') + '.';
+    const gord = { 'A+': 0, A: 1, B: 2, C: 3, F: 4 };
+    const spec = S.sort['wl-table'];
+    if (spec) {
+      const txt = ['symbol', 'section', 'pattern', 'added'].includes(spec.key);
+      const val = (r) => (spec.key === 'grade' ? (gord[r.grade] ?? 9) : txt ? String(r[spec.key] || '') : num(r[spec.key]));
+      const blank = (v) => v === null || v === undefined || v === '' || Number.isNaN(v);   /* names without a value stay at the bottom either way */
+      rows.sort((a, c) => (blank(val(a)) - blank(val(c))) || (spec.dir > 0 ? cmp(val(a), val(c)) : cmp(val(c), val(a))));
+      markSort(table, spec);
+    } else markSort(table, { key: '', dir: -1 });
+    if (doc && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'No names in this list' + (S.wlsec || q ? ' match.' : ' right now.')); td.colSpan = 18; tr.append(td); tb.append(tr); }
+    rows.forEach((r) => {
+      const tr = h('tr'); tr.dataset.key = r.symbol;
+      const key = h('td', 'key');
+      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol); a.target = '_blank'; a.rel = 'noopener'; key.append(a);
+      const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade[0], r.grade)); else gd.textContent = '—';
+      const sec = (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
+      tr.append(key, h('td', 'nw', sec), gd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
+        h('td', 'num', p1(r.away, true)), h('td', 'num', fPrice(r.price)), pctCell(r.chg_1d, 0), h('td', 'num c2', fX(r.rel_vol)),
+        h('td', 'c2', r.other), h('td', 'num c3', p1(r.adr_pct)), h('td', 'num c3 ' + tone(r.perf_1m_pct), p1(r.perf_1m_pct, true)),
+        h('td', 'num c3 ' + tone(r.perf_3m_pct), p1(r.perf_3m_pct, true)), h('td', 'num c3', p1(r.off_52w_high_pct)), h('td', 'num c3', fDv(r.dollar_vol_30d_m)),
+        h('td', 'c2 nw', r.added ? fDate(r.added).replace(/, \d{4}$/, '') : '—'), h('td', 'c3 nw', r.why || ''), chipCell(r.themes, 'theme', 'c2'));
+      tb.append(tr);
+    });
+    S.wlShown = rows;
+    /* changes on the last scan */
+    const ct = $('#wl-ch-table tbody'); ct.replaceChildren();
+    const ch = doc ? (doc.changes_today || []).filter((x) => x.date === doc.date) : [];
+    $('#wl-ch-h').textContent = doc ? 'Changes on the ' + fDate(doc.date) + ' scan (' + ch.length + ')' : 'Changes on the last scan';
+    const lo = (n) => WL_LISTS.indexOf(n);
+    ch.slice().sort((x, y) => lo(x.list) - lo(y.list) || x.action.localeCompare(y.action) || x.sym.localeCompare(y.sym)).forEach((x) => {
+      const tr = h('tr');
+      const k = h('td', 'key'); const a = h('a', 'tgr-tk', x.sym); a.href = tv((symMap.get(x.sym) || {}).tv_symbol || x.sym); a.target = '_blank'; a.rel = 'noopener'; k.append(a);
+      tr.append(k, h('td', '', x.list), h('td', x.action === 'added' ? 'tgr-up' : 'tgr-dn', x.action), h('td', '', x.why || ''));
+      ct.append(tr);
+    });
+    if (doc && !ch.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'No changes on this scan.'); td.colSpan = 4; tr.append(td); ct.append(tr); }
+  };
+  $('#wl-sec').addEventListener('change', (e) => { S.wlsec = e.target.value; draw(); });
+  $('#wl-search').addEventListener('input', (e) => { S.wlq = e.target.value.trim(); draw(); });
+  $('#wl-dl').addEventListener('click', () => {   /* the list on screen as a TradingView import file: ###section, then EXCHANGE:SYMBOL lines */
+    const rows = S.wlShown || [];
+    if (!rows.length) return;
+    const by = new Map();
+    rows.forEach((r) => { const k = secName(S.wl, r.section || '') || S.wl; if (!by.has(k)) by.set(k, []); by.get(k).push(r.tv_symbol); });
+    const txt = [...by].map(([k, v]) => '###' + k + '\n' + v.join('\n')).join('\n') + '\n';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
+    a.download = S.wl.replace('/', '-') + (S.wlsec ? ' ' + secName(S.wl, S.wlsec) : '') + '.txt';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+
   const drawTrack = () => {
     setState('track-table', ['grade_record']);
     const tb = $('#track-table tbody'); tb.replaceChildren();
@@ -1191,7 +1349,8 @@ defCalc('industry_perf', {
     drawTakeaway();
     if (S.tab === 'groups') { drawThemes(symMap); drawIndustries(); drawDrill(symMap); }
     else if (S.tab === 'gainers') drawGainers(symMap);
-    else { drawPmLive(symMap); drawPremarket(symMap); drawTrack(); }
+    else if (S.tab === 'premarket') { drawPmLive(symMap); drawPremarket(symMap); drawTrack(); }
+    else drawWatchlist(symMap);
   }
 
   /* ───────── column chooser: tick columns off to hide them (remembered in this browser) ───────── */
@@ -1228,6 +1387,7 @@ defCalc('industry_perf', {
   setupCols('pm-table', $('#pm-card') && (() => { const x = h('div', 'tgr-cardhead'); x.style.justifyContent = 'flex-end'; $('#pm-card').prepend(x); return x; })());
   setupCols('theme-table', $('#themes-card .tgr-cardhead'));
   setupCols('industry-table', $('#industries-card .tgr-cardhead'));
+  setupCols('wl-table', $('#wl-card .tgr-cardhead'));
   applyCols();
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
@@ -1250,6 +1410,12 @@ defCalc('industry_perf', {
                     : `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/refs/heads/${GH.branch}/${name}?t=${Date.now()}`;
     const r = await fetch(url, { cache: 'no-store' });
     if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
+    return r.json();
+  }
+  /* the setup scanner's lists live on the main branch (setups/latest.json), not radar-data */
+  async function getSetups() {
+    const r = await fetch(`https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/refs/heads/main/setups/latest.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!r.ok) throw new Error('setups: HTTP ' + r.status);
     return r.json();
   }
   const r2 = (x) => Math.round(x * 100) / 100;
@@ -1282,9 +1448,10 @@ defCalc('industry_perf', {
     try {
       const sha = await tipSha();
       if (sha && sha === lastSha && !force) { drawLiveLine(); return; }
-      const [build, live, pm, gl, pml, etfs, rev] = await Promise.all([getJson(sha, 'build.json'), getJson(sha, 'live.json').catch(() => null),
+      const [build, live, pm, gl, pml, etfs, rev, setups] = await Promise.all([getJson(sha, 'build.json'), getJson(sha, 'live.json').catch(() => null),
         getJson(sha, 'premarket.json'), getJson(sha, 'gradelog.json'), getJson(sha, 'premarket_live.json').catch(() => null),
-        getJson(sha, 'etfs.json').catch(() => null), getJson(sha, 'revenue.json').catch(() => null)]);
+        getJson(sha, 'etfs.json').catch(() => null), getJson(sha, 'revenue.json').catch(() => null), getSetups().catch(() => null)]);
+      D.setups = setups ? { status: 'ok', data: setups } : (D.setups && D.setups.status === 'ok' ? D.setups : { status: 'error', data: null });
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {
         const [stocks, themes] = await Promise.all([getJson(sha, 'stocks.json'), getJson(sha, 'themes.json')]);
@@ -1326,7 +1493,7 @@ defCalc('industry_perf', {
   setInterval(() => { if (!document.hidden) refresh(false); }, 120000);
 
   const named = location.hash.slice(1);
-  if (named === 'gainers' || named === 'groups' || named === 'premarket') S.tab = named;
+  if (['gainers', 'groups', 'premarket', 'watchlist'].includes(named)) S.tab = named;
   draw();
   refresh(true);
 })();
