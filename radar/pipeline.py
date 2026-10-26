@@ -50,7 +50,7 @@ T = [
  ("AI Infrastructure", "Data Center Power & Cooling", "GRID POWR", "VRT ETN GEV NVT HUBB MOD POWL TT CAT JCI CMI AMSC"),
  ("AI Infrastructure", "Data Center Builders & REITs", "DTCR PAVE", "EQIX DLR IRM FIX EME STRL MTZ PWR DY"),
  ("AI Infrastructure", "Power Generation (AI Power)", "XLU", "CEG VST NRG TLN"),
- ("AI Infrastructure", "Fuel Cells & On-site Power", "HDRO", "BE FCEL PLUG"),
+ ("AI Infrastructure", "Fuel Cells & On-site Power", "", "BE FCEL PLUG"),
  ("AI Infrastructure", "Nuclear & Uranium", "NLR URA URNM", "CCJ OKLO SMR LEU NNE UEC UUUU NXE DNN XE"),
  ("AI Infrastructure", "Neoclouds & AI Hosting", "NCLD WGMI", "CRWV NBIS IREN CIFR WULF APLD GLXY HUT BTDR CORZ KEEL CLSK RIOT MARA"),
  ("Software", "Enterprise SaaS", "IGV", "CRM NOW ADBE INTU WDAY ADSK TEAM HUBS SAP DOCU ASAN FRSH PEGA BOX GWRE RNG BSY"),

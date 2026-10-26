@@ -8,6 +8,7 @@ on:
         default: "probe"
 permissions:
   contents: write
+  actions: write
 concurrency:
   group: radar-tools
   cancel-in-progress: false
