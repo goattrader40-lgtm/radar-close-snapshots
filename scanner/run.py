@@ -35,6 +35,16 @@ LISTS = ["1-EP/GAP", "1-UPDAY", "2-POOL", "3-SETUPS"]
 SETUP_SCREENS = {"DAILY TIGHTNESS": "Tight", "PULLBACK TO 21EMA-MAIN": "PB 21", "PULLBACK TO 50EMA": "PB 50"}
 GRADE = {0: "", 1: "A+", 2: "A", 3: "B"}
 PBE_DAYS = 4   # MSF v29.1 'Today is at least the Nth day since the 20-day high' (21 / 50 EMA pullback triggers)
+PBE_HH_LEN, PBE_HH_REF, PBE_HH_TOL = 30, 33, 0.0   # MSF v29.13: higher high = the last 30 days' peak >= the peak of the 33 days before (x (1 - tol%))
+
+
+def higher_high(H, i):
+    """momentum only: a new 3-month high made in the last 30 days (the 21 / 50 EMA triggers need it)"""
+    if i < PBE_HH_LEN + PBE_HH_REF - 1:
+        return False
+    return H[i - PBE_HH_LEN + 1:i + 1].max() >= H[i - PBE_HH_LEN - PBE_HH_REF + 1:i - PBE_HH_LEN + 1].max() * (1 - PBE_HH_TOL / 100)
+
+
 PBE_MAX_TOUCHES_50 = 1   # MSF v29.12: 50 EMA trigger — at most 1 earlier day whose low reached the 50 EMA since the 20-day high
 PBE_MAX_TOUCHES_21 = 1   # MSF v29.11: 21 EMA trigger — at most 1 earlier day whose low reached the 21 EMA since the 20-day high
 
@@ -240,7 +250,7 @@ def details(sym, st, d, entry, P):
             coil=fnum(r.early), coil_stop=fnum(r.earlyStop),
             pullback_tight_day=fnum(r.hlTrig) if not r.hlDone else None, pullback_stop=fnum(r.hlStop) if not r.hlDone and r.hlTrig == r.hlTrig else None,
             level=fnum(r.cLvTrig), bigger_base=fnum(r.cBigBuy), flat_top=fnum(r.cFTBuy)).items() if v is not None},
-        ema_triggers_tomorrow=[t for t, ok in (
+        ema_triggers_tomorrow=[] if not higher_high(H, i) else [t for t, ok in (
             ("21 EMA", hb20 is not None and hb20 + 1 >= PBE_DAYS and r.ema10 > r.ema21 > r.ema50 > r.sma200 and r.liquid == 1 and r.above200 == 1
              and st.avgv30[i] >= 700000 and st.c[i] > r.ema50
              and r.ema21 < st.c[i] <= r.ema21 * (1 + r.adr / 100)
