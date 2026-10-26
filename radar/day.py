@@ -96,10 +96,14 @@ def live_once():
             return False
         open(os.path.join(OUT, "base_" + name), "w").write(txt)
     extra = []
+    et = data_file("etfs.json")
+    if et:
+        open(os.path.join(OUT, "base_etfs.json"), "w").write(et)
+        extra += ["--etfs", os.path.join(OUT, "base_etfs.json")]
     vp = data_file("volprofile.json")
     if vp:
         open(os.path.join(OUT, "base_volprofile.json"), "w").write(vp)
-        extra = ["--profile", os.path.join(OUT, "base_volprofile.json")]
+        extra += ["--profile", os.path.join(OUT, "base_volprofile.json")]
     r = sh(sys.executable, os.path.join(HERE, "live.py"), os.path.join(OUT, "base_stocks.json"),
            os.path.join(OUT, "base_themes.json"), os.path.join(OUT, "live.json"), "--force", *extra, check=False)
     log("live:", (r.stdout or r.stderr).strip()[-300:])
@@ -120,6 +124,10 @@ def daily():
     if len(stocks) < 2000:
         raise RuntimeError(f"only {len(stocks)} stocks, not publishing")
     files = [os.path.join(OUT, f) for f in ("stocks.json", "themes.json", "build.json")]
+    r = sh(sys.executable, os.path.join(HERE, "etfs.py"), os.path.join(OUT, "themes.json"), os.path.join(OUT, "etfs.json"), check=False)
+    log("etfs:", (r.stdout or r.stderr).strip()[-300:])
+    if r.returncode == 0:
+        files.append(os.path.join(OUT, "etfs.json"))
     gl = data_file("gradelog.json")
     if gl:
         p = os.path.join(OUT, "gradelog.json")
@@ -287,6 +295,11 @@ if __name__ == "__main__":
         volprofile()
     elif mode == "premarket":
         pm_once()
+    elif mode == "etfs":
+        os.makedirs(OUT, exist_ok=True)
+        open(os.path.join(OUT, "e_themes.json"), "w").write(data_file("themes.json"))
+        sh(sys.executable, os.path.join(HERE, "etfs.py"), os.path.join(OUT, "e_themes.json"), os.path.join(OUT, "etfs.json"))
+        sh(sys.executable, os.path.join(HERE, "publish.py"), "etfs " + now().strftime("%F %H:%M"), os.path.join(OUT, "etfs.json"))
     elif mode == "live":
         live_once()
     else:

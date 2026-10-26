@@ -30,6 +30,7 @@ jobs:
           fi
           if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi
           if [ "${{ inputs.cmd }}" = "premarket" ]; then python3 radar/day.py premarket; fi
+          if [ "${{ inputs.cmd }}" = "etfs" ]; then python3 radar/day.py etfs; fi
           if [ "${{ inputs.cmd }}" = "restart-day" ]; then
             for id in $(gh run list --workflow radar-day.yml --status in_progress --json databaseId -q '.[].databaseId'); do gh run cancel $id; done
             sleep 20; gh workflow run radar-day.yml --ref main -f mode=day

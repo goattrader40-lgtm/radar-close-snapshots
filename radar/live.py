@@ -125,7 +125,13 @@ def main():
     stocks = json.load(open(stocks_p))
     themes = json.load(open(themes_p))
     syms = [r["symbol"] for r in stocks]
-    syms += sorted({e for t in themes for e in (t.get("etfs") or "").split()} - set(syms))
+    etf = {e for t in themes for e in (t.get("etfs") or "").split()}
+    if "--etfs" in sys.argv:
+        try:
+            etf |= set(json.load(open(sys.argv[sys.argv.index("--etfs") + 1]))["rows"])
+        except Exception as e:
+            print(f"no etfs file: {e}", file=sys.stderr)
+    syms += sorted(etf - set(syms))
     ymap = {yahoo_sym(s): s for s in syms}
     y = Yahoo()
     got, source = {}, ""
