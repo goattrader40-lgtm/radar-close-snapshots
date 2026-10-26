@@ -1,2 +1,1070 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Theme & Group Radar</title></head>
-<body style="font:16px system-ui;padding:24px">Theme &amp; Group Radar is being set up. Check back shortly.</body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Theme &amp; Group Radar</title>
+<style>
+  :root {
+    --font-anthropic-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-anthropic-serif: ui-serif, Georgia, "Times New Roman", serif;
+    --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 14px; --cds-gap-lg: 22px;
+    --cds-pad-xs: 3px; --cds-pad-sm: 7px; --cds-pad-md: 12px; --cds-pad-lg: 16px;
+    --cds-radius: 6px; --cds-dur-slow: .3s; --cds-font-weight-medium: 600;
+    --cds-font-size-title: 1.75rem; --cds-font-size-heading: 1.05rem; --cds-font-size-body: .95rem; --cds-font-size-caption: .8rem;
+    --color-bg: #f7f6f2; --color-panel: #ffffff; --color-fg: #1d1c1a; --color-fg-muted: #6b6862; --color-border-line: #e2dfd8;
+    --color-ok: #2f7d4f; --color-bad: #c0392b; --color-warn: #b7791f;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --color-bg: #161614; --color-panel: #1f1f1c; --color-fg: #ecebe6; --color-fg-muted: #9c9a93; --color-border-line: #34332f;
+      --color-ok: #58b07d; --color-bad: #e5675a; --color-warn: #e0a84a; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --color-bg: #161614; --color-panel: #1f1f1c; --color-fg: #ecebe6; --color-fg-muted: #9c9a93; --color-border-line: #34332f;
+    --color-ok: #58b07d; --color-bad: #e5675a; --color-warn: #e0a84a; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-fg); }
+  .wrap { max-width: 1500px; margin: 0 auto; padding: 20px 16px 40px; }
+  a { color: inherit; }
+  .dash-skeleton { animation: tgr-pulse 1.4s ease-in-out infinite; }
+  @keyframes tgr-pulse { 50% { opacity: .45; } }
+  .tgr-live { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .tgr-ldot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--color-fg-muted); display: inline-block; }
+  .tgr-ldot.ok { background: var(--color-ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ok) 25%, transparent); }
+  .tgr-ldot.warn { background: var(--color-warn); }
+  .tgr-ldot.bad { background: var(--color-bad); }
+  /* Layout: header + takeaway, two tabs; each tab = two ranked tables side by side, then a drill-down list. */
+  .tgr { display: grid; gap: var(--cds-gap-lg); font-family: var(--font-anthropic-sans); color: var(--color-fg); }
+  .tgr [hidden] { display: none !important; }
+  .tgr-head { display: grid; gap: var(--cds-gap-xs); }
+  .tgr-head h1 { margin: 0; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); text-wrap: balance; }
+  .tgr-take { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); max-width: 72ch; line-height: 1.5; }
+  .tgr-take .em { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+  .tgr-tabs { display: flex; gap: var(--cds-gap-xs); border-bottom: 1px solid var(--color-border-line); flex-wrap: wrap; }
+  .tgr-tab { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: var(--cds-pad-sm) var(--cds-pad-md); font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); cursor: pointer; display: inline-flex; gap: var(--cds-gap-xs); align-items: center; }
+  .tgr-tab[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+  .tgr-tab:focus-visible, .tgr-seg button:focus-visible, .tgr-chip:focus-visible, .tgr-th:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+  .tgr-count { font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 var(--cds-pad-sm); color: var(--color-fg); }
+  .tgr-page { display: grid; gap: var(--cds-gap-md); }
+  .tgr-bar { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm) var(--cds-gap-lg); align-items: center; }
+  .tgr-ctl { display: inline-flex; align-items: center; gap: var(--cds-gap-xs); }
+  .tgr-lbl { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .tgr-seg { display: inline-flex; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
+  .tgr-seg button { appearance: none; border: 0; background: none; font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); color: var(--color-fg-muted); cursor: pointer; }
+  .tgr-seg button + button { border-left: 1px solid var(--color-border-line); }
+  .tgr-seg button[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); }
+  .tgr-rule { margin: 0; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); }
+  .tgr-rule .em { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+  .tgr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr)); gap: var(--cds-gap-md); }
+  .tgr-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; display: grid; gap: var(--cds-gap-sm); align-content: start; container-type: inline-size; }
+  .tgr-card h2 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); text-wrap: balance; }
+  .tgr-note { margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.45; }
+  .tgr-note .em { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+  .tgr-cardhead { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: baseline; justify-content: space-between; }
+  .tgr-scroll { overflow: auto; max-height: 30rem; min-height: 6rem; }
+  .tgr-scroll.tall { max-height: 36rem; }
+  .tgr-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .tgr-table th { position: sticky; top: 0; z-index: 1; background: var(--color-panel); text-align: left; color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .tgr-table th.num { text-align: right; }
+  .tgr-th { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; }
+  .tgr-th[data-on="1"] { color: var(--color-fg); }
+  .tgr-table td { padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
+  .tgr-table td.num { text-align: right; white-space: nowrap; }
+  .tgr-table td.name { min-width: 9rem; }
+  .tgr-table tr.click { cursor: pointer; }
+  .tgr-table tr.click:hover td { background: color-mix(in srgb, var(--color-fg) 5%, transparent); }
+  .tgr-table tr.sel td { background: color-mix(in srgb, var(--color-fg) 10%, transparent); }
+  .tgr-table td.key { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
+  .tgr-up { color: var(--color-ok); }
+  .tgr-dn { color: var(--color-bad); }
+  .tgr-bar-cell { display: block; height: 3px; border-radius: 2px; margin-top: 3px; margin-left: auto; background: currentColor; opacity: .5; }
+  .tgr-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tgr-chip { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.7; cursor: pointer; white-space: nowrap; }
+  .tgr-chip:hover { border-color: var(--color-fg-muted); }
+  .tgr-sep { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .tgr-tk { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); text-decoration: none; border-bottom: 1px dotted var(--color-fg-muted); }
+  .tgr-tk:hover { border-bottom-style: solid; }
+  .tgr-tks { display: flex; flex-wrap: wrap; gap: 2px var(--cds-gap-sm); }
+  .tgr-flag { color: var(--color-warn); margin-left: 4px; cursor: help; }
+  .tgr-fit { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; font-variant-numeric: tabular-nums; }
+  .tgr-fit.f1 { color: var(--color-fg); border-color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+  .tgr-fit.f2 { color: var(--color-fg); }
+  .tgr-fit.f3 { color: var(--color-fg-muted); }
+  .tgr-table tr.tgr-loose td { opacity: .5; }
+  .tgr-sdot { display: inline-block; width: .45rem; height: .45rem; border-radius: 50%; margin-right: 5px; vertical-align: middle; background: var(--color-fg-muted); opacity: .45; }
+  .tgr-sdot.s1 { background: var(--color-ok); opacity: 1; }
+  .tgr-sdot.s2 { background: var(--color-warn); opacity: 1; }
+  .tgr-gm { display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 999px; border: 1px solid var(--color-ok); color: var(--color-ok); font-size: 0.75em; font-weight: var(--cds-font-weight-medium); line-height: 1.5; vertical-align: middle; white-space: nowrap; }
+  .tgr-moves { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs) var(--cds-gap-sm); align-items: center; font-size: var(--cds-font-size-caption); }
+  .tgr-weak { color: var(--color-warn); margin-left: 4px; }
+  .tgr-grade { display: inline-block; min-width: 1.4em; text-align: center; border-radius: var(--cds-radius); padding: 0 4px; font-weight: var(--cds-font-weight-medium); border: 1px solid var(--color-border-line); }
+  .tgr-grade.gA { background: var(--color-ok); color: var(--color-bg); border-color: var(--color-ok); }
+  .tgr-grade.gB { color: var(--color-ok); border-color: var(--color-ok); }
+  .tgr-grade.gC { color: var(--color-fg-muted); }
+  .tgr-grade.gF { background: var(--color-bad); color: var(--color-bg); border-color: var(--color-bad); }
+  .tgr-src a { display: inline-block; max-width: 9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; color: var(--color-fg-muted); }
+  .tgr-flags { color: var(--color-bad); }
+  .tgr-filters { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm) var(--cds-gap-md); align-items: center; padding: var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-panel); }
+  .tgr-f { display: inline-flex; align-items: center; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); white-space: nowrap; }
+  .tgr-num { font: inherit; font-size: var(--cds-font-size-caption); width: 4.2rem; padding: 2px 4px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); font-variant-numeric: tabular-nums; }
+  .tgr-num:focus-visible, .tgr-f input[type=checkbox]:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
+  .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
+  .tgr-lite:hover { border-color: var(--color-fg-muted); }
+  .tgr-auto { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; }
+  .tgr-gdot { display: inline-block; width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-ok); margin-left: 5px; vertical-align: middle; }
+  .tgr-pill { appearance: none; border: 1px solid var(--color-fg); background: var(--color-fg); color: var(--color-bg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
+  .tgr-search { font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); min-width: 0; width: 12rem; max-width: 100%; }
+  .tgr-etfs { display: flex; flex-wrap: wrap; gap: 2px var(--cds-gap-sm); align-items: baseline; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .tgr-state { min-height: 1.5rem; display: flex; align-items: center; justify-content: center; gap: var(--cds-gap-xs); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .tgr-state .dot { width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+  .tgr-foot { margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; max-width: 90ch; }
+  .tgr [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+  .tgr [data-dash-source-state=empty] { color: transparent; }
+  @container (max-width: 560px) { .c2 { display: none; } }
+  @container (max-width: 420px) { .c3 { display: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="tgr">
+  <header class="tgr-head" id="top">
+    <h1 id="title">Theme &amp; Group Radar</h1>
+    <p class="tgr-take" id="takeaway">
+      <span id="tk-lead">As of the </span><span id="tk-asof" class="em dash-skeleton">—</span><span id="tk-lead2"> close: </span>
+      <span id="tk-gn" class="em dash-skeleton">—</span><span id="tk-mid"> stocks pass your default gainer screen. Strongest theme today: </span>
+      <span id="tk-theme" class="em dash-skeleton">—</span><span> (</span><span id="tk-theme-v">—</span><span> median). Strongest industry with 5+ stocks: </span>
+      <span id="tk-ind" class="em dash-skeleton">—</span><span> (</span><span id="tk-ind-v">—</span><span>).</span>
+    </p>
+    <p class="tgr-live" id="live-line" aria-live="polite"><span class="tgr-ldot" id="live-dot"></span><span id="live-text">Loading…</span> <button class="tgr-lite" id="live-reload" type="button">Check now</button></p>
+  </header>
+
+  <nav class="tgr-tabs" role="tablist" aria-label="Views">
+    <button class="tgr-tab" id="tab-groups" role="tab" aria-selected="true" aria-controls="groups" data-tab="groups">Groups &amp; themes</button>
+    <button class="tgr-tab" id="tab-gainers" role="tab" aria-selected="false" aria-controls="gainers" data-tab="gainers">Gainers &amp; losers</button>
+    <button class="tgr-tab" id="tab-premarket" role="tab" aria-selected="false" aria-controls="premarket" data-tab="premarket">Pre-market</button>
+  </nav>
+
+  <!-- ───────── Tab 1: groups & themes ───────── -->
+  <section class="tgr-page" id="groups" role="tabpanel" aria-labelledby="tab-groups">
+    <div class="tgr-bar" id="groups-controls">
+      <span class="tgr-ctl"><span class="tgr-lbl">Rank by</span>
+        <span class="tgr-seg" data-k="period"><button data-v="1d" aria-pressed="true">Today</button><button data-v="1w" aria-pressed="false">1 week</button><button data-v="1m" aria-pressed="false">1 month</button><button data-v="3m" aria-pressed="false">3 months</button></span></span>
+      <span class="tgr-ctl"><span class="tgr-lbl">Group average</span>
+        <span class="tgr-seg" data-k="wt"><button data-v="med" aria-pressed="true">Median</button><button data-v="cw" aria-pressed="false">Cap-weighted</button></span></span>
+      <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
+        <span class="tgr-seg" data-k="level"><button data-v="industry" aria-pressed="true">Broad</button><button data-v="industry_detail" aria-pressed="false">Detailed</button></span></span>
+      <span class="tgr-ctl"><span class="tgr-lbl">Themes</span>
+        <span class="tgr-seg" data-k="tset"><button data-v="all" aria-pressed="true">All</button><button data-v="core" aria-pressed="false">Your baskets</button><button data-v="auto" aria-pressed="false">Auto groups</button></span></span>
+    </div>
+
+    <div class="tgr-grid">
+      <div class="tgr-card" id="themes-card">
+        <div class="tgr-cardhead"><h2 id="themes-h">Themes</h2></div>
+        <p class="tgr-note">Your baskets, each with any extra names that pass the same co-movement test, plus auto groups the test found on its own. Only liquid names count and show: market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+. Strength = how tightly the whole group moves together: <span class="tgr-sdot s1"></span>0.6+ tight pack (Cybersecurity is 0.63), <span class="tgr-sdot s2"></span>0.45–0.6, <span class="tgr-sdot s3"></span>looser. Click a theme to list its names, or an industry chip to jump to that industry.</p>
+        <div class="tgr-scroll">
+          <table class="tgr-table" id="theme-table">
+            <thead><tr>
+              <th><button class="tgr-th" data-sort="theme">Theme</button></th>
+              <th class="c2"><button class="tgr-th" data-sort="category">Area</button></th>
+              <th class="num"><button class="tgr-th" data-sort="strength" title="How tightly the whole group moves together (average score between every pair of members)">Strength</button></th>
+              <th class="num" data-p="1d"><button class="tgr-th" data-sort="p1d">1D</button></th>
+              <th class="num" data-p="1w"><button class="tgr-th" data-sort="p1w">1W</button></th>
+              <th class="num" data-p="1m"><button class="tgr-th" data-sort="p1m">1M</button></th>
+              <th class="num" data-p="3m"><button class="tgr-th" data-sort="p3m">3M</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="up_pct">Up today</button></th>
+              <th class="c2" data-lv="1">Industries</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="tgr-state dash-skeleton" data-for="theme_perf"></div>
+        </div>
+      </div>
+
+      <div class="tgr-card" id="industries-card">
+        <div class="tgr-cardhead"><h2 id="industries-h">Industry groups</h2></div>
+        <p class="tgr-note" id="industries-note">Every US-listed stock over $300M market cap, grouped by industry. Chips show which of your themes live in each industry.</p>
+        <div class="tgr-scroll">
+          <table class="tgr-table" id="industry-table">
+            <thead><tr>
+              <th><button class="tgr-th" data-sort="industry">Industry</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="n">Stocks</button></th>
+              <th class="num" data-p="1d"><button class="tgr-th" data-sort="p1d">1D</button></th>
+              <th class="num" data-p="1w"><button class="tgr-th" data-sort="p1w">1W</button></th>
+              <th class="num" data-p="1m"><button class="tgr-th" data-sort="p1m">1M</button></th>
+              <th class="num" data-p="3m"><button class="tgr-th" data-sort="p3m">3M</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="up_pct">Up today</button></th>
+              <th class="c2">Themes</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="tgr-state dash-skeleton" data-for="industry_perf"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tgr-card" id="drill-card">
+      <div class="tgr-cardhead">
+        <h2 id="drill-h"><span id="drill-name">Names</span> <span class="tgr-lbl" id="drill-n-wrap">· <span id="drill-n">—</span> stocks<span id="drill-split" hidden> (<span id="drill-ncore">—</span> yours, <span id="drill-next">—</span> auto-added)</span></span></h2>
+        <span class="tgr-ctl"><span class="tgr-seg" data-k="dord"><button data-v="fit" aria-pressed="true">Tightest first</button><button data-v="move" aria-pressed="false">Biggest move</button></span>
+        <input class="tgr-search" id="drill-search" type="search" placeholder="Filter by ticker or name" aria-label="Filter names"></span>
+      </div>
+      <div class="tgr-etfs" id="drill-etfs-wrap" hidden><span>Theme ETFs on TradingView:</span><span class="tgr-tks" id="drill-etfs"></span></div>
+      <p class="tgr-note" id="drill-kind" hidden></p>
+      <p class="tgr-note">The number next to each ticker is its score: how closely it tracks the rest of this group (0 to 1, market move removed). <span class="tgr-fit f1">0.7+</span> tight, <span class="tgr-fit f2">0.6–0.7</span> moves with the group, <span class="tgr-fit f3">under 0.6</span> loose (greyed out). Tickers open the TradingView chart. <span class="tgr-auto">auto</span> = added by the co-movement test, not hand-picked. <span class="tgr-gdot" aria-hidden="true"></span> = passes your gainer filters today. ⚠ = a one-day move of 50%+ in the last 3 months, often a split or spin-off, so check the chart before trusting 1W/1M/3M. A dash means no price yet for the newest day; that listing fills in with the next update.</p>
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="drill-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="name">Company</button></th>
+            <th class="num"><button class="tgr-th" data-sort="chg_1d">1D</button></th>
+            <th class="num"><button class="tgr-th" data-sort="chg_1w">1W</button></th>
+            <th class="num"><button class="tgr-th" data-sort="chg_1m">1M</button></th>
+            <th class="num"><button class="tgr-th" data-sort="chg_3m">3M</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="avg_vol_30d">Avg vol 30D</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="rel_vol" title="Today's volume so far ÷ 30-day average">Rel vol</button></th>
+            <th class="c2" data-lvcol="1"><button class="tgr-th" data-sort="ind">Industry</button></th>
+            <th class="c2">Themes</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="tgr-state dash-skeleton" data-for="stocks"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── Tab 2: 4%+ gainers ───────── -->
+  <section class="tgr-page" id="gainers" role="tabpanel" aria-labelledby="tab-gainers" hidden>
+    <div class="tgr-filters" id="g-filters" role="group" aria-label="Gainer filters">
+      <span class="tgr-seg" data-param="g_dir" aria-label="Gainers or losers"><button data-v="up" aria-pressed="true">Gainers</button><button data-v="down" aria-pressed="false">Losers</button></span>
+      <label class="tgr-f"><span id="g-pct-lbl">Up</span> at least <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-param="g_pct" aria-label="Minimum move today, %"> % today</label>
+      <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-param="g_price" aria-label="Minimum price, dollars"></label>
+      <label class="tgr-f">ADR ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-param="g_adr" aria-label="Minimum ADR %"> %</label>
+      <span class="tgr-f"><label class="tgr-f">Avg $ volume ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-param="g_dvol_m" aria-label="Minimum average dollar volume, millions"> M over</label>
+        <span class="tgr-seg" data-param="g_dvol_days" aria-label="Days for average dollar volume"><button data-v="10" aria-pressed="false">10 days</button><button data-v="20" aria-pressed="true">20 days</button></span></span>
+      <label class="tgr-f"><input type="checkbox" data-param="g_above200"> Above 200-day SMA</label>
+      <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-param="g_mcap_b" aria-label="Minimum market cap, billions"> B</label>
+      <label class="tgr-f">30-day avg volume ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-param="g_avgvol_k" aria-label="Minimum 30-day average volume, thousands of shares"> K shares</label>
+      <button class="tgr-lite" id="g-reset" type="button">Reset to my defaults</button>
+    </div>
+    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA to see breakdowns). Clear a box to turn that filter off. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list.</p>
+    <div class="tgr-moves" id="g-moves"><span class="tgr-lbl">Group moves today (3+ tight members pass):</span> <span class="tgr-chips" id="g-moves-list"></span></div>
+    <div class="tgr-bar">
+      <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
+        <span class="tgr-seg" data-k="level"><button data-v="industry" aria-pressed="true">Broad</button><button data-v="industry_detail" aria-pressed="false">Detailed</button></span></span>
+    </div>
+    <div class="tgr-grid">
+      <div class="tgr-card" id="g-themes-card">
+        <h2 id="g-themes-h">Gainers by theme</h2>
+        <p class="tgr-note">Themes with at least one name passing your filters, counted from the filters above. Tight up = how many are tight members (score 0.7+); 3 or more is a group move, listed first.</p>
+        <div class="tgr-scroll">
+          <table class="tgr-table" id="g-theme-table">
+            <thead><tr>
+              <th>Theme</th>
+              <th class="num">Names</th>
+              <th class="num">Tight up</th>
+              <th class="num">Avg move</th>
+              <th>Tickers</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="tgr-state dash-skeleton" data-for="stocks"></div>
+        </div>
+      </div>
+      <div class="tgr-card" id="g-industries-card">
+        <h2 id="g-industries-h">Gainers by industry</h2>
+        <p class="tgr-note">Industries with at least one name passing your filters.</p>
+        <div class="tgr-scroll">
+          <table class="tgr-table" id="g-industry-table">
+            <thead><tr>
+              <th>Industry</th>
+              <th class="num">Names</th>
+              <th class="num">Avg move</th>
+              <th>Tickers</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="tgr-state dash-skeleton" data-for="stocks"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tgr-card" id="g-list-card">
+      <div class="tgr-cardhead">
+        <h2 id="g-list-h">Today's gainers</h2>
+        <button class="tgr-pill" id="g-clear" hidden></button>
+      </div>
+      <p class="tgr-note" id="g-list-note">Sorted by today's gain. Rel vol = today's volume ÷ 30-day average. $ vol = average daily price × volume. vs 200D = price vs its 200-day SMA. Index shows S&amp;P 500 and Nasdaq-100 membership.</p>
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="g-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="name">Company</button></th>
+            <th class="num"><button class="tgr-th" data-sort="chg_1d">1D</button></th>
+            <th class="num"><button class="tgr-th" data-sort="rel_vol" title="Today's volume so far ÷ 30-day average">Rel vol</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="price">Price</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
+            <th class="num c2" data-dvcol="1"><button class="tgr-th" data-sort="dvol">$ vol</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="avg_vol_30d">Avg vol 30D</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="chg_1w">1W</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="chg_1m">1M</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="chg_3m">3M</button></th>
+            <th class="c2" data-lvcol="1"><button class="tgr-th" data-sort="ind">Industry</button></th>
+            <th><button class="tgr-th" data-sort="themes">Themes</button></th>
+            <th class="c2">Index</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="tgr-state dash-skeleton" data-for="stocks"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── Tab 3: pre-market gappers ───────── -->
+  <section class="tgr-page" id="premarket" role="tabpanel" aria-labelledby="tab-premarket" hidden>
+    <div class="tgr-bar"><span class="tgr-seg" data-k="pmdir"><button data-v="up" aria-pressed="true">Gap ups</button><button data-v="down" aria-pressed="false">Gap downs</button></span>
+      <span class="tgr-seg" data-k="pmshow"><button data-v="ab" aria-pressed="true">A &amp; B only</button><button data-v="all" aria-pressed="false">Show all</button></span></div>
+    <p class="tgr-rule">Gapping 5%+ up or down before the open and passing your rules (market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+, ADR 3%+). Scanned at <span class="em" id="pm-time">—</span> ET on <span class="em" id="pm-date">—</span><span id="pm-stale" hidden> (not today: today's list posts by 9:10 AM ET on weekdays)</span>.</p>
+    <p class="tgr-note">Grade = how solid the news behind the gap is, from reading the actual filings, releases and earnings: <span class="tgr-grade gA">A</span> real fundamental change (earnings beat with raised guidance, big growth inflection, FDA approval, takeover), <span class="tgr-grade gB">B</span> decent (meaningful contract, partnership, index add), <span class="tgr-grade gC">C</span> weak (analyst call, sympathy move, hype, no clear news), <span class="tgr-grade gF">F</span> warning (offering or other dilution, promotional release, reverse split, unconfirmed news). For gap downs the grade means how real and lasting the bad news is: <span class="tgr-grade gA">A</span> serious damage (guidance cut, big miss, lost customer), <span class="tgr-grade gB">B</span> meaningful but contained, <span class="tgr-grade gC">C</span> weak or no real news (possible overreaction). Inflection = a change in the business trend: Turnaround (a decline reverses), Acceleration (growth speeds up), New business (a new product or customer that changes the company), Margin (profits jump on cost or mix), Deterioration (the trend breaks down); scored 1–10 for how big and how confirmed it is. The top 8 gap ups and top 4 gap downs by pre-market $ volume are graded, and only A and B grades show unless you pick Show all. If fewer stocks pass your rules, only those are researched; if none pass, nothing is. <span class="tgr-gm">EP</span> = gap of 10%+ with pre-market volume already 25%+ of a normal day (Qullamaggie's episodic pivot asks for a 10%+ gap on huge early volume). Gap ÷ ADR shows how big the gap is for that stock. Pre-market prices come from Yahoo's 5-minute bars at scan time; check live prints in TradingView.</p>
+    <div class="tgr-card" id="pm-card">
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="pm-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="grade">Grade</button></th>
+            <th class="num"><button class="tgr-th" data-sort="gap_pct">Gap</button></th>
+            <th class="num"><button class="tgr-th" data-sort="pm_volume">PM volume</button></th>
+            <th class="num"><button class="tgr-th" data-sort="pm_dvol_m">PM $ vol $M</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="pm_vol_pct_adv">PM vol % of day</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="gap_x_adr">Gap ÷ ADR</button></th>
+            <th><button class="tgr-th" data-sort="catalyst">Catalyst</button></th>
+            <th><button class="tgr-th" data-sort="inflection">Inflection</button></th>
+            <th class="num"><button class="tgr-th" data-sort="inflection_score">Score /10</button></th>
+            <th class="name">Why</th>
+            <th class="c2">Red flags</th>
+            <th class="c2">Themes</th>
+            <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
+            <th class="c2">Sources</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="tgr-state dash-skeleton" data-for="premarket"></div>
+      </div>
+    </div>
+    <div class="tgr-card" id="track-card">
+      <h2 id="track-h">Track record of the grades</h2>
+      <p class="tgr-note">Every graded gapper is logged, then followed: Held = for gap ups, closed the gap day at or above the pre-market price (for gap downs, at or below). Gap day = close vs the previous close. 5D and 20D = move from the gap-day close 5 and 20 sessions later. Grades only count as useful if A's clearly beat C's here over a few weeks.</p>
+      <div class="tgr-scroll">
+        <table class="tgr-table" id="track-table">
+          <thead><tr>
+            <th>Grade</th>
+            <th class="num">Graded</th>
+            <th class="num">Held</th>
+            <th class="num">Gap day</th>
+            <th class="num c3">With 5D</th>
+            <th class="num">5D</th>
+            <th class="num c3">With 20D</th>
+            <th class="num">20D</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="tgr-state dash-skeleton" data-for="grade_record"></div>
+      </div>
+    </div>
+  </section>
+
+  <p class="tgr-foot" id="foot">During market hours (9:30 AM–4:10 PM ET) prices update about every 5 minutes from Yahoo quotes, and this page checks for new data every 2 minutes on its own. Live 1D is today's change so far; live 1W, 1M and 3M compare today's price with the close 5, 21 and 63 sessions back; Rel vol is today's volume so far ÷ the 30-day average, so it grows through the day. Everything else (themes and their scores, ADR%, $ volume, 200-day SMA, averages) is rebuilt after each close, around 4:30 PM ET. Newest day comes from: <span id="src">—</span>; earlier days, volume and company details come from Nasdaq's daily list, which runs one session behind. ADR% (20-day average of high ÷ low − 1) comes from: <span id="adr-src">—</span>. $ volume averages price × shares over the last 10 or 20 sessions. Group figures are the median (or market-cap-weighted average) of the group's liquid members. Auto-added names and auto groups come from the co-movement test (daily moves with the market's move removed, 120 sessions, 0.6+ score with the group, market cap ≥ $700M and 700K+ shares a day), recomputed weekly, currently with data through <span id="grp-asof">—</span>. Broad industries come from FinanceDatabase; Detailed uses Nasdaq's own industry labels. Data and code: <a href="https://github.com/goattrader40-lgtm/radar-close-snapshots">your GitHub repo</a> (radar-data branch).</p>
+</div>
+</div>
+<script>
+const D = {};
+const CALCS = {};
+function defCalc(id, spec) { CALCS[id] = spec; }
+
+/* ───────── calculations (readers can see these) ───────── */
+defCalc('theme_perf', {
+  title: 'Theme performance',
+  description: 'Per theme (your basket plus its auto-added names, or an auto group), liquid names only (market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+): median and cap-weighted 1D/1W/1M/3M change, share up today, member industries, group strength and each member’s co-movement score.',
+  inputs: ['stocks', 'themes'],
+  fn: (stocks, themes) => {
+    const v = (x) => (x === null || x === undefined || x === '' ? null : Number(x));
+    const r2 = (x) => Math.round(x * 100) / 100;
+    const med = (a) => { a = a.filter((x) => x !== null).sort((x, y) => x - y); if (!a.length) return null; const m = a.length >> 1; return r2(a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2); };
+    const cw = (rs, k) => { let s = 0, w = 0; rs.forEach((r) => { if (v(r[k]) !== null) { s += v(r[k]) * v(r.mcap_b); w += v(r.mcap_b); } }); return w ? r2(s / w) : null; };
+    const tally = (rs, k) => Object.entries(rs.reduce((o, r) => ((o[r[k]] = (o[r[k]] || 0) + 1), o), {})).sort((a, b) => b[1] - a[1]).map(([n, c]) => n + ' (' + c + ')').join(' | ');
+    const bySym = new Map(stocks.map((r) => [r.symbol, r]));
+    return themes.map((t) => {
+      const liquid = (s) => { const r = bySym.get(s); return !!r && v(r.mcap_b) >= 0.7 && v(r.avg_vol_30d) >= 700000 && v(r.dvol_20_m) >= 20; };
+      const coreSyms = String(t.members || '').split(' ').filter(liquid);
+      const extSyms = String(t.ext || '').split(' ').filter(liquid);
+      const rs = coreSyms.concat(extSyms).map((s) => bySym.get(s));
+      const row = { theme: t.theme, category: t.category, kind: t.kind || 'core', etfs: t.etfs, ext: extSyms.join(' '),
+        n: rs.length, n_core: t.kind === 'auto' ? 0 : coreSyms.length, n_ext: t.kind === 'auto' ? rs.length : extSyms.length };
+      ['1d', '1w', '1m', '3m'].forEach((p) => { row['med_' + p] = med(rs.map((r) => v(r['chg_' + p]))); row['cw_' + p] = cw(rs, 'chg_' + p); });
+      row.up_pct = rs.length ? Math.round((100 * rs.filter((r) => v(r.chg_1d) > 0).length) / rs.length) : null;
+      row.industries = tally(rs, 'industry');
+      row.industries_detail = tally(rs, 'industry_detail');
+      row.strength = v(t.strength);
+      row.scores = t.scores || '';
+      row.weak = t.weak || '';
+      return row;
+    });
+  },
+});
+
+defCalc('grade_record', {
+  title: 'Pre-market grade track record',
+  description: 'Every graded gapper since logging began, grouped by direction and grade: how many, how many held the pre-market move at the close, the average gap-day result, and the average move 5 and 20 sessions later.',
+  inputs: ['gradelog'],
+  fn: (gradelog) => {
+    const v = (x) => (x === null || x === undefined || x === '' ? null : Number(x));
+    const avg = (a) => (a.length ? Math.round((a.reduce((s, x) => s + x, 0) / a.length) * 100) / 100 : null);
+    const groups = new Map();
+    gradelog.filter((r) => !(r.placeholder === true || r.placeholder === 'true')).forEach((r) => { const k = (r.direction === 'down' ? 'Gap down' : 'Gap up') + ' ' + r.grade; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); });
+    return [...groups].sort((a, b) => a[0].localeCompare(b[0])).map(([key, rs]) => {
+      const done = rs.filter((r) => v(r.d0_pct) !== null);
+      const r5 = rs.map((r) => v(r.r5)).filter((x) => x !== null), r20 = rs.map((r) => v(r.r20)).filter((x) => x !== null);
+      return { key, n: rs.length, n_closed: done.length,
+        held_pct: done.length ? Math.round((100 * done.filter((r) => r.held === true || r.held === 'true').length) / done.length) : null,
+        avg_d0: avg(done.map((r) => v(r.d0_pct))), n_5d: r5.length, avg_5d: avg(r5), n_20d: r20.length, avg_20d: avg(r20) };
+    });
+  },
+});
+
+defCalc('industry_perf', {
+  title: 'Industry group performance',
+  description: 'Per industry (broad and detailed lists): stock count, median and cap-weighted 1D/1W/1M/3M change, share up today, and themes present.',
+  inputs: ['stocks'],
+  fn: (stocks) => {
+    const v = (x) => (x === null || x === undefined || x === '' ? null : Number(x));
+    const r2 = (x) => Math.round(x * 100) / 100;
+    const med = (a) => { a = a.filter((x) => x !== null).sort((x, y) => x - y); if (!a.length) return null; const m = a.length >> 1; return r2(a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2); };
+    const cw = (rs, k) => { let s = 0, w = 0; rs.forEach((r) => { if (v(r[k]) !== null) { s += v(r[k]) * v(r.mcap_b); w += v(r.mcap_b); } }); return w ? r2(s / w) : null; };
+    const out = [];
+    ['industry', 'industry_detail'].forEach((level) => {
+      const groups = new Map();
+      stocks.forEach((r) => { const k = r[level] || 'Other'; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); });
+      groups.forEach((rs, name) => {
+        const th = {};
+        rs.forEach((r) => String(r.themes || '').split(' | ').filter(Boolean).forEach((t) => { th[t] = (th[t] || 0) + 1; }));
+        const row = { key: level + ': ' + name, level, industry: name, n: rs.length };
+        ['1d', '1w', '1m', '3m'].forEach((p) => { row['med_' + p] = med(rs.map((r) => v(r['chg_' + p]))); row['cw_' + p] = cw(rs, 'chg_' + p); });
+        row.up_pct = Math.round((100 * rs.filter((r) => v(r.chg_1d) > 0).length) / rs.length);
+        row.themes = Object.entries(th).sort((a, b) => b[1] - a[1]).map(([n, c]) => n + ' (' + c + ')').join(' | ');
+        out.push(row);
+      });
+    });
+    return out;
+  },
+});
+
+</script>
+<script>
+(() => {
+  /* ───────── state ───────── */
+  const S = { pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', sort: {} };
+  const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
+  const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
+  const fitMap = (scores) => {
+    const m = new Map();
+    String(scores || '').split(' ').filter(Boolean).forEach((p) => { const i = p.lastIndexOf(':'); m.set(p.slice(0, i), Number(p.slice(i + 1))); });
+    return m;
+  };
+
+  /* gainer filters: your defaults; a cleared box (null) turns that filter off. Kept in the page, so a reload starts from these. */
+  const PDEF = { g_dir: 'up', g_pct: 4, g_price: 5, g_adr: 3.5, g_dvol_m: 30, g_dvol_days: 20, g_above200: true, g_mcap_b: 0.7, g_avgvol_k: 700 };
+  const F = Object.assign({}, PDEF);
+  const params = () => F;
+  const passes = (r, p) => {
+    const n = (x) => (x === null || x === undefined || x === '' ? null : Number(x));
+    const c = n(r.chg_1d);
+    if (c === null) return false;
+    const mv = p.g_dir === 'down' ? -c : c;   /* losers: a drop of at least g_pct */
+    if (p.g_pct !== null ? mv < p.g_pct : mv <= 0) return false;
+    if (p.g_price !== null && (n(r.price) ?? -1) < p.g_price) return false;
+    if (p.g_mcap_b !== null && (n(r.mcap_b) ?? -1) < p.g_mcap_b) return false;
+    if (p.g_avgvol_k !== null && (n(r.avg_vol_30d) ?? -1) < p.g_avgvol_k * 1000) return false;
+    const adr = n(r.adr_20);
+    if (p.g_adr !== null && adr !== null && adr < p.g_adr) return false;
+    const dv = n(r[p.g_dvol_days === 10 ? 'dvol_10_m' : 'dvol_20_m']);
+    if (p.g_dvol_m !== null && dv !== null && dv < p.g_dvol_m) return false;
+    if (p.g_above200 === true && (r.above_200 === false || r.above_200 === 'false')) return false;
+    return true;
+  };
+  const LIST_MAX = 600;
+  /* themes show liquid names only: market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+ */
+  const liquidRow = (r) => { const n = (x) => (x === null || x === undefined || x === '' ? null : Number(x)); return (n(r.mcap_b) ?? 0) >= 0.7 && (n(r.avg_vol_30d) ?? 0) >= 700000 && (n(r.dvol_20_m) ?? 0) >= 20; };
+
+  /* ───────── helpers ───────── */
+  const $ = (s) => document.querySelector(s);
+  const enc = (s) => String(s).replace(/%/g, '%25').replace(/&/g, '%26').replace(/=/g, '%3D');
+  const num = (x) => (x === null || x === undefined || x === '' ? null : Number(x));
+  const fPct = (x) => { const v = num(x); return v === null || isNaN(v) ? '—' : (v > 0 ? '+' : '') + v.toFixed(2) + '%'; };
+  const tone = (x) => { const v = num(x); return v === null ? '' : v > 0 ? 'tgr-up' : v < 0 ? 'tgr-dn' : ''; };
+  /* every cell shows the stored value as is (only grouping, units and signs added), so it matches its source */
+  const g2 = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const g1 = new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const g0 = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+  const fCap = (b) => { const v = num(b); return v === null ? '—' : g2.format(v); };   /* $ billions: the unit is in the column header */
+  const fVol = (x) => { const v = num(x); return v === null ? '—' : g0.format(v); };
+  const fX = (x) => { const v = num(x); return v === null ? '—' : v.toFixed(2) + '×'; };
+  const fDate = (s) => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00Z'); return isNaN(d) ? String(s) : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }); };
+  const tv = (sym) => 'https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(sym);
+  const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+  const isG = (r) => !!(S.gset && S.gset.has(r.symbol));
+  const fPrice = (x) => { const v = num(x); return v === null ? '—' : '$' + g2.format(v); };
+  const fAdr = (x) => { const v = num(x); return v === null ? '—' : v.toFixed(2) + '%'; };
+  const fDv = (m) => { const v = num(m); return v === null ? '—' : g1.format(v); };   /* $ millions: the unit is in the column header */
+  const dvKey = () => (params().g_dvol_days === 10 ? 'dvol_10_m' : 'dvol_20_m');
+  const st = (id) => D[id] || { status: 'loading' };
+  const ok = (...ids) => ids.every((id) => st(id).status === 'ok');
+  const rowsOf = (id) => (st(id).status === 'ok' && Array.isArray(st(id).data) ? st(id).data : []);
+  const cmp = (a, b) => { if (a === null || a === undefined || Number.isNaN(a)) return 1; if (b === null || b === undefined || Number.isNaN(b)) return -1; return typeof a === 'string' ? a.localeCompare(b) : a - b; };
+
+  /* number cell with optional magnitude bar */
+  const pctCell = (x, max) => {
+    const td = h('td', 'num ' + tone(x));
+    td.append(h('span', '', fPct(x)));
+    const v = num(x);
+    if (max && v !== null) { const b = h('span', 'tgr-bar-cell'); b.style.width = Math.max(4, Math.min(100, (Math.abs(v) / max) * 100)) + '%'; td.append(b); }
+    return td;
+  };
+  /* "A (3) | B (1)" → chips; hidden " | " separators keep the cell's text equal to the data */
+  const chipCell = (str, kind, cls) => {
+    const td = h('td', cls || '');
+    const wrap = h('span', 'tgr-chips');
+    String(str || '').split(' | ').filter(Boolean).forEach((part, i) => {
+      if (i) wrap.append(h('span', 'tgr-sep', ' | '));
+      const name = part.replace(/ \(\d+\)$/, '');
+      const b = h('button', 'tgr-chip', part);
+      b.type = 'button'; b.dataset.kind = kind; b.dataset.name = name;
+      wrap.append(b);
+    });
+    td.append(wrap);
+    return td;
+  };
+  const tickerLinks = (str, symMap) => {
+    const td = h('td');
+    const wrap = h('span', 'tgr-tks');
+    String(str || '').split(' ').filter(Boolean).forEach((s, i) => {
+      if (i) wrap.append(h('span', 'tgr-sep', ' '));
+      const a = h('a', 'tgr-tk', s); a.href = tv((symMap.get(s) || {}).tv_symbol || s); a.target = '_blank'; a.rel = 'noopener';
+      wrap.append(a);
+    });
+    td.append(wrap);
+    return td;
+  };
+  const symbolCell = (r, isExt, fit) => {
+    const td = h('td', 'key');
+    const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = '_blank'; a.rel = 'noopener';
+    td.append(a);
+    if (fit !== undefined) {
+      const f = h('span', 'tgr-fit ' + band(fit), fit === null ? 'new' : fit.toFixed(2));
+      f.setAttribute('aria-label', fit === null ? 'Too new to score' : 'Moves with this group: score ' + fit.toFixed(2));
+      td.append(f);
+    }
+    if (isExt) { const x = h('span', 'tgr-auto', 'auto'); x.setAttribute('aria-label', 'Added by the co-movement test'); td.append(x); }
+    if (isG(r)) { const d = h('span', 'tgr-gdot'); d.setAttribute('aria-label', 'Passes your gainer filters today'); td.append(d); }
+    if (r.big_move === true || r.big_move === 'true') { const f = h('span', 'tgr-flag', '⚠'); f.setAttribute('aria-label', 'Had a one-day move of 50% or more in the last 3 months'); td.append(f); }
+    return td;
+  };
+  const setState = (tableId, srcIds) => {
+    const box = document.querySelector('#' + tableId).parentElement.querySelector('.tgr-state');
+    if (!box) return;
+    const sts = srcIds.map((id) => st(id).status);
+    box.replaceChildren();
+    if (sts.every((s) => s === 'ok')) { box.hidden = true; box.classList.remove('dash-skeleton'); return; }
+    box.hidden = false;
+    if (sts.includes('error')) { box.classList.remove('dash-skeleton'); box.append(h('span', 'dot'), h('span', '', 'Failed to load')); }
+    else box.classList.add('dash-skeleton');
+  };
+
+  /* header-click sorting */
+  const sortSpec = (tableId, def) => S.sort[tableId] || def;
+  const markSort = (table, spec) => {
+    table.querySelectorAll('th').forEach((th) => {
+      const b = th.querySelector('.tgr-th');
+      const on = b && b.dataset.sort === spec.key;
+      if (b) b.dataset.on = on ? '1' : '0';
+      if (on) th.setAttribute('aria-sort', spec.dir > 0 ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort');
+    });
+  };
+  document.querySelectorAll('.tgr-table').forEach((table) => {
+    table.querySelector('thead').addEventListener('click', (e) => {
+      const b = e.target.closest('.tgr-th'); if (!b) return;
+      const cur = S.sort[table.id];
+      const key = b.dataset.sort;
+      const textKey = ['theme', 'category', 'industry', 'symbol', 'name', 'ind', 'themes'].includes(key);
+      S.sort[table.id] = { key, dir: cur && cur.key === key ? -cur.dir : textKey ? 1 : -1 };
+      draw();
+    });
+  });
+
+  /* ───────── controls ───────── */
+  const syncControls = () => {
+    document.querySelectorAll('.tgr-seg[data-k]').forEach((seg) => {
+      seg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(S[seg.dataset.k] === b.dataset.v)));
+    });
+    const p = params();
+    document.querySelectorAll('#g-filters [data-param]').forEach((el) => {
+      const k = el.dataset.param;
+      if (el.classList.contains('tgr-seg')) el.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(String(p[k]) === b.dataset.v)));
+      else if (el.type === 'checkbox') el.checked = p[k] === true;
+      else if (el !== document.activeElement) el.value = p[k] === null || p[k] === undefined ? '' : String(p[k]);
+    });
+    document.querySelectorAll('.tgr-tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === S.tab)));
+    $('#groups').hidden = S.tab !== 'groups';
+    $('#gainers').hidden = S.tab !== 'gainers';
+    $('#premarket').hidden = S.tab !== 'premarket';
+  };
+  document.querySelectorAll('.tgr-seg[data-k]').forEach((seg) => seg.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    S[seg.dataset.k] = b.dataset.v;
+    if (seg.dataset.k === 'level') {
+      if (S.sel && S.sel.kind === 'industry') S.sel = null;
+      if (S.gsel && S.gsel.kind === 'industry') S.gsel = null;
+    }
+    if (seg.dataset.k === 'period') { delete S.sort['theme-table']; delete S.sort['industry-table']; delete S.sort['drill-table']; }
+    if (seg.dataset.k === 'dord') delete S.sort['drill-table'];
+    draw();
+  }));
+  const setP = (k, v) => { F[k] = v; draw(); };
+  document.querySelectorAll('#g-filters [data-param]').forEach((el) => {
+    const k = el.dataset.param;
+    if (el.classList.contains('tgr-seg')) {
+      el.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { delete S.sort['g-table']; setP(k, Number.isNaN(Number(b.dataset.v)) ? b.dataset.v : Number(b.dataset.v)); } });
+    } else if (el.type === 'checkbox') {
+      el.addEventListener('change', () => setP(k, el.checked));
+    } else {
+      el.addEventListener('change', () => {
+        const raw = el.value.trim();
+        if (raw === '') { setP(k, null); return; }
+        const v = Number(raw);
+        if (Number.isFinite(v) && v >= 0) setP(k, v);
+      });
+      el.addEventListener('blur', () => syncControls());
+    }
+  });
+  $('#g-reset').addEventListener('click', () => { Object.assign(F, PDEF); delete S.sort['g-table']; draw(); });
+  const showTab = (tab) => { S.tab = tab; history.replaceState(null, '', '#' + tab); draw(); };
+  document.querySelectorAll('.tgr-tab').forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab)));
+
+  /* selections: rows and chips */
+  const select = (kind, name) => {
+    if (S.tab === 'premarket') { S.tab = 'groups'; history.replaceState(null, '', '#groups'); }   /* a theme chip on the pre-market list opens that theme */
+    if (S.tab === 'groups') { S.sel = { kind, name }; S.q = ''; $('#drill-search').value = ''; draw(); $('#drill-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+    else { S.gsel = { kind, name }; draw(); $('#g-list-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+  };
+  document.querySelector('.tgr').addEventListener('click', (e) => {
+    if (e.target.closest('a')) return;
+    const chip = e.target.closest('.tgr-chip');
+    if (chip) { e.stopPropagation(); select(chip.dataset.kind, chip.dataset.name); return; }
+    const tr = e.target.closest('tr.click');
+    if (tr) select(tr.dataset.kind, tr.dataset.name);
+  });
+  $('#g-clear').addEventListener('click', () => { S.gsel = null; draw(); });
+  $('#drill-search').addEventListener('input', (e) => { S.q = e.target.value.trim().toLowerCase(); draw(); });
+
+  /* ───────── tables ───────── */
+  const pf = (p) => S.wt + '_' + p;           // current group-average column for a period
+  const levelRows = () => rowsOf('industry_perf').filter((r) => r.level === S.level);
+
+  const drawThemes = (symMap) => {
+    const table = $('#theme-table');
+    table.querySelectorAll('th[data-p]').forEach((th) => th.setAttribute('data-field', pf(th.dataset.p)));
+    table.querySelector('th[data-lv]').setAttribute('data-field', S.level === 'industry' ? 'industries' : 'industries_detail');
+    setState('theme-table', ['theme_perf']);
+    const tb = table.querySelector('tbody'); tb.replaceChildren();
+    const rows = rowsOf('theme_perf').filter((r) => S.tset === 'all' || (S.tset === 'auto') === (r.kind === 'auto'));
+    $('#themes-h').textContent = S.tset === 'core' ? 'Your baskets' : S.tset === 'auto' ? 'Auto groups' : 'Themes';
+    const spec = sortSpec(table.id, { key: 'p' + S.period, dir: -1 });
+    const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : r[spec.key]);
+    rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
+    markSort(table, spec);
+    const max = Math.max(1, ...rows.map((r) => Math.abs(num(r[pf(S.period)]) || 0)));
+    rows.forEach((r) => {
+      const tr = h('tr', 'click'); tr.dataset.key = r.theme; tr.dataset.kind = 'theme'; tr.dataset.name = r.theme;
+      if (S.sel && S.sel.kind === 'theme' && S.sel.name === r.theme) tr.classList.add('sel');
+      const key = h('td', 'key', r.theme);
+      if (r.weak) { const w = h('span', 'tgr-weak', '⚠'); w.setAttribute('aria-label', 'Has names that no longer move with this group'); key.append(w); }
+      tr.append(key, h('td', 'c2', r.category));
+      const st = num(r.strength); const sc = h('td', 'num');
+      sc.append(h('span', 'tgr-sdot ' + sband(st)), h('span', '', st === null ? '—' : st.toFixed(2)));
+      tr.append(sc);
+      ['1d', '1w', '1m', '3m'].forEach((p) => tr.append(pctCell(r[pf(p)], p === S.period ? max : 0)));
+      tr.append(h('td', 'num c3', r.up_pct === null ? '—' : r.up_pct + '%'));
+      tr.append(chipCell(S.level === 'industry' ? r.industries : r.industries_detail, 'industry', 'c2'));
+      tb.append(tr);
+    });
+  };
+
+  const drawIndustries = () => {
+    const table = $('#industry-table');
+    table.querySelectorAll('th[data-p]').forEach((th) => th.setAttribute('data-field', pf(th.dataset.p)));
+    setState('industry-table', ['industry_perf']);
+    const tb = table.querySelector('tbody'); tb.replaceChildren();
+    const rows = levelRows().slice();
+    $('#industries-h').textContent = S.level === 'industry' ? 'Industry groups' : 'Industry groups (detailed)';
+    const spec = sortSpec(table.id, { key: 'p' + S.period, dir: -1 });
+    const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : spec.key === 'n' || spec.key === 'up_pct' ? num(r[spec.key]) : r[spec.key]);
+    rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
+    markSort(table, spec);
+    const max = Math.max(1, ...rows.map((r) => Math.abs(num(r[pf(S.period)]) || 0)));
+    rows.forEach((r) => {
+      const tr = h('tr', 'click'); tr.dataset.key = r.key; tr.dataset.kind = 'industry'; tr.dataset.name = r.industry;
+      if (S.sel && S.sel.kind === 'industry' && S.sel.name === r.industry) tr.classList.add('sel');
+      tr.append(h('td', 'key', r.industry), h('td', 'num c3', String(r.n)));
+      ['1d', '1w', '1m', '3m'].forEach((p) => tr.append(pctCell(r[pf(p)], p === S.period ? max : 0)));
+      tr.append(h('td', 'num c3', r.up_pct + '%'));
+      tr.append(chipCell(r.themes, 'theme', 'c2'));
+      tb.append(tr);
+    });
+  };
+
+  const stockRow = (r, cols, symMap, extSet, fits) => {
+    const tr = h('tr'); tr.dataset.key = r.symbol;
+    const fit = fits ? (fits.has(r.symbol) ? fits.get(r.symbol) : null) : undefined;
+    if (typeof fit === 'number' && fit < 0.6) tr.classList.add('tgr-loose');
+    cols.forEach((c) => {
+      if (c === 'symbol') tr.append(symbolCell(r, extSet && extSet.has(r.symbol), fit));
+      else if (c === 'name') tr.append(h('td', 'name c2', r.name));
+      else if (c.startsWith('chg_')) { const td = pctCell(r[c], 0); if (c !== 'chg_1d' && cols.includes('index')) td.classList.add('c2'); tr.append(td); }
+      else if (c === 'mcap_b') tr.append(h('td', 'num c3', fCap(r.mcap_b)));
+      else if (c === 'price') tr.append(h('td', 'num c3', fPrice(r.price)));
+      else if (c === 'adr_20') tr.append(h('td', 'num c3', fAdr(r.adr_20)));
+      else if (c === 'dvol') tr.append(h('td', 'num c2', fDv(r[dvKey()])));
+      else if (c === 'vs_200') { const td = h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null || r.vs_200 === undefined ? '—' : (num(r.vs_200) > 0 ? '+' : '') + num(r.vs_200).toFixed(1) + '%'); tr.append(td); }
+      else if (c === 'avg_vol_30d') tr.append(h('td', 'num c2', fVol(r.avg_vol_30d)));
+      else if (c === 'rel_vol') tr.append(h('td', 'num' + (cols.includes('index') ? '' : ' c2'), fX(r.rel_vol)));
+      else if (c === 'ind') { const td = h('td', 'c2'); const b = h('button', 'tgr-chip', r[S.level]); b.type = 'button'; b.dataset.kind = 'industry'; b.dataset.name = r[S.level]; td.append(b); tr.append(td); }
+      else if (c === 'themes') tr.append(chipCell(r.themes, 'theme', cols.includes('index') ? '' : 'c2'));
+      else if (c === 'index') tr.append(h('td', 'c2', r.index || ''));
+    });
+    return tr;
+  };
+  const sortStocks = (rows, tableId, def) => {
+    const spec = sortSpec(tableId, def);
+    const val = (r) => (spec.key === 'ind' ? r[S.level] : spec.key === 'dvol' ? num(r[dvKey()]) : ['symbol', 'name', 'themes'].includes(spec.key) ? String(r[spec.key] || '') : num(r[spec.key]));
+    rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
+    markSort($('#' + tableId), spec);
+  };
+
+  const drawDrill = (symMap) => {
+    const table = $('#drill-table');
+    table.querySelector('th[data-lvcol]').setAttribute('data-field', S.level);
+    setState('drill-table', ['stocks', 'theme_perf', 'industry_perf']);
+    const tb = table.querySelector('tbody'); tb.replaceChildren();
+    const themes = rowsOf('theme_perf');
+    if (!S.sel && themes.length) {
+      const top = themes.slice().sort((a, b) => cmp(num(b[pf(S.period)]), num(a[pf(S.period)])))[0];
+      S.sel = { kind: 'theme', name: top.theme, auto: true };
+    }
+    const nameEl = $('#drill-name'); const nEl = $('#drill-n'); const etfWrap = $('#drill-etfs-wrap');
+    if (!S.sel) { nameEl.textContent = 'Names'; nEl.textContent = '—'; etfWrap.hidden = true; return; }
+    let rows, extSet = new Set(), fits = null;
+    const split = $('#drill-split'), kindNote = $('#drill-kind');
+    split.hidden = true; kindNote.hidden = true;
+    if (S.sel.kind === 'theme') {
+      const t = themes.find((r) => r.theme === S.sel.name);
+      fits = fitMap(t && t.scores);
+      rows = rowsOf('stocks').filter((r) => String(r.themes || '').split(' | ').includes(S.sel.name) && liquidRow(r));
+      nameEl.textContent = S.sel.name;
+      nEl.setAttribute('data-source', 'theme_perf'); nEl.setAttribute('data-field', 'n'); nEl.setAttribute('data-where', 'theme=' + enc(S.sel.name));
+      nEl.textContent = t ? String(t.n) : String(rows.length);
+      if (t && t.kind === 'auto') {
+        extSet = new Set(rows.map((r) => r.symbol));
+        kindNote.textContent = 'Auto group: the co-movement test found these stocks moving together. It is rechecked every week.';
+        kindNote.hidden = false;
+      } else if (t && num(t.n_ext) > 0) {
+        extSet = new Set(String(t.ext || '').split(' ').filter(Boolean));
+        const w = 'theme=' + enc(S.sel.name);
+        const nc = $('#drill-ncore'), ne = $('#drill-next');
+        nc.setAttribute('data-source', 'theme_perf'); nc.setAttribute('data-field', 'n_core'); nc.setAttribute('data-where', w);
+        ne.setAttribute('data-source', 'theme_perf'); ne.setAttribute('data-field', 'n_ext'); ne.setAttribute('data-where', w);
+        nc.textContent = String(t.n_core); ne.textContent = String(t.n_ext);
+        split.hidden = false;
+      }
+      if (t && t.weak) {
+        const list = String(t.weak).split(' ').filter(Boolean).map((p) => p.replace(':', ' ')).join(', ');
+        kindNote.textContent = '⚠ Below 0.4 at the latest weekly check: ' + list + '. These no longer move with this group. Tell Claude whether to keep them.';
+        kindNote.hidden = false;
+      }
+      const etfs = $('#drill-etfs'); etfs.replaceChildren();
+      etfs.setAttribute('data-source', 'theme_perf'); etfs.setAttribute('data-field', 'etfs'); etfs.setAttribute('data-where', 'theme=' + enc(S.sel.name));
+      String(t ? t.etfs : '').split(' ').filter(Boolean).forEach((e, i) => { if (i) etfs.append(h('span', 'tgr-sep', ' ')); const a = h('a', 'tgr-tk', e); a.href = tv(e); a.target = '_blank'; a.rel = 'noopener'; etfs.append(a); });
+      etfWrap.hidden = !(t && t.etfs);
+    } else {
+      const ind = levelRows().find((r) => r.industry === S.sel.name);
+      rows = rowsOf('stocks').filter((r) => r[S.level] === S.sel.name);
+      nameEl.textContent = S.sel.name;
+      nEl.setAttribute('data-source', 'industry_perf'); nEl.setAttribute('data-field', 'n'); nEl.setAttribute('data-where', 'key=' + enc(S.level + ': ' + S.sel.name));
+      nEl.textContent = ind ? String(ind.n) : String(rows.length);
+      etfWrap.hidden = true;
+    }
+    if (S.q) rows = rows.filter((r) => r.symbol.toLowerCase().includes(S.q) || String(r.name).toLowerCase().includes(S.q));
+    $('#drill-card .tgr-seg[data-k="dord"]').hidden = !fits;
+    if (fits && S.dord === 'fit' && !S.sort['drill-table']) {
+      const fv = (r) => (fits.has(r.symbol) ? fits.get(r.symbol) : -1);
+      rows.sort((a, b) => fv(b) - fv(a) || cmp(num(b['chg_' + S.period]), num(a['chg_' + S.period])));
+      markSort(table, { key: '', dir: -1 });
+    } else {
+      sortStocks(rows, 'drill-table', { key: 'chg_' + S.period, dir: -1 });
+    }
+    rows.forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'chg_1w', 'chg_1m', 'chg_3m', 'mcap_b', 'avg_vol_30d', 'rel_vol', 'ind', 'themes'], symMap, extSet, fits)));
+  };
+
+  const drawGainers = (symMap) => {
+    const loaded = ok('stocks', 'themes');
+    ['g-theme-table', 'g-industry-table', 'g-table'].forEach((id) => setState(id, ['stocks']));
+    const pass = S.gpass || [];
+    $('#g-count').textContent = loaded ? String(pass.length) : '—';
+    const avg = (rs) => (rs.length ? rs.reduce((x, r) => x + num(r.chg_1d), 0) / rs.length : null);
+    const down = params().g_dir === 'down';
+    const byGain = (a2, b2) => (down ? cmp(num(a2.chg_1d), num(b2.chg_1d)) : cmp(num(b2.chg_1d), num(a2.chg_1d)));
+    const byAvg = (x, y) => (down ? cmp(x, y) : cmp(y, x));
+    const word = down ? 'Losers' : 'Gainers';
+    $('#g-themes-h').textContent = word + ' by theme'; $('#g-pct-lbl').textContent = down ? 'Down' : 'Up';
+    /* by theme: counted from the stocks passing the filters, tight = score 0.7+ with that theme */
+    const fits = new Map(rowsOf('themes').map((t) => [t.theme, fitMap(t.scores)]));
+    const byTheme = new Map();
+    pass.forEach((r) => String(r.themes || '').split(' | ').filter(Boolean).forEach((t) => { if (!byTheme.has(t)) byTheme.set(t, []); byTheme.get(t).push(r); }));
+    const trows = [...byTheme].map(([theme, rs]) => {
+      const f = fits.get(theme) || new Map();
+      rs.sort(byGain);
+      const tight = rs.filter((r) => (f.get(r.symbol) || 0) >= 0.7).length;
+      return { theme, n: rs.length, tight, avg: avg(rs), syms: rs.map((r) => r.symbol).join(' '), gm: tight >= 3 };
+    }).sort((a2, b2) => (b2.gm - a2.gm) || (b2.tight - a2.tight) || (b2.n - a2.n) || byAvg(a2.avg, b2.avg));
+    const tb1 = $('#g-theme-table tbody'); tb1.replaceChildren();
+    trows.forEach((r) => {
+      const tr = h('tr', 'click'); tr.dataset.kind = 'theme'; tr.dataset.name = r.theme;
+      if (S.gsel && S.gsel.kind === 'theme' && S.gsel.name === r.theme) tr.classList.add('sel');
+      const key = h('td', 'key', r.theme);
+      if (r.gm) key.append(h('span', 'tgr-gm', 'group move'));
+      tr.append(key, h('td', 'num', String(r.n)), h('td', 'num', String(r.tight)), pctCell(r.avg, 0), tickerLinks(r.syms, symMap));
+      tb1.append(tr);
+    });
+    const ml = $('#g-moves-list'); ml.replaceChildren();
+    const moves = trows.filter((r) => r.gm);
+    if (!moves.length) ml.append(h('span', 'tgr-lbl', loaded ? 'none today' : '—'));
+    moves.forEach((r, i) => {
+      if (i) ml.append(h('span', 'tgr-sep', ' | '));
+      const btn = h('button', 'tgr-chip', r.theme); btn.type = 'button'; btn.dataset.kind = 'theme'; btn.dataset.name = r.theme; ml.append(btn);
+    });
+    /* by industry */
+    $('#g-industries-h').textContent = word + (S.level === 'industry' ? ' by industry' : ' by industry (detailed)');
+    const byInd = new Map();
+    pass.forEach((r) => { const k = r[S.level] || 'Other'; if (!byInd.has(k)) byInd.set(k, []); byInd.get(k).push(r); });
+    const tb2 = $('#g-industry-table tbody'); tb2.replaceChildren();
+    [...byInd].map(([industry, rs]) => ({ industry, rs: rs.sort(byGain) }))
+      .sort((a2, b2) => (b2.rs.length - a2.rs.length) || byAvg(avg(a2.rs), avg(b2.rs)))
+      .forEach(({ industry, rs }) => {
+        const tr = h('tr', 'click'); tr.dataset.kind = 'industry'; tr.dataset.name = industry;
+        if (S.gsel && S.gsel.kind === 'industry' && S.gsel.name === industry) tr.classList.add('sel');
+        tr.append(h('td', 'key', industry), h('td', 'num', String(rs.length)), pctCell(avg(rs), 0), tickerLinks(rs.map((r) => r.symbol).join(' '), symMap));
+        tb2.append(tr);
+      });
+    /* list */
+    const t = $('#g-table');
+    t.querySelector('th[data-lvcol]').setAttribute('data-field', S.level);
+    t.querySelector('th[data-dvcol]').setAttribute('data-field', dvKey());
+    t.querySelector('th[data-dvcol] .tgr-th').textContent = '$ vol ' + (params().g_dvol_days === 10 ? '10D' : '20D') + ' $M';
+    const tb = t.querySelector('tbody'); tb.replaceChildren();
+    let rows = pass.slice();
+    if (S.gsel) rows = rows.filter((r) => (S.gsel.kind === 'theme' ? String(r.themes || '').split(' | ').includes(S.gsel.name) : r[S.level] === S.gsel.name));
+    const clr = $('#g-clear'); clr.hidden = !S.gsel; clr.textContent = S.gsel ? S.gsel.name + '  ×' : '';
+    $('#g-list-h').textContent = (S.gsel ? 'Today’s ' + word.toLowerCase() + ' · ' + S.gsel.name : 'Today’s ' + word.toLowerCase()) + (rows.length > LIST_MAX ? ' (first ' + LIST_MAX + ' of ' + rows.length + ')' : '');
+    sortStocks(rows, 'g-table', { key: 'chg_1d', dir: down ? 1 : -1 });
+    rows.slice(0, LIST_MAX).forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'rel_vol', 'price', 'adr_20', 'dvol', 'vs_200', 'mcap_b', 'avg_vol_30d', 'chg_1w', 'chg_1m', 'chg_3m', 'ind', 'themes', 'index'], symMap)));
+  };
+
+  const drawPremarket = (symMap) => {
+    const table = $('#pm-table');
+    setState('pm-table', ['premarket']);
+    const all = rowsOf('premarket');
+    const first = all[0];
+    const rows = all.filter((r) => !(r.placeholder === true || r.placeholder === 'true') && (r.direction || 'up') === S.pmdir && (S.pmshow === 'all' || r.grade === 'A' || r.grade === 'B'));
+    $('#pm-time').textContent = first && first.scan_time ? first.scan_time : '—';
+    $('#pm-date').textContent = first && first.scan_date ? fDate(first.scan_date) : '—';
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+    $('#pm-stale').hidden = !first || first.scan_date === today;
+    const order = { A: 0, B: 1, C: 2, F: 3 };
+    const spec = S.sort['pm-table'];
+    if (spec) {
+      const txt = ['symbol', 'catalyst', 'inflection'].includes(spec.key);
+      const val = (r) => (spec.key === 'grade' ? (order[r.grade] ?? 4) : txt ? String(r[spec.key] || '') : num(r[spec.key]));
+      rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
+      markSort(table, spec);
+    } else markSort(table, { key: '', dir: -1 });
+    const tb = table.querySelector('tbody'); tb.replaceChildren();
+    if (ok('premarket') && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', S.pmshow === 'all' ? 'No liquid stock is gapping 5%+ this way in this scan.' : 'No A or B grade this way in this scan. Pick Show all to see the rest.'); td.colSpan = 16; tr.append(td); tb.append(tr); }
+    rows.forEach((r) => {
+      const tr = h('tr'); tr.dataset.key = r.symbol;
+      const key = h('td', 'key');
+      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = '_blank'; a.rel = 'noopener'; key.append(a);
+      if (r.ep === true || r.ep === 'true') { const e = h('span', 'tgr-gm', 'EP'); e.setAttribute('aria-label', 'Episodic pivot size gap and volume'); key.append(e); }
+      const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade, r.grade)); else gd.textContent = '—';
+      const sx = h('td', 'c2 tgr-src');
+      String(r.sources || '').split(' ').filter(Boolean).forEach((u, i) => { if (i) sx.append(h('span', 'tgr-sep', ' ')); const l = h('a', '', u); l.href = u; l.target = '_blank'; l.rel = 'noopener'; sx.append(l); });
+      tr.append(key, gd, pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
+        h('td', 'num c3', r.pm_vol_pct_adv === null || r.pm_vol_pct_adv === undefined ? '—' : g1.format(num(r.pm_vol_pct_adv)) + '%'),
+        h('td', 'num c3', r.gap_x_adr === null || r.gap_x_adr === undefined ? '—' : num(r.gap_x_adr).toFixed(2) + '×'),
+        h('td', '', r.catalyst || ''), h('td', '', r.inflection || ''), h('td', 'num', r.inflection_score === null || r.inflection_score === undefined || r.inflection_score === '' ? '—' : String(r.inflection_score)), h('td', 'name', r.reason || ''), h('td', 'c2 tgr-flags', r.flags || ''),
+        chipCell(r.themes, 'theme', 'c2'), h('td', 'num c3', fCap(r.mcap_b)),
+        h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null || r.vs_200 === undefined ? '—' : (num(r.vs_200) > 0 ? '+' : '') + num(r.vs_200).toFixed(1) + '%'), sx);
+      tb.append(tr);
+    });
+  };
+
+  const drawTrack = () => {
+    setState('track-table', ['grade_record']);
+    const tb = $('#track-table tbody'); tb.replaceChildren();
+    const rows = rowsOf('grade_record');
+    if (ok('grade_record') && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing logged yet: each morning\'s grades are logged and followed from that evening\'s close.'); td.colSpan = 8; tr.append(td); tb.append(tr); }
+    rows.forEach((r) => {
+      const tr = h('tr'); tr.dataset.key = r.key;
+      tr.append(h('td', 'key', r.key), h('td', 'num', String(r.n)), h('td', 'num', r.held_pct === null || r.held_pct === undefined ? '—' : r.held_pct + '%'),
+        pctCell(r.avg_d0, 0), h('td', 'num c3', String(r.n_5d)), pctCell(r.avg_5d, 0), h('td', 'num c3', String(r.n_20d)), pctCell(r.avg_20d, 0));
+      tb.append(tr);
+    });
+  };
+
+  const drawTakeaway = () => {
+    const b = rowsOf('build')[0];
+    if (b) { $('#src').textContent = b.latest_source || '—'; $('#grp-asof').textContent = b.groups_as_of ? fDate(b.groups_as_of) : '—'; $('#adr-src').textContent = b.adr_source || '—'; }
+    const asof = $('#tk-asof'), gn = $('#tk-gn');
+    if (b) {
+      if (LIVE_ON) { $('#tk-lead').textContent = 'Live at '; asof.textContent = fTime(LIVE.saved_at) + ' ET'; $('#tk-lead2').textContent = ': '; $('#tk-mid').textContent = ' stocks pass your default gainer screen right now. Strongest theme today: '; }
+      else { $('#tk-lead').textContent = 'As of the '; asof.textContent = fDate(b.asof); $('#tk-lead2').textContent = ' close: '; $('#tk-mid').textContent = ' stocks passed your default gainer screen. Strongest theme that day: '; }
+      gn.textContent = String(rowsOf('stocks').filter((r) => passes(r, PDEF)).length);
+      asof.classList.remove('dash-skeleton'); gn.classList.remove('dash-skeleton');
+    }
+    const th = rowsOf('theme_perf').filter((r) => num(r.med_1d) !== null && num(r.n) >= 3).sort((a, b2) => cmp(num(b2.med_1d), num(a.med_1d)))[0];
+    const ind = rowsOf('industry_perf').filter((r) => r.level === 'industry' && num(r.n) >= 5).sort((a, b2) => cmp(num(b2.med_1d), num(a.med_1d)))[0];
+    const tEl = $('#tk-theme'), tV = $('#tk-theme-v'), iEl = $('#tk-ind'), iV = $('#tk-ind-v');
+    if (th) { tEl.textContent = th.theme; tV.textContent = fPct(th.med_1d); tV.className = tone(th.med_1d); tEl.classList.remove('dash-skeleton'); }
+    if (ind) { iEl.textContent = ind.industry; iV.textContent = fPct(ind.med_1d); iV.className = tone(ind.med_1d); iEl.classList.remove('dash-skeleton'); }
+    drawLiveLine();
+  };
+
+  /* ───────── draw ───────── */
+  function draw() {
+    syncControls();
+    const stocks = rowsOf('stocks');
+    const symMap = new Map(stocks.map((r) => [r.symbol, r]));
+    const p = params();
+    S.gpass = stocks.filter((r) => passes(r, p));
+    S.gset = new Set(S.gpass.map((r) => r.symbol));
+    drawTakeaway();
+    if (S.tab === 'groups') { drawThemes(symMap); drawIndustries(); drawDrill(symMap); }
+    else if (S.tab === 'gainers') drawGainers(symMap);
+    else { drawPremarket(symMap); drawTrack(); }
+  }
+
+  /* ───────── data: the radar-data branch of your GitHub repo ───────── */
+  const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
+  let LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null;
+  const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
+  const nyNow = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value])); return { wd: p.weekday, m: Number(p.hour) * 60 + Number(p.minute) }; };
+  const marketOpen = () => { const n = nyNow(); return !['Sat', 'Sun'].includes(n.wd) && n.m >= 570 && n.m <= 970; };
+  const todayNY = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  async function tipSha() {
+    try {
+      const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/commits/${GH.branch}`, { headers: { Accept: 'application/vnd.github.sha' }, cache: 'no-store' });
+      if (r.ok) return (await r.text()).trim();
+    } catch (e) { /* rate-limited or offline: fall back to the branch name */ }
+    return null;
+  }
+  async function getJson(sha, name) {
+    const url = sha ? `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${sha}/${name}`
+                    : `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/refs/heads/${GH.branch}/${name}?t=${Date.now()}`;
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
+    return r.json();
+  }
+  const r2 = (x) => Math.round(x * 100) / 100;
+  /* today's live quote on top of the last close: [price, change %, volume, quote time] */
+  function applyLive(stocks, live, b) {
+    LIVE_ON = !!(live && live.rows && b && live.session > b.asof);
+    if (!LIVE_ON) return stocks;
+    return stocks.map((r) => {
+      const q = live.rows[r.symbol];
+      const o = Object.assign({}, r);
+      if (!q) { o.chg_1d = null; o.no_new_price = true; return o; }
+      const [p, c, vol] = q;
+      o.price = p; o.chg_1d = r2(c); o.volume = vol;
+      o.rel_vol = vol && r.avg_vol_30d ? r2(vol / r.avg_vol_30d) : null;
+      [['1w', 'ref_1w'], ['1m', 'ref_1m'], ['3m', 'ref_3m']].forEach(([k, ref]) => { o['chg_' + k] = r[ref] ? r2((p / r[ref] - 1) * 100) : null; });
+      if (r.price && r.mcap_b) o.mcap_b = r2((r.mcap_b * p) / r.price);
+      if (r.sma200) { o.above_200 = p > r.sma200; o.vs_200 = Math.round((p / r.sma200 - 1) * 1000) / 10; }
+      o.no_new_price = false;
+      return o;
+    });
+  }
+  function compute() {
+    Object.entries(CALCS).forEach(([id, spec]) => {
+      try { D[id] = { status: 'ok', data: spec.fn(...spec.inputs.map((i) => D[i].data)) }; }
+      catch (e) { D[id] = { status: 'error', data: [] }; console.error(id, e); }
+    });
+  }
+  async function refresh(force) {
+    lastCheck = new Date();
+    try {
+      const sha = await tipSha();
+      if (sha && sha === lastSha && !force) { drawLiveLine(); return; }
+      const [build, live, pm, gl] = await Promise.all([getJson(sha, 'build.json'), getJson(sha, 'live.json').catch(() => null),
+        getJson(sha, 'premarket.json'), getJson(sha, 'gradelog.json')]);
+      if (!BASE || build[0].built_at !== lastBuilt) {
+        const [stocks, themes] = await Promise.all([getJson(sha, 'stocks.json'), getJson(sha, 'themes.json')]);
+        BASE = { stocks, themes }; lastBuilt = build[0].built_at;
+      }
+      LIVE = live;
+      D.build = { status: 'ok', data: build };
+      D.themes = { status: 'ok', data: BASE.themes };
+      D.premarket = { status: 'ok', data: pm };
+      D.gradelog = { status: 'ok', data: gl };
+      D.stocks = { status: 'ok', data: applyLive(BASE.stocks, live, build[0]) };
+      compute();
+      lastSha = sha; loadErr = null;
+    } catch (e) {
+      loadErr = String(e.message || e);
+      if (!BASE) ['build', 'themes', 'premarket', 'gradelog', 'stocks', 'theme_perf', 'industry_perf', 'grade_record'].forEach((id) => { D[id] = { status: 'error', data: [] }; });
+    }
+    draw();
+  }
+  function drawLiveLine() {
+    const dot = $('#live-dot'), tx = $('#live-text');
+    const b = rowsOf('build')[0];
+    if (loadErr && !BASE) { dot.className = 'tgr-ldot bad'; tx.textContent = 'Could not load the data (' + loadErr + '). Try Check now.'; return; }
+    if (!b) { tx.textContent = 'Loading…'; return; }
+    const chk = lastCheck ? ' · checked ' + lastCheck.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', timeZone: 'America/New_York' }) : '';
+    if (LIVE_ON) {
+      const age = (Date.now() - new Date(LIVE.saved_at).getTime()) / 60000;
+      const late = marketOpen() && age > 15;
+      dot.className = 'tgr-ldot ' + (late ? 'warn' : 'ok');
+      tx.textContent = (late ? 'Live prices are ' + Math.round(age) + ' minutes old (the GitHub job may be running late)' : 'Live: prices from ' + fTime(LIVE.saved_at) + ' ET, updated about every 5 minutes') + chk;
+    } else {
+      dot.className = 'tgr-ldot';
+      const openSoon = !marketOpen() && b.asof !== todayNY();
+      tx.textContent = 'Showing the ' + fDate(b.asof) + ' close' + (marketOpen() ? ' (waiting for today\'s first live update)' : openSoon ? ' · live prices start at 9:30 AM ET' : '') + chk;
+    }
+  }
+  $('#live-reload').addEventListener('click', () => refresh(true));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && (!lastCheck || Date.now() - lastCheck > 60000)) refresh(false); });
+  setInterval(() => { if (!document.hidden) refresh(false); }, 120000);
+
+  const named = location.hash.slice(1);
+  if (named === 'gainers' || named === 'groups' || named === 'premarket') S.tab = named;
+  draw();
+  refresh(true);
+})();
+</script>
+</body>
+</html>

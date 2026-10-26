@@ -158,6 +158,20 @@ def day():
     if day_done():
         log("today's close is already processed")
         return
+    # catch up first if the last after-close refresh didn't happen (e.g. yesterday's job never started)
+    try:
+        asof = json.loads(data_file("build.json"))[0]["asof"]
+    except Exception:
+        asof = ""
+    prev = t.date() - datetime.timedelta(days=1)
+    while not trading_day(prev):
+        prev -= datetime.timedelta(days=1)
+    if asof < prev.isoformat() and hm(t) < (16, 0):
+        log(f"data is as of {asof}, older than {prev}: refreshing first")
+        try:
+            daily()
+        except Exception as e:
+            log("catch-up refresh failed:", e)
     pm_started, snap_started, last_live = set(), None, None
     while True:
         t = now()
