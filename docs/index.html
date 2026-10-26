@@ -37,6 +37,7 @@
   .tgr-ldot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--color-fg-muted); display: inline-block; }
   .tgr-ldot.ok { background: var(--color-ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ok) 25%, transparent); }
   .tgr-ldot.warn { background: var(--color-warn); }
+  .tgr-sub { margin: var(--cds-gap-sm) 0 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
   .tgr-ldot.bad { background: var(--color-bad); }
   /* Layout: header + takeaway, two tabs; each tab = two ranked tables side by side, then a drill-down list. */
   .tgr { display: grid; gap: var(--cds-gap-lg); font-family: var(--font-anthropic-sans); color: var(--color-fg); }
@@ -329,6 +330,50 @@
 
   <!-- ───────── Tab 3: pre-market gappers ───────── -->
   <section class="tgr-page" id="premarket" role="tabpanel" aria-labelledby="tab-premarket" hidden>
+    <div class="tgr-card" id="pml-card">
+      <div class="tgr-cardhead">
+        <h2 id="pml-h">Pre-market scanner</h2>
+        <span class="tgr-lbl" id="pml-time">—</span>
+      </div>
+      <div class="tgr-filters" id="pml-filters" role="group" aria-label="Pre-market filters">
+        <span class="tgr-seg" data-pm="dir" aria-label="Gap ups or gap downs"><button data-v="up" aria-pressed="true">Gap ups</button><button data-v="down" aria-pressed="false">Gap downs</button></span>
+        <label class="tgr-f">Pre-mkt chg <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-pm="chg_min" aria-label="Minimum pre-market change, %"> % to <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-pm="chg_max" aria-label="Maximum pre-market change, %"> %</label>
+        <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-pm="price"></label>
+        <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-pm="mcap_b"> B</label>
+        <label class="tgr-f">Avg vol 30D ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-pm="avgvol_k"> K</label>
+        <label class="tgr-f">Price × avg vol 30D ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-pm="dvol_m"> M</label>
+        <label class="tgr-f">ADR ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-pm="adr"> %</label>
+        <label class="tgr-f">Pre-mkt vol ≥ <input class="tgr-num" type="number" inputmode="decimal" step="10" min="0" data-pm="pmvol_k"> K</label>
+        <label class="tgr-f"><input type="checkbox" data-pm="above200"> Above 200-day SMA</label>
+        <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
+      </div>
+      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET (Yahoo pre-market bars); this page picks each update up on its own. Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Clear a box to turn that filter off. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
+      <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="pml-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th class="num"><button class="tgr-th" data-sort="pm_last">Pre-mkt price</button></th>
+            <th class="num"><button class="tgr-th" data-sort="pm_chg">Pre-mkt chg</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="pm_gap">Pre-mkt gap</button></th>
+            <th class="num"><button class="tgr-th" data-sort="pm_vol">Pre-mkt vol</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="pm_dvol_m">PM $ vol $M</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="pm_pct_adv">PM vol % of day</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="gap_x_adr">Chg ÷ ADR</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="price">Price</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="chg_1d">Chg</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="volume">Vol</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="rel_vol">Rel vol</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
+            <th><button class="tgr-th" data-sort="themes">Themes</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <h2 class="tgr-sub" id="pmg-h">Graded gappers (5%+, top 8 up and 4 down by pre-market $ volume)</h2>
     <div class="tgr-bar"><span class="tgr-seg" data-k="pmdir"><button data-v="up" aria-pressed="true">Gap ups</button><button data-v="down" aria-pressed="false">Gap downs</button></span>
       <span class="tgr-seg" data-k="pmshow"><button data-v="ab" aria-pressed="true">A &amp; B only</button><button data-v="all" aria-pressed="false">Show all</button></span></div>
     <p class="tgr-rule">Gapping 5%+ up or down before the open and passing your rules (market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+, ADR 3%+). Scanned at <span class="em" id="pm-time">—</span> ET on <span class="em" id="pm-date">—</span><span id="pm-stale" hidden> (not today: today's list posts by 9:10 AM ET on weekdays)</span>.</p>
@@ -923,6 +968,106 @@ defCalc('industry_perf', {
     });
   };
 
+  /* live pre-market scanner: your TradingView "premarket-1" screen as the defaults */
+  const PMDEF = { dir: 'up', chg_min: 0.5, chg_max: 5, price: 5, mcap_b: 0.7, avgvol_k: 600, dvol_m: 20, adr: 4, pmvol_k: null, above200: false };
+  const PMF = Object.assign({}, PMDEF);
+  const syncPm = () => {
+    document.querySelectorAll('#pml-filters [data-pm]').forEach((el) => {
+      const k = el.dataset.pm;
+      if (el.classList.contains('tgr-seg')) el.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(PMF[k] === b.dataset.v)));
+      else if (el.type === 'checkbox') el.checked = PMF[k] === true;
+      else if (el !== document.activeElement) el.value = PMF[k] === null || PMF[k] === undefined ? '' : String(PMF[k]);
+    });
+  };
+  document.querySelectorAll('#pml-filters [data-pm]').forEach((el) => {
+    const k = el.dataset.pm;
+    if (el.classList.contains('tgr-seg')) el.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { PMF[k] = b.dataset.v; draw(); } });
+    else if (el.type === 'checkbox') el.addEventListener('change', () => { PMF[k] = el.checked; draw(); });
+    else {
+      el.addEventListener('change', () => { const raw = el.value.trim(); if (raw === '') PMF[k] = null; else { const v = Number(raw); if (Number.isFinite(v) && v >= 0) PMF[k] = v; } draw(); });
+      el.addEventListener('blur', () => syncPm());
+    }
+  });
+  $('#pml-reset').addEventListener('click', () => { Object.assign(PMF, PMDEF); delete S.sort['pml-table']; draw(); });
+  const pmRows = () => {
+    const live = PML && PML.rows ? PML.rows : null;
+    if (!live || !BASE) return [];
+    const grades = new Map(rowsOf('premarket').filter((r) => r.graded === true || r.graded === 'true').map((r) => [r.symbol, r]));
+    const out = [];
+    BASE.stocks.forEach((r) => {
+      const q = live[r.symbol]; if (!q) return;
+      const [pm_last, pm_chg, pm_gap, pm_vol, pm_dvol] = q;
+      const adv = num(r.avg_vol_30d);
+      const g = grades.get(r.symbol);
+      out.push(Object.assign({}, r, { pm_last, pm_chg, pm_gap, pm_vol, pm_dvol_m: pm_dvol / 1e6,
+        pm_pct_adv: adv ? (pm_vol / adv) * 100 : null,
+        gap_x_adr: num(r.adr_20) ? pm_chg / num(r.adr_20) : null,
+        vs_200: num(r.sma200) ? Math.round((pm_last / num(r.sma200) - 1) * 1000) / 10 : null,
+        above_200: num(r.sma200) ? pm_last > num(r.sma200) : null,
+        tv_dvol_m: adv && num(r.price) ? (adv * num(r.price)) / 1e6 : null,
+        ep: Math.abs(pm_chg) >= 10 && adv && pm_vol / adv >= 0.25,
+        grade: g ? g.grade : '', g_reason: g ? (g.catalyst ? g.catalyst + ': ' : '') + (g.reason || '') : '' }));
+    });
+    return out;
+  };
+  const pmPass = (r, p) => {
+    const mv = p.dir === 'down' ? -r.pm_chg : r.pm_chg;
+    if (p.chg_min !== null ? mv < p.chg_min : mv <= 0) return false;
+    if (p.chg_max !== null && mv > p.chg_max) return false;
+    if (p.price !== null && (num(r.price) ?? -1) < p.price) return false;
+    if (p.mcap_b !== null && (num(r.mcap_b) ?? -1) < p.mcap_b) return false;
+    if (p.avgvol_k !== null && (num(r.avg_vol_30d) ?? -1) < p.avgvol_k * 1000) return false;
+    if (p.dvol_m !== null && (r.tv_dvol_m ?? -1) < p.dvol_m) return false;
+    if (p.adr !== null && num(r.adr_20) !== null && num(r.adr_20) < p.adr) return false;
+    if (p.pmvol_k !== null && r.pm_vol < p.pmvol_k * 1000) return false;
+    if (p.above200 === true && r.above_200 === false) return false;
+    return true;
+  };
+  const drawPmLive = (symMap) => {
+    syncPm();
+    const table = $('#pml-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
+    const ti = $('#pml-time');
+    if (!PML) { ti.textContent = 'No scan yet'; $('#pml-count').textContent = '—'; }
+    else {
+      const today = todayNY();
+      ti.textContent = (PML.date === today ? 'Scan at ' : 'Last scan: ' + fDate(PML.date) + ', ') + fTime(PML.saved_at) + ' ET' +
+        (PML.date === today ? '' : ' · runs 7:00–9:29 AM ET on trading days');
+    }
+    const rows = pmRows().filter((r) => pmPass(r, PMF));
+    $('#pml-count').textContent = PML ? String(rows.length) : '—';
+    $('#pml-h').textContent = 'Pre-market scanner · ' + (PMF.dir === 'down' ? 'gap downs' : 'gap ups');
+    const spec = S.sort['pml-table'] || { key: 'pm_vol', dir: -1 };
+    const txt = ['symbol', 'themes'].includes(spec.key);
+    const val = (r) => (txt ? String(r[spec.key] || '') : num(r[spec.key]));
+    rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
+    markSort(table, spec);
+    /* group gaps: themes with 3+ tight (0.7+) members passing */
+    const fits = new Map(rowsOf('themes').map((t) => [t.theme, fitMap(t.scores)]));
+    const by = new Map();
+    rows.forEach((r) => String(r.themes || '').split(' | ').filter(Boolean).forEach((t) => { if ((fits.get(t) || new Map()).get(r.symbol) >= 0.7) by.set(t, (by.get(t) || 0) + 1); }));
+    const ml = $('#pml-moves-list'); ml.replaceChildren();
+    const gm = [...by].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]);
+    if (!gm.length) ml.append(h('span', 'tgr-lbl', PML ? 'none' : '—'));
+    gm.forEach(([t, n], i) => { if (i) ml.append(h('span', 'tgr-sep', ' | ')); const b = h('button', 'tgr-chip', t + ' (' + n + ')'); b.type = 'button'; b.dataset.kind = 'theme'; b.dataset.name = t; ml.append(b); });
+    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 16; tr.append(td); tb.append(tr); }
+    const pctTxt = (x) => (x === null || x === undefined ? '—' : (x > 0 ? '+' : '') + Number(x).toFixed(2) + '%');
+    rows.slice(0, LIST_MAX).forEach((r) => {
+      const tr = h('tr');
+      const key = h('td', 'key');
+      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = '_blank'; a.rel = 'noopener'; key.append(a);
+      if (r.grade) { const gb = h('span', 'tgr-grade g' + r.grade, r.grade); gb.style.marginLeft = '5px'; gb.title = r.g_reason; key.append(gb); }
+      if (r.ep) key.append(h('span', 'tgr-gm', 'EP'));
+      const c = (x, cls) => h('td', 'num ' + (cls || '') + ' ' + tone(x), pctTxt(x));
+      tr.append(key, h('td', 'num', fPrice(r.pm_last)), c(r.pm_chg), c(r.pm_gap, 'c3'), h('td', 'num', fVol(r.pm_vol)),
+        h('td', 'num c3', g2.format(r.pm_dvol_m)), h('td', 'num c3', r.pm_pct_adv === null ? '—' : g1.format(r.pm_pct_adv) + '%'),
+        h('td', 'num c3', r.gap_x_adr === null ? '—' : r.gap_x_adr.toFixed(2) + '×'), h('td', 'num c2', fPrice(r.price)), c(r.chg_1d, 'c2'),
+        h('td', 'num c2', fVol(r.volume)), h('td', 'num c2', fX(r.rel_vol)), h('td', 'num c3', fAdr(r.adr_20)),
+        h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null ? '—' : (r.vs_200 > 0 ? '+' : '') + r.vs_200.toFixed(1) + '%'),
+        h('td', 'num c3', fCap(r.mcap_b)), chipCell(r.themes, 'theme', ''));
+      tb.append(tr);
+    });
+  };
+
   const drawTrack = () => {
     setState('track-table', ['grade_record']);
     const tb = $('#track-table tbody'); tb.replaceChildren();
@@ -965,12 +1110,12 @@ defCalc('industry_perf', {
     drawTakeaway();
     if (S.tab === 'groups') { drawThemes(symMap); drawIndustries(); drawDrill(symMap); }
     else if (S.tab === 'gainers') drawGainers(symMap);
-    else { drawPremarket(symMap); drawTrack(); }
+    else { drawPmLive(symMap); drawPremarket(symMap); drawTrack(); }
   }
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
-  let LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null;
+  let PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null;
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
   const nyNow = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value])); return { wd: p.weekday, m: Number(p.hour) * 60 + Number(p.minute) }; };
   const marketOpen = () => { const n = nyNow(); return !['Sat', 'Sun'].includes(n.wd) && n.m >= 570 && n.m <= 970; };
@@ -1019,8 +1164,9 @@ defCalc('industry_perf', {
     try {
       const sha = await tipSha();
       if (sha && sha === lastSha && !force) { drawLiveLine(); return; }
-      const [build, live, pm, gl] = await Promise.all([getJson(sha, 'build.json'), getJson(sha, 'live.json').catch(() => null),
-        getJson(sha, 'premarket.json'), getJson(sha, 'gradelog.json')]);
+      const [build, live, pm, gl, pml] = await Promise.all([getJson(sha, 'build.json'), getJson(sha, 'live.json').catch(() => null),
+        getJson(sha, 'premarket.json'), getJson(sha, 'gradelog.json'), getJson(sha, 'premarket_live.json').catch(() => null)]);
+      PML = pml;
       if (!BASE || build[0].built_at !== lastBuilt) {
         const [stocks, themes] = await Promise.all([getJson(sha, 'stocks.json'), getJson(sha, 'themes.json')]);
         BASE = { stocks, themes }; lastBuilt = build[0].built_at;
