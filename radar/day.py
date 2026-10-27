@@ -8,6 +8,8 @@
 Timeline (ET, trading days):
   8:25, 8:40   start the "Pre-market scan" workflow (if today's scan isn't saved yet)
   9:30-4:10    every 5 minutes: live prices -> live.json on the radar-data branch
+  9:35-4:00    every minute in between: the launch watch list only (radar/fast.py), for the big gap-up alerts
+               (catalyst gaps, power days, A+/A launches); alerts.json is published when one is sent
   4:06         start the "Close snapshot" workflow (if today's isn't saved yet)
   after it     pipeline.py (themes, groups, gainers, 1W/1M/3M, ADR, 200-day SMA) + gradelog.py update
                -> stocks.json, themes.json, build.json, gradelog.json on radar-data, and the job ends.
@@ -114,9 +116,7 @@ def live_once():
     lj = main_file("setups/launch.json")
     if lj:
         open(os.path.join(OUT, "launch.json"), "w").write(lj)
-        st = data_file("alerts.json")
-        if st:
-            open(os.path.join(OUT, "alerts.json"), "w").write(st)
+        load_alert_state()
         r = sh(sys.executable, os.path.join(HERE, "alerts.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "launch.json"),
                os.path.join(OUT, "alerts.json"), check=False)
         log((r.stdout or r.stderr).strip()[-600:])
@@ -124,6 +124,37 @@ def live_once():
             files.append(os.path.join(OUT, "alerts.json"))
     sh(sys.executable, os.path.join(HERE, "publish.py"), "live " + now().strftime("%F %H:%M"), *files)
     return True
+
+
+def load_alert_state():
+    """what was alerted today: this job's own copy, else the radar-data branch's (a fresh job after a handover)"""
+    p = os.path.join(OUT, "alerts.json")
+    try:
+        if json.load(open(p)).get("date") == now().date().isoformat():
+            return
+    except Exception:
+        pass
+    st = data_file("alerts.json")
+    if st:
+        open(p, "w").write(st)
+
+
+def fast_once():
+    """1-minute check between the live updates: the watch list only, for the big gap-up alerts"""
+    need = [os.path.join(OUT, f) for f in ("launch.json", "base_stocks.json", "base_volprofile.json")]
+    if not all(os.path.exists(f) for f in need):
+        return                                        # the first live update writes these
+    out = os.path.join(OUT, "live_fast.json")
+    r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, check=False)
+    if r.returncode:
+        log("fast:", (r.stderr or r.stdout).strip()[-300:])
+        return
+    load_alert_state()
+    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--gaps-only", check=False)
+    txt = (r.stdout or r.stderr).strip()
+    if r.returncode == 0 and " 0 new," not in txt:
+        log("fast:", txt[-600:])
+        sh(sys.executable, os.path.join(HERE, "publish.py"), "alerts " + now().strftime("%F %H:%M"), os.path.join(OUT, "alerts.json"))
 
 
 def daily():
@@ -284,6 +315,11 @@ def day():
                     live_once()
                 except Exception as e:
                     log("live update failed:", e)
+            elif (9, 35) <= hm(t) < (16, 0):
+                try:
+                    fast_once()
+                except Exception as e:
+                    log("1-minute check failed:", e)
         # close snapshot at 4:06, then the daily refresh
         if hm(t) >= (16, 6) and snap_started is None:
             snap_started = t
@@ -296,8 +332,10 @@ def day():
                 log("close snapshot not saved after 40 minutes: refreshing with the public files only")
             daily()
             return
-        # next tick: the next 5-minute mark during the session, else the next event
+        # next tick: the next minute during the session (live update on the 5-minute marks), else the next event
         nxt = t.replace(second=20, microsecond=0) + datetime.timedelta(minutes=5 - t.minute % 5)
+        if (9, 34) <= hm(t) < (16, 0):
+            nxt = t.replace(second=20, microsecond=0) + datetime.timedelta(minutes=1)
         if hm(t) < (7, 0):
             nxt = min(nxt, t.replace(hour=7, minute=0, second=5, microsecond=0))
         sleep_until(nxt)

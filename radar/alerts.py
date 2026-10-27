@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Phone alerts (ntfy) from the 5-minute live prices: launches and breakouts as they happen.
 
-  python3 radar/alerts.py <live.json> <launch.json> <alerts.json>      (NTFY_TOPIC set: sends; unset: only logs)
+  python3 radar/alerts.py <live.json> <launch.json> <alerts.json> [--gaps-only]   (NTFY_TOPIC set: sends; unset: only logs)
+
+Every 5 minutes with the live prices; every minute in between (--gaps-only, radar/fast.py) for the big gap-ups on
+volume: catalyst gaps and their 2nd trigger, power days, A+/A launches.
 
 Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the radar-data branch):
   power day   volume pace 4x+ for the time of day, a 10%+ gap, up 15%+, above the 200 SMA, at most 50% over it
@@ -40,8 +43,9 @@ def grade(rv, bo, gap, chg, R, under):
     return "B" if int(vol3) + int(bo) + int(gap3) + int(big) >= 2 else "C"
 
 
-def find(live, doc, now=None):
-    """[(key, title, message, priority, tv symbol)] for everything that fires right now"""
+def find(live, doc, now=None, gaps_only=False):
+    """[(key, title, message, priority, tv symbol)] for everything that fires right now
+    (gaps_only: the watch list's catalyst gaps, power days and launches, not the followed launches' breakouts)"""
     R, rows, out = doc["rules"], live["rows"], []
     now = now or datetime.datetime.now(NY)
     d0 = datetime.date.fromisoformat(doc["date"])                 # the last close the watch list was built from
@@ -94,7 +98,7 @@ def find(live, doc, now=None):
         if g in ("A+", "A"):
             out.append((f"{sym}:launch", f"{sym} {g} launch", f"{facts}{cat} · ${price:.2f} through its base high ${pivot:.2f}"
                         + (" (delayed: faded gap " + mem[0] + ")" if mem else "") + f"{crossed} · theme {theme}", "high" if g == "A+" else "default", tvs))
-    for r in doc.get("launches", []):
+    for r in ([] if gaps_only else doc.get("launches", [])):
         q = rows.get(r["symbol"])
         if not q or len(q) < 5 or q[4] is None:
             continue
@@ -132,6 +136,20 @@ def find(live, doc, now=None):
     return out
 
 
+def opening_range_high(sym):
+    """the high of the first 5 minutes (9:30-9:35), from Yahoo's 5-minute chart (its prices are fine), or None"""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=1d&interval=5m"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            res = json.load(r)["chart"]["result"][0]
+        t0 = datetime.datetime.fromtimestamp(res["timestamp"][0], NY)
+        hi = res["indicators"]["quote"][0]["high"][0]
+        return round(hi, 2) if hi and (t0.hour, t0.minute) == (9, 30) else None
+    except Exception:
+        return None
+
+
 def send(topic, title, msg, prio, tvs):
     req = urllib.request.Request(f"https://ntfy.sh/{topic}", data=msg.encode(), method="POST", headers={
         "Title": title.encode("ascii", "replace").decode(), "Priority": prio, "Tags": "chart_with_upwards_trend",
@@ -142,6 +160,7 @@ def send(topic, title, msg, prio, tvs):
 
 def main():
     live_p, launch_p, state_p = sys.argv[1:4]
+    gaps_only = "--gaps-only" in sys.argv                # the 1-minute check (radar/fast.py): big gaps on volume only
     now = datetime.datetime.now(NY)
     live, doc = json.load(open(live_p)), json.load(open(launch_p))
     today = now.date().isoformat()
@@ -155,7 +174,7 @@ def main():
         print("alerts: not in today's session yet")
         return
     sent = set(state["sent"])
-    found = find(live, doc, now)
+    found = find(live, doc, now, gaps_only)
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
     cat_now = {a[0].split(":")[0] for a in found if a[0].endswith(":catalyst") and a[0] not in sent}
     new, quiet = [], []
@@ -180,8 +199,14 @@ def main():
             + [(a[0], None, None, None, None) for a in new[MAX_PER_RUN - 1:]]
     new += quiet
     for key, title, msg, prio, tvs in new:
+        if title is not None and key.endswith((":catalyst", ":basebreak")):
+            # your entry: over the first 5 minutes' high, or a retest of it
+            orh, q = opening_range_high(key.split(":")[0]), live["rows"].get(key.split(":")[0])
+            if orh and q:
+                msg += f" · 5-min opening range high ${orh:.2f}: " + (f"{100 * (q[0] / orh - 1):.1f}% above it" if q[0] > orh else "not cleared yet")
         if title is not None:
             line = f"{now:%H:%M} {title}: {msg}"
+            state.setdefault("items", []).append({"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs})
             if topic:
                 try:
                     send(topic, title, msg, prio, tvs)

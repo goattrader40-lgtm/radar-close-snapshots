@@ -125,3 +125,20 @@ def offsets(rows, state_p, syms, now=None):
     st["snaps"] = st["snaps"][-KEEP:]
     json.dump(st, open(state_p, "w"), separators=(",", ":"))
     return {s: tuple(v) for s, v in st["off"].items()}
+
+
+def corrected(vol, qtime, o):
+    """the live volume with Yahoo's surplus o = (offset, SIP volume at the calibration) taken off; None = unchanged.
+    From 4:00 on the raw volume stands (it matches the tape by the close)."""
+    if not o or not vol or not qtime or datetime.datetime.fromtimestamp(qtime, NY).hour >= 16:
+        return None
+    return max(vol - o[0], o[1])
+
+
+def saved(state_p, day):
+    """the offsets the last live update measured, without adding a snapshot (for the 1-minute watch-list check)"""
+    try:
+        st = json.load(open(state_p))
+    except Exception:
+        return {}
+    return {s: tuple(v) for s, v in st.get("off", {}).items()} if st.get("date") == day.isoformat() else {}

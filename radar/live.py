@@ -13,7 +13,9 @@ With --sipcal <state file> the volume is first corrected against the consolidate
 Yahoo's live volume runs ahead of it during the session, a median +11% on Oct 27 2026).
 Runs only from 9:30 AM to 4:10 PM ET on trading days unless --force is given (exits 3 = nothing to do).
 """
-import concurrent.futures as cf, datetime, http.cookiejar, json, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
+import concurrent.futures as cf, datetime, http.cookiejar, json, os, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import sipcal  # noqa: E402
 
 NY = zoneinfo.ZoneInfo("America/New_York")
 HOLIDAYS = set("2026-11-26 2026-12-25 2027-01-01 2027-01-18 2027-02-15 2027-03-26 2027-05-31 2027-06-18 "
@@ -164,7 +166,6 @@ def main():
     off = {}
     if "--sipcal" in sys.argv:
         try:
-            import sipcal
             off = sipcal.offsets(rows, sys.argv[sys.argv.index("--sipcal") + 1], set(prof), now)
         except Exception as e:
             print(f"sipcal failed: {e}", file=sys.stderr)
@@ -172,9 +173,9 @@ def main():
     for s, v in rows.items():
         ern = v.pop(5) if len(v) > 5 else None
         op = v.pop(4) if len(v) > 4 else None
-        o = off.get(s)
-        if o and v[2] and v[3] and datetime.datetime.fromtimestamp(v[3], NY).hour < 16:
-            v[2] = max(v[2] - o[0], o[1])                          # Yahoo's surplus over the exact volume, measured 16+ min ago
+        fv = sipcal.corrected(v[2], v[3], off.get(s)) if off else None
+        if fv is not None:
+            v[2] = fv                                              # Yahoo's surplus over the exact volume, measured 16+ min ago
             fixed += 1
         v.append(rvol_at(v[2], v[3], prof.get(s), avg20.get(s)))
         v.append(op)                                               # the open, for the launch trigger's gap
