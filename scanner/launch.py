@@ -9,8 +9,15 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
   ingredients volume 3x+ · gap 3%+ · base breakout (closed above the previous 20 days' high) ·
               its group is trending · within 30% of the 52-week high · neglected (40+ days since its high,
               or a 25%+ correction)
-  grade       the launch itself: A = volume 3x+ and a base breakout, with a 3%+ gap or a 10%+ day
-              B = two of: volume 3x+, base breakout, 3%+ gap, 10%+ day · C = the rest
+  grade       the launch itself, from 4 ingredients: volume 3x+, gap 3%+, base breakout (closed above the previous
+              20 days' high), a 10%+ day.
+              A+ = volume 3x+, a 6%+ gap and a base breakout, jumping from under the 200 SMA to above it (your
+                   "go day"; 2 years: 65% of these ran 20%+ when the theme confirmed, vs 52% for other A's)
+              A = volume 3x+ and a base breakout, with a 3%+ gap or a 10%+ day · B = two of the four · C = the rest
+  news        tagged when the 8:47 pre-market grading gave the stock an A or B gap-up grade that morning
+  legs        each 5+ day pause without a new high, then a close above that high, starts a new leg (the launch is
+              leg 1). Breakouts got worse leg by leg (ran 20%+: leg 2 26%, leg 3 17%, leg 4 17%, leg 5+ 7%), so
+              leg 4+ is flagged late; most launches never made a second leg
   delayed     a gap of 3%+ on 3x+ volume above the 200 SMA that faded (closed in the bottom half or up less
               than 5%) is remembered for 10 sessions; if the stock holds its old base (no close more than 3%
               under the lower of the base top and the 200 SMA) and then launches, that launch gets the gap day's
@@ -51,7 +58,7 @@ import msf  # noqa: E402
 import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
-L = dict(min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
+L = dict(aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, min_adr=4)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -123,9 +130,9 @@ class Arr:
                     and self.ext200_prev[i] <= L["max_ext200"] and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
 
     def neglect(self, i):
-        """days since the highest high of the last 120 sessions, and the correction from it (%)"""
+        """days since the highest high of the last 250 sessions (the base can be long), and the correction from it (%)"""
         h, l = self.st.h, self.st.l
-        w = h[max(0, i - 120):i]
+        w = h[max(0, i - 250):i]
         k = int(np.argmax(w))
         days = w.size - k
         depth = 100 * (1 - l[i - days:i].min() / w[k]) if days > 1 else 0.0
@@ -195,10 +202,14 @@ def best_group(sym, k, groups, GS):
 def grade(a, i):
     vol3, gap3, big = a.rv[i] >= L["rv_big"], a.gap[i] >= L["gap_big"], a.chg[i] >= L["chg_big"]
     bo = a.st.c[i] > a.hi20[i]
+    gap6, under = a.gap[i] >= L["aplus_gap"], a.ext200_prev[i] < 0
     g = a.mem[i]
     if g >= 0:                                       # a delayed launch: credit the faded gap day
         vol3, gap3, big = True, True, big or a.chg[g] >= L["chg_big"]
         bo = bo or a.st.c[i] > a.hi20[g]
+        gap6, under = a.gap[g] >= L["aplus_gap"], a.ext200_prev[g] < 0
+    if vol3 and bo and gap6 and under:
+        return "A+"
     if vol3 and bo and (gap3 or big):
         return "A"
     if int(vol3) + int(bo) + int(gap3) + int(big) >= 2:
@@ -237,6 +248,12 @@ def follow(a, i0, i):
             n += 1
         return n
     dry = st.v[i - 4:i + 1].mean() / st.v[i - 50:i].mean() if i >= 50 else np.nan
+    H, last_new, leg = st.h[i0], i0, 1
+    for j in range(i0 + 1, i + 1):
+        if j - last_new >= L["leg_pause"] and c[j] > H:
+            leg += 1
+        if st.h[j] > H:
+            H, last_new = st.h[j], j
     hi = st.h[i0:i + 1].max()
     status = "Riding" if c[i] >= a.e21[i] else "Below 21 EMA"
     return dict(
@@ -249,7 +266,8 @@ def follow(a, i0, i):
         to_buy_point_pct=fnum(r.dist, 1) if code else None, base_days=fnum(r.cN, 0) if code else None,
         base_depth_pct=fnum(r.cDep, 1) if code else None, surf10=surf(a.e10), surf21=surf(a.e21),
         vol_dryup=fnum(dry, 2), off_high_pct=fnum(100 * (1 - c[i] / hi), 1), ema21=fnum(a.e21[i]),
-        breakout_today=bool(code and msf.is_pat(code) and r.bo == 1),
+        breakout_today=bool(code and msf.is_pat(code) and r.bo == 1), leg=leg, late=leg >= L["late_leg"],
+        days_since_new_high=i - last_new,
     )
 
 
@@ -271,7 +289,7 @@ def detect(A, groups, GS, cal, S, upto=None):
     """every launch day up to calendar index `upto`, one per stock per dedupe window"""
     pos = {d: k for k, d in enumerate(cal)}
     events = []
-    rank = {"A": 0, "B": 1, "C": 2}
+    rank = {"A+": -1, "A": 0, "B": 1, "C": 2}
     for s, a in A.items():
         last = -10 ** 9
         for i in range(200, len(a.st.dates)):
@@ -297,7 +315,7 @@ def detect_followers(A, groups, GS, cal, events):
     own = collections.defaultdict(list)
     for s, i, k, gs, gn in events:
         own[s].append(i)
-        if grade(A[s], i) in "AB":
+        if grade(A[s], i) in ("A+", "A", "B"):
             for g in groups.get(s, ([], []))[0]:
                 led[g].append((k, s))
     out = []
@@ -315,7 +333,18 @@ def detect_followers(A, groups, GS, cal, events):
     return out
 
 
-def daily(A, groups, GS, cal, S, out_path):
+def news_of(path):
+    """{(symbol, date): "A: catalyst"} for gap-ups the pre-market grading gave an A or B"""
+    try:
+        rows = json.load(open(path))
+    except Exception:
+        return {}
+    rows = rows.get("rows", rows) if isinstance(rows, dict) else rows
+    return {(r["symbol"], r["date"]): (r["grade"] + (": " + r["catalyst"] if r.get("catalyst") else ""))
+            for r in rows if isinstance(r, dict) and r.get("grade") in ("A", "B") and r.get("direction", "up") == "up" and r.get("symbol")}
+
+
+def daily(A, groups, GS, cal, S, out_path, news=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
     T = len(cal) - 1
@@ -332,20 +361,21 @@ def daily(A, groups, GS, cal, S, out_path):
         r = launch_row(s, a, i, gs, gn, S)
         r.update(f)
         r["follows"] = leader or None
+        r["news"] = (news or {}).get((s, r["date"]))
         cgs, cgn = best_group(s, T, groups, GS)
         r["group_now"], r["group_status_now"] = cgn, STATUS.get(cgs, "No group")
         up = next((kk for kk in range(k, T + 1) if best_group(s, kk, groups, GS)[0] >= 1), None)
         r["theme_up_since"] = cal[up] if up is not None else None      # first day from the launch its theme was trending
         r["lone_wolf"] = up is None
         rows.append(r)
-    order = {"A": 0, "B": 1, "C": 2}
+    order = {"A+": -1, "A": 0, "B": 1, "C": 2}
     rows.sort(key=lambda r: (order[r["grade"]], -r["rel_vol"]))
     rows.sort(key=lambda r: r["date"], reverse=True)              # newest first, best grade first within a day
     # watch list for the intraday trigger: liquid, from 10% under to 28% over the 200 SMA, no launch in 20 days
     launched = {r["symbol"] for r in rows if r["sessions"] < L["dedupe_days"]}
     leaders = collections.defaultdict(set)              # theme -> A / B launches of the last 10 sessions (for followers)
     for r in rows:
-        if r["grade"] in "AB" and not r.get("follows") and r["sessions"] < 10:
+        if r["grade"] in ("A+", "A", "B") and not r.get("follows") and r["sessions"] < 10:
             for g in groups.get(r["symbol"], ([], []))[0]:
                 leaders[g].add(r["symbol"])
     watch = {}
@@ -437,10 +467,10 @@ def backtest(A, groups, GS, cal, S, out_path):
     fol = [r for r in res if r["follower"]]
     res = [r for r in res if not r["follower"]]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1],
-               rules=L, entry=ENTRY, all=summ(res), followers=summ(fol), by_grade={g: summ([r for r in res if r["grade"] == g]) for g in "ABC"},
+               rules=L, entry=ENTRY, all=summ(res), followers=summ(fol), by_grade={g: summ([r for r in res if r["grade"] == g]) for g in ("A+", "A", "B", "C")},
                trending_group=summ([r for r in res if r["theme"]]), not_trending_at_launch=summ([r for r in res if not r["theme"]]),
                theme_within_10d=summ([r for r in res if r["theme10"]]), lone_wolf_10d=summ([r for r in res if not r["theme10"]]),
-               by_grade_theme10={g + (" theme" if t else " lone wolf"): summ([r for r in res if r["grade"] == g and r["theme10"] == t]) for g in "ABC" for t in (True, False)},
+               by_grade_theme10={g + (" theme" if t else " lone wolf"): summ([r for r in res if r["grade"] == g and r["theme10"] == t]) for g in ("A+", "A", "B", "C") for t in (True, False)},
                vol3=summ([r for r in res if r["vol3"]]), vol_under3=summ([r for r in res if not r["vol3"]]),
                base_breakout=summ([r for r in res if r["bo"]]), no_breakout=summ([r for r in res if not r["bo"]]))
     with open(out_path, "w") as f:
@@ -456,11 +486,12 @@ def main():
     ap.add_argument("--out", default=os.path.join(os.path.dirname(HERE), "setups", "launch.json"))
     ap.add_argument("--backtest")
     ap.add_argument("--entry", choices=["open", "close"], default="open")
+    ap.add_argument("--gradelog", help="the pre-market grade log (radar-data gradelog.json), for news tags")
     a = ap.parse_args()
     global ENTRY
     ENTRY = a.entry
     A, groups, GS, cal, S = load(a.bars, a.stocks)
-    daily(A, groups, GS, cal, S, a.out)
+    daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {})
     if a.backtest:
         backtest(A, groups, GS, cal, S, a.backtest)
 

@@ -536,7 +536,7 @@
         <span class="tgr-lbl" id="ln-time">—</span>
       </div>
       <div class="tgr-bar">
-        <span class="tgr-seg" data-k="lng" aria-label="Grades"><button data-v="all" aria-pressed="true">All grades</button><button data-v="AB" aria-pressed="false">A &amp; B</button><button data-v="A" aria-pressed="false">A only</button></span>
+        <span class="tgr-seg" data-k="lng" aria-label="Grades"><button data-v="all" aria-pressed="true">All grades</button><button data-v="AB" aria-pressed="false">A+, A &amp; B</button><button data-v="A" aria-pressed="false">A+ &amp; A</button></span>
         <span class="tgr-seg" data-k="lnst" aria-label="Status"><button data-v="all" aria-pressed="true">All</button><button data-v="riding" aria-pressed="false">Above 21 EMA</button><button data-v="base" aria-pressed="false">In a pattern</button></span>
         <label class="tgr-f"><input type="checkbox" id="ln-wolf"> Show lone wolves</label>
       </div>
@@ -556,6 +556,7 @@
             <th class="num c2"><button class="tgr-th" data-sort="max_gain_pct">Max</button></th>
             <th><button class="tgr-th" data-sort="status">Status</button></th>
             <th class="c2"><button class="tgr-th" data-sort="exit_gain_pct">21 EMA exit</button></th>
+            <th class="num"><button class="tgr-th" data-sort="leg" title="Legs since the launch: a 5+ day pause without a new high, then a close above it. Leg 4+ = late">Leg</button></th>
             <th class="c2"><button class="tgr-th" data-sort="pattern">Pattern</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
@@ -600,7 +601,7 @@
         </table>
       </div>
     </div>
-    <p class="tgr-note">How a launch is found (after each close, from 2 years of daily bars): the stock opened up, closed up 5%+ in the top half of the day's range on 1.5×+ its 20-day average volume, closed above the 200 SMA, and was still near it the day before (at most 28% above it: a neglected stock or one coming out of a correction, not a trend already running), and closed at least 30% above its 52-week low. Grade = the launch itself: <span class="tgr-grade gA">A</span> volume 3×+ and a base breakout (closed above the previous 20 days' high) with a 3%+ gap or a 10%+ day; <span class="tgr-grade gB">B</span> two of those four; <span class="tgr-grade gC">C</span> the rest. <span class="tgr-gm">delayed</span> = a gap of 3%+ on 3×+ volume that faded, held its old base and then launched within 10 sessions (ACN: earnings gap Oct 1, 2026 faded, base held 4 days, launched Oct 8); it is graded with the gap day's volume and gap. <span class="tgr-gm">follows ACN</span> = a smaller breakout in a leader's wake: within 10 sessions of an A or B launch by another member of its theme, it closed up 2%+ above its 20-day high on 2×+ volume, with the same 200 SMA and 52-week-low rules (DXC on Oct 8, 2026 after ACN). The theme is shown beside it, not in it: a leader often launches before its theme (DELL on Feb 27, 2026 while semis were still correcting; its group led by April), so a launch counts as a lone wolf only when none of its groups has trended since. Exit signal = the first close below the 21 EMA. Patterns, buy points, base days and depth come from your MSF engine (the same as the 3-SETUPS list); Surf = closes in a row above the 10 / 21 EMA. During market hours, Launching today checks the watch list (stocks from 10% under to 28% over their 200 SMA) against the live 5-minute prices: up 5%+, opened up, above the 200 SMA, Rel vol 1.5×+ for this time of day. Entry is yours to time (opening-range high), stop under the day's low.</p>
+    <p class="tgr-note">How a launch is found (after each close, from 2 years of daily bars): the stock opened up, closed up 5%+ in the top half of the day's range on 1.5×+ its 20-day average volume, closed above the 200 SMA, and was still near it the day before (at most 28% above it: a neglected stock or one coming out of a correction, not a trend already running), and closed at least 30% above its 52-week low. Grade = the launch itself, from 4 ingredients: volume 3×+, a 3%+ gap, a base breakout (closed above the previous 20 days' high) and a 10%+ day. <span class="tgr-grade gA">A+</span> = your "go day": volume 3×+, a 6%+ gap and a base breakout, jumping from under the 200 SMA to over it; <span class="tgr-grade gA">A</span> volume 3×+ and a base breakout with a 3%+ gap or a 10%+ day; <span class="tgr-grade gB">B</span> two of the four; <span class="tgr-grade gC">C</span> the rest. <span class="tgr-gm">news</span> = the 8:47 pre-market grading gave it an A or B that morning. Leg = each 5+ day pause without a new high, then a close above it (the launch is leg 1); breakouts got worse leg by leg in the history test, so leg 4+ shows as late. <span class="tgr-gm">delayed</span> = a gap of 3%+ on 3×+ volume that faded, held its old base and then launched within 10 sessions (ACN: earnings gap Oct 1, 2026 faded, base held 4 days, launched Oct 8); it is graded with the gap day's volume and gap. <span class="tgr-gm">follows ACN</span> = a smaller breakout in a leader's wake: within 10 sessions of an A or B launch by another member of its theme, it closed up 2%+ above its 20-day high on 2×+ volume, with the same 200 SMA and 52-week-low rules (DXC on Oct 8, 2026 after ACN). The theme is shown beside it, not in it: a leader often launches before its theme (DELL on Feb 27, 2026 while semis were still correcting; its group led by April), so a launch counts as a lone wolf only when none of its groups has trended since. Exit signal = the first close below the 21 EMA. Patterns, buy points, base days and depth come from your MSF engine (the same as the 3-SETUPS list); Surf = closes in a row above the 10 / 21 EMA. During market hours, Launching today checks the watch list (stocks from 10% under to 28% over their 200 SMA) against the live 5-minute prices: up 5%+, opened up, above the 200 SMA, Rel vol 1.5×+ for this time of day. Entry is yours to time (opening-range high), stop under the day's low.</p>
   </section>
 
   <p class="tgr-foot" id="foot">During market hours (9:30 AM–4:10 PM ET) prices update about every 5 minutes from Yahoo quotes, and this page checks for new data every 2 minutes on its own. Live 1D is today's change so far; live 1W, 1M and 3M compare today's price with the close 5, 21 and 63 sessions back; Rel vol is relative volume at time: volume from 9:30 to now ÷ the average of the last 20 sessions' volume from 9:30 to the same minute (from 5-minute bars on the consolidated tape via Alpaca, all US exchanges and off-exchange trades), so 2.00× at 11:50 means twice the usual volume by 11:50; it's rough in the first 5 minutes. After the close it's the full day ÷ the previous 20 sessions' average. Everything else (themes and their scores, ADR%, $ volume, 200-day SMA, averages) is rebuilt after each close, around 4:30 PM ET. Newest day comes from: <span id="src">—</span>; earlier days, volume and company details come from Nasdaq's daily list, which runs one session behind. ADR% (20-day average of high ÷ low − 1) comes from: <span id="adr-src">—</span>. $ volume averages price × shares over the last 10 or 20 sessions. Group figures are the median (or market-cap-weighted average) of the group's liquid members. Auto-added names and auto groups come from the co-movement test (daily moves with the market's move removed, 120 sessions, 0.6+ score with the group, market cap ≥ $700M and 700K+ shares a day), recomputed weekly, currently with data through <span id="grp-asof">—</span>. Broad industries come from FinanceDatabase; Detailed uses Nasdaq's own industry labels. Data and code: <a href="https://github.com/goattrader40-lgtm/radar-close-snapshots">your GitHub repo</a> (radar-data branch).</p>
@@ -1412,8 +1413,9 @@ defCalc('industry_perf', {
   /* launches: the first day of a new trend (setups/launch.json, rebuilt after each close) and, during market
      hours, the watch list checked against the live 5-minute prices */
   const GSTAT = { 2: 'Leading', 1: 'Turning up', 0: 'Not trending', '-1': 'No group' };
-  const lnGrade = (rv, bo, gap, chg, R) => {
+  const lnGrade = (rv, bo, gap, chg, R, under) => {
     const vol3 = rv >= R.rv_big, gap3 = gap !== null && gap >= R.gap_big, big = chg >= R.chg_big;
+    if (vol3 && bo && under && gap !== null && gap >= R.aplus_gap) return 'A+';   /* the "go day": from under the 200 SMA to over it */
     if (vol3 && bo && (gap3 || big)) return 'A';
     return (+vol3) + (+bo) + (+gap3) + (+big) >= 2 ? 'B' : 'C';
   };
@@ -1425,13 +1427,13 @@ defCalc('industry_perf', {
       const price = q[0], chg = q[1], rv = q[4], open = q[5];
       const prev = price / (1 + chg / 100);
       const gap = open ? r2((open / prev - 1) * 100) : null;
-      const [, pivot, s200, , , h52, days, corr, group, gstat, tvs, mem, leaders] = w;
+      const [close0, pivot, s200, , , h52, days, corr, group, gstat, tvs, mem, leaders] = w;
       /* a follower: a smaller breakout (2%+ above the base high on 2x+ volume) within 10 sessions of a leader's launch */
       const follower = !!(leaders && chg >= 2 && rv >= 2 && price > pivot && price > s200);
       if (!follower && (chg < R.min_chg || !(rv >= R.min_rv) || !(price > s200) || (gap !== null && gap <= 0))) return;
       /* a delayed launch (a high-volume gap that faded and held its base): credit that day's volume and gap */
       const bo = price > pivot || !!(mem && price > mem[1]);
-      const grade = mem ? lnGrade(Math.max(rv, R.rv_big), bo, Math.max(gap ?? 0, R.gap_big), chg, R) : lnGrade(rv, bo, gap, chg, R);
+      const grade = mem ? lnGrade(Math.max(rv, R.rv_big), bo, Math.max(gap ?? 0, R.gap_big), chg, R, false) : lnGrade(rv, bo, gap, chg, R, close0 < s200);
       out.push({ symbol: sym, tv_symbol: tvs, grade, chg, gap, rv, price, pivot: mem && !(price > pivot) ? mem[1] : pivot, bo, group, gstat, corr, days, mem, follows: follower && chg < R.min_chg ? leaders : null, h52: h52 ? (price / h52) * 100 : null });
     });
     return out;
@@ -1439,7 +1441,7 @@ defCalc('industry_perf', {
   const sortRows = (table, rows, def, txtKeys, gradeKey) => {
     const spec = S.sort[table.id] || def;
     if (spec) {
-      const go = { A: 0, B: 1, C: 2 };
+      const go = { 'A+': -1, A: 0, B: 1, C: 2 };
       const val = (r) => (spec.key === gradeKey ? (go[r[gradeKey]] ?? 9) : txtKeys.includes(spec.key) ? String(r[spec.key] || '') : num(r[spec.key]));
       const blank = (v) => v === null || v === undefined || v === '' || Number.isNaN(v);
       rows.sort((a, c) => (blank(val(a)) - blank(val(c))) || (spec.dir > 0 ? cmp(val(a), val(c)) : cmp(val(c), val(a))));
@@ -1447,7 +1449,7 @@ defCalc('industry_perf', {
     } else markSort(table, { key: '', dir: -1 });
   };
   const tkCell = (sym, tvs) => { const td = h('td', 'key'); const a = h('a', 'tgr-tk', sym); a.href = tv(tvs || sym); a.target = '_blank'; a.rel = 'noopener'; td.append(a); return td; };
-  const gradeCell = (g) => { const td = h('td', ''); if (g) td.append(h('span', 'tgr-grade g' + g, g)); else td.textContent = '—'; return td; };
+  const gradeCell = (g) => { const td = h('td', ''); if (g) td.append(h('span', 'tgr-grade g' + g[0], g)); else td.textContent = '—'; return td; };
   const noRows = (tb, n, text) => { const tr = h('tr'); const td = h('td', 'tgr-lbl', text); td.colSpan = n; tr.append(td); tb.append(tr); };
   const drawLaunches = (symMap) => {
     const doc = st('launch').status === 'ok' ? st('launch').data : null;
@@ -1479,17 +1481,18 @@ defCalc('industry_perf', {
       const px = m && num(m.price) !== null ? num(m.price) : r.price;
       return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null });
     }) : [];
-    const rows = all.filter((r) => (S.lng === 'all' || S.lng.includes(r.grade)) && (S.lnwolf || !r.lone_wolf) &&
+    const rows = all.filter((r) => (S.lng === 'all' || S.lng.includes(r.grade[0])) && (S.lnwolf || !r.lone_wolf) &&
       (S.lnst === 'all' || (S.lnst === 'riding' ? r.status === 'Riding' : !!r.pattern)));
     $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
     const today = doc ? all.filter((r) => r.date === doc.date).length : 0;
     $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close). Gain = from the launch-day close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '; lone wolves are hidden unless ticked.';
     sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'pattern'], 'grade');
-    if (doc && !rows.length) noRows(tb, 22, 'No launch matches these filters.');
+    if (doc && !rows.length) noRows(tb, 23, 'No launch matches these filters.');
     rows.forEach((r) => {
       const tr = h('tr');
       const key = tkCell(r.symbol, r.tv);
       if (r.lone_wolf) { const w = h('span', 'tgr-flag', 'lone wolf'); w.style.marginLeft = '6px'; key.append(w); }
+      if (r.news) { const t = h('span', 'tgr-gm', 'news'); t.title = 'Pre-market grade ' + r.news; key.append(t); }
       if (r.follows) { const t = h('span', 'tgr-gm', 'follows ' + r.follows); t.title = 'A breakout within 10 sessions of a launch by ' + r.follows + ' in its theme'; key.append(t); }
       if (r.delayed_from) { const t = h('span', 'tgr-gm', 'delayed'); t.title = 'Faded high-volume gap on ' + fDate(r.delayed_from) + ', base held, then launched'; key.append(t); }
       if (r.neglected) { const n = h('span', 'tgr-gm', 'neglected'); n.title = r.days_since_high + ' days since its high, ' + r.correction_pct + '% correction'; key.append(n); }
@@ -1498,9 +1501,11 @@ defCalc('industry_perf', {
         (r.theme_up_since && r.theme_up_since !== r.date ? ' (since ' + fDate(r.theme_up_since).replace(/, \d{4}$/, '') + ')' : '');
       const stt = h('td', 'nw ' + (r.status === 'Riding' ? 'tgr-up' : 'tgr-dn'), r.status === 'Riding' ? 'Above 21 EMA' : 'Below 21 EMA');
       const ex = h('td', 'c2', r.first_exit ? fDate(r.first_exit).replace(/, \d{4}$/, '') + ' (' + p1(r.exit_gain_pct, true) + ')' : '—');
+      const legTd = h('td', 'num nw' + (r.late ? ' tgr-dn' : ''), r.leg === undefined || r.leg === null ? '—' : String(r.leg) + (r.late ? ' late' : ''));
+      if (r.late) legTd.title = 'Leg 4 or later: breakouts this late mostly failed in the history test';
       tr.append(key, h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), gradeCell(r.grade), pctCell(r.chg_pct, 0), h('td', 'num c2', p1(r.gap_pct, true)),
         h('td', 'num' + (r.rel_vol >= 3 ? ' tgr-up' : ''), fX(r.rel_vol)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
-        h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt, ex,
+        h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt, ex, legTd,
         h('td', 'c2', r.breakout_today ? r.pattern + ' · breakout today' : r.pattern || '—'), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), h('td', 'num c2', r.base_days === null || r.base_days === undefined ? '—' : String(r.base_days)), h('td', 'num c2', p1(r.base_depth_pct)),
         h('td', 'num c3', String(r.surf10 ?? '—')), h('td', 'num c3', String(r.surf21 ?? '—')), h('td', 'num c3' + (num(r.vol_dryup) !== null && r.vol_dryup < 1 ? ' tgr-up' : ''), r.vol_dryup === null ? '—' : num(r.vol_dryup).toFixed(2) + '×'),
@@ -1527,7 +1532,7 @@ defCalc('industry_perf', {
       const line = (label, v) => { if (!v) return; const tr = h('tr'); tr.append(h('td', 'key', label), h('td', 'num', String(v.n)), h('td', 'num', v.win_pct + '%'), pctCell(v.avg_exit_pct, 0), pctCell(v.median_exit_pct, 0), h('td', 'num c2', String(v.avg_days)), h('td', 'num', v.ran_20pct + '%'), h('td', 'num', v.ran_50pct + '%')); bt.append(tr); };
       line('All launches', B.all);
       line('Followers', B.followers);
-      ['A', 'B', 'C'].forEach((g) => { const x = B.by_grade_theme10 || {}; line(g + ', theme confirmed', x[g + ' theme']); line(g + ', lone wolf', x[g + ' lone wolf']); });
+      ['A+', 'A', 'B', 'C'].forEach((g) => { const x = B.by_grade_theme10 || {}; line(g + ', theme confirmed', x[g + ' theme']); line(g + ', lone wolf', x[g + ' lone wolf']); });
     }
   };
   $('#ln-wolf').addEventListener('change', (e) => { S.lnwolf = e.target.checked; draw(); });
