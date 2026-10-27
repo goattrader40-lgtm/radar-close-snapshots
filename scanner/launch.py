@@ -20,16 +20,20 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
                    "go day"; 2 years: 65% of these ran 20%+ when the theme confirmed, vs 52% for other A's)
               A = volume 3x+ and a base breakout, with a 3%+ gap or a 10%+ day · B = two of the four · C = the rest
   news        tagged when the 8:47 pre-market grading gave the stock an A or B gap-up grade that morning
-  legs        the launch is leg 1; each later leg = a new high, then a pause of 5+ sessions without a new high (or a
-              flag), then a close above that high or the flag's falling trendline. One leg per pullback. A
+  legs        the launch is leg 1; each later leg = a new high, then a pause of 5+ sessions without a new high that
+              pulls back 1.25+ of the stock's own ADRs (or a flag), then a close above that high or the flag's
+              falling trendline. Depths are in each stock's own ADR: every ticker has its own character. One leg per pullback. A
               breakout after a rest of 40+ sessions without a new high starts a new run at leg 1 (SMCI rested
               about 114 sessions before its Jan 19 2024 launch).
-              Flag = after a 25%+ rise, a 5-20 session pullback 8-25% deep that stays above the 50 EMA; its trendline
+              Flag = after a 25%+ rise, a 5-20 session pullback 1.25-4 ADRs deep that stays above the 50 EMA; its trendline
               runs from the top along the lower highs, and its buy point is tomorrow's value of that line (SMCI 2023:
               launch May 3, leg 2 May 16, leg 3 the flag breakout at the end of June). Breakouts got worse leg by leg (ran 20%+: leg 2 26%, leg 3 17%, leg 4 17%, leg 5+ 7%), so
               leg 4+ is flagged late; most launches never made a second leg
-  delayed     a gap of 3%+ on 3x+ volume above the 200 SMA that faded (closed in the bottom half or up less
-              than 5%) is remembered for 10 sessions; if the stock holds its old base (no close more than 3%
+  new listings a stock listed less than 200 sessions ago uses its average close since listing in place of the 200
+              SMA, once it has 60+ sessions (RDDT Oct 30 2024, its 155th day: a 28% gap, +42% on 7.9x volume to a new
+              all-time high, +72% by the end of January)
+  delayed     a gap of 3%+ on 3x+ volume above the 200 SMA that was not a launch itself (it faded, or failed a
+              filter such as ADR 4%+) is remembered for 10 sessions; if the stock holds its old base (no close more than 3%
               under the lower of the base top and the 200 SMA) and then launches, that launch gets the gap day's
               volume and gap, and its breakout is measured against the base before the gap (ACN: earnings gap
               Oct 1 2026 on 5.4x volume faded, held the base 4 days, launched Oct 8 and trended)
@@ -68,7 +72,7 @@ import msf  # noqa: E402
 import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
-L = dict(rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
+L = dict(leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, min_adr=4)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -89,11 +93,15 @@ def fnum(x, nd=2):
 class Arr:
     """one stock's daily arrays, plus the launch-day tests for every bar"""
 
-    def __init__(self, st, S):
+    def __init__(self, st, S, new_listing=False):
         self.st = st
+        self.start = L["min_sessions"] if new_listing else 200     # first bar a launch can be judged on
         c, h, l, o, v = st.c, st.h, st.l, st.o, st.v
         n = c.size
-        self.e5, self.e10, self.e21, self.e50, self.s200 = ema(c, 5), ema(c, 10), st.ema21, st.ema50, st.sma200
+        self.e5, self.e10, self.e21, self.e50 = ema(c, 5), ema(c, 10), st.ema21, st.ema50
+        # a stock listed less than 200 sessions ago: its average close since listing stands in for the 200 SMA
+        since = np.cumsum(c) / np.arange(1, n + 1)
+        self.s200 = np.where(np.isnan(st.sma200) | (st.sma200 <= 0), since, st.sma200) if new_listing else st.sma200
         prev = np.full(n, np.nan)
         prev[1:] = c[:-1]
         self.gap = 100 * (o / prev - 1)
@@ -122,13 +130,13 @@ class Arr:
                 g = -1
             self.mem[i] = g
             if (self.gap[i] >= L["gap_big"] and self.rv[i] >= L["rv_big"] and c[i] > self.s200[i]
-                    and self.ext200_prev[i] <= L["max_ext200"] and (not self.held(i) or self.chg[i] < L["min_chg"])):
+                    and self.ext200_prev[i] <= L["max_ext200"] and not self.candidate(i)):      # a big gap that was not a launch itself
                 g = i
 
     def follower(self, i):
         """a smaller breakout that counts when a leader of its group has just launched"""
         st = self.st
-        return bool(i >= 200 and self.liquid[i] and self.chg[i] >= 2 and st.c[i] > self.hi20[i] and self.rv[i] >= 2
+        return bool(i >= self.start and self.liquid[i] and self.chg[i] >= 2 and st.c[i] > self.hi20[i] and self.rv[i] >= 2
                     and self.clpos[i] >= L["min_clpos"] and st.c[i] > self.s200[i] and self.ext200_prev[i] <= L["max_ext200"]
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
 
@@ -142,7 +150,7 @@ class Arr:
     def candidate(self, i):
         """the must-haves of a launch day"""
         st = self.st
-        return bool(i >= 200 and self.liquid[i] and self.gap[i] > 0 and self.chg[i] >= L["min_chg"]
+        return bool(i >= self.start and self.liquid[i] and self.gap[i] > 0 and self.chg[i] >= L["min_chg"]
                     and self.held(i) and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
                     and (self.ext200_prev[i] <= L["max_ext200"] or (self.power(i) and self.ext200_prev[i] <= L["power_ext200"]))
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
@@ -257,7 +265,8 @@ def launch_row(sym, a, i, gstat, gname, S):
 
 def flag_at(a, i):
     """a flag with a falling trendline (your SMCI June 2023 example): the top is the highest high of the last 25
-    sessions, 5 to 20 sessions back, after a 25%+ rise; the pullback is 8-25% deep and closes stay above the 50 EMA.
+    sessions, 5 to 20 sessions back, after a 25%+ rise; the pullback is 1.25-4 of the stock's own ADRs deep (SMCI
+    June 2023: 21% = 3.2 ADRs) and closes stay above the 50 EMA.
     The trendline runs from the top along the lower highs (the flattest line that keeps every high since under it).
     Returns (top index, depth %, line today, line tomorrow) or None."""
     st = a.st
@@ -270,7 +279,8 @@ def flag_at(a, i):
     if h[t] / l[max(0, t - 25):t + 1].min() - 1 < 0.25:
         return None
     depth = 100 * (1 - l[t + 1:i + 1].min() / h[t])
-    if not 8 <= depth <= 25 or any(c[k] < a.e50[k] for k in range(t + 1, i + 1)):
+    adr = st.adr[t] if st.adr[t] > 0 else 5.0
+    if not L["flag_adr_min"] <= depth / adr <= L["flag_adr_max"] or any(c[k] < a.e50[k] for k in range(t + 1, i + 1)):
         return None
     slope = max((h[k] - h[t]) / (k - t) for k in range(t + 1, i))      # through the highs up to yesterday
     if slope >= 0:
@@ -300,7 +310,9 @@ def follow(a, i0, i):
     for j in range(i0 + 1, i + 1):
         if armed and j - last_new >= L["leg_pause"]:
             f = flag_at(a, j)
-            if (f and c[j] > f[2]) or c[j] > H:
+            # a real base pulls back 1.25+ of the stock's own ADRs (each ticker has its own character)
+            deep = 100 * (1 - st.l[last_new:j].min() / H) >= L["leg_adr"] * (st.adr[last_new] if st.adr[last_new] > 0 else 5.0)
+            if (f and c[j] > f[2]) or (c[j] > H and deep):
                 # after a rest of 40+ sessions without a new high, the breakout starts a new run: leg 1 again
                 leg, armed = (1, False) if j - last_new >= L["rest_days"] else (leg + 1, False)
                 if leg == 1:
@@ -322,7 +334,8 @@ def follow(a, i0, i):
         to_buy_point_pct=fnum(r.dist, 1) if code else (fnum(100 * (fl[3] / c[i] - 1), 1) if fl else None),
         base_days=fnum(r.cN, 0) if code else (i - fl[0] if fl else None),
         base_depth_pct=fnum(r.cDep, 1) if code else (fnum(fl[1], 1) if fl else None),
-        flag_breakout_today=flag_bo, surf10=surf(a.e10), surf21=surf(a.e21),
+        flag_breakout_today=flag_bo,
+        base_depth_adr=fnum((r.cDep if code else (fl[1] if fl else np.nan)) / (st.adr[i] if st.adr[i] > 0 else np.nan), 1), surf10=surf(a.e10), surf21=surf(a.e21),
         vol_dryup=fnum(dry, 2), off_high_pct=fnum(100 * (1 - c[i] / hi), 1), ema21=fnum(a.e21[i]),
         breakout_today=bool(code and msf.is_pat(code) and r.bo == 1), leg=leg, late=leg >= L["late_leg"],
         new_run_after_rest=st.dates[rested] if rested is not None else None,
@@ -336,7 +349,8 @@ def load(bars_path, stocks_path):
     stocks, P = run.build(D, cfg)
     cal = [b[0] for b in D["bars"]["SPY"]]
     S = cfg["standard"]
-    A = {s: Arr(st, S) for s, st in stocks.items()}
+    # a stock whose bars start after the file's first session listed during it (the file reaches 2 years back)
+    A = {s: Arr(st, S, new_listing=st.dates[0] > cal[5]) for s, st in stocks.items()}
     themes_path = os.path.join(os.path.dirname(stocks_path or ""), "themes.json")
     groups = groups_of(json.load(open(stocks_path)), json.load(open(themes_path)) if os.path.exists(themes_path) else []) \
         if stocks_path and os.path.exists(stocks_path) else {}
@@ -351,7 +365,7 @@ def detect(A, groups, GS, cal, S, upto=None):
     rank = {"A+": -1, "A": 0, "B": 1, "C": 2}
     for s, a in A.items():
         last = -10 ** 9
-        for i in range(200, len(a.st.dates)):
+        for i in range(L["min_sessions"], len(a.st.dates)):
             k = pos.get(a.st.dates[i])
             if k is None or (upto is not None and k > upto) or not a.candidate(i):
                 continue
@@ -380,7 +394,7 @@ def detect_followers(A, groups, GS, cal, events):
     out = []
     for s, a in A.items():
         last = -10 ** 9
-        for i in range(200, len(a.st.dates)):
+        for i in range(L["min_sessions"], len(a.st.dates)):
             k = pos.get(a.st.dates[i])
             if k is None or i - last <= L["dedupe_days"] or any(abs(i - j) <= L["dedupe_days"] for j in own[s]) or not a.follower(i):
                 continue
@@ -462,7 +476,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
     for s, a in A.items():
         st = a.st
         i = len(st.dates) - 1
-        if st.dates[i] != today or s in launched or not a.liquid[i] or i < 200:
+        if st.dates[i] != today or s in launched or not a.liquid[i] or i < a.start:
             continue
         ext = 100 * (st.c[i] / a.s200[i] - 1)
         if ext > L["max_ext200"] or ext < -10:
