@@ -20,9 +20,11 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
                    "go day"; 2 years: 65% of these ran 20%+ when the theme confirmed, vs 52% for other A's)
               A = volume 3x+ and a base breakout, with a 3%+ gap or a 10%+ day · B = two of the four · C = the rest
   news        tagged when the 8:47 pre-market grading gave the stock an A or B gap-up grade that morning
-  legs        the launch is leg 1; each later leg = a new high, then a pause of 5+ sessions without a new high that
-              pulls back 1.25+ of the stock's own ADRs (or a flag), then a close above that high or the flag's
-              falling trendline. Depths are in each stock's own ADR: every ticker has its own character. One leg per pullback. A
+  legs        the launch is leg 1; each later leg = a decisive close out of a base: above the base top (the highest
+              high of the last ~6 months, at least 5 sessions old, with a pullback of 1.25+ of the stock's own ADRs
+              from it) by a fifth of the stock's own ADR, from under it the day before; or a close above the falling trendline of a flag that formed at the highs. One leg per
+              base (the next needs a new high first). RPD Oct 26 2026: +20% on 3.3x volume through its Aug high
+              of 14.80 = leg 2; its pokes inside the base (Oct 9, Oct 20) are not legs. Depths are in each stock's own ADR: every ticker has its own character. One leg per pullback. A
               breakout after a rest of 40+ sessions without a new high starts a new run at leg 1 (SMCI rested
               about 114 sessions before its Jan 19 2024 launch).
               Flag = after a 25%+ rise, a 5-20 session pullback 1.25-4 ADRs deep that stays above the 50 EMA; its trendline
@@ -72,7 +74,7 @@ import msf  # noqa: E402
 import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
-L = dict(leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
+L = dict(bo_adr=0.2, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=30, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
@@ -292,6 +294,18 @@ def flag_at(a, i):
     return t, depth, h[t] + slope * (i - t), h[t] + slope * (i + 1 - t)
 
 
+def base_top(a, j):
+    """the top of the base a breakout on day j clears: the highest high of the previous ~6 months (120 sessions),
+    leaving out the last 3 (the push into it), and how many sessions old that high is (RPD: the Aug 2026 high of
+    14.80, which Oct 26 cleared on 3.3x volume)"""
+    h = a.st.h
+    lo, hi = max(0, j - 120), j - 3
+    if hi - lo < 10:
+        return None, 0
+    k = lo + int(np.argmax(h[lo:hi]))
+    return h[k], j - k
+
+
 def follow(a, i0, i):
     """what happened from the launch close (i0) to bar i: status, gain, exit signal, current base and pattern"""
     st, c = a.st, a.st.c
@@ -308,15 +322,27 @@ def follow(a, i0, i):
             n += 1
         return n
     dry = st.v[i - 4:i + 1].mean() / st.v[i - 50:i].mean() if i >= 50 else np.nan
-    # a leg = a new high, then a pause of 5+ sessions (or a flag), then a close above the high or the flag's
-    # trendline; one leg per pullback, and the new high after a flag breakout belongs to the same leg
-    H, last_new, leg, armed, rested = st.h[i0], i0, 1, False, None
+    # a leg = a decisive close out of a base: above the base top (the highest high of ~6 months, at least 5
+    # sessions old) by a fifth of the stock's own ADR, from under it the day before; or a close above the trendline
+    # of a flag that formed at the highs. A poke that falls back (RPD Oct 9, inside its base) is no leg.
+    # One leg per base: after a leg, the next needs a new high first.
+    H, last_new, leg, armed, rested, bo_day, used = st.h[i0], i0, 1, False, None, None, set()
     for j in range(i0 + 1, i + 1):
-        if armed and j - last_new >= L["leg_pause"]:
+        if armed:
             f = flag_at(a, j)
-            # a real base pulls back 1.25+ of the stock's own ADRs (each ticker has its own character)
-            deep = 100 * (1 - st.l[last_new:j].min() / H) >= L["leg_adr"] * (st.adr[last_new] if st.adr[last_new] > 0 else 5.0)
-            if (f and c[j] > f[2]) or (c[j] > H and deep):
+            at_highs = bool(f and st.h[f[0]] >= st.h[max(0, f[0] - 120):f[0] + 1].max())
+            flag_go = bool(f and at_highs and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2])
+            top, age = base_top(a, j)
+            trig = top * (1 + L["bo_adr"] * (st.adr[j - 1] if st.adr[j - 1] > 0 else 5.0) / 100) if top else None
+            # and a real base pulls back from its top by 1.25+ of the stock's own ADRs (each ticker has its own character)
+            deep = bool(top and 100 * (1 - st.l[j - age:j].min() / top) >= L["leg_adr"] * (st.adr[j - age] if st.adr[j - age] > 0 else 5.0))
+            # a fresh breakout: no close over the trigger in the 3 days before, and not already run a full ADR past the top
+            fresh = bool(top and max(c[j - 3:j]) < trig and st.h[j - 3:j].max() < top * (1 + (st.adr[j - 1] if st.adr[j - 1] > 0 else 5.0) / 100))
+            base_go = bool(top and age >= L["leg_pause"] and deep and fresh and c[j] >= trig and (j - age) not in used)
+            flag_go = flag_go and f[0] not in used
+            if flag_go or base_go:
+                used.add(f[0] if flag_go else j - age)          # each base top gives at most one leg
+                bo_day = j
                 # after a rest of 40+ sessions without a new high, the breakout starts a new run: leg 1 again
                 leg, armed = (1, False) if j - last_new >= L["rest_days"] else (leg + 1, False)
                 if leg == 1:
@@ -327,19 +353,34 @@ def follow(a, i0, i):
     status = "Riding" if c[i] >= a.e21[i] else "Below 21 EMA"
     fl = flag_at(a, i)
     flag_bo = bool(fl and c[i] > fl[2] and c[i - 1] <= (flag_at(a, i - 1) or (0, 0, np.inf))[2])
+    # tomorrow's base top: the buy point when no pattern is found (a decisive close above it is a base breakout)
+    top, age = base_top(a, i + 1)
+    top_trig = top * (1 + L["bo_adr"] * (st.adr[i] if st.adr[i] > 0 else 5.0) / 100) if top else None
+    top_ok = bool(top and age >= L["leg_pause"] and c[i] < top_trig
+                  and 100 * (1 - st.l[i + 1 - age:i + 1].min() / top) >= L["leg_adr"] * (st.adr[i + 1 - age] if st.adr[i + 1 - age] > 0 else 5.0))
+    # the buy point = the nearest trigger above today's close: your MSF pattern's pivot, the flag's trendline or
+    # the base top (RPD Oct 23 2026 had closed just over its MSF pivot of 14.80; the base top trigger 15.02 is what
+    # Oct 26 broke on 3.3x volume)
+    cands = []
+    if code and r.pivot == r.pivot and c[i] < r.pivot:
+        cands.append((float(r.pivot), msf.NAMES[code], r.cN, r.cDep))
+    if fl:
+        cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
+    if top_ok:
+        cands.append((top_trig, "Base top", age, 100 * (1 - st.l[i + 1 - age:i + 1].min() / top)))
+    bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)
     return dict(
         sessions=i - i0, gain_pct=fnum(100 * (c[i] / c[i0] - 1), 1), max_gain_pct=fnum(100 * (hi / c[i0] - 1), 1),
         status=status, first_exit=st.dates[exit_k] if exit_k is not None else None,
         exit_gain_pct=fnum(100 * (c[exit_k] / c[i0] - 1), 1) if exit_k is not None else None,
         lost_50ema=st.dates[out50] if out50 is not None else None,
         price=fnum(c[i]), chg_today_pct=fnum(a.chg[i], 1), rel_vol_today=fnum(a.rv[i], 1),
-        pattern=msf.NAMES[code] if code else ("Flag (trendline)" if fl else ""),
-        buy_point=fnum(r.pivot) if code else (fnum(fl[3]) if fl else None),
-        to_buy_point_pct=fnum(r.dist, 1) if code else (fnum(100 * (fl[3] / c[i] - 1), 1) if fl else None),
-        base_days=fnum(r.cN, 0) if code else (i - fl[0] if fl else None),
-        base_depth_pct=fnum(r.cDep, 1) if code else (fnum(fl[1], 1) if fl else None),
+        pattern=pat, buy_point=fnum(bp) if bp else None, to_buy_point_pct=fnum(100 * (bp / c[i] - 1), 1) if bp else None,
+        base_top=fnum(top) if top else None, base_top_days=int(age) if top else None,
+        base_breakout_today=bo_day == i,
+        base_days=fnum(bdays, 0) if bdays is not None else None, base_depth_pct=fnum(bdep, 1) if bdep is not None else None,
         flag_breakout_today=flag_bo,
-        base_depth_adr=fnum((r.cDep if code else (fl[1] if fl else np.nan)) / (st.adr[i] if st.adr[i] > 0 else np.nan), 1), surf10=surf(a.e10), surf21=surf(a.e21),
+        base_depth_adr=fnum((bdep if bdep is not None else np.nan) / (st.adr[i] if st.adr[i] > 0 else np.nan), 1), surf10=surf(a.e10), surf21=surf(a.e21),
         vol_dryup=fnum(dry, 2), off_high_pct=fnum(100 * (1 - c[i] / hi), 1), ema21=fnum(a.e21[i]),
         breakout_today=bool(code and msf.is_pat(code) and r.bo == 1), leg=leg, late=leg >= L["late_leg"],
         new_run_after_rest=st.dates[rested] if rested is not None else None,
