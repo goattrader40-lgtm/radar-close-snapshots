@@ -24,6 +24,7 @@ jobs:
       - name: Run
         env:
           GH_TOKEN: ${{ github.token }}
+          CMD: ${{ inputs.cmd }}
           ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
           ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
         run: |
@@ -50,6 +51,7 @@ jobs:
             git add setups/launch.json setups/launch_backtest.json
             git diff --cached --quiet || { git commit -q -m "launches $(TZ=America/New_York date +%F)"; git pull -q --rebase origin main; git push -q; }
           fi
+          case "$CMD" in long\ *) python3 radar/probe_long.py /tmp/long_bars.json ${CMD#long } && python3 radar/publish.py "long history" /tmp/long_bars.json;; esac
           if [ "${{ inputs.cmd }}" = "eod" ]; then python3 radar/probe_eod.py /tmp/probe_eod.json SNDK LITE MXL INTC AMD NVDA CRWD && python3 radar/publish.py "eod rvol probe" /tmp/probe_eod.json; fi
           if [ "${{ inputs.cmd }}" = "pmvol" ]; then python3 radar/probe_pmvol.py /tmp/probe_pmvol.json INTC SMCI MU AXTI COHR AMD WDC SNDK PLTR LITE && python3 radar/publish.py "pm volume probe" /tmp/probe_pmvol.json; fi
           if [ "${{ inputs.cmd }}" = "revenue" ]; then
