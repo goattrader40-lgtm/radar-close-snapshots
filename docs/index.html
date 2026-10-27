@@ -126,7 +126,7 @@
   .tgr-num:focus-visible, .tgr-f input[type=checkbox]:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
-  #wl-table td.nw { white-space: nowrap; }
+  #wl-table td.nw, #ln-table td.nw { white-space: nowrap; }
   .tgr-auto { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; }
   .tgr-gdot { display: inline-block; width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-ok); margin-left: 5px; vertical-align: middle; }
   .tgr-pill { appearance: none; border: 1px solid var(--color-fg); background: var(--color-fg); color: var(--color-bg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
@@ -160,6 +160,7 @@
     <button class="tgr-tab" id="tab-gainers" role="tab" aria-selected="false" aria-controls="gainers" data-tab="gainers">Gainers &amp; losers</button>
     <button class="tgr-tab" id="tab-premarket" role="tab" aria-selected="false" aria-controls="premarket" data-tab="premarket">Pre-market</button>
     <button class="tgr-tab" id="tab-watchlist" role="tab" aria-selected="false" aria-controls="watchlist" data-tab="watchlist">Watchlist</button>
+    <button class="tgr-tab" id="tab-launches" role="tab" aria-selected="false" aria-controls="launches" data-tab="launches">Launches</button>
   </nav>
 
   <!-- ───────── Tab 1: groups & themes ───────── -->
@@ -502,6 +503,106 @@
     </div>
   </section>
 
+  <!-- ───────── Tab 5: launches (the first day of a new trend, its theme, and the bases after it) ───────── -->
+  <section class="tgr-page" id="launches" role="tabpanel" aria-labelledby="tab-launches" hidden>
+    <div class="tgr-card" id="ln-live-card">
+      <div class="tgr-cardhead">
+        <h2>Launching today</h2>
+        <span class="tgr-lbl" id="ln-live-time">—</span>
+      </div>
+      <p class="tgr-note" id="ln-live-note"></p>
+      <div class="tgr-scroll">
+        <table class="tgr-table" id="ln-live-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="grade">Grade so far</button></th>
+            <th class="num"><button class="tgr-th" data-sort="chg">Day</button></th>
+            <th class="num"><button class="tgr-th" data-sort="gap">Gap</button></th>
+            <th class="num"><button class="tgr-th" data-sort="rv" title="Volume so far ÷ the 20-day average volume by this time of day">Rel vol</button></th>
+            <th class="num"><button class="tgr-th" data-sort="price">Price</button></th>
+            <th class="num"><button class="tgr-th" data-sort="pivot" title="Highest high of the previous 20 days: above it = base breakout">Base high</button></th>
+            <th><button class="tgr-th" data-sort="group">Theme</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="corr">Correction</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="days">Days since high</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="h52">% of 52W high</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tgr-card" id="ln-card">
+      <div class="tgr-cardhead">
+        <h2 id="ln-h">Launches</h2>
+        <span class="tgr-lbl" id="ln-time">—</span>
+      </div>
+      <div class="tgr-bar">
+        <span class="tgr-seg" data-k="lng" aria-label="Grades"><button data-v="all" aria-pressed="true">All grades</button><button data-v="AB" aria-pressed="false">A &amp; B</button><button data-v="A" aria-pressed="false">A only</button></span>
+        <span class="tgr-seg" data-k="lnst" aria-label="Status"><button data-v="all" aria-pressed="true">All</button><button data-v="riding" aria-pressed="false">Above 21 EMA</button><button data-v="base" aria-pressed="false">In a pattern</button></span>
+        <label class="tgr-f"><input type="checkbox" id="ln-wolf"> Show lone wolves</label>
+      </div>
+      <p class="tgr-note" id="ln-note"></p>
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="ln-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="date">Launched</button></th>
+            <th><button class="tgr-th" data-sort="grade">Grade</button></th>
+            <th class="num"><button class="tgr-th" data-sort="chg_pct">Day</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="gap_pct">Gap</button></th>
+            <th class="num"><button class="tgr-th" data-sort="rel_vol">Vol ×</button></th>
+            <th class="c2">Base BO</th>
+            <th><button class="tgr-th" data-sort="group">Theme then → now</button></th>
+            <th class="num"><button class="tgr-th" data-sort="gain_now">Gain</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="max_gain_pct">Max</button></th>
+            <th><button class="tgr-th" data-sort="status">Status</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="exit_gain_pct">21 EMA exit</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="pattern">Pattern</button></th>
+            <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
+            <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="base_days">Base days</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="base_depth_pct">Depth</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="surf10" title="Closes in a row above the 10 EMA">Surf 10</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="surf21" title="Closes in a row above the 21 EMA">Surf 21</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="vol_dryup" title="Last 5 days' volume ÷ the 50-day average: under 1 = drying up">Vol dry-up</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="pct_of_52w_high">% of 52W high</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="correction_pct">Correction</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="tgr-state dash-skeleton" data-for="launch"></div>
+      </div>
+    </div>
+    <div class="tgr-card" id="ln-g-card">
+      <h2>Trending groups</h2>
+      <p class="tgr-note">Each theme on the portal (or a stock's industry when it has no theme), and one level up its area. Leading = 60%+ of members close above their 50 EMA and the median 1-month move is +8% or more; Turning up = half or more close above their 21 EMA and the median week is up. Days = sessions in a row it has been trending.</p>
+      <div class="tgr-scroll">
+        <table class="tgr-table" id="ln-g-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="group">Group</button></th>
+            <th><button class="tgr-th" data-sort="status">Status</button></th>
+            <th class="num"><button class="tgr-th" data-sort="members">Members</button></th>
+            <th class="num"><button class="tgr-th" data-sort="above_21ema_pct">Above 21 EMA</button></th>
+            <th class="num"><button class="tgr-th" data-sort="median_1m_pct">Median 1M</button></th>
+            <th class="num"><button class="tgr-th" data-sort="trending_days">Days</button></th>
+            <th class="c2">Launches (20 days)</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tgr-card" id="ln-bt-card">
+      <h2 id="ln-bt-h">History test</h2>
+      <p class="tgr-note" id="ln-bt-note"></p>
+      <div class="tgr-scroll">
+        <table class="tgr-table" id="ln-bt-table">
+          <thead><tr><th>Launches</th><th class="num">Count</th><th class="num">Won</th><th class="num">Avg trade</th><th class="num">Median</th><th class="num c2">Avg days</th><th class="num">Ran 20%+</th><th class="num">Ran 50%+</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <p class="tgr-note">How a launch is found (after each close, from 2 years of daily bars): the stock opened up, closed up 5%+ in the top half of the day's range on 1.5×+ its 20-day average volume, closed above the 200 SMA, and was still near it the day before (at most 28% above it: a neglected stock or one coming out of a correction, not a trend already running). Grade = the launch itself: <span class="tgr-grade gA">A</span> volume 3×+ and a base breakout (closed above the previous 20 days' high) with a 3%+ gap or a 10%+ day; <span class="tgr-grade gB">B</span> two of those four; <span class="tgr-grade gC">C</span> the rest. <span class="tgr-gm">delayed</span> = a gap of 3%+ on 3×+ volume that faded, held its old base and then launched within 10 sessions (ACN: earnings gap Oct 1, 2026 faded, base held 4 days, launched Oct 8); it is graded with the gap day's volume and gap. The theme is shown beside it, not in it: a leader often launches before its theme (DELL on Feb 27, 2026 while semis were still correcting; its group led by April), so a launch counts as a lone wolf only when none of its groups has trended since. Exit signal = the first close below the 21 EMA. Patterns, buy points, base days and depth come from your MSF engine (the same as the 3-SETUPS list); Surf = closes in a row above the 10 / 21 EMA. During market hours, Launching today checks the watch list (stocks from 10% under to 28% over their 200 SMA) against the live 5-minute prices: up 5%+, opened up, above the 200 SMA, Rel vol 1.5×+ for this time of day. Entry is yours to time (opening-range high), stop under the day's low.</p>
+  </section>
+
   <p class="tgr-foot" id="foot">During market hours (9:30 AM–4:10 PM ET) prices update about every 5 minutes from Yahoo quotes, and this page checks for new data every 2 minutes on its own. Live 1D is today's change so far; live 1W, 1M and 3M compare today's price with the close 5, 21 and 63 sessions back; Rel vol is relative volume at time: volume from 9:30 to now ÷ the average of the last 20 sessions' volume from 9:30 to the same minute (from 5-minute bars on the consolidated tape via Alpaca, all US exchanges and off-exchange trades), so 2.00× at 11:50 means twice the usual volume by 11:50; it's rough in the first 5 minutes. After the close it's the full day ÷ the previous 20 sessions' average. Everything else (themes and their scores, ADR%, $ volume, 200-day SMA, averages) is rebuilt after each close, around 4:30 PM ET. Newest day comes from: <span id="src">—</span>; earlier days, volume and company details come from Nasdaq's daily list, which runs one session behind. ADR% (20-day average of high ÷ low − 1) comes from: <span id="adr-src">—</span>. $ volume averages price × shares over the last 10 or 20 sessions. Group figures are the median (or market-cap-weighted average) of the group's liquid members. Auto-added names and auto groups come from the co-movement test (daily moves with the market's move removed, 120 sessions, 0.6+ score with the group, market cap ≥ $700M and 700K+ shares a day), recomputed weekly, currently with data through <span id="grp-asof">—</span>. Broad industries come from FinanceDatabase; Detailed uses Nasdaq's own industry labels. Data and code: <a href="https://github.com/goattrader40-lgtm/radar-close-snapshots">your GitHub repo</a> (radar-data branch).</p>
 </div>
 </div>
@@ -591,7 +692,7 @@ defCalc('industry_perf', {
 <script>
 (() => {
   /* ───────── state ───────── */
-  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', sort: {} };
+  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lng: 'all', lnst: 'all', lnwolf: false, sort: {} };
   const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
   const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
   const fitMap = (scores) => {
@@ -724,7 +825,7 @@ defCalc('industry_perf', {
       const cur = S.sort[table.id];
       const key = b.dataset.sort;
       if (table.id === 'theme-table') S.tlay = 'flat';   /* sorting a column always ranks every theme together */
-      const textKey = ['theme', 'category', 'industry', 'symbol', 'name', 'ind', 'themes', 'section', 'pattern', 'added'].includes(key);
+      const textKey = ['theme', 'category', 'industry', 'symbol', 'name', 'ind', 'themes', 'section', 'pattern', 'added', 'date', 'group', 'status'].includes(key);
       S.sort[table.id] = { key, dir: cur && cur.key === key ? -cur.dir : textKey ? 1 : -1 };
       draw();
     });
@@ -747,6 +848,7 @@ defCalc('industry_perf', {
     $('#gainers').hidden = S.tab !== 'gainers';
     $('#premarket').hidden = S.tab !== 'premarket';
     $('#watchlist').hidden = S.tab !== 'watchlist';
+    $('#launches').hidden = S.tab !== 'launches';
   };
   document.querySelectorAll('.tgr-seg[data-k]').forEach((seg) => seg.addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
@@ -783,7 +885,7 @@ defCalc('industry_perf', {
 
   /* selections: rows and chips */
   const select = (kind, name) => {
-    if (S.tab === 'premarket' || S.tab === 'watchlist') { S.tab = 'groups'; history.replaceState(null, '', '#groups'); }   /* a theme chip on the pre-market or watchlist tab opens that theme */
+    if (S.tab === 'premarket' || S.tab === 'watchlist' || S.tab === 'launches') { S.tab = 'groups'; history.replaceState(null, '', '#groups'); }   /* a theme chip on the pre-market or watchlist tab opens that theme */
     if (S.tab === 'groups') { S.sel = { kind, name }; S.q = ''; $('#drill-search').value = ''; draw(); $('#drill-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
     else { S.gsel = { kind, name }; draw(); $('#g-list-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   };
@@ -1307,6 +1409,124 @@ defCalc('industry_perf', {
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
 
+  /* launches: the first day of a new trend (setups/launch.json, rebuilt after each close) and, during market
+     hours, the watch list checked against the live 5-minute prices */
+  const GSTAT = { 2: 'Leading', 1: 'Turning up', 0: 'Not trending', '-1': 'No group' };
+  const lnGrade = (rv, bo, gap, chg, R) => {
+    const vol3 = rv >= R.rv_big, gap3 = gap !== null && gap >= R.gap_big, big = chg >= R.chg_big;
+    if (vol3 && bo && (gap3 || big)) return 'A';
+    return (+vol3) + (+bo) + (+gap3) + (+big) >= 2 ? 'B' : 'C';
+  };
+  const lnLive = (doc) => {
+    if (!doc || !doc.watch || !LIVE_ON || !LIVE || !LIVE.rows) return [];
+    const R = doc.rules, out = [];
+    Object.entries(doc.watch).forEach(([sym, w]) => {
+      const q = LIVE.rows[sym]; if (!q) return;
+      const price = q[0], chg = q[1], rv = q[4], open = q[5];
+      const prev = price / (1 + chg / 100);
+      const gap = open ? r2((open / prev - 1) * 100) : null;
+      const [, pivot, s200, , , h52, days, corr, group, gstat, tvs, mem] = w;
+      if (chg < R.min_chg || !(rv >= R.min_rv) || !(price > s200) || (gap !== null && gap <= 0)) return;
+      /* a delayed launch (a high-volume gap that faded and held its base): credit that day's volume and gap */
+      const bo = price > pivot || !!(mem && price > mem[1]);
+      const grade = mem ? lnGrade(Math.max(rv, R.rv_big), bo, Math.max(gap ?? 0, R.gap_big), chg, R) : lnGrade(rv, bo, gap, chg, R);
+      out.push({ symbol: sym, tv_symbol: tvs, grade, chg, gap, rv, price, pivot: mem && !(price > pivot) ? mem[1] : pivot, bo, group, gstat, corr, days, mem, h52: h52 ? (price / h52) * 100 : null });
+    });
+    return out;
+  };
+  const sortRows = (table, rows, def, txtKeys, gradeKey) => {
+    const spec = S.sort[table.id] || def;
+    if (spec) {
+      const go = { A: 0, B: 1, C: 2 };
+      const val = (r) => (spec.key === gradeKey ? (go[r[gradeKey]] ?? 9) : txtKeys.includes(spec.key) ? String(r[spec.key] || '') : num(r[spec.key]));
+      const blank = (v) => v === null || v === undefined || v === '' || Number.isNaN(v);
+      rows.sort((a, c) => (blank(val(a)) - blank(val(c))) || (spec.dir > 0 ? cmp(val(a), val(c)) : cmp(val(c), val(a))));
+      markSort(table, spec);
+    } else markSort(table, { key: '', dir: -1 });
+  };
+  const tkCell = (sym, tvs) => { const td = h('td', 'key'); const a = h('a', 'tgr-tk', sym); a.href = tv(tvs || sym); a.target = '_blank'; a.rel = 'noopener'; td.append(a); return td; };
+  const gradeCell = (g) => { const td = h('td', ''); if (g) td.append(h('span', 'tgr-grade g' + g, g)); else td.textContent = '—'; return td; };
+  const noRows = (tb, n, text) => { const tr = h('tr'); const td = h('td', 'tgr-lbl', text); td.colSpan = n; tr.append(td); tb.append(tr); };
+  const drawLaunches = (symMap) => {
+    const doc = st('launch').status === 'ok' ? st('launch').data : null;
+    /* launching today (live) */
+    const lt = $('#ln-live-table'), ltb = lt.querySelector('tbody'); ltb.replaceChildren();
+    const live = lnLive(doc);
+    $('#ln-live-time').textContent = LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : marketOpen() ? 'Waiting for the first live update' : 'Live during market hours';
+    $('#ln-live-note').textContent = !doc ? '' : (doc.watch ? Object.keys(doc.watch).length : 0) + ' stocks on watch from the ' + fDate(doc.date) + ' close. ' +
+      (LIVE_ON ? live.length + ' of them are launching right now. "Grade so far" uses the volume pace and price so far; the close still has to hold the top half of the day.' : 'They are checked every 5 minutes from 9:30 AM ET.');
+    sortRows(lt, live, { key: 'grade', dir: 1 }, ['symbol', 'group'], 'grade');
+    if (doc && LIVE_ON && !live.length) noRows(ltb, 11, 'Nothing on the watch list is launching right now.');
+    live.forEach((r) => {
+      const tr = h('tr');
+      const th = h('td', ''); th.textContent = r.group ? r.group + ' · ' + (GSTAT[r.gstat] || '') : '—';
+      const k0 = tkCell(r.symbol, r.tv_symbol);
+      if (r.mem) { const t = h('span', 'tgr-gm', 'delayed'); t.title = 'Faded high-volume gap on ' + fDate(r.mem[0]) + ', base held since'; k0.append(t); }
+      tr.append(k0, gradeCell(r.grade), pctCell(r.chg, 0), h('td', 'num', r.gap === null ? '—' : p1(r.gap, true)), h('td', 'num' + (r.rv >= 3 ? ' tgr-up' : ''), fX(r.rv)),
+        h('td', 'num', fPrice(r.price)), h('td', 'num' + (r.bo ? ' tgr-up' : ''), fPrice(r.pivot) + (r.bo ? ' ✓' : '')), th,
+        h('td', 'num c2', p1(r.corr)), h('td', 'num c2', r.days === null ? '—' : String(r.days)), h('td', 'num c3', p1(r.h52)));
+      ltb.append(tr);
+    });
+    /* launches */
+    const table = $('#ln-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
+    setState('ln-table', ['launch']);
+    $('#ln-wolf').checked = S.lnwolf;
+    const all = doc ? doc.launches.map((r) => {
+      const m = symMap.get(r.symbol);
+      const px = m && num(m.price) !== null ? num(m.price) : r.price;
+      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null });
+    }) : [];
+    const rows = all.filter((r) => (S.lng === 'all' || S.lng.includes(r.grade)) && (S.lnwolf || !r.lone_wolf) &&
+      (S.lnst === 'all' || (S.lnst === 'riding' ? r.status === 'Riding' : !!r.pattern)));
+    $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
+    const today = doc ? all.filter((r) => r.date === doc.date).length : 0;
+    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close). Gain = from the launch-day close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '; lone wolves are hidden unless ticked.';
+    sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'pattern'], 'grade');
+    if (doc && !rows.length) noRows(tb, 22, 'No launch matches these filters.');
+    rows.forEach((r) => {
+      const tr = h('tr');
+      const key = tkCell(r.symbol, r.tv);
+      if (r.lone_wolf) { const w = h('span', 'tgr-flag', 'lone wolf'); w.style.marginLeft = '6px'; key.append(w); }
+      if (r.delayed_from) { const t = h('span', 'tgr-gm', 'delayed'); t.title = 'Faded high-volume gap on ' + fDate(r.delayed_from) + ', base held, then launched'; key.append(t); }
+      if (r.neglected) { const n = h('span', 'tgr-gm', 'neglected'); n.title = r.days_since_high + ' days since its high, ' + r.correction_pct + '% correction'; key.append(n); }
+      const thm = h('td', '');
+      thm.textContent = (r.group || '—') + ' · ' + r.group_status + (r.group_now && (r.group_now !== r.group || r.group_status_now !== r.group_status) ? ' → ' + (r.group_now !== r.group ? r.group_now + ' · ' : '') + r.group_status_now : '') +
+        (r.theme_up_since && r.theme_up_since !== r.date ? ' (since ' + fDate(r.theme_up_since).replace(/, \d{4}$/, '') + ')' : '');
+      const stt = h('td', 'nw ' + (r.status === 'Riding' ? 'tgr-up' : 'tgr-dn'), r.status === 'Riding' ? 'Above 21 EMA' : 'Below 21 EMA');
+      const ex = h('td', 'c2', r.first_exit ? fDate(r.first_exit).replace(/, \d{4}$/, '') + ' (' + p1(r.exit_gain_pct, true) + ')' : '—');
+      tr.append(key, h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), gradeCell(r.grade), pctCell(r.chg_pct, 0), h('td', 'num c2', p1(r.gap_pct, true)),
+        h('td', 'num' + (r.rel_vol >= 3 ? ' tgr-up' : ''), fX(r.rel_vol)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
+        h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt, ex,
+        h('td', 'c2', r.breakout_today ? r.pattern + ' · breakout today' : r.pattern || '—'), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
+        h('td', 'num', p1(r.away, true)), h('td', 'num c2', r.base_days === null || r.base_days === undefined ? '—' : String(r.base_days)), h('td', 'num c2', p1(r.base_depth_pct)),
+        h('td', 'num c3', String(r.surf10 ?? '—')), h('td', 'num c3', String(r.surf21 ?? '—')), h('td', 'num c3' + (num(r.vol_dryup) !== null && r.vol_dryup < 1 ? ' tgr-up' : ''), r.vol_dryup === null ? '—' : num(r.vol_dryup).toFixed(2) + '×'),
+        h('td', 'num c3', p1(r.pct_of_52w_high)), h('td', 'num c3', p1(r.correction_pct)));
+      tb.append(tr);
+    });
+    /* trending groups */
+    const gt = $('#ln-g-table'), gtb = gt.querySelector('tbody'); gtb.replaceChildren();
+    const gs = doc ? doc.groups.slice() : [];
+    sortRows(gt, gs, null, ['group', 'status'], '');
+    gs.forEach((g) => {
+      const tr = h('tr');
+      tr.append(h('td', 'key', g.group), h('td', g.status === 'Leading' ? 'tgr-up' : '', g.status), h('td', 'num', String(g.members)), h('td', 'num', p1(g.above_21ema_pct)),
+        pctCell(g.median_1m_pct, 0), h('td', 'num', String(g.trending_days)), h('td', 'c2', (g.recent_launches || []).join(' ')));
+      gtb.append(tr);
+    });
+    /* history test */
+    const bt = $('#ln-bt-table tbody'); bt.replaceChildren();
+    const B = LNBT;
+    $('#ln-bt-note').textContent = !B ? 'Runs after each close.' : 'Every launch from ' + fDate(B.first) + ' to ' + fDate(B.last) + ' that has finished, bought ' +
+      (B.entry === 'open' ? "at the launch day's open (your opening-range-high entry is a little higher), stopped under that day's low, otherwise sold" : "at the launch day's close and sold") +
+      ' on the first close below the 21 EMA. Theme = one of its groups was trending within 10 sessions of the launch. Read it as a guide, not a promise: it only counts days that ended strong (a launch that faded by the close never shows up here), and it covers one strong market.';
+    if (B) {
+      const line = (label, v) => { if (!v) return; const tr = h('tr'); tr.append(h('td', 'key', label), h('td', 'num', String(v.n)), h('td', 'num', v.win_pct + '%'), pctCell(v.avg_exit_pct, 0), pctCell(v.median_exit_pct, 0), h('td', 'num c2', String(v.avg_days)), h('td', 'num', v.ran_20pct + '%'), h('td', 'num', v.ran_50pct + '%')); bt.append(tr); };
+      line('All', B.all);
+      ['A', 'B', 'C'].forEach((g) => { const x = B.by_grade_theme10 || {}; line(g + ', theme confirmed', x[g + ' theme']); line(g + ', lone wolf', x[g + ' lone wolf']); });
+    }
+  };
+  $('#ln-wolf').addEventListener('change', (e) => { S.lnwolf = e.target.checked; draw(); });
+
   const drawTrack = () => {
     setState('track-table', ['grade_record']);
     const tb = $('#track-table tbody'); tb.replaceChildren();
@@ -1350,7 +1570,8 @@ defCalc('industry_perf', {
     if (S.tab === 'groups') { drawThemes(symMap); drawIndustries(); drawDrill(symMap); }
     else if (S.tab === 'gainers') drawGainers(symMap);
     else if (S.tab === 'premarket') { drawPmLive(symMap); drawPremarket(symMap); drawTrack(); }
-    else drawWatchlist(symMap);
+    else if (S.tab === 'watchlist') drawWatchlist(symMap);
+    else drawLaunches(symMap);
   }
 
   /* ───────── column chooser: tick columns off to hide them (remembered in this browser) ───────── */
@@ -1388,11 +1609,12 @@ defCalc('industry_perf', {
   setupCols('theme-table', $('#themes-card .tgr-cardhead'));
   setupCols('industry-table', $('#industries-card .tgr-cardhead'));
   setupCols('wl-table', $('#wl-card .tgr-cardhead'));
+  setupCols('ln-table', $('#ln-card .tgr-cardhead'));
   applyCols();
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
-  let REV = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null;
+  let LNBT = null, REV = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null;
   const REVOF = (sym) => (REV && REV.rows ? REV.rows[sym] : null);
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
   const nyNow = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value])); return { wd: p.weekday, m: Number(p.hour) * 60 + Number(p.minute) }; };
@@ -1412,10 +1634,10 @@ defCalc('industry_perf', {
     if (!r.ok) throw new Error(name + ': HTTP ' + r.status);
     return r.json();
   }
-  /* the setup scanner's lists live on the main branch (setups/latest.json), not radar-data */
-  async function getSetups() {
-    const r = await fetch(`https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/refs/heads/main/setups/latest.json?t=${Date.now()}`, { cache: 'no-store' });
-    if (!r.ok) throw new Error('setups: HTTP ' + r.status);
+  /* the setup scanner's files (lists, launches) live on the main branch under setups/, not radar-data */
+  async function getMain(path) {
+    const r = await fetch(`https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/refs/heads/main/${path}?t=${Date.now()}`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(path + ': HTTP ' + r.status);
     return r.json();
   }
   const r2 = (x) => Math.round(x * 100) / 100;
@@ -1450,8 +1672,11 @@ defCalc('industry_perf', {
       if (sha && sha === lastSha && !force) { drawLiveLine(); return; }
       const [build, live, pm, gl, pml, etfs, rev, setups] = await Promise.all([getJson(sha, 'build.json'), getJson(sha, 'live.json').catch(() => null),
         getJson(sha, 'premarket.json'), getJson(sha, 'gradelog.json'), getJson(sha, 'premarket_live.json').catch(() => null),
-        getJson(sha, 'etfs.json').catch(() => null), getJson(sha, 'revenue.json').catch(() => null), getSetups().catch(() => null)]);
+        getJson(sha, 'etfs.json').catch(() => null), getJson(sha, 'revenue.json').catch(() => null), getMain('setups/latest.json').catch(() => null)]);
       D.setups = setups ? { status: 'ok', data: setups } : (D.setups && D.setups.status === 'ok' ? D.setups : { status: 'error', data: null });
+      const [ln, lnbt] = await Promise.all([getMain('setups/launch.json').catch(() => null), getMain('setups/launch_backtest.json').catch(() => null)]);
+      D.launch = ln ? { status: 'ok', data: ln } : (D.launch && D.launch.status === 'ok' ? D.launch : { status: 'error', data: null });
+      if (lnbt) LNBT = lnbt;
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {
         const [stocks, themes] = await Promise.all([getJson(sha, 'stocks.json'), getJson(sha, 'themes.json')]);
@@ -1493,7 +1718,7 @@ defCalc('industry_perf', {
   setInterval(() => { if (!document.hidden) refresh(false); }, 120000);
 
   const named = location.hash.slice(1);
-  if (['gainers', 'groups', 'premarket', 'watchlist'].includes(named)) S.tab = named;
+  if (['gainers', 'groups', 'premarket', 'watchlist', 'launches'].includes(named)) S.tab = named;
   draw();
   refresh(true);
 })();

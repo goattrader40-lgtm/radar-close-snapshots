@@ -69,6 +69,16 @@ jobs:
             python3 scanner/run.py --bars /tmp/bars.json.gz
           fi
 
+      - name: Trend launches (launch days, their themes and the bases that follow)
+        if: steps.gate.outputs.go == 'yes'
+        continue-on-error: true
+        run: |
+          git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+          mkdir -p /tmp/rd
+          git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
+          git show origin/radar-data:themes.json > /tmp/rd/themes.json
+          python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out setups/launch.json --backtest setups/launch_backtest.json
+
       - name: Save today's 5-minute bars for the 21 / 50 EMA trigger test
         if: steps.gate.outputs.go == 'yes'
         continue-on-error: true
