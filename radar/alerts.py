@@ -5,6 +5,11 @@
 
 Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the radar-data branch):
   power day   volume pace 4x+ for the time of day, a 10%+ gap, up 15%+, above the 200 SMA, at most 50% over it
+  catalyst    an episodic pivot, the moment it happens: a neglected stock (closed under its 50 or 200 SMA the day
+              before) gaps up 5%+ on earnings or news with volume pace 3x+ and trades above both the 50 and the
+              200 SMA. No base breakout needed yet (HRI on Oct 27 2026: earnings, gapped 9.3% from under both;
+              the launch alert waited for its 20-day high). Earnings = reported after the last close; without
+              earnings it says to check the news
   launch      A+ or A off the watch list (setups/launch.json, from the last close), graded like the portal's
               Launching today: volume pace 3x+ and above its base high (the previous 20 days' high), with a 3%+
               gap or a 10%+ day; A+ = a 6%+ gap jumping from under the 200 SMA. Also needs: up 5%+, opened up,
@@ -33,9 +38,12 @@ def grade(rv, bo, gap, chg, R, under):
     return "B" if int(vol3) + int(bo) + int(gap3) + int(big) >= 2 else "C"
 
 
-def find(live, doc):
+def find(live, doc, now=None):
     """[(key, title, message, priority, tv symbol)] for everything that fires right now"""
     R, rows, out = doc["rules"], live["rows"], []
+    now = now or datetime.datetime.now(NY)
+    d0 = datetime.date.fromisoformat(doc["date"])                 # the last close the watch list was built from
+    since = datetime.datetime(d0.year, d0.month, d0.day, 15, 30, tzinfo=NY).timestamp()
     for sym, w in doc.get("watch", {}).items():
         q = rows.get(sym)
         if not q or len(q) < 5 or q[4] is None:
@@ -47,6 +55,9 @@ def find(live, doc):
         close0, pivot, s200 = w[0], w[1], w[2]
         group, gstat, tvs = w[8], w[9], w[10]
         mem = w[11] if len(w) > 11 else None
+        s50 = (w[13] if len(w) > 13 else None) or w[4]             # the 50 SMA (lists made before Oct 27: the 50 EMA)
+        ern = q[6] if len(q) > 6 else None
+        earn = bool(ern and since <= ern <= now.timestamp() + 3600)  # reported after the last close (or this morning)
         if not s200 or price <= s200:
             continue
         ext = (close0 / s200 - 1) * 100
@@ -55,16 +66,26 @@ def find(live, doc):
             continue
         theme = f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
         facts = f"{chg:+.1f}% · gap {gap:+.1f}% · vol {rv:.1f}x for the time of day" if gap is not None else f"{chg:+.1f}% · vol {rv:.1f}x"
+        under = [n for n, m in (("50", s50), ("200", s200)) if m and close0 < m]
+        over = bool(s50) and price > s50 and price > s200
+        crossed = f" · was under its {' & '.join(under)} SMA, now above the 50 & 200" if under and over else ""
+        neglect = f" · {w[7]:.0f}% off its high of {w[6]} sessions ago" if w[7] and w[6] is not None and w[7] >= 15 else ""
+        cat = " · EARNINGS" if earn else ""
         if power:
-            out.append((f"{sym}:power", f"{sym} POWER DAY", f"{facts} · ${price:.2f} · theme {theme}", "high", tvs))
-            continue
-        if chg < R["min_chg"] or rv < R["min_rv"] or (gap is not None and gap <= 0):
+            out.append((f"{sym}:power", f"{sym} POWER DAY" + (" on earnings" if earn else ""),
+                        f"{facts} · ${price:.2f}{crossed}{neglect} · theme {theme}", "high", tvs))
             continue
         bo = price > pivot or bool(mem and price > mem[1])
         g = grade(max(rv, R["rv_big"]), bo, max(gap or 0, R["gap_big"]), chg, R, False) if mem else grade(rv, bo, gap, chg, R, close0 < s200)
+        if under and over and gap is not None and gap >= R.get("ep_gap", 5) and rv >= R["rv_big"]:
+            out.append((f"{sym}:catalyst", f"{sym} CATALYST GAP: " + ("earnings" if earn else "news? (no earnings)")
+                        + ", over its 50 & 200 SMA", f"{facts} · ${price:.2f}{crossed}{neglect} · base high ${pivot:.2f} "
+                        + (f"cleared (grade so far {g})" if price > pivot else "next") + f" · theme {theme}", "high", tvs))
+        if chg < R["min_chg"] or rv < R["min_rv"] or (gap is not None and gap <= 0):
+            continue
         if g in ("A+", "A"):
-            out.append((f"{sym}:launch", f"{sym} {g} launch", f"{facts} · ${price:.2f} through its base high ${pivot:.2f}"
-                        + (" (delayed: faded gap " + mem[0] + ")" if mem else "") + f" · theme {theme}", "high" if g == "A+" else "default", tvs))
+            out.append((f"{sym}:launch", f"{sym} {g} launch", f"{facts}{cat} · ${price:.2f} through its base high ${pivot:.2f}"
+                        + (" (delayed: faded gap " + mem[0] + ")" if mem else "") + f"{crossed} · theme {theme}", "high" if g == "A+" else "default", tvs))
     for r in doc.get("launches", []):
         q = rows.get(r["symbol"])
         if not q or len(q) < 5 or q[4] is None:
@@ -126,12 +147,17 @@ def main():
         print("alerts: not in today's session yet")
         return
     sent = set(state["sent"])
-    new = [a for a in find(live, doc) if a[0] not in sent and not (a[0].endswith(":launch") and a[0].split(":")[0] + ":power" in sent)]
+    new = [a for a in find(live, doc, now) if a[0] not in sent and not (a[0].endswith(":launch") and a[0].split(":")[0] + ":power" in sent)]
+    cat_now = {a[0].split(":")[0] for a in new if a[0].endswith(":catalyst")}
+    # a catalyst gap already through its base high says it all: no second push for the launch in the same run
+    quiet = [(a[0], None, None, None, None) for a in new if a[0].endswith(":launch") and a[0].split(":")[0] in cat_now]
+    new = [a for a in new if not (a[0].endswith(":launch") and a[0].split(":")[0] in cat_now)]
     topic = os.environ.get("NTFY_TOPIC", "").strip()
     if len(new) > MAX_PER_RUN:          # a flood (a market-wide gap): one summary instead of a stack of pushes
         new = new[:MAX_PER_RUN - 1] + [(f"summary:{now:%H%M}", f"{len(new) - MAX_PER_RUN + 1} more alerts",
                                         ", ".join(a[0].split(":")[0] for a in new[MAX_PER_RUN - 1:]), "default", "SPY")] \
             + [(a[0], None, None, None, None) for a in new[MAX_PER_RUN - 1:]]
+    new += quiet
     for key, title, msg, prio, tvs in new:
         if title is not None:
             line = f"{now:%H:%M} {title}: {msg}"

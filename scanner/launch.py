@@ -75,7 +75,7 @@ import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
-         near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20)
+         near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -563,8 +563,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
     order = {"A+": -1, "A": 0, "B": 1, "C": 2}
     rows.sort(key=lambda r: (order[r["grade"]], -r["rel_vol"]))
     rows.sort(key=lambda r: r["date"], reverse=True)              # newest first, best grade first within a day
-    # watch list for the intraday trigger: liquid, from 10% under to 50% over the 200 SMA (over 28%: power days
-    # only), no launch in 20 days
+    # watch list for the intraday trigger: liquid, from 25% under to 50% over the 200 SMA (over 28%: power days
+    # only; under it: only once it trades back above it, e.g. a catalyst gap), no launch in 20 days
     launched = {r["symbol"] for r in rows if r["sessions"] < L["dedupe_days"]}
     leaders = collections.defaultdict(set)              # theme -> A / B launches of the last 10 sessions (for followers)
     for r in rows:
@@ -578,7 +578,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
         if st.dates[i] != today or s in launched or not a.liquid[i] or i < a.start:
             continue
         ext = 100 * (st.c[i] / a.s200[i] - 1)
-        if ext > L["power_ext200"] or ext < -10:                   # 28-50% over: power days only (the trigger checks)
+        if ext > L["power_ext200"] or ext < -L["watch_under200"]:  # 28-50% over: power days only (the trigger checks)
             continue
         hi20 = st.h[i - L["base_days"] + 1:i + 1].max()          # tomorrow's "previous 20 days' high"
         hh = st.h[max(0, i - 119):i + 1]
@@ -595,7 +595,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
         watch[s] = [fnum(st.c[i]), fnum(hi20), fnum(a.s200[i]), fnum(a.e21[i]), fnum(a.e50[i]), fnum(st.high52[i]),
                     int(days), fnum(depth, 0), gn, gs, run.tv_symbol(s, st.exchange),
                     [st.dates[g], fnum(a.hi20[g])] if g >= 0 else None,
-                    " ".join(sorted({x for t in groups.get(s, ([], []))[0] for x in leaders.get(t, ()) if x != s})) or None]
+                    " ".join(sorted({x for t in groups.get(s, ([], []))[0] for x in leaders.get(t, ()) if x != s})) or None,
+                    fnum(st.c[i - 49:i + 1].mean()) if i >= 49 else None]
     G = []
     for g, (ms, stt, sh21, m21) in GS.items():
         hist = [int(x) for x in stt[-20:]]
@@ -607,7 +608,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
     G.sort(key=lambda x: (-["Not trending", "Turning up", "Leading"].index(x["status"]), -(x["median_1m_pct"] or -999)))
     doc = dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
-                             "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)"],
+                             "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
+                             "sma50"],
                launches=rows, watch=watch, groups=[g for g in G if g["status"] != "Not trending"])
     with open(out_path, "w") as f:
         json.dump(doc, f, separators=(",", ":"))

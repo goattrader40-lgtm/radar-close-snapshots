@@ -53,6 +53,7 @@ jobs:
             git diff --cached --quiet || { git commit -q -m "launches $(TZ=America/New_York date +%F)"; git pull -q --rebase origin main; git push -q; }
           fi
           case "$CMD" in long\ *) python3 radar/probe_long.py /tmp/long_bars.json ${CMD#long } && python3 radar/publish.py "long history" /tmp/long_bars.json;; esac
+          case "$CMD" in replay\ *) python3 radar/probe_replay.py /tmp/probe_replay.json ${CMD#replay } && python3 radar/publish.py "alert replay" /tmp/probe_replay.json;; esac
           if [ "${{ inputs.cmd }}" = "alerttest" ]; then
             if [ -z "$NTFY_TOPIC" ]; then echo "NTFY_TOPIC secret is not set"; exit 1; fi
             curl -s -H "Title: Radar alerts are on" -H "Tags: white_check_mark" -d "Test from your Theme & Group Radar. Launch, power-day and breakout alerts will arrive here during market hours." "https://ntfy.sh/$NTFY_TOPIC" > /dev/null && echo sent
