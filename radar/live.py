@@ -9,6 +9,8 @@ live.json: {"saved_at", "date", "session", "n", "source",
 Relative volume at time = today's volume from 9:30 to the quote time / the 20-session average volume from
 9:30 to the same minute (from volprofile.json, --profile <path>); null without a curve or before 9:31.
 From 4:00 on it is the full day / the previous 20 sessions' full-day average (avg_vol_20 in stocks.json).
+With --sipcal <state file> the volume is first corrected against the consolidated tape (radar/sipcal.py:
+Yahoo's live volume runs ahead of it during the session, a median +11% on Oct 27 2026).
 Runs only from 9:30 AM to 4:10 PM ET on trading days unless --force is given (exits 3 = nothing to do).
 """
 import concurrent.futures as cf, datetime, http.cookiejar, json, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
@@ -159,9 +161,21 @@ def main():
                     got[s] = v
     rows = {ymap[k]: v for k, v in got.items() if k in ymap}
     avg20 = {r["symbol"]: r.get("avg_vol_20") for r in stocks}
+    off = {}
+    if "--sipcal" in sys.argv:
+        try:
+            import sipcal
+            off = sipcal.offsets(rows, sys.argv[sys.argv.index("--sipcal") + 1], set(prof), now)
+        except Exception as e:
+            print(f"sipcal failed: {e}", file=sys.stderr)
+    fixed = 0
     for s, v in rows.items():
         ern = v.pop(5) if len(v) > 5 else None
         op = v.pop(4) if len(v) > 4 else None
+        o = off.get(s)
+        if o and v[2] and v[3] and datetime.datetime.fromtimestamp(v[3], NY).hour < 16:
+            v[2] = max(v[2] - o[0], o[1])                          # Yahoo's surplus over the exact volume, measured 16+ min ago
+            fixed += 1
         v.append(rvol_at(v[2], v[3], prof.get(s), avg20.get(s)))
         v.append(op)                                               # the open, for the launch trigger's gap
         v.append(ern)                                              # the last / next earnings time, for the earnings tag
@@ -172,7 +186,7 @@ def main():
     json.dump({"saved_at": now.isoformat(timespec="seconds"), "date": now.date().isoformat(), "session": session,
                "n": len(rows), "source": source, "rows": rows}, open(out_p, "w"), separators=(",", ":"))
     print(json.dumps({"saved_at": now.isoformat(timespec="seconds"), "session": session, "quotes": len(rows),
-                      "with_rvol": sum(1 for v in rows.values() if v[4] is not None),
+                      "with_rvol": sum(1 for v in rows.values() if v[4] is not None), "volume_corrected": fixed,
                       "of": len(ymap), "source": source}))
 
 

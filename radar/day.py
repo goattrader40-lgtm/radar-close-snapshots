@@ -103,7 +103,7 @@ def live_once():
     vp = data_file("volprofile.json")
     if vp:
         open(os.path.join(OUT, "base_volprofile.json"), "w").write(vp)
-        extra += ["--profile", os.path.join(OUT, "base_volprofile.json")]
+        extra += ["--profile", os.path.join(OUT, "base_volprofile.json"), "--sipcal", os.path.join(OUT, "sipcal.json")]
     r = sh(sys.executable, os.path.join(HERE, "live.py"), os.path.join(OUT, "base_stocks.json"),
            os.path.join(OUT, "base_themes.json"), os.path.join(OUT, "live.json"), "--force", *extra, check=False)
     log("live:", (r.stdout or r.stderr).strip()[-300:])
