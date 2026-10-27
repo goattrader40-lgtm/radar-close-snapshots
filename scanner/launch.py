@@ -15,6 +15,9 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
               under the lower of the base top and the 200 SMA) and then launches, that launch gets the gap day's
               volume and gap, and its breakout is measured against the base before the gap (ACN: earnings gap
               Oct 1 2026 on 5.4x volume faded, held the base 4 days, launched Oct 8 and trended)
+  follower    a breakout in the leader's wake: within 10 sessions of an A or B launch by another member of one
+              of its themes, the stock closes up 2%+ above its previous 20 days' high on 2x+ volume, in the top half
+              of the range, above the 200 SMA and still near it (DXC Oct 8 2026 after ACN's earnings launch)
   theme       shown beside the grade, not in it: its group's status on the launch day, now, and the day it
               turned up. A leader launches before its theme (DELL Feb 27 2026 while semis were still
               correcting; its group led by April). "Lone wolf" = no group of it trending, then or since.
@@ -103,6 +106,12 @@ class Arr:
             if (self.gap[i] >= L["gap_big"] and self.rv[i] >= L["rv_big"] and c[i] > self.s200[i]
                     and self.ext200_prev[i] <= L["max_ext200"] and (self.clpos[i] < L["min_clpos"] or self.chg[i] < L["min_chg"])):
                 g = i
+
+    def follower(self, i):
+        """a smaller breakout that counts when a leader of its group has just launched"""
+        st = self.st
+        return bool(i >= 200 and self.liquid[i] and self.chg[i] >= 2 and st.c[i] > self.hi20[i] and self.rv[i] >= 2
+                    and self.clpos[i] >= L["min_clpos"] and st.c[i] > self.s200[i] and self.ext200_prev[i] <= L["max_ext200"])
 
     def candidate(self, i):
         """the must-haves of a launch day"""
@@ -279,12 +288,38 @@ def detect(A, groups, GS, cal, S, upto=None):
     return events
 
 
+def detect_followers(A, groups, GS, cal, events):
+    """breakouts in a leader's wake: (sym, i, k, gs, gn, leader) for each follower day"""
+    pos = {d: k for k, d in enumerate(cal)}
+    led = collections.defaultdict(list)                      # theme -> [(calendar k, leader)] of A / B launches
+    own = collections.defaultdict(list)
+    for s, i, k, gs, gn in events:
+        own[s].append(i)
+        if grade(A[s], i) in "AB":
+            for g in groups.get(s, ([], []))[0]:
+                led[g].append((k, s))
+    out = []
+    for s, a in A.items():
+        last = -10 ** 9
+        for i in range(200, len(a.st.dates)):
+            k = pos.get(a.st.dates[i])
+            if k is None or i - last <= L["dedupe_days"] or any(abs(i - j) <= L["dedupe_days"] for j in own[s]) or not a.follower(i):
+                continue
+            leaders = sorted({x for g in groups.get(s, ([], []))[0] for kk, x in led.get(g, []) if x != s and 0 <= k - kk <= 10})
+            if leaders:
+                gs, gn = best_group(s, k, groups, GS)
+                out.append((s, i, k, gs, gn, " ".join(leaders)))
+                last = i
+    return out
+
+
 def daily(A, groups, GS, cal, S, out_path):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
     T = len(cal) - 1
     rows = []
-    for s, i, k, gs, gn in detect(A, groups, GS, cal, S):
+    ev = detect(A, groups, GS, cal, S)
+    for s, i, k, gs, gn, leader in [e + ("",) for e in ev] + detect_followers(A, groups, GS, cal, ev):
         a = A[s]
         last = len(a.st.dates) - 1
         if a.st.dates[last] != today or last - i > L["follow_days"]:
@@ -294,6 +329,7 @@ def daily(A, groups, GS, cal, S, out_path):
             continue
         r = launch_row(s, a, i, gs, gn, S)
         r.update(f)
+        r["follows"] = leader or None
         cgs, cgn = best_group(s, T, groups, GS)
         r["group_now"], r["group_status_now"] = cgn, STATUS.get(cgs, "No group")
         up = next((kk for kk in range(k, T + 1) if best_group(s, kk, groups, GS)[0] >= 1), None)
@@ -305,6 +341,11 @@ def daily(A, groups, GS, cal, S, out_path):
     rows.sort(key=lambda r: r["date"], reverse=True)              # newest first, best grade first within a day
     # watch list for the intraday trigger: liquid, from 10% under to 28% over the 200 SMA, no launch in 20 days
     launched = {r["symbol"] for r in rows if r["sessions"] < L["dedupe_days"]}
+    leaders = collections.defaultdict(set)              # theme -> A / B launches of the last 10 sessions (for followers)
+    for r in rows:
+        if r["grade"] in "AB" and not r.get("follows") and r["sessions"] < 10:
+            for g in groups.get(r["symbol"], ([], []))[0]:
+                leaders[g].add(r["symbol"])
     watch = {}
     for s, a in A.items():
         st = a.st
@@ -328,7 +369,8 @@ def daily(A, groups, GS, cal, S, out_path):
             g = g2
         watch[s] = [fnum(st.c[i]), fnum(hi20), fnum(a.s200[i]), fnum(a.e21[i]), fnum(a.e50[i]), fnum(st.high52[i]),
                     int(days), fnum(depth, 0), gn, gs, run.tv_symbol(s, st.exchange),
-                    [st.dates[g], fnum(a.hi20[g])] if g >= 0 else None]
+                    [st.dates[g], fnum(a.hi20[g])] if g >= 0 else None,
+                    " ".join(sorted({x for t in groups.get(s, ([], []))[0] for x in leaders.get(t, ()) if x != s})) or None]
     G = []
     for g, (ms, stt, sh21, m21) in GS.items():
         hist = [int(x) for x in stt[-20:]]
@@ -340,7 +382,7 @@ def daily(A, groups, GS, cal, S, out_path):
     G.sort(key=lambda x: (-["Not trending", "Turning up", "Leading"].index(x["status"]), -(x["median_1m_pct"] or -999)))
     doc = dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L,
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
-                             "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]"],
+                             "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)"],
                launches=rows, watch=watch, groups=[g for g in G if g["status"] != "Not trending"])
     with open(out_path, "w") as f:
         json.dump(doc, f, separators=(",", ":"))
@@ -351,7 +393,8 @@ def daily(A, groups, GS, cal, S, out_path):
 def backtest(A, groups, GS, cal, S, out_path):
     """each launch since the data starts: from the launch close to the first close below the 21 EMA"""
     res = []
-    for s, i, k, gs, gn in detect(A, groups, GS, cal, S):
+    ev = detect(A, groups, GS, cal, S)
+    for s, i, k, gs, gn, leader in [e + ("",) for e in ev] + detect_followers(A, groups, GS, cal, ev):
         a = A[s]
         c, o, lo = a.st.c, a.st.o, a.st.l
         n = c.size
@@ -375,7 +418,7 @@ def backtest(A, groups, GS, cal, S, out_path):
             continue                          # still open: no result yet
         g = grade(a, i)
         t10 = any(best_group(s, kk, groups, GS)[0] >= 1 for kk in range(k, min(k + 11, len(cal))))
-        res.append(dict(sym=s, date=a.st.dates[i], grade=g, theme=gs >= 1, theme10=t10, vol3=bool(a.rv[i] >= 3), bo=bool(c[i] > a.hi20[i]),
+        res.append(dict(sym=s, date=a.st.dates[i], grade=g, follower=bool(leader), theme=gs >= 1, theme10=t10, vol3=bool(a.rv[i] >= 3), bo=bool(c[i] > a.hi20[i]),
                         ret=100 * (px / buy - 1), days=exit_k - i, maxg=100 * (a.st.h[i:exit_k + 1].max() / buy - 1),
                         r20=100 * (c[min(i + 20, n - 1)] / buy - 1) if i + 20 < n else None))
 
@@ -389,8 +432,10 @@ def backtest(A, groups, GS, cal, S, out_path):
                     avg_days=fnum(np.mean([r["days"] for r in rs]), 1), ran_20pct=fnum(100 * np.mean(mg >= 20), 0),
                     ran_50pct=fnum(100 * np.mean(mg >= 50), 0), avg_20d_pct=fnum(r20.mean(), 1) if r20.size else None,
                     best=sorted(((round(r["ret"], 1), r["sym"], r["date"]) for r in rs), reverse=True)[:5])
+    fol = [r for r in res if r["follower"]]
+    res = [r for r in res if not r["follower"]]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1],
-               rules=L, entry=ENTRY, all=summ(res), by_grade={g: summ([r for r in res if r["grade"] == g]) for g in "ABC"},
+               rules=L, entry=ENTRY, all=summ(res), followers=summ(fol), by_grade={g: summ([r for r in res if r["grade"] == g]) for g in "ABC"},
                trending_group=summ([r for r in res if r["theme"]]), not_trending_at_launch=summ([r for r in res if not r["theme"]]),
                theme_within_10d=summ([r for r in res if r["theme10"]]), lone_wolf_10d=summ([r for r in res if not r["theme10"]]),
                by_grade_theme10={g + (" theme" if t else " lone wolf"): summ([r for r in res if r["grade"] == g and r["theme10"] == t]) for g in "ABC" for t in (True, False)},
