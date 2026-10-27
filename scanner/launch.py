@@ -76,7 +76,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.85, pop_tight=0.8, tight_body=0.35, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -372,7 +372,7 @@ def dry_armed(a, k, top):
 
 
 def pop_level(a, k):
-    """the pop after a setup on day k: day k is a tight candle, its range 0.8 ADR or less and its body 0.35 ADR or less
+    """the pop after a setup on day k: day k is a tight candle, its range 0.8 ADR or less and its body half an ADR or less
     (ANF Oct 2 2026: range 0.74 ADR, body 0.11; Oct 1, range 1.02, body 0.33, was none) and the next day opens above its open and close and above the 10 and 21 EMA, both rising: pushing out of
     the surf (ANF Oct 5: opened 136.97 over Oct 2's 136.49 / 135.91 and its 10 / 21 EMA of 135.72 / 135.03; Oct 1 was
     no tight candle, 4.0%, and Oct 2's open faded). Returns the price the open has to clear, or None."""
@@ -471,7 +471,7 @@ def follow(a, i0, i):
     retest = bool(bo and 1 <= i - bo[0] <= L["retest_days"] and c[i] > bo[1]
                   and bo[1] * (1 - adr / 100) <= st.l[i] <= bo[1] * (1 + adr / 400))
     # tight under the buy point (a level: a base top or a pattern's pivot, not a falling flag line): closes within an
-    # ADR under it, each day's move under half an ADR and its body 0.35 ADR or less, 2+ days in a row (ANF Oct 15-16
+    # ADR under it, each day's move under half an ADR and its body half an ADR or less, 2+ days in a row (ANF Oct 15-16
     # 2026: 2.1% and 1.3% under its 155.22 base top, +1.5% and +0.8%, bodies 0.00 and 0.05 ADR; broke out Oct 19)
     tight = 0
     if bp and pat in ("Base top",) + tuple(msf.NAMES[k] for k in range(1, 13) if msf.is_pat(k)):
