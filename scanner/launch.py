@@ -76,7 +76,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.75)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.75, dry_gap=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -353,8 +353,8 @@ def below_since(a, j, level, k):
 def dry_armed(a, k, top):
     """a dry-up entry is set up at the close of day k (your rule: a regular consolidation, the volume drying up, surfing
     the 10 and 21 EMA; ANF Oct 2 2026): inside the base, an ADR+ under its top; 5-day volume 0.75 or less of the
-    50-day; closing within an ADR of both the 10 and the 21 EMA, above the 50 EMA. Its trigger is the pop out of it
-    (Qullamaggie: a breakout from a tight flag): the next day trades over day k's high on 1x+ volume (ANF Oct 5)."""
+    50-day; closing within an ADR of both the 10 and the 21 EMA, above the 50 EMA. Its trigger is the pop out of it,
+    the price expanding after the contraction (Qullamaggie: a breakout from a tight flag): see pop_level."""
     st, c = a.st, a.st.c
     if k < 50:
         return False
@@ -362,6 +362,16 @@ def dry_armed(a, k, top):
     dry = st.v[k - 4:k + 1].mean() / st.v[k - 50:k].mean()
     return bool(c[k] <= top * (1 - adr / 100) and dry <= L["dry_max"] and abs(c[k] / a.e10[k] - 1) <= adr / 100
                 and abs(c[k] / a.e21[k] - 1) <= adr / 100 and c[k] > a.e50[k])
+
+
+def pop_level(a, k):
+    """the pop after a dry-up setup on day k: the next day gaps up a little (0.5%+) over day k's close and opens above
+    the 10 and 21 EMA, both rising (ANF Oct 5 2026: opened 136.97, +0.8% over 135.91, over its 10 / 21 EMA of 135.72
+    / 135.03). Returns the price the open has to clear, or None when the EMAs aren't both rising."""
+    c = a.st.c
+    if not (a.e10[k] > a.e10[k - 1] and a.e21[k] > a.e21[k - 1]):
+        return None
+    return max(c[k] * (1 + L["dry_gap"] / 100), a.e10[k], a.e21[k])
 
 
 def follow(a, i0, i):
@@ -392,8 +402,10 @@ def follow(a, i0, i):
     used, bo = set(), None                                  # bo = (day, top, top index) of the last base breakout
     dry_done, dry_day, flag_day = False, None, None         # one dry-up entry per base (ANF: Oct 5 2026, not again)
     for j in range(i0 + 1, i + 1):
-        if not dry_done and dry_armed(a, j - 1, H) and c[j] > st.h[j - 1] and a.rv[j] >= 1:
-            dry_done, dry_day = True, j
+        if not dry_done and dry_armed(a, j - 1, H):
+            lv = pop_level(a, j - 1)
+            if lv and st.o[j] >= lv:
+                dry_done, dry_day = True, j
         f = flag_at(a, j) if armed else None
         # a flag at the highs, after the leg has run 4+ of the stock's own ADRs from its start (SMCI Jun 2023: 85%,
         # 13 ADRs, then the flag); a trendline break in the base right after a launch is an entry, not a new leg
@@ -436,8 +448,8 @@ def follow(a, i0, i):
         cands.append((float(r.pivot), msf.NAMES[code], r.cN, r.cDep))        # that's only a recent high (ANF Oct 26 2026)
     if fl:
         cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
-    if not dry_done and dry_armed(a, i, H) and c[i] < st.h[i]:
-        cands.append((float(st.h[i]), "Dry-up entry (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
+    if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
+        cands.append((float(pop_level(a, i)), "Dry-up entry (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
     for top, k in tops:
         cands.append((top, "Base top", below_since(a, i + 1, top, k), 100 * (1 - st.l[k:i + 1].min() / top)))
     bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)

@@ -25,6 +25,8 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               after closing under it the day before; graded A (volume 2x+, trending theme, not a late leg), B
               (1.5x+), C (the rest)
   confirm     in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
+  pop         the entry inside a base: after a consolidation where the volume dried up, surfing the 10 & 21 EMA,
+              it gaps up a little (0.5%+) over the last close and opens above the rising 10 & 21 EMA (ANF Oct 5 2026)
 Nothing is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
 """
@@ -122,6 +124,19 @@ def find(live, doc, now=None, gaps_only=False):
                    f" · {chg:+.1f}% · vol {rv:.1f}x for the time of day", "high", tvs) \
             if top and ago is not None and ago <= 2 and op and op > top and price > top and rv >= 2 else None
         bp = r.get("buy_point")
+        if bp and inside and (r.get("price") or 0) < bp:
+            # the pop out of a dry-up consolidation: a small gap up over the last close, opening above the rising
+            # 10 and 21 EMA (bp = the level the open has to clear), still holding it; no volume needed (ANF Oct 5 2026)
+            if op and op >= bp and price >= bp:
+                gap_ = (op / (price / (1 + chg / 100)) - 1) * 100
+                out.append((f"{sym}:pop", f"{sym} entry in base: the pop out of a dry-up consolidation",
+                            f"opened ${op:.2f} ({gap_:+.1f}% over the last close) above the rising 10 & 21 EMA, now ${price:.2f}"
+                            f" · {chg:+.1f}% · vol {rv:.1f}x · the volume had dried up, surfing the 10 & 21 EMA · an entry inside"
+                            f" the base (still leg {nxt}) · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
+                            f" · launched {r['date']} ({r['grade']})", "default", tvs))
+            elif confirm:
+                out.append(confirm)
+            continue
         if not bp or (r.get("price") or 0) > bp or not (price > bp and rv >= 1):
             if confirm:
                 out.append(confirm)                   # a new breakout the same day says more than the confirmation
@@ -132,12 +147,10 @@ def find(live, doc, now=None, gaps_only=False):
             pat = r.get("pattern") or ""
             pat = "base" if not pat or pat.startswith("Base forming") else pat
             what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}; nothing traded above it for {int(r['base_days'])} sessions)"
-                    if pat == "Base top" and r.get("buy_point_top_date") else
-                    f"last close's high ${bp:.2f}: the pop out of a consolidation where the volume dried up, surfing the 10 & 21 EMA"
-                    if inside else f"buy point ${bp:.2f}")
+                    if pat == "Base top" and r.get("buy_point_top_date") else f"buy point ${bp:.2f}")
             out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
                         f"${price:.2f} over the {what} · {chg:+.1f}% · vol {rv:.1f}x · "
-                        + (f"an entry inside the base (still leg {nxt})" if inside else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "")) + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
+                        + f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "") + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
                         + f" · launched {r['date']} ({r['grade']})", "high" if g == "A" else "default", tvs))
     return out
 
@@ -205,7 +218,7 @@ def main():
             + [(a[0], None, None, None, None) for a in new[MAX_PER_RUN - 1:]]
     new += quiet
     for key, title, msg, prio, tvs in new:
-        if title is not None and key.endswith((":catalyst", ":basebreak")):
+        if title is not None and key.endswith((":catalyst", ":basebreak", ":pop")):
             # your entry: over the first 5 minutes' high, or a retest of it
             orh, q = opening_range_high(key.split(":")[0]), live["rows"].get(key.split(":")[0])
             if orh and q:
