@@ -59,6 +59,8 @@ wait = qmax + 16.5 * 60 - time.time()
 print(f"quotes at {now:%H:%M:%S}, curves through {prof['date']}; waiting {wait / 60:.1f} min for SIP", file=sys.stderr)
 if wait > 0:
     time.sleep(wait)
+quote2 = y.quotes(syms)                         # a second Yahoo snapshot ~17 minutes later: the offset measured at the
+now2 = datetime.datetime.now(NY)                 # first snapshot (Yahoo minus exact) should correct this one
 day = now.date()
 spy = alp({"symbols": "SPY", "timeframe": "1Day", "start": z(now - datetime.timedelta(days=45)), "end": z(now - datetime.timedelta(days=1))})["SPY"]
 prev = [datetime.date.fromisoformat(b["t"][:10]) for b in spy if b["t"][:10] <= prof["date"]][-20:]
@@ -71,6 +73,10 @@ for d in prev + [day]:
 t4 = datetime.datetime(day.year, day.month, day.day, 4, 0, tzinfo=NY)
 pre_vol = {s: sum(b["v"] for b in rows) for s, rows in alp({"symbols": ",".join(syms), "timeframe": "1Min", "start": z(t4),
                                                             "end": z(t4 + datetime.timedelta(minutes=330))}).items()}
+bars2 = {}
+for s_, rows_ in alp({"symbols": ",".join(syms), "timeframe": "1Min", "start": z(datetime.datetime(day.year, day.month, day.day, 9, 30, tzinfo=NY)),
+                      "end": z(datetime.datetime.now(NY) - datetime.timedelta(minutes=15, seconds=30))}).items():
+    bars2[s_] = minutes(rows_).get(day)
 out = {"quotes_at": now.isoformat(timespec="seconds"), "curves_through": prof["date"], "avg_of": [str(prev[0]), str(prev[-1])], "rows": {}}
 vr, rr = [], []
 for s in syms:
@@ -90,6 +96,16 @@ for s in syms:
                       "yahoo_minus_premarket_vs_sip_pct": round(100 * ((q[2] - pre) / sip_vol - 1), 1) if pre is not None else None,
                       "yahoo_vs_sip_pct": round(100 * (q[2] / sip_vol - 1), 1), "portal": portal, "exact": exact,
                       "portal_vs_exact_pct": round(100 * (portal / exact - 1), 1) if portal and exact else None}
+    q2, m2 = quote2.get(s), bars2.get(s)
+    if q2 and m2:
+        qt2 = datetime.datetime.fromtimestamp(q2[3], NY)
+        x2 = (qt2.hour * 60 + qt2.minute + qt2.second / 60) - 570
+        sip2 = at(m2, x2) if x2 < len(m2) - 1 else None
+        if sip2:
+            off = q[2] - sip_vol                         # Yahoo's extra volume, measured at the first snapshot
+            out["rows"][s]["later"] = {"quote_time": qt2.strftime("%H:%M:%S"), "yahoo_vol": q2[2], "sip_vol": round(sip2),
+                                       "raw_vs_sip_pct": round(100 * (q2[2] / sip2 - 1), 1),
+                                       "corrected_vs_sip_pct": round(100 * ((q2[2] - off) / sip2 - 1), 1)}
     vr.append(out["rows"][s]["yahoo_vs_sip_pct"])
     if out["rows"][s]["portal_vs_exact_pct"] is not None:
         rr.append(out["rows"][s]["portal_vs_exact_pct"])
