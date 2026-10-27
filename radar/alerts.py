@@ -22,8 +22,9 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               base (a delayed launch) gets that day's volume and gap.
   breakout    a launch being followed clears its buy point (the nearest of: your MSF pattern's pivot, the flag
               trendline, the smaller or the larger base's top) with volume running at 1x+ normal for the time of day,
-              after closing under it the day before; graded A (volume 2x+, trending theme, not a late leg), B
-              (1.5x+), C (the rest)
+              after closing under it the day before; graded from 2 years of data (grade_breakout): A = an early
+              breakout (1st / 2nd, within 50 sessions of the launch) in a leading theme with volume building before,
+              B = early plus one of those, C = the rest
   confirm     in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
   pop         the entry inside a base: after its resting time (the volume dried up, surfing the 10 & 21 EMA) and a
               tight candle, it opens above that candle's open and close and above the rising 10 & 21 EMA (ANF Oct 5 2026)
@@ -43,6 +44,20 @@ def grade(rv, bo, gap, chg, R, under):
     if vol3 and bo and (gap3 or big):
         return "A"
     return "B" if int(vol3) + int(bo) + int(gap3) + int(big) >= 2 else "C"
+
+
+def grade_breakout(r):
+    """the breakout grade, from what separated the ones that worked (2 years, 906 base breakouts after launches):
+    early = the 1st or 2nd breakout since the launch, within 50 sessions of it; the theme Leading; the volume building
+    the 5 days before (1.1x+ the 50 before). A = all three (62% ran 10%+ in 20 days, 35% ran 20%+); B = early plus
+    one of the others (51% / 24%); C = the rest (40% / 15%). The day's volume and 'turning up' themes didn't help."""
+    early = (r.get("breakouts") or 0) < 2 and (r.get("sessions") or 0) + 1 < 50
+    lead = r.get("group_status_now") == "Leading"
+    build = (r.get("vol_build") or 0) >= 1.1
+    g = "A" if early and lead and build else "B" if early and (lead or build) else "C"
+    why = [("1st" if not r.get("breakouts") else "2nd") + " breakout since the launch" if early else "late (3rd+ breakout or 50+ sessions on)",
+           "theme leading" if lead else f"theme {(r.get('group_status_now') or 'none').lower()}"] + (["volume building"] if build else [])
+    return g, ", ".join(why)
 
 
 def find(live, doc, now=None, gaps_only=False):
@@ -107,7 +122,6 @@ def find(live, doc, now=None, gaps_only=False):
         price, chg, rv = q[0], q[1], q[4]
         op = q[5] if len(q) > 5 else None
         sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
-        trending = r.get("group_status_now") in ("Leading", "Turning up")
         late = bool(r.get("late"))
         ago = r.get("last_breakout_days_ago")
         # a breakout a few sessions after the last one is the same push (RPD Oct 22 / Oct 23): the same leg
@@ -142,14 +156,13 @@ def find(live, doc, now=None, gaps_only=False):
                 out.append(confirm)                   # a new breakout the same day says more than the confirmation
             continue
         if True:
-            # graded to help decide: A = volume pace 2x+ in a trending theme, not a late leg; B = 1.5x+; C = the rest
-            g = "A" if rv >= 2 and trending and nxt < 4 else "B" if rv >= 1.5 and nxt < 4 else "C"
+            g, why = grade_breakout(r)
             pat = r.get("pattern") or ""
             pat = "base" if not pat or pat.startswith("Base forming") else pat
             what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}; nothing traded above it for {int(r['base_days'])} sessions)"
                     if pat == "Base top" and r.get("buy_point_top_date") else f"buy point ${bp:.2f}")
             out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
-                        f"${price:.2f} over the {what} · {chg:+.1f}% · vol {rv:.1f}x · "
+                        f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x · "
                         + f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "") + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
                         + f" · launched {r['date']} ({r['grade']})", "high" if g == "A" else "default", tvs))
     return out

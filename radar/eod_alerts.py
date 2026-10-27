@@ -28,7 +28,9 @@ def main():
             out.append((f"{r['symbol']} retest held", f"came back to its broken base top {r.get('last_breakout_top')} (broken {r.get('last_breakout_date')})"
                         f" and closed above it at ${r['price']:.2f}: another entry" + tail, r.get("tv") or r["symbol"]))
         elif (r.get("tight_days") or 0) >= 2 and r.get("buy_point"):
-            out.append((f"{r['symbol']} tight under its buy point", f"{r['tight_days']} tight closes just under ${r['buy_point']:.2f} ({r.get('pattern')}),"
+            base = (f" · base {r['base_len']} sessions (since {r['base_from']}), {r['base_low_pct']:.0f}% deep ({r['base_low_adr']:.1f} ADRs)"
+                    + (f", {r['msf_pattern']}" if r.get("msf_pattern") else "")) if r.get("base_len") else ""
+            out.append((f"{r['symbol']} tight under its buy point", f"{r['tight_days']} tight closes just under ${r['buy_point']:.2f}, the base high{base},"
                         f" now ${r['price']:.2f}: watch for the breakout" + tail, r.get("tv") or r["symbol"]))
     if len(out) > MAX:
         out = out[:MAX - 1] + [(f"{len(out) - MAX + 1} more heads-ups", ", ".join(t.split()[0] for t, _, _ in out[MAX - 1:]), "SPY")]

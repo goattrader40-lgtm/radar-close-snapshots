@@ -412,6 +412,7 @@ def follow(a, i0, i):
     used, bo = set(), None                                  # bo = (day, top, top index) of the last base breakout
     dry_done, dry_day, flag_day = False, None, None         # one dry-up entry per base (ANF: Oct 5 2026, not again)
     lvl = st.h[i0]                                          # the level the leg broke out of: the launch day's high, then the base top
+    nbo = 0                                                 # breakouts since the launch (for the grade: the 1st and 2nd work best)
     for j in range(i0 + 1, i + 1):
         if not dry_done and dry_armed(a, j - 1, H):
             lv = pop_level(a, j - 1)
@@ -428,6 +429,7 @@ def follow(a, i0, i):
         if flag_go:
             flag_day, lvl = j, st.h[f[0]]
         if flag_go or b:
+            nbo += 1
             used.add(f[0] if flag_go else b[1])           # each base top gives at most one breakout
             if b:
                 bo, lvl = (j, b[0], b[1]), b[0]
@@ -480,6 +482,18 @@ def follow(a, i0, i):
                     and abs(c[k] - st.o[k]) <= L["tight_body"] * _adr(st, k) / 100 * c[k - 1]):
                 break
             tight += 1
+    # the base under the buy point, for the heads-up: since the stock first came within a quarter ADR of that high in
+    # this leg (ANF: the Aug 26 gap day's 154.58, with the 155.22 of Sep 9 as the top: 35 sessions), how deep it went,
+    # and your MSF engine's pattern for it if it sees one
+    bfrom = blen = bdeep = bdeep_adr = None
+    if bp:
+        near = [m for m in range(last_leg, i + 1) if st.h[m] >= bp * (1 - _adr(st, m) / 400)]
+        if near:
+            m0 = near[0]
+            blen, bfrom = i - m0, st.dates[m0 + 1] if m0 + 1 <= i else st.dates[i]
+            bdeep = 100 * (1 - st.l[min(m0 + 1, i):i + 1].min() / bp)       # from the day after (not the gap day's own low)
+            bdeep_adr = bdeep / _adr(st, i)
+    msf_pat = msf.NAMES[code] if code and msf.is_pat(code) else None
     # the stock's stage after the close, the first that applies
     rest = 0
     while i - rest > i0 and resting(a, i - rest):
@@ -488,7 +502,10 @@ def follow(a, i0, i):
     if i == i0:
         stage = "Launch day"
     elif bo and bo[0] == i:
-        stage = f"Base breakout (leg {leg})"
+        # how decisively it closed over the top (2 years, 906 breakouts: 0.5+ ADR over, about 30% fell back under
+        # the top within 5 days; less, 60-70%)
+        ov = (c[i] / bo[1] - 1) * 100 / _adr(st, i)
+        stage = f"Base breakout (leg {leg}), closed {ov:.1f} ADR over the top" + (": decisive" if ov >= 0.5 else ": weak, most of these fell back")
     elif flag_bo:
         stage = f"Flag breakout (leg {leg})"
     elif dry_day == i:
@@ -496,7 +513,8 @@ def follow(a, i0, i):
     elif retest:
         stage = "Retest of the base top held"
     elif tight >= 2:
-        stage = f"Tight under {bp:.2f} ({tight} days)"
+        stage = f"Tight under {bp:.2f}, the base high ({tight} days)" + (
+            f" · base {blen} sessions, {bdeep:.0f}% deep ({bdeep_adr:.1f} ADRs)" + (f", {msf_pat}" if msf_pat else "") if blen else "")
     elif rest >= 3:
         since = st.dates[i - rest + 1]
         stage = f"Consolidation, surfing the 10 & 21 EMA on dry volume ({rest} days)" + (f", {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}" if c[i] < H * 0.99 else "")
@@ -507,7 +525,10 @@ def follow(a, i0, i):
     else:
         stage = f"In the base, {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}"
     return dict(
-        stage=stage, stage_since=since,
+        stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo,
+        vol_build=fnum(st.v[i - 4:i + 1].mean() / st.v[i - 54:i - 4].mean(), 2) if i >= 54 else None,
+        base_from=bfrom, base_len=blen, base_low_pct=fnum(bdeep, 1) if bdeep is not None else None,
+        base_low_adr=fnum(bdeep_adr, 1) if bdeep_adr is not None else None,
         retest_today=retest, tight_days=tight,
         sessions=i - i0, gain_pct=fnum(100 * (c[i] / c[i0] - 1), 1), max_gain_pct=fnum(100 * (hi / c[i0] - 1), 1),
         status=status, first_exit=st.dates[exit_k] if exit_k is not None else None,
