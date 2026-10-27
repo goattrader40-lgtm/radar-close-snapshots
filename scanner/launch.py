@@ -435,6 +435,14 @@ def follow(a, i0, i):
 def load(bars_path, stocks_path):
     cfg = json.load(open(os.path.join(HERE, "settings.json")))
     D = run.load_bars(bars_path)
+    # run during market hours (a manual rebuild), the bars end with today's unfinished session: leave it out, so
+    # launches and the watch list come from the last close
+    import zoneinfo
+    now = datetime.datetime.now(zoneinfo.ZoneInfo("America/New_York"))
+    if (now.hour, now.minute) < (16, 5):
+        for b in D["bars"].values():
+            if b and b[-1][0] == now.date().isoformat():
+                b.pop()
     stocks, P = run.build(D, cfg)
     cal = [b[0] for b in D["bars"]["SPY"]]
     S = cfg["standard"]
