@@ -76,7 +76,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.85, dry_gap=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.85, pop_tight=0.8)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -371,13 +371,14 @@ def dry_armed(a, k, top):
 
 
 def pop_level(a, k):
-    """the pop after a dry-up setup on day k: the next day gaps up a little (0.5%+) over day k's close and opens above
-    the 10 and 21 EMA, both rising (ANF Oct 5 2026: opened 136.97, +0.8% over 135.91, over its 10 / 21 EMA of 135.72
-    / 135.03). Returns the price the open has to clear, or None when the EMAs aren't both rising."""
-    c = a.st.c
-    if not (a.e10[k] > a.e10[k - 1] and a.e21[k] > a.e21[k - 1]):
+    """the pop after a setup on day k: day k is a tight candle (its range 0.8 ADR or less; ANF Oct 2 2026: 2.8%, 0.74
+    ADR) and the next day opens above its open and close and above the 10 and 21 EMA, both rising: pushing out of
+    the surf (ANF Oct 5: opened 136.97 over Oct 2's 136.49 / 135.91 and its 10 / 21 EMA of 135.72 / 135.03; Oct 1 was
+    no tight candle, 4.0%, and Oct 2's open faded). Returns the price the open has to clear, or None."""
+    st = a.st
+    if not (a.e10[k] > a.e10[k - 1] and a.e21[k] > a.e21[k - 1]) or st.h[k] - st.l[k] > L["pop_tight"] * _adr(st, k) / 100 * st.c[k - 1]:
         return None
-    return max(c[k] * (1 + L["dry_gap"] / 100), a.e10[k], a.e21[k])
+    return max(st.o[k], st.c[k], a.e10[k], a.e21[k])
 
 
 def follow(a, i0, i):
@@ -411,7 +412,7 @@ def follow(a, i0, i):
     for j in range(i0 + 1, i + 1):
         if not dry_done and dry_armed(a, j - 1, H):
             lv = pop_level(a, j - 1)
-            if lv and st.o[j] >= lv:
+            if lv and st.o[j] > lv:
                 dry_done, dry_day = True, j
         f = flag_at(a, j) if armed else None
         # a flag at the highs, after the leg has run 4+ of the stock's own ADRs from its start (SMCI Jun 2023: 85%,
@@ -494,7 +495,7 @@ def follow(a, i0, i):
         stage = f"Tight under {bp:.2f} ({tight} days)"
     elif rest >= 3:
         since = st.dates[i - rest + 1]
-        stage = f"Dry-up / consolidation ({rest} days)" + (f", {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}" if c[i] < H * 0.99 else "")
+        stage = f"Consolidation, surfing the 10 & 21 EMA on dry volume ({rest} days)" + (f", {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}" if c[i] < H * 0.99 else "")
     elif c[i] < a.e21[i]:
         stage = "Below the 21 EMA"
     elif c[i] > lvl:                                       # closing above what the leg broke out of (ANF: never over
