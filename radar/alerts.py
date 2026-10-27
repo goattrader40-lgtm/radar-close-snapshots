@@ -133,7 +133,8 @@ def find(live, doc, now=None, gaps_only=False):
             pat = "base" if not pat or pat.startswith("Base forming") else pat
             what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}; nothing traded above it for {int(r['base_days'])} sessions)"
                     if pat == "Base top" and r.get("buy_point_top_date") else
-                    f"last close's high ${bp:.2f} after the volume dried up, surfing the 21 EMA" if inside else f"buy point ${bp:.2f}")
+                    f"last close's high ${bp:.2f}: the pop out of a consolidation where the volume dried up, surfing the 10 & 21 EMA"
+                    if inside else f"buy point ${bp:.2f}")
             out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
                         f"${price:.2f} over the {what} · {chg:+.1f}% · vol {rv:.1f}x · "
                         + (f"an entry inside the base (still leg {nxt})" if inside else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "")) + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"

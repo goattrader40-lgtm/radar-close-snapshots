@@ -351,15 +351,17 @@ def below_since(a, j, level, k):
 
 
 def dry_armed(a, k, top):
-    """a dry-up entry is set up at the close of day k (your ANF Oct 2 2026, entry Oct 5): inside the base, an ADR+
-    under its top; the volume dried up (5-day average 0.75 or less of the 50-day); surfing the 21 EMA (closing
-    within an ADR of it) above the 50 EMA. Its trigger: the next day trades over day k's high on 1x+ volume."""
+    """a dry-up entry is set up at the close of day k (your rule: a regular consolidation, the volume drying up, surfing
+    the 10 and 21 EMA; ANF Oct 2 2026): inside the base, an ADR+ under its top; 5-day volume 0.75 or less of the
+    50-day; closing within an ADR of both the 10 and the 21 EMA, above the 50 EMA. Its trigger is the pop out of it
+    (Qullamaggie: a breakout from a tight flag): the next day trades over day k's high on 1x+ volume (ANF Oct 5)."""
     st, c = a.st, a.st.c
     if k < 50:
         return False
     adr = _adr(st, k)
     dry = st.v[k - 4:k + 1].mean() / st.v[k - 50:k].mean()
-    return bool(c[k] <= top * (1 - adr / 100) and dry <= L["dry_max"] and abs(c[k] / a.e21[k] - 1) <= adr / 100 and c[k] > a.e50[k])
+    return bool(c[k] <= top * (1 - adr / 100) and dry <= L["dry_max"] and abs(c[k] / a.e10[k] - 1) <= adr / 100
+                and abs(c[k] / a.e21[k] - 1) <= adr / 100 and c[k] > a.e50[k])
 
 
 def follow(a, i0, i):
