@@ -68,6 +68,9 @@ for d in prev + [day]:
     t1 = min(t0 + datetime.timedelta(minutes=390), datetime.datetime.now(NY) - datetime.timedelta(minutes=16))
     for s, rows in alp({"symbols": ",".join(syms), "timeframe": "1Min", "start": z(t0), "end": z(t1)}).items():
         bars.setdefault(s, []).extend(rows)
+t4 = datetime.datetime(day.year, day.month, day.day, 4, 0, tzinfo=NY)
+pre_vol = {s: sum(b["v"] for b in rows) for s, rows in alp({"symbols": ",".join(syms), "timeframe": "1Min", "start": z(t4),
+                                                            "end": z(t4 + datetime.timedelta(minutes=330))}).items()}
 out = {"quotes_at": now.isoformat(timespec="seconds"), "curves_through": prof["date"], "avg_of": [str(prev[0]), str(prev[-1])], "rows": {}}
 vr, rr = [], []
 for s in syms:
@@ -78,11 +81,13 @@ for s in syms:
     qt = datetime.datetime.fromtimestamp(q[3], NY)
     x = (qt.hour * 60 + qt.minute + qt.second / 60) - 570
     sip_vol = at(md[day], x)
+    pre = pre_vol.get(s)                       # SIP volume 4:00-9:30 today (pre-market)
     have = [md[d] for d in prev if d in md]
     avg = statistics.mean(at(v, x) for v in have)
     portal = rvol_at(q[2], q[3], prof["rows"].get(s))
     exact = round(sip_vol / avg, 2) if avg else None
-    out["rows"][s] = {"quote_time": qt.strftime("%H:%M:%S"), "yahoo_vol": q[2], "sip_vol": round(sip_vol),
+    out["rows"][s] = {"quote_time": qt.strftime("%H:%M:%S"), "yahoo_vol": q[2], "sip_vol": round(sip_vol), "sip_premarket": pre,
+                      "yahoo_minus_premarket_vs_sip_pct": round(100 * ((q[2] - pre) / sip_vol - 1), 1) if pre is not None else None,
                       "yahoo_vs_sip_pct": round(100 * (q[2] / sip_vol - 1), 1), "portal": portal, "exact": exact,
                       "portal_vs_exact_pct": round(100 * (portal / exact - 1), 1) if portal and exact else None}
     vr.append(out["rows"][s]["yahoo_vs_sip_pct"])
