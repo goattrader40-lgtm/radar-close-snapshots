@@ -401,6 +401,9 @@ def follow(a, i0, i):
     status = "Riding" if c[i] >= a.e21[i] else "Below 21 EMA"
     fl = flag_at(a, i)
     flag_bo = bool(fl and c[i] > fl[2] and c[i - 1] <= (flag_at(a, i - 1) or (0, 0, np.inf))[2])
+    # is today's flag a new leg (at the highs, after a run of 4+ ADRs) or an entry inside the base (ANF Oct 5 2026)?
+    flag_leg = bool(fl and st.h[fl[0]] >= st.h[max(0, fl[0] - 120):fl[0] + 1].max()
+                    and st.h[fl[0]] >= c[last_leg] * (1 + L["flag_run_adr"] * _adr(st, last_leg) / 100))
     # tomorrow's base tops (the smaller and the larger base): buy points when above today's close
     tops = [b for b in (base_ok(a, i + 1, 40), base_ok(a, i + 1, 120)) if b and c[i] < b[0]]
     # the buy point = the nearest trigger above today's close: your MSF pattern's pivot, the flag's trendline or
@@ -443,7 +446,7 @@ def follow(a, i0, i):
         last_breakout_top_date=st.dates[bo[2]] if bo else None, last_breakout_days_ago=i - bo[0] if bo else None,
         last_breakout_base_days=below_since(a, bo[0], bo[1], bo[2]) if bo else None,
         base_days=fnum(bdays, 0) if bdays is not None else None, base_depth_pct=fnum(bdep, 1) if bdep is not None else None,
-        flag_breakout_today=flag_bo,
+        flag_breakout_today=flag_bo, flag_is_leg=flag_leg,
         base_depth_adr=fnum((bdep if bdep is not None else np.nan) / (st.adr[i] if st.adr[i] > 0 else np.nan), 1), surf10=surf(a.e10), surf21=surf(a.e21),
         vol_dryup=fnum(dry, 2), off_high_pct=fnum(100 * (1 - c[i] / hi), 1), ema21=fnum(a.e21[i]),
         breakout_today=bool(code and msf.is_pat(code) and r.bo == 1), leg=leg, late=leg >= L["late_leg"],

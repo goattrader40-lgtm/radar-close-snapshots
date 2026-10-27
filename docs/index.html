@@ -1610,13 +1610,14 @@ defCalc('industry_perf', {
       const gap = op ? (op / (price / (1 + chg / 100)) - 1) * 100 : null;
       const ago = r.last_breakout_days_ago, top = r.last_breakout_top, bp = r.buy_point;
       const vol = ' · vol ' + rv.toFixed(1) + '×';
-      const nxt = (r.leg || 0) + (ago !== null && ago !== undefined && ago < (R.leg_pause || 5) ? 0 : 1);
+      const inside = r.pattern === 'Flag (trendline)' && r.flag_is_leg === false;   /* an entry inside the base, not a new leg (ANF Oct 5 2026) */
+      const nxt = inside ? (r.leg || 0) : (r.leg || 0) + (ago !== null && ago !== undefined && ago < (R.leg_pause || 5) ? 0 : 1);
       const trending = r.group_status_now === 'Leading' || r.group_status_now === 'Turning up';
       if (bp && (r.price || 0) <= bp && rv >= 1) {
         if (price > bp) {
           const g = rv >= 2 && trending && nxt < 4 ? 'A' : rv >= 1.5 && nxt < 4 ? 'B' : 'C';
           out.push([r.symbol + ':breakout', r.symbol + ' ' + g + ' breakout: ' + (r.pattern && !r.pattern.startsWith('Base forming') ? r.pattern : 'base'),
-            fPrice(price) + ' over ' + fPrice(bp) + (r.buy_point_top_date ? ' (top set ' + fDate(r.buy_point_top_date).replace(/, \d{4}$/, '') + ')' : '') + ' · ' + f1(chg) + vol + ' · leg ' + nxt + (nxt >= 4 ? ' (late)' : ''), r.tv]);
+            fPrice(price) + ' over ' + fPrice(bp) + (r.buy_point_top_date ? ' (top set ' + fDate(r.buy_point_top_date).replace(/, \d{4}$/, '') + ')' : '') + ' · ' + f1(chg) + vol + (inside ? ' · an entry inside the base (still leg ' + nxt + ')' : ' · leg ' + nxt + (nxt >= 4 ? ' (late)' : '')), r.tv]);
           return;
         }
         /* heads-up: a real gap up (2%+) on volume (1.2x+ for the time of day), within 2% under the buy point */
