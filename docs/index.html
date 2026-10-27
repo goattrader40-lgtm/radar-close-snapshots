@@ -1617,7 +1617,8 @@ defCalc('industry_perf', {
             fPrice(price) + ' over ' + fPrice(bp) + (r.buy_point_top_date ? ' (top set ' + fDate(r.buy_point_top_date).replace(/, \d{4}$/, '') + ')' : '') + ' · ' + f1(chg) + vol + ' · leg ' + nxt + (nxt >= 4 ? ' (late)' : ''), r.tv]);
           return;
         }
-        if (gap !== null && gap > 0 && price >= bp * 0.98) {
+        /* heads-up: a real gap up (2%+) on volume (1.2x+ for the time of day), within 2% under the buy point */
+        if (gap !== null && gap >= (R.near_gap ?? 2) && rv >= (R.near_rv ?? 1.2) && price >= bp * 0.98) {
           out.push([r.symbol + ':near', r.symbol + ' gapping up to its buy point', fPrice(price) + ' is ' + ((bp / price - 1) * 100).toFixed(1) + '% under ' + fPrice(bp) + ' · gap ' + f1(gap) + vol, r.tv]);
           return;
         }
@@ -1664,7 +1665,7 @@ defCalc('industry_perf', {
     $('#ln-alert-btn').textContent = alertsOn ? 'Turn off' : 'Turn on';
     $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
       : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
-      : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up power days, catalyst gaps (a neglected stock gapping over its 50 & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up close to the buy point, the breakout over it (graded A/B/C) and its confirmation. The big gap-ups (catalyst gaps, power days, A+/A launches) are checked every minute from 9:35 by the GitHub job; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day, during market hours. ' + (log.length ? 'Today:' : 'None yet today.')
+      : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up power days, catalyst gaps (a neglected stock gapping over its 50 & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C) and its confirmation. The big gap-ups (catalyst gaps, power days, A+/A launches) are checked every minute from 9:35 by the GitHub job; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day, during market hours. ' + (log.length ? 'Today:' : 'None yet today.')
       : 'Off. Turn on to get desktop pop-ups while this page is open.';
   }
   $('#ln-alert-btn').addEventListener('click', async () => {
