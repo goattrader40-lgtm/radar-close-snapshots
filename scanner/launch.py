@@ -367,7 +367,7 @@ def dry_armed(a, k, top):
     the 10 and 21 EMA; ANF Oct 2 2026): inside the base, an ADR+ under its top; 5-day volume 0.75 or less of the
     50-day; closing within an ADR of both the 10 and the 21 EMA, above the 50 EMA. Its trigger is the pop out of it,
     the price expanding after the contraction (Qullamaggie: a breakout from a tight flag): see pop_level."""
-    return resting(a, k) and bool(a.st.c[k] <= top * (1 - _adr(a.st, k) / 100))
+    return all(resting(a, k - m) for m in range(3)) and bool(a.st.c[k] <= top * (1 - _adr(a.st, k) / 100))   # 3+ days of rest
 
 
 def pop_level(a, k):
