@@ -1529,6 +1529,8 @@ defCalc('industry_perf', {
       if (r.follows) { const t = h('span', 'tgr-gm', 'follows ' + r.follows); t.title = 'A breakout within 10 sessions of a launch by ' + r.follows + ' in its theme'; key.append(t); }
       if (r.delayed_from) { const t = h('span', 'tgr-gm', 'delayed'); t.title = 'Faded high-volume gap on ' + fDate(r.delayed_from) + ', base held, then launched'; key.append(t); }
       if (r.neglected) { const n = h('span', 'tgr-gm', 'neglected'); n.title = r.days_since_high + ' days since its high, ' + r.correction_pct + '% correction'; key.append(n); }
+      if (r.tight_days >= 2) { const t = h('span', 'tgr-gm', 'tight ×' + r.tight_days); t.title = r.tight_days + ' tight closes in a row just under the buy point (within an ADR of it, each day under half an ADR): a breakout may come next'; key.append(t); }
+      if (r.retest_today) { const t = h('span', 'tgr-gm', 'retest held'); t.title = 'Came back to its broken base top ' + fPrice(r.last_breakout_top) + ' today and closed above it: another entry'; key.append(t); }
       const thm = h('td', '');
       thm.textContent = (r.group || '—') + ' · ' + r.group_status + (r.group_now && (r.group_now !== r.group || r.group_status_now !== r.group_status) ? ' → ' + (r.group_now !== r.group ? r.group_now + ' · ' : '') + r.group_status_now : '') +
         (r.theme_up_since && r.theme_up_since !== r.date ? ' (since ' + fDate(r.theme_up_since).replace(/, \d{4}$/, '') + ')' : '');
@@ -1660,12 +1662,25 @@ defCalc('industry_perf', {
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100));
     }
+    /* after the close: the evening scan's heads-ups for tomorrow (tight under a buy point, retest held) */
+    const ldoc = st('launch').status === 'ok' ? st('launch').data : null;
+    if (alertsOn && ldoc && ldoc.date === todayNY()) {
+      (ldoc.launches || []).forEach((r) => {
+        const tail = ' · leg ' + r.leg + (r.late ? ' (late)' : '') + ' · launched ' + fDate(r.date).replace(/, \d{4}$/, '') + ' (' + r.grade + ')';
+        const it = r.retest_today ? [r.symbol + ':retest', r.symbol + ' retest held (after the close)', 'Came back to its broken base top ' + fPrice(r.last_breakout_top) + ' and closed above it at ' + fPrice(r.price) + ': another entry' + tail]
+          : r.tight_days >= 2 && r.buy_point ? [r.symbol + ':tight', r.symbol + ' tight under its buy point (after the close)', r.tight_days + ' tight closes just under ' + fPrice(r.buy_point) + ' (' + r.pattern + '), now ' + fPrice(r.price) + ': watch for the breakout' + tail] : null;
+        if (!it || sent.has(it[0])) return;
+        sent.add(it[0]); notify(it[1], it[2], r.tv, it[0]);
+        log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · ' + it[1] + ' — ' + it[2]);
+      });
+      saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100));
+    }
     const ul = $('#ln-alert-log'); ul.replaceChildren();
     log.forEach((x) => ul.append(h('li', '', x)));
     $('#ln-alert-btn').textContent = alertsOn ? 'Turn off' : 'Turn on';
     $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
       : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
-      : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up power days, catalyst gaps (a neglected stock gapping over its 50 & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C) and its confirmation. The big gap-ups (catalyst gaps, power days, A+/A launches) are checked every minute from 9:35 by the GitHub job; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day, during market hours. ' + (log.length ? 'Today:' : 'None yet today.')
+      : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up power days, catalyst gaps (a neglected stock gapping over its 50 & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C) and its confirmation; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) are checked every minute from 9:35 by the GitHub job; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day. ' + (log.length ? 'Today:' : 'None yet today.')
       : 'Off. Turn on to get desktop pop-ups while this page is open.';
   }
   $('#ln-alert-btn').addEventListener('click', async () => {

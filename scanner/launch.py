@@ -76,7 +76,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -378,7 +378,11 @@ def follow(a, i0, i):
     used, bo = set(), None                                  # bo = (day, top, top index) of the last base breakout
     for j in range(i0 + 1, i + 1):
         f = flag_at(a, j) if armed else None
-        at_highs = bool(f and st.h[f[0]] >= st.h[max(0, f[0] - 120):f[0] + 1].max())
+        # a flag at the highs, after the leg has run 4+ of the stock's own ADRs from its start (SMCI Jun 2023: 85%,
+        # 13 ADRs, then the flag); a trendline break in the base right after a launch is an entry, not a new leg
+        # (ANF Sep 16 2026: 5% past its Aug 26 launch close; Oct 5, after the volume dried up, your entry in the base)
+        at_highs = bool(f and st.h[f[0]] >= st.h[max(0, f[0] - 120):f[0] + 1].max()
+                        and st.h[f[0]] >= c[last_leg] * (1 + L["flag_run_adr"] * _adr(st, last_leg) / 100))
         flag_go = bool(f and at_highs and f[0] not in used and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2])
         b = base_breakout(a, j, used)
         if flag_go or b:
@@ -403,15 +407,30 @@ def follow(a, i0, i):
     # the base top (RPD Oct 23 2026 had closed just over its MSF pivot of 14.80; the base top trigger 15.02 is what
     # Oct 26 broke on 3.3x volume)
     cands = []
-    if code and r.pivot == r.pivot and c[i] < r.pivot:
-        cands.append((float(r.pivot), msf.NAMES[code], r.cN, r.cDep))
+    if code and msf.is_pat(code) and r.pivot == r.pivot and c[i] < r.pivot:   # not "Base forming (no pattern yet)":
+        cands.append((float(r.pivot), msf.NAMES[code], r.cN, r.cDep))        # that's only a recent high (ANF Oct 26 2026)
     if fl:
         cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
     for top, k in tops:
         cands.append((top, "Base top", below_since(a, i + 1, top, k), 100 * (1 - st.l[k:i + 1].min() / top)))
     bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)
     top_date = next((st.dates[k] for t, k in tops if bp is not None and t == bp), None)
+    adr = _adr(st, i)
+    # retest held: within 10 sessions of a base breakout, the low comes back to the broken top (from a quarter ADR
+    # over it to an ADR under it) and the close holds above it (ANF Oct 23 2026: low 152.73, close 155.82 over 155.22)
+    retest = bool(bo and 1 <= i - bo[0] <= L["retest_days"] and c[i] > bo[1]
+                  and bo[1] * (1 - adr / 100) <= st.l[i] <= bo[1] * (1 + adr / 400))
+    # tight under the buy point (a level: a base top or a pattern's pivot, not a falling flag line): closes within an
+    # ADR under it, each day's move under half an ADR, 2+ days in a row (ANF Oct 15-16 2026: 2.1% and 1.3% under
+    # its 155.22 base top, +1.5% and +0.8%; broke out Oct 19)
+    tight = 0
+    if bp and pat != "Flag (trendline)":
+        for k in range(i, max(i0, i - 10), -1):
+            if not (bp * (1 - _adr(st, k) / 100) <= c[k] < bp and abs(a.chg[k]) <= _adr(st, k) / 2):
+                break
+            tight += 1
     return dict(
+        retest_today=retest, tight_days=tight,
         sessions=i - i0, gain_pct=fnum(100 * (c[i] / c[i0] - 1), 1), max_gain_pct=fnum(100 * (hi / c[i0] - 1), 1),
         status=status, first_exit=st.dates[exit_k] if exit_k is not None else None,
         exit_gain_pct=fnum(100 * (c[exit_k] / c[i0] - 1), 1) if exit_k is not None else None,
@@ -564,9 +583,13 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
     order = {"A+": -1, "A": 0, "B": 1, "C": 2}
     rows.sort(key=lambda r: (order[r["grade"]], -r["rel_vol"]))
     rows.sort(key=lambda r: r["date"], reverse=True)              # newest first, best grade first within a day
+    # one launch per stock: the newest (ANF: the Aug 26 2026 power day replaced the Aug 3 C launch, which had
+    # closed below the 21 EMA on Aug 17; both followed gave two alerts with different legs)
+    seen = set()
+    rows = [r for r in rows if not (r["symbol"] in seen or seen.add(r["symbol"]))]
     # watch list for the intraday trigger: liquid, from 25% under to 50% over the 200 SMA (over 28%: power days
     # only; under it: only once it trades back above it, e.g. a catalyst gap), no launch in 20 days
-    launched = {r["symbol"] for r in rows if r["sessions"] < L["dedupe_days"]}
+    launched = {r["symbol"] for r in rows if r["sessions"] < L["dedupe_days"] and not r["first_exit"]}
     leaders = collections.defaultdict(set)              # theme -> A / B launches of the last 10 sessions (for followers)
     for r in rows:
         if r["grade"] in ("A+", "A", "B") and not r.get("follows") and r["sessions"] < 10:

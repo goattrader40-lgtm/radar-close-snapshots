@@ -81,6 +81,13 @@ jobs:
           git show origin/radar-data:live.json > /tmp/rd/live.json || true
           python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out setups/launch.json --backtest setups/launch_backtest.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json
 
+      - name: After-close heads-ups to the phone (tight under a buy point, retest held)
+        if: steps.gate.outputs.go == 'yes'
+        continue-on-error: true
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python3 radar/eod_alerts.py setups/launch.json
+
       - name: Save today's 5-minute bars for the 21 / 50 EMA trigger test
         if: steps.gate.outputs.go == 'yes'
         continue-on-error: true
