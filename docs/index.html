@@ -127,6 +127,9 @@
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
   #wl-table td.nw, #ln-table td.nw { white-space: nowrap; }
+  .tgr-alog { margin: 0; padding: 0; list-style: none; font-size: var(--cds-font-size-caption); max-height: 12rem; overflow: auto; }
+  .tgr-alog li { padding: 3px 0; border-top: 1px solid var(--color-border-line); }
+  .tgr-alog li:first-child { border-top: 0; }
   .tgr-auto { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; }
   .tgr-gdot { display: inline-block; width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-ok); margin-left: 5px; vertical-align: middle; }
   .tgr-pill { appearance: none; border: 1px solid var(--color-fg); background: var(--color-fg); color: var(--color-bg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
@@ -505,6 +508,14 @@
 
   <!-- ───────── Tab 5: launches (the first day of a new trend, its theme, and the bases after it) ───────── -->
   <section class="tgr-page" id="launches" role="tabpanel" aria-labelledby="tab-launches" hidden>
+    <div class="tgr-card" id="ln-alert-card">
+      <div class="tgr-cardhead">
+        <h2>Desktop alerts</h2>
+        <span class="tgr-ctl"><button class="tgr-lite" id="ln-alert-btn" type="button">Turn on</button> <button class="tgr-lite" id="ln-alert-test" type="button">Test</button></span>
+      </div>
+      <p class="tgr-note" id="ln-alert-note"></p>
+      <ul class="tgr-alog" id="ln-alert-log"></ul>
+    </div>
     <div class="tgr-card" id="ln-live-card">
       <div class="tgr-cardhead">
         <h2>Launching today</h2>
@@ -1552,6 +1563,91 @@ defCalc('industry_perf', {
   };
   $('#ln-wolf').addEventListener('change', (e) => { S.lnwolf = e.target.checked; draw(); });
 
+  /* desktop alerts while this page is open (it can be a background tab): power days, A+/A launches off the watch
+     list, and for followed launches a gap-up close to the buy point (heads-up), the breakout over it (graded) and
+     its confirmation. Each stock and kind once a day; checked after every data refresh (every 2 minutes). */
+  const AKEY = 'radar-alerts-on';
+  const canNotify = () => 'Notification' in window;
+  let alertsOn = false;
+  try { alertsOn = localStorage.getItem(AKEY) === '1' && canNotify() && Notification.permission === 'granted'; } catch (e) { alertsOn = false; }
+  const dayKey = (k) => 'radar-alerts-' + k + '-' + todayNY();
+  const loadDay = (k, fb) => { try { return JSON.parse(localStorage.getItem(dayKey(k)) || fb); } catch (e) { return JSON.parse(fb); } };
+  const saveDay = (k, v) => { try { localStorage.setItem(dayKey(k), JSON.stringify(v)); } catch (e) { /* private window */ } };
+  const liveAlerts = () => {
+    const doc = st('launch').status === 'ok' ? st('launch').data : null;
+    if (!doc || !LIVE_ON || !LIVE || !LIVE.rows) return [];
+    const R = doc.rules, out = [];
+    const f1 = (x) => (x > 0 ? '+' : '') + x.toFixed(1) + '%';
+    lnLive(doc).forEach((r) => {
+      const facts = f1(r.chg) + (r.gap !== null ? ' · gap ' + f1(r.gap) : '') + ' · vol ' + r.rv.toFixed(1) + '× for the time of day · ' + fPrice(r.price);
+      const power = r.rv >= (R.power_rv || 4) && r.gap !== null && r.gap >= (R.power_gap || 10) && r.chg >= (R.power_chg || 15);
+      if (power) out.push([r.symbol + ':power', r.symbol + ' POWER DAY', facts + ' · ' + (r.group || 'no group'), r.tv_symbol]);
+      else if (r.grade === 'A+' || r.grade === 'A') out.push([r.symbol + ':launch', r.symbol + ' ' + r.grade + ' launch', facts + ' · through its base high ' + fPrice(r.pivot) + ' · ' + (r.group || 'no group'), r.tv_symbol]);
+    });
+    (doc.launches || []).forEach((r) => {
+      const q = LIVE.rows[r.symbol]; if (!q || q[4] === null || q[4] === undefined) return;
+      const price = q[0], chg = q[1], rv = q[4], op = q[5];
+      const gap = op ? (op / (price / (1 + chg / 100)) - 1) * 100 : null;
+      const ago = r.last_breakout_days_ago, top = r.last_breakout_top, bp = r.buy_point;
+      const vol = ' · vol ' + rv.toFixed(1) + '×';
+      const nxt = (r.leg || 0) + (ago !== null && ago !== undefined && ago < (R.leg_pause || 5) ? 0 : 1);
+      const trending = r.group_status_now === 'Leading' || r.group_status_now === 'Turning up';
+      if (bp && (r.price || 0) <= bp && rv >= 1) {
+        if (price > bp) {
+          const g = rv >= 2 && trending && nxt < 4 ? 'A' : rv >= 1.5 && nxt < 4 ? 'B' : 'C';
+          out.push([r.symbol + ':breakout', r.symbol + ' ' + g + ' breakout: ' + (r.pattern && !r.pattern.startsWith('Base forming') ? r.pattern : 'base'),
+            fPrice(price) + ' over ' + fPrice(bp) + (r.buy_point_top_date ? ' (top set ' + fDate(r.buy_point_top_date).replace(/, \d{4}$/, '') + ')' : '') + ' · ' + f1(chg) + vol + ' · leg ' + nxt + (nxt >= 4 ? ' (late)' : ''), r.tv]);
+          return;
+        }
+        if (gap !== null && gap > 0 && price >= bp * 0.98) {
+          out.push([r.symbol + ':near', r.symbol + ' gapping up to its buy point', fPrice(price) + ' is ' + ((bp / price - 1) * 100).toFixed(1) + '% under ' + fPrice(bp) + ' · gap ' + f1(gap) + vol, r.tv]);
+          return;
+        }
+      }
+      if (top && ago !== null && ago !== undefined && ago <= 2 && op && op > top && price > top && rv >= 2) {
+        out.push([r.symbol + ':confirm', r.symbol + ' breakout confirmed', 'opened ' + fPrice(op) + ', trades ' + fPrice(price) + ' above the base top ' + fPrice(top) + ' · ' + f1(chg) + vol, r.tv]);
+      }
+    });
+    return out;
+  };
+  const notify = (title, body, tvs, key) => {
+    try { const n = new Notification(title, { body, tag: key }); n.onclick = () => { window.open(tv(tvs || ''), '_blank', 'noopener'); n.close(); }; } catch (e) { /* blocked */ }
+  };
+  function runAlerts() {
+    const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
+    if (alertsOn && marketOpen()) {
+      liveAlerts().forEach(([key, title, body, tvs]) => {
+        const sym = key.split(':')[0];
+        if (sent.has(key) || (key.endsWith(':near') && sent.has(sym + ':breakout')) || (key.endsWith(':launch') && sent.has(sym + ':power'))) return;
+        sent.add(key);
+        notify(title, body, tvs, key);
+        log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · ' + title + ' — ' + body);
+      });
+      saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100));
+    }
+    const ul = $('#ln-alert-log'); ul.replaceChildren();
+    log.forEach((x) => ul.append(h('li', '', x)));
+    $('#ln-alert-btn').textContent = alertsOn ? 'Turn off' : 'Turn on';
+    $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
+      : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
+      : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up power days, A+/A launches, and for followed launches a gap-up close to the buy point, the breakout over it (graded A/B/C) and its confirmation. Each stock and kind once a day, during market hours. ' + (log.length ? 'Today:' : 'None yet today.')
+      : 'Off. Turn on to get desktop pop-ups while this page is open.';
+  }
+  $('#ln-alert-btn').addEventListener('click', async () => {
+    if (alertsOn) { alertsOn = false; try { localStorage.setItem(AKEY, '0'); } catch (e) { /* private window */ } runAlerts(); return; }
+    if (!canNotify()) { runAlerts(); return; }
+    const p = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+    alertsOn = p === 'granted';
+    try { localStorage.setItem(AKEY, alertsOn ? '1' : '0'); } catch (e) { /* private window */ }
+    runAlerts();
+  });
+  $('#ln-alert-test').addEventListener('click', async () => {
+    if (!canNotify()) return;
+    const p = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+    if (p === 'granted') notify('Radar test alert', 'Desktop alerts work. Launches, power days and breakouts will pop up like this.', 'SPY', 'test');
+    runAlerts();
+  });
+
   const drawTrack = () => {
     setState('track-table', ['grade_record']);
     const tb = $('#track-table tbody'); tb.replaceChildren();
@@ -1720,6 +1816,7 @@ defCalc('industry_perf', {
       if (!BASE) ['build', 'themes', 'premarket', 'gradelog', 'stocks', 'theme_perf', 'industry_perf', 'grade_record'].forEach((id) => { D[id] = { status: 'error', data: [] }; });
     }
     draw();
+    runAlerts();
   }
   function drawLiveLine() {
     const dot = $('#live-dot'), tx = $('#live-text');
@@ -1740,7 +1837,7 @@ defCalc('industry_perf', {
   }
   $('#live-reload').addEventListener('click', () => refresh(true));
   document.addEventListener('visibilitychange', () => { if (!document.hidden && (!lastCheck || Date.now() - lastCheck > 60000)) refresh(false); });
-  setInterval(() => { if (!document.hidden) refresh(false); }, 120000);
+  setInterval(() => { if (!document.hidden || alertsOn) refresh(false); }, 120000);   /* alerts on: keep checking in a background tab */
 
   const named = location.hash.slice(1);
   if (['gainers', 'groups', 'premarket', 'watchlist', 'launches'].includes(named)) S.tab = named;
