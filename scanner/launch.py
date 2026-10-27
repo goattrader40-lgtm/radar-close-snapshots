@@ -5,7 +5,10 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
               previous 20 days' average, closed above the 200 SMA, and was still near it the day before (at most
               28% above it: a neglected stock or one coming out of a correction, not a trend already running;
               your launches were -6% to +25% from it, the continuation days of MU / DELL / APPN +30% to +77%),
-              and closed at least 30% above its 52-week low (your standard filter; your launches were 57-166% above)
+              and closed at least 30% above its 52-week low (your standard filter; your launches were 57-166% above).
+              A power day (an episodic pivot: volume 4x+, a 10%+ gap, a 15%+ day) may start up to 50% above the
+              200 SMA: SMCI May 3 2023 launched at an all-time high 32% over it; 2 years of these: 54% ran 20%+
+  earnings    tagged when the stock reported that day or the evening before (Yahoo's earnings date, from the live job)
   ingredients volume 3x+ · gap 3%+ · base breakout (closed above the previous 20 days' high) ·
               its group is trending · within 30% of the 52-week high · neglected (40+ days since its high,
               or a 25%+ correction)
@@ -58,7 +61,7 @@ import msf  # noqa: E402
 import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
-L = dict(aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
+L = dict(power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, min_adr=4)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -127,7 +130,12 @@ class Arr:
         st = self.st
         return bool(i >= 200 and self.liquid[i] and self.gap[i] > 0 and self.chg[i] >= L["min_chg"]
                     and self.clpos[i] >= L["min_clpos"] and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
-                    and self.ext200_prev[i] <= L["max_ext200"] and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
+                    and (self.ext200_prev[i] <= L["max_ext200"] or (self.power(i) and self.ext200_prev[i] <= L["power_ext200"]))
+                    and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
+
+    def power(self, i):
+        """a power day (an episodic pivot): volume 4x+, a 10%+ gap and a 15%+ day"""
+        return bool(self.rv[i] >= L["power_rv"] and self.gap[i] >= L["power_gap"] and self.chg[i] >= L["power_chg"])
 
     def neglect(self, i):
         """days since the highest high of the last 250 sessions (the base can be long), and the correction from it (%)"""
@@ -344,7 +352,27 @@ def news_of(path):
             for r in rows if isinstance(r, dict) and r.get("grade") in ("A", "B") and r.get("direction", "up") == "up" and r.get("symbol")}
 
 
-def daily(A, groups, GS, cal, S, out_path, news=None):
+def earnings_of(path, cal):
+    """{symbol: the session its last earnings fell on} from the day's live quotes (an after-close report counts
+    for the next session, the day the market reacts)"""
+    try:
+        rows = json.load(open(path))["rows"]
+    except Exception:
+        return {}
+    import zoneinfo
+    ny = zoneinfo.ZoneInfo("America/New_York")
+    out = {}
+    for s, q in rows.items():
+        if len(q) > 6 and q[6]:
+            t = datetime.datetime.fromtimestamp(q[6], ny)
+            d = t.date().isoformat()
+            if t.hour >= 16:                                   # reported after the close: the market reacts the next session
+                d = next((x for x in cal if x > d), d)
+            out[s] = d
+    return out
+
+
+def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
     T = len(cal) - 1
@@ -362,6 +390,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None):
         r.update(f)
         r["follows"] = leader or None
         r["news"] = (news or {}).get((s, r["date"]))
+        r["earnings"] = (earnings or {}).get(s) == r["date"]
         cgs, cgn = best_group(s, T, groups, GS)
         r["group_now"], r["group_status_now"] = cgn, STATUS.get(cgs, "No group")
         up = next((kk for kk in range(k, T + 1) if best_group(s, kk, groups, GS)[0] >= 1), None)
@@ -487,11 +516,12 @@ def main():
     ap.add_argument("--backtest")
     ap.add_argument("--entry", choices=["open", "close"], default="open")
     ap.add_argument("--gradelog", help="the pre-market grade log (radar-data gradelog.json), for news tags")
+    ap.add_argument("--live", help="the day's last live quotes (radar-data live.json), for earnings tags")
     a = ap.parse_args()
     global ENTRY
     ENTRY = a.entry
     A, groups, GS, cal, S = load(a.bars, a.stocks)
-    daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {})
+    daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {})
     if a.backtest:
         backtest(A, groups, GS, cal, S, a.backtest)
 

@@ -5,7 +5,7 @@
 
 Pulls Yahoo quotes for every stock in stocks.json plus the theme ETFs, in batches, and writes
 live.json: {"saved_at", "date", "session", "n", "source",
-            "rows": {SYM: [price, chg_1d %, volume, quote time, relative volume at time, today's open]}}.
+            "rows": {SYM: [price, chg_1d %, volume, quote time, relative volume at time, today's open, earnings time]}}.
 Relative volume at time = today's volume from 9:30 to the quote time / the 20-session average volume from
 9:30 to the same minute (from volprofile.json, --profile <path>); null without a curve or before 9:31.
 From 4:00 on it is the full day / the previous 20 sessions' full-day average (avg_vol_20 in stocks.json).
@@ -58,7 +58,7 @@ class Yahoo:
         for i in range(0, len(syms), BATCH):
             chunk = syms[i:i + BATCH]
             q = urllib.parse.urlencode({"symbols": ",".join(chunk), "crumb": self.crumb,
-                                        "fields": "regularMarketPrice,regularMarketChangePercent,regularMarketVolume,regularMarketTime,regularMarketOpen"})
+                                        "fields": "regularMarketPrice,regularMarketChangePercent,regularMarketVolume,regularMarketTime,regularMarketOpen,earningsTimestamp"})
             for attempt in range(3):
                 try:
                     res = json.loads(self.get("https://query2.finance.yahoo.com/v7/finance/quote?" + q))["quoteResponse"]["result"]
@@ -67,7 +67,8 @@ class Yahoo:
                         if p:
                             op = r.get("regularMarketOpen")
                             out[r["symbol"]] = [round(p, 4), round(r.get("regularMarketChangePercent") or 0, 3),
-                                                r.get("regularMarketVolume"), r.get("regularMarketTime"), round(op, 4) if op else None]
+                                                r.get("regularMarketVolume"), r.get("regularMarketTime"), round(op, 4) if op else None,
+                                                r.get("earningsTimestamp")]
                     break
                 except Exception as e:
                     if attempt == 2:
@@ -159,9 +160,11 @@ def main():
     rows = {ymap[k]: v for k, v in got.items() if k in ymap}
     avg20 = {r["symbol"]: r.get("avg_vol_20") for r in stocks}
     for s, v in rows.items():
+        ern = v.pop(5) if len(v) > 5 else None
         op = v.pop(4) if len(v) > 4 else None
         v.append(rvol_at(v[2], v[3], prof.get(s), avg20.get(s)))
         v.append(op)                                               # the open, for the launch trigger's gap
+        v.append(ern)                                              # the last / next earnings time, for the earnings tag
     if len(rows) < 300:
         sys.exit(f"only {len(rows)} quotes came back, not saving")
     times = sorted(v[3] for v in rows.values() if v[3])
