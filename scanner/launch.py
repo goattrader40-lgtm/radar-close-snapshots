@@ -20,11 +20,11 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
                    "go day"; 2 years: 65% of these ran 20%+ when the theme confirmed, vs 52% for other A's)
               A = volume 3x+ and a base breakout, with a 3%+ gap or a 10%+ day · B = two of the four · C = the rest
   news        tagged when the 8:47 pre-market grading gave the stock an A or B gap-up grade that morning
-  legs        the launch is leg 1; each later leg = a decisive close out of a base: above the base top (the highest
-              high of the last ~6 months, at least 5 sessions old, with a pullback of 1.25+ of the stock's own ADRs
-              from it) by a fifth of the stock's own ADR, from under it the day before; or a close above the falling trendline of a flag that formed at the highs. One leg per
-              base (the next needs a new high first). RPD Oct 26 2026: +20% on 3.3x volume through its Aug high
-              of 14.80 = leg 2; its pokes inside the base (Oct 9, Oct 20) are not legs. Depths are in each stock's own ADR: every ticker has its own character. One leg per pullback. A
+  legs        the launch is leg 1; each later leg = a close out of a base: above the base top (the highest high of
+              the last ~6 months, at least 5 sessions old, with a pullback of 1.25+ of the stock's own ADRs from it)
+              on 1x+ volume, from under it the day before; or a close above the falling trendline of a flag that formed at the highs. One leg per
+              base (the next needs a new high first). RPD Oct 23 2026: a close of 14.91 over its Aug high of 14.80
+              on 2.1x volume = leg 2 (Oct 26, +20% on 3.3x, confirmed it); its pokes inside the base are not legs. Depths are in each stock's own ADR: every ticker has its own character. One leg per pullback. A
               breakout after a rest of 40+ sessions without a new high starts a new run at leg 1 (SMCI rested
               about 114 sessions before its Jan 19 2024 launch).
               Flag = after a 25%+ rise, a 5-20 session pullback 1.25-4 ADRs deep that stays above the 50 EMA; its trendline
@@ -74,7 +74,7 @@ import msf  # noqa: E402
 import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
-L = dict(bo_adr=0.2, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
+L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=30, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
@@ -322,8 +322,8 @@ def follow(a, i0, i):
             n += 1
         return n
     dry = st.v[i - 4:i + 1].mean() / st.v[i - 50:i].mean() if i >= 50 else np.nan
-    # a leg = a decisive close out of a base: above the base top (the highest high of ~6 months, at least 5
-    # sessions old) by a fifth of the stock's own ADR, from under it the day before; or a close above the trendline
+    # a leg = a close out of a base: above the base top (the highest high of ~6 months, at least 5 sessions old)
+    # on 1x+ volume, from under it the day before (RPD Oct 23 2026: 14.91 over its 14.80 Aug high on 2.1x); or a close above the trendline
     # of a flag that formed at the highs. A poke that falls back (RPD Oct 9, inside its base) is no leg.
     # One leg per base: after a leg, the next needs a new high first.
     H, last_new, leg, armed, rested, bo_day, used = st.h[i0], i0, 1, False, None, None, set()
@@ -338,7 +338,7 @@ def follow(a, i0, i):
             deep = bool(top and 100 * (1 - st.l[j - age:j].min() / top) >= L["leg_adr"] * (st.adr[j - age] if st.adr[j - age] > 0 else 5.0))
             # a fresh breakout: no close over the trigger in the 3 days before, and not already run a full ADR past the top
             fresh = bool(top and max(c[j - 3:j]) < trig and st.h[j - 3:j].max() < top * (1 + (st.adr[j - 1] if st.adr[j - 1] > 0 else 5.0) / 100))
-            base_go = bool(top and age >= L["leg_pause"] and deep and fresh and c[j] >= trig and (j - age) not in used)
+            base_go = bool(top and age >= L["leg_pause"] and deep and fresh and c[j] > trig and a.rv[j] >= L["bo_rv"] and (j - age) not in used)
             flag_go = flag_go and f[0] not in used
             if flag_go or base_go:
                 used.add(f[0] if flag_go else j - age)          # each base top gives at most one leg
