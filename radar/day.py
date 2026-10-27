@@ -109,7 +109,20 @@ def live_once():
     log("live:", (r.stdout or r.stderr).strip()[-300:])
     if r.returncode:
         return False
-    sh(sys.executable, os.path.join(HERE, "publish.py"), "live " + now().strftime("%F %H:%M"), os.path.join(OUT, "live.json"))
+    files = [os.path.join(OUT, "live.json")]
+    # phone alerts: launches and breakouts as they happen (radar/alerts.py; sent when NTFY_TOPIC is set)
+    lj = main_file("setups/launch.json")
+    if lj:
+        open(os.path.join(OUT, "launch.json"), "w").write(lj)
+        st = data_file("alerts.json")
+        if st:
+            open(os.path.join(OUT, "alerts.json"), "w").write(st)
+        r = sh(sys.executable, os.path.join(HERE, "alerts.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "launch.json"),
+               os.path.join(OUT, "alerts.json"), check=False)
+        log((r.stdout or r.stderr).strip()[-600:])
+        if r.returncode == 0 and os.path.exists(os.path.join(OUT, "alerts.json")):
+            files.append(os.path.join(OUT, "alerts.json"))
+    sh(sys.executable, os.path.join(HERE, "publish.py"), "live " + now().strftime("%F %H:%M"), *files)
     return True
 
 

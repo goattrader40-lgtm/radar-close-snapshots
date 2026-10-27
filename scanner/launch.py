@@ -465,7 +465,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
     order = {"A+": -1, "A": 0, "B": 1, "C": 2}
     rows.sort(key=lambda r: (order[r["grade"]], -r["rel_vol"]))
     rows.sort(key=lambda r: r["date"], reverse=True)              # newest first, best grade first within a day
-    # watch list for the intraday trigger: liquid, from 10% under to 28% over the 200 SMA, no launch in 20 days
+    # watch list for the intraday trigger: liquid, from 10% under to 50% over the 200 SMA (over 28%: power days
+    # only), no launch in 20 days
     launched = {r["symbol"] for r in rows if r["sessions"] < L["dedupe_days"]}
     leaders = collections.defaultdict(set)              # theme -> A / B launches of the last 10 sessions (for followers)
     for r in rows:
@@ -479,7 +480,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
         if st.dates[i] != today or s in launched or not a.liquid[i] or i < a.start:
             continue
         ext = 100 * (st.c[i] / a.s200[i] - 1)
-        if ext > L["max_ext200"] or ext < -10:
+        if ext > L["power_ext200"] or ext < -10:                   # 28-50% over: power days only (the trigger checks)
             continue
         hi20 = st.h[i - L["base_days"] + 1:i + 1].max()          # tomorrow's "previous 20 days' high"
         hh = st.h[max(0, i - 119):i + 1]
