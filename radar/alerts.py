@@ -10,8 +10,11 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               gap or a 10%+ day; A+ = a 6%+ gap jumping from under the 200 SMA. Also needs: up 5%+, opened up,
               above the 200 SMA, and the day before at most 28% over it. A faded high-volume gap that held its
               base (a delayed launch) gets that day's volume and gap.
-  breakout    a launch being followed clears its pattern's buy point (your MSF pattern or the flag trendline)
-              with volume running at 1x+ normal for the time of day, after closing under it the day before
+  breakout    a launch being followed clears its buy point (the nearest of: your MSF pattern's pivot, the flag
+              trendline, the smaller or the larger base's top) with volume running at 1x+ normal for the time of day,
+              after closing under it the day before; graded A (volume 2x+, trending theme, not a late leg), B
+              (1.5x+), C (the rest)
+  confirm     in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
 Nothing is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
 """
@@ -64,17 +67,39 @@ def find(live, doc):
                         + (" (delayed: faded gap " + mem[0] + ")" if mem else "") + f" · theme {theme}", "high" if g == "A+" else "default", tvs))
     for r in doc.get("launches", []):
         q = rows.get(r["symbol"])
-        bp = r.get("buy_point")
-        if not q or not bp or len(q) < 5 or q[4] is None or (r.get("price") or 0) > bp:
+        if not q or len(q) < 5 or q[4] is None:
             continue
         price, chg, rv = q[0], q[1], q[4]
-        if price > bp and rv >= 1:
-            leg = f" · leg {r['leg']}{' (late)' if r.get('late') else ''}" if r.get("leg") else ""
+        op = q[5] if len(q) > 5 else None
+        sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
+        trending = r.get("group_status_now") in ("Leading", "Turning up")
+        late = bool(r.get("late"))
+        ago = r.get("last_breakout_days_ago")
+        # a breakout a few sessions after the last one is the same push (RPD Oct 22 / Oct 23): the same leg
+        nxt = (r.get("leg") or 0) + (0 if ago is not None and ago < doc["rules"].get("leg_pause", 5) else 1)
+        # confirmation: in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
+        # (RPD Oct 26 2026, after breaking its Aug high on Oct 23)
+        top = r.get("last_breakout_top")
+        confirm = (f"{sym}:confirm", f"{sym} breakout confirmed",
+                   f"opened ${op:.2f} and trades ${price:.2f} above the base top ${top:.2f} (broken {r['last_breakout_date']})"
+                   f" · {chg:+.1f}% · vol {rv:.1f}x for the time of day", "high", tvs) \
+            if top and ago is not None and ago <= 2 and op and op > top and price > top and rv >= 2 else None
+        bp = r.get("buy_point")
+        if not bp or (r.get("price") or 0) > bp or not (price > bp and rv >= 1):
+            if confirm:
+                out.append(confirm)                   # a new breakout the same day says more than the confirmation
+            continue
+        if True:
+            # graded to help decide: A = volume pace 2x+ in a trending theme, not a late leg; B = 1.5x+; C = the rest
+            g = "A" if rv >= 2 and trending and nxt < 4 else "B" if rv >= 1.5 and nxt < 4 else "C"
             pat = r.get("pattern") or ""
             pat = "base" if not pat or pat.startswith("Base forming") else pat
-            out.append((f"{r['symbol']}:breakout", f"{r['symbol']} breakout: {pat}",
-                        f"${price:.2f} over the buy point ${bp:.2f} · {chg:+.1f}% · vol {rv:.1f}x{leg} · launched {r['date']} ({r['grade']})",
-                        "default", r.get("tv") or r["symbol"]))
+            what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}; nothing traded above it for {int(r['base_days'])} sessions)"
+                    if pat == "Base top" and r.get("buy_point_top_date") else f"buy point ${bp:.2f}")
+            out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
+                        f"${price:.2f} over the {what} · {chg:+.1f}% · vol {rv:.1f}x · would be leg {nxt}"
+                        + (" (late)" if nxt >= 4 else "") + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
+                        + f" · launched {r['date']} ({r['grade']})", "high" if g == "A" else "default", tvs))
     return out
 
 
