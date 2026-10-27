@@ -1,7 +1,9 @@
 """Trend launches: the first day of a new trend, the group it belongs to, and the bases that follow.
 
 Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the cyber names Sep 14 2026, AMD 2016):
-  must have   opened up (any gap), closed up 5%+ in the top half of the day's range, volume 1.5x+ the
+  must have   opened up (any gap), closed up 5%+ in the top half of the day's range (a power day may close lower
+              if it holds half its gap: FSLR Jul 28 2022; tagged "faded", since in 2 years such days bought at the
+              open with a stop under the day's low were stopped out 9 times in 10, though 13% ran 50%+), volume 1.5x+ the
               previous 20 days' average, closed above the 200 SMA, and was still near it the day before (at most
               28% above it: a neglected stock or one coming out of a correction, not a trend already running;
               your launches were -6% to +25% from it, the continuation days of MU / DELL / APPN +30% to +77%),
@@ -120,7 +122,7 @@ class Arr:
                 g = -1
             self.mem[i] = g
             if (self.gap[i] >= L["gap_big"] and self.rv[i] >= L["rv_big"] and c[i] > self.s200[i]
-                    and self.ext200_prev[i] <= L["max_ext200"] and (self.clpos[i] < L["min_clpos"] or self.chg[i] < L["min_chg"])):
+                    and self.ext200_prev[i] <= L["max_ext200"] and (not self.held(i) or self.chg[i] < L["min_chg"])):
                 g = i
 
     def follower(self, i):
@@ -130,11 +132,18 @@ class Arr:
                     and self.clpos[i] >= L["min_clpos"] and st.c[i] > self.s200[i] and self.ext200_prev[i] <= L["max_ext200"]
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
 
+    def held(self, i):
+        """closed in the top half of the day's range, or on a power day held at least half of its gap
+        (FSLR Jul 28 2022: a 16.8% gap on 4.7x volume that closed +15.3%, low in the day's range)"""
+        if self.clpos[i] >= L["min_clpos"]:
+            return True
+        return self.power(i) and self.chg[i] >= self.gap[i] / 2
+
     def candidate(self, i):
         """the must-haves of a launch day"""
         st = self.st
         return bool(i >= 200 and self.liquid[i] and self.gap[i] > 0 and self.chg[i] >= L["min_chg"]
-                    and self.clpos[i] >= L["min_clpos"] and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
+                    and self.held(i) and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
                     and (self.ext200_prev[i] <= L["max_ext200"] or (self.power(i) and self.ext200_prev[i] <= L["power_ext200"]))
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
 
@@ -237,6 +246,7 @@ def launch_row(sym, a, i, gstat, gname, S):
     return dict(
         symbol=sym, tv=run.tv_symbol(sym, st.exchange), date=st.dates[i], grade=grade(a, i),
         gap_pct=fnum(a.gap[i], 1), chg_pct=fnum(a.chg[i], 1), rel_vol=fnum(a.rv[i], 1), close_in_range=fnum(100 * a.clpos[i], 0),
+        faded=bool(a.clpos[i] < L["min_clpos"]), power=a.power(i),
         base_breakout=bool(st.c[i] > a.hi20[i] or (a.mem[i] >= 0 and st.c[i] > a.hi20[a.mem[i]])),
         delayed_from=st.dates[a.mem[i]] if a.mem[i] >= 0 else None, group=gname, group_status=STATUS.get(gstat, "No group"),
         pct_of_52w_high=fnum(100 * st.c[i] / h52, 0), near_high=bool(100 * st.c[i] / h52 >= L["near_high"]),
