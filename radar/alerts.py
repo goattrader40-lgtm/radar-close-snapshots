@@ -7,8 +7,10 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
   power day   volume pace 4x+ for the time of day, a 10%+ gap, up 15%+, above the 200 SMA, at most 50% over it
   catalyst    an episodic pivot, the moment it happens: a neglected stock (closed under its 50 or 200 SMA the day
               before) gaps up 5%+ on earnings or news with volume pace 3x+ and trades above both the 50 and the
-              200 SMA. No base breakout needed yet (HRI on Oct 27 2026: earnings, gapped 9.3% from under both;
-              the launch alert waited for its 20-day high). Earnings = reported after the last close; without
+              200 SMA. No base breakout needed, and no clean base either (HRI on Oct 27 2026: earnings, gapped 9.3%
+              from under both out of a choppy chart; the launch alert waited for its 20-day high). It says whether
+              the base high is cleared yet; if not, a 2nd trigger follows when it is (volume 1x+). Such a stock
+              gets these two instead of a launch alert. Earnings = reported after the last close; without
               earnings it says to check the news
   launch      A+ or A off the watch list (setups/launch.json, from the last close), graded like the portal's
               Launching today: volume pace 3x+ and above its base high (the previous 20 days' high), with a 3%+
@@ -71,16 +73,22 @@ def find(live, doc, now=None):
         crossed = f" · was under its {' & '.join(under)} SMA, now above the 50 & 200" if under and over else ""
         neglect = f" · {w[7]:.0f}% off its high of {w[6]} sessions ago" if w[7] and w[6] is not None and w[7] >= 15 else ""
         cat = " · EARNINGS" if earn else ""
+        bo = price > pivot or bool(mem and price > mem[1])
+        g = grade(max(rv, R["rv_big"]), bo, max(gap or 0, R["gap_big"]), chg, R, False) if mem else grade(rv, bo, gap, chg, R, close0 < s200)
+        shape = bool(under) and over and gap is not None and gap >= R.get("ep_gap", 5)    # a catalyst gap, whatever the volume
+        if shape and price > pivot and rv >= 1:
+            # the 2nd trigger: sent only after a catalyst alert that hadn't cleared the base yet (see main)
+            out.append((f"{sym}:basebreak", f"{sym} 2nd trigger: base high ${pivot:.2f} cleared",
+                        f"${price:.2f} · {chg:+.1f}% · vol {rv:.1f}x for the time of day · grade so far {g}{cat}"
+                        f" · after its catalyst gap over the 50 & 200 SMA · theme {theme}", "high", tvs))
         if power:
             out.append((f"{sym}:power", f"{sym} POWER DAY" + (" on earnings" if earn else ""),
                         f"{facts} · ${price:.2f}{crossed}{neglect} · theme {theme}", "high", tvs))
             continue
-        bo = price > pivot or bool(mem and price > mem[1])
-        g = grade(max(rv, R["rv_big"]), bo, max(gap or 0, R["gap_big"]), chg, R, False) if mem else grade(rv, bo, gap, chg, R, close0 < s200)
-        if under and over and gap is not None and gap >= R.get("ep_gap", 5) and rv >= R["rv_big"]:
+        if shape and rv >= R["rv_big"]:
             out.append((f"{sym}:catalyst", f"{sym} CATALYST GAP: " + ("earnings" if earn else "news? (no earnings)")
                         + ", over its 50 & 200 SMA", f"{facts} · ${price:.2f}{crossed}{neglect} · base high ${pivot:.2f} "
-                        + (f"cleared (grade so far {g})" if price > pivot else "next") + f" · theme {theme}", "high", tvs))
+                        + (f"cleared (grade so far {g})" if price > pivot else "not cleared yet: 2nd alert when it is") + f" · theme {theme}", "high", tvs))
         if chg < R["min_chg"] or rv < R["min_rv"] or (gap is not None and gap <= 0):
             continue
         if g in ("A+", "A"):
@@ -147,11 +155,24 @@ def main():
         print("alerts: not in today's session yet")
         return
     sent = set(state["sent"])
-    new = [a for a in find(live, doc, now) if a[0] not in sent and not (a[0].endswith(":launch") and a[0].split(":")[0] + ":power" in sent)]
-    cat_now = {a[0].split(":")[0] for a in new if a[0].endswith(":catalyst")}
-    # a catalyst gap already through its base high says it all: no second push for the launch in the same run
-    quiet = [(a[0], None, None, None, None) for a in new if a[0].endswith(":launch") and a[0].split(":")[0] in cat_now]
-    new = [a for a in new if not (a[0].endswith(":launch") and a[0].split(":")[0] in cat_now)]
+    found = find(live, doc, now)
+    cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
+    cat_now = {a[0].split(":")[0] for a in found if a[0].endswith(":catalyst") and a[0] not in sent}
+    new, quiet = [], []
+    for a in found:
+        key, sym = a[0], a[0].split(":")[0]
+        if key in sent or (key.endswith(":launch") and sym + ":power" in sent):
+            continue
+        # a catalyst stock gets two triggers: the catalyst gap, then (if its base wasn't cleared yet) the base breakout;
+        # its launch alert would only repeat them
+        if key.endswith(":basebreak") and sym not in cat_before:
+            if sym in cat_now:                      # this run's catalyst alert already says "cleared"
+                quiet.append((key, None, None, None, None))
+            continue
+        if key.endswith(":launch") and (sym in cat_before or sym in cat_now):
+            quiet.append((key, None, None, None, None))
+            continue
+        new.append(a)
     topic = os.environ.get("NTFY_TOPIC", "").strip()
     if len(new) > MAX_PER_RUN:          # a flood (a market-wide gap): one summary instead of a stack of pushes
         new = new[:MAX_PER_RUN - 1] + [(f"summary:{now:%H%M}", f"{len(new) - MAX_PER_RUN + 1} more alerts",
