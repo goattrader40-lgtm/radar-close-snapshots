@@ -76,7 +76,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.75)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -350,6 +350,18 @@ def below_since(a, j, level, k):
     return j - max(0, k - 252)
 
 
+def dry_armed(a, k, top):
+    """a dry-up entry is set up at the close of day k (your ANF Oct 2 2026, entry Oct 5): inside the base, an ADR+
+    under its top; the volume dried up (5-day average 0.75 or less of the 50-day); surfing the 21 EMA (closing
+    within an ADR of it) above the 50 EMA. Its trigger: the next day trades over day k's high on 1x+ volume."""
+    st, c = a.st, a.st.c
+    if k < 50:
+        return False
+    adr = _adr(st, k)
+    dry = st.v[k - 4:k + 1].mean() / st.v[k - 50:k].mean()
+    return bool(c[k] <= top * (1 - adr / 100) and dry <= L["dry_max"] and abs(c[k] / a.e21[k] - 1) <= adr / 100 and c[k] > a.e50[k])
+
+
 def follow(a, i0, i):
     """what happened from the launch close (i0) to bar i: status, gain, exit signal, current base and pattern"""
     st, c = a.st, a.st.c
@@ -376,7 +388,10 @@ def follow(a, i0, i):
     leg = 1 if not b0 or c[i0] > b0[0] else 0
     H, last_new, armed, rested, last_leg = st.h[i0], i0, False, None, i0
     used, bo = set(), None                                  # bo = (day, top, top index) of the last base breakout
+    dry_done, dry_day, flag_day = False, None, None         # one dry-up entry per base (ANF: Oct 5 2026, not again)
     for j in range(i0 + 1, i + 1):
+        if not dry_done and dry_armed(a, j - 1, H) and c[j] > st.h[j - 1] and a.rv[j] >= 1:
+            dry_done, dry_day = True, j
         f = flag_at(a, j) if armed else None
         # a flag at the highs, after the leg has run 4+ of the stock's own ADRs from its start (SMCI Jun 2023: 85%,
         # 13 ADRs, then the flag); a trendline break in the base right after a launch is an entry, not a new leg
@@ -385,6 +400,8 @@ def follow(a, i0, i):
                         and st.h[f[0]] >= c[last_leg] * (1 + L["flag_run_adr"] * _adr(st, last_leg) / 100))
         flag_go = bool(f and at_highs and f[0] not in used and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2])
         b = base_breakout(a, j, used)
+        if flag_go:
+            flag_day = j
         if flag_go or b:
             used.add(f[0] if flag_go else b[1])           # each base top gives at most one breakout
             if b:
@@ -396,14 +413,17 @@ def follow(a, i0, i):
                     rested = j
                 last_leg, armed = j, False
         if st.h[j] > H:
-            H, last_new, armed = st.h[j], j, True
+            H, last_new, armed, dry_done = st.h[j], j, True, False
     hi = st.h[i0:i + 1].max()
     status = "Riding" if c[i] >= a.e21[i] else "Below 21 EMA"
     fl = flag_at(a, i)
-    flag_bo = bool(fl and c[i] > fl[2] and c[i - 1] <= (flag_at(a, i - 1) or (0, 0, np.inf))[2])
-    # is today's flag a new leg (at the highs, after a run of 4+ ADRs) or an entry inside the base (ANF Oct 5 2026)?
+    # a flag is a pattern only at the highs, after the leg ran 4+ ADRs (SMCI Jun 2023); a falling line inside the
+    # base right after a launch is none (ANF Sep 2026: under the Aug 26 gap day's high the whole time, one structure)
     flag_leg = bool(fl and st.h[fl[0]] >= st.h[max(0, fl[0] - 120):fl[0] + 1].max()
                     and st.h[fl[0]] >= c[last_leg] * (1 + L["flag_run_adr"] * _adr(st, last_leg) / 100))
+    if not flag_leg:
+        fl = None
+    flag_bo = flag_day == i
     # tomorrow's base tops (the smaller and the larger base): buy points when above today's close
     tops = [b for b in (base_ok(a, i + 1, 40), base_ok(a, i + 1, 120)) if b and c[i] < b[0]]
     # the buy point = the nearest trigger above today's close: your MSF pattern's pivot, the flag's trendline or
@@ -414,6 +434,8 @@ def follow(a, i0, i):
         cands.append((float(r.pivot), msf.NAMES[code], r.cN, r.cDep))        # that's only a recent high (ANF Oct 26 2026)
     if fl:
         cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
+    if not dry_done and dry_armed(a, i, H) and c[i] < st.h[i]:
+        cands.append((float(st.h[i]), "Dry-up entry (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
     for top, k in tops:
         cands.append((top, "Base top", below_since(a, i + 1, top, k), 100 * (1 - st.l[k:i + 1].min() / top)))
     bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)
@@ -427,7 +449,7 @@ def follow(a, i0, i):
     # ADR under it, each day's move under half an ADR, 2+ days in a row (ANF Oct 15-16 2026: 2.1% and 1.3% under
     # its 155.22 base top, +1.5% and +0.8%; broke out Oct 19)
     tight = 0
-    if bp and pat != "Flag (trendline)":
+    if bp and pat in ("Base top",) + tuple(msf.NAMES[k] for k in range(1, 13) if msf.is_pat(k)):
         for k in range(i, max(i0, i - 10), -1):
             if not (bp * (1 - _adr(st, k) / 100) <= c[k] < bp and abs(a.chg[k]) <= _adr(st, k) / 2):
                 break
@@ -446,7 +468,7 @@ def follow(a, i0, i):
         last_breakout_top_date=st.dates[bo[2]] if bo else None, last_breakout_days_ago=i - bo[0] if bo else None,
         last_breakout_base_days=below_since(a, bo[0], bo[1], bo[2]) if bo else None,
         base_days=fnum(bdays, 0) if bdays is not None else None, base_depth_pct=fnum(bdep, 1) if bdep is not None else None,
-        flag_breakout_today=flag_bo, flag_is_leg=flag_leg,
+        flag_breakout_today=flag_bo, dry_entry_today=dry_day == i,
         base_depth_adr=fnum((bdep if bdep is not None else np.nan) / (st.adr[i] if st.adr[i] > 0 else np.nan), 1), surf10=surf(a.e10), surf21=surf(a.e21),
         vol_dryup=fnum(dry, 2), off_high_pct=fnum(100 * (1 - c[i] / hi), 1), ema21=fnum(a.e21[i]),
         breakout_today=bool(code and msf.is_pat(code) and r.bo == 1), leg=leg, late=leg >= L["late_leg"],

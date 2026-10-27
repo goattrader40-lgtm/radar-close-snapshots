@@ -110,8 +110,8 @@ def find(live, doc, now=None, gaps_only=False):
         ago = r.get("last_breakout_days_ago")
         # a breakout a few sessions after the last one is the same push (RPD Oct 22 / Oct 23): the same leg
         nxt = (r.get("leg") or 0) + (0 if ago is not None and ago < doc["rules"].get("leg_pause", 5) else 1)
-        # a flag line inside the base right after a launch is an entry there, not a new leg (ANF Oct 5 2026)
-        inside = r.get("pattern") == "Flag (trendline)" and r.get("flag_is_leg") is False
+        # the dry-up entry is an entry inside the base, not a new leg (ANF Oct 5 2026)
+        inside = (r.get("pattern") or "").startswith("Dry-up entry")
         if inside:
             nxt = r.get("leg") or 0
         # confirmation: in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
@@ -132,7 +132,8 @@ def find(live, doc, now=None, gaps_only=False):
             pat = r.get("pattern") or ""
             pat = "base" if not pat or pat.startswith("Base forming") else pat
             what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}; nothing traded above it for {int(r['base_days'])} sessions)"
-                    if pat == "Base top" and r.get("buy_point_top_date") else f"buy point ${bp:.2f}")
+                    if pat == "Base top" and r.get("buy_point_top_date") else
+                    f"last close's high ${bp:.2f} after the volume dried up, surfing the 21 EMA" if inside else f"buy point ${bp:.2f}")
             out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
                         f"${price:.2f} over the {what} · {chg:+.1f}% · vol {rv:.1f}x · "
                         + (f"an entry inside the base (still leg {nxt})" if inside else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "")) + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
