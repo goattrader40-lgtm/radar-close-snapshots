@@ -4,7 +4,8 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
   must have   opened up (any gap), closed up 5%+ in the top half of the day's range, volume 1.5x+ the
               previous 20 days' average, closed above the 200 SMA, and was still near it the day before (at most
               28% above it: a neglected stock or one coming out of a correction, not a trend already running;
-              your launches were -6% to +25% from it, the continuation days of MU / DELL / APPN +30% to +77%)
+              your launches were -6% to +25% from it, the continuation days of MU / DELL / APPN +30% to +77%),
+              and closed at least 30% above its 52-week low (your standard filter; your launches were 57-166% above)
   ingredients volume 3x+ · gap 3%+ · base breakout (closed above the previous 20 days' high) ·
               its group is trending · within 30% of the 52-week high · neglected (40+ days since its high,
               or a 25%+ correction)
@@ -50,7 +51,7 @@ import msf  # noqa: E402
 import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
-L = dict(min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, rv_big=3, gap_big=3, chg_big=10, base_days=20,
+L = dict(min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, min_adr=4)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -111,14 +112,15 @@ class Arr:
         """a smaller breakout that counts when a leader of its group has just launched"""
         st = self.st
         return bool(i >= 200 and self.liquid[i] and self.chg[i] >= 2 and st.c[i] > self.hi20[i] and self.rv[i] >= 2
-                    and self.clpos[i] >= L["min_clpos"] and st.c[i] > self.s200[i] and self.ext200_prev[i] <= L["max_ext200"])
+                    and self.clpos[i] >= L["min_clpos"] and st.c[i] > self.s200[i] and self.ext200_prev[i] <= L["max_ext200"]
+                    and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
 
     def candidate(self, i):
         """the must-haves of a launch day"""
         st = self.st
         return bool(i >= 200 and self.liquid[i] and self.gap[i] > 0 and self.chg[i] >= L["min_chg"]
                     and self.clpos[i] >= L["min_clpos"] and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
-                    and self.ext200_prev[i] <= L["max_ext200"])
+                    and self.ext200_prev[i] <= L["max_ext200"] and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
 
     def neglect(self, i):
         """days since the highest high of the last 120 sessions, and the correction from it (%)"""
@@ -214,7 +216,7 @@ def launch_row(sym, a, i, gstat, gname, S):
         base_breakout=bool(st.c[i] > a.hi20[i] or (a.mem[i] >= 0 and st.c[i] > a.hi20[a.mem[i]])),
         delayed_from=st.dates[a.mem[i]] if a.mem[i] >= 0 else None, group=gname, group_status=STATUS.get(gstat, "No group"),
         pct_of_52w_high=fnum(100 * st.c[i] / h52, 0), near_high=bool(100 * st.c[i] / h52 >= L["near_high"]),
-        days_since_high=days, correction_pct=fnum(depth, 0), neglected=bool(days >= L["neglect_days"] or depth >= L["neglect_depth"]),
+        days_since_high=days, correction_pct=fnum(depth, 0), above_52w_low_pct=fnum(100 * (st.c[i] / st.low52[i] - 1), 0), neglected=bool(days >= L["neglect_days"] or depth >= L["neglect_depth"]),
         vs_200_pct=fnum(100 * (st.c[i] / a.s200[i] - 1), 0), close=fnum(st.c[i]), low=fnum(st.l[i]),
     )
 
