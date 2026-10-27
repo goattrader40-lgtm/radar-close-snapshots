@@ -73,8 +73,9 @@ import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
 L = dict(leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
-         near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, min_adr=4)
+         near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
+LIQ = dict(min_price=10, min_dollar_vol_20d_millions=30, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
 
 
@@ -116,8 +117,11 @@ class Arr:
             self.hi20[i] = h[i - L["base_days"]:i].max()
         self.ext200_prev = np.full(n, np.nan)
         self.ext200_prev[1:] = 100 * (c[:-1] / self.s200[:-1] - 1)
-        self.liquid = np.array([c[i] >= S["min_price"] and st.avgv30[i] > S["min_avg_vol_30d"]
-                                and st.dv30[i] > S["min_dollar_vol_30d_millions"] and st.adr[i] >= L["min_adr"] for i in range(n)])
+        # your launch-list minimums (settings.json "launch"): price, 20-day average $ volume and shares, ADR
+        LQ = dict(LIQ, **(S if S and "min_dollar_vol_20d_millions" in S else {}))
+        avgv20, dv20 = roll_mean(v, 20), roll_mean(c * v, 20) / 1e6
+        self.liquid = np.array([c[i] >= LQ["min_price"] and avgv20[i] >= LQ["min_avg_vol_20d"]
+                                and dv20[i] >= LQ["min_dollar_vol_20d_millions"] and st.adr[i] >= LQ["min_adr"] for i in range(n)])
         self.ret21 = np.full(n, np.nan)
         self.ret21[21:] = 100 * (c[21:] / c[:-21] - 1)
         self.ret5 = np.full(n, np.nan)
@@ -349,8 +353,9 @@ def load(bars_path, stocks_path):
     stocks, P = run.build(D, cfg)
     cal = [b[0] for b in D["bars"]["SPY"]]
     S = cfg["standard"]
+    LIQ.update({k: v for k, v in cfg.get("launch", {}).items() if not k.startswith("_")})
     # a stock whose bars start after the file's first session listed during it (the file reaches 2 years back)
-    A = {s: Arr(st, S, new_listing=st.dates[0] > cal[5]) for s, st in stocks.items()}
+    A = {s: Arr(st, LIQ, new_listing=st.dates[0] > cal[5]) for s, st in stocks.items()}
     themes_path = os.path.join(os.path.dirname(stocks_path or ""), "themes.json")
     groups = groups_of(json.load(open(stocks_path)), json.load(open(themes_path)) if os.path.exists(themes_path) else []) \
         if stocks_path and os.path.exists(stocks_path) else {}
@@ -507,7 +512,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
         G.append(dict(group=g[5:] + " area" if g.startswith("area:") else g, status=STATUS[int(stt[-1])], members=len(ms), above_21ema_pct=fnum(100 * sh21[-1], 0),
                       median_1m_pct=fnum(m21[-1], 1), trending_days=since if since is not None else 0, recent_launches=launches))
     G.sort(key=lambda x: (-["Not trending", "Turning up", "Leading"].index(x["status"]), -(x["median_1m_pct"] or -999)))
-    doc = dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L,
+    doc = dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)"],
                launches=rows, watch=watch, groups=[g for g in G if g["status"] != "Not trending"])

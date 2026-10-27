@@ -1493,7 +1493,9 @@ defCalc('industry_perf', {
       (S.lnst === 'all' || (S.lnst === 'riding' ? r.status === 'Riding' : !!r.pattern)));
     $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
     const today = doc ? all.filter((r) => r.date === doc.date).length : 0;
-    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close). Gain = from the launch-day close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '; lone wolves are hidden unless ticked.';
+    const LQ = doc && doc.liquidity;
+    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close). Gain = from the launch-day close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '; lone wolves are hidden unless ticked.' +
+      (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
     sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'pattern'], 'grade');
     if (doc && !rows.length) noRows(tb, 24, 'No launch matches these filters.');
     rows.forEach((r) => {

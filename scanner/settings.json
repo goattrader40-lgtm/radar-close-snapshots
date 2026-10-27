@@ -1,6 +1,14 @@
 {
   "_about": "Your scanner settings. Every screener uses the 'standard' filters plus its own. Percent values are percents (10 = 10%).",
 
+  "launch": {
+    "_about": "Who can be on the Launches list and trigger alerts (not the other screens). Change a number here; it applies from the next evening scan.",
+    "min_price": 10,
+    "min_dollar_vol_20d_millions": 30,
+    "min_avg_vol_20d": 600000,
+    "min_adr": 3.5
+  },
+
   "standard": {
     "min_price": 10,
     "min_mcap": 700e6,
