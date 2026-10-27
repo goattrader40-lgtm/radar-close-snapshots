@@ -76,7 +76,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.75, dry_gap=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.85, dry_gap=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -350,18 +350,24 @@ def below_since(a, j, level, k):
     return j - max(0, k - 252)
 
 
-def dry_armed(a, k, top):
-    """a dry-up entry is set up at the close of day k (your rule: a regular consolidation, the volume drying up, surfing
-    the 10 and 21 EMA; ANF Oct 2 2026): inside the base, an ADR+ under its top; 5-day volume 0.75 or less of the
-    50-day; closing within an ADR of both the 10 and the 21 EMA, above the 50 EMA. Its trigger is the pop out of it,
-    the price expanding after the contraction (Qullamaggie: a breakout from a tight flag): see pop_level."""
+def resting(a, k):
+    """day k is part of a dry-up / consolidation, the stock's resting time: the volume dried up (5-day average 0.85
+    or less of the 50-day) while it surfs the 10 and 21 EMA (closing within an ADR of both) above the 50 EMA
+    (ANF Sep 17 - Oct 2 2026, your "Sep 18 - Oct 4 or so")"""
     st, c = a.st, a.st.c
     if k < 50:
         return False
     adr = _adr(st, k)
     dry = st.v[k - 4:k + 1].mean() / st.v[k - 50:k].mean()
-    return bool(c[k] <= top * (1 - adr / 100) and dry <= L["dry_max"] and abs(c[k] / a.e10[k] - 1) <= adr / 100
-                and abs(c[k] / a.e21[k] - 1) <= adr / 100 and c[k] > a.e50[k])
+    return bool(dry <= L["dry_max"] and abs(c[k] / a.e10[k] - 1) <= adr / 100 and abs(c[k] / a.e21[k] - 1) <= adr / 100 and c[k] > a.e50[k])
+
+
+def dry_armed(a, k, top):
+    """a dry-up entry is set up at the close of day k (your rule: a regular consolidation, the volume drying up, surfing
+    the 10 and 21 EMA; ANF Oct 2 2026): inside the base, an ADR+ under its top; 5-day volume 0.75 or less of the
+    50-day; closing within an ADR of both the 10 and the 21 EMA, above the 50 EMA. Its trigger is the pop out of it,
+    the price expanding after the contraction (Qullamaggie: a breakout from a tight flag): see pop_level."""
+    return resting(a, k) and bool(a.st.c[k] <= top * (1 - _adr(a.st, k) / 100))
 
 
 def pop_level(a, k):
@@ -401,6 +407,7 @@ def follow(a, i0, i):
     H, last_new, armed, rested, last_leg = st.h[i0], i0, False, None, i0
     used, bo = set(), None                                  # bo = (day, top, top index) of the last base breakout
     dry_done, dry_day, flag_day = False, None, None         # one dry-up entry per base (ANF: Oct 5 2026, not again)
+    lvl = st.h[i0]                                          # the level the leg broke out of: the launch day's high, then the base top
     for j in range(i0 + 1, i + 1):
         if not dry_done and dry_armed(a, j - 1, H):
             lv = pop_level(a, j - 1)
@@ -415,11 +422,11 @@ def follow(a, i0, i):
         flag_go = bool(f and at_highs and f[0] not in used and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2])
         b = base_breakout(a, j, used)
         if flag_go:
-            flag_day = j
+            flag_day, lvl = j, st.h[f[0]]
         if flag_go or b:
             used.add(f[0] if flag_go else b[1])           # each base top gives at most one breakout
             if b:
-                bo = (j, b[0], b[1])
+                bo, lvl = (j, b[0], b[1]), b[0]
             if leg == 0 or j - last_leg >= L["leg_pause"]:  # breakouts a few days apart (Oct 22 / Oct 23) are one leg
                 # after a rest of 40+ sessions without a new high, the breakout starts a new run: leg 1 again
                 leg = 1 if j - last_new >= L["rest_days"] else leg + 1
@@ -449,7 +456,7 @@ def follow(a, i0, i):
     if fl:
         cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
     if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
-        cands.append((float(pop_level(a, i)), "Dry-up entry (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
+        cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
     for top, k in tops:
         cands.append((top, "Base top", below_since(a, i + 1, top, k), 100 * (1 - st.l[k:i + 1].min() / top)))
     bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)
@@ -468,7 +475,34 @@ def follow(a, i0, i):
             if not (bp * (1 - _adr(st, k) / 100) <= c[k] < bp and abs(a.chg[k]) <= _adr(st, k) / 2):
                 break
             tight += 1
+    # the stock's stage after the close, the first that applies
+    rest = 0
+    while i - rest > i0 and resting(a, i - rest):
+        rest += 1
+    since = None
+    if i == i0:
+        stage = "Launch day"
+    elif bo and bo[0] == i:
+        stage = f"Base breakout (leg {leg})"
+    elif flag_bo:
+        stage = f"Flag breakout (leg {leg})"
+    elif dry_day == i:
+        stage = "Pop out of the consolidation (entry in base)"
+    elif retest:
+        stage = "Retest of the base top held"
+    elif tight >= 2:
+        stage = f"Tight under {bp:.2f} ({tight} days)"
+    elif rest >= 3:
+        since = st.dates[i - rest + 1]
+        stage = f"Dry-up / consolidation ({rest} days)" + (f", {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}" if c[i] < H * 0.99 else "")
+    elif c[i] < a.e21[i]:
+        stage = "Below the 21 EMA"
+    elif c[i] > lvl:                                       # closing above what the leg broke out of (ANF: never over
+        stage = f"Running (leg {leg}), {100 * (c[i] / lvl - 1):.0f}% over {lvl:.2f}"   # the Aug 26 high until Oct 19)
+    else:
+        stage = f"In the base, {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}"
     return dict(
+        stage=stage, stage_since=since,
         retest_today=retest, tight_days=tight,
         sessions=i - i0, gain_pct=fnum(100 * (c[i] / c[i0] - 1), 1), max_gain_pct=fnum(100 * (hi / c[i0] - 1), 1),
         status=status, first_exit=st.dates[exit_k] if exit_k is not None else None,

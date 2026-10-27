@@ -25,7 +25,7 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               after closing under it the day before; graded A (volume 2x+, trending theme, not a late leg), B
               (1.5x+), C (the rest)
   confirm     in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
-  pop         the entry inside a base: after a consolidation where the volume dried up, surfing the 10 & 21 EMA,
+  pop         the entry inside a base: after its resting time (the volume dried up, surfing the 10 & 21 EMA),
               it gaps up a little (0.5%+) over the last close and opens above the rising 10 & 21 EMA (ANF Oct 5 2026)
 Nothing is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
@@ -112,8 +112,8 @@ def find(live, doc, now=None, gaps_only=False):
         ago = r.get("last_breakout_days_ago")
         # a breakout a few sessions after the last one is the same push (RPD Oct 22 / Oct 23): the same leg
         nxt = (r.get("leg") or 0) + (0 if ago is not None and ago < doc["rules"].get("leg_pause", 5) else 1)
-        # the dry-up entry is an entry inside the base, not a new leg (ANF Oct 5 2026)
-        inside = (r.get("pattern") or "").startswith("Dry-up entry")
+        # the pop out of a consolidation is an entry inside the base, not a new leg (ANF Oct 5 2026)
+        inside = (r.get("pattern") or "").startswith("Pop out of the consolidation")
         if inside:
             nxt = r.get("leg") or 0
         # confirmation: in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
@@ -125,13 +125,13 @@ def find(live, doc, now=None, gaps_only=False):
             if top and ago is not None and ago <= 2 and op and op > top and price > top and rv >= 2 else None
         bp = r.get("buy_point")
         if bp and inside and (r.get("price") or 0) < bp:
-            # the pop out of a dry-up consolidation: a small gap up over the last close, opening above the rising
+            # the pop out of a consolidation (volume dried up): a small gap up over the last close, opening above the rising
             # 10 and 21 EMA (bp = the level the open has to clear), still holding it; no volume needed (ANF Oct 5 2026)
             if op and op >= bp and price >= bp:
                 gap_ = (op / (price / (1 + chg / 100)) - 1) * 100
-                out.append((f"{sym}:pop", f"{sym} entry in base: the pop out of a dry-up consolidation",
+                out.append((f"{sym}:pop", f"{sym} entry in base: the pop out of the consolidation",
                             f"opened ${op:.2f} ({gap_:+.1f}% over the last close) above the rising 10 & 21 EMA, now ${price:.2f}"
-                            f" · {chg:+.1f}% · vol {rv:.1f}x · the volume had dried up, surfing the 10 & 21 EMA · an entry inside"
+                            f" · {chg:+.1f}% · vol {rv:.1f}x · after its resting time (volume dried up, surfing the 10 & 21 EMA) · an entry inside"
                             f" the base (still leg {nxt}) · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
                             f" · launched {r['date']} ({r['grade']})", "default", tvs))
             elif confirm:
