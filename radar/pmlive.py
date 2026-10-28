@@ -8,6 +8,9 @@ For every stock in stocks.json with a $300M+ market cap and 300K+ shares a day, 
   pm_last   latest pre-market price
   pm_chg    pre-market change % = pm_last vs the previous close
   pm_gap    pre-market gap %    = the first pre-market trade vs the previous close
+The previous close is the last close in stocks.json (the after-close rebuild, the portal's Price column). Not
+Yahoo's chartPreviousClose: until the open it is the close the day before that (Oct 28 2026: HRI showed +21.3%
+against Monday's 127.13 instead of -1.1% against Tuesday's 156.00).
   pm_vol    pre-market volume (shares), pm_dvol = price x volume ($), pm_high / pm_low
 Yahoo's pre-market bars carry no volume (always 0, checked Oct 26, 2026), so the volume comes from Alpaca's
 consolidated-tape (SIP) 5-minute bars from 4:00 AM. The free Alpaca plan only serves SIP data older than 15 minutes,
@@ -37,7 +40,7 @@ def get(url):
     return None
 
 
-def scan(sym, today):
+def scan(sym, today, prev):
     ys = urllib.parse.quote(sym.replace("/", "-").replace(".", "-"))
     r = get(f"https://query1.finance.yahoo.com/v8/finance/chart/{ys}?range=1d&interval=5m&includePrePost=true")
     if not r:
@@ -49,7 +52,6 @@ def scan(sym, today):
         ts = datetime.datetime.fromtimestamp(t, NY)
         if ts.date() == today and (ts.hour, ts.minute) < (9, 30) and c is not None:
             bars.append((ts, o or c, h or c, l or c, c, v or 0))
-    prev = (r.get("meta") or {}).get("chartPreviousClose") or (r.get("meta") or {}).get("previousClose")
     if not bars or not prev:
         return None
     last = bars[-1][4]
@@ -105,11 +107,12 @@ def alpaca_pm_volume(syms, today):
 def main():
     stocks_p, out_p = sys.argv[1], sys.argv[2]
     now = datetime.datetime.now(NY)
-    syms = [r["symbol"] for r in json.load(open(stocks_p))
-            if (r.get("mcap_b") or 0) >= 0.3 and (r.get("avg_vol_30d") or 0) >= 300_000]
+    stocks = json.load(open(stocks_p))
+    syms = [r["symbol"] for r in stocks if (r.get("mcap_b") or 0) >= 0.3 and (r.get("avg_vol_30d") or 0) >= 300_000]
+    close = {r["symbol"]: r.get("price") for r in stocks}          # the last close: what the pre-market change is from
     t0 = time.time()
     with cf.ThreadPoolExecutor(12) as pool:
-        got = {s: v for s, v in zip(syms, pool.map(lambda x: scan(x, now.date()), syms)) if v}
+        got = {s: v for s, v in zip(syms, pool.map(lambda x: scan(x, now.date(), close.get(x)), syms)) if v}
     if len(syms) and len(got) < 0.2 * len(syms):
         sys.exit(f"only {len(got)} of {len(syms)} had pre-market data, not saving")
     vols, vol_asof = alpaca_pm_volume(sorted(got), now.date())
