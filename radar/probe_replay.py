@@ -16,7 +16,7 @@ from live import rvol_at
 NY = alerts.NY
 UTC = datetime.timezone.utc
 hdr = {"APCA-API-KEY-ID": os.environ["ALPACA_KEY_ID"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET"]}
-syms = sys.argv[2:]
+syms = [a for a in sys.argv[2:] if not a.startswith("--")]
 z = lambda t: t.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 show = lambda name: subprocess.run(["git", "show", name], capture_output=True, text=True).stdout
 
@@ -43,6 +43,7 @@ for s in bars:
         b["ts"] = datetime.datetime.fromisoformat(b["t"].replace("Z", "+00:00")).timestamp()
 out, sent = {"date": str(now.date()), "watch_from": doc["date"], "checks": {s: [] for s in syms}, "alerts": []}, set()
 t = t0 + datetime.timedelta(minutes=5, seconds=20)
+step = datetime.timedelta(minutes=1 if "--every-minute" in sys.argv else 5)
 while t.timestamp() + 60 <= now.timestamp() - 16 * 60 and t.hour < 16:
     rows = {}
     for s in syms:
@@ -55,11 +56,11 @@ while t.timestamp() + 60 <= now.timestamp() - 16 * 60 and t.hour < 16:
         lv = live.get(s) or []
         row = [price, round(100 * (price / w[0] - 1), 3), vol, qt, rvol_at(vol, qt, prof.get(s)), op, lv[6] if len(lv) > 6 else None]
         rows[s] = row
-        out["checks"][s].append([t.strftime("%H:%M"), price, row[1], round(100 * (op / w[0] - 1), 1), row[4]])
+        out["checks"][s].append([t.strftime("%H:%M"), price, row[1], round(100 * (op / w[0] - 1), 1), row[4], round(max(b["h"] for b in done), 2)])
     for a in alerts.find({"rows": rows}, doc, t):
         if a[0] not in sent:
             sent.add(a[0])
             out["alerts"].append([t.strftime("%H:%M"), a[1], a[2]])
-    t += datetime.timedelta(minutes=5)
+    t += step
 json.dump(out, open(sys.argv[1], "w"), indent=1)
 print(json.dumps(out["alerts"], indent=1))
