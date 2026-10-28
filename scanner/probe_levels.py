@@ -137,6 +137,8 @@ def main():
                 bl = det["base_len"]
                 new["breakout, base under the level " + ("under 15 sessions" if bl < 15 else "15-39 sessions" if bl < 40 else "40+ sessions")].append(o)
                 new["breakout, MSF names a pattern" if det["msf"] else "breakout, MSF names no pattern"].append(o)
+                new["breakout by pattern: " + (det["msf"] or "no pattern named")].append(o)
+                new["breakout by pattern: " + (det["msf"] or "no pattern named") + ", grade " + ("A/B" if g in "AB" else "C")].append(o)
                 if det["msf_pivot"]:
                     new["breakout, MSF pattern pivot = this level"].append(o)
                 pattern = bl >= 15 or bool(det["msf"])
