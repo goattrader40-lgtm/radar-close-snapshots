@@ -567,9 +567,9 @@
             <th class="num c2"><button class="tgr-th" data-sort="max_gain_pct">Max</button></th>
             <th><button class="tgr-th" data-sort="stage" title="Where the stock is after the close: in the base, consolidation surfing the 10 & 21 EMA on dry volume (its resting time), tight under the buy point, a breakout, running, a retest that held; green = above the 21 EMA">Status</button></th>
             <th class="num"><button class="tgr-th" data-sort="base_day" title="Day of the base: sessions since the launch, or since the leg's breakout (it starts again at 0 with each new leg). ↑ = it turned up today: back over a rising 10 EMA after closing under it">Base day</button></th>
+            <th><button class="tgr-th" data-sort="base_pattern" title="The base forming now, as your MSF engine names it: High tight flag, Bull flag, Tight flag, Pennant, Ascending triangle, Flat base, Cup with handle, ... or Base forming (no pattern yet)">Base pattern</button></th>
             <th class="c2"><button class="tgr-th" data-sort="exit_gain_pct">21 EMA exit</button></th>
             <th class="num"><button class="tgr-th" data-sort="leg" title="Legs since the launch: a 5+ day pause without a new high, then a close above it. Leg 4+ = late">Leg</button></th>
-            <th class="c2"><button class="tgr-th" data-sort="base_pattern" title="The base forming now, as your MSF engine names it: High tight flag, Bull flag, Tight flag, Pennant, Ascending triangle, Flat base, Cup with handle, ... or Base forming (no pattern yet)">Base pattern</button></th>
             <th class="c2"><button class="tgr-th" data-sort="pattern" title="What the buy point is: the base top, the pattern's pivot, a flag line, the pop out of a consolidation">Trigger</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
@@ -1546,10 +1546,10 @@ defCalc('industry_perf', {
       tr.append(key, h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), gradeCell(r.grade), pctCell(r.chg_pct, 0), h('td', 'num c2', p1(r.gap_pct, true)),
         h('td', 'num' + (r.rel_vol >= 3 ? ' tgr-up' : ''), fX(r.rel_vol)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
         h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
-        h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')), ex, legTd,
-        h('td', 'c2 nw', r.base_pattern ? r.base_pattern.replace('Base forming (no pattern yet)', 'Forming') : '—'),
+        h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')),
+        h('td', 'nw', r.base_pattern ? r.base_pattern.replace('Base forming (no pattern yet)', 'Forming (no pattern yet)') : '—'), ex, legTd,
         h('td', 'c2' + (r.breakout_today || r.flag_breakout_today || r.base_breakout_today || r.dry_entry_today ? ' tgr-up' : ''),
-          r.base_breakout_today ? 'Base breakout today (leg ' + r.leg + ')' : r.dry_entry_today ? 'Pop out of the consolidation today (in base)' : (r.breakout_today || r.flag_breakout_today) ? r.pattern + ' · breakout today' : r.pattern || '—'), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
+          r.base_breakout_today ? 'Base breakout today (leg ' + r.leg + ')' : r.dry_entry_today ? 'Pop out of the consolidation today (in base)' : (r.breakout_today || r.flag_breakout_today) ? r.pattern + ' · breakout today' : num(r.buy_point) !== null && r.pattern ? r.pattern : '—'), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), h('td', 'num c2', r.base_days === null || r.base_days === undefined ? '—' : String(r.base_days)), h('td', 'num c2', p1(r.base_depth_pct)), h('td', 'num c2', r.base_depth_adr === null || r.base_depth_adr === undefined ? '—' : num(r.base_depth_adr).toFixed(1) + '×'),
         h('td', 'num c3', String(r.surf10 ?? '—')), h('td', 'num c3', String(r.surf21 ?? '—')), h('td', 'num c3' + (num(r.vol_dryup) !== null && r.vol_dryup < 1 ? ' tgr-up' : ''), r.vol_dryup === null ? '—' : num(r.vol_dryup).toFixed(2) + '×'),
         h('td', 'num c3', p1(r.pct_of_52w_high)), h('td', 'num c3', p1(r.correction_pct)));
