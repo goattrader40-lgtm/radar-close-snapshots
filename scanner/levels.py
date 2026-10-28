@@ -21,6 +21,7 @@
            its Aug 26 gap alone, so its Sep 16 pullback is no entry (the pop out of the consolidation, Oct 5, is).
 """
 import numpy as np
+import msf
 
 LV = dict(peak_win=5, peak_age=5, peak_pull=1.25, lookback=250, merge=0.5, bo_rv=1.0, fail_days=3,
           tight_move=0.5, tight_body=0.5, near=1.0, retest_above=0.25, retest_below=1.0,
@@ -104,7 +105,7 @@ def walk(a, i0, i1):
             if v[1] == "on" and c[j] > v[0]:
                 v[1], v[2] = "broken", j                   # on light volume it is gone without a breakout
                 if a.rv[j] >= LV["bo_rv"]:
-                    broke.append(v[0])
+                    broke.append((v[0], q))
             elif v[1] == "broken" and j - v[2] <= LV["fail_days"] and c[j] < v[0]:
                 v[1], v[2] = "on", None
                 events.append((j, "failed", dict(level=round(float(v[0]), 2))))
@@ -113,9 +114,17 @@ def walk(a, i0, i1):
             elif v[1] == "broken" and j - v[2] == LV["fail_days"] and (held is None or v[2] >= held[1]):
                 held = (v[0], v[2])                         # it held 3 sessions: the level to retest
         if broke:
-            top = max(broke)
+            top, q = max(broke)
+            # the base under the level: sessions since anything last traded above it before its peak (RPD's 13.87, set
+            # Oct 12 2026, last exceeded Aug 11); and the pattern your MSF engine saw at yesterday's close
+            m = next((m for m in range(q - 1, max(-1, q - 500), -1) if h[m] > top), None)
+            r = st.df.iloc[j - 1]
+            code = int(r.code)
+            pat = msf.NAMES[code] if code and msf.is_pat(code) else None
+            piv = bool(pat and r.pivot == r.pivot and abs(r.pivot - top) <= _adr(st, j - 1) / 100 * top)
             events.append((j, "breakout", dict(level=round(float(top), 2), tight=tight if lv and top <= lv * (1 + 1e-9) and top >= lv * (1 - 1e-9) else 0,
-                                               year_high=bool(h[max(0, j - 250):j].max() <= top * 1.0001), rv=round(float(a.rv[j]), 1))))
+                                               year_high=bool(h[max(0, j - 250):j].max() <= top * 1.0001), rv=round(float(a.rv[j]), 1),
+                                               base_len=j - m - 1 if m is not None else 500, msf=pat, msf_pivot=piv)))
         if held and c[j] < held[0] * (1 - _adr(st, j) / 100):
             held = None                                     # lost the level
         # retest of the broken level / 21 EMA test, end of day, each once per pullback (the next needs a new high)
@@ -128,8 +137,12 @@ def walk(a, i0, i1):
                             and c[j] > held[0])
             ema_test = bool(a.e21[j] * (1 - LV["retest_below"] * ad / 100) <= l[j] <= a.e21[j] * (1 + LV["retest_above"] * ad / 100)
                             and c[j] > a.e21[j] and c[j] > a.e50[j] and h[j] > l[j] and (c[j] - l[j]) / (h[j] - l[j]) >= 0.5)
-            for kind, ok in (("retest", lvl_test), ("ema21", ema_test and run_adrs(a, j, top) >= LV["run_adr"])):
+            # the retest is the trade; the 21 EMA counts when it is there too (SG Oct 26: the June high $9.49 and the
+            # 21 EMA $9.52 together); a 21 EMA test with no broken level under it is kept apart (no pattern, no trade)
+            ema_conf = bool(lvl_test and abs(a.e21[j] - held[0]) <= ad / 100 * held[0])
+            for kind, ok in (("retest", lvl_test), ("ema21", ema_test and not lvl_test and run_adrs(a, j, top) >= LV["run_adr"])):
                 if ok and not (done and kind in done[1]):
-                    events.append((j, kind, dict(level=round(float(held[0]), 2) if kind == "retest" else None, ema21=round(float(a.e21[j]), 2))))
+                    events.append((j, kind, dict(level=round(float(held[0]), 2) if kind == "retest" else None, ema21=round(float(a.e21[j]), 2),
+                                                 ema_conf=ema_conf)))
                     done = (top, (done[1] if done else set()) | {kind})
     return events, state

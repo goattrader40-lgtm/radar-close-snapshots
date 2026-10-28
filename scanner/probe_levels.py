@@ -134,15 +134,26 @@ def main():
             new[kind + ", grade " + g].append(o)
             if kind == "breakout":
                 nb += 1
+                bl = det["base_len"]
+                new["breakout, base under the level " + ("under 15 sessions" if bl < 15 else "15-39 sessions" if bl < 40 else "40+ sessions")].append(o)
+                new["breakout, MSF names a pattern" if det["msf"] else "breakout, MSF names no pattern"].append(o)
+                if det["msf_pivot"]:
+                    new["breakout, MSF pattern pivot = this level"].append(o)
+                pattern = bl >= 15 or bool(det["msf"])
+                new[("pattern breakout" if pattern else "no-pattern breakout") + ", grade " + g].append(o)
+                new["pattern breakout" if pattern else "no-pattern breakout"].append(o)
                 new["breakout, tight 2+ days before" if det["tight"] >= 2 else "breakout, not tight"].append(o)
                 if det["year_high"]:
                     new["breakout, 1-year high"].append(o)
                 was = any(oj == j and ok == "breakout" for oj, ok in odays)
                 new["breakout the current design also had" if was else "breakout only the new design has"].append(o)
                 same["breakout days in both"] += int(was)
-            if kind in ("retest", "ema21"):
-                new["retest or 21 EMA test (end of day)"].append(o)
-                new["retest or 21 EMA test, grade " + g].append(o)
+            if kind == "retest":
+                new["retest with the 21 EMA there too" if det["ema_conf"] else "retest, 21 EMA not there"].append(o)
+                if det["ema_conf"]:
+                    new["retest with the 21 EMA there too, grade " + g].append(o)
+            if kind == "line":
+                new["line (a flag / wedge pattern), grade " + g].append(o)
     months = len(cal[200:]) / 21
     res = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1],
                launches=len(ev), months=round(months, 1),
