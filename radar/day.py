@@ -297,7 +297,7 @@ def day():
         for slot in ((8, 25), (8, 40)):
             if hm(t) >= slot and hm(t) < (9, 25) and slot not in pm_started:
                 pm_started.add(slot)
-                if slot == (8, 25) or not premarket_saved_today():
+                if not premarket_saved_today():           # a job restarted mid-morning doesn't redo today's scan
                     dispatch("premarket.yml")
         # live pre-market scanner every 5 minutes, 7:00-9:29
         if (7, 0) <= hm(t) < (9, 30) and (last_pm is None or (t - last_pm).total_seconds() >= 290):
