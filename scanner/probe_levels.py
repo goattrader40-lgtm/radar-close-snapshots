@@ -64,6 +64,16 @@ def outcome(a, j, kind, det):
                 fail5=bool((c[j + 1:j + 6] < ref).any()), full=j + 20 < n)
 
 
+def grade_at(a, s, j, i0, nbo, groups, GS, pos):
+    """the breakout grade's ingredients on day j (radar/alerts.py grade_breakout): early = the 1st or 2nd breakout since
+    the launch, within 50 sessions of it; the theme Leading; the volume building the 5 days before (1.1x+ the 50 before)"""
+    v = a.st.v
+    early = nbo < 2 and j - i0 < 50
+    lead = launch.best_group(s, pos[a.st.dates[j]], groups, GS)[0] == 2
+    build = j >= 55 and v[j - 5:j].mean() / max(1.0, v[j - 55:j - 5].mean()) >= 1.1
+    return "A" if early and lead and build else "B" if early and (lead or build) else "C"
+
+
 def summ(rs):
     rs = [r for r in rs if r]
     if not rs:
@@ -82,6 +92,8 @@ def main():
     A, groups, GS, cal, S = launch.load(a_.bars, a_.stocks)
     ev = launch.detect(A, groups, GS, cal, S)
     old, new = collections.defaultdict(list), collections.defaultdict(list)
+    pos = {d: k for k, d in enumerate(cal)}
+    base = collections.defaultdict(list)
     same = collections.Counter()
     per_launch_old, per_launch_new = [], []
     for s, i0, k, gs, gn in ev:
@@ -99,15 +111,29 @@ def main():
         per_launch_old.append(len(oe))
         per_launch_new.append(len([e for e in ne if e[1] != "failed"]))
         odays = {(j, kind) for j, kind, _ in oe}
+        nb = 0
         for j, kind, det in oe:
-            old[kind].append(outcome(a, j, kind, det))
+            o = outcome(a, j, kind, det)
+            old[kind].append(o)
+            if kind == "breakout":
+                old["breakout, grade " + grade_at(a, s, j, i0, nb, groups, GS, pos)].append(o)
+                nb += 1
+        # the baseline: any day in the same stocks and windows, bought at the close
+        for j in range(i0 + 1, i1 + 1):
+            o = outcome(a, j, "day", {})
+            base["any day"].append(o)
+            base["any day above the 21 EMA" if c[j] > a.e21[j] else "any day under the 21 EMA"].append(o)
+        nb = 0
         for j, kind, det in ne:
             if kind == "failed":
                 new["failed (no entry)"].append(None)
                 continue
             o = outcome(a, j, kind, det)
             new[kind].append(o)
+            g = grade_at(a, s, j, i0, nb, groups, GS, pos)
+            new[kind + ", grade " + g].append(o)
             if kind == "breakout":
+                nb += 1
                 new["breakout, tight 2+ days before" if det["tight"] >= 2 else "breakout, not tight"].append(o)
                 if det["year_high"]:
                     new["breakout, 1-year high"].append(o)
@@ -116,10 +142,12 @@ def main():
                 same["breakout days in both"] += int(was)
             if kind in ("retest", "ema21"):
                 new["retest or 21 EMA test (end of day)"].append(o)
+                new["retest or 21 EMA test, grade " + g].append(o)
     months = len(cal[200:]) / 21
     res = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1],
                launches=len(ev), months=round(months, 1),
                entries_per_launch=dict(current=round(float(np.mean(per_launch_old)), 2), new=round(float(np.mean(per_launch_new)), 2)),
+               baseline={k: summ(v) for k, v in sorted(base.items())},
                current={k: summ(v) for k, v in sorted(old.items())},
                new={k: (summ(v) if k != "failed (no entry)" else dict(n=len(v))) for k, v in sorted(new.items())},
                same=dict(same), rules=levels.LV)
