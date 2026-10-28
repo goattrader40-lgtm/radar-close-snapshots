@@ -526,6 +526,14 @@ def follow(a, i0, i):
         stage = f"In the base, {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}"
     return dict(
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo,
+        # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
+        # Flat base, Cup with handle, ... or Base forming (no pattern yet))
+        base_pattern=msf.NAMES[code] if code else None,
+        # the day of the base: sessions since the launch or the leg's breakout (ANF: Aug 26 = day 0, Sep 10 day 10,
+        # Sep 24 day 20; Oct 19, leg 2, day 0 again), and whether today it turned up: back over a rising 10 EMA after
+        # closing under it (ANF Oct 1, day 25)
+        base_day=i - last_leg,
+        turned_up=bool(i > last_leg and c[i] > a.e10[i] > a.e10[i - 1] and not (c[i - 1] > a.e10[i - 1] > a.e10[i - 2])),
         vol_build=fnum(st.v[i - 4:i + 1].mean() / st.v[i - 54:i - 4].mean(), 2) if i >= 54 else None,
         base_from=bfrom, base_len=blen, base_low_pct=fnum(bdeep, 1) if bdeep is not None else None,
         base_low_adr=fnum(bdeep_adr, 1) if bdeep_adr is not None else None,

@@ -566,12 +566,14 @@
             <th class="num"><button class="tgr-th" data-sort="gain_now">Gain</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="max_gain_pct">Max</button></th>
             <th><button class="tgr-th" data-sort="stage" title="Where the stock is after the close: in the base, consolidation surfing the 10 & 21 EMA on dry volume (its resting time), tight under the buy point, a breakout, running, a retest that held; green = above the 21 EMA">Status</button></th>
+            <th class="num"><button class="tgr-th" data-sort="base_day" title="Day of the base: sessions since the launch, or since the leg's breakout (it starts again at 0 with each new leg). ↑ = it turned up today: back over a rising 10 EMA after closing under it">Base day</button></th>
             <th class="c2"><button class="tgr-th" data-sort="exit_gain_pct">21 EMA exit</button></th>
             <th class="num"><button class="tgr-th" data-sort="leg" title="Legs since the launch: a 5+ day pause without a new high, then a close above it. Leg 4+ = late">Leg</button></th>
-            <th class="c2"><button class="tgr-th" data-sort="pattern">Pattern</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="base_pattern" title="The base forming now, as your MSF engine names it: High tight flag, Bull flag, Tight flag, Pennant, Ascending triangle, Flat base, Cup with handle, ... or Base forming (no pattern yet)">Base pattern</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="pattern" title="What the buy point is: the base top, the pattern's pivot, a flag line, the pop out of a consolidation">Trigger</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
-            <th class="num c2"><button class="tgr-th" data-sort="base_days">Base days</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="base_days" title="How long the trigger's base is: for a base top, the sessions since anything traded above it">Base length</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_pct">Depth</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_adr" title="The base's depth in the stock's own ADRs: each ticker has its own character">Depth in ADRs</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="surf10" title="Closes in a row above the 10 EMA">Surf 10</button></th>
@@ -1516,8 +1518,8 @@ defCalc('industry_perf', {
     const LQ = doc && doc.liquidity;
     $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close). Gain = from the launch-day close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '; lone wolves are hidden unless ticked.' +
       (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
-    sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern'], 'grade');
-    if (doc && !rows.length) noRows(tb, 24, 'No launch matches these filters.');
+    sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern'], 'grade');
+    if (doc && !rows.length) noRows(tb, 26, 'No launch matches these filters.');
     rows.forEach((r) => {
       const tr = h('tr');
       const key = tkCell(r.symbol, r.tv);
@@ -1543,7 +1545,9 @@ defCalc('industry_perf', {
       if (r.late) legTd.title = 'Leg 4 or later: breakouts this late mostly failed in the history test';
       tr.append(key, h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), gradeCell(r.grade), pctCell(r.chg_pct, 0), h('td', 'num c2', p1(r.gap_pct, true)),
         h('td', 'num' + (r.rel_vol >= 3 ? ' tgr-up' : ''), fX(r.rel_vol)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
-        h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt, ex, legTd,
+        h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
+        h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')), ex, legTd,
+        h('td', 'c2 nw', r.base_pattern ? r.base_pattern.replace('Base forming (no pattern yet)', 'Forming') : '—'),
         h('td', 'c2' + (r.breakout_today || r.flag_breakout_today || r.base_breakout_today || r.dry_entry_today ? ' tgr-up' : ''),
           r.base_breakout_today ? 'Base breakout today (leg ' + r.leg + ')' : r.dry_entry_today ? 'Pop out of the consolidation today (in base)' : (r.breakout_today || r.flag_breakout_today) ? r.pattern + ' · breakout today' : r.pattern || '—'), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), h('td', 'num c2', r.base_days === null || r.base_days === undefined ? '—' : String(r.base_days)), h('td', 'num c2', p1(r.base_depth_pct)), h('td', 'num c2', r.base_depth_adr === null || r.base_depth_adr === undefined ? '—' : num(r.base_depth_adr).toFixed(1) + '×'),
