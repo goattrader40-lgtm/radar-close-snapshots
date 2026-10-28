@@ -64,9 +64,10 @@ def grade_breakout(r):
 def find_early(live, doc, now=None):
     """the early heads-up, 9:31-9:34 (every minute): the shape of a big gap-up from the first minutes' prices, before
     the volume pace means anything (the opening auction is most of the first minutes' volume). The full alert follows
-    from 9:35 if the volume confirms. The shapes as the 9:35 alerts judge them, minus the volume: a power-day gap
-    (10%+), a catalyst gap (5%+ from under the 50 EMA or 200 SMA to over both), a launch gap (3%+ through the base
-    high, up 5%+); above the 200 SMA, and the day before at most 28% over it (50% for a power-day gap)."""
+    from 9:35 if the volume confirms. Big gaps only, 5%+ (smaller ones are noise this early), with the shapes the
+    9:35 alerts judge, minus the volume: a power-day gap (10%+), a catalyst gap (from under the 50 EMA or 200 SMA to
+    over both), a launch gap (through the base high, up 5%+); above the 200 SMA, and the day before at most 28% over
+    it (50% for a power-day gap)."""
     R, rows, out = doc["rules"], live["rows"], []
     now = now or datetime.datetime.now(NY)
     d0 = datetime.date.fromisoformat(doc["date"])
@@ -79,15 +80,15 @@ def find_early(live, doc, now=None):
         prev = price / (1 + chg / 100)
         gap = (op / prev - 1) * 100
         close0, pivot, s200, s50 = w[0], w[1], w[2], w[4]
-        if not s200 or price <= s200 or gap <= 0:
+        if not s200 or price <= s200 or gap < R.get("ep_gap", 5):
             continue
         ext = (close0 / s200 - 1) * 100
         power = gap >= R.get("power_gap", 10)
         if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not power):
             continue
         under = [n for n, m in (("50 EMA", s50), ("200 SMA", s200)) if m and close0 < m]
-        catalyst = bool(under) and bool(s50) and price > s50 and gap >= R.get("ep_gap", 5)
-        launch = price > pivot and gap >= R["gap_big"] and chg >= R["min_chg"]
+        catalyst = bool(under) and bool(s50) and price > s50
+        launch = price > pivot and chg >= R["min_chg"]
         if not (power or catalyst or launch):
             continue
         ern = q[6] if len(q) > 6 else None
