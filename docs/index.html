@@ -556,14 +556,13 @@
         <table class="tgr-table" id="ln-table">
           <thead><tr>
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
-            <th><button class="tgr-th" data-sort="date">Launched</button></th>
+            <th><button class="tgr-th" data-sort="date" title="The launch day; under it, that day's move, gap and volume (× its 20-day average)">Launched</button></th>
             <th><button class="tgr-th" data-sort="grade">Grade</button></th>
-            <th class="num"><button class="tgr-th" data-sort="chg_pct">Day</button></th>
-            <th class="num c2"><button class="tgr-th" data-sort="gap_pct">Gap</button></th>
-            <th class="num"><button class="tgr-th" data-sort="rel_vol">Vol ×</button></th>
+            <th class="num"><button class="tgr-th" data-sort="today" title="Today's % change: live during market hours, the day's final after the close">Today</button></th>
+            <th class="num"><button class="tgr-th" data-sort="rv_today" title="Today's relative volume: live during market hours (volume so far ÷ the usual by this time of day), the full day after the close">Rel vol</button></th>
             <th class="c2">Base BO</th>
             <th><button class="tgr-th" data-sort="group">Theme then → now</button></th>
-            <th class="num"><button class="tgr-th" data-sort="gain_now">Gain</button></th>
+            <th class="num"><button class="tgr-th" data-sort="gain_now" title="LD = launch day: % from the launch day's close to now">LD → now</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="max_gain_pct">Max</button></th>
             <th><button class="tgr-th" data-sort="stage" title="Where the stock is after the close: in the base, consolidation surfing the 10 & 21 EMA on dry volume (its resting time), tight under the buy point, a breakout, running, a retest that held; green = above the 21 EMA">Status</button></th>
             <th class="num"><button class="tgr-th" data-sort="base_day" title="Day of the base: sessions since the launch, or since the leg's breakout (it starts again at 0 with each new leg). ↑ = it turned up today: back over a rising 10 EMA after closing under it">Base day</button></th>
@@ -1509,17 +1508,19 @@ defCalc('industry_perf', {
     const all = doc ? doc.launches.map((r) => {
       const m = symMap.get(r.symbol);
       const px = m && num(m.price) !== null ? num(m.price) : r.price;
-      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null });
+      /* today: the live (or the latest close's) change and relative volume, not the launch day's */
+      const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct), rvToday = m && num(m.rel_vol) !== null ? num(m.rel_vol) : num(r.rel_vol_today);
+      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday });
     }) : [];
     const rows = all.filter((r) => (S.lng === 'all' || S.lng.includes(r.grade[0])) && (S.lnwolf || !r.lone_wolf) &&
       (S.lnst === 'all' || (S.lnst === 'riding' ? r.status === 'Riding' : !!r.pattern)));
     $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
     const today = doc ? all.filter((r) => r.date === doc.date).length : 0;
     const LQ = doc && doc.liquidity;
-    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close). Gain = from the launch-day close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '; lone wolves are hidden unless ticked.' +
+    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
       (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
     sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern'], 'grade');
-    if (doc && !rows.length) noRows(tb, 26, 'No launch matches these filters.');
+    if (doc && !rows.length) noRows(tb, 25, 'No launch matches these filters.');
     rows.forEach((r) => {
       const tr = h('tr');
       const key = tkCell(r.symbol, r.tv);
@@ -1543,8 +1544,11 @@ defCalc('industry_perf', {
       const legTd = h('td', 'num nw' + (r.late ? ' tgr-dn' : ''), r.leg === undefined || r.leg === null ? '—' : (r.leg === 0 ? '0 (in base)' : String(r.leg)) + (r.late ? ' late' : '') + (r.new_run_after_rest ? ' (new run)' : ''));
       if (r.new_run_after_rest) legTd.title = 'A new run after a rest of 40+ sessions, from ' + fDate(r.new_run_after_rest);
       if (r.late) legTd.title = 'Leg 4 or later: breakouts this late mostly failed in the history test';
-      tr.append(key, h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), gradeCell(r.grade), pctCell(r.chg_pct, 0), h('td', 'num c2', p1(r.gap_pct, true)),
-        h('td', 'num' + (r.rel_vol >= 3 ? ' tgr-up' : ''), fX(r.rel_vol)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
+      /* the launch date, and under it that day's move, gap and volume */
+      const ld = h('td', 'nw'); ld.append(h('div', '', fDate(r.date).replace(/, \d{4}$/, '')),
+        h('div', 'tgr-lbl', p1(r.chg_pct, true) + (num(r.gap_pct) !== null ? ' · gap ' + p1(r.gap_pct, true) : '') + ' · ' + fX(r.rel_vol) + ' vol'));
+      tr.append(key, ld, gradeCell(r.grade), pctCell(r.today, 0),
+        h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
         h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
         h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')),
         h('td', 'nw', r.base_pattern ? r.base_pattern.replace('Base forming (no pattern yet)', 'Forming (no pattern yet)') : '—'), ex, legTd,
