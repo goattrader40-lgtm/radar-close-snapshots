@@ -79,7 +79,7 @@ jobs:
           git show origin/radar-data:themes.json > /tmp/rd/themes.json
           git show origin/radar-data:gradelog.json > /tmp/rd/gradelog.json || true
           git show origin/radar-data:live.json > /tmp/rd/live.json || true
-          python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out setups/launch.json --backtest setups/launch_backtest.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json
+          python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out setups/launch.json --backtest setups/launch_backtest.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json --picks setups/picks.json
 
       - name: After-close heads-ups to the phone (tight under a buy point, retest held)
         if: steps.gate.outputs.go == 'yes'
@@ -103,6 +103,6 @@ jobs:
             echo "No changes."
           else
             git commit -m "setups $(TZ=America/New_York date +%F)"
-            git pull --rebase --quiet origin main
+            git pull --rebase -X theirs --quiet origin main     # a Follow-button rebuild meanwhile: this scan's launches win (they include the picks)
             git push
           fi

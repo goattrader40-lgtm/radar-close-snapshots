@@ -48,10 +48,20 @@ jobs:
             python3 scanner/fetch.py /tmp/bars.json.gz
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json && { git show origin/radar-data:gradelog.json > /tmp/rd/gradelog.json || true; } && { git show origin/radar-data:live.json > /tmp/rd/live.json || true; }
-            python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out setups/launch.json --backtest setups/launch_backtest.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json
+            python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out setups/launch.json --backtest setups/launch_backtest.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json --picks setups/picks.json
             git add setups/launch.json setups/launch_backtest.json
             git diff --cached --quiet || { git commit -q -m "launches $(TZ=America/New_York date +%F)"; git pull -q --rebase origin main; git push -q; }
           fi
+          case "$CMD" in launchdry\ *)
+            # the launch build with test picks (not saved to main): python3 -c writes them added at this time yesterday
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json
+            python3 -c "import json,sys,datetime; t=(datetime.datetime.now()-datetime.timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S'); json.dump({'picks': {s: {'added': t} for s in sys.argv[1:]}}, open('/tmp/picks_dry.json','w'))" ${CMD#launchdry }
+            python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/launch_dry.json --picks /tmp/picks_dry.json
+            python3 radar/publish.py "launch dry run" /tmp/launch_dry.json;;
+          esac
           if [ "${{ inputs.cmd }}" = "gapstudy" ]; then
             pip install --quiet numba numpy pandas
             python3 scanner/fetch.py /tmp/bars.json.gz

@@ -1,0 +1,63 @@
+# Your picks: the portal's Follow button (Watchlist tab) saves setups/picks.json; this rebuilds the Launches list
+# with them right away, so they show on the Launches tab and the live job alerts on them within minutes, instead of
+# after the evening scan (which includes them too). Remove (Launches tab) works the same way.
+name: Follow picks
+
+on:
+  push:
+    branches: [main]
+    paths: [setups/picks.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: picks
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild the Launches list with your picks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "radar-bot"; git config user.email "radar-bot@users.noreply.github.com"
+          # the evening scan rebuilds the list too: let it finish, then build on top of it with the latest picks
+          while [ "$(gh run list --workflow scanner.yml --status in_progress --json databaseId -q length)" != "0" ]; do
+            echo "waiting for the evening scan"; sleep 30
+          done
+          git pull -q origin main
+          pip install --quiet numba numpy pandas
+          python3 scanner/fetch.py /tmp/bars.json.gz
+          git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+          mkdir -p /tmp/rd
+          git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
+          git show origin/radar-data:themes.json > /tmp/rd/themes.json
+          git show origin/radar-data:gradelog.json > /tmp/rd/gradelog.json || true
+          git show origin/radar-data:live.json > /tmp/rd/live.json || true
+          python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out setups/launch.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json --picks setups/picks.json
+          python3 -c "import json; d = json.load(open('setups/launch.json')); print('picks on the list:', ' '.join(r['symbol'] for r in d['launches'] if r.get('pick')) or '-')"
+          git add setups/launch.json
+          git diff --cached --quiet && exit 0
+          git commit -q -m "launches: your picks $(TZ=America/New_York date '+%F %H:%M')"
+          for i in 1 2 3; do
+            if git pull -q --rebase origin main; then
+              git push -q && exit 0
+            else
+              git rebase --abort || true
+              echo "the launches were rebuilt meanwhile: run this again (Actions -> Follow picks -> Run workflow)"; exit 1
+            fi
+            sleep 5
+          done
+          exit 1

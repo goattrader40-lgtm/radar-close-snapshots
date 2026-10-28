@@ -127,6 +127,16 @@
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
   #wl-table td.nw, #ln-table td.nw { white-space: nowrap; }
+  .tgr-follow { margin-left: 6px; line-height: 1.5; white-space: nowrap; }
+  .tgr-follow.on { border-color: var(--color-ok); color: var(--color-ok); }
+  .tgr-dlg { max-width: min(560px, calc(100vw - 32px)); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); padding: 16px; }
+  .tgr-dlg::backdrop { background: rgba(0, 0, 0, 0.45); }
+  .tgr-dlg h2 { margin-top: 0; }
+  .tgr-dlg ol { padding-left: 1.3em; }
+  .tgr-dlg li { margin: 4px 0; }
+  .tgr-dlg input { width: 100%; box-sizing: border-box; }
+  .tgr-dlg-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+  .tgr-toast { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); max-width: calc(100vw - 32px); background: var(--color-fg); color: var(--color-bg); padding: 8px 14px; border-radius: var(--cds-radius); font-size: var(--cds-font-size-caption); z-index: 50; }
   .tgr-alog { margin: 0; padding: 0; list-style: none; font-size: var(--cds-font-size-caption); max-height: 12rem; overflow: auto; }
   .tgr-alog li { padding: 3px 0; border-top: 1px solid var(--color-border-line); }
   .tgr-alog li:first-child { border-top: 0; }
@@ -620,6 +630,22 @@
   <p class="tgr-foot" id="foot">During market hours (9:30 AM–4:10 PM ET) prices update about every 5 minutes from Yahoo quotes (from about 9:55 their volume is corrected against the consolidated tape: Yahoo's live volume runs several % high during the session), and this page checks for new data every 90 seconds on its own. Live 1D is today's change so far; live 1W, 1M and 3M compare today's price with the close 5, 21 and 63 sessions back; Rel vol is relative volume at time: volume from 9:30 to now ÷ the average of the last 20 sessions' volume from 9:30 to the same minute (from 5-minute bars on the consolidated tape via Alpaca, all US exchanges and off-exchange trades), so 2.00× at 11:50 means twice the usual volume by 11:50; it's rough in the first 5 minutes. After the close it's the full day ÷ the previous 20 sessions' average. Everything else (themes and their scores, ADR%, $ volume, 200-day SMA, averages) is rebuilt after each close, around 4:30 PM ET. Newest day comes from: <span id="src">—</span>; earlier days, volume and company details come from Nasdaq's daily list, which runs one session behind. ADR% (20-day average of high ÷ low − 1) comes from: <span id="adr-src">—</span>. $ volume averages price × shares over the last 10 or 20 sessions. Group figures are the median (or market-cap-weighted average) of the group's liquid members. Auto-added names and auto groups come from the co-movement test (daily moves with the market's move removed, 120 sessions, 0.6+ score with the group, market cap ≥ $700M and 700K+ shares a day), recomputed weekly, currently with data through <span id="grp-asof">—</span>. Broad industries come from FinanceDatabase; Detailed uses Nasdaq's own industry labels. Data and code: <a href="https://github.com/goattrader40-lgtm/radar-close-snapshots">your GitHub repo</a> (radar-data branch).</p>
 </div>
 </div>
+<dialog class="tgr-dlg" id="gh-key-dlg" aria-labelledby="gh-key-h">
+  <h2 id="gh-key-h">Follow button: one-time setup on this device</h2>
+  <p>Your picks are saved in your GitHub repo, so the GitHub job follows them like launches (buy points, breakouts, alerts on your desktop and phone). For that this page needs a key from GitHub that can only change this one repo. You do this once on each computer or phone you use.</p>
+  <ol>
+    <li><a href="https://github.com/settings/personal-access-tokens/new?name=Radar+portal&amp;description=Follow+button+on+the+radar+portal&amp;target_name=goattrader40-lgtm&amp;expires_in=365&amp;contents=write" target="_blank" rel="noopener">Open GitHub's key page</a> (sign in if it asks).</li>
+    <li>Token name: <b>Radar portal</b>. Expiration: <b>1 year</b> (or longer).</li>
+    <li>Repository access: <b>Only select repositories</b>, then pick <b>radar-close-snapshots</b>.</li>
+    <li>Permissions, Repository permissions: <b>Contents</b> set to <b>Read and write</b>.</li>
+    <li>Click <b>Generate token</b>, copy it (it starts with github_pat_) and paste it here.</li>
+  </ol>
+  <input class="tgr-search" id="gh-key-in" type="password" placeholder="github_pat_…" autocomplete="off" aria-label="Your GitHub key">
+  <p class="tgr-lbl" id="gh-key-msg" aria-live="polite"></p>
+  <div class="tgr-dlg-btns"><button class="tgr-lite" id="gh-key-cancel" type="button">Cancel</button><button class="tgr-lite" id="gh-key-save" type="button">Save and follow</button></div>
+  <p class="tgr-lbl">The key stays in this browser only (clearing this site's data removes it).</p>
+</dialog>
+<div class="tgr-toast" id="toast" role="status" hidden></div>
 <script>
 const D = {};
 const CALCS = {};
@@ -1325,6 +1351,81 @@ defCalc('industry_perf', {
   /* watchlist: the setup scanner's lists, with today's live price on top */
   const WL_LISTS = ['3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'];
   const WL_ORDER = { '3-SETUPS': ['Tight', 'PB 21', 'PB 50'], '2-POOL': ['Momentum', '50 EMA reclaim', 'Growth'] };
+  /* your picks: the Follow button saves the stock to setups/picks.json in your repo (with a GitHub key kept in this
+     browser, made once per device); a GitHub job (Follow picks) then rebuilds the Launches list with it in a few
+     minutes, and from then on it is followed like a launch. ✕ on the Launches tab removes it the same way. */
+  const PKEY = 'radar-gh-key', PPEND = 'radar-picks-pending';
+  const ghKey = () => { try { return localStorage.getItem(PKEY) || ''; } catch (e) { return ''; } };
+  const dropKey = () => { try { localStorage.removeItem(PKEY); } catch (e) { /* private window */ } };
+  const pendingPicks = () => { try { return JSON.parse(localStorage.getItem(PPEND) || '{}'); } catch (e) { return {}; } };
+  const pickedNow = () => {   /* followed as of the last rebuild, plus the clicks since (until the rebuild shows them) */
+    const doc = st('launch').status === 'ok' ? st('launch').data : null;
+    const set = new Set(doc ? doc.launches.filter((r) => r.pick).map((r) => r.symbol) : []);
+    Object.entries(pendingPicks()).forEach(([s, [on, t]]) => { if (Date.now() - t < 30 * 60 * 1000) { if (on) set.add(s); else set.delete(s); } });
+    return set;
+  };
+  let toastT = null;
+  const toast = (text) => { const t = $('#toast'); t.textContent = text; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 9000); };
+  const nyIso = () => {
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' })
+      .formatToParts(new Date()).map((x) => [x.type, x.value]));
+    return p.year + '-' + p.month + '-' + p.day + 'T' + p.hour + ':' + p.minute + ':' + p.second;
+  };
+  const askKey = () => new Promise((resolve) => {
+    const dlg = $('#gh-key-dlg'), inp = $('#gh-key-in'), msg = $('#gh-key-msg');
+    inp.value = ''; msg.textContent = '';
+    const done = (v) => { dlg.close(); resolve(v); };
+    $('#gh-key-save').onclick = async () => {
+      const v = inp.value.trim();
+      if (!v) { msg.textContent = 'Paste the key first.'; return; }
+      msg.textContent = 'Checking it with GitHub…';
+      const r = await fetch('https://api.github.com/user', { headers: { Authorization: 'Bearer ' + v, Accept: 'application/vnd.github+json' } }).catch(() => null);
+      if (!r || !r.ok) { msg.textContent = r ? 'GitHub did not accept this key: copy it again (it starts with github_pat_).' : 'Could not reach GitHub: try again.'; return; }
+      try { localStorage.setItem(PKEY, v); } catch (e) { /* private window: this visit only */ }
+      done(v);
+    };
+    $('#gh-key-cancel').onclick = () => done(null);
+    dlg.showModal();
+  });
+  const b64 = (s) => btoa(unescape(encodeURIComponent(s)));
+  const unb64 = (s) => decodeURIComponent(escape(atob(s.replace(/\s/g, ''))));
+  const savePick = async (sym, on) => {
+    let key = ghKey() || await askKey();
+    if (!key) return false;
+    const url = 'https://api.github.com/repos/' + GH.owner + '/' + GH.repo + '/contents/setups/picks.json';
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const hd = { Authorization: 'Bearer ' + key, Accept: 'application/vnd.github+json' };
+      const g = await fetch(url + '?ref=main&t=' + Date.now(), { headers: hd, cache: 'no-store' });
+      if (g.status === 401) { dropKey(); key = await askKey(); if (!key) return false; continue; }
+      let doc = { picks: {} }, sha;
+      if (g.ok) { const j = await g.json(); sha = j.sha; try { doc = JSON.parse(unb64(j.content)); } catch (e) { /* unreadable: start it again */ } }
+      else if (g.status !== 404) throw new Error('GitHub answered ' + g.status);
+      doc.picks = doc.picks || {};
+      if (on) doc.picks[sym] = { added: nyIso(), from: 'Watchlist ' + S.wl }; else delete doc.picks[sym];
+      const body = { message: (on ? 'Follow ' : 'Stop following ') + sym + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
+      if (sha) body.sha = sha;
+      const p = await fetch(url, { method: 'PUT', headers: hd, body: JSON.stringify(body) });
+      if (p.ok) return true;
+      if (p.status === 409 || p.status === 422) continue;           /* changed meanwhile: read it again */
+      if (p.status === 401 || p.status === 403 || p.status === 404) {
+        dropKey();
+        throw new Error('this key can\'t save to the repo. Make a new one: in step 3 pick radar-close-snapshots, in step 4 Contents: Read and write');
+      }
+      throw new Error('GitHub answered ' + p.status);
+    }
+    throw new Error('the file kept changing: try again');
+  };
+  const followPick = async (sym, on, btn) => {
+    btn.disabled = true; btn.textContent = on ? 'Saving…' : 'Removing…';
+    try {
+      if (await savePick(sym, on)) {
+        const p = pendingPicks(); p[sym] = [on, Date.now()];
+        try { localStorage.setItem(PPEND, JSON.stringify(p)); } catch (e) { /* private window */ }
+        toast(on ? sym + ' followed: it shows on the Launches tab in about 5 minutes, then it alerts like a launch.' : sym + ' no longer followed: it leaves the Launches tab in about 5 minutes.');
+      }
+    } catch (e) { toast('Not saved: ' + e.message + '.'); }
+    draw();
+  };
   const wlSecs = (list, rows) => {   /* same section order as the TradingView import files */
     const have = [...new Set(rows.map((r) => r.section || ''))];
     if (list.startsWith('1-')) return have.sort().reverse();
@@ -1381,10 +1482,21 @@ defCalc('industry_perf', {
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
     if (doc && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'No names in this list' + (S.wlsec || q ? ' match.' : ' right now.')); td.colSpan = 18; tr.append(td); tb.append(tr); }
+    const picked = pickedNow(), ldoc = st('launch').status === 'ok' ? st('launch').data : null;
+    const launchedSet = new Set(ldoc ? ldoc.launches.filter((r) => r.grade !== 'You').map((r) => r.symbol) : []);
     rows.forEach((r) => {
       const tr = h('tr'); tr.dataset.key = r.symbol;
       const key = h('td', 'key');
       const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol); a.target = '_blank'; a.rel = 'noopener'; key.append(a);
+      /* Follow: onto the Launches tab, followed like a launch (buy points, breakouts, alerts) */
+      const fol = picked.has(r.symbol);
+      if (launchedSet.has(r.symbol) && !fol) { const t = h('span', 'tgr-gm', 'in Launches'); t.title = 'Already followed on the Launches tab as a launch'; key.append(t); }
+      else {
+        const fb = h('button', 'tgr-lite tgr-follow' + (fol ? ' on' : ''), fol ? '✓ Following' : '+ Follow'); fb.type = 'button';
+        fb.title = fol ? 'On your Launches tab: click to stop following it' : 'Follow it on the Launches tab: buy points, breakouts and alerts like a launch';
+        fb.addEventListener('click', () => followPick(r.symbol, !fol, fb));
+        key.append(fb);
+      }
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade[0], r.grade)); else gd.textContent = '—';
       const sec = (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
       tr.append(key, h('td', 'nw', sec), gd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
@@ -1468,7 +1580,7 @@ defCalc('industry_perf', {
   const sortRows = (table, rows, def, txtKeys, gradeKey) => {
     const spec = S.sort[table.id] || def;
     if (spec) {
-      const go = { 'A+': -1, A: 0, B: 1, C: 2 };
+      const go = { 'A+': -1, A: 0, B: 1, C: 2, You: 3 };
       const val = (r) => (spec.key === gradeKey ? (go[r[gradeKey]] ?? 9) : txtKeys.includes(spec.key) ? String(r[spec.key] || '') : num(r[spec.key]));
       const blank = (v) => v === null || v === undefined || v === '' || Number.isNaN(v);
       rows.sort((a, c) => (blank(val(a)) - blank(val(c))) || (spec.dir > 0 ? cmp(val(a), val(c)) : cmp(val(c), val(a))));
@@ -1512,18 +1624,26 @@ defCalc('industry_perf', {
       const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct), rvToday = m && num(m.rel_vol) !== null ? num(m.rel_vol) : num(r.rel_vol_today);
       return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday });
     }) : [];
-    const rows = all.filter((r) => (S.lng === 'all' || S.lng.includes(r.grade[0])) && (S.lnwolf || !r.lone_wolf) &&
+    const rows = all.filter((r) => (S.lng === 'all' || r.grade === 'You' || S.lng.includes(r.grade[0])) && (S.lnwolf || !r.lone_wolf) &&
       (S.lnst === 'all' || (S.lnst === 'riding' ? r.status === 'Riding' : !!r.pattern)));
     $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
-    const today = doc ? all.filter((r) => r.date === doc.date).length : 0;
+    const today = doc ? all.filter((r) => r.date === doc.date && r.grade !== 'You').length : 0;
+    const npick = all.filter((r) => r.pick).length;
     const LQ = doc && doc.liquidity;
-    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
+    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close)' + (npick ? ', ' + npick + ' of them your picks' : '') + '. Your picks = the Follow button on the Watchlist tab: followed from the close you added them at, until you remove them (✕). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
       (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
     sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern'], 'grade');
     if (doc && !rows.length) noRows(tb, 25, 'No launch matches these filters.');
     rows.forEach((r) => {
       const tr = h('tr');
       const key = tkCell(r.symbol, r.tv);
+      if (r.pick) {
+        const t = h('span', 'tgr-gm', 'your pick'); t.title = 'You follow it (Follow button, ' + fDate(r.pick.slice(0, 10)) + ')'; key.append(t);
+        const rm = h('button', 'tgr-lite tgr-follow', '✕'); rm.type = 'button'; rm.title = 'Stop following ' + r.symbol + (r.grade === 'You' ? ' (it leaves this list)' : ' as your pick (it stays as a launch)');
+        rm.setAttribute('aria-label', rm.title);
+        rm.addEventListener('click', () => { if (confirm('Stop following ' + r.symbol + '?')) followPick(r.symbol, false, rm); });
+        key.append(rm);
+      }
       if (r.lone_wolf) { const w = h('span', 'tgr-flag', 'lone wolf'); w.style.marginLeft = '6px'; key.append(w); }
       if (r.power) { const t = h('span', 'tgr-gm', 'power'); t.title = 'Power day: volume 4x+, a 10%+ gap, a 15%+ day'; key.append(t); }
       if (r.faded) { const t = h('span', 'tgr-flag', 'faded'); t.style.marginLeft = '6px'; t.title = 'Closed ' + r.close_in_range + '% up its range: the day\'s low is a tight stop (2 years: most such days broke it, 13% still ran 50%+)'; key.append(t); }
@@ -1545,9 +1665,13 @@ defCalc('industry_perf', {
       if (r.new_run_after_rest) legTd.title = 'A new run after a rest of 40+ sessions, from ' + fDate(r.new_run_after_rest);
       if (r.late) legTd.title = 'Leg 4 or later: breakouts this late mostly failed in the history test';
       /* the launch date, and under it that day's move, gap and volume */
-      const ld = h('td', ''); ld.append(h('div', 'nw', fDate(r.date).replace(/, \d{4}$/, '')),
+      const ld = h('td', '');
+      if (r.grade === 'You') ld.append(h('div', 'nw', 'Added ' + fDate(r.pick.slice(0, 10)).replace(/, \d{4}$/, '')), h('div', 'tgr-lbl', 'from ' + fPrice(r.close) + ' (' + fDate(r.date).replace(/, \d{4}$/, '') + ' close)'));
+      else ld.append(h('div', 'nw', fDate(r.date).replace(/, \d{4}$/, '')),
         h('div', 'tgr-lbl', (r.chg_pct > 0 ? '+' : '') + Math.round(r.chg_pct) + '%' + (num(r.gap_pct) !== null ? ' gap ' + Math.round(r.gap_pct) + '%' : '') + ' ' + num(r.rel_vol).toFixed(1) + '×'));
-      tr.append(key, ld, gradeCell(r.grade), pctCell(r.today, 0),
+      const gc = r.grade === 'You' ? h('td', '') : gradeCell(r.grade);
+      if (r.grade === 'You') { const t = h('span', 'tgr-gm', 'You'); t.title = 'Your pick: no launch day to grade'; gc.append(t); }
+      tr.append(key, ld, gc, pctCell(r.today, 0),
         h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
         h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
         h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')),

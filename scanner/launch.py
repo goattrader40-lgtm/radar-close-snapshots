@@ -384,8 +384,10 @@ def pop_level(a, k):
     return max(st.o[k], st.c[k], a.e10[k], a.e21[k])
 
 
-def follow(a, i0, i):
-    """what happened from the launch close (i0) to bar i: status, gain, exit signal, current base and pattern"""
+def follow(a, i0, i, pick=False):
+    """what happened from the launch close (i0) to bar i: status, gain, exit signal, current base and pattern.
+    pick: a stock you follow from the Watchlist tab, from the close you added it at (i0): no launch day, and its top
+    starts at its base top when it was under it"""
     st, c = a.st, a.st.c
     exit_k = next((k for k in range(i0 + 1, i + 1) if c[k] < a.e21[k]), None)
     out50 = next((k for k in range(i0 + 2, i + 1) if c[k] < a.e50[k] and c[k - 1] < a.e50[k - 1]), None)
@@ -409,9 +411,11 @@ def follow(a, i0, i):
     b0 = base_ok(a, i0, 120)
     leg = 1 if not b0 or c[i0] > b0[0] else 0
     H, last_new, armed, rested, last_leg = st.h[i0], i0, False, None, i0
+    if pick and b0 and b0[0] > H:
+        H = b0[0]
     used, bo = set(), None                                  # bo = (day, top, top index) of the last base breakout
     dry_done, dry_day, flag_day = False, None, None         # one dry-up entry per base (ANF: Oct 5 2026, not again)
-    lvl = st.h[i0]                                          # the level the leg broke out of: the launch day's high, then the base top
+    lvl = H                                                 # the level the leg broke out of: the launch day's high, then the base top
     nbo = 0                                                 # breakouts since the launch (for the grade: the 1st and 2nd work best)
     for j in range(i0 + 1, i + 1):
         if not dry_done and dry_armed(a, j - 1, H):
@@ -499,7 +503,7 @@ def follow(a, i0, i):
     while i - rest > i0 and resting(a, i - rest):
         rest += 1
     since = None
-    if i == i0:
+    if i == i0 and not pick:
         stage = "Launch day"
     elif bo and bo[0] == i:
         # how decisively it closed over the top (2 years, 906 breakouts: 0.5+ ADR over, about 30% fell back under
@@ -662,7 +666,15 @@ def earnings_of(path, cal):
     return out
 
 
-def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
+def picks_of(path):
+    """{symbol: when you added it (ISO time, New York)} from setups/picks.json (the portal's Follow button)"""
+    try:
+        return {s.upper(): p["added"] for s, p in json.load(open(path)).get("picks", {}).items() if p.get("added")}
+    except Exception:
+        return {}
+
+
+def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
     T = len(cal) - 1
@@ -694,9 +706,37 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None):
     # closed below the 21 EMA on Aug 17; both followed gave two alerts with different legs)
     seen = set()
     rows = [r for r in rows if not (r["symbol"] in seen or seen.add(r["symbol"]))]
+    # your picks (the portal's Follow button on the Watchlist tab), followed like a launch from the close you added
+    # them at (that day's close after 4 PM, else the session before), until you remove them. A stock already
+    # followed as a launch keeps its launch row, marked as yours too
+    have = {r["symbol"]: r for r in rows}
+    for s, added in (picks or {}).items():
+        if s in have:
+            have[s]["pick"] = added
+            continue
+        a = A.get(s)
+        if a is None:
+            continue
+        last = len(a.st.dates) - 1
+        try:
+            t = datetime.datetime.fromisoformat(added)
+        except ValueError:
+            continue
+        d = t.date().isoformat()
+        i0 = max((k for k in range(last + 1) if a.st.dates[k] < d or (a.st.dates[k] == d and t.hour >= 16)), default=None)
+        if a.st.dates[last] != today or i0 is None or i0 < 60:
+            continue
+        k0 = pos.get(a.st.dates[i0], T)
+        gs, gn = best_group(s, k0, groups, GS)
+        r = launch_row(s, a, i0, gs, gn, S)
+        r.update(follow(a, i0, last, pick=True))
+        cgs, cgn = best_group(s, T, groups, GS)
+        r.update(grade="You", pick=added, follows=None, news=None, earnings=False, group_now=cgn,
+                 group_status_now=STATUS.get(cgs, "No group"), theme_up_since=None, lone_wolf=False)
+        rows.append(r)
     # watch list for the intraday trigger: liquid, from 25% under to 50% over the 200 SMA (over 28%: power days
     # only; under it: only once it trades back above it, e.g. a catalyst gap), no launch in 20 days
-    launched = {r["symbol"] for r in rows if r["sessions"] < L["dedupe_days"] and not r["first_exit"]}
+    launched = {r["symbol"] for r in rows if r["sessions"] < L["dedupe_days"] and not r["first_exit"] and r["grade"] != "You"}
     leaders = collections.defaultdict(set)              # theme -> A / B launches of the last 10 sessions (for followers)
     for r in rows:
         if r["grade"] in ("A+", "A", "B") and not r.get("follows") and r["sessions"] < 10:
@@ -814,11 +854,13 @@ def main():
     ap.add_argument("--entry", choices=["open", "close"], default="open")
     ap.add_argument("--gradelog", help="the pre-market grade log (radar-data gradelog.json), for news tags")
     ap.add_argument("--live", help="the day's last live quotes (radar-data live.json), for earnings tags")
+    ap.add_argument("--picks", help="setups/picks.json: the stocks you follow (the portal's Follow button)")
     a = ap.parse_args()
     global ENTRY
     ENTRY = a.entry
     A, groups, GS, cal, S = load(a.bars, a.stocks)
-    daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {})
+    daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {},
+          picks_of(a.picks) if a.picks else {})
     if a.backtest:
         backtest(A, groups, GS, cal, S, a.backtest)
 

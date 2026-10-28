@@ -23,7 +23,7 @@ def main():
     out = []
     for r in doc.get("launches", []):
         late = " (late leg)" if r.get("late") else ""
-        tail = f" · leg {r.get('leg')}{late} · launched {r['date']} ({r['grade']}) · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
+        tail = f" · leg {r.get('leg')}{late} · {'your pick since ' + r['pick'][:10] if r.get('grade') == 'You' else 'launched ' + r['date'] + ' (' + r['grade'] + ')'} · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
         if r.get("retest_today"):
             out.append((f"{r['symbol']} retest held", f"came back to its broken base top {r.get('last_breakout_top')} (broken {r.get('last_breakout_date')})"
                         f" and closed above it at ${r['price']:.2f}: another entry" + tail, r.get("tv") or r["symbol"]))

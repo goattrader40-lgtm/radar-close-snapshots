@@ -195,7 +195,7 @@ def find(live, doc, now=None, gaps_only=False):
                             f"opened ${op:.2f} ({gap_:+.1f}%) above yesterday's tight candle and the rising 10 & 21 EMA, now ${price:.2f}"
                             f" · {chg:+.1f}% · vol {rv:.1f}x · after its resting time (volume dried up, surfing the 10 & 21 EMA) · an entry inside"
                             f" the base (still leg {nxt}) · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
-                            f" · launched {r['date']} ({r['grade']})", "default", tvs))
+                            + since(r), "default", tvs))
             elif confirm:
                 out.append(confirm)
             continue
@@ -212,8 +212,13 @@ def find(live, doc, now=None, gaps_only=False):
             out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
                         f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x · "
                         + f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "") + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
-                        + f" · launched {r['date']} ({r['grade']})", "high" if g == "A" else "default", tvs))
+                        + since(r), "high" if g == "A" else "default", tvs))
     return out
+
+
+def since(r):
+    """how the stock came to be followed: its launch, or your Follow button"""
+    return f" · your pick since {r['pick'][:10]}" if r.get("grade") == "You" else f" · launched {r['date']} ({r['grade']})"
 
 
 def opening_range_high(sym):
