@@ -52,6 +52,14 @@ jobs:
             git add setups/launch.json setups/launch_backtest.json
             git diff --cached --quiet || { git commit -q -m "launches $(TZ=America/New_York date +%F)"; git pull -q --rebase origin main; git push -q; }
           fi
+          if [ "${{ inputs.cmd }}" = "gapstudy" ]; then
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json && git show origin/radar-data:volprofile.json > /tmp/rd/volprofile.json
+            python3 scanner/probe_gaps.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --volprofile /tmp/rd/volprofile.json --out /tmp/probe_gaps.json
+            python3 radar/publish.py "gap study" /tmp/probe_gaps.json
+          fi
           case "$CMD" in long\ *) python3 radar/probe_long.py /tmp/long_bars.json ${CMD#long } && python3 radar/publish.py "long history" /tmp/long_bars.json;; esac
           case "$CMD" in replay\ *) python3 radar/probe_replay.py /tmp/probe_replay.json ${CMD#replay } && python3 radar/publish.py "alert replay" /tmp/probe_replay.json;; esac
           if [ "${{ inputs.cmd }}" = "alerttest" ]; then

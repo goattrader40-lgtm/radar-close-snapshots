@@ -3,7 +3,8 @@
 
   python3 radar/probe_replay.py <out.json> SYM ...   (needs ALPACA_KEY_ID / ALPACA_SECRET; the last 16 minutes aren't out yet)
 
-At each 5-minute check (9:35:20, 9:40:20, ...): price = the last complete minute's close, volume = Alpaca SIP volume
+At each 5-minute check (9:35:20, 9:40:20, ...; --every-minute: each minute from 9:31:20, with the early heads-ups
+until 9:35): price = the last complete minute's close, volume = Alpaca SIP volume
 from 9:30 to that minute, Rel vol from the volume curves (volprofile.json), the open = the first minute's open,
 earnings time from the latest live.json; then radar/alerts.py's rules against last night's watch list
 (setups/launch.json). Lists every check's numbers and each alert the first time it fires.
@@ -42,8 +43,9 @@ for s in bars:
     for b in bars[s]:
         b["ts"] = datetime.datetime.fromisoformat(b["t"].replace("Z", "+00:00")).timestamp()
 out, sent = {"date": str(now.date()), "watch_from": doc["date"], "checks": {s: [] for s in syms}, "alerts": []}, set()
-t = t0 + datetime.timedelta(minutes=5, seconds=20)
-step = datetime.timedelta(minutes=1 if "--every-minute" in sys.argv else 5)
+every = "--every-minute" in sys.argv
+t = t0 + datetime.timedelta(minutes=1 if every else 5, seconds=20)
+step = datetime.timedelta(minutes=1 if every else 5)
 while t.timestamp() + 60 <= now.timestamp() - 16 * 60 and t.hour < 16:
     rows = {}
     for s in syms:
@@ -57,7 +59,8 @@ while t.timestamp() + 60 <= now.timestamp() - 16 * 60 and t.hour < 16:
         row = [price, round(100 * (price / w[0] - 1), 3), vol, qt, rvol_at(vol, qt, prof.get(s)), op, lv[6] if len(lv) > 6 else None]
         rows[s] = row
         out["checks"][s].append([t.strftime("%H:%M"), price, row[1], round(100 * (op / w[0] - 1), 1), row[4], round(max(b["h"] for b in done), 2)])
-    for a in alerts.find({"rows": rows}, doc, t):
+    early = (t.hour, t.minute) < (9, 35)
+    for a in (alerts.find_early if early else alerts.find)({"rows": rows}, doc, t):
         if a[0] not in sent:
             sent.add(a[0])
             out["alerts"].append([t.strftime("%H:%M"), a[1], a[2]])

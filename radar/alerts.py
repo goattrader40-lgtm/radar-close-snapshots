@@ -4,7 +4,8 @@
   python3 radar/alerts.py <live.json> <launch.json> <alerts.json> [--gaps-only]   (NTFY_TOPIC set: sends; unset: only logs)
 
 Every 5 minutes with the live prices; every minute in between (--gaps-only, radar/fast.py) for the big gap-ups on
-volume: catalyst gaps and their 2nd trigger, power days, A+/A launches.
+volume: catalyst gaps and their 2nd trigger, power days, A+/A launches. 9:31-9:34 (the 1-minute check only): the
+early heads-up (find_early), the shape of such a gap before its volume can be read.
 
 Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the radar-data branch):
   power day   volume pace 4x+ for the time of day, a 10%+ gap, up 15%+, above the 200 SMA, at most 50% over it
@@ -28,7 +29,7 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
   confirm     in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
   pop         the entry inside a base: after its resting time (the volume dried up, surfing the 10 & 21 EMA) and a
               tight candle, it opens above that candle's open and close and above the rising 10 & 21 EMA (ANF Oct 5 2026)
-Nothing is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
+Nothing but the early heads-ups is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
 """
 import datetime, json, os, sys, urllib.request, zoneinfo
@@ -58,6 +59,49 @@ def grade_breakout(r):
     why = [("1st" if not r.get("breakouts") else "2nd") + " breakout since the launch" if early else "late (3rd+ breakout or 50+ sessions on)",
            "theme leading" if lead else f"theme {(r.get('group_status_now') or 'none').lower()}"] + (["volume building"] if build else [])
     return g, ", ".join(why)
+
+
+def find_early(live, doc, now=None):
+    """the early heads-up, 9:31-9:34 (every minute): the shape of a big gap-up from the first minutes' prices, before
+    the volume pace means anything (the opening auction is most of the first minutes' volume). The full alert follows
+    from 9:35 if the volume confirms. The shapes as the 9:35 alerts judge them, minus the volume: a power-day gap
+    (10%+), a catalyst gap (5%+ from under the 50 EMA or 200 SMA to over both), a launch gap (3%+ through the base
+    high, up 5%+); above the 200 SMA, and the day before at most 28% over it (50% for a power-day gap)."""
+    R, rows, out = doc["rules"], live["rows"], []
+    now = now or datetime.datetime.now(NY)
+    d0 = datetime.date.fromisoformat(doc["date"])
+    since = datetime.datetime(d0.year, d0.month, d0.day, 15, 30, tzinfo=NY).timestamp()
+    for sym, w in doc.get("watch", {}).items():
+        q = rows.get(sym)
+        if not q or len(q) < 6 or not q[5]:
+            continue                                                # not open yet (NYSE often takes a minute or more)
+        price, chg, rv, op = q[0], q[1], q[4], q[5]
+        prev = price / (1 + chg / 100)
+        gap = (op / prev - 1) * 100
+        close0, pivot, s200, s50 = w[0], w[1], w[2], w[4]
+        if not s200 or price <= s200 or gap <= 0:
+            continue
+        ext = (close0 / s200 - 1) * 100
+        power = gap >= R.get("power_gap", 10)
+        if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not power):
+            continue
+        under = [n for n, m in (("50 EMA", s50), ("200 SMA", s200)) if m and close0 < m]
+        catalyst = bool(under) and bool(s50) and price > s50 and gap >= R.get("ep_gap", 5)
+        launch = price > pivot and gap >= R["gap_big"] and chg >= R["min_chg"]
+        if not (power or catalyst or launch):
+            continue
+        ern = q[6] if len(q) > 6 else None
+        earn = bool(ern and since <= ern <= now.timestamp() + 3600)
+        group, gstat = w[8], w[9]
+        theme = f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
+        what, need = ("power-day gap", "4x+ and up 15%+") if power else ("catalyst gap", "3x+") if catalyst else ("launch gap", "3x+")
+        out.append((f"{sym}:early", f"{sym} EARLY: {what} " + ("on earnings" if earn else "(news? no earnings)"),
+                    f"gap {gap:+.1f}% · ${price:.2f} ({chg:+.1f}%)"
+                    + (f" · was under its {' & '.join(under)}, now above the 50 EMA & 200 SMA" if under and price > s50 else "")
+                    + f" · base high ${pivot:.2f} " + ("cleared" if price > pivot else "not cleared")
+                    + (f" · vol {rv:.1f}x so far (rough: the opening auction)" if rv else "")
+                    + f" · the full alert from 9:35 if the volume confirms ({need}) · theme {theme}", "default", w[10]))
+    return out
 
 
 def find(live, doc, now=None, gaps_only=False):
@@ -205,11 +249,12 @@ def main():
         state = {}
     if state.get("date") != today:
         state = {"date": today, "sent": []}
-    if live.get("session") != today or (now.hour, now.minute) < (9, 35):
+    early = (now.hour, now.minute) < (9, 35)            # 9:31-9:34: the early heads-ups only (the 1-minute check)
+    if live.get("session") != today or (now.hour, now.minute) < (9, 31) or (early and not gaps_only):
         print("alerts: not in today's session yet")
         return
     sent = set(state["sent"])
-    found = find(live, doc, now, gaps_only)
+    found = find_early(live, doc, now) if early else find(live, doc, now, gaps_only)
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
     cat_now = {a[0].split(":")[0] for a in found if a[0].endswith(":catalyst") and a[0] not in sent}
     new, quiet = [], []
