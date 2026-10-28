@@ -1680,6 +1680,17 @@ defCalc('industry_perf', {
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100));
     }
+    /* the morning's pre-market grades (the 8:47 grading posts them by about 9:10): one pop-up with the A and B names */
+    const pmRows = rowsOf('premarket').filter((r) => !r.placeholder && (r.graded === true || r.graded === 'true'));
+    if (alertsOn && pmRows.length && pmRows[0].scan_date === todayNY() && !sent.has('pm:' + todayNY())) {
+      sent.add('pm:' + todayNY());
+      const pick = (dir) => pmRows.filter((r) => r.direction === dir && (r.grade === 'A' || r.grade === 'B')).map((r) => r.symbol + ' ' + r.grade).join(', ');
+      const up = pick('up'), dn = pick('down');
+      const body = (up ? 'Gap-ups: ' + up : 'No A or B gap-up') + (dn ? ' · gap-downs: ' + dn : '') + ' · ' + pmRows.length + ' graded';
+      try { const n = new Notification('Pre-market grades', { body, tag: 'pm' }); n.onclick = () => { window.focus(); location.hash = '#premarket'; n.close(); }; } catch (e) { /* blocked */ }
+      log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · Pre-market grades — ' + body);
+      saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100));
+    }
     /* after the close: the evening scan's heads-ups for tomorrow (tight under a buy point, retest held) */
     const ldoc = st('launch').status === 'ok' ? st('launch').data : null;
     if (alertsOn && ldoc && ldoc.date === todayNY()) {
@@ -1700,7 +1711,7 @@ defCalc('industry_perf', {
     $('#ln-alert-btn').textContent = alertsOn ? 'Turn off' : 'Turn on';
     $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
       : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
-      : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up power days, catalyst gaps (a neglected stock gapping over its 50 & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C) and its confirmation; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) are checked every minute from 9:35 by the GitHub job; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day. ' + (log.length ? 'Today:' : 'None yet today.')
+      : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C) and its confirmation; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) are checked every minute from 9:35 by the GitHub job; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day. ' + (log.length ? 'Today:' : 'None yet today.')
       : 'Off. Turn on to get desktop pop-ups while this page is open.';
   }
   $('#ln-alert-btn').addEventListener('click', async () => {
