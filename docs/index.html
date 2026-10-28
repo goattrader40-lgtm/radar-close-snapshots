@@ -1545,8 +1545,8 @@ defCalc('industry_perf', {
       if (r.new_run_after_rest) legTd.title = 'A new run after a rest of 40+ sessions, from ' + fDate(r.new_run_after_rest);
       if (r.late) legTd.title = 'Leg 4 or later: breakouts this late mostly failed in the history test';
       /* the launch date, and under it that day's move, gap and volume */
-      const ld = h('td', 'nw'); ld.append(h('div', '', fDate(r.date).replace(/, \d{4}$/, '')),
-        h('div', 'tgr-lbl', p1(r.chg_pct, true) + (num(r.gap_pct) !== null ? ' · gap ' + p1(r.gap_pct, true) : '') + ' · ' + fX(r.rel_vol) + ' vol'));
+      const ld = h('td', ''); ld.append(h('div', 'nw', fDate(r.date).replace(/, \d{4}$/, '')),
+        h('div', 'tgr-lbl', (r.chg_pct > 0 ? '+' : '') + Math.round(r.chg_pct) + '%' + (num(r.gap_pct) !== null ? ' gap ' + Math.round(r.gap_pct) + '%' : '') + ' ' + num(r.rel_vol).toFixed(1) + '×'));
       tr.append(key, ld, gradeCell(r.grade), pctCell(r.today, 0),
         h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
         h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
