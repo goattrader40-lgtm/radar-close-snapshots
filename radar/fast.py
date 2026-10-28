@@ -11,7 +11,7 @@ with the volume correction the last live update measured (radar/sipcal.py). rada
 import datetime, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sipcal  # noqa: E402
-from live import NY, Yahoo, rvol_at, yahoo_sym  # noqa: E402
+from live import NY, Yahoo, fill_opens, rvol_at, yahoo_sym  # noqa: E402
 
 
 def main():
@@ -30,7 +30,9 @@ def main():
     if not y.login():
         sys.exit("fast: no Yahoo crumb")
     rows = {}
-    for k, v in y.quotes(list(ymap)).items():
+    got = y.quotes(list(ymap))
+    opened = fill_opens(y, got, now)                    # NYSE opens Yahoo hasn't reported yet (first ~10 minutes)
+    for k, v in got.items():
         s = ymap.get(k)
         if not s:
             continue
@@ -44,7 +46,7 @@ def main():
     session = datetime.datetime.fromtimestamp(times[len(times) // 2], NY).date().isoformat() if times else now.date().isoformat()
     json.dump({"saved_at": now.isoformat(timespec="seconds"), "date": now.date().isoformat(), "session": session,
                "n": len(rows), "source": "yahoo quote (1-minute watch list)", "rows": rows}, open(out_p, "w"), separators=(",", ":"))
-    print(f"fast: {len(rows)} quotes, {sum(1 for s in rows if s in off)} volume-corrected")
+    print(f"fast: {len(rows)} quotes, {sum(1 for s in rows if s in off)} volume-corrected, open from the chart: {' '.join(ymap.get(k, k) for k in opened) or '-'}")
 
 
 if __name__ == "__main__":

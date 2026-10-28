@@ -1603,7 +1603,8 @@ defCalc('industry_perf', {
       const facts = f1(r.chg) + (r.gap !== null ? ' · gap ' + f1(r.gap) : '') + ' · vol ' + r.rv.toFixed(1) + '× for the time of day · ' + fPrice(r.price);
       const power = r.rv >= (R.power_rv || 4) && r.gap !== null && r.gap >= (R.power_gap || 10) && r.chg >= (R.power_chg || 15);
       const crossed = r.under.length && r.over ? ' · was under its ' + r.under.join(' & ') + ' SMA, now above the 50 & 200' : '';
-      const neglect = r.corr >= 15 && r.days !== null ? ' · ' + r.corr.toFixed(0) + '% off its high of ' + r.days + ' sessions ago' : '';
+      /* today's distance from the 52-week high, and the correction it is coming out of (AXGN Oct 28 2026: 14% under it, after a 36% correction) */
+      const neglect = (r.h52 ? (r.h52 < 100 ? ' · ' + (100 - r.h52).toFixed(0) + '% under its 52-week high' : ' · at a 52-week high') : '') + (r.corr >= 15 ? ', after a ' + r.corr.toFixed(0) + '% correction' : '');
       /* the 2nd trigger of a catalyst gap: its base high cleared (shown only after a catalyst alert that hadn't cleared it) */
       if (r.shape && r.bo && r.rv >= 1) out.push([r.symbol + ':basebreak', r.symbol + ' 2nd trigger: base high ' + fPrice(r.pivot) + ' cleared',
         fPrice(r.price) + ' · ' + f1(r.chg) + ' · vol ' + r.rv.toFixed(1) + '× for the time of day · grade so far ' + r.grade + (r.earnings ? ' · EARNINGS' : '') + ' · after its catalyst gap over the 50 & 200 SMA · ' + (r.group || 'no group'), r.tv_symbol]);

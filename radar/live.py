@@ -99,6 +99,34 @@ class Yahoo:
         return None
 
 
+def fill_opens(y, got, now, limit=80):
+    """Yahoo's quote leaves an NYSE stock's open empty for its first ~10 minutes (Oct 28 2026: STNG and EAT met their
+    alert rules at 9:35 / 9:37 and alerted at 9:45, while Nasdaq's ICLR and AXGN alerted at 9:35). For stocks moving 3%+
+    with no open yet, take it from Yahoo's 1-minute chart (its 9:30 bar). got: {yahoo sym: [price, chg, vol, time, open,
+    earnings]}, filled in place. Returns the symbols filled."""
+    if not ((now.hour, now.minute) >= (9, 30) and now.hour < 16):
+        return []
+    todo = [k for k, v in got.items() if v[4] is None and abs(v[1] or 0) >= 3][:limit]
+
+    def first_open(ysym):
+        try:
+            r = json.loads(y.get(f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(ysym)}?range=1d&interval=1m", 15))["chart"]["result"][0]
+            for t, o in zip(r.get("timestamp") or [], r["indicators"]["quote"][0].get("open") or []):
+                ts = datetime.datetime.fromtimestamp(t, NY)
+                if o and ts.date() == now.date() and (ts.hour, ts.minute) >= (9, 30):
+                    return round(o, 4)
+        except Exception:
+            pass
+        return None
+    done = []
+    with cf.ThreadPoolExecutor(8) as pool:
+        for k, o in zip(todo, pool.map(first_open, todo)):
+            if o:
+                got[k][4] = o
+                done.append(k)
+    return done
+
+
 def rvol_at(vol, qtime, curve, avg20=None):
     """today's volume so far / the average volume from 9:30 to the same minute.
     From 4:00 the quote's volume includes the closing auction, which the curves (9:30-3:59) leave out, so it is
@@ -151,6 +179,7 @@ def main():
     if y.login():
         got = y.quotes(list(ymap))
         source = "yahoo quote"
+    opened = fill_opens(y, got, now) if source == "yahoo quote" else []
     if len(got) < 0.5 * len(ymap):     # crumb refused or blocked: fall back to chart calls for the liquid names
         source = "yahoo chart"
         liquid = [yahoo_sym(r["symbol"]) for r in stocks
@@ -185,7 +214,8 @@ def main():
     times = sorted(v[3] for v in rows.values() if v[3])
     session = datetime.datetime.fromtimestamp(times[len(times) // 2], NY).date().isoformat() if times else now.date().isoformat()
     json.dump({"saved_at": now.isoformat(timespec="seconds"), "date": now.date().isoformat(), "session": session,
-               "n": len(rows), "source": source, "rows": rows}, open(out_p, "w"), separators=(",", ":"))
+               "n": len(rows), "source": source, "open_from_chart": sorted(ymap.get(k, k) for k in opened), "rows": rows},
+              open(out_p, "w"), separators=(",", ":"))
     print(json.dumps({"saved_at": now.isoformat(timespec="seconds"), "session": session, "quotes": len(rows),
                       "with_rvol": sum(1 for v in rows.values() if v[4] is not None), "volume_corrected": fixed,
                       "of": len(ymap), "source": source}))

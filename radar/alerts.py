@@ -92,7 +92,10 @@ def find(live, doc, now=None, gaps_only=False):
         under = [n for n, m in (("50", s50), ("200", s200)) if m and close0 < m]
         over = bool(s50) and price > s50 and price > s200
         crossed = f" · was under its {' & '.join(under)} SMA, now above the 50 & 200" if under and over else ""
-        neglect = f" · {w[7]:.0f}% off its high of {w[6]} sessions ago" if w[7] and w[6] is not None and w[7] >= 15 else ""
+        # how far under its 52-week high it trades now, and the correction it is coming out of (AXGN Oct 28 2026: 14% under
+        # its 52-week high at $45.48, after a 36% correction; not "36% off its high", which was yesterday's depth)
+        neglect = (f" · {100 * (1 - price / w[5]):.0f}% under its 52-week high (${w[5]:.2f})" if w[5] and price < w[5] else " · at a 52-week high" if w[5] else "") \
+            + (f", after a {w[7]:.0f}% correction" if w[7] and w[7] >= 15 else "")
         cat = " · EARNINGS" if earn else ""
         bo = price > pivot or bool(mem and price > mem[1])
         g = grade(max(rv, R["rv_big"]), bo, max(gap or 0, R["gap_big"]), chg, R, False) if mem else grade(rv, bo, gap, chg, R, close0 < s200)
