@@ -8,9 +8,9 @@ volume: catalyst gaps and their 2nd trigger, power days, A+/A launches.
 
 Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the radar-data branch):
   power day   volume pace 4x+ for the time of day, a 10%+ gap, up 15%+, above the 200 SMA, at most 50% over it
-  catalyst    an episodic pivot, the moment it happens: a neglected stock (closed under its 50 or 200 SMA the day
-              before) gaps up 5%+ on earnings or news with volume pace 3x+ and trades above both the 50 and the
-              200 SMA. No base breakout needed, and no clean base either (HRI on Oct 27 2026: earnings, gapped 9.3%
+  catalyst    an episodic pivot, the moment it happens: a neglected stock (closed under its 50 EMA or 200 SMA the
+              day before) gaps up 5%+ on earnings or news with volume pace 3x+ and trades above both the 50 EMA and
+              the 200 SMA. No base breakout needed, and no clean base either (HRI on Oct 27 2026: earnings, gapped 9.3%
               from under both out of a choppy chart; the launch alert waited for its 20-day high). It says whether
               the base high is cleared yet; if not, a 2nd trigger follows when it is (volume 1x+). Such a stock
               gets these two instead of a launch alert. Earnings = reported after the last close; without
@@ -78,7 +78,7 @@ def find(live, doc, now=None, gaps_only=False):
         close0, pivot, s200 = w[0], w[1], w[2]
         group, gstat, tvs = w[8], w[9], w[10]
         mem = w[11] if len(w) > 11 else None
-        s50 = (w[13] if len(w) > 13 else None) or w[4]             # the 50 SMA (lists made before Oct 27: the 50 EMA)
+        s50 = w[4]                                                 # the 50 EMA
         ern = q[6] if len(q) > 6 else None
         earn = bool(ern and since <= ern <= now.timestamp() + 3600)  # reported after the last close (or this morning)
         if not s200 or price <= s200:
@@ -89,9 +89,9 @@ def find(live, doc, now=None, gaps_only=False):
             continue
         theme = f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
         facts = f"{chg:+.1f}% · gap {gap:+.1f}% · vol {rv:.1f}x for the time of day" if gap is not None else f"{chg:+.1f}% · vol {rv:.1f}x"
-        under = [n for n, m in (("50", s50), ("200", s200)) if m and close0 < m]
+        under = [n for n, m in (("50 EMA", s50), ("200 SMA", s200)) if m and close0 < m]
         over = bool(s50) and price > s50 and price > s200
-        crossed = f" · was under its {' & '.join(under)} SMA, now above the 50 & 200" if under and over else ""
+        crossed = f" · was under its {' & '.join(under)}, now above the 50 EMA & 200 SMA" if under and over else ""
         # how far under its 52-week high it trades now, and the correction it is coming out of (AXGN Oct 28 2026: 14% under
         # its 52-week high at $45.48, after a 36% correction; not "36% off its high", which was yesterday's depth)
         neglect = (f" · {100 * (1 - price / w[5]):.0f}% under its 52-week high (${w[5]:.2f})" if w[5] and price < w[5] else " · at a 52-week high" if w[5] else "") \
@@ -104,14 +104,14 @@ def find(live, doc, now=None, gaps_only=False):
             # the 2nd trigger: sent only after a catalyst alert that hadn't cleared the base yet (see main)
             out.append((f"{sym}:basebreak", f"{sym} 2nd trigger: base high ${pivot:.2f} cleared",
                         f"${price:.2f} · {chg:+.1f}% · vol {rv:.1f}x for the time of day · grade so far {g}{cat}"
-                        f" · after its catalyst gap over the 50 & 200 SMA · theme {theme}", "high", tvs))
+                        f" · after its catalyst gap over the 50 EMA & 200 SMA · theme {theme}", "high", tvs))
         if power:
             out.append((f"{sym}:power", f"{sym} POWER DAY" + (" on earnings" if earn else ""),
                         f"{facts} · ${price:.2f}{crossed}{neglect} · theme {theme}", "high", tvs))
             continue
         if shape and rv >= R["rv_big"]:
             out.append((f"{sym}:catalyst", f"{sym} CATALYST GAP: " + ("earnings" if earn else "news? (no earnings)")
-                        + ", over its 50 & 200 SMA", f"{facts} · ${price:.2f}{crossed}{neglect} · base high ${pivot:.2f} "
+                        + ", over its 50 EMA & 200 SMA", f"{facts} · ${price:.2f}{crossed}{neglect} · base high ${pivot:.2f} "
                         + (f"cleared (grade so far {g})" if price > pivot else "not cleared yet: 2nd alert when it is") + f" · theme {theme}", "high", tvs))
         if chg < R["min_chg"] or rv < R["min_rv"] or (gap is not None and gap <= 0):
             continue
