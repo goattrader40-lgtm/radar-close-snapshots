@@ -29,15 +29,22 @@ def num(x):
 
 def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
     pm = json.load(open(pm_path))
-    # Yahoo's pre-market bars carry no volume; the live scanner file has it from Alpaca (consolidated tape)
+    stocks = {r["symbol"]: r for r in json.load(open(stocks_path))}
+    # The live scanner file (every 5 minutes) is newer than the 8:25 scan: take its latest pre-market price, so the gap
+    # and the moving-average columns are as of grading time (about 8:47), and its volume (Alpaca's consolidated tape;
+    # Yahoo's pre-market bars carry none). Stocks only in the live file are added; ones only in the scan keep its numbers.
     if live_path and os.path.exists(live_path):
         lv = json.load(open(live_path))
         if lv.get("date") == pm.get("date"):
-            for g in pm.get("rows", []):
-                q = (lv.get("rows") or {}).get(g["symbol"])
-                if q:
-                    g["pm_volume"], g["pm_dvol"] = q[3], q[4]
-    stocks = {r["symbol"]: r for r in json.load(open(stocks_path))}
+            by = {g["symbol"]: g for g in pm.get("rows", [])}
+            for sym, q in (lv.get("rows") or {}).items():
+                prev = num((stocks.get(sym) or {}).get("price"))
+                if not prev:
+                    continue
+                g = by.setdefault(sym, {"symbol": sym, "prev_close": prev})
+                g["pm_last"], g["gap_pct"], g["pm_volume"], g["pm_dvol"] = q[0], q[1], q[3], q[4]
+            pm["rows"] = list(by.values())
+            pm["saved_at"] = lv.get("saved_at") or pm.get("saved_at", "")
     rows = []
     for g in pm.get("rows", []):
         s = stocks.get(g["symbol"])
