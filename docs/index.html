@@ -207,7 +207,7 @@
               <th class="num" data-p="3m"><button class="tgr-th" data-sort="p3m">3M</button></th>
               <th class="num"><button class="tgr-th" data-sort="vs" id="th-vs" title="The theme's move minus its area's main ETF over the period you rank by">vs ETF</button></th>
               <th class="num c3"><button class="tgr-th" data-sort="up_pct">Up today</button></th>
-              <th class="c3" title="The theme's own ETF (the first one listed for it)">Theme ETF</th>
+              <th class="c3" title="The theme's own ETF (the first one listed for it that has data)">Theme ETF</th>
               <th class="num c3"><button class="tgr-th" data-sort="e50" title="The theme ETF's price vs its 50-day EMA">ETF vs 50 EMA</button></th>
               <th class="num c3"><button class="tgr-th" data-sort="e200" title="The theme ETF's price vs its 200-day SMA">ETF vs 200 SMA</button></th>
               <th class="c2" data-lv="1">Industries</th>
@@ -967,7 +967,7 @@ defCalc('industry_perf', {
     return o;
   };
   const maCell = (x, cls) => h('td', 'num ' + (cls || '') + ' ' + tone(x), x === null || x === undefined ? '—' : (x > 0 ? '+' : '') + x.toFixed(1) + '%');
-  const themeEtf = (r) => String(r.etfs || '').split(' ').filter(Boolean)[0] || null;
+  const themeEtf = (r) => { const l = String(r.etfs || '').split(' ').filter(Boolean); return l.find((e) => ETF && ETF.rows && ETF.rows[e]) || l[0] || null; };   /* the first listed one with data */
   const areaEtf = (cat) => (ETF && ETF.areas ? ETF.areas[cat] : null);
   const indEtf = (ind) => (ETF && ETF.industries ? ETF.industries[ind] : null);
   const vsOf = (r, etf) => { const e = etf ? etfRow(etf) : null; const v = num(r[pf(S.period)]); return e && v !== null && e['chg_' + S.period] !== null ? r2(v - e['chg_' + S.period]) : null; };
