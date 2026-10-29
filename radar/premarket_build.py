@@ -3,7 +3,8 @@
 
   prepare <premarket/latest.json> <stocks.json> <out_dir> [n_grade_up] [n_grade_down] [--live=premarket_live.json]
       Keeps gaps of 5%+ up or down that pass the liquidity rules (market cap $700M+, 30-day average volume 700K+ shares,
-      20-day average $ volume $20M+, ADR% 3+), adds ADR%, theme, 200-day SMA and an EP badge, and writes
+      20-day average $ volume $20M+, ADR% 3+), adds ADR%, theme, the pre-market price vs the 200-day SMA
+      and the 50-day EMA (both as of the last close), an EP badge, and writes
       <out_dir>/rows.json plus <out_dir>/to_grade.json (by pre-market $ volume: top 20 gap-ups and top 8 gap-downs).
   finish <out_dir> [grades.json]
       Merges the grades into <out_dir>/premarket.json (the dashboard's dataset file).
@@ -49,6 +50,8 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
         if adr is not None and adr < ADR_MIN:     # ADR% 3+ (a stock with no ADR yet isn't dropped)
             continue
         share = g["pm_volume"] / avgv
+        sma, e50, last = num(s.get("sma200")), num(s.get("ema50")), num(g.get("pm_last"))
+        vs = lambda m: round((last / m - 1) * 100, 1) if m and last else None   # the pre-market price at scan time
         rows.append({
             "symbol": g["symbol"], "name": s.get("name"), "tv_symbol": s.get("tv_symbol"),
             "gap_pct": g["gap_pct"], "pm_last": g["pm_last"], "prev_close": g["prev_close"],
@@ -58,7 +61,8 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
             "direction": "up" if g["gap_pct"] > 0 else "down",
             "ep": bool(g["gap_pct"] >= EP_GAP and share >= EP_PM_SHARE),
             "mcap_b": mcap, "avg_vol_30d": int(avgv), "dvol_20_m": dv, "adr_20": adr,
-            "above_200": s.get("above_200"), "vs_200": s.get("vs_200"), "chg_1m": s.get("chg_1m"), "chg_3m": s.get("chg_3m"),
+            "sma200": sma, "ema50": e50, "above_200": (last > sma) if sma and last else s.get("above_200"),
+            "vs_200": vs(sma) if sma and last else s.get("vs_200"), "vs_50e": vs(e50), "chg_1m": s.get("chg_1m"), "chg_3m": s.get("chg_3m"),
             "themes": s.get("themes") or "", "industry": s.get("industry"),
             "grade": "", "catalyst": "", "reason": "", "flags": "", "inflection": "", "inflection_score": None,
             "sources": "", "graded": False,

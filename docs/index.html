@@ -383,7 +383,7 @@
         <label class="tgr-f"><input type="checkbox" data-pm="above200"> Above 200-day SMA</label>
         <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
       </div>
-      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
+      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. vs 200D and vs 50 EMA = the latest pre-market price vs the 200-day SMA and 50-day EMA as of yesterday's close. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
       <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="pml-table">
@@ -402,6 +402,7 @@
             <th class="num c2"><button class="tgr-th" data-sort="rel_vol">Rel vol</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_50e" title="Pre-market price vs the 50-day EMA as of yesterday's close">vs 50 EMA</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="below_low52" title="How far below the pre-market price the 52-week low is (TradingView's 'Low 52W below price by')">52W low below</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
             <th><button class="tgr-th" data-sort="themes">Themes</button></th>
@@ -414,7 +415,7 @@
     <div class="tgr-bar"><span class="tgr-seg" data-k="pmdir"><button data-v="up" aria-pressed="true">Gap ups</button><button data-v="down" aria-pressed="false">Gap downs</button></span>
       <span class="tgr-seg" data-k="pmshow"><button data-v="ab" aria-pressed="true">A &amp; B only</button><button data-v="all" aria-pressed="false">Show all</button></span></div>
     <p class="tgr-rule">Gapping 5%+ up or down before the open and passing your rules (market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+, ADR 3%+). Scanned at <span class="em" id="pm-time">—</span> ET on <span class="em" id="pm-date">—</span><span id="pm-stale" hidden> (not today: today's list posts by 9:10 AM ET on weekdays)</span>.</p>
-    <p class="tgr-note">Grade = how solid the news behind the gap is, from reading the actual filings, releases and earnings: <span class="tgr-grade gA">A</span> real fundamental change (earnings beat with raised guidance, big growth inflection, FDA approval, takeover), <span class="tgr-grade gB">B</span> decent (meaningful contract, partnership, index add), <span class="tgr-grade gC">C</span> weak (analyst call, sympathy move, hype, no clear news), <span class="tgr-grade gF">F</span> warning (offering or other dilution, promotional release, reverse split, unconfirmed news). For gap downs the grade means how real and lasting the bad news is: <span class="tgr-grade gA">A</span> serious damage (guidance cut, big miss, lost customer), <span class="tgr-grade gB">B</span> meaningful but contained, <span class="tgr-grade gC">C</span> weak or no real news (possible overreaction). Inflection = a change in the business trend: Turnaround (a decline reverses), Acceleration (growth speeds up), New business (a new product or customer that changes the company), Margin (profits jump on cost or mix), Deterioration (the trend breaks down); scored 1–10 for how big and how confirmed it is. The top 8 gap ups and top 4 gap downs by pre-market $ volume are graded, and only A and B grades show unless you pick Show all. If fewer stocks pass your rules, only those are researched; if none pass, nothing is. <span class="tgr-gm">EP</span> = gap of 10%+ with pre-market volume already 25%+ of a normal day (Qullamaggie's episodic pivot asks for a 10%+ gap on huge early volume). Gap ÷ ADR shows how big the gap is for that stock. Pre-market prices come from Yahoo's 5-minute bars at scan time; check live prints in TradingView.</p>
+    <p class="tgr-note">Grade = how solid the news behind the gap is, from reading the actual filings, releases and earnings: <span class="tgr-grade gA">A</span> real fundamental change (earnings beat with raised guidance, big growth inflection, FDA approval, takeover), <span class="tgr-grade gB">B</span> decent (meaningful contract, partnership, index add), <span class="tgr-grade gC">C</span> weak (analyst call, sympathy move, hype, no clear news), <span class="tgr-grade gF">F</span> warning (offering or other dilution, promotional release, reverse split, unconfirmed news). For gap downs the grade means how real and lasting the bad news is: <span class="tgr-grade gA">A</span> serious damage (guidance cut, big miss, lost customer), <span class="tgr-grade gB">B</span> meaningful but contained, <span class="tgr-grade gC">C</span> weak or no real news (possible overreaction). Inflection = a change in the business trend: Turnaround (a decline reverses), Acceleration (growth speeds up), New business (a new product or customer that changes the company), Margin (profits jump on cost or mix), Deterioration (the trend breaks down); scored 1–10 for how big and how confirmed it is. The top 8 gap ups and top 4 gap downs by pre-market $ volume are graded, and only A and B grades show unless you pick Show all. If fewer stocks pass your rules, only those are researched; if none pass, nothing is. <span class="tgr-gm">EP</span> = gap of 10%+ with pre-market volume already 25%+ of a normal day (Qullamaggie's episodic pivot asks for a 10%+ gap on huge early volume). Gap ÷ ADR shows how big the gap is for that stock. vs 200D and vs 50 EMA = the pre-market price at scan time vs the 200-day SMA and 50-day EMA as of yesterday's close. Pre-market prices come from Yahoo's 5-minute bars at scan time; check live prints in TradingView.</p>
     <div class="tgr-card" id="pm-card">
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="pm-table">
@@ -434,6 +435,7 @@
             <th class="c2">Themes</th>
             <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_50e" title="Pre-market price vs the 50-day EMA as of yesterday's close">vs 50 EMA</button></th>
             <th class="c2">Sources</th>
           </tr></thead>
           <tbody></tbody>
@@ -1225,7 +1227,7 @@ defCalc('industry_perf', {
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
     const tb = table.querySelector('tbody'); tb.replaceChildren();
-    if (ok('premarket') && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', S.pmshow === 'all' ? 'No liquid stock is gapping 5%+ this way in this scan.' : 'No A or B grade this way in this scan. Pick Show all to see the rest.'); td.colSpan = 16; tr.append(td); tb.append(tr); }
+    if (ok('premarket') && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', S.pmshow === 'all' ? 'No liquid stock is gapping 5%+ this way in this scan.' : 'No A or B grade this way in this scan. Pick Show all to see the rest.'); td.colSpan = 17; tr.append(td); tb.append(tr); }
     rows.forEach((r) => {
       const tr = h('tr'); tr.dataset.key = r.symbol;
       const key = h('td', 'key');
@@ -1239,7 +1241,8 @@ defCalc('industry_perf', {
         h('td', 'num c3', r.gap_x_adr === null || r.gap_x_adr === undefined ? '—' : num(r.gap_x_adr).toFixed(2) + '×'),
         h('td', '', r.catalyst || ''), h('td', '', r.inflection || ''), h('td', 'num', r.inflection_score === null || r.inflection_score === undefined || r.inflection_score === '' ? '—' : String(r.inflection_score)), h('td', 'name', r.reason || ''), h('td', 'c2 tgr-flags', r.flags || ''),
         chipCell(r.themes, 'theme', 'c2'), h('td', 'num c3', fCap(r.mcap_b)),
-        h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null || r.vs_200 === undefined ? '—' : (num(r.vs_200) > 0 ? '+' : '') + num(r.vs_200).toFixed(1) + '%'), sx);
+        h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null || r.vs_200 === undefined ? '—' : (num(r.vs_200) > 0 ? '+' : '') + num(r.vs_200).toFixed(1) + '%'),
+        h('td', 'num c2 ' + tone(r.vs_50e), r.vs_50e === null || r.vs_50e === undefined ? '—' : (num(r.vs_50e) > 0 ? '+' : '') + num(r.vs_50e).toFixed(1) + '%'), sx);
       tb.append(tr);
     });
   };
@@ -1280,6 +1283,7 @@ defCalc('industry_perf', {
         gap_x_adr: num(r.adr_20) ? pm_chg / num(r.adr_20) : null,
         vs_200: num(r.sma200) ? Math.round((pm_last / num(r.sma200) - 1) * 1000) / 10 : null,
         above_200: num(r.sma200) ? pm_last > num(r.sma200) : null,
+        vs_50e: num(r.ema50) ? Math.round((pm_last / num(r.ema50) - 1) * 1000) / 10 : null,
         tv_dvol_m: adv && num(r.price) ? (adv * num(r.price)) / 1e6 : null,
         below_low52: num(r.low_52w) && pm_last ? ((pm_last - num(r.low_52w)) / pm_last) * 100 : null,   /* TradingView: 52W low is X% below price */
         ep: Math.abs(pm_chg) >= 10 && adv && pm_vol / adv >= 0.25,
@@ -1328,7 +1332,7 @@ defCalc('industry_perf', {
     const gm = [...by].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]);
     if (!gm.length) ml.append(h('span', 'tgr-lbl', PML ? 'none' : '—'));
     gm.forEach(([t, n], i) => { if (i) ml.append(h('span', 'tgr-sep', ' | ')); const b = h('button', 'tgr-chip', t + ' (' + n + ')'); b.type = 'button'; b.dataset.kind = 'theme'; b.dataset.name = t; ml.append(b); });
-    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 17; tr.append(td); tb.append(tr); }
+    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 18; tr.append(td); tb.append(tr); }
     const pctTxt = (x) => (x === null || x === undefined ? '—' : (x > 0 ? '+' : '') + Number(x).toFixed(2) + '%');
     rows.slice(0, LIST_MAX).forEach((r) => {
       const tr = h('tr');
@@ -1342,6 +1346,7 @@ defCalc('industry_perf', {
         h('td', 'num c3', r.gap_x_adr === null ? '—' : r.gap_x_adr.toFixed(2) + '×'), h('td', 'num c2', fPrice(r.price)), c(r.chg_1d, 'c2'),
         h('td', 'num c2', fVol(r.volume)), h('td', 'num c2', fX(r.rel_vol)), h('td', 'num c3', fAdr(r.adr_20)),
         h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null ? '—' : (r.vs_200 > 0 ? '+' : '') + r.vs_200.toFixed(1) + '%'),
+        h('td', 'num c2 ' + tone(r.vs_50e), r.vs_50e === null ? '—' : (r.vs_50e > 0 ? '+' : '') + r.vs_50e.toFixed(1) + '%'),
         h('td', 'num c2', r.below_low52 === null ? '—' : r.below_low52.toFixed(1) + '%'),
         h('td', 'num c3', fCap(r.mcap_b)), chipCell(r.themes, 'theme', ''));
       tb.append(tr);

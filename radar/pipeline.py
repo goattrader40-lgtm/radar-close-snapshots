@@ -474,6 +474,18 @@ def adj_closes(series):
         a[i - 1] = a[i] / r
     return a
 
+def ema_last(closes, n=50):
+    """n-day EMA at the last close, from the unbroken run of closes at the end (seeded with their first n-day SMA)."""
+    run = []
+    for c in reversed(closes):
+        if c is None: break
+        run.append(c)
+    run.reverse()
+    if len(run) < 2 * n: return None
+    e, k = sum(run[:n]) / n, 2 / (n + 1)
+    for c in run[n:]: e += k * (c - e)
+    return e
+
 def dollar_vol(series, n):
     v = [p * vv for (p, _, vv) in series[-(n + 2):] if p and vv][-n:]
     return sum(v) / len(v) if len(v) >= n - 2 else None
@@ -516,6 +528,7 @@ for s, r in latest.items():
     sma = snap_val(s, "sma200")
     if sma is None and len(adj) >= SMA_N and None not in adj[-SMA_N:] and not stale: sma = sum(adj[-SMA_N:]) / SMA_N
     above = None if sma is None or stale else price > sma
+    e50 = None if stale else ema_last(adj)
     adr = snap_val(s, "adr_20")
     if adr is None: adr = adr_pct(s)
     dv10 = snap_val(s, "dvol_10") or dollar_vol(ser, 10)
@@ -534,6 +547,7 @@ for s, r in latest.items():
         "avg_vol_20": None if avg20_next is None else int(avg20_next),
         "adr_20": rd(adr), "dvol_10_m": rd(dv10 / 1e6, 1) if dv10 else None, "dvol_20_m": rd(dv20 / 1e6, 1) if dv20 else None,
         "sma200": rd(sma), "above_200": above, "vs_200": rd((price / sma - 1) * 100, 1) if sma and not stale else None,
+        "ema50": rd(e50), "vs_50e": rd((price / e50 - 1) * 100, 1) if e50 else None,
         "sector": sec, "industry": ind, "industry_detail": r["industry"] or "Other",
         "themes": " | ".join(theme_of.get(s, [])), "index": " | ".join(idx), "gainer": g,
         # a one-day move of 50%+ inside the 3M window is often a split or spin-off: check the chart
