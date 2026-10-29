@@ -220,7 +220,7 @@
 
       <div class="tgr-card" id="industries-card">
         <div class="tgr-cardhead"><h2 id="industries-h">Industry groups</h2></div>
-        <p class="tgr-note" id="industries-note">Every US-listed stock over $300M market cap, grouped by industry. Chips show which of your themes live in each industry.</p>
+        <p class="tgr-note" id="industries-note">Every US-listed stock over $300M market cap, grouped by industry. Chips show which of your themes live in each industry. ETF = the industry's own ETF; <span class="tgr-etag">sector</span> = no industry ETF exists, so it's the whole sector's fund (XLB for Materials, XLI for Industrials…), and vs ETF compares the group with its sector; <span class="tgr-etag">related</span> = a close but different fund.</p>
         <div class="tgr-scroll">
           <table class="tgr-table" id="industry-table">
             <thead><tr>
@@ -970,6 +970,10 @@ defCalc('industry_perf', {
   const themeEtf = (r) => { const l = String(r.etfs || '').split(' ').filter(Boolean); return l.find((e) => ETF && ETF.rows && ETF.rows[e]) || l[0] || null; };   /* the first listed one with data */
   const areaEtf = (cat) => (ETF && ETF.areas ? ETF.areas[cat] : null);
   const indEtf = (ind) => (ETF && ETF.industries ? ETF.industries[ind] : null);
+  /* what kind of ETF an industry is compared with: most have their own, the rest borrow their sector's (or a related) fund */
+  const SECTOR_ETFS = new Set(['XLB', 'XLI', 'XLK', 'XLY', 'XLP', 'XLU', 'XLRE', 'XLC', 'XLV', 'XLF', 'XLE']);
+  const RELATED_ETFS = { 'IT Services': 'software ETF', 'Construction & Engineering': 'infrastructure ETF' };
+  const indEtfKind = (ind, etf) => (SECTOR_ETFS.has(etf) ? 'Sector ETF (no industry ETF)' : RELATED_ETFS[ind] ? 'Related ETF (' + RELATED_ETFS[ind] + ', no industry ETF)' : 'Industry ETF');
   const vsOf = (r, etf) => { const e = etf ? etfRow(etf) : null; const v = num(r[pf(S.period)]); return e && v !== null && e['chg_' + S.period] !== null ? r2(v - e['chg_' + S.period]) : null; };
   const etfLink = (sym) => { const a = h('a', 'tgr-tk', sym); a.href = tv(sym); a.target = '_blank'; a.rel = 'noopener'; return a; };
 
@@ -1044,7 +1048,8 @@ defCalc('industry_perf', {
       if (S.sel && S.sel.kind === 'industry' && S.sel.name === r.industry) tr.classList.add('sel');
       tr.append(h('td', 'key', r.industry), h('td', 'num c3', String(r.n)));
       ['1d', '1w', '1m', '3m'].forEach((p) => tr.append(pctCell(r[pf(p)], p === S.period ? max : 0)));
-      const ec = h('td', 'c3'); if (r.etf) ec.append(etfLink(r.etf)); tr.append(ec, pctCell(r.vs, 0), maCell(r.e50, 'c3'), maCell(r.e200, 'c3'));
+      const ec = h('td', 'c3'); if (r.etf) { ec.append(etfLink(r.etf)); const k = indEtfKind(r.industry, r.etf); if (k !== 'Industry ETF') { const tg = h('span', 'tgr-etag', SECTOR_ETFS.has(r.etf) ? 'sector' : 'related'); tg.title = k; ec.append(tg); } }
+      tr.append(ec, pctCell(r.vs, 0), maCell(r.e50, 'c3'), maCell(r.e200, 'c3'));
       tr.append(h('td', 'num c3', r.up_pct + '%'));
       tr.append(chipCell(r.themes, 'theme', 'c2'));
       tb.append(tr);
@@ -1144,7 +1149,7 @@ defCalc('industry_perf', {
       nEl.setAttribute('data-source', 'industry_perf'); nEl.setAttribute('data-field', 'n'); nEl.setAttribute('data-where', 'key=' + enc(S.level + ': ' + S.sel.name));
       nEl.textContent = ind ? String(ind.n) : String(rows.length);
       etfWrap.hidden = true;
-      if (S.level === 'industry') showUmb('Industry ETF', indEtf(S.sel.name), ind);
+      if (S.level === 'industry') showUmb(indEtfKind(S.sel.name, indEtf(S.sel.name)), indEtf(S.sel.name), ind);
     }
     if (S.q) rows = rows.filter((r) => r.symbol.toLowerCase().includes(S.q) || String(r.name).toLowerCase().includes(S.q));
     $('#drill-card .tgr-seg[data-k="dord"]').hidden = !fits;
