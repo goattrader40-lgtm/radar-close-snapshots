@@ -99,14 +99,25 @@ class Yahoo:
         return None
 
 
-def fill_opens(y, got, now, limit=80):
+def fill_opens(y, got, now, limit=80, cache_p="/tmp/radar/out/opens.json"):
     """Yahoo's quote leaves an NYSE stock's open empty for its first ~10 minutes (Oct 28 2026: STNG and EAT met their
-    alert rules at 9:35 / 9:37 and alerted at 9:45, while Nasdaq's ICLR and AXGN alerted at 9:35). For stocks moving 3%+
-    with no open yet, take it from Yahoo's 1-minute chart (its 9:30 bar). got: {yahoo sym: [price, chg, vol, time, open,
-    earnings]}, filled in place. Returns the symbols filled."""
+    alert rules at 9:35 / 9:37 and alerted at 9:45, while Nasdaq's ICLR and AXGN alerted at 9:35), and even with an open
+    in it the alerts can wait (GKOS Oct 29: its 9:31 heads-up and 9:35 power day came at 9:46). So until 9:50 every stock
+    moving 3%+ takes its open from Yahoo's 1-minute chart (the first bar from 9:30), once, kept for the day (cache_p);
+    after that only those still without one. got: {yahoo sym: [price, chg, vol, time, open, earnings]}, filled in place.
+    Returns [(symbol, the quote's open, the chart's)] for the ones taken from the chart this time."""
     if not ((now.hour, now.minute) >= (9, 30) and now.hour < 16):
         return []
-    todo = [k for k, v in got.items() if v[4] is None and abs(v[1] or 0) >= 3][:limit]
+    try:
+        cache = json.load(open(cache_p))
+        cache = cache["opens"] if cache.get("date") == now.date().isoformat() else {}
+    except Exception:
+        cache = {}
+    for k, v in got.items():
+        if k in cache:
+            v[4] = cache[k]
+    early = (now.hour, now.minute) < (9, 50)
+    todo = [k for k, v in got.items() if k not in cache and abs(v[1] or 0) >= 3 and (v[4] is None or early)][:limit]
 
     def first_open(ysym):
         try:
@@ -122,8 +133,14 @@ def fill_opens(y, got, now, limit=80):
     with cf.ThreadPoolExecutor(8) as pool:
         for k, o in zip(todo, pool.map(first_open, todo)):
             if o:
-                got[k][4] = o
-                done.append(k)
+                done.append((k, got[k][4], o))
+                got[k][4] = cache[k] = o
+    if done:
+        try:
+            os.makedirs(os.path.dirname(cache_p), exist_ok=True)
+            json.dump({"date": now.date().isoformat(), "opens": cache}, open(cache_p, "w"))
+        except Exception:
+            pass
     return done
 
 
@@ -214,7 +231,7 @@ def main():
     times = sorted(v[3] for v in rows.values() if v[3])
     session = datetime.datetime.fromtimestamp(times[len(times) // 2], NY).date().isoformat() if times else now.date().isoformat()
     json.dump({"saved_at": now.isoformat(timespec="seconds"), "date": now.date().isoformat(), "session": session,
-               "n": len(rows), "source": source, "open_from_chart": sorted(ymap.get(k, k) for k in opened), "rows": rows},
+               "n": len(rows), "source": source, "open_from_chart": sorted(ymap.get(k[0], k[0]) for k in opened), "rows": rows},
               open(out_p, "w"), separators=(",", ":"))
     print(json.dumps({"saved_at": now.isoformat(timespec="seconds"), "session": session, "quotes": len(rows),
                       "with_rvol": sum(1 for v in rows.values() if v[4] is not None), "volume_corrected": fixed,

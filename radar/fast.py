@@ -31,7 +31,7 @@ def main():
         sys.exit("fast: no Yahoo crumb")
     rows = {}
     got = y.quotes(list(ymap))
-    opened = fill_opens(y, got, now)                    # NYSE opens Yahoo hasn't reported yet (first ~10 minutes)
+    opened = fill_opens(y, got, now)                    # the movers' opens from the chart in the first 20 minutes (NYSE)
     for k, v in got.items():
         s = ymap.get(k)
         if not s:
@@ -46,7 +46,7 @@ def main():
     session = datetime.datetime.fromtimestamp(times[len(times) // 2], NY).date().isoformat() if times else now.date().isoformat()
     json.dump({"saved_at": now.isoformat(timespec="seconds"), "date": now.date().isoformat(), "session": session,
                "n": len(rows), "source": "yahoo quote (1-minute watch list)", "rows": rows}, open(out_p, "w"), separators=(",", ":"))
-    print(f"fast: {len(rows)} quotes, {sum(1 for s in rows if s in off)} volume-corrected, open from the chart: {' '.join(ymap.get(k, k) for k in opened) or '-'}")
+    print(f"fast: {len(rows)} quotes, {sum(1 for s in rows if s in off)} volume-corrected, open from the chart: {' '.join(f'{ymap.get(k, k)} {o}' + (f' (quote {q})' if q != o else '') for k, q, o in opened) or '-'}")
 
 
 if __name__ == "__main__":
