@@ -8,7 +8,7 @@
 Timeline (ET, trading days):
   8:25, 8:40   start the "Pre-market scan" workflow (if today's scan isn't saved yet)
   9:30-4:10    every 5 minutes: live prices -> live.json on the radar-data branch
-  9:31-4:00    every minute in between: the launch watch list only (radar/fast.py), for the big gap-up alerts
+  9:31-12:00, 3:00-4:00   every minute in between: the launch watch list only (radar/fast.py), for the big gap-up alerts
                (catalyst gaps, power days, A+/A launches; 9:31-9:34 their early heads-ups, before the volume
                means anything); alerts.json is published when one is sent
   4:06         start the "Close snapshot" workflow (if today's isn't saved yet)
@@ -138,6 +138,11 @@ def load_alert_state():
     st = data_file("alerts.json")
     if st:
         open(p, "w").write(st)
+
+
+def fast_window(x):
+    """the 1-minute checks run in the morning and the last hour (the user's choice, Oct 29 2026)"""
+    return (9, 31) <= x < (12, 0) or (15, 0) <= x < (16, 0)
 
 
 def fast_once():
@@ -316,7 +321,7 @@ def day():
                     live_once()
                 except Exception as e:
                     log("live update failed:", e)
-            elif (9, 31) <= hm(t) < (16, 0):
+            elif fast_window(hm(t)):
                 try:
                     fast_once()                           # 9:31-9:34 the early heads-ups, then the big gap-up alerts
                 except Exception as e:
@@ -335,7 +340,7 @@ def day():
             return
         # next tick: the next minute during the session (live update on the 5-minute marks), else the next event
         nxt = t.replace(second=20, microsecond=0) + datetime.timedelta(minutes=5 - t.minute % 5)
-        if (9, 30) <= hm(t) < (16, 0):
+        if (9, 30) <= hm(t) < (16, 0) and (fast_window(hm(t)) or hm(t) < (9, 31)):
             nxt = t.replace(second=20, microsecond=0) + datetime.timedelta(minutes=1)
         if hm(t) < (7, 0):
             nxt = min(nxt, t.replace(hour=7, minute=0, second=5, microsecond=0))
