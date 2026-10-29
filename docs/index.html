@@ -381,6 +381,7 @@
         <label class="tgr-f">Pre-mkt vol ≥ <input class="tgr-num" type="number" inputmode="decimal" step="10" min="0" data-pm="pmvol_k"> K</label>
         <label class="tgr-f">52W low ≥ <input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-pm="low52"> % below price</label>
         <label class="tgr-f"><input type="checkbox" data-pm="above200"> Above 200-day SMA</label>
+        <label class="tgr-f"><input type="checkbox" data-pm="above50e"> Above 50-day EMA</label>
         <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
       </div>
       <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. vs 200D and vs 50 EMA = the latest pre-market price vs the 200-day SMA and 50-day EMA as of yesterday's close. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
@@ -1248,7 +1249,7 @@ defCalc('industry_perf', {
   };
 
   /* live pre-market scanner: your TradingView "premarket-1" screen as the defaults */
-  const PMDEF = { dir: 'up', chg_min: 0.5, chg_max: 5, price: 5, mcap_b: 0.7, avgvol_k: 600, dvol_m: 20, adr: 4, pmvol_k: null, low52: 30, above200: false };
+  const PMDEF = { dir: 'up', chg_min: 0.5, chg_max: 5, price: 5, mcap_b: 0.7, avgvol_k: 600, dvol_m: 20, adr: 4, pmvol_k: null, low52: 30, above200: false, above50e: false };
   const PMF = Object.assign({}, PMDEF);
   const syncPm = () => {
     document.querySelectorAll('#pml-filters [data-pm]').forEach((el) => {
@@ -1302,6 +1303,7 @@ defCalc('industry_perf', {
     if (p.adr !== null && num(r.adr_20) !== null && num(r.adr_20) < p.adr) return false;
     if (p.pmvol_k !== null && r.pm_vol < p.pmvol_k * 1000) return false;
     if (p.above200 === true && r.above_200 === false) return false;
+    if (p.above50e === true && r.vs_50e !== null && r.vs_50e <= 0) return false;
     if (p.low52 !== null && r.below_low52 !== null && r.below_low52 < p.low52) return false;
     return true;
   };
