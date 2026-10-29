@@ -111,7 +111,7 @@ def find(live, doc, now=None, gaps_only=False):
     R, rows, out = doc["rules"], live["rows"], []
     now = now or datetime.datetime.now(NY)
     d0 = datetime.date.fromisoformat(doc["date"])                 # the last close the watch list was built from
-    since = datetime.datetime(d0.year, d0.month, d0.day, 15, 30, tzinfo=NY).timestamp()
+    after_close = datetime.datetime(d0.year, d0.month, d0.day, 15, 30, tzinfo=NY).timestamp()
     for sym, w in doc.get("watch", {}).items():
         q = rows.get(sym)
         if not q or len(q) < 5 or q[4] is None:
@@ -125,7 +125,7 @@ def find(live, doc, now=None, gaps_only=False):
         mem = w[11] if len(w) > 11 else None
         s50 = w[4]                                                 # the 50 EMA
         ern = q[6] if len(q) > 6 else None
-        earn = bool(ern and since <= ern <= now.timestamp() + 3600)  # reported after the last close (or this morning)
+        earn = bool(ern and after_close <= ern <= now.timestamp() + 3600)  # reported after the last close (or this morning)
         if not s200 or price <= s200:
             continue
         ext = (close0 / s200 - 1) * 100
