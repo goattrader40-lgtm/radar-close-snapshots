@@ -6,7 +6,8 @@
 Each area of themes has a main ETF that moves the whole area (SMH for AI & semis, IGV for software, ...),
 and each broad industry has its main ETF. This saves, for those ETFs plus every theme ETF, the latest close and
 the 1D / 1W / 1M / 3M change from Yahoo daily bars, with the reference closes the 5-minute live job uses
-(same conventions as stocks.json: 1W = 5 sessions, 1M = 21, 3M = 63).
+(same conventions as stocks.json: 1W = 5 sessions, 1M = 21, 3M = 63), plus the 200-day SMA and the 50-day EMA
+at the last close (the portal shows the ETF's price vs each; none for an ETF too young to have them).
 Output: {"built_at", "areas": {area: ETF}, "industries": {industry: ETF}, "rows": {ETF: {...}}}
 """
 import concurrent.futures as cf, datetime, json, sys, time, urllib.error, urllib.request, zoneinfo
@@ -66,6 +67,16 @@ def bars(sym):
     return sym, None, []
 
 
+def ema_last(c, n=50):
+    """n-day EMA at the last close, seeded with the first n-day SMA (needs 2n closes)"""
+    if len(c) < 2 * n:
+        return None
+    e, k = sum(c[:n]) / n, 2 / (n + 1)
+    for x in c[n:]:
+        e += k * (x - e)
+    return e
+
+
 def main():
     themes_p, out_p = sys.argv[1], sys.argv[2]
     themes = json.load(open(themes_p))
@@ -82,7 +93,9 @@ def main():
             pct = lambda n: round((c[-1] / c[-1 - n] - 1) * 100, 2)
             rows[sym] = {"name": name, "asof": str(pts[-1][0]), "price": round(c[-1], 4), "chg_1d": pct(1), "chg_1w": pct(5),
                          "chg_1m": pct(21), "chg_3m": pct(63), "ref_1w": round(c[-5], 4), "ref_1m": round(c[-21], 4),
-                         "ref_3m": round(c[-63], 4)}
+                         "ref_3m": round(c[-63], 4),
+                         "sma200": round(sum(c[-200:]) / 200, 4) if len(c) >= 200 else None,
+                         "ema50": round(ema_last(c), 4) if ema_last(c) else None}
     if len(rows) < 0.7 * len(syms):
         sys.exit(f"only {len(rows)} of {len(syms)} ETFs came back, not saving")
     json.dump({"built_at": now.isoformat(timespec="seconds"), "areas": AREAS, "industries": INDUSTRIES, "rows": rows},

@@ -207,6 +207,9 @@
               <th class="num" data-p="3m"><button class="tgr-th" data-sort="p3m">3M</button></th>
               <th class="num"><button class="tgr-th" data-sort="vs" id="th-vs" title="The theme's move minus its area's main ETF over the period you rank by">vs ETF</button></th>
               <th class="num c3"><button class="tgr-th" data-sort="up_pct">Up today</button></th>
+              <th class="c3" title="The theme's own ETF (the first one listed for it)">Theme ETF</th>
+              <th class="num c3"><button class="tgr-th" data-sort="e50" title="The theme ETF's price vs its 50-day EMA">ETF vs 50 EMA</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="e200" title="The theme ETF's price vs its 200-day SMA">ETF vs 200 SMA</button></th>
               <th class="c2" data-lv="1">Industries</th>
             </tr></thead>
             <tbody></tbody>
@@ -229,6 +232,8 @@
               <th class="num" data-p="3m"><button class="tgr-th" data-sort="p3m">3M</button></th>
               <th class="c3">ETF</th>
               <th class="num"><button class="tgr-th" data-sort="vs" id="th-ivs" title="The industry's move minus its main ETF over the period you rank by">vs ETF</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="e50" title="The industry ETF's price vs its 50-day EMA">ETF vs 50 EMA</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="e200" title="The industry ETF's price vs its 200-day SMA">ETF vs 200 SMA</button></th>
               <th class="num c3"><button class="tgr-th" data-sort="up_pct">Up today</button></th>
               <th class="c2">Themes</th>
             </tr></thead>
@@ -956,8 +961,13 @@ defCalc('industry_perf', {
       const p = q[0]; o.price = p; o.chg_1d = r2(q[1]);
       [['1w', 'ref_1w'], ['1m', 'ref_1m'], ['3m', 'ref_3m']].forEach(([k, ref]) => { o['chg_' + k] = b[ref] ? r2((p / b[ref] - 1) * 100) : null; });
     }
+    /* the ETF's price (live during market hours) vs its 200-day SMA and 50-day EMA from the last close */
+    o.vs_200 = num(b.sma200) && num(o.price) ? Math.round((num(o.price) / num(b.sma200) - 1) * 1000) / 10 : null;
+    o.vs_50e = num(b.ema50) && num(o.price) ? Math.round((num(o.price) / num(b.ema50) - 1) * 1000) / 10 : null;
     return o;
   };
+  const maCell = (x, cls) => h('td', 'num ' + (cls || '') + ' ' + tone(x), x === null || x === undefined ? '—' : (x > 0 ? '+' : '') + x.toFixed(1) + '%');
+  const themeEtf = (r) => String(r.etfs || '').split(' ').filter(Boolean)[0] || null;
   const areaEtf = (cat) => (ETF && ETF.areas ? ETF.areas[cat] : null);
   const indEtf = (ind) => (ETF && ETF.industries ? ETF.industries[ind] : null);
   const vsOf = (r, etf) => { const e = etf ? etfRow(etf) : null; const v = num(r[pf(S.period)]); return e && v !== null && e['chg_' + S.period] !== null ? r2(v - e['chg_' + S.period]) : null; };
@@ -971,7 +981,7 @@ defCalc('industry_perf', {
     setState('theme-table', ['theme_perf']);
     const tb = table.querySelector('tbody'); tb.replaceChildren();
     const rows = rowsOf('theme_perf').filter((r) => S.tset === 'all' || (S.tset === 'auto') === (r.kind === 'auto'));
-    rows.forEach((r) => { r.vs = vsOf(r, areaEtf(r.category)); });
+    rows.forEach((r) => { r.vs = vsOf(r, areaEtf(r.category)); const e = themeEtf(r) ? etfRow(themeEtf(r)) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; });
     $('#themes-h').textContent = S.tset === 'core' ? 'Your baskets' : S.tset === 'auto' ? 'Auto groups' : 'Themes';
     const spec = sortSpec(table.id, { key: 'p' + S.period, dir: -1 });
     const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : spec.key === 'vs' ? r.vs : r[spec.key]);
@@ -990,6 +1000,8 @@ defCalc('industry_perf', {
       ['1d', '1w', '1m', '3m'].forEach((p) => tr.append(pctCell(r[pf(p)], p === S.period ? max : 0)));
       tr.append(pctCell(r.vs, 0));
       tr.append(h('td', 'num c3', r.up_pct === null ? '—' : r.up_pct + '%'));
+      const ec = h('td', 'c3'); if (themeEtf(r)) ec.append(etfLink(themeEtf(r)));
+      tr.append(ec, maCell(r.e50, 'c3'), maCell(r.e200, 'c3'));
       tr.append(chipCell(S.level === 'industry' ? r.industries : r.industries_detail, 'industry', 'c2'));
       return tr;
     };
@@ -999,7 +1011,7 @@ defCalc('industry_perf', {
       const key = h('td', 'key'); key.append(etfLink(etf), h('span', 'tgr-etag', 'main ETF'));
       tr.append(key, h('td', 'c2', cat), h('td', 'num', ''));
       ['1d', '1w', '1m', '3m'].forEach((p) => tr.append(pctCell(e ? e['chg_' + p] : null, 0)));
-      tr.append(h('td', 'num', ''), h('td', 'num c3', ''), h('td', 'c2 tgr-lbl', e ? e.name : 'no data yet'));
+      tr.append(h('td', 'num', ''), h('td', 'num c3', ''), h('td', 'c3', ''), maCell(e ? e.vs_50e : null, 'c3'), maCell(e ? e.vs_200 : null, 'c3'), h('td', 'c2 tgr-lbl', e ? e.name : 'no data yet'));
       return tr;
     };
     if (S.tlay === 'flat') { rows.forEach((r) => tb.append(themeTr(r, false))); return; }
@@ -1020,10 +1032,10 @@ defCalc('industry_perf', {
     const tb = table.querySelector('tbody'); tb.replaceChildren();
     const rows = levelRows().slice();
     $('#th-ivs').textContent = 'vs ETF (' + S.period.toUpperCase() + ')';
-    rows.forEach((r) => { r.etf = S.level === 'industry' ? indEtf(r.industry) : null; r.vs = vsOf(r, r.etf); });
+    rows.forEach((r) => { r.etf = S.level === 'industry' ? indEtf(r.industry) : null; r.vs = vsOf(r, r.etf); const e = r.etf ? etfRow(r.etf) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; });
     $('#industries-h').textContent = S.level === 'industry' ? 'Industry groups' : 'Industry groups (detailed)';
     const spec = sortSpec(table.id, { key: 'p' + S.period, dir: -1 });
-    const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : spec.key === 'vs' ? r.vs : spec.key === 'n' || spec.key === 'up_pct' ? num(r[spec.key]) : r[spec.key]);
+    const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : ['vs', 'e50', 'e200'].includes(spec.key) ? r[spec.key] : spec.key === 'n' || spec.key === 'up_pct' ? num(r[spec.key]) : r[spec.key]);
     rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
     markSort(table, spec);
     const max = Math.max(1, ...rows.map((r) => Math.abs(num(r[pf(S.period)]) || 0)));
@@ -1032,7 +1044,7 @@ defCalc('industry_perf', {
       if (S.sel && S.sel.kind === 'industry' && S.sel.name === r.industry) tr.classList.add('sel');
       tr.append(h('td', 'key', r.industry), h('td', 'num c3', String(r.n)));
       ['1d', '1w', '1m', '3m'].forEach((p) => tr.append(pctCell(r[pf(p)], p === S.period ? max : 0)));
-      const ec = h('td', 'c3'); if (r.etf) ec.append(etfLink(r.etf)); tr.append(ec, pctCell(r.vs, 0));
+      const ec = h('td', 'c3'); if (r.etf) ec.append(etfLink(r.etf)); tr.append(ec, pctCell(r.vs, 0), maCell(r.e50, 'c3'), maCell(r.e200, 'c3'));
       tr.append(h('td', 'num c3', r.up_pct + '%'));
       tr.append(chipCell(r.themes, 'theme', 'c2'));
       tb.append(tr);
