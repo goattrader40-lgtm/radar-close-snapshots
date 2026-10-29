@@ -5,7 +5,8 @@
 
 Pulls Yahoo quotes for every stock in stocks.json plus the theme ETFs, in batches, and writes
 live.json: {"saved_at", "date", "session", "n", "source",
-            "rows": {SYM: [price, chg_1d %, volume, quote time, relative volume at time, today's open, earnings time]}}.
+            "rows": {SYM: [price, chg_1d %, volume, quote time, relative volume at time, today's open, earnings time, today's high]}}.
+Today's high lets the alerts see a stock that traded over its buy point between two updates and fell back.
 Relative volume at time = today's volume from 9:30 to the quote time / the 20-session average volume from
 9:30 to the same minute (from volprofile.json, --profile <path>); null without a curve or before 9:31.
 From 4:00 on it is the full day / the previous 20 sessions' full-day average (avg_vol_20 in stocks.json).
@@ -57,22 +58,22 @@ class Yahoo:
         return False
 
     def quotes(self, syms):
-        """v7 quote endpoint, BATCH symbols per call. Returns {yahoo_sym: [price, chg%, volume, time, open]}."""
+        """v7 quote endpoint, BATCH symbols per call. Returns {yahoo_sym: [price, chg%, volume, time, open, earnings, day high]}."""
         out = {}
         for i in range(0, len(syms), BATCH):
             chunk = syms[i:i + BATCH]
             q = urllib.parse.urlencode({"symbols": ",".join(chunk), "crumb": self.crumb,
-                                        "fields": "regularMarketPrice,regularMarketChangePercent,regularMarketVolume,regularMarketTime,regularMarketOpen,earningsTimestamp"})
+                                        "fields": "regularMarketPrice,regularMarketChangePercent,regularMarketVolume,regularMarketTime,regularMarketOpen,earningsTimestamp,regularMarketDayHigh"})
             for attempt in range(3):
                 try:
                     res = json.loads(self.get("https://query2.finance.yahoo.com/v7/finance/quote?" + q))["quoteResponse"]["result"]
                     for r in res:
                         p = r.get("regularMarketPrice")
                         if p:
-                            op = r.get("regularMarketOpen")
+                            op, hi = r.get("regularMarketOpen"), r.get("regularMarketDayHigh")
                             out[r["symbol"]] = [round(p, 4), round(r.get("regularMarketChangePercent") or 0, 3),
                                                 r.get("regularMarketVolume"), r.get("regularMarketTime"), round(op, 4) if op else None,
-                                                r.get("earningsTimestamp")]
+                                                r.get("earningsTimestamp"), round(hi, 4) if hi else None]
                     break
                 except Exception as e:
                     if attempt == 2:
@@ -88,7 +89,9 @@ class Yahoo:
                 m = json.loads(self.get(url))["chart"]["result"][0]["meta"]
                 p, pc = m.get("regularMarketPrice"), m.get("chartPreviousClose") or m.get("previousClose")
                 if p and pc:
-                    return [round(p, 4), round((p / pc - 1) * 100, 3), m.get("regularMarketVolume"), m.get("regularMarketTime"), None]
+                    hi = m.get("regularMarketDayHigh")
+                    return [round(p, 4), round((p / pc - 1) * 100, 3), m.get("regularMarketVolume"), m.get("regularMarketTime"), None, None,
+                            round(hi, 4) if hi else None]
                 return None
             except urllib.error.HTTPError as e:
                 if e.code == 404:
@@ -217,6 +220,7 @@ def main():
             print(f"sipcal failed: {e}", file=sys.stderr)
     fixed = 0
     for s, v in rows.items():
+        hi = v.pop(6) if len(v) > 6 else None
         ern = v.pop(5) if len(v) > 5 else None
         op = v.pop(4) if len(v) > 4 else None
         fv = sipcal.corrected(v[2], v[3], off.get(s)) if off else None
@@ -226,6 +230,7 @@ def main():
         v.append(rvol_at(v[2], v[3], prof.get(s), avg20.get(s)))
         v.append(op)                                               # the open, for the launch trigger's gap
         v.append(ern)                                              # the last / next earnings time, for the earnings tag
+        v.append(hi)                                               # today's high: a buy point touched between updates
     if len(rows) < 300:
         sys.exit(f"only {len(rows)} quotes came back, not saving")
     times = sorted(v[3] for v in rows.values() if v[3])

@@ -8,7 +8,8 @@
 Timeline (ET, trading days):
   8:25, 8:40   start the "Pre-market scan" workflow (if today's scan isn't saved yet)
   9:30-4:10    every 5 minutes: live prices -> live.json on the radar-data branch
-  9:31-12:00, 3:00-4:00   every minute in between: the launch watch list only (radar/fast.py), for the big gap-up alerts
+  9:31-12:00, 3:00-4:00   every minute in between: the launch watch list and the followed launches (radar/fast.py),
+               for the big gap-up alerts and the breakouts
                (catalyst gaps, power days, A+/A launches; 9:31-9:34 their early heads-ups, before the volume
                means anything); alerts.json is published when one is sent
   4:06         start the "Close snapshot" workflow (if today's isn't saved yet)
@@ -146,7 +147,7 @@ def fast_window(x):
 
 
 def fast_once():
-    """1-minute check between the live updates: the watch list only, for the big gap-up alerts"""
+    """1-minute check between the live updates: the watch list and the followed launches, for the big gap-ups and breakouts"""
     need = [os.path.join(OUT, f) for f in ("launch.json", "base_stocks.json", "base_volprofile.json")]
     if not all(os.path.exists(f) for f in need):
         return                                        # the first live update writes these
@@ -156,7 +157,7 @@ def fast_once():
         log("fast:", (r.stderr or r.stdout).strip()[-300:])
         return
     load_alert_state()
-    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--gaps-only", check=False)
+    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", check=False)
     txt = (r.stdout or r.stderr).strip()
     if r.returncode == 0 and " 0 new," not in txt:
         log("fast:", txt[-600:])
@@ -323,7 +324,7 @@ def day():
                     log("live update failed:", e)
             elif fast_window(hm(t)):
                 try:
-                    fast_once()                           # 9:31-9:34 the early heads-ups, then the big gap-up alerts
+                    fast_once()                           # 9:31-9:34 the early heads-ups, then the big gap-ups and breakouts
                 except Exception as e:
                     log("1-minute check failed:", e)
         # close snapshot at 4:06, then the daily refresh

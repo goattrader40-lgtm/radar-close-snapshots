@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Phone alerts (ntfy) from the 5-minute live prices: launches and breakouts as they happen.
 
-  python3 radar/alerts.py <live.json> <launch.json> <alerts.json> [--gaps-only]   (NTFY_TOPIC set: sends; unset: only logs)
+  python3 radar/alerts.py <live.json> <launch.json> <alerts.json> [--fast]   (NTFY_TOPIC set: sends; unset: only logs)
 
-Every 5 minutes with the live prices; every minute in between (--gaps-only, radar/fast.py) for the big gap-ups on
-volume: catalyst gaps and their 2nd trigger, power days, A+/A launches. 9:31-9:34 (the 1-minute check only): the
-early heads-up (find_early), the shape of such a gap before its volume can be read.
+Every 5 minutes with the live prices; every minute in between (--fast, radar/fast.py: 9:31-12:00 and 3:00-4:00) for
+the big gap-ups on volume (catalyst gaps and their 2nd trigger, power days, A+/A launches) and the followed launches'
+breakouts. 9:31-9:34 (the 1-minute check only): the early heads-up (find_early), the shape of such a gap before its
+volume can be read.
 
 Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the radar-data branch):
   power day   volume pace 4x+ for the time of day, a 10%+ gap, up 15%+, above the 200 SMA, at most 50% over it
@@ -26,6 +27,8 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               after closing under it the day before; graded from 2 years of data (grade_breakout): A = an early
               breakout (1st / 2nd, within 50 sessions of the launch) in a leading theme with volume building before,
               B = early plus one of those, C = the rest
+  touch       a launch being followed traded over its buy point (today's high) but is back under it at the check: not a
+              breakout, a heads-up (LION Oct 29 2026 touched $12.98 at 1:26 PM and fell back between two 5-minute updates)
   confirm     in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
   pop         the entry inside a base: after its resting time (the volume dried up, surfing the 10 & 21 EMA) and a
               tight candle, it opens above that candle's open and close and above the rising 10 & 21 EMA (ANF Oct 5 2026)
@@ -105,9 +108,8 @@ def find_early(live, doc, now=None):
     return out
 
 
-def find(live, doc, now=None, gaps_only=False):
-    """[(key, title, message, priority, tv symbol)] for everything that fires right now
-    (gaps_only: the watch list's catalyst gaps, power days and launches, not the followed launches' breakouts)"""
+def find(live, doc, now=None):
+    """[(key, title, message, priority, tv symbol)] for everything that fires right now"""
     R, rows, out = doc["rules"], live["rows"], []
     now = now or datetime.datetime.now(NY)
     d0 = datetime.date.fromisoformat(doc["date"])                 # the last close the watch list was built from
@@ -163,7 +165,7 @@ def find(live, doc, now=None, gaps_only=False):
         if g in ("A+", "A"):
             out.append((f"{sym}:launch", f"{sym} {g} launch", f"{facts}{cat} · ${price:.2f} through its base high ${pivot:.2f}"
                         + (" (delayed: faded gap " + mem[0] + ")" if mem else "") + f"{crossed} · theme {theme}", "high" if g == "A+" else "default", tvs))
-    for r in ([] if gaps_only else doc.get("launches", [])):
+    for r in doc.get("launches", []):
         q = rows.get(r["symbol"])
         if not q or len(q) < 5 or q[4] is None:
             continue
@@ -199,6 +201,12 @@ def find(live, doc, now=None, gaps_only=False):
             elif confirm:
                 out.append(confirm)
             continue
+        hi = q[7] if len(q) > 7 else None
+        if bp and (r.get("price") or 0) <= bp and hi and hi > bp and price <= bp:
+            out.append((f"{sym}:touch", f"{sym} touched its buy point, back under",
+                        f"traded up to ${hi:.2f} today, over the buy point ${bp:.2f}, now ${price:.2f} ({100 * (price / bp - 1):+.1f}%)"
+                        f" · not a breakout yet: that alert comes when it trades over ${bp:.2f} at a check · {chg:+.1f}% · vol {rv:.1f}x"
+                        + since(r), "default", tvs))
         if not bp or (r.get("price") or 0) > bp or not (price > bp and rv >= 1):
             if confirm:
                 out.append(confirm)                   # a new breakout the same day says more than the confirmation
@@ -245,7 +253,7 @@ def send(topic, title, msg, prio, tvs):
 
 def main():
     live_p, launch_p, state_p = sys.argv[1:4]
-    gaps_only = "--gaps-only" in sys.argv                # the 1-minute check (radar/fast.py): big gaps on volume only
+    fast = "--fast" in sys.argv                          # the 1-minute check (radar/fast.py)
     now = datetime.datetime.now(NY)
     live, doc = json.load(open(live_p)), json.load(open(launch_p))
     today = now.date().isoformat()
@@ -256,11 +264,11 @@ def main():
     if state.get("date") != today:
         state = {"date": today, "sent": []}
     early = (now.hour, now.minute) < (9, 35)            # 9:31-9:34: the early heads-ups only (the 1-minute check)
-    if live.get("session") != today or (now.hour, now.minute) < (9, 31) or (early and not gaps_only):
+    if live.get("session") != today or (now.hour, now.minute) < (9, 31) or (early and not fast):
         print("alerts: not in today's session yet")
         return
     sent = set(state["sent"])
-    found = find_early(live, doc, now) if early else find(live, doc, now, gaps_only)
+    found = find_early(live, doc, now) if early else find(live, doc, now)
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
     cat_now = {a[0].split(":")[0] for a in found if a[0].endswith(":catalyst") and a[0] not in sent}
     new, quiet = [], []

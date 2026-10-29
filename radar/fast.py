@@ -5,7 +5,8 @@
 
 The launch watch list (setups/launch.json, a few hundred stocks), so a big gap-up on volume (a catalyst gap, a power
 day, an A+/A launch) alerts within a minute instead of up to five (HRI crossed its 200 SMA between the 9:35 and the
-9:40 update on Oct 27, 2026). Breakouts of the launches being followed stay on the 5-minute update. Writes live.json-shaped rows for those stocks only, Rel vol as radar/live.py works it out,
+9:40 update on Oct 27, 2026), plus the launches being followed, for their breakouts (LION crossed its buy point at
+3:08 PM on Oct 29, 2026 and the 5-minute update saw it at 3:11). Writes live.json-shaped rows for those stocks only, Rel vol as radar/live.py works it out,
 with the volume correction the last live update measured (radar/sipcal.py). radar/alerts.py reads it like live.json.
 """
 import datetime, json, os, sys
@@ -18,7 +19,7 @@ def main():
     launch_p, stocks_p, prof_p, cal_p, out_p = sys.argv[1:6]
     now = datetime.datetime.now(NY)
     doc = json.load(open(launch_p))
-    syms = sorted(doc.get("watch", {}))
+    syms = sorted(set(doc.get("watch", {})) | {r["symbol"] for r in doc.get("launches", [])})
     try:
         prof = json.load(open(prof_p))["rows"]
     except Exception:
@@ -36,10 +37,10 @@ def main():
         s = ymap.get(k)
         if not s:
             continue
-        price, chg, vol, qt, op, ern = v
+        price, chg, vol, qt, op, ern, hi = v
         fv = sipcal.corrected(vol, qt, off.get(s))
         vol = vol if fv is None else fv
-        rows[s] = [price, chg, vol, qt, rvol_at(vol, qt, prof.get(s), avg20.get(s)), op, ern]
+        rows[s] = [price, chg, vol, qt, rvol_at(vol, qt, prof.get(s), avg20.get(s)), op, ern, hi]
     if len(rows) < 0.5 * len(syms):
         sys.exit(f"fast: only {len(rows)} of {len(syms)} quotes")
     times = sorted(v[3] for v in rows.values() if v[3])
