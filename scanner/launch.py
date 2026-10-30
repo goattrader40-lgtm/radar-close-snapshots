@@ -80,7 +80,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, tight_near=0.85, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -321,6 +321,18 @@ def flag_at(a, i):
     return t, depth, h[t] + slope * (i - t), h[t] + slope * (i + 1 - t)
 
 
+def flag_run(a, t):
+    """the run into a flag's top t: from the lowest low of the 25 sessions before it, 4+ of the stock's ADRs, and made
+    by the trend, no single day 50%+ of it (CAI Aug 18 - 25 2026: 20.78 to 28.32, 5 ADRs, its biggest day a quarter of
+    it; ANF's Aug 26 2026 gap day was most of its run: no flag after it, the Oct 5 pop is the entry)"""
+    st, c = a.st, a.st.c
+    k = max(1, t - 25) + int(np.argmin(st.l[max(1, t - 25):t + 1]))
+    run = st.h[t] - st.l[k]
+    if k >= t or run <= 0 or 100 * run / st.l[k] < L["flag_run_adr"] * _adr(st, t):
+        return False
+    return max(c[m] - c[m - 1] for m in range(k + 1, t + 1)) <= 0.5 * run
+
+
 def surfing(a, t, j):
     """days from t+1 to j closing within an ADR of both the 10 and 21 EMA: the flag consolidating at its EMAs (SMCI
     Jun 16-27 2023: 7 days, then the Jun 28 break of its line; ACN Oct 23-28 2026: none, it fell and bounced)"""
@@ -458,6 +470,7 @@ def follow(a, i0, i, pick=False):
     if pick and b0 and b0[0] > H:
         H = b0[0]
     used, bo = set(), None                                  # bo = (day, top, top index) of the last base breakout
+    used_flags = set()            # a flag's line break and the later close over its top are two entries (CAI Sep 14 / 15 2026)
     # the level a retest comes back to: the broken base's top, by the candle bodies (each day the higher of its open and
     # close) or by the wicks, either one (SPOT Oct 2026: the bodies topped at $536.98 under the $540.82 wick).
     # rlv = (breakout day, bodies' top, wick top). A launch that closed out of its base broke that base too (SPOT Oct 22
@@ -478,12 +491,11 @@ def follow(a, i0, i, pick=False):
         # a flag at the highs, after the leg has run 4+ of the stock's own ADRs from its start (SMCI Jun 2023: 85%,
         # 13 ADRs, then the flag); a trendline break in the base right after a launch is an entry, not a new leg
         # (ANF Sep 16 2026: 5% past its Aug 26 launch close; Oct 5, after the volume dried up, your entry in the base)
-        at_highs = bool(f and st.h[f[0]] >= st.h[max(0, f[0] - 120):f[0] + 1].max()
-                        and st.h[f[0]] >= c[last_leg] * (1 + L["flag_run_adr"] * _adr(st, last_leg) / 100))
+        at_highs = bool(f and st.h[f[0]] >= st.h[max(0, f[0] - 120):f[0] + 1].max() and flag_run(a, f[0]))
         # the flag buy: pulled back from the high, consolidating at the 10 / 21 EMA (3+ days surfing them), then the close
         # over its falling line and the 10 & 21 EMA: a new leg (SMCI Jun 28 2023, its 3rd leg). Without the surfing it
         # is no flag (ACN Oct 29 2026, a drop and bounce under its Oct 22 high 259.39: still leg 2)
-        flag_go = bool(L["flag_legs"] and f and at_highs and f[0] not in used and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2]
+        flag_go = bool(L["flag_legs"] and f and at_highs and f[0] not in used_flags and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2]
                        and surfing(a, f[0], j - 1) >= L["flag_surf"] and c[j] > a.e10[j] and c[j] > a.e21[j])
         b = base_breakout(a, j, used)
         if b and bo and j - bo[0] < L["leg_pause"] and (c[bo[0]:j] >= bo[1]).all():
@@ -503,7 +515,10 @@ def follow(a, i0, i, pick=False):
             flag_day, lvl = j, st.h[f[0]]
         if flag_go or b:
             nbo += 1
-            used.add(f[0] if flag_go else b[1])           # each base top gives at most one breakout
+            if flag_go:
+                used_flags.add(f[0])
+            if b:
+                used.add(b[1])                            # each base top gives at most one breakout
             if b:
                 bo, lvl = (j, b[0], b[1]), b[0]
                 rlv = (j, min(body(max(0, b[1] - 20), max(b[1] + 1, j - 3)), b[0]), float(b[0]))   # the base's bodies, not the push into it
@@ -526,8 +541,7 @@ def follow(a, i0, i, pick=False):
     fl = flag_at(a, i)
     # a flag is a pattern only at the highs, after the leg ran 4+ ADRs (SMCI Jun 2023); a falling line inside the
     # base right after a launch is none (ANF Sep 2026: under the Aug 26 gap day's high the whole time, one structure)
-    flag_leg = bool(fl and st.h[fl[0]] >= st.h[max(0, fl[0] - 120):fl[0] + 1].max()
-                    and st.h[fl[0]] >= c[last_leg] * (1 + L["flag_run_adr"] * _adr(st, last_leg) / 100))
+    flag_leg = bool(fl and st.h[fl[0]] >= st.h[max(0, fl[0] - 120):fl[0] + 1].max() and flag_run(a, fl[0]))
     if not flag_leg or not L["flag_legs"] or surfing(a, fl[0], i) < L["flag_surf"]:
         fl = None
     flag_bo = flag_day == i
@@ -586,12 +600,15 @@ def follow(a, i0, i, pick=False):
     # 187-188: Oct 7 closed 196.64 back over 195.00, the buy at the close; ANF Aug 17-18 closed under it: no retest)
     rday = lambda k: bool(hit(k) and (st.l[k] <= st.l[rlv[0] + 1:k].min()
                                       or (first is not None and first <= k and (c[first:k + 1] > a.e21[first:k + 1]).all())))
-    done = next((k for k in range(rlv[0] + 1, i + 1) if rday(k)), None) if rlv else None
-    retest = bool(held and done == i)
+    rdays = [k for k in range(rlv[0] + 1, i + 1) if rday(k)] if rlv else []
+    done = rdays[0] if rdays else None
+    # one per breakout, unless a later one undercuts the earlier's low and reclaims again (CAI 2026: Sep 3 at 23.62, then
+    # Sep 10 down to 23.20 under the 23.66 base high and the 21 EMA, closed back over both)
+    retest = bool(held and rdays and rdays[-1] == i and all(st.l[i] < st.l[k] for k in rdays[:-1]))
     retest_ema = retest_on(i)[1] if retest else []
     # tomorrow's zone, for the heads-up during the day (the buy alert itself waits for the close): until a retest held
     zone = [fnum(rlv[1] * (1 - 1.5 * adr / 100)), fnum(max(rlv[2], rlv[1] * (1 + adr / 400)))] \
-        if held and 2 <= i - rlv[0] < L["retest_days"] and done is None else None
+        if held and 2 <= i - rlv[0] < L["retest_days"] else None
     # the push out of the 10 / 21 EMA with a gap, within 5 sessions of the retest's first touch, held or not: the day
     # before still at the EMAs (closing within an ADR of the 10 EMA, over the 50 EMA), it opens over that day's candle
     # (its open and close) and closes over the trigger, the highest of that candle, the 10 and 21 EMA and the breakout
@@ -602,7 +619,7 @@ def follow(a, i0, i, pick=False):
     push_armed = lambda k: bool(held and first is not None and first <= k <= first + 5 and abs(c[k] / a.e10[k] - 1) * 100 <= _adr(st, k)
                                 and c[k] > a.e50[k])
     push_day = next((j for j in range(first + 1, min(i, first + 6) + 1) if push_armed(j - 1) and st.o[j] > max(st.o[j - 1], c[j - 1])
-                     and c[j] > push_lv(j - 1) and a.rv[j] >= 1), None) if first is not None else None
+                     and c[j] > push_lv(j - 1)), None) if first is not None else None     # whatever the volume (CAI Oct 9 2026, 0.98x)
     push_level = push_lv(i) if push_armed(i) and push_day is None else None     # what tomorrow's open has to clear
     # tight under the buy point (a level: a base top or a pattern's pivot, not a falling flag line): closes within an
     # ADR under it, 2+ tight days in a row: tight bodies (half an ADR or less) close to the base high, whatever the
@@ -612,7 +629,7 @@ def follow(a, i0, i, pick=False):
     tlv = nb or (bp if bp and pat in tuple(msf.NAMES[k] for k in range(1, 13) if msf.is_pat(k)) else None)
     if tlv:                          # under the base high (ATRC Aug 4-5 2026: 5% under 41.29, no tight days)
         for k in range(i, max(i0, i - 10), -1):
-            if not (tlv * (1 - _adr(st, k) / 100) <= c[k] < tlv and abs(a.chg[k]) <= _adr(st, k) / 2
+            if not (tlv * (1 - L["tight_near"] * _adr(st, k) / 100) <= c[k] < tlv and abs(a.chg[k]) <= _adr(st, k) / 2
                     and abs(c[k] - st.o[k]) <= L["tight_body"] * _adr(st, k) / 100 * c[k - 1]
                     # stacked, not stepping: all the days' opens and closes within half an ADR (ANF Oct 15-16 2026:
                     # 0.24 ADR, ACN Oct 5-7 0.44, SG Oct 5-7 0.46; GMAB Sep 17-21 0.96 and Oct 20-22 1.02: no tight days)
@@ -651,8 +668,9 @@ def follow(a, i0, i, pick=False):
         ov = (c[i] / bo[1] - 1) * 100 / _adr(st, i)
         # a weak one starts the next leg only when it follows through (ATRC Aug 7 2026, leg 2 from Aug 11)
         stage = (f"Base breakout (leg {leg}), closed {ov:.1f} ADR over the top: decisive" if ov >= 0.5 else
-                 f"Base breakout (leg {leg + 1} if it follows through), closed {ov:.1f} ADR over the top: weak, most of these fell back") \
-            + (f", on light volume ({a.rv[i]:.1f}x)" if a.rv[i] < 1 else "")
+                 f"Base breakout ({f'leg {leg + 1} if it follows through' if leg == 0 or i - last_leg >= L['leg_pause'] else f'leg {leg}'}), "
+                 f"closed {ov:.1f} ADR over the top: weak, most of these fell back") \
+            + (f", on light volume ({a.rv[i]:.2f}x)" if a.rv[i] < 1 else "")
     elif thru_day == i:
         stage = f"Breakout follow-through (leg {leg}): gapped up and held over {bo[1]:.2f} all day, closed {(c[i] / bo[1] - 1) * 100 / _adr(st, i):.1f} ADR over"
     elif flag_bo:
@@ -660,7 +678,8 @@ def follow(a, i0, i, pick=False):
     elif dry_day == i:
         stage = "Pop out of the consolidation (entry in base)"
     elif push_day == i:
-        stage = f"Push out of the 21 EMA with a gap, after the retest of {rlv[1]:.2f}" + (f"-{rlv[2]:.2f}" if rlv[2] > rlv[1] * 1.001 else "")
+        stage = f"Push out of the 21 EMA with a gap, after the retest of {rlv[1]:.2f}" + (f"-{rlv[2]:.2f}" if rlv[2] > rlv[1] * 1.001 else "") \
+            + (f", on light volume ({a.rv[i]:.2f}x)" if a.rv[i] < 1 else "")
     elif retest:
         lv_txt = f"{rlv[1]:.2f}" if rlv[2] <= rlv[1] * 1.001 else f"{rlv[1]:.2f}-{rlv[2]:.2f} (bodies-wicks)"
         stage = f"Retest of the breakout level {lv_txt} held" + (" + confluence: " + " & ".join(retest_ema) if retest_ema else "")

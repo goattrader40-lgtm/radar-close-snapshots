@@ -43,7 +43,8 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               (GMAB Oct 2 2026: down to 33.72 under 34.63, back to 34.75 over it and the 21 EMA; ANF Aug 17-18 closed
               under the 21 EMA: no retest)
   push        within 5 sessions of the retest's first touch, the day before still at the EMAs: it opens over that
-              day's open and close and its 10 & 21 EMA, pushing out of the 21 EMA with a gap (ANF Aug 21 2026)
+              day's candle and trades over its 10 & 21 EMA and the breakout level, pushing out of the 21 EMA with a gap,
+              whatever the volume (shown) (ANF Aug 21 2026; CAI Oct 9 on 0.98x)
 Nothing but the early heads-ups is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
 """
@@ -221,13 +222,13 @@ def find(live, doc, now=None):
                             f" · the buy: at the close, if it holds over ${lvb:.2f}" + tail, "high" if held else "default", tvs))
         # the push out of the 21 EMA with a gap after the retest's touch (push_level = what the open has to clear)
         pl = r.get("push_level")
-        if pl and op and r.get("day_open") and op > max(r["day_open"], r["price"]) and price > pl and rv >= 1:
+        if pl and op and r.get("day_open") and op > max(r["day_open"], r["price"]) and price > pl:     # whatever the volume
             gap_ = (op / (price / (1 + chg / 100)) - 1) * 100
             out.append((f"{sym}:push", f"{sym} entry: push out of the 10 / 21 EMA with a gap",
                         f"opened ${op:.2f} ({gap_:+.1f}%) over yesterday's candle, now ${price:.2f} over the trigger ${pl:.2f}"
                         f" (yesterday's candle, its 10 & 21 EMA and the breakout level, all reclaimed)"
                         f" · after the retest of its breakout level ${r.get('retest_level'):.2f} (touched {r.get('retest_tried')})"
-                        f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r), "high", tvs))
+                        f" · {chg:+.1f}% · vol {rv:.1f}x for the time of day" + (" (light)" if rv < 1 else "") + f" · leg {r.get('leg')}" + since(r), "high", tvs))
         bp = r.get("buy_point")
         if bp and inside and (r.get("price") or 0) < bp:
             # the pop out of a consolidation: after a tight candle, it opens above that candle's open and close and above
