@@ -206,4 +206,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:                       # the run's log isn't readable from the session: the error goes out instead
+        import traceback
+        body = getattr(e, "read", lambda: b"")()[:500].decode("utf-8", "replace")
+        json.dump(dict(error=traceback.format_exc()[-3000:], body=body), open(sys.argv[sys.argv.index("--out") + 1], "w"), indent=1)
+        raise
