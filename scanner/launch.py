@@ -76,7 +76,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=10, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=20, body_tops=1, retest_launch=1, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -312,6 +312,23 @@ def _adr(st, k):
     return st.adr[k] if st.adr[k] > 0 else 5.0
 
 
+def body_top(a, j, span):
+    """the top of the base's candle bodies (each day the higher of its open and close) over the sessions base_top looks
+    at: a close over it is the breakout (SPOT Oct 2026: the bodies topped at $536.98, Oct 16's open, under the $540.82
+    wick of Oct 9; Oct 22 closed over both, Oct 28 retested $536.98 and held)"""
+    st = a.st
+    lo, hi = max(0, j - span), j - 3
+    if hi - lo < 10:
+        return None
+    return float(np.maximum(st.o[lo:hi], st.c[lo:hi]).max())
+
+
+def base_level(a, j, span, b):
+    """the level a close has to clear for base b = (top, its index): the bodies' top (body_tops), never above the wick top"""
+    bt = body_top(a, j, span) if L["body_tops"] else None
+    return min(bt, b[0]) if bt else b[0]
+
+
 def base_ok(a, j, span):
     """(top, its index) when the base before day j is real: its top is 5+ sessions old and it pulled back 1.25+ of
     the stock's own ADRs from it (each ticker has its own character); else None"""
@@ -334,9 +351,10 @@ def base_breakout(a, j, used=()):
         if not b or b[1] in used:
             continue
         top, k = b
-        if (c[j] > top and a.rv[j] >= L["bo_rv"] and max(c[j - 3:j]) <= top
+        lvl = base_level(a, j, span, b)
+        if (c[j] > lvl and a.rv[j] >= L["bo_rv"] and max(c[j - 3:j]) <= lvl
                 and st.h[j - 3:j].max() < top * (1 + _adr(st, j - 1) / 100)):
-            return b
+            return lvl, k
     return None
 
 
@@ -413,7 +431,14 @@ def follow(a, i0, i, pick=False):
     H, last_new, armed, rested, last_leg = st.h[i0], i0, False, None, i0
     if pick and b0 and b0[0] > H:
         H = b0[0]
-    used, bo = set(), None                                  # bo = (day, top, top index) of the last base breakout
+    used, bo = set(), None                                  # bo = (day, level, top index) of the last base breakout
+    lbo = None                                              # the launch's own breakout, for its retest
+    if L["retest_launch"] and i0 >= 20:
+        # a launch that closed out of its base is a breakout too: its retest counts (SPOT Oct 22 2026 over its October
+        # base, back to it Oct 28)
+        tops0 = np.maximum(st.o[i0 - 20:i0], st.c[i0 - 20:i0]) if L["body_tops"] else st.h[i0 - 20:i0]
+        if c[i0] > tops0.max():
+            lbo = (i0, float(tops0.max()), i0 - 20 + int(np.argmax(tops0)))
     dry_done, dry_day, flag_day = False, None, None         # one dry-up entry per base (ANF: Oct 5 2026, not again)
     lvl = H                                                 # the level the leg broke out of: the launch day's high, then the base top
     nbo = 0                                                 # breakouts since the launch (for the grade: the 1st and 2nd work best)
@@ -456,7 +481,11 @@ def follow(a, i0, i, pick=False):
         fl = None
     flag_bo = flag_day == i
     # tomorrow's base tops (the smaller and the larger base): buy points when above today's close
-    tops = [b for b in (base_ok(a, i + 1, 40), base_ok(a, i + 1, 120)) if b and c[i] < b[0]]
+    tops = []                                              # (level, top index, wick top)
+    for span in (40, 120):
+        b = base_ok(a, i + 1, span)
+        if b and c[i] < base_level(a, i + 1, span, b):
+            tops.append((base_level(a, i + 1, span, b), b[1], b[0]))
     # the buy point = the nearest trigger above today's close: your MSF pattern's pivot, the flag's trendline or
     # the base top (RPD Oct 23 2026 had closed just over its MSF pivot of 14.80; the base top trigger 15.02 is what
     # Oct 26 broke on 3.3x volume)
@@ -467,15 +496,24 @@ def follow(a, i0, i, pick=False):
         cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
     if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
         cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
-    for top, k in tops:
-        cands.append((top, "Base top", below_since(a, i + 1, top, k), 100 * (1 - st.l[k:i + 1].min() / top)))
+    for top, k, wick in tops:
+        cands.append((top, "Base top", below_since(a, i + 1, wick, k), 100 * (1 - st.l[k:i + 1].min() / top)))
     bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)
-    top_date = next((st.dates[k] for t, k in tops if bp is not None and t == bp), None)
+    top_date = next((st.dates[k] for t, k, w in tops if bp is not None and t == bp), None)
     adr = _adr(st, i)
-    # retest held: within 10 sessions of a base breakout, the low comes back to the broken top (from a quarter ADR
-    # over it to an ADR under it) and the close holds above it (ANF Oct 23 2026: low 152.73, close 155.82 over 155.22)
-    retest = bool(bo and 1 <= i - bo[0] <= L["retest_days"] and c[i] > bo[1]
-                  and bo[1] * (1 - adr / 100) <= st.l[i] <= bo[1] * (1 + adr / 400))
+    # retest held: within 20 sessions of a base breakout (the launch's own too), while it hasn't closed an ADR under
+    # it, the low comes back to the broken level (from a quarter ADR over it to an ADR under it) and the close holds
+    # above it; once per pullback (ANF Oct 23 2026: low 152.73, close 155.82; SPOT Oct 28: low 536.74, close 538.40
+    # over $536.98, the 21 EMA $536.18 there too). Between closes, the zone is an intraday heads-up
+    rb = bo or lbo
+
+    def retest_on(k):
+        ak = _adr(st, k)
+        return bool(rb and 1 <= k - rb[0] <= L["retest_days"] and c[k] > rb[1] and rb[1] * (1 - ak / 100) <= st.l[k] <= rb[1] * (1 + ak / 400))
+    held = bool(rb and 1 <= i - rb[0] <= L["retest_days"] and not (c[rb[0] + 1:i + 1] < rb[1] * (1 - adr / 100)).any())
+    retest = retest_on(i) and held and not any(retest_on(k) for k in range(max(rb[0] + 1, last_new + 1), i))
+    retest_ema = bool(retest and st.l[i] <= a.e21[i] * (1 + adr / 400) and c[i] > a.e21[i])
+    zone = [fnum(rb[1] * (1 - adr / 100)), fnum(rb[1] * (1 + adr / 400))] if held and c[i] > rb[1] and i - rb[0] < L["retest_days"] else None
     # tight under the buy point (a level: a base top or a pattern's pivot, not a falling flag line): closes within an
     # ADR under it, each day's move under half an ADR and its body half an ADR or less, 2+ days in a row (ANF Oct 15-16
     # 2026: 2.1% and 1.3% under its 155.22 base top, +1.5% and +0.8%, bodies 0.00 and 0.05 ADR; broke out Oct 19)
@@ -541,7 +579,8 @@ def follow(a, i0, i, pick=False):
         vol_build=fnum(st.v[i - 4:i + 1].mean() / st.v[i - 54:i - 4].mean(), 2) if i >= 54 else None,
         base_from=bfrom, base_len=blen, base_low_pct=fnum(bdeep, 1) if bdeep is not None else None,
         base_low_adr=fnum(bdeep_adr, 1) if bdeep_adr is not None else None,
-        retest_today=retest, tight_days=tight,
+        retest_today=retest, retest_ema=retest_ema, retest_zone=zone, retest_level=fnum(rb[1]) if rb else None,
+        retest_from=st.dates[rb[0]] if rb else None, tight_days=tight,
         sessions=i - i0, gain_pct=fnum(100 * (c[i] / c[i0] - 1), 1), max_gain_pct=fnum(100 * (hi / c[i0] - 1), 1),
         status=status, first_exit=st.dates[exit_k] if exit_k is not None else None,
         exit_gain_pct=fnum(100 * (c[exit_k] / c[i0] - 1), 1) if exit_k is not None else None,
