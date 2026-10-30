@@ -70,6 +70,14 @@ jobs:
             python3 scanner/probe_levels.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_levels.json
             python3 radar/publish.py "levels test" /tmp/probe_levels.json
           fi
+          if [ "${{ inputs.cmd }}" = "catalyst" ]; then
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json
+            python3 scanner/probe_catalyst.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_catalyst.json || true
+            python3 radar/publish.py "catalyst launch test" /tmp/probe_catalyst.json
+          fi
           if [ "${{ inputs.cmd }}" = "gapstudy" ]; then
             pip install --quiet numba numpy pandas
             python3 scanner/fetch.py /tmp/bars.json.gz
