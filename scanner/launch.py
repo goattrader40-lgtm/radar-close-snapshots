@@ -80,7 +80,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, thru_base_adr=2, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -486,7 +486,8 @@ def follow(a, i0, i, pick=False):
         b = base_breakout(a, j, used)
         # the follow-through of a weak breakout, within 3 sessions: it gaps up over the day before's close, trades all
         # day over the top and closes half an ADR+ over it: the new leg starts here (ACN Oct 16 2026 closed 0.2 ADR over
-        # the launch day's 227.63; Oct 20 gapped up, low 237.82, closed 239.12: leg 2. GMAB's Aug 14 and Sep 18 got none)
+        # the launch day's 227.63; Oct 20 gapped up, low 237.82, closed 239.12: leg 2. GMAB Aug 14 2026 -> Aug 17; SMCI
+        # May 16 2023 -> May 17. GMAB's Sep 18 got none: still inside its 34.7 range until Oct 5)
         if weak_bo and not b and j - weak_bo[0] <= 3 and st.o[j] > c[j - 1] and st.l[j] > weak_bo[1] \
                 and c[j] >= weak_bo[1] * (1 + L["leg_decisive"] * _adr(st, j) / 100):
             if leg == 0 or j - last_leg >= L["leg_pause"]:
@@ -504,10 +505,9 @@ def follow(a, i0, i, pick=False):
             # a new leg needs a decisive close (half an ADR over the top): a weaker one is a breakout, still the same leg
             # (GMAB 2026: the launch Aug 7 leg 1; Aug 14 and Sep 18 closed just over their tops; Oct 5 leg 2, Oct 23 leg 3)
             weak = bool(b and not flag_go and c[j] < b[0] * (1 + L["leg_decisive"] * _adr(st, j) / 100))
-            # its follow-through can start the leg only out of a real base, 2+ ADRs deep (ACN's after its Oct 1 2026
-            # launch: 11 sessions, 4 ADRs; GMAB's Aug 10-13 dip, 1.7 ADRs, was a pause: Aug 17 stayed in leg 1)
-            deep = 100 * (1 - st.l[b[1] + 1:j].min() / b[0]) / _adr(st, b[1]) if weak and j > b[1] + 1 else 0.0
-            weak_bo = (j, b[0]) if weak and deep >= L["thru_base_adr"] else None
+            # its follow-through starts the leg (a leg runs from a breakout through the run and the pullback until the
+            # next breakout: GMAB 2026 Aug 14 over the launch day's high, Oct 5 out of the 34.7 range, Oct 23)
+            weak_bo = (j, b[0]) if weak else None
             if not weak and (leg == 0 or j - last_leg >= L["leg_pause"]):  # breakouts a few days apart (Oct 22 / Oct 23) are one leg
                 # after a rest of 40+ sessions without a new high, the breakout starts a new run: leg 1 again
                 leg = 1 if j - last_new >= L["rest_days"] else leg + 1
