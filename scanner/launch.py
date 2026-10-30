@@ -80,7 +80,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, tight_near=0.85, launch_under200=1, under200_max=10, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, tight_near=0.85, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -181,17 +181,9 @@ class Arr:
         st = self.st
         return bool(i >= self.start and self.liquid[i] and self.gap[i] > 0
                     and ((self.chg[i] >= L["min_chg"] and self.held(i)) or (catalyst and self.catalyst(i)))
-                    and self.rv[i] >= L["min_rv"] and (st.c[i] > self.s200[i] or self.under200(i))
+                    and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
                     and (self.ext200_prev[i] <= L["max_ext200"] or (self.power(i) and self.ext200_prev[i] <= L["power_ext200"]))
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
-
-    def under200(self, i):
-        """a launch that closed under the 200 SMA: a power-size day (10%+ gap, up 15%+, in the top half of its range)
-        closing over the 50 EMA and within 10% under the 200 SMA (CAI Aug 6 2026: a 15.5% gap, +21.6% at the high on
-        2.8x, closed 20.00 over its 50 EMA 17.01, 6% under its 200 SMA 21.37)"""
-        st = self.st
-        return bool(L["launch_under200"] and self.gap[i] >= L["power_gap"] and self.chg[i] >= L["power_chg"] and self.clpos[i] >= L["min_clpos"]
-                    and st.c[i] > self.e50[i] and st.c[i] >= self.s200[i] * (1 - L["under200_max"] / 100))
 
     def power(self, i):
         """a power day (an episodic pivot): volume 4x+, a 10%+ gap and a 15%+ day"""
