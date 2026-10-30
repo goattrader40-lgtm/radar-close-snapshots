@@ -103,8 +103,8 @@ def fnum(x, nd=2):
 class Arr:
     """one stock's daily arrays, plus the launch-day tests for every bar"""
 
-    def __init__(self, st, S, new_listing=False):
-        self.st = st
+    def __init__(self, st, S, new_listing=False, sym=None):
+        self.st, self.sym = st, sym
         self.start = L["min_sessions"] if new_listing else 200     # first bar a launch can be judged on
         c, h, l, o, v = st.c, st.h, st.l, st.o, st.v
         n = c.size
@@ -648,9 +648,7 @@ def load(bars_path, stocks_path):
     S = cfg["standard"]
     LIQ.update({k: v for k, v in cfg.get("launch", {}).items() if not k.startswith("_")})
     # a stock whose bars start after the file's first session listed during it (the file reaches 2 years back)
-    A = {s: Arr(st, LIQ, new_listing=st.dates[0] > cal[5]) for s, st in stocks.items()}
-    for s, a in A.items():
-        a.sym = s
+    A = {s: Arr(st, LIQ, new_listing=st.dates[0] > cal[5], sym=s) for s, st in stocks.items()}
     themes_path = os.path.join(os.path.dirname(stocks_path or ""), "themes.json")
     groups = groups_of(json.load(open(stocks_path)), json.load(open(themes_path)) if os.path.exists(themes_path) else []) \
         if stocks_path and os.path.exists(stocks_path) else {}
