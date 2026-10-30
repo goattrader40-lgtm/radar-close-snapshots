@@ -127,6 +127,11 @@
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
   #wl-table td.nw, #ln-table td.nw { white-space: nowrap; }
+  .tgr-legend { margin: 6px 0 10px; font-size: var(--cds-font-size-caption); }
+  .tgr-legend summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
+  .tgr-legend ul { margin: 6px 0; padding-left: 1.2em; }
+  .tgr-legend li { margin: 3px 0; }
+  .tgr-legend h3 { font-size: 1em; margin: 10px 0 2px; }
   .tgr-follow { margin-left: 6px; line-height: 1.5; white-space: nowrap; }
   .tgr-follow.on { border-color: var(--color-ok); color: var(--color-ok); }
   .tgr-dlg { max-width: min(560px, calc(100vw - 32px)); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); padding: 16px; }
@@ -488,6 +493,17 @@
         <button class="tgr-lite" id="wl-dl" type="button">Download for TradingView</button>
       </div>
       <p class="tgr-note" id="wl-note"></p>
+      <details class="tgr-legend" id="wl-legend">
+        <summary>How the grade works</summary>
+        <p>The grade is your setup scanner's (MSF engine), set after each close. It grades the trend and the last pullback, not the day's move or volume.</p>
+        <ul>
+          <li>First the trend has to line up: 10 EMA above the 21 EMA above the 50 EMA, and the price above the 50 EMA and the 200-day SMA. If not, no grade (—).</li>
+          <li><span class="tgr-grade gA">A+</span> its last pullback from the 20-day high was 10–15%.</li>
+          <li><span class="tgr-grade gA">A</span> a pullback of up to 20% (other than 10–15%).</li>
+          <li><span class="tgr-grade gB">B</span> a pullback of 20–30%, only for stocks with an ADR of 8%+.</li>
+        </ul>
+        <p>So a stock can be A+ here and B on the Launches tab: that one grades the launch day itself (MIR on Oct 29, 2026: A+ here for its trend and 10.7% pullback, B there for a +11.5% day and a base breakout but only a 1% gap on 1.9× volume).</p>
+      </details>
       <p class="tgr-note">Your setup scanner's lists, rebuilt after each close (about 4:40 PM ET). 1-EP/GAP = gap over 5% on 2.5× relative volume; 1-UPDAY = up 4% or more with relative volume 1 or more; 2-POOL = a first close back above the 50 EMA, plus the weekly momentum leaders; 3-SETUPS = names from those three lists in a Tight, 21 EMA or 50 EMA pullback setup (above the 200 SMA). Names leave after 2 closes in a row below the 50 EMA, and 1-lists after 15 trading days without reaching 3-SETUPS. Price, Chg and Rel vol are live during market hours (otherwise the latest close), and Away = how far the buy point is above that price. Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 1 ADR above that EMA. Download for TradingView saves the list you're looking at as a file for TradingView's Watchlist menu → Import list.</p>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="wl-table">
@@ -536,6 +552,28 @@
       </div>
       <p class="tgr-note" id="ln-alert-note"></p>
       <ul class="tgr-alog" id="ln-alert-log"></ul>
+    </div>
+    <div class="tgr-card" id="ln-legend-card">
+      <details class="tgr-legend" id="ln-legend">
+        <summary>How the grades work (Launching today, Launches, breakout alerts)</summary>
+        <h3>Launch grade: the launch day itself</h3>
+        <p>Four ingredients: volume 3×+ its 20-day average · a gap of 3%+ · a base breakout (closed above the previous 20 days' high) · a 10%+ day.</p>
+        <ul>
+          <li><span class="tgr-grade gA">A+</span> volume 3×+, a 6%+ gap and a base breakout, jumping from under the 200-day SMA to over it (your "go day").</li>
+          <li><span class="tgr-grade gA">A</span> volume 3×+ and a base breakout, with a 3%+ gap or a 10%+ day.</li>
+          <li><span class="tgr-grade gB">B</span> two of the four ingredients.</li>
+          <li><span class="tgr-grade gC">C</span> the rest.</li>
+          <li><span class="tgr-gm">You</span> your pick (the Follow button on the Watchlist tab): no launch day to grade.</li>
+        </ul>
+        <p>During the day (Launching today and its alerts) the volume is the pace so far for the time of day, so the grade can change by the close: the Launches table uses the full day (MIR on Oct 29, 2026: A at 11:28 AM on a 3.0× pace, B at the close on 1.9×).</p>
+        <h3>Breakout grade: a followed launch clearing its buy point (alerts)</h3>
+        <ul>
+          <li><span class="tgr-grade gA">A</span> all three: early (the 1st or 2nd breakout since the launch, within 50 sessions of it) · its theme Leading · volume building (the 5 days before at 1.1×+ the 50 before). In 2 years of data 62% ran 10%+ within 20 days, 35% ran 20%+.</li>
+          <li><span class="tgr-grade gB">B</span> early plus one of the other two (51% / 24%).</li>
+          <li><span class="tgr-grade gC">C</span> the rest (40% / 15%).</li>
+        </ul>
+        <p>Theme Leading = 60%+ of its stocks close above their 50 EMA and its median 1-month move is +8% or more; Turning up = half or more above their 21 EMA and its median week is up.</p>
+      </details>
     </div>
     <div class="tgr-card" id="ln-live-card">
       <div class="tgr-cardhead">
@@ -1629,7 +1667,7 @@ defCalc('industry_perf', {
     const live = lnLive(doc);
     $('#ln-live-time').textContent = LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : marketOpen() ? 'Waiting for the first live update' : 'Live during market hours';
     $('#ln-live-note').textContent = !doc ? '' : (doc.watch ? Object.keys(doc.watch).length : 0) + ' stocks on watch from the ' + fDate(doc.date) + ' close. ' +
-      (LIVE_ON ? live.length + ' of them are launching right now. "Grade so far" uses the volume pace and price so far; the close still has to hold the top half of the day.' : 'They are checked every 5 minutes from 9:30 AM ET.');
+      (LIVE_ON ? live.length + ' of them are launching right now. "Grade so far" uses the volume pace and price so far; the close still has to hold the top half of the day. After the close (about 4:30 PM ET) this list clears, and the ones that held move to the Launches table below, dated today.' : 'They are checked every 5 minutes from 9:30 AM ET. After the close this list clears: the day\'s launches that held at the close are in the Launches table below, dated that day (the evening scan, about 4:40 PM ET).');
     sortRows(lt, live, { key: 'grade', dir: 1 }, ['symbol', 'group'], 'grade');
     if (doc && LIVE_ON && !live.length) noRows(ltb, 11, 'Nothing on the watch list is launching right now.');
     live.forEach((r) => {
