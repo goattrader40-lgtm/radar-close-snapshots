@@ -133,7 +133,8 @@ def buy_points(A, keys):
             if f["lost_50ema"]:
                 break
             st = f["stage"]
-            kind = next((k for k, w in (("breakout", "Base breakout"), ("flag", "Flag breakout"), ("pop", "Pop out"), ("retest", "Retest"))
+            kind = next((k for k, w in (("breakout", "Base breakout"), ("flag", "Flag breakout"), ("pop", "Pop out"), ("retest", "Retest"),
+                                        ("push", "Push out"))
                          if st.startswith(w)), None)
             if not kind:
                 continue

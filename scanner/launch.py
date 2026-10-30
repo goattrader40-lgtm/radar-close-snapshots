@@ -518,8 +518,10 @@ def follow(a, i0, i, pick=False):
     # retest held, at the close: within 20 sessions of a breakout, while it hasn't closed an ADR under the level, the
     # low comes back to the level, the bodies' top or the wick top (from 1.5 ADRs under the bodies' top up to the wick
     # top; a low that stays over it never touched: ANF Aug 14 2026, 106.19 over 105.16) and the close holds above the
-    # bodies' top and the 21 EMA. One try per breakout: the first touch; if it closes under, no retest (ANF Aug 17
-    # 2026 touched 105.16 and closed 105.16 under its 21 EMA 105.36; Aug 18 undercut, Aug 19-20 consolidation)
+    # bodies' top and the 21 EMA, on the day that makes the pullback's low: the undercut and reclaim (GMAB Oct 2 2026:
+    # Oct 1 touched 34.51 and closed 34.55 under 34.63; Oct 2 down to 33.72, closed 34.75 over the level and the 21 EMA
+    # 34.39). ANF Aug 2026: Aug 17 touched 105.16 and closed 105.16 under its 21 EMA 105.36, Aug 18 undercut to 100.43
+    # and closed 103.38 under it again, Aug 19-20 no new low: consolidation, no retest. Once per breakout
     # (ANF Oct 23 2026: low 152.73, close 155.82 over 153.41; SPOT Oct 28: low 536.74, close 538.40 over 536.98).
     # It has to be a pullback (RPD Oct 26 2026 opened at its level and ran 20%: the confirmation, no retest). Confluence: the 10, 21 or 50 EMA at the level too (within an ADR of it), the low
     # at it and the close above it (SPOT: the 21 EMA $536.18)
@@ -542,12 +544,14 @@ def follow(a, i0, i, pick=False):
         return ok, conf
     held = bool(rlv and 1 <= i - rlv[0] <= L["retest_days"] and not (c[rlv[0] + 1:i + 1] < rlv[1] * (1 - adr / 100)).any())
     hit = lambda k: bool(retest_on(k)[1]) if L["retest_need_ema"] else retest_on(k)[0]
-    first = next((k for k in range(rlv[0] + 1, i + 1) if touch_on(k)), None) if rlv else None     # the retest's one try
-    retest = bool(held and first == i and hit(i))
+    first = next((k for k in range(rlv[0] + 1, i + 1) if touch_on(k)), None) if rlv else None     # the first touch
+    rday = lambda k: bool(hit(k) and st.l[k] <= st.l[rlv[0] + 1:k].min())          # the pullback's low, reclaimed
+    done = next((k for k in range(rlv[0] + 1, i + 1) if rday(k)), None) if rlv else None
+    retest = bool(held and done == i)
     retest_ema = retest_on(i)[1] if retest else []
-    # tomorrow's zone, for the heads-up during the day (the buy alert itself waits for the close): until the first touch
+    # tomorrow's zone, for the heads-up during the day (the buy alert itself waits for the close): until a retest held
     zone = [fnum(rlv[1] * (1 - 1.5 * adr / 100)), fnum(max(rlv[2], rlv[1] * (1 + adr / 400)))] \
-        if held and 2 <= i - rlv[0] < L["retest_days"] and first is None else None
+        if held and 2 <= i - rlv[0] < L["retest_days"] and done is None else None
     # the push out of the 21 EMA with a gap, within 5 sessions of the retest's try, held or not (ANF Aug 21 2026 after
     # touching 105.16 on Aug 17: opened 107.24 over Aug 20's candle and its 10 / 21 EMA 107.04 / 105.19; GMAB Oct 5
     # after Oct 2): the day before still at the EMAs (closed at or under the 10 EMA, over the 50 EMA), it opens over
@@ -638,7 +642,8 @@ def follow(a, i0, i, pick=False):
         # high since the breakout (a real pullback, 1.5 ADRs), and whether it already closed 1.25 ADRs away from the level
         retest_need_low=fnum(st.h[rlv[0]:i + 1].max() * (1 - 1.5 * adr / 100)) if zone else None,
         retest_away=bool(c[rlv[0]:i + 1].max() >= rlv[1] * (1 + 1.25 * adr / 100)) if zone else None,
-        retest_tried=st.dates[first] if first is not None else None, retest_failed=bool(first is not None and not (held and hit(first))),
+        retest_tried=st.dates[first] if first is not None else None,
+        retest_low=fnum(st.l[rlv[0] + 1:i + 1].min()) if zone else None,          # tomorrow's low has to undercut it
         push_level=fnum(push_level) if push_level else None, push_today=push_day == i,
         adr_pct=fnum(adr, 2), ema10=fnum(a.e10[i]), ema50=fnum(a.e50[i]), day_open=fnum(st.o[i]),
         sessions=i - i0, gain_pct=fnum(100 * (c[i] / c[i0] - 1), 1), max_gain_pct=fnum(100 * (hi / c[i0] - 1), 1),
