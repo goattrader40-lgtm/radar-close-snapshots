@@ -20,6 +20,10 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
                    "go day"; 2 years: 65% of these ran 20%+ when the theme confirmed, vs 52% for other A's)
               A = volume 3x+ and a base breakout, with a 3%+ gap or a 10%+ day · B = two of the four · C = the rest
   news        tagged when the 8:47 pre-market grading gave the stock an A or B gap-up grade that morning
+  catalyst    a launch on earnings or meaningful news (the two tags above) that gapped 5%+, closed net positive and
+              still in the gap (over the day before's high) and cleared at least its 1-month base, though up less
+              than 5% or not in the top half of its range (GMAB Aug 7 2026: earnings, a 5.4% gap, +4.8%). Kept
+              night to night in launch.json's catalyst_days
   legs        the launch is leg 1; each later leg = a close out of a base: above the base top (the highest high of
               the last ~6 months, at least 5 sessions old, with a pullback of 1.25+ of the stock's own ADRs from it)
               on 1x+ volume, from under it the day before; or a close above the falling trendline of a flag that formed at the highs. One leg per
@@ -80,6 +84,7 @@ L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
+CATALYST_DAYS = {}     # {(symbol, date): "earnings" / the news}: the days a catalyst launch can come on
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
 
 
@@ -169,7 +174,7 @@ class Arr:
         a 5.4% gap, +4.8%, over its 6-month base)"""
         st = self.st
         return bool(L["catalyst_launch"] and self.gap[i] >= L["ep_gap"] and self.chg[i] > 0 and st.c[i] > st.h[i - 1]
-                    and self.cleared(i) >= BASES[-1])
+                    and self.cleared(i) >= BASES[-1] and (self.sym, st.dates[i]) in CATALYST_DAYS)
 
     def candidate(self, i):
         """the must-haves of a launch day"""
@@ -286,7 +291,8 @@ def launch_row(sym, a, i, gstat, gname, S):
         days_since_high=days, correction_pct=fnum(depth, 0), above_52w_low_pct=fnum(100 * (st.c[i] / st.low52[i] - 1), 0), neglected=bool(days >= L["neglect_days"] or depth >= L["neglect_depth"]),
         vs_200_pct=fnum(100 * (st.c[i] / a.s200[i] - 1), 0), close=fnum(st.c[i]), low=fnum(st.l[i]),
         # the longest base the launch day cleared (by the bodies): "6-month", "3-month", "1-month" or None
-        cleared={120: "6-month", 63: "3-month", 21: "1-month"}.get(a.cleared(i)), catalyst=bool(a.catalyst(i) and a.chg[i] < L["min_chg"]),
+        cleared={120: "6-month", 63: "3-month", 21: "1-month"}.get(a.cleared(i)),
+        catalyst=bool(a.catalyst(i) and not (a.chg[i] >= L["min_chg"] and a.held(i))),     # in on the catalyst rule only
     )
 
 
@@ -643,6 +649,8 @@ def load(bars_path, stocks_path):
     LIQ.update({k: v for k, v in cfg.get("launch", {}).items() if not k.startswith("_")})
     # a stock whose bars start after the file's first session listed during it (the file reaches 2 years back)
     A = {s: Arr(st, LIQ, new_listing=st.dates[0] > cal[5]) for s, st in stocks.items()}
+    for s, a in A.items():
+        a.sym = s
     themes_path = os.path.join(os.path.dirname(stocks_path or ""), "themes.json")
     groups = groups_of(json.load(open(stocks_path)), json.load(open(themes_path)) if os.path.exists(themes_path) else []) \
         if stocks_path and os.path.exists(stocks_path) else {}
@@ -742,6 +750,19 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None)
     today = cal[-1]
     T = len(cal) - 1
     rows = []
+    # the earnings and news days a catalyst launch can come on: tonight's tags plus the ones kept from earlier nights
+    # (Yahoo's earnings date moves on to the next report; the grade log keeps only the last days)
+    try:
+        kept = {(d[0], d[1]): d[2] for d in json.load(open(out_path)).get("catalyst_days", [])}
+    except Exception:
+        kept = {}
+    tags = {**kept, **{(s, d): "earnings" for s, d in (earnings or {}).items()}, **{k: "news " + v for k, v in (news or {}).items()}}
+    CATALYST_DAYS.clear()
+    for (s, d), w in tags.items():
+        a = A.get(s)
+        k = a.st.dates.index(d) if a is not None and d in a.st.dates[-200:] else None
+        if k is not None and a.gap[k] >= L["ep_gap"]:
+            CATALYST_DAYS[(s, d)] = w
     ev = detect(A, groups, GS, cal, S)
     for s, i, k, gs, gn, leader in [e + ("",) for e in ev] + detect_followers(A, groups, GS, cal, ev):
         a = A[s]
@@ -755,7 +776,9 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None)
         r.update(f)
         r["follows"] = leader or None
         r["news"] = (news or {}).get((s, r["date"]))
-        r["earnings"] = (earnings or {}).get(s) == r["date"]
+        r["earnings"] = (earnings or {}).get(s) == r["date"] or CATALYST_DAYS.get((s, r["date"])) == "earnings"
+        if r["catalyst"]:
+            r["catalyst"] = CATALYST_DAYS.get((s, r["date"]))
         cgs, cgn = best_group(s, T, groups, GS)
         r["group_now"], r["group_status_now"] = cgn, STATUS.get(cgs, "No group")
         up = next((kk for kk in range(k, T + 1) if best_group(s, kk, groups, GS)[0] >= 1), None)
@@ -844,7 +867,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None)
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50"],
-               launches=rows, watch=watch, groups=[g for g in G if g["status"] != "Not trending"])
+               launches=rows, watch=watch, groups=[g for g in G if g["status"] != "Not trending"],
+               catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()))
     with open(out_path, "w") as f:
         json.dump(doc, f, separators=(",", ":"))
     n_today = sum(1 for r in rows if r["date"] == today)
