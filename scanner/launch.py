@@ -516,41 +516,56 @@ def follow(a, i0, i, pick=False):
     top_date = next((st.dates[k] for t, k in tops if bp is not None and t == bp), None)
     adr = _adr(st, i)
     # retest held, at the close: within 20 sessions of a breakout, while it hasn't closed an ADR under the level, the
-    # low comes back to the level, the bodies' top or the wick top (from a quarter ADR over the wick top to 1.5 ADRs
-    # under the bodies' top) and the close holds above the bodies' top; once per
-    # pullback (ANF Oct 23 2026: low 152.73, close 155.82 over 153.41; SPOT Oct 28: low 536.74, close 538.40 over 536.98).
+    # low comes back to the level, the bodies' top or the wick top (from 1.5 ADRs under the bodies' top up to the wick
+    # top; a low that stays over it never touched: ANF Aug 14 2026, 106.19 over 105.16) and the close holds above the
+    # bodies' top and the 21 EMA. One try per breakout: the first touch; if it closes under, no retest (ANF Aug 17
+    # 2026 touched 105.16 and closed 105.16 under its 21 EMA 105.36; Aug 18 undercut, Aug 19-20 consolidation)
+    # (ANF Oct 23 2026: low 152.73, close 155.82 over 153.41; SPOT Oct 28: low 536.74, close 538.40 over 536.98).
     # It has to be a pullback (RPD Oct 26 2026 opened at its level and ran 20%: the confirmation, no retest). Confluence: the 10, 21 or 50 EMA at the level too (within an ADR of it), the low
     # at it and the close above it (SPOT: the 21 EMA $536.18)
+    def touch_on(k):
+        """the retest's try on day k: 3+ sessions after the breakout (a dip in the first two is the breakout settling at
+        the base high, not a retest: GMAB Sep 24 2026), a real pullback (the low 1.5+ ADRs under the high since the
+        breakout: drifting at the base high is consolidating, GMAB Sep 23 - Oct 1), after closing 1.25+ ADRs away from
+        the level, the low at the level (undercut and reclaim: GMAB Oct 2, from 35.90 down to 33.72 under 34.63)"""
+        ak = _adr(st, k)
+        return bool(rlv and 3 <= k - rlv[0] <= L["retest_days"]
+                    and rlv[1] * (1 - 1.5 * ak / 100) <= st.l[k] <= max(rlv[2], rlv[1] * (1 + ak / 400))
+                    and st.l[k] <= st.h[rlv[0]:k].max() * (1 - 1.5 * ak / 100)
+                    and c[rlv[0]:k].max() >= rlv[1] * (1 + 1.25 * ak / 100))
+
     def retest_on(k):
         ak = _adr(st, k)
-        # 3+ sessions after the breakout (a dip in the first two is the breakout settling at the base high, not a
-        # retest: GMAB Sep 24 2026), a real pullback (the low 1.5+ ADRs under the high since the breakout: drifting at
-        # the base high is consolidating, GMAB Sep 23 - Oct 1), the low from a quarter ADR over the level to 1.5 ADRs
-        # under it (undercut and reclaim: GMAB Oct 2, from 35.90 down to 33.72 under 34.63, closed 34.75)
-        ok = bool(rlv and 3 <= k - rlv[0] <= L["retest_days"] and c[k] > rlv[1] and rlv[1] * (1 - 1.5 * ak / 100) <= st.l[k] <= rlv[2] * (1 + ak / 400)
-                  and st.l[k] <= st.h[rlv[0]:k].max() * (1 - 1.5 * ak / 100)
-                  and c[rlv[0]:k].max() >= rlv[1] * (1 + 1.25 * ak / 100))    # it closed away from the level first (GMAB Sep 24:
-                                                                             # 0.85 ADR, still at the base high; Oct 2: 1.5)
+        ok = touch_on(k) and c[k] > rlv[1] and c[k] > a.e21[k]       # held: over the bodies' top and the 21 EMA
         conf = [n for n, e in (("10 EMA", a.e10), ("21 EMA", a.e21), ("50 EMA", a.e50))
                 if ok and rlv[1] * (1 - ak / 100) <= e[k] <= rlv[2] * (1 + ak / 100) and st.l[k] <= e[k] * (1 + ak / 400) and c[k] > e[k]]
         return ok, conf
     held = bool(rlv and 1 <= i - rlv[0] <= L["retest_days"] and not (c[rlv[0] + 1:i + 1] < rlv[1] * (1 - adr / 100)).any())
     hit = lambda k: bool(retest_on(k)[1]) if L["retest_need_ema"] else retest_on(k)[0]
-    retest = held and hit(i) and not any(hit(k) for k in range(rlv[0] + 1, i))      # one retest per breakout
+    first = next((k for k in range(rlv[0] + 1, i + 1) if touch_on(k)), None) if rlv else None     # the retest's one try
+    retest = bool(held and first == i and hit(i))
     retest_ema = retest_on(i)[1] if retest else []
-    # tomorrow's zone, for the heads-up during the day (the buy alert itself waits for the close)
-    zone = [fnum(rlv[1] * (1 - 1.5 * adr / 100)), fnum(rlv[2] * (1 + adr / 400))] \
-        if held and 2 <= i - rlv[0] < L["retest_days"] and not any(hit(k) for k in range(rlv[0] + 1, i + 1)) else None
+    # tomorrow's zone, for the heads-up during the day (the buy alert itself waits for the close): until the first touch
+    zone = [fnum(rlv[1] * (1 - 1.5 * adr / 100)), fnum(max(rlv[2], rlv[1] * (1 + adr / 400)))] \
+        if held and 2 <= i - rlv[0] < L["retest_days"] and first is None else None
+    # the push out of the 21 EMA with a gap, within 5 sessions of the retest's try, held or not (ANF Aug 21 2026 after
+    # touching 105.16 on Aug 17: opened 107.24 over Aug 20's candle and its 10 / 21 EMA 107.04 / 105.19; GMAB Oct 5
+    # after Oct 2): the day before still at the EMAs (closed at or under the 10 EMA, over the 50 EMA), it opens over
+    # that day's open and close and its 10 and 21 EMA. Once per breakout
+    push_lv = lambda k: max(st.o[k], c[k], a.e10[k], a.e21[k])
+    push_armed = lambda k: bool(held and first is not None and first <= k <= first + 5 and c[k] <= a.e10[k] and c[k] > a.e50[k])
+    push_day = next((j for j in range(first + 1, min(i, first + 6) + 1) if push_armed(j - 1) and st.o[j] > push_lv(j - 1)), None) \
+        if first is not None else None
+    push_level = push_lv(i) if push_armed(i) and push_day is None else None     # what tomorrow's open has to clear
     # tight under the buy point (a level: a base top or a pattern's pivot, not a falling flag line): closes within an
-    # ADR under it, 2+ tight days in a row: each a tight candle (its range 0.8 ADR or less, its body half an ADR or
-    # less, the pop's tight candle; SG Oct 5-7 2026 under $9.49: ranges 0.79 / 0.59 / 0.63 ADR, broke out Oct 8; ANF's
-    # Oct 15-16 dojis spanned 1.26 / 1.00 ADR: no tight days) and the day's move under half an ADR
+    # ADR under it, 2+ tight days in a row: tight bodies (half an ADR or less) close to the base high, whatever the
+    # wicks (ANF Oct 15-16 2026: 2.1% and 1.3% under its 155.22 base top, bodies 0.00 and 0.05 ADR; broke out Oct 19),
+    # the day's move under half an ADR
     tight = 0
     if bp and pat in ("Base top",) + tuple(msf.NAMES[k] for k in range(1, 13) if msf.is_pat(k)):
         for k in range(i, max(i0, i - 10), -1):
             if not (bp * (1 - _adr(st, k) / 100) <= c[k] < bp and abs(a.chg[k]) <= _adr(st, k) / 2
                     and abs(c[k] - st.o[k]) <= L["tight_body"] * _adr(st, k) / 100 * c[k - 1]
-                    and st.h[k] - st.l[k] <= L["pop_tight"] * _adr(st, k) / 100 * c[k - 1]
                     and max(c[k:i + 1]) - min(c[k:i + 1]) <= _adr(st, i) / 200 * c[i]):   # sideways, not advancing
                 break
             tight += 1
@@ -587,6 +602,8 @@ def follow(a, i0, i, pick=False):
         stage = f"Flag breakout (leg {leg})"
     elif dry_day == i:
         stage = "Pop out of the consolidation (entry in base)"
+    elif push_day == i:
+        stage = f"Push out of the 21 EMA with a gap, after the retest of {rlv[1]:.2f}" + (f"-{rlv[2]:.2f}" if rlv[2] > rlv[1] * 1.001 else "")
     elif retest:
         lv_txt = f"{rlv[1]:.2f}" if rlv[2] <= rlv[1] * 1.001 else f"{rlv[1]:.2f}-{rlv[2]:.2f} (bodies-wicks)"
         stage = f"Retest of the breakout level {lv_txt} held" + (" + confluence: " + " & ".join(retest_ema) if retest_ema else "")
@@ -621,6 +638,8 @@ def follow(a, i0, i, pick=False):
         # high since the breakout (a real pullback, 1.5 ADRs), and whether it already closed 1.25 ADRs away from the level
         retest_need_low=fnum(st.h[rlv[0]:i + 1].max() * (1 - 1.5 * adr / 100)) if zone else None,
         retest_away=bool(c[rlv[0]:i + 1].max() >= rlv[1] * (1 + 1.25 * adr / 100)) if zone else None,
+        retest_tried=st.dates[first] if first is not None else None, retest_failed=bool(first is not None and not (held and hit(first))),
+        push_level=fnum(push_level) if push_level else None, push_today=push_day == i,
         adr_pct=fnum(adr, 2), ema10=fnum(a.e10[i]), ema50=fnum(a.e50[i]), day_open=fnum(st.o[i]),
         sessions=i - i0, gain_pct=fnum(100 * (c[i] / c[i0] - 1), 1), max_gain_pct=fnum(100 * (hi / c[i0] - 1), 1),
         status=status, first_exit=st.dates[exit_k] if exit_k is not None else None,
