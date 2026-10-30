@@ -80,7 +80,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, tight_near=0.85, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_days=5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -313,7 +313,10 @@ def flag_at(a, i):
         return None
     depth = 100 * (1 - l[t + 1:i + 1].min() / h[t])
     adr = st.adr[t] if st.adr[t] > 0 else 5.0
-    if not L["flag_adr_min"] <= depth / adr <= L["flag_adr_max"] or any(c[k] < a.e50[k] for k in range(t + 1, i + 1)):
+    # it holds its 21 EMA (no close half an ADR under it: APPN Sep 8-11 2026 fell 1.4 ADRs under it from its Aug 31
+    # high, a drop and bounce, no flag; SMCI Jun 2023 -0.2, ANF Aug 2026 -0.4) and has 5+ days in it
+    if not L["flag_adr_min"] <= depth / adr <= L["flag_adr_max"] or any(c[k] < a.e50[k] for k in range(t + 1, i + 1)) \
+            or i - t < L["flag_days"] or any(100 * (c[k] / a.e21[k] - 1) < -0.5 * _adr(st, k) for k in range(t + 1, i + 1)):
         return None
     slope = max((h[k] - h[t]) / (k - t) for k in range(t + 1, i))      # through the highs up to yesterday
     if slope >= 0:
@@ -382,7 +385,9 @@ def base_breakout(a, j, used=()):
     ADR or more over the top on 1x+ volume (a weaker close over it mostly fell back: 60-70% within 5 days; GMAB Aug 14,
     Sep 18 2026), fresh (no such close in the 3 days before, not already run an ADR past it)"""
     st, c = a.st, a.st.c
-    for span in (120, 40):
+    # once launched, the 3-month and the 1-month base (63 / 21 sessions; not 6 / 2 months: the bases after a launch are
+    # shorter), the larger first
+    for span in L["base_spans"]:
         b = base_ok(a, j, span)
         if not b or b[1] in used:
             continue
@@ -390,9 +395,46 @@ def base_breakout(a, j, used=()):
         dec = top * (1 + L["bo_decisive"] * _adr(st, j) / 100)
         # whatever the volume (ATRC Aug 7 2026 over its 41.29 base high on 0.6x; ACN Oct 16 on 0.9x): the status says
         # when it was light, the alert during the day still wants 1x+ volume for the time of day
+        # inside a bigger base (a higher high in the last 3 months, 20+ sessions old) it has to be decisive, on 1x+ volume
+        # (APPN Oct 9 2026 over its 1-month high 39.67, under the Aug 31 high 44.06: 0.2 ADR on 0.9x, no; VEEV Oct 9
+        # over 291.40, under its Aug 27 high 296.24: 0.5 ADR on 1.2x)
+        m = j - 63 + int(np.argmax(st.h[j - 63:j])) if j >= 63 else None
+        inside = m is not None and st.h[m] > top * 1.001 and j - m >= L["inner_big"]
+        if inside and not (c[j] > top * (1 + 0.5 * _adr(st, j) / 100) and a.rv[j] >= 1):
+            continue
         if (c[j] > dec and max(c[j - 3:j]) <= dec
                 and st.h[j - 3:j].max() < top * (1 + _adr(st, j - 1) / 100)):
             return b
+    return inner_breakout(a, j, used)
+
+
+def inner_base(a, j):
+    """(top, its index) of the base inside a big base, before day j: when the stock has been in a base for a while (its
+    high 20+ sessions old), the last 20 sessions' high is a level too, 2+ sessions old with a pullback after it
+    (2+ down closes or 1.25 ADRs). APPN Oct 2026: under its Aug 31 high 44.06, the last 20 days' high 40.98 (Oct 12),
+    Oct 13-14 pulling back tight under it; VEEV: under its Aug 27 high 296.24, 291.40 (Oct 1)"""
+    st, c, h = a.st, a.st.c, a.st.h
+    if j < 125:
+        return None
+    big = j - 120 + int(np.argmax(h[j - 120:j]))
+    k = j - L["inner_span"] + int(np.argmax(h[j - L["inner_span"]:j]))
+    if j - big < L["inner_big"] or k == big or j - k < 2 or h[k] >= h[big]:
+        return None
+    down = int((c[k + 1:j] < c[k:j - 1]).sum())
+    if down < 2 and 100 * (1 - c[k + 1:j].min() / h[k]) < L["leg_adr"] * _adr(st, k):
+        return None
+    return h[k], k
+
+
+def inner_breakout(a, j, used=()):
+    """a decisive close (half an ADR+) over the inner base's high on 1x+ volume (APPN Oct 15 2026 over 40.98, 1.3 ADRs on
+    1.7x; VEEV Oct 9 over 291.40 on 1.2x; APPN's Oct 9 poke, 0.2 ADR on 0.9x, no): (top, index, "inner")"""
+    b = inner_base(a, j)
+    if not b or b[1] in used:
+        return None
+    c = a.st.c
+    if c[j] > b[0] * (1 + 0.5 * _adr(a.st, j) / 100) and a.rv[j] >= 1 and max(c[j - 3:j]) <= b[0]:
+        return b[0], b[1], "inner"
     return None
 
 
@@ -480,6 +522,7 @@ def follow(a, i0, i, pick=False):
         if i0 >= 20 and c[i0] > st.h[i0 - 20:i0].max() else None
     dry_done, dry_day, flag_day = False, None, None         # one dry-up entry per base (ANF: Oct 5 2026, not again)
     weak_bo, thru_day = None, None                          # a weak breakout (day, top) waiting for its follow-through
+    inner_day = None                                        # the day of the last inner base breakout
     lvl = H                                                 # the level the leg broke out of: the launch day's high, then the base top
     nbo = 0                                                 # breakouts since the launch (for the grade: the 1st and 2nd work best)
     for j in range(i0 + 1, i + 1):
@@ -520,6 +563,8 @@ def follow(a, i0, i, pick=False):
             if b:
                 used.add(b[1])                            # each base top gives at most one breakout
             if b:
+                inner_day = j if len(b) > 2 else inner_day
+                b = b[:2]
                 bo, lvl = (j, b[0], b[1]), b[0]
                 rlv = (j, min(body(max(0, b[1] - 20), max(b[1] + 1, j - 3)), b[0]), float(b[0]))   # the base's bodies, not the push into it
             # a new leg needs a decisive close (half an ADR over the top): a weaker one is a breakout, still the same leg
@@ -546,7 +591,9 @@ def follow(a, i0, i, pick=False):
         fl = None
     flag_bo = flag_day == i
     # tomorrow's base tops (the smaller and the larger base): buy points when above today's close
-    tops = [b for b in (base_ok(a, i + 1, 40), base_ok(a, i + 1, 120)) if b and c[i] < b[0]]
+    tops = [b for b in (base_ok(a, i + 1, sp) for sp in L["base_spans"]) if b and c[i] < b[0]]
+    if len(tops) == 2 and max(tops)[0] <= min(tops)[0] * (1 + 0.5 * _adr(st, i) / 100):
+        tops = [max(tops)]          # two highs within half an ADR are one level, the higher (CAI Oct 2026: 32.77 / 32.89)
     # the buy point = the nearest trigger above today's close: your MSF pattern's pivot, the flag's trendline or
     # the base top (RPD Oct 23 2026 had closed just over its MSF pivot of 14.80; the base top trigger 15.02 is what
     # Oct 26 broke on 3.3x volume)
@@ -562,6 +609,9 @@ def follow(a, i0, i, pick=False):
         cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
     for top, k in tops:
         cands.append((top, "Base top", below_since(a, i + 1, top, k), 100 * (1 - st.l[k:i + 1].min() / top)))
+    ib = inner_base(a, i + 1)
+    if ib and c[i] < ib[0]:             # the inner base's high (APPN Oct 14 2026 night: 40.98 under its Aug 31 high 44.06)
+        cands.append((ib[0], "Inner base (last 20 days)", i + 1 - ib[1], 100 * (1 - st.l[ib[1]:i + 1].min() / ib[0])))
     bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)
     top_date = next((st.dates[k] for t, k in tops if bp is not None and t == bp), None)
     adr = _adr(st, i)
@@ -638,6 +688,9 @@ def follow(a, i0, i, pick=False):
             tight += 1
     # advancing is not tight: every one of those days a higher high, higher low and higher close than the day before
     # (GMAB Oct 20-22 2026, a staircase into $40.17; ANF Oct 16 made a lower high, so Oct 15-16 was tight)
+    # and not drifting down: the last close at most 0.1 ADR under the first (VEEV Aug 20-25 2026, a falling wedge)
+    if tight >= 2 and 100 * (c[i] / c[i - tight + 1] - 1) < -0.1 * _adr(st, i):
+        tight = 0
     if tight >= 2 and all(st.h[k] > st.h[k - 1] and st.l[k] > st.l[k - 1] and c[k] > c[k - 1] for k in range(i - tight + 1, i + 1)):
         tight = 0
     # the base under the buy point, for the heads-up: since the stock first came within a quarter ADR of that high in
@@ -662,6 +715,10 @@ def follow(a, i0, i, pick=False):
     if i == i0 and not pick:
         cb = {120: "6-month", 63: "3-month", 21: "1-month"}.get(a.cleared(i))
         stage = "Launch day" + (f", cleared its {cb} base" if cb else "")
+    elif bo and bo[0] == i and inner_day == i:
+        ov = (c[i] / bo[1] - 1) * 100 / _adr(st, i)
+        stage = f"Breakout of the inner base (leg {leg}), the last 20 days' high {bo[1]:.2f}, closed {ov:.1f} ADR over it" \
+            + (f", on light volume ({a.rv[i]:.2f}x)" if a.rv[i] < 1 else "")
     elif bo and bo[0] == i:
         # how decisively it closed over the top (2 years, 906 breakouts: 0.5+ ADR over, about 30% fell back under
         # the top within 5 days; less, 60-70%)
