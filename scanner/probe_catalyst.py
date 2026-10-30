@@ -30,6 +30,24 @@ def trade(a, i, at="open"):
     return None
 
 
+def after(A, keys):
+    """what the stock did after the launch close, whatever the exits: ran 20% / 50% within 60 sessions (the high),
+    closed under the launch day's low within 10 sessions, the close 60 sessions on"""
+    rs = []
+    for s, i in keys:
+        st = A[s].st
+        if i + 10 >= st.c.size:
+            continue
+        e = st.c[i]
+        hi = st.h[i + 1:i + 61].max()
+        rs.append((hi >= e * 1.2, hi >= e * 1.5, bool((st.c[i + 1:i + 11] < st.l[i]).any()), 100 * (st.c[i + 60] / e - 1) if i + 60 < st.c.size else None))
+    if not rs:
+        return None
+    r60 = [r[3] for r in rs if r[3] is not None]
+    return dict(n=len(rs), ran20=round(100 * float(np.mean([r[0] for r in rs]))), ran50=round(100 * float(np.mean([r[1] for r in rs]))),
+                lost_low10=round(100 * float(np.mean([r[2] for r in rs]))), med60=round(float(np.median(r60)), 1) if r60 else None)
+
+
 def both(A, keys):
     return dict(open=summ([trade(A[s], i) for s, i in keys]), close=summ([trade(A[s], i, "close") for s, i in keys]))
 
@@ -62,6 +80,10 @@ def main():
                replaced_launches=both(A, gone),
                catalyst_by_base={f"{n} sessions": both(A, [(s, i) for s, i in cat if A[s].cleared(i) == n]) for n in launch.BASES},
                all_by_base={f"{n} sessions": both(A, [(s, i) for s, i in sets[1] if A[s].cleared(i) == n]) for n in launch.BASES + (0,)},
+               after60=dict(current=after(A, sets[0]), catalyst_launches=after(A, cat),
+                            catalyst_top_half=after(A, [(s, i) for s, i in cat if A[s].clpos[i] >= 0.5]),
+                            catalyst_lower_half=after(A, [(s, i) for s, i in cat if A[s].clpos[i] < 0.5]),
+                            **{f"catalyst_{n}_sessions": after(A, [(s, i) for s, i in cat if A[s].cleared(i) == n]) for n in launch.BASES}),
                examples=sorted((A[s].st.dates[i], s, round(float(A[s].gap[i]), 1), round(float(A[s].chg[i]), 1), round(float(A[s].rv[i]), 1), A[s].cleared(i)) for s, i in cat)[-25:])
     json.dump(out, open(a_.out, "w"), indent=1)
     print(json.dumps(out, indent=1))
