@@ -33,10 +33,10 @@ def main():
                         f"pulled back to its breakout level {lv} (broken {r.get('retest_from')}) and closed above it at ${r['price']:.2f}"
                         + (f", with the {' & '.join(emas)} there too" if emas else "") + ": another entry" + tail,
                         r.get("tv") or r["symbol"], "high" if emas else "default"))
-        elif (r.get("tight_days") or 0) >= 2 and r.get("buy_point"):
+        elif (r.get("tight_days") or 0) >= 2 and (r.get("tight_level") or r.get("buy_point")):
             base = (f" · base {r['base_len']} sessions (since {r['base_from']}), {r['base_low_pct']:.0f}% deep ({r['base_low_adr']:.1f} ADRs)"
                     + (f", {r['msf_pattern']}" if r.get("msf_pattern") else "")) if r.get("base_len") else ""
-            out.append((f"{r['symbol']} tight under its buy point", f"{r['tight_days']} tight days just under ${r['buy_point']:.2f}, the base high{base},"
+            out.append((f"{r['symbol']} tight under its buy point", f"{r['tight_days']} tight days just under ${r.get('tight_level') or r['buy_point']:.2f}, the base high{base},"
                         f" now ${r['price']:.2f}: watch for the breakout" + tail, r.get("tv") or r["symbol"], "default"))
     if len(out) > MAX:
         out = out[:MAX - 1] + [(f"{len(out) - MAX + 1} more heads-ups", ", ".join(t.split()[0] for t, _, _, _ in out[MAX - 1:]), "SPY", "default")]
