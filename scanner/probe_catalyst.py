@@ -176,7 +176,9 @@ def main():
         if r:
             news[(s, A[s].st.dates[i])] = r
         time.sleep(0.3)
-    check = {"GMAB 2026-08-07": news_on("GMAB", "2026-08-07", "2026-08-06")}
+    check = {"GMAB 2026-08-07": news_on("GMAB", "2026-08-07", "2026-08-06"),
+             "GMAB raw Aug 5-8": [[n["created_at"], n["headline"][:120], n.get("symbols")] for n in get("https://data.alpaca.markets/v1beta1/news",
+                                  {"symbols": "GMAB", "start": "2026-08-05T00:00:00Z", "end": "2026-08-08T23:59:00Z", "limit": 50}).get("news", [])]}
     sets = {}
     for name, flag, days in (("current", 0, {}), ("with_news", 1, {k: v[0] for k, v in news.items()}), ("no_news_needed", 1, every)):
         L["catalyst_launch"] = flag

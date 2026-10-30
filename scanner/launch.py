@@ -176,11 +176,11 @@ class Arr:
         return bool(L["catalyst_launch"] and self.gap[i] >= L["ep_gap"] and self.chg[i] > 0 and st.c[i] > st.h[i - 1]
                     and self.cleared(i) >= BASES[-1] and (self.sym, st.dates[i]) in CATALYST_DAYS)
 
-    def candidate(self, i):
-        """the must-haves of a launch day"""
+    def candidate(self, i, catalyst=True):
+        """the must-haves of a launch day (catalyst=False: the regular launch only)"""
         st = self.st
         return bool(i >= self.start and self.liquid[i] and self.gap[i] > 0
-                    and ((self.chg[i] >= L["min_chg"] and self.held(i)) or self.catalyst(i))
+                    and ((self.chg[i] >= L["min_chg"] and self.held(i)) or (catalyst and self.catalyst(i)))
                     and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
                     and (self.ext200_prev[i] <= L["max_ext200"] or (self.power(i) and self.ext200_prev[i] <= L["power_ext200"]))
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
@@ -663,19 +663,31 @@ def detect(A, groups, GS, cal, S, upto=None):
     rank = {"A+": -1, "A": 0, "B": 1, "C": 2}
     for s, a in A.items():
         last = -10 ** 9
+        own, cat = [], []
         for i in range(L["min_sessions"], len(a.st.dates)):
             k = pos.get(a.st.dates[i])
             if k is None or (upto is not None and k > upto) or not a.candidate(i):
+                continue
+            if not a.candidate(i, catalyst=False):
+                cat.append((i, k))
                 continue
             gs, gn = best_group(s, k, groups, GS)
             # one launch at a time: another within 20 sessions counts only after the last one closed below the
             # 21 EMA, or replaces it when it is the stronger day (APPN: a C on Aug 5 2026, the real launch, a B, on Aug 7)
             if i - last > L["dedupe_days"] or any(a.st.c[j] < a.e21[j] for j in range(last + 1, i)):
-                events.append((s, i, k, gs, gn))
+                own.append((s, i, k, gs, gn))
                 last = i
             elif rank[grade(a, i)] < rank[grade(a, last)]:
-                events[-1] = (s, i, k, gs, gn)
+                own[-1] = (s, i, k, gs, gn)
                 last = i
+        # a catalyst launch comes on top and never blocks a regular one (those stay exactly as they were): it counts
+        # when no launch came in the 20 sessions before it, or the last one closed below the 21 EMA since
+        for i, k in cat:
+            prev = max((e[1] for e in own if e[1] < i), default=-10 ** 9)
+            if i - prev > L["dedupe_days"] or any(a.st.c[j] < a.e21[j] for j in range(prev + 1, i)):
+                gs, gn = best_group(s, k, groups, GS)
+                own.append((s, i, k, gs, gn))
+        events.extend(sorted(own, key=lambda e: e[1]))
     return events
 
 
