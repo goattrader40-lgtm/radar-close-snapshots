@@ -649,7 +649,9 @@ def follow(a, i0, i, pick=False):
         # how decisively it closed over the top (2 years, 906 breakouts: 0.5+ ADR over, about 30% fell back under
         # the top within 5 days; less, 60-70%)
         ov = (c[i] / bo[1] - 1) * 100 / _adr(st, i)
-        stage = f"Base breakout (leg {leg}), closed {ov:.1f} ADR over the top" + (": decisive" if ov >= 0.5 else ": weak, most of these fell back") \
+        # a weak one starts the next leg only when it follows through (ATRC Aug 7 2026, leg 2 from Aug 11)
+        stage = (f"Base breakout (leg {leg}), closed {ov:.1f} ADR over the top: decisive" if ov >= 0.5 else
+                 f"Base breakout (leg {leg + 1} if it follows through), closed {ov:.1f} ADR over the top: weak, most of these fell back") \
             + (f", on light volume ({a.rv[i]:.1f}x)" if a.rv[i] < 1 else "")
     elif thru_day == i:
         stage = f"Breakout follow-through (leg {leg}): gapped up and held over {bo[1]:.2f} all day, closed {(c[i] / bo[1] - 1) * 100 / _adr(st, i):.1f} ADR over"
