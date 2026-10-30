@@ -76,7 +76,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=20, retest_need_ema=0, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=20, retest_need_ema=0, bo_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -322,19 +322,25 @@ def base_ok(a, j, span):
     k = j - age
     if 100 * (1 - st.l[k:j].min() / top) < L["leg_adr"] * _adr(st, k):
         return None
+    # and the closes pulled back too: a one-day dip in an advance is no base (GMAB Sep 23-30 2026: one down day,
+    # Sep 24, the closes 2% under the top at most, then higher again; Sep 30's close over it was no breakout)
+    if 100 * (1 - st.c[k + 1:j].min() / top) < L["leg_adr"] * _adr(st, k):
+        return None
     return top, k
 
 
 def base_breakout(a, j, used=()):
-    """(top, its index) of the base a close on day j breaks out of, the larger base first; a breakout = a close over
-    the top on 1x+ volume, fresh (no close over it in the 3 days before, not already run an ADR past it)"""
+    """(top, its index) of the base a close on day j breaks out of, the larger base first; a breakout = a close half an
+    ADR or more over the top on 1x+ volume (a weaker close over it mostly fell back: 60-70% within 5 days; GMAB Aug 14,
+    Sep 18 2026), fresh (no such close in the 3 days before, not already run an ADR past it)"""
     st, c = a.st, a.st.c
     for span in (120, 40):
         b = base_ok(a, j, span)
         if not b or b[1] in used:
             continue
         top, k = b
-        if (c[j] > top and a.rv[j] >= L["bo_rv"] and max(c[j - 3:j]) <= top
+        dec = top * (1 + L["bo_decisive"] * _adr(st, j) / 100)
+        if (c[j] > dec and a.rv[j] >= L["bo_rv"] and max(c[j - 3:j]) <= dec
                 and st.h[j - 3:j].max() < top * (1 + _adr(st, j - 1) / 100)):
             return b
     return None
@@ -493,7 +499,7 @@ def follow(a, i0, i, pick=False):
         return ok, conf
     held = bool(rlv and 1 <= i - rlv[0] <= L["retest_days"] and not (c[rlv[0] + 1:i + 1] < rlv[1] * (1 - adr / 100)).any())
     hit = lambda k: bool(retest_on(k)[1]) if L["retest_need_ema"] else retest_on(k)[0]
-    retest = held and hit(i) and not any(hit(k) for k in range(max(rlv[0] + 1, last_new + 1), i))
+    retest = held and hit(i) and not any(hit(k) for k in range(rlv[0] + 1, i))      # one retest per breakout
     retest_ema = retest_on(i)[1] if retest else []
     # tomorrow's zone, for the heads-up during the day (the buy alert itself waits for the close)
     zone = [fnum(rlv[1] * (1 - adr / 100)), fnum(rlv[1] * (1 + adr / 400))] if held and c[i] > rlv[1] and i - rlv[0] < L["retest_days"] else None
@@ -504,9 +510,14 @@ def follow(a, i0, i, pick=False):
     if bp and pat in ("Base top",) + tuple(msf.NAMES[k] for k in range(1, 13) if msf.is_pat(k)):
         for k in range(i, max(i0, i - 10), -1):
             if not (bp * (1 - _adr(st, k) / 100) <= c[k] < bp and abs(a.chg[k]) <= _adr(st, k) / 2
-                    and abs(c[k] - st.o[k]) <= L["tight_body"] * _adr(st, k) / 100 * c[k - 1]):
+                    and abs(c[k] - st.o[k]) <= L["tight_body"] * _adr(st, k) / 100 * c[k - 1]
+                    and max(c[k:i + 1]) - min(c[k:i + 1]) <= _adr(st, i) / 200 * c[i]):   # sideways, not advancing
                 break
             tight += 1
+    # advancing is not tight: every one of those days a higher high, higher low and higher close than the day before
+    # (GMAB Oct 20-22 2026, a staircase into $40.17; ANF Oct 16 made a lower high, so Oct 15-16 was tight)
+    if tight >= 2 and all(st.h[k] > st.h[k - 1] and st.l[k] > st.l[k - 1] and c[k] > c[k - 1] for k in range(i - tight + 1, i + 1)):
+        tight = 0
     # the base under the buy point, for the heads-up: since the stock first came within a quarter ADR of that high in
     # this leg (ANF: the Aug 26 gap day's 154.58, with the 155.22 of Sep 9 as the top: 35 sessions), how deep it went,
     # and your MSF engine's pattern for it if it sees one
