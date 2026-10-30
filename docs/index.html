@@ -2035,7 +2035,7 @@ defCalc('industry_perf', {
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
-  let SRV = null, LNBT = null, REV = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null;
+  let SRV = null, LNBT = null, REV = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
   const REVOF = (sym) => (REV && REV.rows ? REV.rows[sym] : null);
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
   const nyNow = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value])); return { wd: p.weekday, m: Number(p.hour) * 60 + Number(p.minute) }; };
@@ -2091,11 +2091,24 @@ defCalc('industry_perf', {
     lastCheck = new Date();
     try {
       const sha = await tipSha();
-      if (sha && sha === lastSha && !force) { drawLiveLine(); return; }
+      if (sha && sha === lastSha && !force) {
+        /* nothing new on radar-data (after the close it can sit for hours), but the evening scan commits the Watchlist and
+           the Launches to main: re-read those every 5 minutes, so a new scan shows without reloading the page */
+        if (Date.now() - lastMain > 300000) {
+          lastMain = Date.now();
+          const [st2, ln2] = await Promise.all([getMain('setups/latest.json').catch(() => null), getMain('setups/launch.json').catch(() => null)]);
+          const was = (D.setups && D.setups.data ? D.setups.data.made_at : '') + (D.launch && D.launch.data ? D.launch.data.made_at : '');
+          if (st2) D.setups = { status: 'ok', data: st2 };
+          if (ln2) D.launch = { status: 'ok', data: ln2 };
+          if ((st2 ? st2.made_at : '') + (ln2 ? ln2.made_at : '') !== was && st2 && ln2) { compute(); draw(); runAlerts(); return; }
+        }
+        drawLiveLine(); return;
+      }
       const [build, live, pm, gl, pml, etfs, rev, setups] = await Promise.all([getJson(sha, 'build.json'), getJson(sha, 'live.json').catch(() => null),
         getJson(sha, 'premarket.json'), getJson(sha, 'gradelog.json'), getJson(sha, 'premarket_live.json').catch(() => null),
         getJson(sha, 'etfs.json').catch(() => null), getJson(sha, 'revenue.json').catch(() => null), getMain('setups/latest.json').catch(() => null)]);
       D.setups = setups ? { status: 'ok', data: setups } : (D.setups && D.setups.status === 'ok' ? D.setups : { status: 'error', data: null });
+      lastMain = Date.now();
       const [ln, lnbt] = await Promise.all([getMain('setups/launch.json').catch(() => null), getMain('setups/launch_backtest.json').catch(() => null)]);
       D.launch = ln ? { status: 'ok', data: ln } : (D.launch && D.launch.status === 'ok' ? D.launch : { status: 'error', data: null });
       if (lnbt) LNBT = lnbt;
