@@ -596,7 +596,9 @@ def follow(a, i0, i, pick=False):
         for k in range(i, max(i0, i - 10), -1):
             if not (bp * (1 - _adr(st, k) / 100) <= c[k] < bp and abs(a.chg[k]) <= _adr(st, k) / 2
                     and abs(c[k] - st.o[k]) <= L["tight_body"] * _adr(st, k) / 100 * c[k - 1]
-                    and max(c[k:i + 1]) - min(c[k:i + 1]) <= _adr(st, i) / 200 * c[i]):   # sideways, not advancing
+                    # stacked, not stepping: all the days' opens and closes within half an ADR (ANF Oct 15-16 2026:
+                    # 0.24 ADR, ACN Oct 5-7 0.44, SG Oct 5-7 0.46; GMAB Sep 17-21 0.96 and Oct 20-22 1.02: no tight days)
+                    and max(c[k:i + 1].max(), st.o[k:i + 1].max()) - min(c[k:i + 1].min(), st.o[k:i + 1].min()) <= _adr(st, i) / 200 * c[i]):
                 break
             tight += 1
     # advancing is not tight: every one of those days a higher high, higher low and higher close than the day before
@@ -614,6 +616,8 @@ def follow(a, i0, i, pick=False):
             blen, bfrom = i - m0, st.dates[m0 + 1] if m0 + 1 <= i else st.dates[i]
             bdeep = 100 * (1 - st.l[min(m0 + 1, i):i + 1].min() / bp)       # from the day after (not the gap day's own low)
             bdeep_adr = bdeep / _adr(st, i)
+    if blen is not None and blen < L["leg_pause"]:
+        tight = 0                    # under a high set a few sessions ago there is no base yet (GMAB Sep 21 2026: 1 session)
     msf_pat = msf.NAMES[code] if code and msf.is_pat(code) else None
     # the stock's stage after the close, the first that applies
     rest = 0
