@@ -355,9 +355,12 @@ def base_ok(a, j, span):
     k = j - age
     if 100 * (1 - st.l[k:j].min() / top) < L["leg_adr"] * _adr(st, k):
         return None
-    # and the closes pulled back too: a one-day dip in an advance is no base (GMAB Sep 23-30 2026: one down day,
-    # Sep 24, the closes 2% under the top at most, then higher again; Sep 30's close over it was no breakout)
-    if 100 * (1 - st.c[k + 1:j].min() / top) < L["leg_adr"] * _adr(st, k):
+    # and the closes pulled back too, or chopped sideways (2+ down closes): a one-day dip in an advance is no base
+    # (GMAB Sep 23-30 2026: the closes 2% under the top at most and every one higher than the day before; Sep 30's
+    # close over it was no breakout). ATRC Aug 24 - Sep 1 2026: closes 0.9 ADR under its 49.88, 4 down closes: a
+    # base, broken out of Sep 2
+    down = int((st.c[k + 1:j] < st.c[k:j - 1]).sum())
+    if 100 * (1 - st.c[k + 1:j].min() / top) < L["leg_adr"] * _adr(st, k) and down < 2:
         return None
     return top, k
 
@@ -660,10 +663,11 @@ def follow(a, i0, i, pick=False):
         stage = f"Consolidation, surfing the 10 & 21 EMA on dry volume ({rest} days)" + (f", {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}" if c[i] < H * 0.99 else "")
     elif c[i] < a.e21[i]:
         stage = "Below the 21 EMA"
-    elif top_date and bp is not None and pat == "Base top":
-        # a base formed under a new high: it starts the day of that high (ACN: its Oct 22 2026 high 259.39, pulled back)
-        kt = st.dates.index(top_date)
-        stage = f"In the base, day {i - kt + 1}, {100 * (1 - c[i] / bp):.0f}% under the top {bp:.2f} (set {top_date})"
+    elif tops:
+        # a base formed under a new high: it starts the day of that high (ACN: its Oct 22 2026 high 259.39, pulled back),
+        # whatever buy point is nearer (ATRC Oct 5 2026: the flag line 58.66 under its Sep 24 top 61.70)
+        tb, kt = min(tops)
+        stage = f"In the base, day {i - kt + 1}, {100 * (1 - c[i] / tb):.0f}% under the top {tb:.2f} (set {st.dates[kt]})"
     elif c[i] > lvl:                                       # closing above what the leg broke out of (ANF: never over
         stage = f"Running (leg {leg}), {100 * (c[i] / lvl - 1):.0f}% over {lvl:.2f}"   # the Aug 26 high until Oct 19)
     else:
