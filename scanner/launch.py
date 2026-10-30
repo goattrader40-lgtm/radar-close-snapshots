@@ -617,6 +617,11 @@ def follow(a, i0, i, pick=False):
         base_low_adr=fnum(bdeep_adr, 1) if bdeep_adr is not None else None,
         retest_today=retest, retest_ema=retest_ema, retest_level=fnum(rlv[1]) if rlv else None, retest_level_wick=fnum(rlv[2]) if rlv else None,
         retest_from=st.dates[rlv[0]] if rlv else None, retest_zone=zone, tight_days=tight,
+        # for the retest alerts during the day (radar/alerts.py), with the zone: the low has to get this far under the
+        # high since the breakout (a real pullback, 1.5 ADRs), and whether it already closed 1.25 ADRs away from the level
+        retest_need_low=fnum(st.h[rlv[0]:i + 1].max() * (1 - 1.5 * adr / 100)) if zone else None,
+        retest_away=bool(c[rlv[0]:i + 1].max() >= rlv[1] * (1 + 1.25 * adr / 100)) if zone else None,
+        adr_pct=fnum(adr, 2), ema10=fnum(a.e10[i]), ema50=fnum(a.e50[i]), day_open=fnum(st.o[i]),
         sessions=i - i0, gain_pct=fnum(100 * (c[i] / c[i0] - 1), 1), max_gain_pct=fnum(100 * (hi / c[i0] - 1), 1),
         status=status, first_exit=st.dates[exit_k] if exit_k is not None else None,
         exit_gain_pct=fnum(100 * (c[exit_k] / c[i0] - 1), 1) if exit_k is not None else None,

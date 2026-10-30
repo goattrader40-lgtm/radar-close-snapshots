@@ -32,6 +32,13 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
   confirm     in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
   pop         the entry inside a base: after its resting time (the volume dried up, surfing the 10 & 21 EMA) and a
               tight candle, it opens above that candle's open and close and above the rising 10 & 21 EMA (ANF Oct 5 2026)
+  zone        a heads-up: a launch being followed pulls back into the retest zone of its last breakout (from 1.5 ADRs
+              under the top of the broken base's bodies to a quarter ADR over its wick top), after a real pullback (1.5
+              ADRs off the high since) and having closed 1.25 ADRs away first; with the 10 / 21 / 50 EMA there if they are
+              (GMAB Oct 2 2026: down to 33.72 under its 34.63 level, the 21 EMA 34.39 there)
+  retest      from 3:45 PM: today's low came into that zone and it trades back over the bodies' top: the retest holding
+              into the close (the buy: at the close, if it holds); high priority with an EMA there too. The scan after
+              the close confirms it (radar/eod_alerts.py). One per breakout
 Nothing but the early heads-ups is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
 """
@@ -187,6 +194,26 @@ def find(live, doc, now=None):
                    f"opened ${op:.2f} and trades ${price:.2f} above the base top ${top:.2f} (broken {r['last_breakout_date']})"
                    f" · {chg:+.1f}% · vol {rv:.1f}x for the time of day", "high", tvs) \
             if top and ago is not None and ago <= 2 and op and op > top and price > top and rv >= 2 else None
+        # the retest of the last breakout: the zone for today was set at the last close (scanner/launch.py follow)
+        z, lvb = r.get("retest_zone"), r.get("retest_level")
+        if z and lvb and r.get("retest_away") and (now.hour, now.minute) >= (9, 35):
+            lvw, adr = r.get("retest_level_wick") or lvb, r.get("adr_pct") or 5.0
+            lv = f"${lvb:.2f}" + (f"-${lvw:.2f} (bodies-wicks)" if lvw > lvb * 1.001 else "")
+            emas = [(n, e) for n, e in (("10 EMA", r.get("ema10")), ("21 EMA", r.get("ema21")), ("50 EMA", r.get("ema50")))
+                    if e and lvb * (1 - adr / 100) <= e <= lvw * (1 + adr / 100)]
+            conf = (" · at the " + " & ".join(f"{n} (${e:.2f} at the last close)" for n, e in emas)) if emas else ""
+            tail = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
+            if z[0] <= price <= min(z[1], r.get("retest_need_low") or z[1]):
+                out.append((f"{sym}:zone", f"{sym} pulling back to its breakout level" + (" + " + " & ".join(n for n, e in emas) if emas else ""),
+                            f"${price:.2f} in the retest zone ${z[0]:.2f}-${z[1]:.2f} · level {lv} (broken {r['retest_from']}){conf}"
+                            f" · a heads-up: the buy is the close holding over ${lvb:.2f}" + tail, "default", tvs))
+            if (now.hour, now.minute) >= (15, 45) and lvb < price <= lvb * (1 + 1.5 * adr / 100):
+                # the low is checked on today's 1-minute chart before it goes out (main); an EMA counts when it trades over it
+                held = [(n, e) for n, e in emas if price > e]
+                conf = (" · over the " + " & ".join(f"{n} (${e:.2f} at the last close)" for n, e in held)) if held else ""
+                out.append((f"{sym}:retest", f"{sym} RETEST HOLDING into the close" + (" + " + " & ".join(n for n, e in held) if held else ""),
+                            f"came back to its breakout level {lv} (broken {r['retest_from']}) and trades ${price:.2f} over it{conf}"
+                            f" · the buy: at the close, if it holds over ${lvb:.2f}" + tail, "high" if held else "default", tvs))
         bp = r.get("buy_point")
         if bp and inside and (r.get("price") or 0) < bp:
             # the pop out of a consolidation: after a tight candle, it opens above that candle's open and close and above
@@ -220,6 +247,11 @@ def find(live, doc, now=None):
             pat = "base" if not pat or pat.startswith("Base forming") else pat
             what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}; nothing traded above it for {int(r['base_days'])} sessions)"
                     if pat == "Base top" and r.get("buy_point_top_date") else f"buy point ${bp:.2f}")
+            # the breakout that also pushed out of the 10 & 21 EMA with a gap: opened over yesterday's candle (its open and
+            # close) and both EMAs, a double confluence (GMAB Oct 5 2026)
+            push = bool(op and r.get("day_open") and r.get("ema10") and r.get("ema21")
+                        and op > max(r["day_open"], r["price"], r["ema10"], r["ema21"]))
+            why += " · also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle)" if push else ""
             out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
                         f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x · "
                         + f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "") + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
@@ -259,6 +291,22 @@ def chart_high_today(sym):
                if h and datetime.datetime.fromtimestamp(t, NY).date() == today and datetime.datetime.fromtimestamp(t, NY).hour * 60
                + datetime.datetime.fromtimestamp(t, NY).minute >= 570]
         return round(max(his), 4) if his else None
+    except Exception:
+        return None
+
+
+def chart_low_today(sym):
+    """today's low from 9:30 on, from Yahoo's 1-minute chart, or None"""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=1d&interval=1m"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            res = json.load(r)["chart"]["result"][0]
+        today = datetime.datetime.now(NY).date()
+        los = [x for t, x in zip(res.get("timestamp") or [], res["indicators"]["quote"][0].get("low") or [])
+               if x and datetime.datetime.fromtimestamp(t, NY).date() == today and datetime.datetime.fromtimestamp(t, NY).hour * 60
+               + datetime.datetime.fromtimestamp(t, NY).minute >= 570]
+        return round(min(los), 4) if los else None
     except Exception:
         return None
 
@@ -313,6 +361,16 @@ def main():
             + [(a[0], None, None, None, None) for a in new[MAX_PER_RUN - 1:]]
     new += quiet
     for key, title, msg, prio, tvs in new:
+        if title is not None and key.endswith(":retest"):
+            # today's low (1-minute chart) came into the zone, after a real pullback; with the EMA, the low at it
+            sym_ = key.split(":")[0]
+            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == sym_), {})
+            lo_ = chart_low_today(sym_)
+            z_, need_ = r_.get("retest_zone") or [0, 0], r_.get("retest_need_low") or 0
+            if not (lo_ and z_[0] <= lo_ <= min(z_[1], need_)):
+                print(f"{key}: today's low {lo_} not in the zone {z_} (under {need_}), not sent")
+                continue
+            msg += f" · today's low ${lo_:.2f}"
         if title is not None and key.endswith(":touch"):
             # only when today's 1-minute chart shows the trade over the buy point (the quote's day high can be yesterday's)
             r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
