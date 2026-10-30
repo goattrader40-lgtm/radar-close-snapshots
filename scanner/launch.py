@@ -76,9 +76,10 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=20, retest_need_ema=0, bo_decisive=0, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
+BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
 
 
@@ -154,11 +155,28 @@ class Arr:
             return True
         return self.power(i) and self.chg[i] >= self.gap[i] / 2
 
+    def cleared(self, i):
+        """the longest base the close cleared, in sessions: 120 (6 months), 63 (3 months), 21 (1 month, the least a
+        launch must clear) or 0. Cleared = over the top of its candle bodies (each day the higher of open and close;
+        GMAB Aug 7 2026 closed 31.25 over 30.70, Feb 17's open, under that day's 31.41 wick). Older highs don't count:
+        a launch is the stock's own inflection, not a new 1-year high"""
+        st = self.st
+        return next((n for n in BASES if i >= n and st.c[i] > np.maximum(st.o[i - n:i], st.c[i - n:i]).max()), 0)
+
+    def catalyst(self, i):
+        """a catalyst launch (earnings, news, a turnaround): a 5%+ gap that closes net positive, still in the gap
+        (over the day before's high) and over at least its 1-month base, though up less than 5% (GMAB Aug 7 2026:
+        a 5.4% gap, +4.8%, over its 6-month base)"""
+        st = self.st
+        return bool(L["catalyst_launch"] and self.gap[i] >= L["ep_gap"] and self.chg[i] > 0 and st.c[i] > st.h[i - 1]
+                    and self.cleared(i) >= BASES[-1])
+
     def candidate(self, i):
         """the must-haves of a launch day"""
         st = self.st
-        return bool(i >= self.start and self.liquid[i] and self.gap[i] > 0 and self.chg[i] >= L["min_chg"]
-                    and self.held(i) and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
+        return bool(i >= self.start and self.liquid[i] and self.gap[i] > 0
+                    and ((self.chg[i] >= L["min_chg"] and self.held(i)) or self.catalyst(i))
+                    and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
                     and (self.ext200_prev[i] <= L["max_ext200"] or (self.power(i) and self.ext200_prev[i] <= L["power_ext200"]))
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
 
@@ -267,6 +285,8 @@ def launch_row(sym, a, i, gstat, gname, S):
         pct_of_52w_high=fnum(100 * st.c[i] / h52, 0), near_high=bool(100 * st.c[i] / h52 >= L["near_high"]),
         days_since_high=days, correction_pct=fnum(depth, 0), above_52w_low_pct=fnum(100 * (st.c[i] / st.low52[i] - 1), 0), neglected=bool(days >= L["neglect_days"] or depth >= L["neglect_depth"]),
         vs_200_pct=fnum(100 * (st.c[i] / a.s200[i] - 1), 0), close=fnum(st.c[i]), low=fnum(st.l[i]),
+        # the longest base the launch day cleared (by the bodies): "6-month", "3-month", "1-month" or None
+        cleared={120: "6-month", 63: "3-month", 21: "1-month"}.get(a.cleared(i)), catalyst=bool(a.catalyst(i) and a.chg[i] < L["min_chg"]),
     )
 
 
@@ -415,7 +435,7 @@ def follow(a, i0, i, pick=False):
     # leg 1 = the launch when it closed out of its base (SMCI May 3 2023, at an all-time high); a launch inside its
     # base (RPD Sep 14 2026, under its Aug high) is leg 0 until the first breakout out of the base
     b0 = base_ok(a, i0, 120)
-    leg = 1 if not b0 or c[i0] > b0[0] else 0
+    leg = 1 if not b0 or c[i0] > b0[0] or a.cleared(i0) == 120 else 0     # cleared its 6-month base by the bodies: leg 1 (GMAB Aug 7)
     H, last_new, armed, rested, last_leg = st.h[i0], i0, False, None, i0
     if pick and b0 and b0[0] > H:
         H = b0[0]
@@ -449,7 +469,10 @@ def follow(a, i0, i, pick=False):
             if b:
                 bo, lvl = (j, b[0], b[1]), b[0]
                 rlv = (j, min(body(max(0, b[1] - 20), max(b[1] + 1, j - 3)), b[0]))   # the base's bodies, not the push into it
-            if leg == 0 or j - last_leg >= L["leg_pause"]:  # breakouts a few days apart (Oct 22 / Oct 23) are one leg
+            # a new leg needs a decisive close (half an ADR over the top): a weaker one is a breakout, still the same leg
+            # (GMAB 2026: the launch Aug 7 leg 1; Aug 14 and Sep 18 closed just over their tops; Oct 5 leg 2, Oct 23 leg 3)
+            weak = bool(b and not flag_go and c[j] < b[0] * (1 + L["leg_decisive"] * _adr(st, j) / 100))
+            if not weak and (leg == 0 or j - last_leg >= L["leg_pause"]):  # breakouts a few days apart (Oct 22 / Oct 23) are one leg
                 # after a rest of 40+ sessions without a new high, the breakout starts a new run: leg 1 again
                 leg = 1 if j - last_new >= L["rest_days"] else leg + 1
                 if leg == 1 and j - last_new >= L["rest_days"]:
@@ -542,7 +565,8 @@ def follow(a, i0, i, pick=False):
         rest += 1
     since = None
     if i == i0 and not pick:
-        stage = "Launch day"
+        cb = {120: "6-month", 63: "3-month", 21: "1-month"}.get(a.cleared(i))
+        stage = "Launch day" + (f", cleared its {cb} base" if cb else "")
     elif bo and bo[0] == i:
         # how decisively it closed over the top (2 years, 906 breakouts: 0.5+ ADR over, about 30% fell back under
         # the top within 5 days; less, 60-70%)
