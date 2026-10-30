@@ -187,11 +187,17 @@ def main():
         launch.CATALYST_DAYS.clear()
         launch.CATALYST_DAYS.update(days)
         sets[name] = {(s, i) for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S)}
+    # the launch under the 200 SMA (a power-size day over the 50 EMA within 10% of the 200 SMA): what it adds
+    L["catalyst_launch"], L["launch_under200"] = 0, 0
+    launch.CATALYST_DAYS.clear()
+    no_u200 = {(s, i) for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S)}
+    L["launch_under200"] = 1
+    u200 = sorted(sets["current"] - no_u200)
     cur = sets["current"]
     cat = sorted(k for k in sets["with_news"] - cur if (k[0], A[k[0]].st.dates[k[1]]) in news)
     nonews = sorted(k for k in sets["no_news_needed"] - cur if (k[0], A[k[0]].st.dates[k[1]]) not in news)
     gone = sorted(cur - sets["with_news"])
-    orh = orh_entries(A, sorted(cur | set(cat) | set(nonews)))
+    orh = orh_entries(A, sorted(cur | set(cat) | set(nonews) | set(u200)))
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1],
                candidate_days=len(maybe), with_news=len(news), earnings=sum(1 for v in news.values() if v[0] == "earnings"),
                launches=dict(current=len(cur), catalyst_with_news=len(cat), catalyst_without_news=len(nonews), current_absorbed=len(gone)),
@@ -202,6 +208,10 @@ def main():
                                               orh=launch_day(A, [(s, i) for s, i in cat if A[s].cleared(i) == n], orh),
                                               buy_points=buy_points(A, [(s, i) for s, i in cat if A[s].cleared(i) == n]).get("all"))
                         for n in launch.BASES},
+               under200=dict(added=len(u200), removed=len(no_u200 - sets["current"]), after60=after(A, u200), buy_points=buy_points(A, u200),
+                             launch_day_orh=launch_day(A, u200, orh), without_them=dict(after60=after(A, sorted(no_u200)))),
+               under200_examples=[[A[s].st.dates[i], s, round(float(A[s].gap[i]), 1), round(float(A[s].chg[i]), 1), round(float(A[s].rv[i]), 1),
+                                   round(float(100 * (A[s].st.c[i] / A[s].s200[i] - 1)), 1)] for s, i in u200][-30:],
                check=check,
                examples=[[A[s].st.dates[i], s, round(float(A[s].gap[i]), 1), round(float(A[s].chg[i]), 1), A[s].cleared(i)] + list(news[(s, A[s].st.dates[i])])
                          for s, i in sorted(cat, key=lambda k: A[k[0]].st.dates[k[1]])[-40:]])
