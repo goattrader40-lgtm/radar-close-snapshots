@@ -76,7 +76,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=20, retest_need_ema=0, bo_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, retest_days=20, retest_need_ema=0, bo_decisive=0, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
@@ -496,7 +496,9 @@ def follow(a, i0, i, pick=False):
         # the base high is consolidating, GMAB Sep 23 - Oct 1), the low from a quarter ADR over the level to 1.5 ADRs
         # under it (undercut and reclaim: GMAB Oct 2, from 35.90 down to 33.72 under 34.63, closed 34.75)
         ok = bool(rlv and 3 <= k - rlv[0] <= L["retest_days"] and c[k] > rlv[1] and rlv[1] * (1 - 1.5 * ak / 100) <= st.l[k] <= rlv[1] * (1 + ak / 400)
-                  and st.l[k] <= st.h[rlv[0]:k].max() * (1 - 1.5 * ak / 100))
+                  and st.l[k] <= st.h[rlv[0]:k].max() * (1 - 1.5 * ak / 100)
+                  and c[rlv[0]:k].max() >= rlv[1] * (1 + 1.25 * ak / 100))    # it closed away from the level first (GMAB Sep 24:
+                                                                             # 0.85 ADR, still at the base high; Oct 2: 1.5)
         conf = [n for n, e in (("10 EMA", a.e10), ("21 EMA", a.e21), ("50 EMA", a.e50))
                 if ok and abs(e[k] - rlv[1]) <= ak / 100 * rlv[1] and st.l[k] <= e[k] * (1 + ak / 400) and c[k] > e[k]]
         return ok, conf
