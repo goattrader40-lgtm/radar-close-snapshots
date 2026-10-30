@@ -289,11 +289,12 @@
       <span class="tgr-f"><label class="tgr-f">Avg $ volume ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-param="g_dvol_m" aria-label="Minimum average dollar volume, millions"> M over</label>
         <span class="tgr-seg" data-param="g_dvol_days" aria-label="Days for average dollar volume"><button data-v="10" aria-pressed="false">10 days</button><button data-v="20" aria-pressed="true">20 days</button></span></span>
       <label class="tgr-f"><input type="checkbox" data-param="g_above200"> Above 200-day SMA</label>
+      <label class="tgr-f"><input type="checkbox" data-param="g_above50e"> Above 50-day EMA</label>
       <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-param="g_mcap_b" aria-label="Minimum market cap, billions"> B</label>
       <label class="tgr-f">30-day avg volume ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-param="g_avgvol_k" aria-label="Minimum 30-day average volume, thousands of shares"> K shares</label>
       <button class="tgr-lite" id="g-reset" type="button">Reset to my defaults</button>
     </div>
-    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA to see breakdowns). Clear a box to turn that filter off. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list.</p>
+    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list.</p>
     <div class="tgr-moves" id="g-moves"><span class="tgr-lbl">Group moves today (3+ tight members pass):</span> <span class="tgr-chips" id="g-moves-list"></span></div>
     <div class="tgr-bar">
       <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
@@ -340,7 +341,7 @@
         <h2 id="g-list-h">Today's gainers</h2>
         <button class="tgr-pill" id="g-clear" hidden></button>
       </div>
-      <p class="tgr-note" id="g-list-note">Sorted by today's gain. Rel vol = volume from 9:30 to now ÷ the 20-day average volume from 9:30 to the same time (after the close: full day ÷ 20-day average). $ vol = average daily price × volume. vs 200D = price vs its 200-day SMA. Index shows S&amp;P 500 and Nasdaq-100 membership.</p>
+      <p class="tgr-note" id="g-list-note">Sorted by today's gain. Rel vol = volume from 9:30 to now ÷ the 20-day average volume from 9:30 to the same time (after the close: full day ÷ 20-day average). $ vol = average daily price × volume. vs 200D = price vs its 200-day SMA; vs 50 EMA = price vs its 50-day EMA. Index shows S&amp;P 500 and Nasdaq-100 membership.</p>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="g-table">
           <thead><tr>
@@ -352,6 +353,7 @@
             <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
             <th class="num c2" data-dvcol="1"><button class="tgr-th" data-sort="dvol">$ vol</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_50e">vs 50 EMA</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="avg_vol_30d">Avg vol 30D</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="chg_1w">1W</button></th>
@@ -750,7 +752,7 @@ defCalc('industry_perf', {
   };
 
   /* gainer filters: your defaults; a cleared box (null) turns that filter off. Kept in the page, so a reload starts from these. */
-  const PDEF = { g_dir: 'up', g_pct: 4, g_price: 5, g_adr: 3.5, g_dvol_m: 30, g_dvol_days: 20, g_above200: true, g_mcap_b: 0.7, g_avgvol_k: 700 };
+  const PDEF = { g_dir: 'up', g_pct: 4, g_price: 5, g_adr: 3.5, g_dvol_m: 30, g_dvol_days: 20, g_above200: true, g_above50e: false, g_mcap_b: 0.7, g_avgvol_k: 700 };
   const F = Object.assign({}, PDEF);
   const params = () => F;
   const passes = (r, p) => {
@@ -767,6 +769,7 @@ defCalc('industry_perf', {
     const dv = n(r[p.g_dvol_days === 10 ? 'dvol_10_m' : 'dvol_20_m']);
     if (p.g_dvol_m !== null && dv !== null && dv < p.g_dvol_m) return false;
     if (p.g_above200 === true && (r.above_200 === false || r.above_200 === 'false')) return false;
+    if (p.g_above50e === true && n(r.vs_50e) !== null && n(r.vs_50e) <= 0) return false;
     return true;
   };
   const LIST_MAX = 600;
@@ -1069,6 +1072,7 @@ defCalc('industry_perf', {
       else if (c === 'adr_20') tr.append(h('td', 'num c3', fAdr(r.adr_20)));
       else if (c === 'dvol') tr.append(h('td', 'num c2', fDv(r[dvKey()])));
       else if (c === 'vs_200') { const td = h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null || r.vs_200 === undefined ? '—' : (num(r.vs_200) > 0 ? '+' : '') + num(r.vs_200).toFixed(1) + '%'); tr.append(td); }
+      else if (c === 'vs_50e') { const td = h('td', 'num c2 ' + tone(r.vs_50e), r.vs_50e === null || r.vs_50e === undefined ? '—' : (num(r.vs_50e) > 0 ? '+' : '') + num(r.vs_50e).toFixed(1) + '%'); tr.append(td); }
       else if (c === 'avg_vol_30d') tr.append(h('td', 'num c2', fVol(r.avg_vol_30d)));
       else if (c === 'rel_vol') tr.append(h('td', 'num' + (cols.includes('index') ? '' : ' c2'), fX(r.rel_vol)));
       else if (c === 'ind') { const td = h('td', 'c2'); const b = h('button', 'tgr-chip', r[S.level]); b.type = 'button'; b.dataset.kind = 'industry'; b.dataset.name = r[S.level]; td.append(b); tr.append(td); }
@@ -1224,7 +1228,7 @@ defCalc('industry_perf', {
     const clr = $('#g-clear'); clr.hidden = !S.gsel; clr.textContent = S.gsel ? S.gsel.name + '  ×' : '';
     $('#g-list-h').textContent = (S.gsel ? 'Today’s ' + word.toLowerCase() + ' · ' + S.gsel.name : 'Today’s ' + word.toLowerCase()) + (rows.length > LIST_MAX ? ' (first ' + LIST_MAX + ' of ' + rows.length + ')' : '');
     sortStocks(rows, 'g-table', { key: 'chg_1d', dir: down ? 1 : -1 });
-    rows.slice(0, LIST_MAX).forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'rel_vol', 'price', 'adr_20', 'dvol', 'vs_200', 'mcap_b', 'avg_vol_30d', 'chg_1w', 'chg_1m', 'chg_3m', 'ind', 'themes', 'index'], symMap)));
+    rows.slice(0, LIST_MAX).forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'rel_vol', 'price', 'adr_20', 'dvol', 'vs_200', 'vs_50e', 'mcap_b', 'avg_vol_30d', 'chg_1w', 'chg_1m', 'chg_3m', 'ind', 'themes', 'index'], symMap)));
   };
 
   const drawPremarket = (symMap) => {
@@ -2011,6 +2015,7 @@ defCalc('industry_perf', {
       [['1w', 'ref_1w'], ['1m', 'ref_1m'], ['3m', 'ref_3m']].forEach(([k, ref]) => { o['chg_' + k] = r[ref] ? r2((p / r[ref] - 1) * 100) : null; });
       if (r.price && r.mcap_b) o.mcap_b = r2((r.mcap_b * p) / r.price);
       if (r.sma200) { o.above_200 = p > r.sma200; o.vs_200 = Math.round((p / r.sma200 - 1) * 1000) / 10; }
+      if (r.ema50) o.vs_50e = Math.round((p / r.ema50 - 1) * 1000) / 10;
       o.no_new_price = false;
       return o;
     });

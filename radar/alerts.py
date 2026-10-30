@@ -74,7 +74,7 @@ def find_early(live, doc, now=None):
     R, rows, out = doc["rules"], live["rows"], []
     now = now or datetime.datetime.now(NY)
     d0 = datetime.date.fromisoformat(doc["date"])
-    since = datetime.datetime(d0.year, d0.month, d0.day, 15, 30, tzinfo=NY).timestamp()
+    after_close = datetime.datetime(d0.year, d0.month, d0.day, 15, 30, tzinfo=NY).timestamp()
     for sym, w in doc.get("watch", {}).items():
         q = rows.get(sym)
         if not q or len(q) < 6 or not q[5]:
@@ -95,7 +95,7 @@ def find_early(live, doc, now=None):
         if not (power or catalyst or launch):
             continue
         ern = q[6] if len(q) > 6 else None
-        earn = bool(ern and since <= ern <= now.timestamp() + 3600)
+        earn = bool(ern and after_close <= ern <= now.timestamp() + 3600)
         group, gstat = w[8], w[9]
         theme = f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
         what, need = ("power-day gap", "4x+ and up 15%+") if power else ("catalyst gap", "3x+") if catalyst else ("launch gap", "3x+")
