@@ -1791,6 +1791,10 @@ defCalc('industry_perf', {
   const liveAlerts = () => {
     const doc = st('launch').status === 'ok' ? st('launch').data : null;
     if (!doc || !LIVE_ON || !LIVE || !LIVE.rows) return [];
+    /* the time of the prices (New York), not this computer's clock: nothing from the 9:30 update, whose quotes can
+       still carry yesterday's open, high and close (ENTG on Oct 30, 2026: "traded up to $170.01 today", yesterday's high) */
+    const sm = /T(\d\d):(\d\d)/.exec(String(LIVE.saved_at || '')), snapM = sm ? Number(sm[1]) * 60 + Number(sm[2]) : 0;
+    if (snapM < 571) return [];
     const R = doc.rules, out = [];
     const f1 = (x) => (x > 0 ? '+' : '') + x.toFixed(1) + '%';
     lnLive(doc).forEach((r) => {
@@ -1816,10 +1820,8 @@ defCalc('industry_perf', {
       const ago = r.last_breakout_days_ago, top = r.last_breakout_top, bp = r.buy_point;
       const vol = ' · vol ' + rv.toFixed(1) + '×';
       const inside = (r.pattern || '').startsWith('Pop out of the consolidation');   /* an entry inside the base, not a new leg (ANF Oct 5 2026) */
-      /* traded over the buy point between two updates and fell back (today's high): a heads-up, not a breakout (LION Oct 29 2026, 1:26 PM) */
-      const hi = q.length > 7 ? q[7] : null;
-      if (!inside && bp && (r.price || 0) <= bp && hi && hi > bp && price <= bp) out.push([r.symbol + ':touch', r.symbol + ' touched its buy point, back under',
-        'traded up to ' + fPrice(hi) + ' today, over the buy point ' + fPrice(bp) + ', now ' + fPrice(price) + ' (' + f1((price / bp - 1) * 100) + ') · not a breakout yet · ' + f1(chg) + vol, r.tv]);
+      /* "touched its buy point, back under" comes from the GitHub job only, once today's 1-minute chart confirms the trade over
+         the buy point (the live quote's day high can still be yesterday's: ENTG on Oct 30, 2026 showed $170.01 at 9:30) */
       const nxt = inside ? (r.leg || 0) : (r.leg || 0) + (ago !== null && ago !== undefined && ago < (R.leg_pause || 5) ? 0 : 1);
       if (inside && bp && (r.price || 0) < bp) {
         /* the pop out of a consolidation: after a tight candle, opening above its open and close and the rising 10 & 21 EMA (ANF Oct 5 2026) */

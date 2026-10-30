@@ -201,8 +201,11 @@ def find(live, doc, now=None):
             elif confirm:
                 out.append(confirm)
             continue
+        # from 9:45 only: until a stock's first trades show, Yahoo's day high is yesterday's (ENTG Oct 30 2026: $170.01,
+        # yesterday's high, at 9:30; its real high was $159.00); and only a high at or above the open and the price
         hi = q[7] if len(q) > 7 else None
-        if bp and (r.get("price") or 0) <= bp and hi and hi > bp and price <= bp:
+        if (now.hour, now.minute) >= (9, 45) and bp and (r.get("price") or 0) <= bp and hi and hi > bp and price <= bp \
+                and hi >= price and (not op or hi >= op):
             out.append((f"{sym}:touch", f"{sym} touched its buy point, back under",
                         f"traded up to ${hi:.2f} today, over the buy point ${bp:.2f}, now ${price:.2f} ({100 * (price / bp - 1):+.1f}%)"
                         f" · not a breakout yet: that alert comes when it trades over ${bp:.2f} at a check · {chg:+.1f}% · vol {rv:.1f}x"
@@ -239,6 +242,23 @@ def opening_range_high(sym):
         t0 = datetime.datetime.fromtimestamp(res["timestamp"][0], NY)
         hi = res["indicators"]["quote"][0]["high"][0]
         return round(hi, 2) if hi and (t0.hour, t0.minute) == (9, 30) else None
+    except Exception:
+        return None
+
+
+def chart_high_today(sym):
+    """today's high from 9:30 on, from Yahoo's 1-minute chart (its prices are today's, unlike the quote's day high in
+    the first minutes), or None"""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=1d&interval=1m"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            res = json.load(r)["chart"]["result"][0]
+        today = datetime.datetime.now(NY).date()
+        his = [h for t, h in zip(res.get("timestamp") or [], res["indicators"]["quote"][0].get("high") or [])
+               if h and datetime.datetime.fromtimestamp(t, NY).date() == today and datetime.datetime.fromtimestamp(t, NY).hour * 60
+               + datetime.datetime.fromtimestamp(t, NY).minute >= 570]
+        return round(max(his), 4) if his else None
     except Exception:
         return None
 
@@ -293,6 +313,13 @@ def main():
             + [(a[0], None, None, None, None) for a in new[MAX_PER_RUN - 1:]]
     new += quiet
     for key, title, msg, prio, tvs in new:
+        if title is not None and key.endswith(":touch"):
+            # only when today's 1-minute chart shows the trade over the buy point (the quote's day high can be yesterday's)
+            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
+            ch = chart_high_today(key.split(":")[0])
+            if not (ch and r_.get("buy_point") and ch > r_["buy_point"]):
+                print(f"{key}: not confirmed by today's chart (high {ch}), not sent")
+                continue
         if title is not None and key.endswith((":catalyst", ":basebreak", ":pop")):
             # your entry: over the first 5 minutes' high, or a retest of it
             orh, q = opening_range_high(key.split(":")[0]), live["rows"].get(key.split(":")[0])
