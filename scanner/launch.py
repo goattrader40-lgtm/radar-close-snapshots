@@ -680,7 +680,7 @@ def follow(a, i0, i, pick=False):
     elif c[i] > lvl:                                       # closing above what the leg broke out of (ANF: never over
         stage = f"Running (leg {leg}), {100 * (c[i] / lvl - 1):.0f}% over {lvl:.2f}"   # the Aug 26 high until Oct 19)
     else:
-        stage = f"In the base, day {i - last_leg + 1}, {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}"
+        stage = f"In the base, day {i - last_new + 1}, {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}"   # from the day of that high
     return dict(
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo,
         # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
