@@ -487,13 +487,16 @@ def follow(a, i0, i, pick=False):
     # retest held, at the close: within 20 sessions of a breakout, while it hasn't closed an ADR under the level, the
     # low comes back to the level (from a quarter ADR over it to an ADR under it) and the close holds above it; once per
     # pullback (ANF Oct 23 2026: low 152.73, close 155.82 over 153.41; SPOT Oct 28: low 536.74, close 538.40 over 536.98).
-    # It has to be a pullback: the stock first ran an ADR+ over the level (RPD Oct 26 2026 opened at its level and ran 20%:
-    # the confirmation, no retest). Confluence: the 10, 21 or 50 EMA at the level too (within an ADR of it), the low
+    # It has to be a pullback (RPD Oct 26 2026 opened at its level and ran 20%: the confirmation, no retest). Confluence: the 10, 21 or 50 EMA at the level too (within an ADR of it), the low
     # at it and the close above it (SPOT: the 21 EMA $536.18)
     def retest_on(k):
         ak = _adr(st, k)
-        ok = bool(rlv and 1 <= k - rlv[0] <= L["retest_days"] and c[k] > rlv[1] and rlv[1] * (1 - ak / 100) <= st.l[k] <= rlv[1] * (1 + ak / 400)
-                  and st.h[rlv[0]:k].max() >= rlv[1] * (1 + ak / 100))
+        # 3+ sessions after the breakout (a dip in the first two is the breakout settling at the base high, not a
+        # retest: GMAB Sep 24 2026), a real pullback (the low 1.5+ ADRs under the high since the breakout: drifting at
+        # the base high is consolidating, GMAB Sep 23 - Oct 1), the low from a quarter ADR over the level to 1.5 ADRs
+        # under it (undercut and reclaim: GMAB Oct 2, from 35.90 down to 33.72 under 34.63, closed 34.75)
+        ok = bool(rlv and 3 <= k - rlv[0] <= L["retest_days"] and c[k] > rlv[1] and rlv[1] * (1 - 1.5 * ak / 100) <= st.l[k] <= rlv[1] * (1 + ak / 400)
+                  and st.l[k] <= st.h[rlv[0]:k].max() * (1 - 1.5 * ak / 100))
         conf = [n for n, e in (("10 EMA", a.e10), ("21 EMA", a.e21), ("50 EMA", a.e50))
                 if ok and abs(e[k] - rlv[1]) <= ak / 100 * rlv[1] and st.l[k] <= e[k] * (1 + ak / 400) and c[k] > e[k]]
         return ok, conf
@@ -502,7 +505,8 @@ def follow(a, i0, i, pick=False):
     retest = held and hit(i) and not any(hit(k) for k in range(rlv[0] + 1, i))      # one retest per breakout
     retest_ema = retest_on(i)[1] if retest else []
     # tomorrow's zone, for the heads-up during the day (the buy alert itself waits for the close)
-    zone = [fnum(rlv[1] * (1 - adr / 100)), fnum(rlv[1] * (1 + adr / 400))] if held and c[i] > rlv[1] and i - rlv[0] < L["retest_days"] else None
+    zone = [fnum(rlv[1] * (1 - 1.5 * adr / 100)), fnum(rlv[1] * (1 + adr / 400))] \
+        if held and 2 <= i - rlv[0] < L["retest_days"] and not any(hit(k) for k in range(rlv[0] + 1, i + 1)) else None
     # tight under the buy point (a level: a base top or a pattern's pivot, not a falling flag line): closes within an
     # ADR under it, each day's move under half an ADR and its body half an ADR or less, 2+ days in a row (ANF Oct 15-16
     # 2026: 2.1% and 1.3% under its 155.22 base top, +1.5% and +0.8%, bodies 0.00 and 0.05 ADR; broke out Oct 19)
