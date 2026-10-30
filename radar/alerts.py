@@ -220,10 +220,11 @@ def find(live, doc, now=None):
                             f" · the buy: at the close, if it holds over ${lvb:.2f}" + tail, "high" if held else "default", tvs))
         # the push out of the 21 EMA with a gap after the retest's touch (push_level = what the open has to clear)
         pl = r.get("push_level")
-        if pl and op and op > pl and price >= pl:
+        if pl and op and r.get("day_open") and op > max(r["day_open"], r["price"]) and price > pl and rv >= 1:
             gap_ = (op / (price / (1 + chg / 100)) - 1) * 100
-            out.append((f"{sym}:push", f"{sym} entry: push out of the 21 EMA with a gap",
-                        f"opened ${op:.2f} ({gap_:+.1f}%) over yesterday's candle and its 10 & 21 EMA (${pl:.2f}), now ${price:.2f}"
+            out.append((f"{sym}:push", f"{sym} entry: push out of the 10 / 21 EMA with a gap",
+                        f"opened ${op:.2f} ({gap_:+.1f}%) over yesterday's candle, now ${price:.2f} over the trigger ${pl:.2f}"
+                        f" (yesterday's candle, its 10 & 21 EMA and the breakout level, all reclaimed)"
                         f" · after the retest of its breakout level ${r.get('retest_level'):.2f} (touched {r.get('retest_tried')})"
                         f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r), "high", tvs))
         bp = r.get("buy_point")
@@ -378,7 +379,10 @@ def main():
             sym_ = key.split(":")[0]
             r_ = next((x for x in doc.get("launches", []) if x["symbol"] == sym_), {})
             lo_ = chart_low_today(sym_)
-            z_, need_ = r_.get("retest_zone") or [0, 0], min(r_.get("retest_need_low") or 0, r_.get("retest_low") or 1e9)
+            # the pullback's new low (undercut and reclaim), or any low in the zone while it tests the level with every close
+            # since the first touch over the 21 EMA (ACN Oct 7 2026)
+            z_ = r_.get("retest_zone") or [0, 0]
+            need_ = min(r_.get("retest_need_low") or 0, 1e9 if r_.get("retest_testing") else (r_.get("retest_low") or 1e9))
             if not (lo_ and z_[0] <= lo_ <= min(z_[1], need_)):       # in the zone, the pullback's new low (undercut and reclaim)
                 print(f"{key}: today's low {lo_} not in the zone {z_} as a new pullback low (under {need_}), not sent")
                 continue
