@@ -5,8 +5,9 @@ launches also split by the longest base they cleared (1, 3 or 6 months).
 
   python3 scanner/probe_catalyst.py --bars BARS.json.gz --stocks radar-data/stocks.json --out OUT.json
 
-Scored like the launch backtest: bought at the launch day's open, stopped under that day's low from the next day,
-otherwise sold on the first close under the 21 EMA; plus ran 20% / 50% (the high before the exit).
+Scored like the launch backtest: bought at the launch day's open (and, apart, at its close: a catalyst day often
+closes under its open), stopped under that day's low from the next day, otherwise sold on the first close under the
+21 EMA; plus ran 20% / 50% (the high before the exit).
 """
 import argparse, datetime, json, os, sys
 import numpy as np
@@ -18,15 +19,19 @@ import launch  # noqa: E402
 L = launch.L
 
 
-def trade(a, i):
+def trade(a, i, at="open"):
     st, c, o, lo = a.st, a.st.c, a.st.o, a.st.l
-    buy, stop = o[i], lo[i]
+    buy, stop = (o if at == "open" else c)[i], lo[i]
     for j in range(i + 1, c.size):
         if lo[j] <= stop:
             return 100 * (min(stop, o[j]) / buy - 1), 100 * (st.h[i:j + 1].max() / buy - 1)
         if c[j] < a.e21[j]:
             return 100 * (c[j] / buy - 1), 100 * (st.h[i:j + 1].max() / buy - 1)
     return None
+
+
+def both(A, keys):
+    return dict(open=summ([trade(A[s], i) for s, i in keys]), close=summ([trade(A[s], i, "close") for s, i in keys]))
 
 
 def summ(rs):
@@ -53,10 +58,10 @@ def main():
     gone = sets[0] - sets[1]
     cat = [(s, i) for s, i in sets[1] if A[s].chg[i] < L["min_chg"] or not A[s].held(i)]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1],
-               current=summ([trade(A[s], i) for s, i in sets[0]]), with_catalyst=summ([trade(A[s], i) for s, i in sets[1]]),
-               catalyst_launches=summ([trade(A[s], i) for s, i in cat]), added=len(new), replaced=len(gone),
-               catalyst_by_base={f"{n} sessions": summ([trade(A[s], i) for s, i in cat if A[s].cleared(i) == n]) for n in launch.BASES},
-               all_by_base={f"{n} sessions": summ([trade(A[s], i) for s, i in sets[1] if A[s].cleared(i) == n]) for n in launch.BASES + (0,)},
+               current=both(A, sets[0]), with_catalyst=both(A, sets[1]), catalyst_launches=both(A, cat), added=len(new), replaced=len(gone),
+               replaced_launches=both(A, gone),
+               catalyst_by_base={f"{n} sessions": both(A, [(s, i) for s, i in cat if A[s].cleared(i) == n]) for n in launch.BASES},
+               all_by_base={f"{n} sessions": both(A, [(s, i) for s, i in sets[1] if A[s].cleared(i) == n]) for n in launch.BASES + (0,)},
                examples=sorted((A[s].st.dates[i], s, round(float(A[s].gap[i]), 1), round(float(A[s].chg[i]), 1), round(float(A[s].rv[i]), 1), A[s].cleared(i)) for s, i in cat)[-25:])
     json.dump(out, open(a_.out, "w"), indent=1)
     print(json.dumps(out, indent=1))
