@@ -143,6 +143,7 @@ def buy_points(A, keys):
                      r20=100 * (c[j + 20] / e - 1) if j + 20 < n else None)
             out[kind].append(r)
             out["all"].append(r)
+            out[kind + (", 1x+ volume" if a.rv[j] >= 1 else ", volume under 1x")].append(r)
             m += 1
         per.append(m)
     res = {}
