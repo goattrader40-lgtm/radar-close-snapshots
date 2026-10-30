@@ -80,7 +80,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=0, thru_base_adr=2, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, thru_base_adr=2, retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -321,6 +321,13 @@ def flag_at(a, i):
     return t, depth, h[t] + slope * (i - t), h[t] + slope * (i + 1 - t)
 
 
+def surfing(a, t, j):
+    """days from t+1 to j closing within an ADR of both the 10 and 21 EMA: the flag consolidating at its EMAs (SMCI
+    Jun 16-27 2023: 7 days, then the Jun 28 break of its line; ACN Oct 23-28 2026: none, it fell and bounced)"""
+    st, c = a.st, a.st.c
+    return sum(1 for k in range(t + 1, j + 1) if abs(c[k] / a.e10[k] - 1) * 100 <= _adr(st, k) and abs(c[k] / a.e21[k] - 1) * 100 <= _adr(st, k))
+
+
 def base_top(a, j, span=120):
     """the top of the base a breakout on day j clears: the highest high of the previous `span` sessions (120 = the
     larger base, ~6 months; 40 = the smaller one, ~2 months), leaving out the last 3 (the push into it), and how
@@ -471,9 +478,11 @@ def follow(a, i0, i, pick=False):
         # (ANF Sep 16 2026: 5% past its Aug 26 launch close; Oct 5, after the volume dried up, your entry in the base)
         at_highs = bool(f and st.h[f[0]] >= st.h[max(0, f[0] - 120):f[0] + 1].max()
                         and st.h[f[0]] >= c[last_leg] * (1 + L["flag_run_adr"] * _adr(st, last_leg) / 100))
-        # off (flag_legs=0): a break of the falling line inside the base is no breakout and no new leg; the leg comes with
-        # the close over the base's top (ACN Oct 29 2026, 5 sessions after its Oct 22 high 259.39: still leg 2)
-        flag_go = bool(L["flag_legs"] and f and at_highs and f[0] not in used and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2])
+        # the flag buy: pulled back from the high, consolidating at the 10 / 21 EMA (3+ days surfing them), then the close
+        # over its falling line and the 10 & 21 EMA: a new leg (SMCI Jun 28 2023, its 3rd leg). Without the surfing it
+        # is no flag (ACN Oct 29 2026, a drop and bounce under its Oct 22 high 259.39: still leg 2)
+        flag_go = bool(L["flag_legs"] and f and at_highs and f[0] not in used and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2]
+                       and surfing(a, f[0], j - 1) >= L["flag_surf"] and c[j] > a.e10[j] and c[j] > a.e21[j])
         b = base_breakout(a, j, used)
         # the follow-through of a weak breakout, within 3 sessions: it gaps up over the day before's close, trades all
         # day over the top and closes half an ADR+ over it: the new leg starts here (ACN Oct 16 2026 closed 0.2 ADR over
@@ -497,7 +506,7 @@ def follow(a, i0, i, pick=False):
             weak = bool(b and not flag_go and c[j] < b[0] * (1 + L["leg_decisive"] * _adr(st, j) / 100))
             # its follow-through can start the leg only out of a real base, 2+ ADRs deep (ACN's after its Oct 1 2026
             # launch: 11 sessions, 4 ADRs; GMAB's Aug 10-13 dip, 1.7 ADRs, was a pause: Aug 17 stayed in leg 1)
-            deep = 100 * (1 - st.l[b[1] + 1:j].min() / b[0]) / _adr(st, b[1]) if j > b[1] + 1 else 0.0
+            deep = 100 * (1 - st.l[b[1] + 1:j].min() / b[0]) / _adr(st, b[1]) if weak and j > b[1] + 1 else 0.0
             weak_bo = (j, b[0]) if weak and deep >= L["thru_base_adr"] else None
             if not weak and (leg == 0 or j - last_leg >= L["leg_pause"]):  # breakouts a few days apart (Oct 22 / Oct 23) are one leg
                 # after a rest of 40+ sessions without a new high, the breakout starts a new run: leg 1 again
@@ -514,7 +523,7 @@ def follow(a, i0, i, pick=False):
     # base right after a launch is none (ANF Sep 2026: under the Aug 26 gap day's high the whole time, one structure)
     flag_leg = bool(fl and st.h[fl[0]] >= st.h[max(0, fl[0] - 120):fl[0] + 1].max()
                     and st.h[fl[0]] >= c[last_leg] * (1 + L["flag_run_adr"] * _adr(st, last_leg) / 100))
-    if not flag_leg or not L["flag_legs"]:
+    if not flag_leg or not L["flag_legs"] or surfing(a, fl[0], i) < L["flag_surf"]:
         fl = None
     flag_bo = flag_day == i
     # tomorrow's base tops (the smaller and the larger base): buy points when above today's close
