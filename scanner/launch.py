@@ -766,7 +766,14 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None)
         kept = {(d[0], d[1]): d[2] for d in json.load(open(out_path)).get("catalyst_days", [])}
     except Exception:
         kept = {}
-    tags = {**kept, **{(s, d): "earnings" for s, d in (earnings or {}).items()}, **{k: "news " + v for k, v in (news or {}).items()}}
+    tags = dict(kept)
+    for s, d in (earnings or {}).items():
+        a = A.get(s)
+        if a is not None and d in a.st.dates[-200:]:
+            k = a.st.dates.index(d)
+            for m in range(k, min(k + 2, len(a.st.dates))):    # and the session after: GMAB raised its guidance at 3:52 PM
+                tags[(s, a.st.dates[m])] = "earnings"           # on Aug 6 2026, the gap came Aug 7
+    tags.update({k: "news " + v for k, v in (news or {}).items()})
     CATALYST_DAYS.clear()
     for (s, d), w in tags.items():
         a = A.get(s)

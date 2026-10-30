@@ -7,7 +7,7 @@ only a break of the 5-minute opening range high.
   python3 scanner/probe_catalyst.py --bars BARS.json.gz --stocks radar-data/stocks.json --out OUT.json
   (needs ALPACA_KEY_ID / ALPACA_SECRET: the news headlines and the launch days' 5-minute bars)
 
-  news        Alpaca's news (Benzinga) from the prior session's close to 9:30 that morning, about the company
+  news        Alpaca's news (Benzinga) from the prior session's last hour to 9:30 that morning, about the company
               itself (3 symbols or fewer, not a movers list or a "why it's moving" story); "earnings" when the
               headline is about results / guidance. The live scanner uses your earnings and news tags instead (2
               years of those don't exist)
@@ -50,8 +50,9 @@ def get(url, q):
 
 
 def news_on(s, d, p):
-    """(what, headline) for the company's own news from session p's close to 9:30 on d, or None"""
-    t0 = datetime.datetime.fromisoformat(p + "T16:00").replace(tzinfo=NY)
+    """(what, headline) for the company's own news from session p's last hour (GMAB's guidance raise came at 3:52 PM on
+    Aug 6 2026, the gap Aug 7) to 9:30 on d, or None"""
+    t0 = datetime.datetime.fromisoformat(p + "T15:00").replace(tzinfo=NY)
     t1 = datetime.datetime.fromisoformat(d + "T09:30").replace(tzinfo=NY)
     res = get("https://data.alpaca.markets/v1beta1/news", {"symbols": alp(s), "start": iso(t0), "end": iso(t1), "limit": 50, "sort": "asc"})
     own = [n for n in res.get("news", []) if len(n.get("symbols", [])) <= 3 and not GENERIC.search(n.get("headline", ""))]
