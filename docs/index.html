@@ -1844,14 +1844,14 @@ defCalc('industry_perf', {
         if (op && op > bp && price >= bp) out.push([r.symbol + ':pop', r.symbol + ' entry in base: the pop out of the consolidation',
           'opened ' + fPrice(op) + ' (' + f1(gap) + ') above yesterday\'s tight candle and the rising 10 & 21 EMA, now ' + fPrice(price) + ' · ' + f1(chg) + vol + ' · after its resting time (volume dried up, surfing the 10 & 21 EMA) · an entry inside the base (still leg ' + nxt + ')', r.tv]);
         if (op && op > bp && price >= bp) return;
-      } else if (bp && (r.price || 0) <= bp && rv >= 1) {
-        if (price > bp) {
+      } else if (bp && (r.price || 0) <= bp) {
+        if (price > bp) {          /* whatever the volume: the alert shows it, and says when it is light (ATRC Aug 7 2026) */
           /* graded from 2 years of breakouts: early (1st / 2nd, within 50 sessions of the launch), theme leading, volume building */
           const early = (r.breakouts || 0) < 2 && (r.sessions || 0) + 1 < 50, lead = r.group_status_now === 'Leading', build = (r.vol_build || 0) >= 1.1;
           const g = early && lead && build ? 'A' : early && (lead || build) ? 'B' : 'C';
           const why = (early ? (r.breakouts ? '2nd' : '1st') + ' breakout since the launch' : 'late (3rd+ breakout or 50+ sessions on)') + ', theme ' + (lead ? 'leading' : (r.group_status_now || 'none').toLowerCase()) + (build ? ', volume building' : '');
           out.push([r.symbol + ':breakout', r.symbol + ' ' + g + ' breakout: ' + (r.pattern && !r.pattern.startsWith('Base forming') ? r.pattern : 'base'),
-            fPrice(price) + ' over ' + fPrice(bp) + (r.buy_point_top_date ? ' (top set ' + fDate(r.buy_point_top_date).replace(/, \d{4}$/, '') + ')' : '') + ' · ' + why + ' · ' + f1(chg) + vol + ' · leg ' + nxt + (nxt >= 4 ? ' (late)' : ''), r.tv]);
+            fPrice(price) + ' over ' + fPrice(bp) + (r.buy_point_top_date ? ' (top set ' + fDate(r.buy_point_top_date).replace(/, \d{4}$/, '') + ')' : '') + ' · ' + why + ' · ' + f1(chg) + vol + (rv < 1 ? ' (light)' : '') + ' · leg ' + nxt + (nxt >= 4 ? ' (late)' : ''), r.tv]);
           return;
         }
         /* heads-up: a real gap up (2%+) on volume (1.2x+ for the time of day), within 2% under the buy point */

@@ -23,7 +23,8 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               above the 200 SMA, and the day before at most 28% over it. A faded high-volume gap that held its
               base (a delayed launch) gets that day's volume and gap.
   breakout    a launch being followed clears its buy point (the nearest of: your MSF pattern's pivot, the flag
-              trendline, the smaller or the larger base's top) with volume running at 1x+ normal for the time of day,
+              trendline, the smaller or the larger base's top), whatever the volume: the alert shows the volume pace
+              for the time of day and says when it is light (ATRC Aug 7 2026 over 41.29 on 0.6x, Oct 29 over 61.70),
               after closing under it the day before; graded from 2 years of data (grade_breakout): A = an early
               breakout (1st / 2nd, within 50 sessions of the launch) in a leading theme with volume building before,
               B = early plus one of those, C = the rest
@@ -250,7 +251,7 @@ def find(live, doc, now=None):
                         f"traded up to ${hi:.2f} today, over the buy point ${bp:.2f}, now ${price:.2f} ({100 * (price / bp - 1):+.1f}%)"
                         f" · not a breakout yet: that alert comes when it trades over ${bp:.2f} at a check · {chg:+.1f}% · vol {rv:.1f}x"
                         + since(r), "default", tvs))
-        if not bp or (r.get("price") or 0) > bp or not (price > bp and rv >= 1):
+        if not bp or (r.get("price") or 0) > bp or not price > bp:
             if confirm:
                 out.append(confirm)                   # a new breakout the same day says more than the confirmation
             continue
@@ -266,7 +267,8 @@ def find(live, doc, now=None):
                         and op > max(r["day_open"], r["price"], r["ema10"], r["ema21"]))
             why += " · also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle)" if push else ""
             out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
-                        f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x · "
+                        f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x for the time of day"
+                        + (" (light)" if rv < 1 else "") + " · "
                         + f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "") + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
                         + since(r), "high" if g == "A" else "default", tvs))
     return out
