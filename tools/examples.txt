@@ -1,0 +1,18 @@
+# The user's agreed examples: symbol, first day (the launch or the pick), last day, launch|pick.
+# tools/replay.py --regress replays them and compares with tools/expected_reads.txt.
+GMAB 2026-08-07 2026-10-30 launch
+ANF  2026-08-03 2026-10-30 launch
+ANF  2026-08-26 2026-10-30 launch
+RPD  2026-09-14 2026-10-30 launch
+SPOT 2026-10-22 2026-10-30 launch
+ACN  2026-10-01 2026-10-30 launch
+SMCI 2023-05-03 2023-08-14 launch
+ATRC 2026-07-24 2026-10-30 launch
+CAI  2026-08-07 2026-10-30 launch
+NTSK 2026-09-14 2026-10-30 launch
+APPN 2026-08-07 2026-10-30 launch
+VEEV 2026-08-07 2026-10-30 launch
+ZS   2026-09-14 2026-10-30 launch
+ARM  2026-03-25 2026-05-29 pick
+TTAN 2026-10-15 2026-10-30 pick
+LIFE 2026-10-01 2026-10-30 pick   # the user agreed its Oct 30 flag (44.81); Oct 8, 20, 21 not reviewed yet
