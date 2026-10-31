@@ -1,0 +1,38 @@
+{
+ "now": "2026-10-26T16:06:31.829324-04:00",
+ "SNDK": {
+  "today_vol": 6452497,
+  "avg20_daily": 8075741,
+  "days": 20
+ },
+ "LITE": {
+  "today_vol": 5920963,
+  "avg20_daily": 4914164,
+  "days": 20
+ },
+ "MXL": {
+  "today_vol": 3188475,
+  "avg20_daily": 3487077,
+  "days": 20
+ },
+ "INTC": {
+  "today_vol": 96645938,
+  "avg20_daily": 98064912,
+  "days": 20
+ },
+ "AMD": {
+  "today_vol": 15850523,
+  "avg20_daily": 19528872,
+  "days": 20
+ },
+ "NVDA": {
+  "today_vol": 86355479,
+  "avg20_daily": 106247357,
+  "days": 20
+ },
+ "CRWD": {
+  "today_vol": 7502742,
+  "avg20_daily": 8626678,
+  "days": 20
+ }
+}

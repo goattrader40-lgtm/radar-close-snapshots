@@ -1,0 +1,101 @@
+{
+ "date": "2026-10-30",
+ "sent": [
+  "ACN:breakout",
+  "ACN:touch",
+  "CPRI:basebreak",
+  "CPRI:catalyst",
+  "CPRI:early",
+  "CPRI:launch",
+  "CPRI:power",
+  "HZO:breakout",
+  "HZO:touch",
+  "MANH:breakout",
+  "MHK:early",
+  "MHK:launch"
+ ],
+ "items": [
+  {
+   "key": "CPRI:early",
+   "time": "09:31",
+   "title": "CPRI EARLY: catalyst gap on earnings",
+   "msg": "gap +9.6% \u00b7 $18.11 (+12.8%) \u00b7 was under its 200 SMA, now above the 50 EMA & 200 SMA \u00b7 base high $16.76 cleared \u00b7 vol 81.9x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (3x+) \u00b7 theme Apparel & Luxury Goods (leading)",
+   "tv": "NYSE:CPRI"
+  },
+  {
+   "key": "MHK:early",
+   "time": "09:31",
+   "title": "MHK EARLY: launch gap on earnings",
+   "msg": "gap +7.3% \u00b7 $140.88 (+8.2%) \u00b7 base high $132.41 cleared \u00b7 vol 7.5x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (3x+) \u00b7 theme Household Durables (turning up)",
+   "tv": "NYSE:MHK"
+  },
+  {
+   "key": "CPRI:catalyst",
+   "time": "09:35",
+   "title": "CPRI CATALYST GAP: earnings, over its 50 EMA & 200 SMA",
+   "msg": "+18.5% \u00b7 gap +9.6% \u00b7 vol 30.2x for the time of day \u00b7 $19.02 \u00b7 was under its 200 SMA, now above the 50 EMA & 200 SMA \u00b7 33% under its 52-week high ($28.27), after a 44% correction \u00b7 base high $16.76 cleared (grade so far A+) \u00b7 theme Apparel & Luxury Goods (leading) \u00b7 5-min opening range high $19.14: not cleared yet",
+   "tv": "NYSE:CPRI"
+  },
+  {
+   "key": "MANH:breakout",
+   "time": "09:35",
+   "title": "MANH C breakout: Base top",
+   "msg": "$244.89 over the base top $242.63 (set 2026-10-23; nothing traded above it for 257 sessions) \u00b7 late (3rd+ breakout or 50+ sessions on), theme turning up, volume building \u00b7 +1.7% \u00b7 vol 3.3x \u00b7 would be leg 3 \u00b7 theme Software (turning up) \u00b7 launched 2026-07-29 (A)",
+   "tv": "NASDAQ:MANH"
+  },
+  {
+   "key": "MHK:launch",
+   "time": "09:36",
+   "title": "MHK A launch",
+   "msg": "+6.4% \u00b7 gap +7.3% \u00b7 vol 3.0x for the time of day \u00b7 EARNINGS \u00b7 $138.64 through its base high $132.41 \u00b7 theme Household Durables (turning up)",
+   "tv": "NYSE:MHK"
+  },
+  {
+   "key": "ACN:breakout",
+   "time": "12:30",
+   "title": "ACN B breakout: Base top",
+   "msg": "$259.69 over the base top $259.39 (set 2026-10-22; nothing traded above it for 187 sessions) \u00b7 2nd breakout since the launch, theme leading \u00b7 +5.0% \u00b7 vol 1.0x \u00b7 would be leg 3 \u00b7 theme IT Services & Consulting (leading) \u00b7 launched 2026-10-01 (A+)",
+   "tv": "NYSE:ACN"
+  },
+  {
+   "key": "CPRI:power",
+   "time": "12:45",
+   "title": "CPRI POWER DAY on earnings",
+   "msg": "+16.3% \u00b7 gap +10.5% \u00b7 vol 5.0x for the time of day \u00b7 $18.67 \u00b7 was under its 200 SMA, now above the 50 EMA & 200 SMA \u00b7 34% under its 52-week high ($28.27), after a 44% correction \u00b7 theme Apparel & Luxury Goods (leading)",
+   "tv": "NYSE:CPRI"
+  },
+  {
+   "key": "ACN:touch",
+   "time": "12:45",
+   "title": "ACN touched its buy point, back under",
+   "msg": "traded up to $260.41 today, over the buy point $259.39, now $259.21 (-0.1%) \u00b7 not a breakout yet: that alert comes when it trades over $259.39 at a check \u00b7 +4.8% \u00b7 vol 1.1x \u00b7 launched 2026-10-01 (A+)",
+   "tv": "NYSE:ACN"
+  },
+  {
+   "key": "HZO:touch",
+   "time": "15:59",
+   "title": "HZO touched its buy point, back under",
+   "msg": "traded up to $52.67 today, over the buy point $52.65, now $52.65 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $52.65 at a check \u00b7 +0.1% \u00b7 vol 1.2x \u00b7 launched 2026-08-10 (A)",
+   "tv": "NYSE:HZO"
+  },
+  {
+   "key": "HZO:breakout",
+   "time": "16:00",
+   "title": "HZO C breakout: Base top",
+   "msg": "$52.72 over the base top $52.65 (set 2026-10-22; nothing traded above it for 258 sessions) \u00b7 late (3rd+ breakout or 50+ sessions on), theme leading \u00b7 +0.2% \u00b7 vol 1.3x \u00b7 would be leg 2 \u00b7 theme Specialty Retail (leading) \u00b7 launched 2026-08-10 (A)",
+   "tv": "NYSE:HZO"
+  }
+ ],
+ "log": [
+  "09:31 CPRI EARLY: catalyst gap on earnings: gap +9.6% \u00b7 $18.11 (+12.8%) \u00b7 was under its 200 SMA, now above the 50 EMA & 200 SMA \u00b7 base high $16.76 cleared \u00b7 vol 81.9x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (3x+) \u00b7 theme Apparel & Luxury Goods (leading)",
+  "09:31 MHK EARLY: launch gap on earnings: gap +7.3% \u00b7 $140.88 (+8.2%) \u00b7 base high $132.41 cleared \u00b7 vol 7.5x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (3x+) \u00b7 theme Household Durables (turning up)",
+  "09:35 CPRI CATALYST GAP: earnings, over its 50 EMA & 200 SMA: +18.5% \u00b7 gap +9.6% \u00b7 vol 30.2x for the time of day \u00b7 $19.02 \u00b7 was under its 200 SMA, now above the 50 EMA & 200 SMA \u00b7 33% under its 52-week high ($28.27), after a 44% correction \u00b7 base high $16.76 cleared (grade so far A+) \u00b7 theme Apparel & Luxury Goods (leading) \u00b7 5-min opening range high $19.14: not cleared yet",
+  "09:35 MANH C breakout: Base top: $244.89 over the base top $242.63 (set 2026-10-23; nothing traded above it for 257 sessions) \u00b7 late (3rd+ breakout or 50+ sessions on), theme turning up, volume building \u00b7 +1.7% \u00b7 vol 3.3x \u00b7 would be leg 3 \u00b7 theme Software (turning up) \u00b7 launched 2026-07-29 (A)",
+  "09:36 MHK A launch: +6.4% \u00b7 gap +7.3% \u00b7 vol 3.0x for the time of day \u00b7 EARNINGS \u00b7 $138.64 through its base high $132.41 \u00b7 theme Household Durables (turning up)",
+  "12:30 ACN B breakout: Base top: $259.69 over the base top $259.39 (set 2026-10-22; nothing traded above it for 187 sessions) \u00b7 2nd breakout since the launch, theme leading \u00b7 +5.0% \u00b7 vol 1.0x \u00b7 would be leg 3 \u00b7 theme IT Services & Consulting (leading) \u00b7 launched 2026-10-01 (A+)",
+  "12:45 CPRI POWER DAY on earnings: +16.3% \u00b7 gap +10.5% \u00b7 vol 5.0x for the time of day \u00b7 $18.67 \u00b7 was under its 200 SMA, now above the 50 EMA & 200 SMA \u00b7 34% under its 52-week high ($28.27), after a 44% correction \u00b7 theme Apparel & Luxury Goods (leading)",
+  "12:45 ACN touched its buy point, back under: traded up to $260.41 today, over the buy point $259.39, now $259.21 (-0.1%) \u00b7 not a breakout yet: that alert comes when it trades over $259.39 at a check \u00b7 +4.8% \u00b7 vol 1.1x \u00b7 launched 2026-10-01 (A+)",
+  "15:59 HZO touched its buy point, back under: traded up to $52.67 today, over the buy point $52.65, now $52.65 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $52.65 at a check \u00b7 +0.1% \u00b7 vol 1.2x \u00b7 launched 2026-08-10 (A)",
+  "16:00 HZO C breakout: Base top: $52.72 over the base top $52.65 (set 2026-10-22; nothing traded above it for 258 sessions) \u00b7 late (3rd+ breakout or 50+ sessions on), theme leading \u00b7 +0.2% \u00b7 vol 1.3x \u00b7 would be leg 2 \u00b7 theme Specialty Retail (leading) \u00b7 launched 2026-08-10 (A)"
+ ]
+}
