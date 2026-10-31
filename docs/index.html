@@ -493,6 +493,7 @@
         <button class="tgr-lite" id="wl-dl" type="button">Download for TradingView</button>
       </div>
       <p class="tgr-note" id="wl-note"></p>
+      <div class="tgr-note" id="wl-rules"></div>
       <details class="tgr-legend" id="wl-legend">
         <summary>How the grade works</summary>
         <p>The grade is your setup scanner's (MSF engine), set after each close. It grades the trend and the last pullback, not the day's move or volume.</p>
@@ -1527,6 +1528,39 @@ defCalc('industry_perf', {
         away: num(r.buy_point) && price ? r2((num(r.buy_point) / price - 1) * 100) : null });
     });
   };
+  /* what puts a stock on the selected list and what takes it off, from the scanner's own settings (setups/latest.json);
+     the defaults are today's settings, for a file written before the settings were saved in it */
+  const wlRules = (list, set) => {
+    const X = Object.assign({ 'EP-GAPUP-BREAKOUT': { gap_pct: 5, rel_vol: 2.5 }, 'HOTTEST STOCKS': { chg_pct: 4, rel_vol: 1 }, '50 EMA FIRST CLOSE': { closes_below_before: 2 },
+      'MOMENTUM-1W': { perf_pct: 10 }, 'MOMENTUM-1M': { perf_pct: 25 }, 'MOMENTUM-3M': { perf_pct: 50 }, 'MOMENTUM-6M': { perf_pct: 50, above_sma200: true, min_pct_above_52w_low: 50 },
+      'DAILY TIGHTNESS': { min_pct_above_52w_low: 40, max_pct_below_52w_high: 30, vol_below_avg30_pct: 20, range_vs_avg10_max: 0.8, min_tight_days: 3, within_last_days: 5 },
+      'PULLBACK TO 21EMA-MAIN': { max_above_ema_pct: 3 }, 'PULLBACK TO 50EMA': { max_above_ema_pct: 3 } }, (set && set.screeners) || {});
+    const S0 = Object.assign({ min_price: 10, min_mcap: 7e8, min_avg_vol_30d: 700000, min_dollar_vol_30d_millions: 20, min_adr: 4, above_ema50: true, min_pct_above_52w_low: 30 }, (set && set.standard) || {});
+    const Ls = Object.assign({ delete_after_closes_below_ema50: 2, new_mover_days_without_setup: 15, delete_below_gap_low: false, delete_below_upday_low: true,
+      pool_refresh_weekday: 4, setups_max: 30, setups_need_above_sma200: true }, (set && set.lists) || {});
+    const day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'][Ls.pool_refresh_weekday] || 'week';
+    const nb = Ls.delete_after_closes_below_ema50, nd = Ls.new_mover_days_without_setup;
+    const T = X['DAILY TIGHTNESS'], M6 = X['MOMENTUM-6M'];
+    const R = {
+      '1-EP/GAP': ['a gap up of more than ' + X['EP-GAPUP-BREAKOUT'].gap_pct + '% at the open with relative volume ' + X['EP-GAPUP-BREAKOUT'].rel_vol + '× or more. No 200 SMA rule. Section = the gap day (a new gap moves it to the newer section).',
+        nb + ' closes in a row below the 50 EMA' + (Ls.delete_below_gap_low ? ', a close below the gap day\'s low' : '') + ', or ' + nd + ' trading days without reaching 3-SETUPS.'],
+      '1-UPDAY': ['up ' + X['HOTTEST STOCKS'].chg_pct + '% or more on the day with relative volume ' + X['HOTTEST STOCKS'].rel_vol + '× or more. No 200 SMA rule. Section = the up day.',
+        nb + ' closes in a row below the 50 EMA' + (Ls.delete_below_upday_low ? ', a close below the up day\'s low' : '') + ', or ' + nd + ' trading days without reaching 3-SETUPS.'],
+      '2-POOL': ['a first close back above the 50 EMA after ' + X['50 EMA FIRST CLOSE'].closes_below_before + '+ closes below it (section "50 EMA reclaim"), or, refreshed every ' + day +
+        ', the momentum leaders: up ' + X['MOMENTUM-1W'].perf_pct + '%+ in a week, ' + X['MOMENTUM-1M'].perf_pct + '%+ in a month, ' + X['MOMENTUM-3M'].perf_pct + '%+ in 3 months or ' +
+        M6.perf_pct + '%+ in 6 months' + (M6.above_sma200 ? ' (that one also above the 200 SMA' + (M6.min_pct_above_52w_low ? ' and ' + M6.min_pct_above_52w_low + '%+ over its 52-week low' : '') + ')' : '') + ' (section "Momentum").',
+        nb + ' closes in a row below the 50 EMA; at the ' + day + ' refresh, a close below the 200 SMA or no longer liquid.'],
+      '3-SETUPS': ['a name from the other three lists' + (Ls.setups_need_above_sma200 ? ', above the 200 SMA,' : '') + ' in a setup: Tight (today a tight day and ' + T.min_tight_days + ' of the last ' + T.within_last_days +
+        ': volume ' + T.vol_below_avg30_pct + '%+ under its 30-day average' + (T.range_vs_avg10_max ? ' and a range at most ' + T.range_vs_avg10_max + '× the 10-day average' : '') + '; ' + T.min_pct_above_52w_low +
+        '%+ over the 52-week low, within ' + T.max_pct_below_52w_high + '% of the 52-week high), a 21 EMA pullback (within ' + X['PULLBACK TO 21EMA-MAIN'].max_above_ema_pct +
+        '% above the 21 EMA, the 21 EMA over the 50 EMA) or a 50 EMA pullback (within ' + X['PULLBACK TO 50EMA'].max_above_ema_pct + '% above the 50 EMA, the 21 EMA over the 50 EMA). Section = the setup.',
+        nb + ' closes in a row below the 50 EMA' + (Ls.setups_need_above_sma200 ? ' or a close below the 200 SMA' : '') + '; every ' + day + ' the list is trimmed to the best ' + Ls.setups_max + '.'],
+    }[list];
+    if (!R) return null;
+    const every = 'price $' + S0.min_price + '+, market cap $' + Math.round(S0.min_mcap / 1e6) + 'M+, 30-day average volume ' + Math.round(S0.min_avg_vol_30d / 1000) + 'k+ shares and $' +
+      S0.min_dollar_vol_30d_millions + 'M+ a day, ADR ' + S0.min_adr + '%+' + (S0.above_ema50 ? ', a close above the 50 EMA' : '') + (S0.min_pct_above_52w_low ? ', at least ' + S0.min_pct_above_52w_low + '% above the 52-week low' : '') + '.';
+    return [['What puts a stock on ' + list + ': ', R[0]], ['It leaves on: ', R[1]], ['Every list also needs: ', every], ['Grade: ', 'the trend and the last pullback, the same on every list (How the grade works, below).']];
+  };
   const drawWatchlist = (symMap) => {
     const table = $('#wl-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
     setState('wl-table', ['setups']);
@@ -1534,6 +1568,8 @@ defCalc('industry_perf', {
     const all = wlRows(symMap);
     document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
     $('#wl-time').textContent = doc ? 'Scan of the ' + fDate(doc.date) + ' close' : st('setups').status === 'error' ? 'Could not load the lists' : '—';
+    const rules = wlRules(S.wl, doc && doc.settings), rbox = $('#wl-rules');
+    rbox.replaceChildren(...(rules || []).map(([k, v]) => { const p = h('div', ''); p.append(h('strong', '', k), document.createTextNode(v)); return p; }));
     /* section picker */
     const secs = wlSecs(S.wl, all);
     if (S.wlsec && !secs.includes(S.wlsec)) S.wlsec = '';

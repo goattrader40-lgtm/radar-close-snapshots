@@ -290,7 +290,9 @@ def write_outputs(state, stocks, cfg, P, log, d):
     changes = [x for x in log if x["date"] == d]
     doc = dict(date=d, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
                counts={n: len(full[n]) for n in LISTS}, changes_today=changes, lists=full,
-               settings=dict(higher_high_low=cfg["lists"]["setups_higher_high_low"], msf="v29.4" + (" + " + ", ".join(f"{k}={v}" for k, v in cfg["msf"].items() if not k.startswith("_")) if any(not k.startswith("_") for k in cfg["msf"]) else "")))
+               # the rules behind each list, for the portal's "what puts a stock on this list" box
+               settings=dict(standard=cfg["standard"], screeners=cfg["screeners"], lists=cfg["lists"],
+                             higher_high_low=cfg["lists"]["setups_higher_high_low"], msf="v29.4" + (" + " + ", ".join(f"{k}={v}" for k, v in cfg["msf"].items() if not k.startswith("_")) if any(not k.startswith("_") for k in cfg["msf"]) else "")))
     with open(os.path.join(OUT, "latest.json"), "w") as f:
         json.dump(doc, f, indent=1)
     with open(os.path.join(OUT, "history", d + ".json"), "w") as f:   # the day's 3-SETUPS, list sizes and changes
