@@ -80,7 +80,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_days=5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -337,10 +337,18 @@ def flag_run(a, t):
 
 
 def surfing(a, t, j):
-    """days from t+1 to j closing within an ADR of both the 10 and 21 EMA: the flag consolidating at its EMAs (SMCI
-    Jun 16-27 2023: 7 days, then the Jun 28 break of its line; ACN Oct 23-28 2026: none, it fell and bounced)"""
+    """days from t+1 to j closing within an ADR of the 10 or the 21 EMA: the flag consolidating at its EMAs, riding the
+    10 EMA counts (SMCI Jun 16-27 2023, then the Jun 28 break of its line; TTAN Oct 26-29 2026 riding its 10 EMA, the 21
+    EMA 5% under; ACN Oct 23-28 2026: 2 days, it fell and bounced)"""
     st, c = a.st, a.st.c
-    return sum(1 for k in range(t + 1, j + 1) if abs(c[k] / a.e10[k] - 1) * 100 <= _adr(st, k) and abs(c[k] / a.e21[k] - 1) * 100 <= _adr(st, k))
+    return sum(1 for k in range(t + 1, j + 1) if min(abs(c[k] / a.e10[k] - 1), abs(c[k] / a.e21[k] - 1)) * 100 <= _adr(st, k))
+
+
+def lower_highs(a, t, j):
+    """days from t+1 to j making a lower high than the day before: the flag's downward move (3+ needed; TTAN Oct 26-29
+    2026: 87.00, 83.92, 83.82, 81.07 under its Oct 23 high 87.75)"""
+    h = a.st.h
+    return sum(1 for k in range(t + 1, j + 1) if h[k] < h[k - 1])
 
 
 def base_top(a, j, span=120):
@@ -530,11 +538,13 @@ def follow(a, i0, i, pick=False):
             lv = pop_level(a, j - 1)
             if lv and st.o[j] > lv:
                 dry_done, dry_day = True, j
-        f = flag_at(a, j) if armed else None
+        f = flag_at(a, j)               # after any recent high, not only a new high of the run (each flag top once)
         # a flag at the highs, after the leg has run 4+ of the stock's own ADRs from its start (SMCI Jun 2023: 85%,
         # 13 ADRs, then the flag); a trendline break in the base right after a launch is an entry, not a new leg
         # (ANF Sep 16 2026: 5% past its Aug 26 launch close; Oct 5, after the volume dried up, your entry in the base)
-        at_highs = bool(f and st.h[f[0]] >= st.h[max(0, f[0] - 120):f[0] + 1].max() and flag_run(a, f[0]))
+        # a flag after a recent high, at the top of a base or inside a bigger one (TTAN Oct 2026 under its Aug 28 high
+        # 102.95), wedging down: 3+ lower highs, after a run made by the trend
+        at_highs = bool(f and flag_run(a, f[0]) and lower_highs(a, f[0], j - 1) >= L["flag_down_days"])
         # the flag buy: pulled back from the high, consolidating at the 10 / 21 EMA (3+ days surfing them), then the close
         # over its falling line and the 10 & 21 EMA: a new leg (SMCI Jun 28 2023, its 3rd leg). Without the surfing it
         # is no flag (ACN Oct 29 2026, a drop and bounce under its Oct 22 high 259.39: still leg 2)
@@ -586,7 +596,7 @@ def follow(a, i0, i, pick=False):
     fl = flag_at(a, i)
     # a flag is a pattern only at the highs, after the leg ran 4+ ADRs (SMCI Jun 2023); a falling line inside the
     # base right after a launch is none (ANF Sep 2026: under the Aug 26 gap day's high the whole time, one structure)
-    flag_leg = bool(fl and st.h[fl[0]] >= st.h[max(0, fl[0] - 120):fl[0] + 1].max() and flag_run(a, fl[0]))
+    flag_leg = bool(fl and flag_run(a, fl[0]) and lower_highs(a, fl[0], i) >= L["flag_down_days"])
     if not flag_leg or not L["flag_legs"] or surfing(a, fl[0], i) < L["flag_surf"]:
         fl = None
     flag_bo = flag_day == i
