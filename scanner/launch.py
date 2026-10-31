@@ -417,6 +417,18 @@ def base_ok(a, j, span):
     return top, k
 
 
+def reach(a, j, top):
+    """how far back a top on day j reaches: 6, 3 or 1 month(s) (the highest high of the last 120, 63 or 21 sessions,
+    leaving out the last 3), 0 if none. VEEV Oct 9 2026: 291.40 a 1-month high inside its base under 296.24, the
+    6-month high (Aug 27)"""
+    h = a.st.h
+    for span, m in ((120, 6), (63, 3), (21, 1)):
+        lo, hi = max(0, j - span), j - 3
+        if hi > lo and top >= h[lo:hi].max() * 0.999:
+            return m
+    return 0
+
+
 def top_tries(a, i, top, lo):
     """the tries of a base's top up to day i: the high itself is the 1st, then each high within a quarter ADR of the top
     after a pullback of 1.25+ ADRs from it (ARM 2026: 166.69 on Mar 25 and Apr 16, the 3rd try Apr 17; 237.68-239.50 on
@@ -832,11 +844,13 @@ def follow(a, i0, i, pick=False):
         # when it follows through (ATRC Aug 7 2026 0.24%, leg 2 from Aug 11; ARM Apr 17 0.02%, leg 2 from Apr 20)
         ov = (c[i] / bo[1] - 1) * 100 / _adr(st, i)
         pc = 100 * (c[i] / bo[1] - 1)
-        stage = (f"Base breakout (leg {leg}), closed {pc:.1f}% ({ov:.1f} ADR) over the base high {bo[1]:.2f}" if pc > L["caution_pct"] else
+        rm = reach(a, i, bo[1])
+        hi_txt = f"the base high {bo[1]:.2f}" + (f" (a {rm}-month high)" if rm else "")
+        stage = (f"Base breakout (leg {leg}), closed {pc:.1f}% ({ov:.1f} ADR) over {hi_txt}" if pc > L["caution_pct"] else
                  f"Base breakout with caution ({f'leg {leg + 1} if it follows through' if leg == 0 or i - last_leg >= L['leg_pause'] else f'leg {leg}'}): "
-                 f"closed {pc:.2f}% over the base high {bo[1]:.2f}, within {L['caution_pct']}%: not decisive") \
+                 f"closed {pc:.2f}% over {hi_txt}, within {L['caution_pct']}%: not decisive") \
             + (f", on light volume ({a.rv[i]:.2f}x)" if a.rv[i] < 1 else "")
-        kb = bo[2]
+        kb, dbl = bo[2], False
         if i - kb >= 6 and kb not in used_flags:
             # the double breakout: squeezing under a falling line from the base top (the line through its highs, no close
             # over it yet; a flag breakout from that top broke it already: ARM Apr 13 2026, so Apr 17 is no double) with
@@ -847,16 +861,22 @@ def follow(a, i0, i, pick=False):
             mid = kb + (i - kb) // 2
             if sl < 0 and all(c[k] <= st.h[kb] + sl * (k - kb) for k in range(kb + 1, i)) \
                     and st.h[i - 3:i].max() <= st.h[kb] * (1 - 0.1 * _adr(st, i) / 100) and st.l[mid:i].min() > st.l[kb + 1:mid].min():
+                dbl = True
                 stage += (f" · double breakout: also out of the falling line from its {st.dates[kb]} high {st.h[kb]:.2f}, squeezing with higher lows"
                           + (f", gapped up {100 * (st.o[i] / c[i - 1] - 1):.1f}%" if st.o[i] > c[i - 1] else ""))
-                # a bigger base's high right above (VEEV Oct 9 2026: out of the line and its 291.40 inner base, closed
-                # 296.13 at the main base high 296.24 of Aug 27: very close, not out of it yet)
-                mt, mk = base_top(a, i, 120)
-                if mt > bo[1] * 1.001 and mt * (1 - 0.5 * _adr(st, i) / 100) <= c[i] <= mt * (1 + L["caution_pct"] / 100):
-                    stage += (f"; the main base high {mt:.2f} ({st.dates[i - mk]}) right above: closed {c[i]:.2f} under it, not out of it yet"
-                              if c[i] <= mt else
-                              f"; the main base high {mt:.2f} ({st.dates[i - mk]}): closed {100 * (c[i] / mt - 1):.2f}% over it, within "
-                              f"{L['caution_pct']}%: caution")
+        # the main base's high right above (VEEV Oct 9 2026: a double breakout, out of its 1-month base 291.40 and the
+        # falling line from Oct 1; it traded through its 6-month high 296.24 of Aug 27 to 297.45 but closed 296.13 under
+        # it: not out of the main base yet, a close over it would have made it a triple breakout)
+        mt, mk = base_top(a, i, 120)
+        if mt and mt > bo[1] * 1.001 and mt * (1 - 0.5 * _adr(st, i) / 100) <= c[i] <= mt * (1 + L["caution_pct"] / 100):
+            mn = f"the {reach(a, i, mt) or 6}-month high {mt:.2f} ({st.dates[i - mk]})"
+            if c[i] <= mt:
+                stage += (f"; {mn} right above: traded to {st.h[i]:.2f} but closed {c[i]:.2f} under it, not out of it yet ("
+                          + ("a close over it makes it a triple breakout)" if dbl else "a close over it is the main base's breakout)")
+                          if st.h[i] > mt else f"; {mn} right above: closed {c[i]:.2f} under it, not out of it yet")
+            else:
+                stage += (f"; {'a triple breakout: ' if dbl else ''}also over {mn}, closed {100 * (c[i] / mt - 1):.2f}% over it, "
+                          f"within {L['caution_pct']}%: caution")
         tr, up = top_tries(a, i - 1, bo[1], max(i0, i - 60))
         if len(tr) == 2 and up:
             stage += f" · the 3rd try of the top: an ascending triangle (tried {st.dates[tr[0]]} and {st.dates[tr[1]]}, the 2nd pullback shallower)"
