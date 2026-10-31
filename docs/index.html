@@ -848,6 +848,9 @@ defCalc('industry_perf', {
   const fX = (x) => { const v = num(x); return v === null ? '—' : v.toFixed(2) + '×'; };
   const fDate = (s) => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00Z'); return isNaN(d) ? String(s) : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }); };
   const tv = (sym) => 'https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(sym);
+  /* every ticker opens in the same TradingView tab, replacing the last chart (a named tab; without noopener, or the
+     browser opens a new one each time) */
+  const TVTAB = 'radar-chart';
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
   const isG = (r) => !!(S.gset && S.gset.has(r.symbol));
   const fPrice = (x) => { const v = num(x); return v === null ? '—' : '$' + g2.format(v); };
@@ -886,7 +889,7 @@ defCalc('industry_perf', {
     const wrap = h('span', 'tgr-tks');
     String(str || '').split(' ').filter(Boolean).forEach((s, i) => {
       if (i) wrap.append(h('span', 'tgr-sep', ' '));
-      const a = h('a', 'tgr-tk', s); a.href = tv((symMap.get(s) || {}).tv_symbol || s); a.target = '_blank'; a.rel = 'noopener';
+      const a = h('a', 'tgr-tk', s); a.href = tv((symMap.get(s) || {}).tv_symbol || s); a.target = TVTAB;
       wrap.append(a);
     });
     td.append(wrap);
@@ -894,7 +897,7 @@ defCalc('industry_perf', {
   };
   const symbolCell = (r, isExt, fit) => {
     const td = h('td', 'key');
-    const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = '_blank'; a.rel = 'noopener';
+    const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = TVTAB;
     td.append(a);
     if (fit !== undefined) {
       const f = h('span', 'tgr-fit ' + band(fit), fit === null ? 'new' : fit.toFixed(2));
@@ -1035,7 +1038,7 @@ defCalc('industry_perf', {
   const RELATED_ETFS = { 'IT Services': 'software ETF', 'Construction & Engineering': 'infrastructure ETF' };
   const indEtfKind = (ind, etf) => (SECTOR_ETFS.has(etf) ? 'Sector ETF (no industry ETF)' : RELATED_ETFS[ind] ? 'Related ETF (' + RELATED_ETFS[ind] + ', no industry ETF)' : 'Industry ETF');
   const vsOf = (r, etf) => { const e = etf ? etfRow(etf) : null; const v = num(r[pf(S.period)]); return e && v !== null && e['chg_' + S.period] !== null ? r2(v - e['chg_' + S.period]) : null; };
-  const etfLink = (sym) => { const a = h('a', 'tgr-tk', sym); a.href = tv(sym); a.target = '_blank'; a.rel = 'noopener'; return a; };
+  const etfLink = (sym) => { const a = h('a', 'tgr-tk', sym); a.href = tv(sym); a.target = TVTAB; return a; };
 
   const drawThemes = (symMap) => {
     const table = $('#theme-table');
@@ -1200,7 +1203,7 @@ defCalc('industry_perf', {
       }
       const etfs = $('#drill-etfs'); etfs.replaceChildren();
       etfs.setAttribute('data-source', 'theme_perf'); etfs.setAttribute('data-field', 'etfs'); etfs.setAttribute('data-where', 'theme=' + enc(S.sel.name));
-      String(t ? t.etfs : '').split(' ').filter(Boolean).forEach((e, i) => { if (i) etfs.append(h('span', 'tgr-sep', ' ')); const a = h('a', 'tgr-tk', e); a.href = tv(e); a.target = '_blank'; a.rel = 'noopener'; etfs.append(a); });
+      String(t ? t.etfs : '').split(' ').filter(Boolean).forEach((e, i) => { if (i) etfs.append(h('span', 'tgr-sep', ' ')); const a = h('a', 'tgr-tk', e); a.href = tv(e); a.target = TVTAB; etfs.append(a); });
       etfWrap.hidden = !(t && t.etfs);
       if (t) showUmb('Area ' + t.category + ', main ETF', areaEtf(t.category), t);
     } else {
@@ -1311,7 +1314,7 @@ defCalc('industry_perf', {
     rows.forEach((r) => {
       const tr = h('tr'); tr.dataset.key = r.symbol;
       const key = h('td', 'key');
-      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = '_blank'; a.rel = 'noopener'; key.append(a);
+      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = TVTAB; key.append(a);
       if (r.ep === true || r.ep === 'true') { const e = h('span', 'tgr-gm', 'EP'); e.setAttribute('aria-label', 'Episodic pivot size gap and volume'); key.append(e); }
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade, r.grade)); else gd.textContent = '—';
       const sx = h('td', 'c2 tgr-src');
@@ -1418,7 +1421,7 @@ defCalc('industry_perf', {
     rows.slice(0, LIST_MAX).forEach((r) => {
       const tr = h('tr');
       const key = h('td', 'key');
-      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = '_blank'; a.rel = 'noopener'; key.append(a);
+      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = TVTAB; key.append(a);
       if (r.grade) { const gb = h('span', 'tgr-grade g' + r.grade, r.grade); gb.style.marginLeft = '5px'; gb.title = r.g_reason; key.append(gb); }
       if (r.ep) key.append(h('span', 'tgr-gm', 'EP'));
       const c = (x, cls) => h('td', 'num ' + (cls || '') + ' ' + tone(x), pctTxt(x));
@@ -1618,7 +1621,7 @@ defCalc('industry_perf', {
     rows.forEach((r) => {
       const tr = h('tr'); tr.dataset.key = r.symbol;
       const key = h('td', 'key');
-      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol); a.target = '_blank'; a.rel = 'noopener'; key.append(a);
+      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol); a.target = TVTAB; key.append(a);
       /* Follow: onto the Launches tab, followed like a launch (buy points, breakouts, alerts) */
       const fol = picked.has(r.symbol);
       if (launchedSet.has(r.symbol) && !fol) { const t = h('span', 'tgr-gm', 'in Launches'); t.title = 'Already followed on the Launches tab as a launch'; key.append(t); }
@@ -1645,7 +1648,7 @@ defCalc('industry_perf', {
     const lo = (n) => WL_LISTS.indexOf(n);
     ch.slice().sort((x, y) => lo(x.list) - lo(y.list) || x.action.localeCompare(y.action) || x.sym.localeCompare(y.sym)).forEach((x) => {
       const tr = h('tr');
-      const k = h('td', 'key'); const a = h('a', 'tgr-tk', x.sym); a.href = tv((symMap.get(x.sym) || {}).tv_symbol || x.sym); a.target = '_blank'; a.rel = 'noopener'; k.append(a);
+      const k = h('td', 'key'); const a = h('a', 'tgr-tk', x.sym); a.href = tv((symMap.get(x.sym) || {}).tv_symbol || x.sym); a.target = TVTAB; k.append(a);
       tr.append(k, h('td', '', x.list), h('td', x.action === 'added' ? 'tgr-up' : 'tgr-dn', x.action), h('td', '', x.why || ''));
       ct.append(tr);
     });
@@ -1718,7 +1721,7 @@ defCalc('industry_perf', {
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
   };
-  const tkCell = (sym, tvs) => { const td = h('td', 'key'); const a = h('a', 'tgr-tk', sym); a.href = tv(tvs || sym); a.target = '_blank'; a.rel = 'noopener'; td.append(a); return td; };
+  const tkCell = (sym, tvs) => { const td = h('td', 'key'); const a = h('a', 'tgr-tk', sym); a.href = tv(tvs || sym); a.target = TVTAB; td.append(a); return td; };
   const gradeCell = (g) => { const td = h('td', ''); if (g) td.append(h('span', 'tgr-grade g' + g[0], g)); else td.textContent = '—'; return td; };
   const noRows = (tb, n, text) => { const tr = h('tr'); const td = h('td', 'tgr-lbl', text); td.colSpan = n; tr.append(td); tb.append(tr); };
   const drawLaunches = (symMap) => {
@@ -1919,7 +1922,7 @@ defCalc('industry_perf', {
     return out;
   };
   const notify = (title, body, tvs, key) => {
-    try { const n = new Notification(title, { body, tag: key }); n.onclick = () => { window.open(tv(tvs || ''), '_blank', 'noopener'); n.close(); }; } catch (e) { /* blocked */ }
+    try { const n = new Notification(title, { body, tag: key }); n.onclick = () => { window.open(tv(tvs || ''), TVTAB); n.close(); }; } catch (e) { /* blocked */ }
   };
   function runAlerts() {
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
