@@ -625,8 +625,13 @@
         <span class="tgr-seg" data-k="lng" aria-label="Grades"><button data-v="all" aria-pressed="true">All grades</button><button data-v="AB" aria-pressed="false">A+, A &amp; B</button><button data-v="A" aria-pressed="false">A+ &amp; A</button></span>
         <span class="tgr-seg" data-k="lnst" aria-label="Status"><button data-v="all" aria-pressed="true">All</button><button data-v="riding" aria-pressed="false">Above 21 EMA</button><button data-v="base" aria-pressed="false">In a pattern</button></span>
         <label class="tgr-f"><input type="checkbox" id="ln-wolf"> Show lone wolves</label>
+        <input class="tgr-search" id="ln-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
       </div>
       <p class="tgr-note" id="ln-note"></p>
+      <details class="tgr-legend" id="ln-rules-box" open>
+        <summary>What counts as a launch day</summary>
+        <div class="tgr-note" id="ln-rules"></div>
+      </details>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="ln-table">
           <thead><tr>
@@ -797,7 +802,7 @@ defCalc('industry_perf', {
 <script>
 (() => {
   /* ───────── state ───────── */
-  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lng: 'all', lnst: 'all', lnwolf: false, sort: {} };
+  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', lng: 'all', lnst: 'all', lnwolf: false, sort: {} };
   const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
   const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
   const fitMap = (scores) => {
@@ -1587,7 +1592,7 @@ defCalc('industry_perf', {
     return [['Gets on: ', R[0]], ['It leaves on: ', R[1]], ['Every list also needs: ', every], ['Grade: ', 'the trend and the last pullback, the same on every list (How the grade works, below).']];
   };
   /* the list's rules and the "About these lists" note open or stay closed the way you left them (this browser only) */
-  [['wl-rules-box', 'radar-wl-rules'], ['wl-about-box', 'radar-wl-about']].forEach(([id, key]) => {
+  [['wl-rules-box', 'radar-wl-rules'], ['wl-about-box', 'radar-wl-about'], ['ln-rules-box', 'radar-ln-rules']].forEach(([id, key]) => {
     const box = document.getElementById(id);
     if (!box) return;
     try { if (localStorage.getItem(key) === 'closed') box.open = false; } catch (e) { /* no storage: stays open */ }
@@ -1670,6 +1675,7 @@ defCalc('industry_perf', {
   };
   $('#wl-sec').addEventListener('change', (e) => { S.wlsec = e.target.value; draw(); });
   $('#wl-search').addEventListener('input', (e) => { S.wlq = e.target.value.trim(); draw(); });
+  $('#ln-search').addEventListener('input', (e) => { S.lnq = e.target.value.trim(); draw(); });
   $('#wl-dl').addEventListener('click', () => {   /* the list on screen as a TradingView import file: ###section, then EXCHANGE:SYMBOL lines */
     const rows = S.wlShown || [];
     if (!rows.length) return;
@@ -1772,8 +1778,20 @@ defCalc('industry_perf', {
       const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct), rvToday = m && num(m.rel_vol) !== null ? num(m.rel_vol) : num(r.rel_vol_today);
       return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday });
     }) : [];
-    const rows = all.filter((r) => (S.lng === 'all' || r.grade === 'You' || S.lng.includes(r.grade[0])) && (S.lnwolf || !r.lone_wolf) &&
+    /* a ticker search shows that stock whatever the other filters */
+    const lq = S.lnq.toUpperCase();
+    const rows = lq ? all.filter((r) => r.symbol.includes(lq)) : all.filter((r) => (S.lng === 'all' || r.grade === 'You' || S.lng.includes(r.grade[0])) && (S.lnwolf || !r.lone_wolf) &&
       (S.lnst === 'all' || (S.lnst === 'riding' ? r.status === 'Riding' : !!r.pattern)));
+    const lr = doc && doc.rules, lqd = doc && doc.liquidity;
+    $('#ln-rules').replaceChildren(...(lr && lqd ? [
+      ['Opens up and runs: ', 'opens above the day before\'s close and closes up ' + lr.min_chg + '%+ in the top half of its range, on ' + lr.min_rv + '×+ its 20-day average volume.'],
+      ['Or a catalyst launch: ', 'a ' + lr.ep_gap + '%+ gap on earnings or news that closes up, still in the gap (over the day before\'s high) and over at least its 1-month base.'],
+      ['Trend: ', 'closes above the 200 SMA, at most ' + lr.max_ext200 + '% over it the day before; at least ' + lr.min_above_low52 + '% above the 52-week low.'],
+      ['Power day: ', 'volume ' + lr.power_rv + '×+, a ' + lr.power_gap + '%+ gap and a ' + lr.power_chg + '%+ day; may start up to ' + lr.power_ext200 + '% over the 200 SMA and need not close in the top half if it holds half its gap.'],
+      ['Liquid: ', 'price $' + lqd.min_price + '+, a 20-day average of $' + lqd.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(lqd.min_avg_vol_20d) + '+ shares a day, ADR ' + lqd.min_adr + '%+.'],
+      ['One at a time: ', 'another launch of the same stock within ' + lr.dedupe_days + ' sessions counts only after it closed under the 21 EMA, or when it grades higher.'],
+      ['Your picks: ', 'the Follow button on the Watchlist tab; followed from the close you add them at, launch day or not.'],
+    ] : []).map(([k, v]) => { const d = h('div', ''); d.append(h('strong', '', k), document.createTextNode(v)); return d; }));
     $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
     const today = doc ? all.filter((r) => r.date === doc.date && r.grade !== 'You').length : 0;
     const npick = all.filter((r) => r.pick).length;
