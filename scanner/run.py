@@ -233,17 +233,21 @@ def fnum(x, nd=2):
 
 
 def our_flag(st, i):
-    """the flag from the Launches tab (scanner/launch.py, as reviewed Oct 30 2026), for a base your MSF engine names no
-    pattern: at the highs, pulled back 1.25-4 ADRs over 5-20 sessions, closes holding the 21 EMA, 3+ days surfing the
-    10 / 21 EMA, after a run made by the trend, under a falling line across the highs. Returns (the line tomorrow, the top)
-    or None. LIFE Oct 2026: +44% to 44.99, 10% back, surfing its 10 EMA, the line from 44.99"""
+    """a flag for the Watchlist when your MSF engine names no pattern yet, from the Launches tab's flag (scanner/launch.py)
+    with one difference, here only: the consolidation close to the high may ride the 10 EMA alone (closing within an ADR
+    of the 10 or the 21 EMA, 3+ days). At the highs, pulled back 1.25-4 ADRs over 5-20 sessions, closes holding the 21
+    EMA, after a run made by the trend, under a falling line across the highs. Returns (the line tomorrow, the top) or
+    None. LIFE Oct 2026: +44% to 44.99, 10% back, riding its 10 EMA as the volume dried up, the line from 44.99"""
     import types
     import launch                                 # here: launch imports this module
     a = types.SimpleNamespace(st=st, e10=launch.ema(st.c, 10), e21=st.ema21, e50=st.ema50)
     try:
         f = launch.flag_at(a, i)
-        if not f or st.h[f[0]] < st.h[max(0, f[0] - 120):f[0] + 1].max() or not launch.flag_run(a, f[0]) \
-                or launch.surfing(a, f[0], i) < launch.L["flag_surf"]:
+        if not f or st.h[f[0]] < st.h[max(0, f[0] - 120):f[0] + 1].max() or not launch.flag_run(a, f[0]):
+            return None
+        c = st.c
+        surf = sum(1 for k in range(f[0] + 1, i + 1) if min(abs(c[k] / a.e10[k] - 1), abs(c[k] / a.e21[k] - 1)) * 100 <= launch._adr(st, k))
+        if surf < launch.L["flag_surf"]:
             return None
     except (IndexError, ValueError):
         return None
