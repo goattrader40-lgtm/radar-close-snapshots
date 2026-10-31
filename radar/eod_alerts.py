@@ -8,6 +8,10 @@
   retest   it pulled back to its last breakout's level (the top of the broken base's bodies or its wick top) and
            closed above it: another entry, once per breakout; high priority with the 10 / 21 / 50 EMA there too
            (GMAB Oct 2 2026 at 34.63 with the 21 EMA; SPOT Oct 28 at 536.98-540.82 with the 21 EMA)
+  21 EMA   the 21 EMA entries in the base: the retest (a controlled pullback, the low under it, the close back over it:
+           TTAN Oct 29 2026, ARM May 18) and the undercut & reclaim after 2 closes under it (strong: SMCI Jun 27 2023)
+  3rd try  an ascending triangle: 2 tries of the top, the last pullback shallower, now close to the top again: the 3rd try
+           usually breaks out (ARM Apr 24 / May 6 2026, out May 20)
 Only for a scan of today's close; each stock once.
 """
 import datetime, json, os, sys
@@ -33,11 +37,21 @@ def main():
                         f"pulled back to its breakout level {lv} (broken {r.get('retest_from')}) and closed above it at ${r['price']:.2f}"
                         + (f", with the {' & '.join(emas)} there too" if emas else "") + ": another entry" + tail,
                         r.get("tv") or r["symbol"], "high" if emas else "default"))
+        elif r.get("ema21_today"):
+            und = r["ema21_today"] == "undercut"
+            out.append((f"{r['symbol']} 21 EMA {'undercut & reclaim' if und else 'retest'} held",
+                        (f"after 2 closes under its 21 EMA, it undercut it again and closed back over it at ${r['price']:.2f} (21 EMA ${r['ema21']:.2f}): strong"
+                         if und else f"pulled back into its 21 EMA, the low under it, and closed back over it at ${r['price']:.2f} (21 EMA ${r['ema21']:.2f})")
+                        + ": an entry in the base" + tail, r.get("tv") or r["symbol"], "high" if und else "default"))
         elif (r.get("tight_days") or 0) >= 2 and (r.get("tight_level") or r.get("buy_point")):
             base = (f" · base {r['base_len']} sessions (since {r['base_from']}), {r['base_low_pct']:.0f}% deep ({r['base_low_adr']:.1f} ADRs)"
                     + (f", {r['msf_pattern']}" if r.get("msf_pattern") else "")) if r.get("base_len") else ""
             out.append((f"{r['symbol']} tight under its buy point", f"{r['tight_days']} tight days just under ${r.get('tight_level') or r['buy_point']:.2f}, the base high{base},"
-                        f" now ${r['price']:.2f}: watch for the breakout" + tail, r.get("tv") or r["symbol"], "default"))
+                        f" now ${r['price']:.2f}: watch for the breakout" + (" · " + r["top_tries_note"] if r.get("top_tries_note") else "") + tail,
+                        r.get("tv") or r["symbol"], "default"))
+        elif r.get("top_tries_note") and r.get("to_buy_point_pct") is not None and r["to_buy_point_pct"] <= 0.5 * (r.get("adr_pct") or 5.0):
+            out.append((f"{r['symbol']} 3rd try of its top coming", f"{r['top_tries_note']}; now ${r['price']:.2f}, {r['to_buy_point_pct']:.1f}% under it" + tail,
+                        r.get("tv") or r["symbol"], "default"))
     if len(out) > MAX:
         out = out[:MAX - 1] + [(f"{len(out) - MAX + 1} more heads-ups", ", ".join(t.split()[0] for t, _, _, _ in out[MAX - 1:]), "SPY", "default")]
     topic = os.environ.get("NTFY_TOPIC", "").strip()

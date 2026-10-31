@@ -133,8 +133,9 @@ def buy_points(A, keys):
             if f["lost_50ema"]:
                 break
             st = f["stage"]
-            kind = next((k for k, w in (("breakout", "Base breakout"), ("flag", "Flag breakout"), ("pop", "Pop out"), ("retest", "Retest"),
-                                        ("push", "Push out"))
+            kind = next((k for k, w in (("breakout", "Base breakout"), ("follow-through", "Breakout follow-through"), ("flag", "Flag breakout"),
+                                        ("pop", "Pop out"), ("retest", "Retest"), ("push", "Push out"), ("21 EMA retest", "21 EMA retest"),
+                                        ("21 EMA undercut", "21 EMA undercut"))
                          if st.startswith(w)), None)
             if not kind:
                 continue
@@ -144,6 +145,18 @@ def buy_points(A, keys):
             out[kind].append(r)
             out["all"].append(r)
             out[kind + (", 1x+ volume" if a.rv[j] >= 1 else ", volume under 1x")].append(r)
+            # the new labels: how far a base breakout closed over the top (your 0.5% caution vs the old 0.5 ADR), the double
+            # breakout, the 3rd try of an ascending triangle, a flag with the volume dried up the 2 days before
+            if kind == "breakout" and f.get("last_breakout_top"):
+                ov = 100 * (e / f["last_breakout_top"] - 1)
+                out["breakout, caution (within 0.5%)" if f.get("breakout_caution") else
+                    "breakout, 0.5%+ but under 0.5 ADR" if ov < 0.5 * (f.get("adr_pct") or 5) else "breakout, 0.5+ ADR over"].append(r)
+                if f.get("double_breakout"):
+                    out["breakout, double"].append(r)
+                if "3rd try of the top" in st:
+                    out["breakout, 3rd try (ascending triangle)"].append(r)
+            if kind == "flag":
+                out["flag, volume dried up the 2 days before" if f.get("flag_dry") else "flag, volume not dried up"].append(r)
             m += 1
         per.append(m)
     res = {}

@@ -23,7 +23,8 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               above the 200 SMA, and the day before at most 28% over it. A faded high-volume gap that held its
               base (a delayed launch) gets that day's volume and gap.
   breakout    a launch being followed clears its buy point (the nearest of: your MSF pattern's pivot, the flag
-              trendline, the smaller or the larger base's top), whatever the volume: the alert shows the volume pace
+              trendline, the smaller or the larger base's top), whatever the volume (a base top: the close has to hold
+              more than 0.5% over it to be decisive, within 0.5% is a breakout with caution): the alert shows the volume pace
               for the time of day and says when it is light (ATRC Aug 7 2026 over 41.29 on 0.6x, Oct 29 over 61.70),
               after closing under it the day before; graded from 2 years of data (grade_breakout): A = an early
               breakout (1st / 2nd, within 50 sessions of the launch) in a leading theme with volume building before,
@@ -44,7 +45,14 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               under the 21 EMA: no retest)
   push        within 5 sessions of the retest's first touch, the day before still at the EMAs: it opens over that
               day's candle and trades over its 10 & 21 EMA and the breakout level, pushing out of the 21 EMA with a gap,
-              whatever the volume (shown) (ANF Aug 21 2026; CAI Oct 9 on 0.98x)
+              whatever the volume (shown) (ANF Aug 21 2026; CAI Oct 9 on 0.98x). None while still under a flag's
+              falling line (ARM Apr 8 2026)
+  ema21zone   a heads-up: a stock set up for a 21 EMA entry in its base (scanner/launch.py ema21_watch) trades down to its
+              21 EMA (a quarter ADR over it or under it)
+  ema21       from 3:45 PM: today's low went under the 21 EMA and under the open, and it trades back over it in the upper
+              half of the day: the 21 EMA retest holding into the close (after a controlled pullback, the closes held
+              over it: TTAN Oct 29 2026, ARM May 18) or the undercut & reclaim (after 2 closes under it, strong: SMCI Jun
+              27 2023). The buy is the close; the scan after the close confirms it
 Nothing but the early heads-ups is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
 """
@@ -202,6 +210,21 @@ def find(live, doc, now=None):
                    f"opened ${op:.2f} and trades ${price:.2f} above the base top ${top:.2f} (broken {r['last_breakout_date']})"
                    f" · {chg:+.1f}% · vol {rv:.1f}x for the time of day", "high", tvs) \
             if top and ago is not None and ago <= 2 and op and op > top and price > top and rv >= 2 else None
+        # the 21 EMA entries in the base, set up at the last close (scanner/launch.py follow, ema21_watch)
+        w21, e21, adr21 = r.get("ema21_watch"), r.get("ema21"), r.get("adr_pct") or 5.0
+        if w21 and e21 and (now.hour, now.minute) >= (9, 35):
+            kind = ("undercut & reclaim (2 closes under it: strong)" if w21 == "undercut" else "retest (a controlled pullback into it)")
+            tail21 = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
+            if price <= e21 * (1 + adr21 / 400) and price > (r.get("ema50") or 0):
+                out.append((f"{sym}:ema21zone", f"{sym} at its 21 EMA in the base",
+                            f"${price:.2f} at the 21 EMA ${e21:.2f} (the last close's) · a 21 EMA {kind} setup: the buy is the close back"
+                            f" over it, in the upper half of the day" + tail21, "default", tvs))
+            if (now.hour, now.minute) >= (15, 45) and e21 < price <= e21 * (1 + 1.5 * adr21 / 100):
+                # today's low under the 21 EMA and the open, the price in the upper half of the day: checked on today's
+                # 1-minute chart before it goes out (main)
+                out.append((f"{sym}:ema21", f"{sym} 21 EMA {'UNDERCUT & RECLAIM' if w21 == 'undercut' else 'RETEST'} holding into the close",
+                            f"back over the 21 EMA ${e21:.2f} (the last close's) at ${price:.2f}"
+                            f" · the buy: at the close, if it holds over it" + tail21, "high" if w21 == "undercut" else "default", tvs))
         # the retest of the last breakout: the zone for today was set at the last close (scanner/launch.py follow)
         z, lvb = r.get("retest_zone"), r.get("retest_level")
         if z and lvb and r.get("retest_away") and (now.hour, now.minute) >= (9, 35):
@@ -262,7 +285,8 @@ def find(live, doc, now=None):
             g, why = grade_breakout(r)
             pat = r.get("pattern") or ""
             pat = "base" if not pat or pat.startswith("Base forming") else pat
-            what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}; nothing traded above it for {int(r['base_days'])} sessions)"
+            what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}; nothing traded above it for {int(r['base_days'])} sessions;"
+                    f" decisive with a close more than 0.5% over it, ${bp * 1.005:.2f}: within 0.5% a breakout with caution)"
                     if pat == "Base top" and r.get("buy_point_top_date") else f"buy point ${bp:.2f}")
             # the breakout that also pushed out of the 10 & 21 EMA with a gap: opened over yesterday's candle (its open and
             # close) and both EMAs, a double confluence (GMAB Oct 5 2026)
@@ -392,6 +416,25 @@ def main():
                 print(f"{key}: today's low {lo_} not in the zone {z_} as a new pullback low (under {need_}), not sent")
                 continue
             msg += f" · today's low ${lo_:.2f}"
+        if title is not None and key.endswith(":retest"):
+            # and over the 10 EMA, unless today's low tested the 21 EMA (ARM Mar 30 2026 closed under its 10 EMA with the
+            # 21 EMA far under: no retest; Apr 7 down under the 21 EMA and back: the retest + 21 EMA)
+            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
+            q_, lo_ = live["rows"].get(key.split(":")[0]), chart_low_today(key.split(":")[0])
+            e10_, e21_, adr_ = r_.get("ema10") or 0, r_.get("ema21") or 0, r_.get("adr_pct") or 5.0
+            if not (q_ and (q_[0] > e10_ or (lo_ and lo_ <= e21_ * (1 + adr_ / 400)))):
+                print(f"{key}: under the 10 EMA {e10_} without a 21 EMA test (low {lo_}), not sent")
+                continue
+        if title is not None and key.endswith(":ema21"):
+            # today's low under the 21 EMA and under the open, the price in the upper half of today's range
+            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
+            q_, lo_, hi_ = live["rows"].get(key.split(":")[0]), chart_low_today(key.split(":")[0]), chart_high_today(key.split(":")[0])
+            e21_ = r_.get("ema21") or 0
+            op_ = q_[5] if q_ and len(q_) > 5 else None
+            if not (q_ and lo_ and hi_ and op_ and lo_ < e21_ and lo_ < op_ and q_[0] - lo_ >= 0.5 * (hi_ - lo_)):
+                print(f"{key}: today's low {lo_} / high {hi_} / open {op_}: no undercut and reclaim of the 21 EMA {e21_} yet, not sent")
+                continue
+            msg += f" · today's low ${lo_:.2f} under it"
         if title is not None and key.endswith(":touch"):
             # only when today's 1-minute chart shows the trade over the buy point (the quote's day high can be yesterday's)
             r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})

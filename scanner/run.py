@@ -236,16 +236,20 @@ def our_flag(st, i):
     """a bull flag for the Watchlist when your MSF engine names no pattern yet: the Launches tab's flag
     (scanner/launch.py), the same rule. The top at least a 1-month high, after a run of 4+ ADRs made by the trend; the
     high and 4+ pullback days, 1.25-4 ADRs deep, 3+ lower highs, closes holding the 21 EMA, 3+ days within an ADR of the
-    10 or the 21 EMA, under a falling line across the highs. Returns (the line tomorrow, the top) or None. LIFE Oct 2026:
+    10 or the 21 EMA, no violent drop (a gap down of 0.7+ ADR closing 1+ ADR down on 1.3x+ volume), under a falling
+    line across the highs (a failed try doesn't redraw it). Returns (the line tomorrow, the top) or None. LIFE Oct 2026:
     +44% to 44.99, 10% back, riding its 10 EMA as the volume dried up, the line from 44.99"""
     import types
     import launch                                 # here: launch imports this module
-    a = types.SimpleNamespace(st=st, e10=launch.ema(st.c, 10), e21=st.ema21, e50=st.ema50)
+    prev = np.concatenate(([np.nan], st.c[:-1]))
+    avg20 = np.concatenate(([np.nan], launch.roll_mean(st.v, 20)[:-1]))
+    a = types.SimpleNamespace(st=st, e10=launch.ema(st.c, 10), e21=st.ema21, e50=st.ema50,
+                              chg=100 * (st.c / prev - 1), rv=st.v / avg20)        # for the flag's no-violent-drop test
     try:
         f = launch.flag_at(a, i)
         if not f or not launch.flag_run(a, f[0]) or launch.lower_highs(a, f[0], i) < launch.L["flag_down_days"] \
-                or launch.surfing(a, f[0], i) < launch.L["flag_surf"]:
-            return None
+                or launch.surfing(a, f[0], i) < launch.L["flag_surf"] or st.c[i] > f[2]:
+            return None                           # closed over its line today: the flag broke (TTAN Oct 30 2026)
     except (IndexError, ValueError):
         return None
     return float(f[3]), float(st.h[f[0]])
