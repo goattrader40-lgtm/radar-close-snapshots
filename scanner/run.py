@@ -248,8 +248,8 @@ def our_flag(st, i):
     try:
         f = launch.flag_at(a, i)
         if not f or not launch.flag_run(a, f[0]) or launch.lower_highs(a, f[0], i) < launch.L["flag_down_days"] \
-                or launch.surfing(a, f[0], i) < launch.L["flag_surf"] or st.c[i] > f[2]:
-            return None                           # closed over its line today: the flag broke (TTAN Oct 30 2026)
+                or launch.surfing(a, f[0], i) < launch.L["flag_surf"] or st.c[i] > f[2] * (1 + launch.L["caution_pct"] / 100):
+            return None             # closed over its line today: the flag broke (within 0.5% the line stays the next trigger)
     except (IndexError, ValueError):
         return None
     return float(f[3]), float(st.h[f[0]])

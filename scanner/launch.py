@@ -681,9 +681,11 @@ def follow(a, i0, i, pick=False):
     # 2026: its "Tight flag" pivot 39.83 under the Jul 29 base high 41.29, broken Aug 7)
     if code and msf.is_pat(code) and r.pivot == r.pivot and c[i] < r.pivot and (nb is None or r.pivot >= nb * (1 - _adr(st, i) / 400)):
         cands.append((float(r.pivot), msf.NAMES[code], r.cN, r.cDep))        # that's only a recent high (ANF Oct 26 2026)
-    # until it breaks (today's close over today's line too: TTAN, your pick from Oct 30 2026, the day it closed 84.26 over
-    # 84.00): then the base top is next
-    if fl and fl[0] not in used_flags and c[i] < fl[3] and c[i] <= fl[2]:
+    # until it breaks, then the base top is next (ARM Apr 13 2026 closed 5.8% over its line). A break within 0.5% over
+    # the line (caution, like a base breakout) keeps the line as the next trigger, then the base top (TTAN Oct 30 2026
+    # closed 84.26 over 84.00: 84.28 next, then 87.75)
+    flag_caution = bool(fl and fl[2] < c[i] <= fl[2] * (1 + L["caution_pct"] / 100))
+    if fl and (fl[0] not in used_flags or (flag_day == i and flag_caution)) and c[i] < fl[3] and (c[i] <= fl[2] or flag_caution):
         cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
     if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
         cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
@@ -887,7 +889,10 @@ def follow(a, i0, i, pick=False):
             + (f" and held over {bo[1]:.2f} all day" if st.l[i] > bo[1] else "") \
             + f", closed {100 * (c[i] / bo[1] - 1):.1f}% ({(c[i] / bo[1] - 1) * 100 / _adr(st, i):.1f} ADR) over {bo[1]:.2f}"
     elif flag_bo:
-        stage = f"Flag breakout: closed over its falling line {fline:.2f} and the 10 & 21 EMA, an entry in the base (leg {leg})" \
+        stage = (f"Flag breakout: closed over its falling line {fline:.2f} and the 10 & 21 EMA, an entry in the base (leg {leg})"
+                 if c[i] > fline * (1 + L["caution_pct"] / 100) else
+                 f"Flag breakout with caution: closed {100 * (c[i] / fline - 1):.2f}% over its falling line {fline:.2f}, within "
+                 f"{L['caution_pct']}%, and over the 10 & 21 EMA, an entry in the base (leg {leg}): the line is the next trigger again") \
             + (f", the volume dried up the 2 days before ({a.rv[i - 2]:.2f}x, {a.rv[i - 1]:.2f}x)" if max(a.rv[i - 2], a.rv[i - 1]) < 1 else "")
     elif dry_day == i:
         stage = "Pop out of the consolidation (entry in base)"
