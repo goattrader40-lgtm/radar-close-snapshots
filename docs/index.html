@@ -848,9 +848,23 @@ defCalc('industry_perf', {
   const fX = (x) => { const v = num(x); return v === null ? '—' : v.toFixed(2) + '×'; };
   const fDate = (s) => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00Z'); return isNaN(d) ? String(s) : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }); };
   const tv = (sym) => 'https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(sym);
-  /* every ticker opens in the same TradingView tab, replacing the last chart (a named tab; without noopener, or the
-     browser opens a new one each time) */
+  /* every ticker opens in the same TradingView tab, replacing the last chart: the page keeps hold of the tab it opened
+     and loads the next ticker into it (TradingView renames its tab, so finding it by name alone opens a new one each
+     time); closed, the next click opens a new one. Ctrl / Cmd / middle click still open a separate tab */
   const TVTAB = 'radar-chart';
+  let tvWin = null;
+  const openTV = (url) => {
+    if (tvWin && !tvWin.closed) {
+      try { tvWin.location.href = url; tvWin.focus(); return; } catch (e) { /* cut off: open it again */ }
+    }
+    tvWin = window.open(url, TVTAB);
+  };
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[target="' + TVTAB + '"]');
+    if (!a || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    openTV(a.href);
+  });
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
   const isG = (r) => !!(S.gset && S.gset.has(r.symbol));
   const fPrice = (x) => { const v = num(x); return v === null ? '—' : '$' + g2.format(v); };
@@ -1922,7 +1936,7 @@ defCalc('industry_perf', {
     return out;
   };
   const notify = (title, body, tvs, key) => {
-    try { const n = new Notification(title, { body, tag: key }); n.onclick = () => { window.open(tv(tvs || ''), TVTAB); n.close(); }; } catch (e) { /* blocked */ }
+    try { const n = new Notification(title, { body, tag: key }); n.onclick = () => { openTV(tv(tvs || '')); n.close(); }; } catch (e) { /* blocked */ }
   };
   function runAlerts() {
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
