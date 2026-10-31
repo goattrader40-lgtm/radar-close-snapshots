@@ -15,7 +15,7 @@
     "max_mcap": 2e12,
     "min_avg_vol_30d": 700000,
     "min_dollar_vol_30d_millions": 20,
-    "min_adr": 4,
+    "min_adr": 3.5,
     "above_ema50": true,
     "min_pct_above_52w_low": 30,
     "_min_pct_above_52w_low": "price at least 30% above the 52-week low (your 'true 30%'; in TradingView: 'Price above Low 52W by 30% or more')"
