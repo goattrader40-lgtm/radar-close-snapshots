@@ -80,7 +80,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -297,9 +297,11 @@ def launch_row(sym, a, i, gstat, gname, S):
 
 
 def flag_at(a, i):
-    """a flag with a falling trendline (your SMCI June 2023 example): the top is the highest high of the last 25
-    sessions, 5 to 20 sessions back, after a 25%+ rise; the pullback is 1.25-4 of the stock's own ADRs deep (SMCI
-    June 2023: 21% = 3.2 ADRs) and closes stay above the 50 EMA.
+    """a bull flag with a falling trendline (your SMCI June 2023 example): the top is at least a 1-month high (21
+    sessions; a 3- or 6-month high counts too), the highest high of the last 25 sessions, 4 to 20 sessions back (the
+    high and 4+ pullback days: a 5-day base, TTAN Oct 23-29 2026); the pole is the run into it (flag_run: 4+ ADRs);
+    the pullback is 1.25-4 of the stock's own ADRs deep (SMCI June 2023: 21% = 3.2 ADRs) and closes stay above the
+    50 EMA.
     The trendline runs from the top along the lower highs (the flattest line that keeps every high since under it).
     Returns (top index, depth %, line today, line tomorrow) or None."""
     st = a.st
@@ -307,16 +309,14 @@ def flag_at(a, i):
     if i < 50:
         return None
     t = i - 24 + int(np.argmax(h[i - 24:i + 1]))
-    if not 5 <= i - t <= 20:
-        return None
-    if h[t] / l[max(0, t - 25):t + 1].min() - 1 < 0.25:
+    if not L["flag_days"] <= i - t <= 20 or h[t] < h[max(0, t - 21):t].max():
         return None
     depth = 100 * (1 - l[t + 1:i + 1].min() / h[t])
     adr = st.adr[t] if st.adr[t] > 0 else 5.0
     # it holds its 21 EMA (no close half an ADR under it: APPN Sep 8-11 2026 fell 1.4 ADRs under it from its Aug 31
-    # high, a drop and bounce, no flag; SMCI Jun 2023 -0.2, ANF Aug 2026 -0.4) and has 5+ days in it
+    # high, a drop and bounce, no flag; SMCI Jun 2023 -0.2, ANF Aug 2026 -0.4)
     if not L["flag_adr_min"] <= depth / adr <= L["flag_adr_max"] or any(c[k] < a.e50[k] for k in range(t + 1, i + 1)) \
-            or i - t < L["flag_days"] or any(100 * (c[k] / a.e21[k] - 1) < -0.5 * _adr(st, k) for k in range(t + 1, i + 1)):
+            or any(100 * (c[k] / a.e21[k] - 1) < -0.5 * _adr(st, k) for k in range(t + 1, i + 1)):
         return None
     slope = max((h[k] - h[t]) / (k - t) for k in range(t + 1, i))      # through the highs up to yesterday
     if slope >= 0:
@@ -528,7 +528,7 @@ def follow(a, i0, i, pick=False):
     body = lambda lo, hi: float(np.maximum(st.o[lo:hi], st.c[lo:hi]).max())
     rlv = (i0, min(body(i0 - 20, i0), st.h[i0 - 20:i0].max()), float(st.h[i0 - 20:i0].max())) \
         if i0 >= 20 and c[i0] > st.h[i0 - 20:i0].max() else None
-    dry_done, dry_day, flag_day = False, None, None         # one dry-up entry per base (ANF: Oct 5 2026, not again)
+    dry_done, dry_day, flag_day, flag_line = False, None, None, None        # one dry-up entry per base (ANF: Oct 5 2026, not again)
     weak_bo, thru_day = None, None                          # a weak breakout (day, top) waiting for its follow-through
     inner_day = None                                        # the day of the last inner base breakout
     lvl = H                                                 # the level the leg broke out of: the launch day's high, then the base top
@@ -545,10 +545,12 @@ def follow(a, i0, i, pick=False):
         # a flag after a recent high, at the top of a base or inside a bigger one (TTAN Oct 2026 under its Aug 28 high
         # 102.95), wedging down: 3+ lower highs, after a run made by the trend
         at_highs = bool(f and flag_run(a, f[0]) and lower_highs(a, f[0], j - 1) >= L["flag_down_days"])
-        # the flag buy: pulled back from the high, consolidating at the 10 / 21 EMA (3+ days surfing them), then the close
-        # over its falling line and the 10 & 21 EMA: a new leg (SMCI Jun 28 2023, its 3rd leg). Without the surfing it
-        # is no flag (ACN Oct 29 2026, a drop and bounce under its Oct 22 high 259.39: still leg 2)
-        flag_go = bool(L["flag_legs"] and f and at_highs and f[0] not in used_flags and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2]
+        # the flag buy: the high and 4+ pullback days (a 5-day base), consolidating at the 10 / 21 EMA (3+ days surfing
+        # them), then the close over its falling line and the 10 & 21 EMA (SMCI Jun 28 2023; TTAN Oct 30 2026 after its
+        # Oct 23 high). An entry inside the base, not a new leg: the leg comes with the close over the base top (CAI
+        # Sep 14 2026 the flag, Sep 15 the base breakout). Without the surfing it is no flag (ACN Oct 29 2026, a drop
+        # and bounce under its Oct 22 high 259.39)
+        flag_go = bool(L["flag_legs"] and f and at_highs and f[0] not in used_flags and j - f[0] > L["flag_days"] and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2]
                        and surfing(a, f[0], j - 1) >= L["flag_surf"] and c[j] > a.e10[j] and c[j] > a.e21[j])
         b = base_breakout(a, j, used)
         if b and bo and j - bo[0] < L["leg_pause"] and (c[bo[0]:j] >= bo[1]).all():
@@ -564,22 +566,19 @@ def follow(a, i0, i, pick=False):
                 leg = 1 if j - last_new >= L["rest_days"] else leg + 1
                 last_leg, armed, thru_day = j, False, j
             weak_bo = None
-        if flag_go:
-            flag_day, lvl = j, st.h[f[0]]
-        if flag_go or b:
+        if flag_go:                                       # an entry in the base: the leg and its level stay
+            flag_day, flag_line = j, f[2]
+            used_flags.add(f[0])
+        if b:
             nbo += 1
-            if flag_go:
-                used_flags.add(f[0])
-            if b:
-                used.add(b[1])                            # each base top gives at most one breakout
-            if b:
-                inner_day = j if len(b) > 2 else inner_day
-                b = b[:2]
-                bo, lvl = (j, b[0], b[1]), b[0]
-                rlv = (j, min(body(max(0, b[1] - 20), max(b[1] + 1, j - 3)), b[0]), float(b[0]))   # the base's bodies, not the push into it
+            used.add(b[1])                                # each base top gives at most one breakout
+            inner_day = j if len(b) > 2 else inner_day
+            b = b[:2]
+            bo, lvl = (j, b[0], b[1]), b[0]
+            rlv = (j, min(body(max(0, b[1] - 20), max(b[1] + 1, j - 3)), b[0]), float(b[0]))   # the base's bodies, not the push into it
             # a new leg needs a decisive close (half an ADR over the top): a weaker one is a breakout, still the same leg
             # (GMAB 2026: the launch Aug 7 leg 1; Aug 14 and Sep 18 closed just over their tops; Oct 5 leg 2, Oct 23 leg 3)
-            weak = bool(b and not flag_go and c[j] < b[0] * (1 + L["leg_decisive"] * _adr(st, j) / 100))
+            weak = bool(c[j] < b[0] * (1 + L["leg_decisive"] * _adr(st, j) / 100))
             # its follow-through starts the leg (a leg runs from a breakout through the run and the pullback until the
             # next breakout: GMAB 2026 Aug 14 over the launch day's high, Oct 5 out of the 34.7 range, Oct 23)
             weak_bo = (j, b[0]) if weak else None
@@ -613,7 +612,7 @@ def follow(a, i0, i, pick=False):
     # 2026: its "Tight flag" pivot 39.83 under the Jul 29 base high 41.29, broken Aug 7)
     if code and msf.is_pat(code) and r.pivot == r.pivot and c[i] < r.pivot and (nb is None or r.pivot >= nb * (1 - _adr(st, i) / 400)):
         cands.append((float(r.pivot), msf.NAMES[code], r.cN, r.cDep))        # that's only a recent high (ANF Oct 26 2026)
-    if fl:
+    if fl and fl[0] not in used_flags and c[i] < fl[3]:     # until it breaks: then the base top is next (TTAN Oct 30 2026)
         cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
     if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
         cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
@@ -742,7 +741,7 @@ def follow(a, i0, i, pick=False):
     elif thru_day == i:
         stage = f"Breakout follow-through (leg {leg}): gapped up and held over {bo[1]:.2f} all day, closed {(c[i] / bo[1] - 1) * 100 / _adr(st, i):.1f} ADR over"
     elif flag_bo:
-        stage = f"Flag breakout (leg {leg})"
+        stage = f"Flag breakout: closed over its falling line {flag_line:.2f} and the 10 & 21 EMA, an entry in the base (leg {leg})"
     elif dry_day == i:
         stage = "Pop out of the consolidation (entry in base)"
     elif push_day == i:
