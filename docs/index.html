@@ -493,7 +493,10 @@
         <button class="tgr-lite" id="wl-dl" type="button">Download for TradingView</button>
       </div>
       <p class="tgr-note" id="wl-note"></p>
-      <div class="tgr-note" id="wl-rules"></div>
+      <details class="tgr-legend" id="wl-rules-box" open>
+        <summary id="wl-rules-sum">The rules of this list</summary>
+        <div class="tgr-note" id="wl-rules"></div>
+      </details>
       <details class="tgr-legend" id="wl-legend">
         <summary>How the grade works</summary>
         <p>The grade is your setup scanner's (MSF engine), set after each close. It grades the trend and the last pullback, not the day's move or volume.</p>
@@ -1559,8 +1562,15 @@ defCalc('industry_perf', {
     if (!R) return null;
     const every = 'price $' + S0.min_price + '+, market cap $' + Math.round(S0.min_mcap / 1e6) + 'M+, 30-day average volume ' + Math.round(S0.min_avg_vol_30d / 1000) + 'k+ shares and $' +
       S0.min_dollar_vol_30d_millions + 'M+ a day, ADR ' + S0.min_adr + '%+' + (S0.above_ema50 ? ', a close above the 50 EMA' : '') + (S0.min_pct_above_52w_low ? ', at least ' + S0.min_pct_above_52w_low + '% above the 52-week low' : '') + '.';
-    return [['What puts a stock on ' + list + ': ', R[0]], ['It leaves on: ', R[1]], ['Every list also needs: ', every], ['Grade: ', 'the trend and the last pullback, the same on every list (How the grade works, below).']];
+    return [['Gets on: ', R[0]], ['It leaves on: ', R[1]], ['Every list also needs: ', every], ['Grade: ', 'the trend and the last pullback, the same on every list (How the grade works, below).']];
   };
+  /* the rules box opens or stays closed the way you left it (this browser only) */
+  (() => {
+    const box = document.getElementById('wl-rules-box');
+    if (!box) return;
+    try { if (localStorage.getItem('radar-wl-rules') === 'closed') box.open = false; } catch (e) { /* no storage: stays open */ }
+    box.addEventListener('toggle', () => { try { localStorage.setItem('radar-wl-rules', box.open ? 'open' : 'closed'); } catch (e) { /* ignore */ } });
+  })();
   const drawWatchlist = (symMap) => {
     const table = $('#wl-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
     setState('wl-table', ['setups']);
@@ -1569,6 +1579,7 @@ defCalc('industry_perf', {
     document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
     $('#wl-time').textContent = doc ? 'Scan of the ' + fDate(doc.date) + ' close' : st('setups').status === 'error' ? 'Could not load the lists' : '—';
     const rules = wlRules(S.wl, doc && doc.settings), rbox = $('#wl-rules');
+    $('#wl-rules-sum').textContent = 'The rules of ' + S.wl;
     rbox.replaceChildren(...(rules || []).map(([k, v]) => { const p = h('div', ''); p.append(h('strong', '', k), document.createTextNode(v)); return p; }));
     /* section picker */
     const secs = wlSecs(S.wl, all);
