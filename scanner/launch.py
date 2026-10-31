@@ -681,7 +681,9 @@ def follow(a, i0, i, pick=False):
     # 2026: its "Tight flag" pivot 39.83 under the Jul 29 base high 41.29, broken Aug 7)
     if code and msf.is_pat(code) and r.pivot == r.pivot and c[i] < r.pivot and (nb is None or r.pivot >= nb * (1 - _adr(st, i) / 400)):
         cands.append((float(r.pivot), msf.NAMES[code], r.cN, r.cDep))        # that's only a recent high (ANF Oct 26 2026)
-    if fl and fl[0] not in used_flags and c[i] < fl[3]:     # until it breaks: then the base top is next (TTAN Oct 30 2026)
+    # until it breaks (today's close over today's line too: TTAN, your pick from Oct 30 2026, the day it closed 84.26 over
+    # 84.00): then the base top is next
+    if fl and fl[0] not in used_flags and c[i] < fl[3] and c[i] <= fl[2]:
         cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
     if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
         cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
