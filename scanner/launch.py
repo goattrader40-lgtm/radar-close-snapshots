@@ -337,10 +337,11 @@ def flag_run(a, t):
 
 
 def surfing(a, t, j):
-    """days from t+1 to j closing within an ADR of both the 10 and 21 EMA: the flag consolidating at its EMAs (SMCI
-    Jun 16-27 2023: 7 days, then the Jun 28 break of its line; ACN Oct 23-28 2026: none, it fell and bounced)"""
+    """days from t+1 to j closing within an ADR of the 10 or the 21 EMA: the flag consolidating at its EMAs (SMCI Jun
+    16-27 2023: 7 days, then the Jun 28 break of its line; LIFE Oct 2026 riding its 10 EMA, the 21 EMA further under;
+    ACN Oct 23-28 2026: 2 days, it fell and bounced)"""
     st, c = a.st, a.st.c
-    return sum(1 for k in range(t + 1, j + 1) if abs(c[k] / a.e10[k] - 1) * 100 <= _adr(st, k) and abs(c[k] / a.e21[k] - 1) * 100 <= _adr(st, k))
+    return sum(1 for k in range(t + 1, j + 1) if min(abs(c[k] / a.e10[k] - 1), abs(c[k] / a.e21[k] - 1)) * 100 <= _adr(st, k))
 
 
 def base_top(a, j, span=120):

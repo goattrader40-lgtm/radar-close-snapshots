@@ -232,6 +232,24 @@ def fnum(x, nd=2):
     return None if x is None or (isinstance(x, float) and math.isnan(x)) else round(float(x), nd)
 
 
+def our_flag(st, i):
+    """the flag from the Launches tab (scanner/launch.py, as reviewed Oct 30 2026), for a base your MSF engine names no
+    pattern: at the highs, pulled back 1.25-4 ADRs over 5-20 sessions, closes holding the 21 EMA, 3+ days surfing the
+    10 / 21 EMA, after a run made by the trend, under a falling line across the highs. Returns (the line tomorrow, the top)
+    or None. LIFE Oct 2026: +44% to 44.99, 10% back, surfing its 10 EMA, the line from 44.99"""
+    import types
+    import launch                                 # here: launch imports this module
+    a = types.SimpleNamespace(st=st, e10=launch.ema(st.c, 10), e21=st.ema21, e50=st.ema50)
+    try:
+        f = launch.flag_at(a, i)
+        if not f or st.h[f[0]] < st.h[max(0, f[0] - 120):f[0] + 1].max() or not launch.flag_run(a, f[0]) \
+                or launch.surfing(a, f[0], i) < launch.L["flag_surf"]:
+            return None
+    except (IndexError, ValueError):
+        return None
+    return float(f[3]), float(st.h[f[0]])
+
+
 def details(sym, st, d, entry, P):
     i = st.pos[d]
     r = st.df.iloc[i]
@@ -264,6 +282,13 @@ def details(sym, st, d, entry, P):
              and sum(st.l[k] <= st.ema50[k] for k in range(i - hb20 + 1, i + 1)) <= PBE_MAX_TOUCHES_50)) if ok],
         twenty_day_high=fnum(hi20), days_since_20d_high=hb20,
     )
+    # MSF names no pattern yet: the flag rule from the Launches tab may (LIFE Oct 30 2026)
+    if code == 10:
+        fl = our_flag(st, i)
+        if fl:
+            out.update(pattern="Flag (falling line)", buy_point=fnum(fl[0]), to_buy_point_pct=fnum(100 * (fl[0] / st.c[i] - 1), 1),
+                       flag_top=fnum(fl[1]))
+            out["entries"]["flag_line"] = fnum(fl[0])
     out.update({k: v for k, v in entry.items() if k not in ("low",)})
     if "low" in entry:
         out["support_low"] = entry["low"]
