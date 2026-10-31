@@ -194,7 +194,10 @@
         <span class="tgr-seg" data-k="tlay"><button data-v="flat" aria-pressed="true">One ranked list</button><button data-v="area" aria-pressed="false">By area (main ETF on top)</button></span></span>
       <span class="tgr-ctl"><span class="tgr-lbl">Themes</span>
         <span class="tgr-seg" data-k="tset"><button data-v="all" aria-pressed="true">All</button><button data-v="core" aria-pressed="false">Your baskets</button><button data-v="auto" aria-pressed="false">Auto groups</button></span></span>
+      <span class="tgr-ctl"><span class="tgr-lbl">Find a ticker</span>
+        <input class="tgr-search" id="grp-search" type="search" placeholder="e.g. NVDA" aria-label="Find a ticker's themes and industry" autocapitalize="characters" style="max-width:8.5em"></span>
     </div>
+    <p class="tgr-note" id="grp-find" hidden></p>
 
     <div class="tgr-grid">
       <div class="tgr-card" id="themes-card">
@@ -808,7 +811,7 @@ defCalc('industry_perf', {
 <script>
 (() => {
   /* ───────── state ───────── */
-  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', lng: 'all', lnst: 'all', lnwolf: false, sort: {} };
+  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', gq: '', lng: 'all', lnst: 'all', lnwolf: false, sort: {} };
   const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
   const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
   const fitMap = (scores) => {
@@ -1034,6 +1037,11 @@ defCalc('industry_perf', {
   });
   $('#g-clear').addEventListener('click', () => { S.gsel = null; draw(); });
   $('#drill-search').addEventListener('input', (e) => { S.q = e.target.value.trim().toLowerCase(); draw(); });
+  $('#grp-search').addEventListener('input', (e) => { S.gq = e.target.value.trim().toUpperCase(); draw(); });
+  $('#grp-find').addEventListener('click', (e) => {        /* a theme or the industry: list its names below */
+    const chip = e.target.closest('.tgr-chip');
+    if (chip) { S.sel = { kind: chip.dataset.kind, name: chip.dataset.name }; S.q = ''; $('#drill-search').value = ''; draw(); $('#drill-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+  });
 
   /* ───────── tables ───────── */
   const pf = (p) => S.wt + '_' + p;           // current group-average column for a period
@@ -1072,7 +1080,8 @@ defCalc('industry_perf', {
     $('#th-vs').textContent = 'vs ETF (' + S.period.toUpperCase() + ')';
     setState('theme-table', ['theme_perf']);
     const tb = table.querySelector('tbody'); tb.replaceChildren();
-    const rows = rowsOf('theme_perf').filter((r) => S.tset === 'all' || (S.tset === 'auto') === (r.kind === 'auto'));
+    const rows = rowsOf('theme_perf').filter((r) => S.tset === 'all' || (S.tset === 'auto') === (r.kind === 'auto'))
+      .filter((r) => !S.gfind || S.gfind.themes.includes(r.theme));          /* Find a ticker: only its themes */
     rows.forEach((r) => { r.vs = vsOf(r, areaEtf(r.category)); const e = themeEtf(r) ? etfRow(themeEtf(r)) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; });
     $('#themes-h').textContent = S.tset === 'core' ? 'Your baskets' : S.tset === 'auto' ? 'Auto groups' : 'Themes';
     const spec = sortSpec(table.id, { key: 'p' + S.period, dir: -1 });
@@ -1122,7 +1131,7 @@ defCalc('industry_perf', {
     table.querySelectorAll('th[data-p]').forEach((th) => th.setAttribute('data-field', pf(th.dataset.p)));
     setState('industry-table', ['industry_perf']);
     const tb = table.querySelector('tbody'); tb.replaceChildren();
-    const rows = levelRows().slice();
+    const rows = levelRows().filter((r) => !S.gfind || r.industry === S.gfind.stock[S.level]);      /* Find a ticker: its industry */
     $('#th-ivs').textContent = 'vs ETF (' + S.period.toUpperCase() + ')';
     rows.forEach((r) => { r.etf = S.level === 'industry' ? indEtf(r.industry) : null; r.vs = vsOf(r, r.etf); const e = r.etf ? etfRow(r.etf) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; });
     $('#industries-h').textContent = S.level === 'industry' ? 'Industry groups' : 'Industry groups (detailed)';
@@ -2086,6 +2095,26 @@ defCalc('industry_perf', {
     drawLiveLine();
   };
 
+  /* Find a ticker (Groups & themes): its themes and its industry, the tables cut to those, its first group listed below */
+  function findTicker(symMap) {
+    const q = S.gq, note = $('#grp-find');
+    const r = q ? symMap.get(q) : null;
+    const prev = S.gfind ? S.gfind.stock.symbol : null;
+    S.gfind = r ? { stock: r, themes: String(r.themes || '').split(' | ').filter(Boolean) } : null;
+    note.replaceChildren(); note.hidden = !q;
+    if (!q) return;
+    if (!r) { note.textContent = q + ': not in the list (US-listed stocks over $300M market cap)'; return; }
+    const g = S.gfind, ind = r[S.level];
+    note.append(h('b', '', r.symbol), document.createTextNode(' ' + (r.name || '') + ' · '));
+    note.append(document.createTextNode(g.themes.length ? 'themes: ' : 'in none of the themes · '));
+    g.themes.forEach((t, k) => { const c = h('button', 'tgr-chip', t); c.type = 'button'; c.dataset.kind = 'theme'; c.dataset.name = t; note.append(c); if (k < g.themes.length - 1) note.append(document.createTextNode(' ')); });
+    if (ind) { note.append(document.createTextNode((g.themes.length ? ' · ' : '') + 'industry: ')); const c = h('button', 'tgr-chip', ind); c.type = 'button'; c.dataset.kind = 'industry'; c.dataset.name = ind; note.append(c); }
+    /* a new ticker: list its first theme (or its industry) below, unless one of its groups is already listed */
+    if (r.symbol !== prev && !(S.sel && ((S.sel.kind === 'theme' && g.themes.includes(S.sel.name)) || (S.sel.kind === 'industry' && S.sel.name === ind)))) {
+      S.sel = g.themes.length ? { kind: 'theme', name: g.themes[0] } : ind ? { kind: 'industry', name: ind } : S.sel;
+    }
+  }
+
   /* ───────── draw ───────── */
   function draw() {
     syncControls();
@@ -2095,7 +2124,7 @@ defCalc('industry_perf', {
     S.gpass = stocks.filter((r) => passes(r, p));
     S.gset = new Set(S.gpass.map((r) => r.symbol));
     drawTakeaway();
-    if (S.tab === 'groups') { drawThemes(symMap); drawIndustries(); drawDrill(symMap); }
+    if (S.tab === 'groups') { findTicker(symMap); drawThemes(symMap); drawIndustries(); drawDrill(symMap); }
     else if (S.tab === 'gainers') drawGainers(symMap);
     else if (S.tab === 'premarket') { drawPmLive(symMap); drawPremarket(symMap); drawTrack(); }
     else if (S.tab === 'watchlist') drawWatchlist(symMap);
