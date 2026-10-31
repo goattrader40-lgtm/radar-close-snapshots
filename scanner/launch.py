@@ -424,6 +424,10 @@ def top_tries(a, i, top, lo):
     real pullback (1.25+ ADRs), shallower than the one before it"""
     st = a.st
     h, l = st.h, st.l
+    # the base of this top starts after any clearly higher high (VEEV Oct 2026: its Aug 27 high 296.24 is the bigger
+    # base's, not a try of the 291.40 top)
+    over = [k for k in range(lo, i + 1) if h[k] > top * (1 + 0.25 * _adr(st, k) / 100)]
+    lo = over[-1] + 1 if over else lo
     tries = []
     for k in range(lo, i + 1):
         if h[k] < top * (1 - 0.25 * _adr(st, k) / 100):
