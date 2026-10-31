@@ -508,7 +508,10 @@
         </ul>
         <p>So a stock can be A+ here and B on the Launches tab: that one grades the launch day itself (MIR on Oct 29, 2026: A+ here for its trend and 10.7% pullback, B there for a +11.5% day and a base breakout but only a 1% gap on 1.9× volume).</p>
       </details>
-      <p class="tgr-note">Your setup scanner's lists, rebuilt after each close (about 4:40 PM ET). 1-EP/GAP = gap over 5% on 2.5× relative volume; 1-UPDAY = up 4% or more with relative volume 1 or more; 2-POOL = a first close back above the 50 EMA, plus the weekly momentum leaders; 3-SETUPS = names from those three lists in a Tight, 21 EMA or 50 EMA pullback setup (above the 200 SMA). Names leave after 2 closes in a row below the 50 EMA, and 1-lists after 15 trading days without reaching 3-SETUPS. Price, Chg and Rel vol are live during market hours (otherwise the latest close), and Away = how far the buy point is above that price. Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 1 ADR above that EMA. Download for TradingView saves the list you're looking at as a file for TradingView's Watchlist menu → Import list.</p>
+      <details class="tgr-legend" id="wl-about-box" open>
+        <summary>About these lists</summary>
+        <p class="tgr-note">Your setup scanner's lists, rebuilt after each close (about 4:40 PM ET). 1-EP/GAP = gap over 5% on 2.5× relative volume; 1-UPDAY = up 4% or more with relative volume 1 or more; 2-POOL = a first close back above the 50 EMA, plus the weekly momentum leaders; 3-SETUPS = names from those three lists in a Tight, 21 EMA or 50 EMA pullback setup (above the 200 SMA). Names leave after 2 closes in a row below the 50 EMA, and 1-lists after 15 trading days without reaching 3-SETUPS. Price, Chg and Rel vol are live during market hours (otherwise the latest close), and Away = how far the buy point is above that price. Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 1 ADR above that EMA. Download for TradingView saves the list you're looking at as a file for TradingView's Watchlist menu → Import list.</p>
+      </details>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="wl-table">
           <thead><tr>
@@ -1566,13 +1569,13 @@ defCalc('industry_perf', {
       S0.min_dollar_vol_30d_millions + 'M+ a day, ADR ' + S0.min_adr + '%+' + (S0.above_ema50 ? ', a close above the 50 EMA' : '') + (S0.min_pct_above_52w_low ? ', at least ' + S0.min_pct_above_52w_low + '% above the 52-week low' : '') + '.';
     return [['Gets on: ', R[0]], ['It leaves on: ', R[1]], ['Every list also needs: ', every], ['Grade: ', 'the trend and the last pullback, the same on every list (How the grade works, below).']];
   };
-  /* the rules box opens or stays closed the way you left it (this browser only) */
-  (() => {
-    const box = document.getElementById('wl-rules-box');
+  /* the list's rules and the "About these lists" note open or stay closed the way you left them (this browser only) */
+  [['wl-rules-box', 'radar-wl-rules'], ['wl-about-box', 'radar-wl-about']].forEach(([id, key]) => {
+    const box = document.getElementById(id);
     if (!box) return;
-    try { if (localStorage.getItem('radar-wl-rules') === 'closed') box.open = false; } catch (e) { /* no storage: stays open */ }
-    box.addEventListener('toggle', () => { try { localStorage.setItem('radar-wl-rules', box.open ? 'open' : 'closed'); } catch (e) { /* ignore */ } });
-  })();
+    try { if (localStorage.getItem(key) === 'closed') box.open = false; } catch (e) { /* no storage: stays open */ }
+    box.addEventListener('toggle', () => { try { localStorage.setItem(key, box.open ? 'open' : 'closed'); } catch (e) { /* ignore */ } });
+  });
   const drawWatchlist = (symMap) => {
     const table = $('#wl-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
     setState('wl-table', ['setups']);
