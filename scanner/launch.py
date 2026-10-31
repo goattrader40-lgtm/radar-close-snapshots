@@ -712,6 +712,7 @@ def follow(a, i0, i, pick=False):
     while i - rest > i0 and resting(a, i - rest):
         rest += 1
     since = None
+    bday = None                       # the base's day as the status counts it, from the day of its high
     if i == i0 and not pick:
         cb = {120: "6-month", 63: "3-month", 21: "1-month"}.get(a.cleared(i))
         stage = "Launch day" + (f", cleared its {cb} base" if cb else "")
@@ -752,11 +753,13 @@ def follow(a, i0, i, pick=False):
         # a base formed under a new high: it starts the day of that high (ACN: its Oct 22 2026 high 259.39, pulled back),
         # whatever buy point is nearer (ATRC Oct 5 2026: the flag line 58.66 under its Sep 24 top 61.70)
         tb, kt = min(tops)
-        stage = f"In the base, day {i - kt + 1}, {100 * (1 - c[i] / tb):.0f}% under the top {tb:.2f} (set {st.dates[kt]})"
+        bday = i - kt + 1
+        stage = f"In the base, day {bday}, {100 * (1 - c[i] / tb):.0f}% under the top {tb:.2f} (set {st.dates[kt]})"
     elif c[i] > lvl:                                       # closing above what the leg broke out of (ANF: never over
         stage = f"Running (leg {leg}), {100 * (c[i] / lvl - 1):.0f}% over {lvl:.2f}"   # the Aug 26 high until Oct 19)
     else:
-        stage = f"In the base, day {i - last_new + 1}, {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}"   # from the day of that high
+        bday = i - last_new + 1
+        stage = f"In the base, day {bday}, {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}"   # from the day of that high
     return dict(
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo,
         # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
@@ -765,7 +768,9 @@ def follow(a, i0, i, pick=False):
         # the day of the base: sessions since the launch or the leg's breakout (ANF: Aug 26 = day 0, Sep 10 day 10,
         # Sep 24 day 20; Oct 19, leg 2, day 0 again), and whether today it turned up: back over a rising 10 EMA after
         # closing under it (ANF Oct 1, day 25)
-        base_day=i - last_leg,
+        # in a base: the same day the status names (TTAN, your pick from Oct 30 2026: day 6 of the base under its Oct 23
+        # top 87.75, not day 0 of the follow); otherwise sessions since the leg's breakout, as before
+        base_day=bday if bday is not None else i - last_leg,
         turned_up=bool(i > last_leg and c[i] > a.e10[i] > a.e10[i - 1] and not (c[i - 1] > a.e10[i - 1] > a.e10[i - 2])),
         vol_build=fnum(st.v[i - 4:i + 1].mean() / st.v[i - 54:i - 4].mean(), 2) if i >= 54 else None,
         base_from=bfrom, base_len=blen, base_low_pct=fnum(bdeep, 1) if bdeep is not None else None,
