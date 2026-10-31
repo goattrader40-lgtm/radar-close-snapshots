@@ -1559,7 +1559,7 @@ defCalc('industry_perf', {
         '% above the 21 EMA, the 21 EMA over the 50 EMA) or a 50 EMA pullback (within ' + X['PULLBACK TO 50EMA'].max_above_ema_pct + '% above the 50 EMA, the 21 EMA over the 50 EMA). Section = the setup.',
         nb + ' closes in a row below the 50 EMA' + (Ls.setups_need_above_sma200 ? ' or a close below the 200 SMA' : '') + '; every ' + day + ' the list is trimmed to the best ' + Ls.setups_max +
         ', ranked: a setup in the last 5 trading days first, then the grade (A+, A, B, none), then the MSF score (40 for a pattern, +15 trend template, +10 stronger than the S&P 500 over the year, ' +
-        '+10 RS line at a 3-month high, +10 volume dried up, +10 tight last 5 days, +5 within 5% under the buy point), then the newest setup.'],
+        '+10 RS line at a 3-month high, +10 volume dried up, +10 tight last 5 days, +5 within 5% under the buy point, +10 the 21 EMA over the 50 EMA), then the newest setup.'],
     }[list];
     if (!R) return null;
     const every = 'price $' + S0.min_price + '+, market cap $' + Math.round(S0.min_mcap / 1e6) + 'M+, 30-day average volume ' + Math.round(S0.min_avg_vol_30d / 1000) + 'k+ shares and $' +

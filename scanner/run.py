@@ -222,7 +222,10 @@ def rank_key(sym, e, today, d, cal):
     r = st.df.iloc[i]
     g = int(r.grade)
     age = tdays_between(cal, e.get("last_hit", e["added"]), d)
-    return (0 if age <= 5 else 1, {1: 0, 2: 1, 3: 2}.get(g, 3), -int(r.score), age)
+    # your MSF score, plus 10 when the 21 EMA is over the 50 EMA (the user's rule, Oct 31 2026; the MSF engine itself
+    # is left as in TradingView)
+    score = int(r.score) + (10 if st.ema21[i] > st.ema50[i] else 0)
+    return (0 if age <= 5 else 1, {1: 0, 2: 1, 3: 2}.get(g, 3), -score, age)
 
 
 def fnum(x, nd=2):
