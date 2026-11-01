@@ -216,7 +216,8 @@ def our_flag(st, i):
     (scanner/launch.py), the same rule. The top at least a 1-month high, after a run of 4+ ADRs made by the trend; the
     high and 4+ pullback days, 1.25-4 ADRs deep, 3+ lower highs, closes holding the 21 EMA, 3+ days within an ADR of the
     10 or the 21 EMA, no violent drop (a gap down of 0.7+ ADR closing 1+ ADR down on 1.3x+ volume), under a falling
-    line across the highs (a failed try doesn't redraw it). Returns (the line tomorrow, the top) or None. LIFE Oct 2026:
+    line across the highs (a failed try doesn't redraw it); a bull flag's channel or a pennant, the volume drying up.
+    Returns (the line tomorrow, the top, "bull flag" / "pennant") or None. LIFE Oct 2026:
     +44% to 44.99, 10% back, riding its 10 EMA as the volume dried up, the line from 44.99"""
     import types
     import launch                                 # here: launch imports this module
@@ -231,7 +232,7 @@ def our_flag(st, i):
             return None             # closed over its line today: the flag broke (within 0.5% the line stays the next trigger)
     except (IndexError, ValueError):
         return None
-    return float(f[3]), float(st.h[f[0]])
+    return float(f[3]), float(st.h[f[0]]), f[4] if len(f) > 4 else "bull flag"     # the line tomorrow, the top, the shape
 
 
 def details(sym, st, d, entry, P):
@@ -270,7 +271,7 @@ def details(sym, st, d, entry, P):
     if code == 10:
         fl = our_flag(st, i)
         if fl:
-            out.update(pattern="Bull flag (falling line)", buy_point=fnum(fl[0]), to_buy_point_pct=fnum(100 * (fl[0] / st.c[i] - 1), 1),
+            out.update(pattern=("Pennant" if fl[2] == "pennant" else "Bull flag") + " (falling line)", buy_point=fnum(fl[0]), to_buy_point_pct=fnum(100 * (fl[0] / st.c[i] - 1), 1),
                        flag_top=fnum(fl[1]))
             out["entries"]["flag_line"] = fnum(fl[0])
     out.update({k: v for k, v in entry.items() if k not in ("low",)})

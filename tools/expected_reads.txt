@@ -97,8 +97,8 @@ ZS from 2026-09-14 (launch)
 ARM from 2026-03-25 (pick)
   2026-03-25 c 157.07 | leg 1 | In the base, day 1, 14% under the top 183.16 | next buy point None 
   2026-03-31 c 151.28 | leg 1 | Retest of the breakout level 136.90-140.58 (bodies-wicks) held + confluence: 10 EMA | next buy point 166.69 Base top
-  2026-04-07 c 143.86 | leg 1 | Retest of the breakout level 136.90-140.58 (bodies-wicks) held + confluence: 21 EMA | next buy point 151.71 Bull flag (trendline)
-  2026-04-13 c 157.58 | leg 1 | Bull flag breakout: closed over its falling line 149.00 and the 10 & 21 EMA, an entry in the base (leg 1), the volume dried up the 2 days before (0.64x, 0.88x) | next buy point 166.69 Base top
+  2026-04-07 c 143.86 | leg 1 | Retest of the breakout level 136.90-140.58 (bodies-wicks) held + confluence: 21 EMA | next buy point 151.71 Pennant (trendline)
+  2026-04-13 c 157.58 | leg 1 | Pennant breakout: closed over its falling line 149.00 and the 10 & 21 EMA, an entry in the base (leg 1), the volume dried up the 2 days before (0.64x, 0.88x) | next buy point 166.69 Base top
   2026-04-16 c 162.33 | leg 1 | Tight under 166.69, the base high (3 days) · base 15 sessions, 18% deep (3.1 ADRs), Ascending triangle | next buy point 166.69 Ascending triangle
   2026-04-17 c 166.73 | leg 1 | Base breakout with caution (leg 2 if it follows through): closed 0.02% over the base high 166.69 (a 3-month high), within 0.5%: not decisive, on light volume (0.58x) | next buy point None Ascending triangle
   2026-04-20 c 175.10 | leg 2 | Breakout follow-through (leg 2): opened over the day before's close, closed 5.0% (0.9 ADR) over 166.69 | next buy point None 
