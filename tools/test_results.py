@@ -22,6 +22,7 @@ TESTS = [
     ("probe_pb1h", "1-hour 21 EMA pullback", "Uptrend (10 > 21 > 50 EMA, a new 20-day high in the last 10 sessions, at most 50% over the 200 SMA, over it, 30%+ over the 52-week low), ADR 4%+, $30M / 700K a day, $700M+ market cap. A day closing under the 1-hour 21 EMA, the next day gaps up with the 5-minute opening range over that EMA: buy the 5-minute high, risk the 5-minute low; +2R breakeven, 1/3 at +3R, 1/3 at +5R, runners on the daily 21 EMA close.", "cmd pb1h"),
     ("probe_launch_orh", "Launch days, WITH HINDSIGHT", "Launch days (regular, power, reversal, catalyst) bought on the 5-minute opening range high, risk the 5-minute low. Uses days known to close as launches: an upper bound, NOT tradable as is. managed = your rules; simple = the 5-minute low stop and the daily 21 EMA close.", "cmd launchorh"),
     ("probe_launch_live", "Launch days, fair (no hindsight)", "Every stock on the launch watch list (from 25% under to 28% over the 200 SMA, 50% for 8%+ gaps, liquid, ADR 3.5%+, no launch in 20 sessions) that gaps up and trades over both the 5-minute high and +5%: bought there, risk the 5-minute low, your management. Split by what the day closed as, gap, buy time, coming from under the 200 SMA, volume pace.", "cmd launchlive"),
+    ("probe_buypoints", "Buy points, bought at the breakout", "Our Launches buy points (base breakout, follow-through, flag, pop, retest, push, 21 EMA retest, undercut & reclaim) for 60 sessions after each launch, bought as the alerts fire (at the level when it breaks, a push at the open, the close for close signals); the risk the low of that day; your management. Each one saved with its RVOL (the day's volume / 20-day average) and gap.", "cmd buypoints"),
     ("probe_earnings", "Earnings-day high breakout", "An earnings day (company earnings news) that closed over its 1-month high, over the 200 SMA, 30%+ over the 52-week low, liquid ($10+, $30M and 700K a day, $700M+ market cap, ADR 4%+); a later day (within 10 sessions) breaking the earnings-day high: bought over both the 5-minute high and the earnings-day high, risk the 5-minute low, your management.", "cmd earnings"),
 ]
 
@@ -69,6 +70,79 @@ def style(ws, widths):
         ws.column_dimensions[get_column_letter(i)].width = w
 
 
+RV_B = ((None, 1), (1, 1.5), (1.5, 2), (2, 3), (3, 6), (6, None))
+GAP_B = ((None, 0), (0, 2), (2, 5), (5, 8), (8, None))
+
+
+def bname(lo, hi, unit=""):
+    return f"under {hi}{unit}" if lo is None else f"{lo}{unit}+" if hi is None else f"{lo}-{hi}{unit}"
+
+
+def inb(x, lo, hi):
+    return x is not None and (lo is None or x >= lo) and (hi is None or x < hi)
+
+
+def trades(wb, title, rows):
+    """every trade, a filter on each column; row 2 = the totals of what the filters show"""
+    ws = wb.create_sheet(title[:31])
+    cols = list(rows[0].keys())
+    n = len(rows) + 3
+    L_ = {c: get_column_letter(i + 1) for i, c in enumerate(cols)}
+    tot = [("trades shown", f"=SUBTOTAL(103,{L_[cols[0]]}4:{L_[cols[0]]}{n})")]
+    for c, lab, f in (("win", "winners %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("R", "average R", "=ROUND(SUBTOTAL(101,{r}),2)"),
+                      ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)"),
+                      ("reached_3R", "reached +3R %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("failed5", "failed in 5 days %", "=ROUND(100*SUBTOTAL(101,{r}),1)")):
+        if c in L_:
+            tot.append((lab, f.format(r=f"{L_[c]}4:{L_[c]}{n}")))
+    ws.append([t[0] for t in tot])
+    ws.append([t[1] for t in tot])
+    ws.append(cols)
+    for r in rows:
+        ws.append([r.get(c) for c in cols])
+    for c in ws[1]:
+        c.font = Font(bold=True)
+    for c in ws[2]:
+        c.font = Font(bold=True, color="C00000")
+    for c in ws[3]:
+        c.font = Font(bold=True, color="FFFFFF")
+        c.fill = PatternFill("solid", fgColor="2F5597")
+        c.alignment = Alignment(wrap_text=True, vertical="top")
+    ws.auto_filter.ref = f"A3:{get_column_letter(len(cols))}{n}"
+    ws.freeze_panes = "C4"
+    for i in range(1, len(cols) + 1):
+        ws.column_dimensions[get_column_letter(i)].width = 14
+
+
+def grid(wb, title, rows, rv):
+    """average R, trades and winners % for each RVOL band x gap band"""
+    ws = wb.create_sheet(title[:31])
+    gaps = [bname(lo, hi, "%") for lo, hi in GAP_B]
+    for what in ("average R", "trades", "winners %", "total R"):
+        ws.append([f"{what}: {rv} (rows) x gap (columns)"] + gaps + ["all gaps"])
+        for c in ws[ws.max_row]:
+            c.font = Font(bold=True)
+        for rlo, rhi in RV_B + ((None, None),):
+            line = [bname(rlo, rhi, "x") if (rlo, rhi) != (None, None) else "all"]
+            for glo, ghi in GAP_B + ((None, None),):
+                sel = [t for t in rows if (inb(t.get(rv), rlo, rhi) if (rlo, rhi) != (None, None) else t.get(rv) is not None)
+                       and (inb(t.get("gap_pct"), glo, ghi) if (glo, ghi) != (None, None) else True)]
+                if not sel:
+                    line.append(None)
+                elif what == "average R":
+                    line.append(round(sum(t["R"] for t in sel) / len(sel), 2))
+                elif what == "trades":
+                    line.append(len(sel))
+                elif what == "winners %":
+                    line.append(round(100 * sum(t["win"] for t in sel) / len(sel)))
+                else:
+                    line.append(round(sum(t["R"] for t in sel), 1))
+            ws.append(line)
+        ws.append([])
+    ws.column_dimensions["A"].width = 44
+    for i in range(2, 9):
+        ws.column_dimensions[get_column_letter(i)].width = 12
+
+
 def main():
     wb = Workbook()
     rm = wb.active
@@ -100,6 +174,10 @@ def main():
              ("probe_launch_live", "closed_as_all_trades › regular", "…that closed as a regular launch", "known only at the close"),
              ("probe_launch_live", "closed_as_all_trades › not a launch", "…that did not close as a launch", ""),
              ("probe_launch_live", "from_under_the_200sma › under the 200 SMA the day before", "…coming from under the 200 SMA", ""),
+             ("probe_buypoints", "all", "Buy points, all", "risk = the day's low"),
+             ("probe_buypoints", "by_buy_point › breakout", "Buy points, base breakout", ""),
+             ("probe_buypoints", "by_buy_point › flag", "Buy points, flag breakout", ""),
+             ("probe_buypoints", "by_buy_point › 21 EMA retest", "Buy points, 21 EMA retest", ""),
              ("probe_earnings", "all", "Earnings-day high breakout", "")]
     for name, path, variant, note in picks:
         d = data(name)
@@ -128,6 +206,13 @@ def main():
         for path, v in rows:
             ws.append([path or "all"] + [v.get(k) for k in cols])
         style(ws, [62] + [13] * len(cols))
+    for name, label, rvcol in (("probe_launch_live", "Launch trades", ("rvol_pace_at_buy", "rvol_day")), ("probe_buypoints", "Buy point trades", ("rvol_day",))):
+        d = data(name)
+        if not d or not d.get("trades"):
+            continue
+        trades(wb, label, d["trades"])
+        for rv in rvcol:
+            grid(wb, f"{label.split()[0]} {'pace' if 'pace' in rv else 'RVOL'} x gap", d["trades"], rv)
     wb.save(OUT)
     print("saved", OUT)
 
