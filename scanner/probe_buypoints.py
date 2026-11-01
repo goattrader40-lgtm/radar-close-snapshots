@@ -56,10 +56,23 @@ def one(key):
         pbo, pvb, pses = ((prev.get("breakouts") or 0), (prev.get("vol_build") or 0), prev.get("sessions")) if prev else (0, 0, None)
         prev = f
         cands = []
-        if pbp and h[j] > pbp and c[j - 1] <= pbp:
+        # a day whose high crosses a base top (the 6- or 3-month base the engine calls a breakout of) is a base breakout,
+        # bought at that top, whatever smaller trigger it crossed first (AEHR Apr 6 2026: over its inner-base pivot 45.75,
+        # then its base top 46.95 set Mar 4: a base breakout, not an inner base)
+        bt = next((float(b_[0]) for b_ in (launch.base_ok(a, j, sp) for sp in (120, 63)) if b_ and c[j - 1] <= b_[0] < h[j]), None)
+        also = None
+        if bt:
+            cands.append(("base breakout", max(bt, float(o[j])), "level", float(h[j])))
+            if pbp and abs(pbp - bt) > 0.005 * bt and h[j] > pbp and c[j - 1] <= pbp:
+                also = f"{ppat or 'buy point'} {pbp:.2f}"
+            pbp_used = bt
+        elif pbp and h[j] > pbp and c[j - 1] <= pbp:
             k = next(nm for w, nm in LEVEL if ppat.startswith(w))
             if k != "pop" or o[j] > pbp:                    # a pop opens over its level
                 cands.append((k, max(float(pbp), float(o[j])), "level", float(h[j])))
+            pbp_used = pbp
+        else:
+            pbp_used = pbp
         kind = next(((k, how) for k, w, how in KINDS if stage.startswith(w)), None)
         if kind:
             k, how = kind
@@ -73,7 +86,8 @@ def one(key):
             x21, x10 = manage(a, j, buy, stop, same_high, 21), manage(a, j, buy, stop, same_high, 10)
             hi20 = h[j + 1:min(n, j + 21)].max()
             r_ = row(s, st, a, f, i0, j, k, entry, buy, stop, x21, x10, hi20, c, n, closed if entry == "level" else "")
-            r_["level"] = round(float(pbp), 2) if entry == "level" else None
+            r_["level"] = round(float(pbp_used), 2) if entry == "level" else None
+            r_["also_crossed"] = also if entry == "level" else None
             # the theme that day and the breakout grade the alerts give (early = 1st / 2nd breakout within 50 sessions of the
             # launch; a Leading theme; the volume building the 5 days before, 1.1x+)
             gs = launch.best_group(s, POS[st.dates[j]], GROUPS, GS)[0] if st.dates[j] in POS else -1
@@ -84,7 +98,7 @@ def one(key):
             # as the alert fires, sold at the close when that day closes back under the buy point (a level buy)
             if entry == "level":
                 for x, suf in ((x21, ""), (x10, "_10")):
-                    y = mgmt.sold_at_close(x, a, j, buy, x["risk"], "sold at the close: back under the buy point") if c[j] <= pbp else x
+                    y = mgmt.sold_at_close(x, a, j, buy, x["risk"], "sold at the close: back under the buy point") if c[j] <= pbp_used else x
                     r_.update(mgmt.cols(y, "alertcx_", suf))
             # the tags the Launches tab shows (as of that day's close)
             r_.update(caution_within_0_5pct=int(bool(f.get("breakout_caution"))), double_breakout=int(bool(f.get("double_breakout"))),
@@ -92,7 +106,8 @@ def one(key):
                       tight_days_before=int(ptight), volume_building_5d=f.get("vol_build"),
                       # what the buy point came from: the trigger's pattern (base top, flag line, an MSF pattern's pivot: ascending
                       # triangle, flat base, cup with handle...), the base's MSF name, and the EMAs with a retest (10 / 21 / 50)
-                      pattern=(ppat or None) if entry == "level" else (f.get("pattern") or None), base_pattern=f.get("base_pattern"),
+                      pattern=("Base top" if bt and k == "base breakout" else (ppat or None)) if entry == "level" else (f.get("pattern") or None),
+                      base_pattern=f.get("base_pattern"),
                       retest_with=(" & ".join(f.get("retest_ema") or []) or "no EMA") if k == "retest" else None)
             out.append(r_)
     return out
