@@ -202,6 +202,8 @@ STRATEGY = {
     "50 EMA undercut": "50 EMA undercut & reclaim (new, on the test branch): after 2 closes in a row UNDER the 50 EMA (any depth), the next "
                        "session's low goes under it and under the open and the close comes back over it in the upper half of the day (AEHR Mar 31 "
                        "2026). A 3rd close under takes the launch off the list. Bought at that close.",
+    "Breakout undercut": "Breakout undercut & reclaim (live Nov 1 2026): after a breakout that first advanced 1.25+ ADRs, 2+ closes back under "
+                         "the breakout level holding over the 50 EMA, then the close back over it within 5 sessions (CAI Oct 9 2026). Bought at that close.",
     "Gap retest": "Gap retest (your rule): a 6%+ gap on a launch-type day (power day, launch day, or a big gap-up day: 2x+ volume, the gap held at "
                   "the close); after the stock first closed an ADR+ over the gap, the first pullback whose low comes back into the gap (from half "
                   "an ADR under the day before's high to a quarter ADR over the gap day's low) and closes back over the day before's high. "
@@ -599,7 +601,7 @@ def main():
         for k, short in (("base breakout", "Base breakout"), ("bull flag breakout", "Bull flag breakout"), ("bull pennant breakout", "Bull pennant breakout"), ("pop", "Pop"), ("pattern pivot", "Pattern pivot"),
                          ("follow-through", "Follow-through"), ("retest", "Retest held"), ("push", "Push 21 EMA"),
                          ("21 EMA retest", "21 EMA retest"), ("21 EMA undercut & reclaim", "21 EMA undercut"),
-                         ("50 EMA undercut & reclaim", "50 EMA undercut")):
+                         ("50 EMA undercut & reclaim", "50 EMA undercut"), ("breakout undercut & reclaim", "Breakout undercut")):
             sel = [r for r in br if r["buy_point"] == k and r.get("engine_confirmed", 1)]   # the days the engine read as it
             if k == "pattern pivot":                       # the MSF patterns on their own sheets too (ascending triangle, flat base...)
                 for pat in sorted({r.get("pattern") or "" for r in sel}):

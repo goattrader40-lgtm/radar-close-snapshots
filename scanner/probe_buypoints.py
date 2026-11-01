@@ -30,7 +30,7 @@ A = {}
 GROUPS, GS, POS = {}, {}, {}
 KINDS = (("follow-through", "Breakout follow-through", "close"), ("retest", "Retest", "close"), ("push", "Push out", "open"),
          ("21 EMA retest", "21 EMA retest", "close"), ("21 EMA undercut & reclaim", "21 EMA undercut", "close"),
-         ("50 EMA undercut & reclaim", "50 EMA undercut", "close"))
+         ("50 EMA undercut & reclaim", "50 EMA undercut", "close"), ("breakout undercut & reclaim", "Breakout undercut", "close"))
 # the level buy points: every day the price crosses the day before's buy point is a buy, whatever the close (no hindsight)
 LEVEL = (("Base top", "base breakout"), ("Bull flag", "bull flag breakout"), ("Flag", "bull flag breakout"), ("Bull pennant", "bull pennant breakout"),
          ("Pop", "pop"), ("", "pattern pivot"))
