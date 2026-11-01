@@ -139,7 +139,8 @@ def main():
                           gap_pct=round(t["gap"], 2), day_change_pct=round(t["chg_day"], 2), rvol_day=round(t["rvol_day"], 2),
                           rvol_pace_at_buy=round(t["pace"], 2) if t["pace"] else None, buy_minutes_after_open=t["minutes"],
                           from_under_200sma=t["under200"], vs_200sma_day_before_pct=round(t["ext200_prev"], 1), adr_pct=round(t["adr"], 2),
-                          days_held=t["days"], **mgmt.cols(t), **mgmt.cols(t["x10"], suf="_10"), **cx_launch(t, A))
+                          days_held=t["days"], **mgmt.liquidity(A[t["sym"]], A[t["sym"]].st.dates.index(t["date"])),
+                          **mgmt.cols(t), **mgmt.cols(t["x10"], suf="_10"), **cx_launch(t, A))
                      for t in tm]
     json.dump(out, open(a_.out, "w"), indent=1)
     print(json.dumps(out, indent=1))

@@ -69,6 +69,7 @@ COLUMNS = (
     ("close_in_range_pct", "where the day closed in its range (100 = at the high)"),
     ("vs_200sma_day_before_pct / from_under_200sma", "how far over (+) or under (-) the 200 SMA it was the day before"),
     ("adr_pct", "average daily range of the last 20 days"),
+    ("dollar_vol_20d_m / dollar_vol_band / avg_shares_20d", "the 20-day average $ traded a day (in $M) the day before the buy, its band (under $20M, $20-50M, $50-100M, $100M+), and the 20-day average shares a day"),
     ("leg / sessions_since_launch / launch_date", "which leg of the move, and how long after its launch"),
     ("closed_as", "launch days: what the day closed as (regular, power day, not a launch) - known only at 4 PM"),
     ("risk_pct", "from the buy down to the stop, in %"),
@@ -248,9 +249,15 @@ TACTICS = {
 }
 
 
+def dv_band(x):
+    return None if x is None else "under $20M" if x < 20 else "$20-50M" if x < 50 else "$50-100M" if x < 100 else "$100M+"
+
+
 def with_risk_adr(rows):
-    """your max risk is 0.7 ADR: the risk in ADRs and a 1/0 to filter on"""
+    """your max risk is 0.7 ADR: the risk in ADRs and a 1/0 to filter on; the 20-day $ volume band"""
     for r in rows:
+        if "dollar_vol_20d_m" in r:
+            r["dollar_vol_band"] = dv_band(r["dollar_vol_20d_m"])
         if r.get("risk_pct") is not None and r.get("adr_pct"):
             r["risk_in_adr"] = round(r["risk_pct"] / r["adr_pct"], 2)
             r["within_0_7_adr"] = int(r["risk_in_adr"] <= 0.7)
@@ -282,7 +289,8 @@ def tactic_grid(wb, title, rows):
     """each tactic's results by RVOL band and by gap band"""
     ws = wb.create_sheet(title[:31])
     tac = sorted({r["entry tactic"] for r in rows})
-    for what, key, bands, unit in (("RVOL (the day's)", "rvol_day", RV_B, "x"), ("gap", "gap_pct", GAP_B, "%")):
+    for what, key, bands, unit in (("RVOL (the day's)", "rvol_day", RV_B, "x"), ("gap", "gap_pct", GAP_B, "%"),
+                                   ("20-day $ volume ($M)", "dollar_vol_20d_m", ((None, 20), (20, 50), (50, 100), (100, None)), "M")):
         for stat in ("average R", "winners %", "average %", "trades"):
             ws.append([f"{stat} by {what}"] + tac)
             for c in ws[ws.max_row]:

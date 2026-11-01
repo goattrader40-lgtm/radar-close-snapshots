@@ -52,7 +52,7 @@ def one(key):
                                 rvol_day=round(float(a.rv[j]), 2), adr_pct=round(float(st.adr[j - 1]), 2),
                                 theme_status={2: "Leading", 1: "Turning up", 0: "Not trending"}.get(gs, "no theme"),
                                 breakout_grade="A" if early and lead and build else "B" if early and (lead or build) else "C",
-                                volume_building_5d=pvb, tight_days_before=prev.get("tight_days") or 0))
+                                volume_building_5d=pvb, tight_days_before=prev.get("tight_days") or 0, **mgmt.liquidity(a, j)))
         prev = f
     return out
 

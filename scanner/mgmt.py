@@ -83,3 +83,23 @@ def sold_at_close(x, a, k, buy, risk_pct, why="sold at the close"):
     got += left * px
     R = buy * risk_pct / 100
     return dict(x, ret=100 * (got / buy - 1), R=(got - buy) / R if R > 0 else 0.0, how=why, t1=hi >= t1, t2=hi >= t2, days=0)
+
+
+_DV = {}
+
+
+def liquidity(a, k):
+    """the 20-day averages the day before day k: $ traded (in $M) and shares, for the spreadsheet's filters"""
+    key = id(a)
+    if key not in _DV:
+        import numpy as np
+        c, v = a.st.c, a.st.v
+        n = c.size
+        cs, vs = np.concatenate(([0.0], np.cumsum(c * v))), np.concatenate(([0.0], np.cumsum(v)))
+        dv, av = np.full(n, np.nan), np.full(n, np.nan)
+        dv[19:] = (cs[20:] - cs[:-20]) / 20 / 1e6
+        av[19:] = (vs[20:] - vs[:-20]) / 20
+        _DV[key] = (dv, av)
+    dv, av = _DV[key]
+    j = k - 1
+    return dict(dollar_vol_20d_m=round(float(dv[j]), 1) if j >= 19 else None, avg_shares_20d=int(av[j]) if j >= 19 else None)

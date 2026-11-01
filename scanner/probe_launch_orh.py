@@ -113,7 +113,7 @@ def main():
             cb, cl = float(st.c[i]), float(st.l[i])
             row = dict(date=d, symbol=s, launch_type=kind[(s, i)], grade=launch.grade(a, i), rvol_day=round(float(a.rv[i]), 2),
                        gap_pct=round(float(a.gap[i]), 2), day_change_pct=round(float(a.chg[i]), 2), close_in_range_pct=round(100 * float(a.clpos[i])),
-                       vs_200sma_day_before_pct=round(float(a.ext200_prev[i]), 1), adr_pct=round(float(st.adr[i - 1]), 2))
+                       vs_200sma_day_before_pct=round(float(a.ext200_prev[i]), 1), adr_pct=round(float(st.adr[i - 1]), 2), **mgmt.liquidity(a, i))
             row["min5_bought"] = int(bool(x and x.get("broke")))
             if x and x.get("broke"):
                 row.update(mgmt.cols(x, "min5_"))
