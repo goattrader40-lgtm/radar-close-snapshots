@@ -1040,11 +1040,13 @@ def detect(A, groups, GS, cal, S, upto=None):
                 continue
             gs, gn = best_group(s, k, groups, GS)
             # one launch at a time: another within 20 sessions counts only after the last one closed below the
-            # 21 EMA, or replaces it when it is the stronger day (APPN: a C on Aug 5 2026, the real launch, a B, on Aug 7)
+            # 21 EMA, or replaces it when it is the stronger day (APPN: a C on Aug 5 2026, the real launch, a B, on Aug 7).
+            # A power day is never replaced: the days after it are its continuation (INFQ May 21 2026, a 20.8% gap, +31.5%
+            # on 8.9x; May 22, +11.2% on a gap of 8.2%, was its 2nd day, not the launch; HLIT May 22 and May 26)
             if i - last > L["dedupe_days"] or any(a.st.c[j] < a.e21[j] for j in range(last + 1, i)):
                 own.append((s, i, k, gs, gn))
                 last = i
-            elif rank[grade(a, i)] < rank[grade(a, last)]:
+            elif rank[grade(a, i)] < rank[grade(a, last)] and not a.power(last):
                 own[-1] = (s, i, k, gs, gn)
                 last = i
         # a catalyst or reversal launch comes on top and never blocks a regular one (those stay exactly as they were): it counts
