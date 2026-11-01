@@ -37,27 +37,30 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:47 AM grading has its own session: leave it
 alone.
 
-## Status at the end of the last session (Nov 1 2026)
+## Status at the end of the last session (Nov 1 2026, evening)
 
-- **Live on main** (Launches rebuilt, the evening scan re-run by hand): everything under "What the user agreed" below,
-  including this session's launch-day rules, off-list rules, the ✕ buttons, the Launches table (narrower Status, ADR
-  column), the new 3-SETUPS and its alerts, and the Watchlist's Why column next to Grade. The 2-year check script counts
-  flag breaks within 0.5% of the line (was on `test/flag-inside-base`). All agreed examples pass
-  (`tools/replay.py --regress`); tools/expected_reads.txt is unchanged.
-- **Only on a test branch**: nothing. Every `test/...` branch of this session is merged (`test/launch-day-rules`,
-  `test/remove-launch`, `test/off-list-rules`, `test/wl-why`, `test/setups3`, `test/ready-desktop-only`).
-- **Agreed in this session**: LIFE's Oct 8 (21 EMA undercut & reclaim), Oct 20 (pop) and Oct 21 (breakout, leg 1) reads;
-  INFQ's launch is May 21 2026 and the days after it are continuation (a power day is never replaced); HLIT Apr 30 2026
-  stays out (it failed liquidity: about $9M a day, ADR about 2.9%): **don't change the liquidity rules for it**.
-- **Launches after the rebuild (Oct 30 close)**: 109 launches (was 130). Off: TECH (ADR 0.2% after its Jun 25 gap,
-  buyout-like), BRZE, CBZ, VEEV (ADR 3.04%), SYNA, ROKU, DV and the other ADR-under-3.2% names. Back on (older than
-  120 sessions, still making new highs): AMN, HNGE, ILMN. Reversal launches on the list: GDDY Oct 30, FLS Oct 29,
-  BEAM Oct 28, CART Oct 23.
-- **3-SETUPS at that close**: 56 stocks: 8 Triggered today (TTAN flag breakout; IOT, AI, BSP 21 EMA retest; VSXY, DXC,
-  CART retest held; CDNA breakout), 23 Ready (LIFE 44.81 0.5 ADR away tight ×4, APPN 50.41, ACN 259.39, EAT, CBRL,
-  HUBS, MNDY...), 25 Setting up.
-- **The phone**: the user hasn't subscribed the ntfy app to the topic yet; the first evening Ready file goes out after
-  the Nov 2 close.
+- **Live on main** (Launches rebuilt from the Oct 30 close, 119 launches): everything under "What the user agreed"
+  below. New tonight: **gap out of base** (alerts + portal), the **bull flag** redefined, the **bull pennant**, the
+  **breakout undercut & reclaim**, the **try-of-the-top** reads, the **50 EMA undercut tab** (with its reclaim entry;
+  off the list at the 3rd close under the 50 EMA), the names "Bull flag" / "Bull pennant", and the 1-minute check
+  watching the tab. After the rebuild: SIMO, CRM, NOW, ASST in the 50 EMA undercut tab; CTSH, KVYO, MNDY, W, CDW,
+  SHOP, SAIL, RBRK, TEAM, GTLB, ZETA, IQV under their breakout level (a breakout undercut & reclaim alert if they get
+  back over it). All agreed examples pass (`tools/replay.py --regress`).
+- **Coded but switched off**: the **momentum cutoff** (`L["max_run_pct"] = 0`). The user decides the rule (see Open
+  items); turning it on is that one setting (plus the 200 SMA test if they pick B).
+- **Only on a test branch**: `test/pb1h` holds the backtest tools (scanner/probe_*.py, scanner/mgmt.py = the user's
+  trade management, tools/analyze.py, tools/reset_analysis.py, tools/extension_analysis.py, tools/momentum_cutoff.py,
+  tools/test_results.py = the spreadsheet tools/test-results.xlsx, radar-tools.yml commands buypoints / gapbase /
+  gapretest / launchlive / launchorh / earnings ...). Its engine is main's. Not merged to main (tools, not live).
+- **Agreed reads added tonight** (tools/examples.txt): AEHR Feb 11 - Apr 10 2026 (Mar 31 50 EMA undercut & reclaim,
+  Apr 2 bull flag breakout with the 50 EMA note, Apr 6 base breakout); APLD May 4 2026 (the textbook bull flag);
+  CAI (Aug 19 bull flag, Aug 20 base breakout, Sep 3 / Sep 10 retests, Sep 14 bull flag, Sep 15 base breakout, **Oct 9
+  breakout undercut & reclaim**, **Oct 21 the 3rd try of the top**, Oct 22-26 tight, Oct 27 base breakout); RPD Oct 8
+  (the 3rd try of its 1-month base top 13.25 under the main base Aug 27 and the bigger base Aug 11); ARM Apr 13 is a
+  **bull pennant** breakout. Not patterns: ACN Oct 29 (a drop and bounce), APPN Sep 14, AEHR Feb 20 (the Feb 11
+  breakout never advanced: the base stayed valid).
+- **The phone**: the user still has to subscribe the ntfy app; Monday Nov 2 is the first session with the gap-out-of-base
+  and breakout-reclaim alerts live.
 
 ## The user's ground rules
 
@@ -131,7 +134,10 @@ Only rewrite tools/expected_reads.txt (`--regress --write`) after the user agree
   it never blocks a regular launch. The live job alerts it the moment it meets the rules (the top half checked on
   today's 1-minute chart); the close confirms it. The 2-year check: 41 reversal launches, launch-day ORH trades 67%
   won, median +3.4%, 47% ran 20%+, 17% ran 50%+ (all launches: 45%, −1.1%, 28%, 7%).
-- **Off the list** (Nov 1 2026): 2 closes in a row under the 50 EMA; **62 sessions from its highest point without a
+- **Off the list** (Nov 1 2026): **3 closes in a row under the 50 EMA** (after 2 the launch moves to the **50 EMA
+  undercut tab** under the Launches table; the next session has to close back over the 50 EMA, which puts it back on
+  Launches; the reclaim (low under the 50 EMA and the open, the close back over it in the upper half of the day) is the
+  **50 EMA undercut & reclaim** entry, no depth limit: AEHR Mar 31 2026 after Mar 27 & 30); **62 sessions from its highest point without a
   new high** ("a $60 high 5 days ago with the stock at $55 today counts from the $60 day"; picks too; once off it stays
   off); **ADR under 3.2% after the launch** (a launch day still needs 3.5%; TECH 0.2% after a buyout-like gap, BRZE);
   a newer launch of the same stock; the user's ✕ (that launch and older ones; a launch on a later day shows again).
@@ -151,12 +157,27 @@ Only rewrite tools/expected_reads.txt (`--regress --write`) after the user agree
   it and the 21 EMA, and over the 10 EMA unless the low tested the 21 EMA (ARM Mar 30 no; Mar 31 yes + 10 EMA; Apr 7
   yes + 21 EMA; GMAB Oct 2, ACN Oct 7, CAI Sep 3 / Sep 10, SPOT Oct 28, ANF Oct 23). The stock must move up the first
   sessions after the breakout before a dip counts (GMAB).
-- **Push** out of the 21 EMA with a gap after the retest's touch (ANF Aug 21, ACN Oct 8, CAI Oct 9); none while still
-  under a flag's falling line (ARM Apr 8).
-- **Bull flag**: the top at least a 1-month high; the pole = a run of 4+ ADRs made by the trend into it, not one gap
-  day (a high that only retests an older top is the 2nd try of a flat top, no pole: ARM May 6); the high and 4+
-  pullback days (a 5-day base); 1.25–4 ADRs deep; 3+ lower highs; surfing the 10 or 21 EMA (3+ days within an ADR);
-  no close half an ADR under the 21 EMA; a controlled pullback, no violent drop (a gap down of 0.7+ ADR closing 1+ ADR
+- **Push** out of the 21 EMA with a gap after the retest's touch (ANF Aug 21, ACN Oct 8); none while still under a
+  flag's falling line (ARM Apr 8). (CAI Oct 9 is a breakout undercut & reclaim, below.)
+- **Breakout undercut & reclaim** (Nov 1 2026, the user's name; CAI Oct 9 2026): after a breakout that first advanced
+  (a close 1.25+ ADRs over the level: not AEHR Feb 20 2026, its Feb 11 breakout fell right back, the base stayed
+  valid), **2+ closes back under the breakout level** (the broken base's top, its bodies) holding over the 50 EMA, then
+  the close back over it within 5 sessions: an entry, once per breakout (CAI: under 28.01 Oct 6-8, closed 29.70 Oct 9).
+  One close under and back is a retest (GMAB Oct 2, ACN Oct 7). Alerts: back over the level (heads-up), from 3:45 PM
+  holding into the close.
+- **Bull flag** (named so Nov 1 2026; the user's definition: the pole, then a descending channel right after its high,
+  volume drying up, then the momentum surge out of it; APLD Mar 31 - May 4 2026 is the textbook one): the top at least
+  a 1-month high; the pole = a run of 4+ ADRs made by the trend into it, not one gap day (a high that only retests an
+  older top is the 2nd try of a flat top, no pole: ARM May 6); the high and 4+ pullback days (5 candles: the breakout
+  comes 5 to **22** sessions after the top; AEHR Apr 2 on the 21st); 1.25–4 ADRs deep; 3+ lower highs; **a descending
+  channel: lower highs on at least half and lower lows on more than half of the days down to the flag's low, no higher
+  swing low after it** (not ACN Oct 29 2026: 2 lower lows of 4, a pause and a V); **the drift down at or under 1.1x
+  the 20-day average volume** (APLD 0.82x, AEHR 0.81x, your flags 0.71-1.04x; not APPN Sep 2026 1.17x, ARM Mar 26-30
+  1.75x, VEEV Aug 28-31 1.62x); riding the 10 or 21 EMA (3+ days within an ADR: kept, it takes none of the user's
+  flags off); no close half an ADR under the 21 EMA **unless the falling line is intact, the line is in the upper half
+  of the pole and the drop came on light volume (no day down half an ADR+ on 1.3x+): then closes under the 21 / 50 EMA
+  are allowed and the breakout says "closed under the 50 EMA during the flag (dates): you judge the grade"** (AEHR Mar
+  26-30 2026, its line 40.65 broken Apr 2; not APPN Sep 8 2.4x, not LIFE Sep 16-17 2.1x / 2.3x); a controlled pullback, no violent drop (a gap down of 0.7+ ADR closing 1+ ADR
   down on 1.3x+ volume: ARM Apr 27–28 and May 7, ZS Oct 5: no flag). The line runs through the highs; a try that
   pokes half an ADR+ over it and closes back under is a failed try, the line stays (ARM Apr 10 failed, Apr 13 broke
   at 149.00). Entry: the close over the line and the 10 & 21 EMA; the alert fires at the line during the day. Within
@@ -164,6 +185,10 @@ Only rewrite tools/expected_reads.txt (`--regress --write`) after the user agree
   over 84.00, next 84.28, then 87.75). Tag: the volume dried up the 2 days before (ZS Oct 21). Examples: SMCI Jun 28
   2023, CAI Aug 19 / Sep 14, VEEV Sep 23, ZS Oct 21, TTAN Oct 30, ARM Apr 13. A flag inside a base is an earlier
   entry (more room, less risk); the base can still turn into another pattern.
+- **Bull pennant** (Nov 1 2026, a symmetrical triangle; ARM Mar 25 - Apr 13 2026): the same pole, length, depth and
+  rules, but converging: lower highs and a **higher swing low after the first low** (ARM: highs Mar 25, Apr 1 stepping
+  down, lows Mar 30, Apr 7 stepping up: contraction, then the expansion out of it), the volume after its first low at
+  or under 1.1x. The trigger is the falling upper line: "Bull pennant breakout" (ARM Apr 13 at 149.00).
 - **21 EMA retest** (entry in the base): 5+ days into the base and 1.25+ ADRs off its high, a controlled pullback (the
   3 days before not all up, the closes held over the 21 EMA); the low under the 21 EMA and under the open, the close
   back over it in the upper half of the day. Once per pullback (TTAN Oct 29, ARM May 18, NTSK Oct 1, VEEV Sep 21; not
@@ -177,12 +202,21 @@ Only rewrite tools/expected_reads.txt (`--regress --write`) after the user agree
 - **Double breakout** tag: a squeeze under a falling line from the base top with higher lows, broken with the top the
   same day (ARM May 20, ATRC Aug 7, CAI Oct 27, VEEV Oct 9); not when the day before was already at the top (GMAB
   Oct 23, a U shape) or a flag already broke that line (ARM Apr 17).
-- **3rd try** (ascending triangle): the high is the 1st try, a 2nd within a quarter ADR after a real pullback, then a
-  shallower pullback: the 3rd try usually breaks out (ARM Apr 24 / May 6 → May 20); not a falling wedge (VEEV Aug)
-  and not a 2nd try that breaks out right away (a U or flat top: GMAB, ACN, ARM Apr 16–17).
+- **3rd try** (ascending triangle): the high is the 1st try, a 2nd **within 0.2 ADR** of it after a real pullback (CAI
+  Oct 16 2026 at 0.23 ADR under was no try), then a shallower pullback: the 3rd try usually breaks out (ARM Apr 24 /
+  May 6 → May 20); not a falling wedge (VEEV Aug) and not a 2nd try that breaks out right away (a U or flat top: GMAB,
+  ACN, ARM Apr 16–17). **The try day has its own heads-up read** (Nov 1 2026): "the 3rd try of the top today" for the
+  main base's top (CAI Oct 21 2026, 32.89 after Sep 23 and Oct 6); a smaller base's top tried under the main base is
+  named as such with the bases above (RPD Oct 8 2026: its 1-month top 13.25, the main base Aug 27 and the bigger base
+  Aug 11 above).
 - **Pop out of the consolidation** (entry in the base): ANF Oct 5.
 - **Status**: "In the base" once the stock is 1.25+ ADRs under its high.
-- **Watchlist flag** (scanner/run.py our_flag) follows the same flag rule.
+- **Watchlist flag** (scanner/run.py our_flag) follows the same flag rule (bull flag or bull pennant).
+- **Gap out of base** (Nov 1 2026, live): a Launches stock that closed at or under its base high (the base top or an MSF
+  pivot; not a flag line or a pop) and opens above it; only with ADR 4%+, 600K+ shares and $30M+ a day (20-day
+  averages), market cap $700M+. Phone alerts: the gap (volume pace 1x+), the 1-minute and the 5-minute opening range
+  high broken (with the stop, the range's low, and the risk in ADRs), and at 9:50 the volume check (under 2x = out); a
+  trigger after 9:50 needs 2x+. Its plain breakout alert stays quiet that day. The portal tags the row.
 
 ## What the user agreed (Watchlist 3-SETUPS, Nov 1 2026)
 
@@ -210,10 +244,42 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 21 EMA retest 417 (23% / 46%), undercut & reclaim 98 (26% / 47%, 56% ran 10%+), retests 629 (24% / 49%), pushes 174
 (26% / 50%); all 2,985 buy points (22% / 41%).
 
-## Open items (not done; each needs the user's go)
+## Open items: the to-do list for the next session (each needs the user's go)
 
-- Move the Launches rules box to the top of the tab (asked, not answered).
-- Picks reading their history from the start; an intraday surge alert without a gap (offered earlier).
-- 3-SETUPS: the check found two weaker Ready groups (on its list 31+ days: −0.9%; base under 2 ADRs deep: −0.7%); the
-  user chose to keep the list as it is.
-- Phone: subscribe the ntfy app to the topic (the user's side); check the first evening Ready file after the Nov 2 close.
+1. **The momentum cutoff** (the user will say which rule): no buy points once the stock has run too far from its
+   momentum's start (the low of its last rest of 40+ sessions without a new 6-month high; AEHR: Nov 21 2025, 18.70).
+   **A**: 300%+ from that start (2 years of buy points past it: -0.4 to -0.8R whatever the entry, both halves; blocks
+   AEHR May-Jun 2026, SMCI Jul 12 - Aug 2023, but also the user's LIFE Oct 20-30 2026 at +335-368%). **B**: 300%+ and
+   140%+ over the 200 SMA at once (keeps LIFE, 85-98% over it; but that LIFE-like group lost -0.65 to -0.75R). The time
+   since the start added nothing. Code: `L["max_run_pct"]` in scanner/launch.py (0 = off); the status then reads
+   "EXTENDED: +X% from its momentum start (date), no buy points" and the stock's alerts stay quiet.
+2. **The Launches row for a breakout reclaim setup**: the 12 stocks under their breakout level have the alert set
+   (reclaim_level) but the row doesn't say it yet: add "under its breakout level $X: reclaim setup" (the user asked).
+3. **The spreadsheet** (tools/test-results.xlsx on test/pb1h): rebuilt at the end of this session from the run on the
+   live engine (each trigger sheet = only the days the engine read as that breakout, with engine_read; failed
+   crosses on their own sheet; bull flag / bull pennant / breakout undercut & reclaim / 50 EMA / gap retest /
+   momentum sheets; one buy point per stock and day). The earlier "deep analysis" counted failed intraday pokes as
+   breakouts: redo its conclusions on the corrected data when the user wants them.
+4. **"No reset yet" tag** (AEHR's Mar 5-19 2026 buy points, 1R losers before the momentum reset at the 50 EMA): the
+   user's momentum rule (1) may replace it; ask if they still want a tag.
+5. Monday Nov 2: check the first live gap-out-of-base and breakout-reclaim alerts, the 50 EMA tab, and the evening
+   Ready file (after the user subscribes ntfy).
+6. Offered, never decided: require the 10 / 21 EMA at the level for a retest; a fairer breakout stop test (0.7 ADR
+   under the buy, then the day's low); trigger a bull flag on the higher of the line and the day before's high.
+7. Older: move the Launches rules box to the top of the tab; picks reading their history from the start; an intraday
+   surge alert without a gap; the 3-SETUPS weaker Ready groups (kept as is).
+
+## Tests run on Nov 1 2026 (test/pb1h)
+
+Aug 2025 - Oct 2026, the user's management (1/3 at +2 ADR, 1/3 at +5 ADR, the runners out on a 10 / 21 EMA close),
+after 0.15% costs, the risk floored at 1%:
+
+- No filter combination beat luck (shuffled data found as many "winning" combinations). Launch-day 5-minute entry,
+  held: +0.11R a trade (t 3.5), regime-dependent (the 2nd half +0.04R).
+- Breakouts with the 5-minute stop lose (-0.1 to -0.3R); held through the day with the day's-low stop they are
+  positive, but that stop is only known at the close. Follow-through on the 5-minute entry: avoid (-0.67R).
+- Gap retest (6%+ launch-type gap, the retest holding the 10 / 21 EMA): no reliable edge (+0.19R at the close, t 0.5,
+  only positive in the 1st half); after a plain big gap-up day: -0.44R.
+- Gap out of base, 1-minute entry, held: +0.37-0.40R on 91 trades, the 2nd half negative.
+- Momentum: see open item 1.
+
