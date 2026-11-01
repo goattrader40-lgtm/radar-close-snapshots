@@ -896,7 +896,9 @@ def follow(a, i0, i, pick=False):
     m_bo = under_since(i - 1) if reclaim_bo else None
     m_now = under_since(i)
     # tomorrow's: under the level now (within 5 sessions), holding over the 50 EMA, no reclaim of this breakout yet
-    reclaim_level = rlv[1] if (m_now is not None and i - m_now < 5 and all(c[x] > a.e50[x] for x in range(m_now, i + 1))
+    # (tomorrow's reclaim needs 2+ closes under by then: today at least the 2nd; the stock advanced first; within 5 sessions)
+    reclaim_level = rlv[1] if (m_now is not None and 1 <= i - m_now <= 4 and all(c[x] > a.e50[x] for x in range(m_now, i + 1))
+                               and c[rlv[0] + 1:m_now].max(initial=0) >= rlv[1] * (1 + 1.25 * _adr(st, m_now) / 100)
                                and not any(bo_reclaim(x) for x in range(rlv[0] + 2, i + 1))) else None
     # the 50 EMA undercut & reclaim (an entry, like the 21 EMA one): the 2 closes before under the 50 EMA (no depth limit,
     # your OK Nov 1 2026), today the low under it and under the open, the close back over it in the upper half of the day,
@@ -1112,6 +1114,9 @@ def follow(a, i0, i, pick=False):
                 tries_txt = (f"the {nth} try of its {str(rm_) + '-month' if rm_ else 'smaller'} base's top {tb:.2f} today (tried "
                              f"{', '.join([st.dates[kt]] + [st.dates[k] for k in tr[1:-1]])}), {above}: a heads-up")
                 stage += " · " + tries_txt
+    if reclaim_level:
+        stage += (f" · under its breakout level {rlv[1]:.2f} since {st.dates[m_now]} ({i - m_now + 1} closes), holding over the 50 EMA: "
+                  f"a breakout undercut & reclaim setup, the buy is a close back over it")
     out = dict(
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo, top_tries=ntries, top_tries_note=tries_txt,
         ema21_today=reclaim, ema21_watch=ema21_watch,
