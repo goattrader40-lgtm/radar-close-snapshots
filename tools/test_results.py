@@ -101,6 +101,12 @@ DESC = {
                      "Then your management (+2R breakeven, 1/3 at +3R, 1/3 at +5R, runners on the daily 21 EMA close).",
     "Launch 5-min vs close": "LAUNCH DAYS (days that closed as launches). min5_ = ENTRY over the 5-minute high on the launch day, STOP the 5-minute low "
                              "(hindsight: only days that turned out to be launches). close_ = ENTRY at the launch day's close, STOP the day's low (fair). Your management.",
+    "Launch - compare entries": "LAUNCH DAYS, one row per launch and ENTRY TACTIC: filter 'entry tactic' (5-min entry = over the 5-minute high, stop the "
+                               "5-minute low, only days that turned out to be launches; buy at the close = the launch day's close, stop the day's low), then RVOL / gap. "
+                               "Row 3 = the totals of what you filter. Your management.",
+    "Buy points - compare entries": "BUY POINTS after the launch, one row per buy point and ENTRY TACTIC: filter 'entry tactic' (as the alert fires = at the level / "
+                                   "the open / the close, stop the day's low; buy at the close = that day's close, stop the day's low; 5-min entry = over the "
+                                   "5-minute high and the buy point, stop the 5-minute low), then RVOL / gap. Row 3 = the totals of what you filter.",
     "Buy point trades": "BUY POINTS after the launch. Plain columns (R, win, result_pct, risk_pct) = ENTRY as the alert fires (at the level when it breaks, "
                         "the open for a push, the close for close signals), STOP the day's low. close_ = ENTRY at that day's close, STOP the day's low. "
                         "min5_ = ENTRY over the 5-minute high (and the buy point), STOP the 5-minute low (close signals: the next morning). Your management.",
@@ -115,6 +121,53 @@ HEAD = {
                          "close_win": "close entry: win", "min5_risk_pct": "5-min entry: risk % (stop 5-min low)", "min5_R": "5-min entry: R",
                          "min5_result_pct": "5-min entry: result %", "min5_win": "5-min entry: win"},
 }
+
+
+TACTICS = {
+    "launch": (("min5_", "5-min entry", "5-min low"), ("close_", "buy at the close", "day's low")),
+    "buypoint": (("", "as the alert fires", "day's low"), ("close_", "buy at the close", "day's low"), ("min5_", "5-min entry", "5-min low")),
+}
+RESULT = ("risk_pct", "result_pct", "R", "win", "reached_3R", "exit")
+
+
+def long_rows(rows, tactics):
+    """one row per trade and entry tactic, so the tactic is a column to filter on"""
+    out = []
+    for r in rows:
+        base = {k: v for k, v in r.items() if not k.startswith(("min5_", "close_")) and k not in RESULT + ("reached_2R", "reached_5R", "days_held",
+                                                                                                       "ran20", "failed5", "min5_bought")}
+        for pre, name, stop in tactics:
+            if r.get(pre + "R") is None:
+                continue
+            x = dict(base)
+            x.update({"entry tactic": name, "stop": stop})
+            x.update({k: r.get(pre + k) for k in RESULT})
+            out.append(x)
+    return out
+
+
+def tactic_grid(wb, title, rows):
+    """each tactic's results by RVOL band and by gap band"""
+    ws = wb.create_sheet(title[:31])
+    tac = sorted({r["entry tactic"] for r in rows})
+    for what, key, bands, unit in (("RVOL (the day's)", "rvol_day", RV_B, "x"), ("gap", "gap_pct", GAP_B, "%")):
+        for stat in ("average R", "winners %", "average %", "trades"):
+            ws.append([f"{stat} by {what}"] + tac)
+            for c in ws[ws.max_row]:
+                c.font = Font(bold=True)
+            for lo, hi in bands + ((None, None),):
+                line = [bname(lo, hi, unit) if (lo, hi) != (None, None) else "all"]
+                for t in tac:
+                    sel = [r for r in rows if r["entry tactic"] == t and r.get("R") is not None
+                           and ((lo, hi) == (None, None) or inb(r.get(key), lo, hi))]
+                    line.append(None if not sel else round(sum(r["R"] for r in sel) / len(sel), 2) if stat == "average R" else
+                                round(100 * sum(r["win"] for r in sel) / len(sel)) if stat == "winners %" else
+                                round(sum(r["result_pct"] for r in sel) / len(sel), 2) if stat == "average %" else len(sel))
+                ws.append(line)
+            ws.append([])
+    ws.column_dimensions["A"].width = 30
+    for i in range(2, 6):
+        ws.column_dimensions[get_column_letter(i)].width = 20
 
 
 def trades(wb, title, rows, spec=TOT):
@@ -269,8 +322,15 @@ def main():
             ws.append([path or "all"] + [v.get(k) for k in cols])
         style(ws, [62] + [13] * len(cols))
     d = data("probe_launch_orh")
-    if d and d.get("trades"):
-        trades(wb, "Launch 5-min vs close", d["trades"], TOT_2)
+    if d and d.get("trades") and any("close_R" in r for r in d["trades"]):
+        lr = long_rows(d["trades"], TACTICS["launch"])
+        trades(wb, "Launch - compare entries", lr)
+        tactic_grid(wb, "Launch entries by RVOL, gap", lr)
+    d = data("probe_buypoints")
+    if d and d.get("trades") and any("close_R" in r for r in d["trades"]):
+        br = long_rows(d["trades"], TACTICS["buypoint"])
+        trades(wb, "Buy points - compare entries", br)
+        tactic_grid(wb, "Buy pt entries by RVOL, gap", br)
     for name, label, rvcol in (("probe_launch_live", "Launch trades", ("rvol_pace_at_buy", "rvol_day")), ("probe_buypoints", "Buy point trades", ("rvol_day",))):
         d = data(name)
         if not d or not d.get("trades"):
