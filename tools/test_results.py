@@ -99,10 +99,21 @@ COLUMNS = (
 )
 
 
+def bull_flag(d):
+    """the user's name for our flag (Nov 1 2026): a bull flag. Runs made before the rename say 'Flag'"""
+    for t in (d or {}).get("trades", []):
+        if t.get("buy_point") == "flag breakout":
+            t["buy_point"] = "bull flag breakout"
+        for k in ("pattern", "engine_read"):
+            if isinstance(t.get(k), str) and t[k].startswith("Flag"):
+                t[k] = "Bull flag" + t[k][4:]
+    return d
+
+
 def data(name):
     try:
-        return json.loads(subprocess.run(["git", "show", f"origin/radar-data:{name}.json"], cwd=ROOT, check=True,
-                                         capture_output=True, text=True).stdout)
+        return bull_flag(json.loads(subprocess.run(["git", "show", f"origin/radar-data:{name}.json"], cwd=ROOT, check=True,
+                                                   capture_output=True, text=True).stdout))
     except Exception:
         return None
 
@@ -167,7 +178,7 @@ STRATEGY = {
     "Base breakout": "A close more than 0.5% over the base top (the highest high of the base: at least 5 sessions old, after a pullback of 1.25+ ADRs); "
                      "within 0.5% = a breakout with caution, its follow-through starts the leg. Tops are named by their reach: a 1-, 3- or 6-month high "
                      "(CAI Oct 27 2026, 2.4% over 32.89; RPD Oct 23 over 14.80). Here every cross of the base top counts, whatever the close.",
-    "Flag breakout": "A bull flag: the top at least a 1-month high after a run of 4+ ADRs, then 4+ pullback days, 1.25-4 ADRs deep, 3+ lower highs, "
+    "Bull flag breakout": "A bull flag: the top at least a 1-month high after a run of 4+ ADRs, then 4+ pullback days, 1.25-4 ADRs deep, 3+ lower highs, "
                      "riding the 10 or 21 EMA, a controlled pullback; the falling line through the highs is the trigger (TTAN Oct 30 2026 at 84.00, "
                      "ZS Oct 21, ARM Apr 13 at 149.00).",
     "Pop": "Pop out of the consolidation, an entry inside the base: after its resting time (volume dried up, surfing the 10 & 21 EMA) and a tight "
@@ -585,7 +596,7 @@ def main():
         trades(wb, "Buy points - compare entries", br)
         tactic_grid(wb, "Buy pt entries by RVOL, gap", br)
         # one sheet per Launches trigger, the same layout as "Launch - compare entries"
-        for k, short in (("base breakout", "Base breakout"), ("flag breakout", "Flag breakout"), ("pop", "Pop"), ("pattern pivot", "Pattern pivot"),
+        for k, short in (("base breakout", "Base breakout"), ("bull flag breakout", "Bull flag breakout"), ("pop", "Pop"), ("pattern pivot", "Pattern pivot"),
                          ("follow-through", "Follow-through"), ("retest", "Retest held"), ("push", "Push 21 EMA"),
                          ("21 EMA retest", "21 EMA retest"), ("21 EMA undercut & reclaim", "21 EMA undercut"),
                          ("50 EMA undercut & reclaim", "50 EMA undercut")):

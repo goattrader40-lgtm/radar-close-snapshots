@@ -24,11 +24,7 @@ MIN_N, MIN_HALF = 40, 15
 
 
 def data(name):
-    try:
-        return json.loads(subprocess.run(["git", "show", f"origin/radar-data:{name}.json"], cwd=ROOT, check=True,
-                                         capture_output=True, text=True).stdout)
-    except Exception:
-        return None
+    return tr.data(name)
 
 
 def band(x, cuts, unit=""):
@@ -99,6 +95,8 @@ def realism(strategy, tactic):
     t = tactic or ""
     if strategy.endswith(": push") and ("alert" in t or "5-min" in t):
         return "hindsight"
+    if "(the engine's breakout days)" in strategy and t != "buy at the close":
+        return "hindsight"                          # bought during the day, but only days known at the close to be breakouts
     if t.startswith("as the alert fires"):
         return "upper limit"
     return "fair"
@@ -184,7 +182,19 @@ def main():
     if d and d.get("trades"):
         br = tr.long_rows(d["trades"], tr.TACTICS["buypoint"])
         for k in sorted({r["buy_point"] for r in br}):
-            sets.append((f"Buy point: {k}", "buypoint", [r for r in br if r["buy_point"] == k]))
+            sel = [r for r in br if r["buy_point"] == k]
+            if any(r.get("bought") == "level" for r in sel):
+                # a level buy point: every cross bought during the day (you can't know the close yet), and the engine's own
+                # breakout days bought at their close (the user, Nov 1 2026: the trigger sheets must match the engine)
+                sets.append((f"Buy point: {k} (every cross, bought during the day)", "buypoint", [r for r in sel if r["entry tactic"] != "buy at the close"]))
+                sets.append((f"Buy point: {k} (the engine's breakout days)", "buypoint", [r for r in sel if r.get("engine_confirmed", 1)]))
+            else:
+                sets.append((f"Buy point: {k}", "buypoint", sel))
+    d = data("probe_gapretest")
+    if d and d.get("trades"):
+        gq = tr.long_rows(d["trades"], tr.TACTICS["gapretest"])
+        sets.append(("Gap retest, holding the 10 / 21 EMA", "buypoint", [r for r in gq if r.get("retest_with") != "no EMA"]))
+        sets.append(("Gap retest, all", "buypoint", gq))
     d = data("probe_gapbase")
     if d and d.get("trades"):
         sets.append(("Gap out of base", "gapbase", tr.with_risk_adr(d["trades"])))
