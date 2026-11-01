@@ -1,45 +1,71 @@
 # Setups — 2026-10-30
 
-**1-EP/GAP** 25 · **1-UPDAY** 110 · **2-POOL** 189 · **3-SETUPS** 30
+**1-EP/GAP** 25 · **1-UPDAY** 110 · **2-POOL** 189 · **3-SETUPS** 56
 
 TradingView import files are in [`tradingview/`](tradingview/) (Watchlist menu → Import list).
 
 ## 3-SETUPS
 
-Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 1 ADR above that EMA.
+Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Launches engine (scanner/launch.py).
 
 | # | Symbol | Setup (last hit) | Grade | Pattern | Buy point | Away | Other entries | ADR | From |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | CVI | PB 21 (Oct 30) | A+ | Bull flag | 63.51 | +8.8% | flag trendline 57.87 | 5.5% | 2-POOL |
-| 2 | SHOP | PB 50 (Oct 30) | A+ | Bull flag | 180.88 | +14.9% | flag trendline 165.17, armed: 50 EMA pullback | 4.4% | 2-POOL |
-| 3 | XERS | Tight (Oct 30) | A+ | Ascending triangle | 11.42 | +6.6% | level 11.42 | 4.8% | 2-POOL |
-| 4 | ENTG | PB 21 (Oct 30) | A+ | Base forming (no pattern yet) | 170.06 | +10.1% | pullback tight day 159.0, level 170.06 | 5.2% | 1-UPDAY |
-| 5 | FROG | PB 50 (Oct 30) | A+ | Base breakout | 105.76 | +12.0% | pullback tight day 95.65 | 6.1% | 2-POOL |
-| 6 | NTRA | PB 21 (Oct 30) | A+ | Ascending triangle | 437.41 | +5.6% |  | 4.7% | 2-POOL |
-| 7 | ACHC | PB 50 (Oct 30) | A+ | Base forming (no pattern yet) | 35.83 | +19.6% | pullback tight day 30.1 | 4.1% | 2-POOL |
-| 8 | MOH | PB 21 + PB 50 (Oct 30) | A+ | Base forming (no pattern yet) | 244.89 | +19.6% |  | 4.6% | 2-POOL |
-| 9 | GO | PB 21 (Oct 28) | A+ | Base forming (no pattern yet) | 13.98 | +8.2% |  | 3.7% | 2-POOL |
-| 10 | CNXC | PB 21 (Oct 30) | A+ | Base forming (no pattern yet) | 34.59 | +14.8% | coil 30.66 | 5.8% | 2-POOL |
-| 11 | AI | PB 21 (Oct 30) | A+ |  |  |  | armed: 21 EMA pullback | 5.5% | 1-EP/GAP |
-| 12 | IOT | PB 21 (Oct 30) | A+ |  |  |  | armed: 50 EMA pullback | 4.6% | 2-POOL |
-| 13 | RBRK | PB 21 (Oct 30) | A+ |  |  |  |  | 6.1% | 1-UPDAY |
-| 14 | KD | PB 21 (Oct 30) | A+ |  |  |  |  | 4.8% | 2-POOL |
-| 15 | WIX | PB 21 (Oct 28) | A+ |  |  |  |  | 5.4% | 1-UPDAY |
-| 16 | PRCH | PB 21 (Oct 27) | A+ |  |  |  |  | 5.2% | 1-UPDAY |
-| 17 | ARQT | Tight (Oct 29) | A | Tight flag | 33.3 | +3.8% |  | 4.9% | 1-UPDAY |
-| 18 | SLN | Tight (Oct 28) | A | Tight flag | 19.86 | +0.6% |  | 3.8% | 1-EP/GAP |
-| 19 | LW | Tight (Oct 27) | A | Base forming (no pattern yet) | 55.7 | +3.0% | level 55.7 | 3.5% | 2-POOL |
-| 20 | KOD | Tight (Oct 26) | A | High tight flag | 104.0 | +4.9% | level 104.0 | 7.3% | 2-POOL |
-| 21 | FIVN | PB 21 (Oct 30) | A | High tight flag | 40.0 | +10.1% |  | 6.0% | 1-UPDAY |
-| 22 | INSW | PB 21 (Oct 29) | A | Base breakout | 126.27 | +12.8% |  | 4.7% | 1-UPDAY |
-| 23 | SYRE | Tight (Oct 29) | A | Base forming (no pattern yet) | 110.17 | +14.1% |  | 5.6% | 2-POOL |
-| 24 | SWKS | Tight (Oct 28) | A | Cup (no handle) | 92.8 | +6.0% |  | 4.2% | 2-POOL |
-| 25 | VIR | PB 21 (Oct 30) | A | Base breakout | 12.19 | +7.9% |  | 6.1% | 1-UPDAY |
-| 26 | RNG | PB 21 (Oct 30) | A | Bull flag | 98.14 | +20.5% | flag trendline 80.9, pullback tight day 83.77, armed: 21 EMA pullback | 5.5% | 1-EP/GAP |
-| 27 | PTGX | PB 21 (Oct 30) | A | Base forming (no pattern yet) | 160.81 | +11.0% |  | 4.1% | 2-POOL |
-| 28 | RVTY | PB 21 (Oct 30) | A | Qullamaggie breakout | 169.06 | +7.7% |  | 4.0% | 2-POOL |
-| 29 | WK | Tight (Oct 28) | A | Base forming (no pattern yet) | 86.56 | +3.5% |  | 4.0% | 2-POOL |
-| 30 | PRGO | PB 21 (Oct 30) | A | Qullamaggie breakout | 16.79 | +6.4% |  | 4.2% | 2-POOL |
+| 1 | TTAN | Triggered today: Flag breakout | A+ | Flag (trendline) | 84.28 | +0.0% | flag trendline 84.33 | 4.97% | 1-UPDAY |
+| 2 | IOT | Triggered today: 21 EMA retest | A+ | Flag (trendline) | 43.72 | +3.9% |  | 4.6% | 2-POOL |
+| 3 | VSXY | Triggered today: Retest held | A | Base top | 102.46 | +6.0% | pullback tight day 98.25 | 5.34% | 1-UPDAY |
+| 4 | DXC | Triggered today: Retest held | A | Base top | 16.38 | +9.3% |  | 5.56% | 1-UPDAY |
+| 5 | AI | Triggered today: 21 EMA retest | A+ | Base top | 13.04 | +10.0% |  | 5.53% | 1-EP/GAP |
+| 6 | CART | Triggered today: Retest held | A | Base top | 62.0 | +9.8% | flag trendline 56.65 | 4.4% | 1-UPDAY |
+| 7 | BSP | Triggered today: 21 EMA retest |  | Base top | 59.5 | +30.7% |  | 10.36% | 1-EP/GAP |
+| 8 | CDNA | Triggered today: Breakout | A+ | Qullamaggie breakout |  |  |  | 6.83% | 1-EP/GAP |
+| 9 | EAT | Ready: Base top |  | Base top | 212.23 | +0.0% |  | 5.25% | 1-EP/GAP |
+| 10 | CBRL | Ready: Base top | A | Base top | 70.28 | +0.3% |  | 4.2% | 1-UPDAY |
+| 11 | ACN | Ready: Base top | A | Base top | 259.39 | +0.4% |  | 4.07% | 1-UPDAY |
+| 12 | PTEN | Ready: Base top | A | Base top | 13.39 | +0.5% |  | 4.45% | 1-UPDAY |
+| 13 | VRDN | Ready: Base top | A | Base top | 24.86 | +0.8% | level 25.32 | 4.73% | 1-UPDAY |
+| 14 | KYMR | Ready: Base top | A | Base top | 127.85 | +1.0% |  | 5.4% | 1-UPDAY |
+| 15 | HUBS | Ready: Flag (trendline) | A | Flag (trendline) | 237.09 | +0.9% |  | 4.85% | 2-POOL |
+| 16 | XERS | Ready: Flag (trendline) | A+ | Flag (trendline) | 10.83 | +1.1% | level 11.42 | 4.8% | 2-POOL |
+| 17 | MNDY | Ready: Flag (trendline) | A | Flag (trendline) | 96.89 | +1.3% | flag trendline 95.76 | 5.41% | 2-POOL |
+| 18 | CLF | Ready: Base top | A+ | Base top | 14.58 | +2.3% | flat top 14.58 | 6.38% | 1-EP/GAP |
+| 19 | APPN | Ready: Flag (trendline) | A+ | Flag (trendline) | 50.41 | +2.7% | flag trendline 50.41 | 6.52% | 1-UPDAY |
+| 20 | W | Ready: Base top | A | Base top | 118.31 | +2.1% |  | 4.3% | 1-UPDAY |
+| 21 | LIFE | Ready: Flag (trendline) |  | Flag (trendline) | 44.81 | +3.3% |  | 6.21% | 1-UPDAY |
+| 22 | TARS | Ready: Base top |  | Base top | 76.64 | +2.4% | flat top 76.64 | 4.4% | 2-POOL |
+| 23 | ETSY | Ready: Base top | A | Base top | 91.12 | +2.4% |  | 4.42% | 1-UPDAY |
+| 24 | PRGO | Ready: Flag (trendline) | A | Flag (trendline) | 16.14 | +2.3% |  | 4.16% | 2-POOL |
+| 25 | KVYO | Ready: Flag (trendline) | A | Flag (trendline) | 20.75 | +3.0% |  | 5.23% | 1-EP/GAP |
+| 26 | UPBD | Ready: Base top |  | Base top | 21.22 | +2.5% |  | 4.19% | 1-EP/GAP |
+| 27 | IRON | Ready: Base top | A | Base top | 83.63 | +3.5% |  | 5.57% | 1-EP/GAP |
+| 28 | KSS | Ready: Base top | A | Base top | 25.1 | +3.2% |  | 5.21% | 1-UPDAY |
+| 29 | KOD | Ready: Base top | A | Base top | 104.0 | +4.9% | level 104.0 | 7.34% | 2-POOL |
+| 30 | ABSI | Ready: Base top | A | Base top | 11.89 | +6.8% |  | 10.01% | 1-UPDAY |
+| 31 | NCNO | Ready: Flag (trendline) | A | Flag (trendline) | 23.32 | +2.8% | coil 22.7, pullback tight day 23.3, level 23.83 | 4.1% | 1-UPDAY |
+| 32 | AMLX | Setting up: 21 EMA retest setup |  | Base top | 30.0 | +4.0% |  | 4.71% | 2-POOL |
+| 33 | WTTR | Setting up: 21 EMA retest setup |  | Base top | 20.53 | +4.1% | flat top 20.53 | 4.11% | 2-POOL |
+| 34 | MAZE | Setting up: 21 EMA retest setup |  | Inner base (last 20 days) | 33.19 | +5.4% | level 33.5 | 5.32% | 1-UPDAY |
+| 35 | NRIX | Setting up: 21 EMA retest setup | A | Base top | 28.23 | +5.3% | level 28.23 | 5.25% | 1-UPDAY |
+| 36 | S | Setting up: 21 EMA retest setup |  | Base breakout | 26.5 | +5.4% |  | 5.08% | 1-UPDAY |
+| 37 | NAVN | Setting up: 21 EMA retest setup | A | Inner base (last 20 days) | 27.61 | +5.8% |  | 4.14% | 1-UPDAY |
+| 38 | PGY | Setting up: 21 EMA retest setup |  | Inner base (last 20 days) | 21.15 | +10.0% |  | 6.79% | 2-POOL |
+| 39 | CVI | Setting up: Flag forming | A+ | Flag (trendline) | 63.29 | +8.4% | flag trendline 57.87 | 5.48% | 2-POOL |
+| 40 | DOCS | Setting up: 21 EMA retest setup | A | Inner base (last 20 days) | 34.8 | +6.2% |  | 4.04% | 1-UPDAY |
+| 41 | KD | Setting up: Flag forming | A+ | Flag (trendline) | 14.88 | +7.6% |  | 4.76% | 2-POOL |
+| 42 | ESTC | Setting up: Near the retest zone | A+ | Inner base (last 20 days) | 107.48 | +10.5% |  | 4.49% | 1-UPDAY |
+| 43 | ZYME | Setting up: 21 EMA retest setup | A | Base top | 31.34 | +9.5% |  | 4.08% | 1-UPDAY |
+| 44 | SYRE | Setting up: 21 EMA retest setup | A | Base top | 110.17 | +14.1% |  | 5.63% | 2-POOL |
+| 45 | ADPT | Setting up: 21 EMA retest setup |  | Base top | 30.74 | +15.4% |  | 6.1% | 1-UPDAY |
+| 46 | CNXC | Setting up: 21 EMA retest setup | A+ | Base top | 34.59 | +14.8% | coil 30.66 | 5.83% | 2-POOL |
+| 47 | AZTA | Setting up: 21 EMA retest setup |  | Base breakout | 46.41 | +18.8% |  | 6.57% | 1-UPDAY |
+| 48 | DINO | Setting up: Near the retest zone |  | Base top | 129.37 | +12.5% | coil 116.7, flat top 129.37 | 4.1% | 2-POOL |
+| 49 | SHOP | Setting up: Near the retest zone | A+ | Base top | 180.88 | +14.9% | flag trendline 165.17 | 4.36% | 2-POOL |
+| 50 | RNG | Setting up: 21 EMA retest setup | A | Base top | 98.14 | +20.5% | flag trendline 80.9, pullback tight day 83.77 | 5.52% | 1-EP/GAP |
+| 51 | TEAM | Setting up: Near the retest zone | A | Base top | 229.96 | +19.9% | flag trendline 220.69 | 4.38% | 2-POOL |
+| 52 | TNDM | Setting up: 21 EMA retest setup |  | Base top | 24.81 | +29.8% |  | 5.5% | 1-UPDAY |
+| 53 | ASAN | Setting up: 21 EMA retest setup | A+ | Base forming (no pattern yet) |  |  |  | 5.4% | 2-POOL |
+| 54 | RBRK | Setting up: Near the retest zone | A+ |  |  |  |  | 6.06% | 1-UPDAY |
+| 55 | VCYT | Setting up: 21 EMA retest setup | A |  |  |  |  | 5.39% | 1-UPDAY |
+| 56 | ZS | Setting up: Near the retest zone | A+ |  |  |  |  | 5.51% | 1-UPDAY |
 
 ## Changes today
 
