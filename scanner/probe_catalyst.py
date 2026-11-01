@@ -157,6 +157,7 @@ def buy_points(A, keys):
                     out["breakout, 3rd try (ascending triangle)"].append(r)
             if kind == "flag":
                 out["flag, volume dried up the 2 days before" if f.get("flag_dry") else "flag, volume not dried up"].append(r)
+                out["flag, caution (within 0.5% over its line)" if "with caution" in st else "flag, decisive (over 0.5%)"].append(r)
             m += 1
         per.append(m)
     res = {}
