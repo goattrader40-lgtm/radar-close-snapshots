@@ -1507,7 +1507,7 @@ def main():
         rows = setups3(A, cal[-1], wl, prev, removed_setups_of(a.picks) if a.picks else {})
         write_watchlist(rows, a.watchlist, wl)
         s3 = [dict(symbol=r["symbol"], tv=r.get("tv"), section=r["section"], setup=r["setup"], buy_point=r["buy_point"],
-                   away_adr=r["away_adr"], adr_pct=r["adr_pct"]) for r in rows]
+                   away_adr=r["away_adr"], adr_pct=r["adr_pct"], why=r["why"]) for r in rows]
         print("3-SETUPS:", {sec: sum(1 for r in rows if r["section"] == sec) for sec in S3_SECTIONS})
     daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {},
           picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3)

@@ -63,6 +63,37 @@ def main():
             except Exception as e:
                 print("not sent:", e, file=sys.stderr)
     print(f"eod alerts: {len(out)}" + ("" if topic else " (no NTFY_TOPIC: printed, not sent)"))
+    # 3-SETUPS Ready (Watchlist): tomorrow's buys, all in one message with the list as a text file
+    ready = [r for r in doc.get("setups3", []) if r.get("section") == "Ready"]
+    if ready:
+        name, text = f"3-SETUPS-Ready-{doc['date']}.txt", ready_file(doc["date"], ready)
+        print(text)
+        if topic:
+            try:
+                send_file(topic, f"3-SETUPS Ready for tomorrow: {len(ready)} stocks",
+                          " ".join(r["symbol"] for r in ready)[:300], name, text)
+            except Exception as e:
+                print("Ready list not sent:", e, file=sys.stderr)
+
+
+def ready_file(day, rows):
+    """the Ready list as text: one line per stock, the closest to its trigger first"""
+    lines = [f"3-SETUPS Ready after the {day} close: the trigger within 0.7 ADR (buy over it; your entry: the 5-minute opening range high)", ""]
+    for r in sorted(rows, key=lambda r: r.get("away_adr") if r.get("away_adr") is not None else 9):
+        lines.append(f"{r['symbol']:6} {r.get('setup') or '':18} trigger {r.get('buy_point') or '-':>9}  {r.get('away_adr') or 0:.1f} ADR away"
+                     f"  ADR {r.get('adr_pct') or 0:.1f}%" + ("  tight" + w.split("tight")[1].split(" (")[0] if "tight" in (w := r.get("why") or "") else "")
+                     + ("  (" + w.split(" (")[-1] if " (from " in w else ""))
+    return "\n".join(lines) + "\n"
+
+
+def send_file(topic, title, msg, filename, text):
+    """one ntfy message with a text file attached (ntfy: the body is the file, the message goes in a header)"""
+    import urllib.request
+    req = urllib.request.Request(f"https://ntfy.sh/{topic}", data=text.encode(), method="PUT", headers={
+        "Title": title.encode("ascii", "replace").decode(), "Message": msg.encode("ascii", "replace").decode(),
+        "Filename": filename, "Priority": "default", "Tags": "clipboard"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return r.status
 
 
 if __name__ == "__main__":

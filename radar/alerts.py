@@ -426,6 +426,12 @@ def main():
         new = new[:MAX_PER_RUN - 1] + [(f"summary:{now:%H%M}", f"{len(new) - MAX_PER_RUN + 1} more alerts",
                                         ", ".join(a[0].split(":")[0] for a in new[MAX_PER_RUN - 1:]), "default", "SPY")] \
             + [(a[0], None, None, None, None) for a in new[MAX_PER_RUN - 1:]]
+    # 3-SETUPS Ready triggers of this check: one message for all of them (each still marked sent)
+    s3 = [a for a in new if a[0].endswith(":s3") and a[1]]
+    if len(s3) > 1:
+        new = [a for a in new if a not in s3] + [(f"s3batch:{now:%H%M}", f"3-SETUPS Ready: {len(s3)} triggers",
+                                                  "\n".join(f"{a[0].split(':')[0]}: {a[2]}" for a in s3), "high", s3[0][4])] \
+            + [(a[0], None, None, None, None) for a in s3]
     new += quiet
     for key, title, msg, prio, tvs in new:
         if title is not None and key.endswith(":retest"):
