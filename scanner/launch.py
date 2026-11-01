@@ -85,7 +85,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, pennant_low=0.25, flag_legs=1, flag_surf=0, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, pennant_low=0.0, flag_legs=1, flag_surf=0, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -367,7 +367,7 @@ def flag_shape(a, t, i):
                  swing low after that low, and that drift down a controlled, lower-volume pullback: at or under 1.1x the
                  20-day average volume (APLD Apr 24-28 2026 0.82x, AEHR Mar 4-30 0.81x, SMCI, CAI, VEEV, ZS, TTAN, ANF
                  0.71-1.04x; not APPN Aug 31 - Sep 10 1.17x, ARM Mar 25-30 1.75x, VEEV Aug 27-31 1.62x: drops on heavy volume)
-    "pennant"    converging, a symmetrical triangle: after its first low a higher swing low (a quarter ADR+ over it) while the
+    "pennant"    converging, a symmetrical triangle: after its first low a higher swing low (any low over it: ARM Apr 7 2026, 137.58 over Mar 30's 136.00) while the
                  highs keep stepping down, the volume after that first low at or under 1.1x (ARM Mar 25 - Apr 10 2026:
                  highs Mar 25, Apr 1 down, lows Mar 30, Apr 2 / 7 up, 0.91x after Mar 30)
     Riding the 10 / 21 EMA is no part of it (the user, Nov 1 2026)."""
