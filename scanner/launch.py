@@ -1117,6 +1117,14 @@ def follow(a, i0, i, pick=False):
     if reclaim_level:
         stage += (f" · under its breakout level {rlv[1]:.2f} since {st.dates[m_now]} ({i - m_now + 1} closes), holding over the 50 EMA: "
                   f"a breakout undercut & reclaim setup, the buy is a close back over it")
+    elif m_now is not None and i - m_now <= 4:
+        # before the setup (the user, Nov 1 2026: the status should say it): the 1st close back under the level after an
+        # advance (CAI Oct 6 2026), or back under it without having advanced (W Oct 30 2026, AEHR Feb 12: the base stays valid)
+        if c[rlv[0] + 1:m_now].max(initial=0) < rlv[1] * (1 + 1.25 * _adr(st, m_now) / 100):
+            stage += f" · back under its breakout level {rlv[1]:.2f}: the breakout didn't advance, the base is still valid"
+        elif i == m_now and c[i] > a.e50[i]:
+            stage += (f" · closed back under its breakout level {rlv[1]:.2f} (1st close): a 2nd close under, holding over the 50 EMA, "
+                      f"sets up a breakout undercut & reclaim")
     out = dict(
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo, top_tries=ntries, top_tries_note=tries_txt,
         ema21_today=reclaim, ema21_watch=ema21_watch,

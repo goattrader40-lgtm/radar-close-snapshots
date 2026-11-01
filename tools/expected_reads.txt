@@ -3,6 +3,7 @@ GMAB from 2026-08-07 (launch)
   2026-08-14 c 31.94 | leg 1 | Base breakout with caution (leg 2 if it follows through): closed 0.47% over the base high 31.79 (a 6-month high), within 0.5%: not decisive | next buy point None Base forming (no pattern yet)
   2026-08-17 c 32.84 | leg 2 | Breakout follow-through (leg 2): opened over the day before's close and held over 31.79 all day, closed 3.3% (1.5 ADR) over 31.79 | next buy point None 
   2026-09-18 c 34.74 | leg 2 | Base breakout with caution (leg 3 if it follows through): closed 0.23% over the base high 34.66 (a 6-month high), within 0.5%: not decisive | next buy point 35.15 Qullamaggie breakout
+  2026-10-01 c 34.55 | leg 2 | In the base, day 2, 4% under the top 35.90 · closed back under its breakout level 34.63 (1st close): a 2nd close under, holding over the 50 EMA, sets up a breakout undercut & reclaim | next buy point None 
   2026-10-02 c 34.75 | leg 2 | Retest of the breakout level 34.63 held + confluence: 21 EMA | next buy point 35.7 Base top
   2026-10-05 c 38.48 | leg 3 | Base breakout (leg 3), closed 7.8% (2.7 ADR) over the base high 35.70 (a 6-month high) | next buy point None 
   2026-10-08 c 36.05 | leg 3 | Retest of the breakout level 35.57-35.70 (bodies-wicks) held + confluence: 21 EMA | next buy point None 
@@ -37,6 +38,7 @@ SPOT from 2026-10-22 (launch)
   2026-10-30 c 593.44 | leg 1 | Push out of the 21 EMA with a gap, after the retest of 536.98-540.82 | next buy point 593.8 Base top
 ACN from 2026-10-01 (launch)
   2026-10-01 c 212.30 | leg 1 | Launch day, cleared its 6-month base | next buy point None 
+  2026-10-06 c 193.40 | leg 1 | In the base, day 4, 15% under the top 227.63 · back under its breakout level 195.00: the breakout didn't advance, the base is still valid | next buy point None 
   2026-10-07 c 196.64 | leg 1 | Retest of the breakout level 195.00-197.63 (bodies-wicks) held | next buy point 227.63 Base top
   2026-10-08 c 208.36 | leg 1 | Push out of the 21 EMA with a gap, after the retest of 195.00-197.63 | next buy point 227.63 Base top
   2026-10-16 c 229.68 | leg 2 | Base breakout (leg 2), closed 0.9% (0.2 ADR) over the base high 227.63 (a 6-month high), on light volume (0.93x) | next buy point None Base forming (no pattern yet)
@@ -49,6 +51,8 @@ SMCI from 2023-05-03 (launch)
   2023-07-12 c 27.66 | leg 3 | Breakout follow-through (leg 3): opened over the day before's close, closed 2.4% (0.4 ADR) over 27.02 | next buy point None 
   2023-07-27 c 32.73 | leg 3 | Tight under 32.91, the base high (2 days) · base 6 sessions, 15% deep (2.3 ADRs) | next buy point 32.91 Base top
   2023-07-28 c 33.45 | leg 4 | Base breakout (leg 4), closed 1.7% (0.3 ADR) over the base high 32.91 (a 6-month high), on light volume (0.70x) | next buy point None 
+  2023-08-02 c 31.96 | leg 4 | In the base, day 2, 5% under the top 33.79 · back under its breakout level 32.40: the breakout didn't advance, the base is still valid | next buy point None 
+  2023-08-03 c 32.12 | leg 4 | In the base, day 3, 5% under the top 33.79 · back under its breakout level 32.40: the breakout didn't advance, the base is still valid | next buy point None 
 ATRC from 2026-07-24 (launch)
   2026-07-24 c 35.04 | leg 0 | Launch day | next buy point 36.33 Base top
   2026-07-27 c 37.37 | leg 1 | Base breakout (leg 1), closed 2.9% (0.6 ADR) over the base high 36.33 (a 3-month high) | next buy point None 
@@ -66,6 +70,7 @@ CAI from 2026-08-07 (launch)
   2026-09-10 c 24.04 | leg 2 | Retest of the breakout level 23.40-23.66 (bodies-wicks) held + confluence: 21 EMA | next buy point 25.56 Bull flag (trendline)
   2026-09-14 c 26.05 | leg 2 | Bull flag breakout: closed over its falling line 25.33 and the 10 & 21 EMA, an entry in the base (leg 2), the volume dried up the 2 days before (0.52x, 0.36x) | next buy point 28.32 Base top
   2026-09-15 c 28.50 | leg 3 | Base breakout (leg 3), closed 0.6% (0.1 ADR) over the base high 28.32 (a 6-month high) | next buy point None Bull flag
+  2026-10-06 c 27.45 | leg 3 | Below the 21 EMA · closed back under its breakout level 28.01 (1st close): a 2nd close under, holding over the 50 EMA, sets up a breakout undercut & reclaim | next buy point 32.52 Bull flag (trendline)
   2026-10-07 c 27.10 | leg 3 | Below the 21 EMA · under its breakout level 28.01 since 2026-10-06 (2 closes), holding over the 50 EMA: a breakout undercut & reclaim setup, the buy is a close back over it | next buy point 32.49 Bull flag (trendline)
   2026-10-08 c 27.50 | leg 3 | Below the 21 EMA · under its breakout level 28.01 since 2026-10-06 (3 closes), holding over the 50 EMA: a breakout undercut & reclaim setup, the buy is a close back over it | next buy point 32.89 Base top
   2026-10-09 c 29.70 | leg 3 | Breakout undercut & reclaim (entry): 3 closes under the breakout level 28.01 since 2026-10-06, holding over the 50 EMA, closed 29.70 back over it | next buy point 32.89 Base top
@@ -94,6 +99,7 @@ ZS from 2026-09-14 (launch)
   2026-09-30 c 199.42 | leg 1 | Push out of the 21 EMA with a gap, after the retest of 190.00-190.97, on light volume (0.54x) | next buy point 216.97 Base top
   2026-10-09 c 233.73 | leg 2 | Base breakout (leg 2), closed 7.7% (1.6 ADR) over the base high 216.97 (a 6-month high) | next buy point None 
   2026-10-15 c 220.43 | leg 2 | Retest of the breakout level 214.64-216.97 (bodies-wicks) held + confluence: 10 EMA | next buy point None 
+  2026-10-16 c 207.38 | leg 2 | Below the 21 EMA · closed back under its breakout level 214.64 (1st close): a 2nd close under, holding over the 50 EMA, sets up a breakout undercut & reclaim | next buy point 227.92 Bull flag (trendline)
   2026-10-19 c 212.53 | leg 2 | In the base, day 6, 10% under the top 237.22 (set 2026-10-12) · under its breakout level 214.64 since 2026-10-16 (2 closes), holding over the 50 EMA: a breakout undercut & reclaim setup, the buy is a close back over it | next buy point 226.06 Bull flag (trendline)
   2026-10-20 c 214.51 | leg 2 | In the base, day 7, 10% under the top 237.22 (set 2026-10-12) · under its breakout level 214.64 since 2026-10-16 (3 closes), holding over the 50 EMA: a breakout undercut & reclaim setup, the buy is a close back over it | next buy point 224.2 Bull flag (trendline)
   2026-10-21 c 231.33 | leg 2 | Bull flag breakout: closed over its falling line 224.20 and the 10 & 21 EMA, an entry in the base (leg 2), the volume dried up the 2 days before (0.58x, 0.46x) | next buy point 237.22 Base top
@@ -122,6 +128,11 @@ LIFE from 2026-10-01 (pick)
   2026-10-30 c 43.39 | leg 1 | Tight under 44.99, the base high (4 days) · base 7 sessions, 10% deep (1.5 ADRs) | next buy point 44.81 Bull flag (trendline)
 AEHR from 2026-02-11 (launch)
   2026-02-11 c 33.85 | leg 1 | Launch day, cleared its 3-month base | next buy point None 
+  2026-02-12 c 27.89 | leg 1 | In the base, day 16, 12% under the top 31.84 (set 2026-01-22) · back under its breakout level 30.91: the breakout didn't advance, the base is still valid | next buy point 31.84 Base top
+  2026-02-13 c 28.84 | leg 1 | In the base, day 17, 9% under the top 31.84 (set 2026-01-22) · back under its breakout level 30.91: the breakout didn't advance, the base is still valid | next buy point 31.84 Base top
+  2026-02-17 c 28.49 | leg 1 | In the base, day 4, 24% under the top 37.49 · back under its breakout level 30.91: the breakout didn't advance, the base is still valid | next buy point None 
+  2026-02-18 c 29.01 | leg 1 | In the base, day 5, 23% under the top 37.49 (set 2026-02-11) · back under its breakout level 30.91: the breakout didn't advance, the base is still valid | next buy point 37.49 Base top
+  2026-02-19 c 30.27 | leg 1 | In the base, day 6, 19% under the top 37.49 (set 2026-02-11) · back under its breakout level 30.91: the breakout didn't advance, the base is still valid | next buy point 37.49 Base top
   2026-02-24 c 39.23 | leg 2 | Base breakout (leg 2), closed 4.6% (0.4 ADR) over the base high 37.49 (a 6-month high) | next buy point None 
   2026-03-06 c 35.61 | leg 2 | Retest of the breakout level 33.85-37.49 (bodies-wicks) held + confluence: 21 EMA | next buy point None 
   2026-03-09 c 40.88 | leg 2 | Retest of the breakout level 33.85-37.49 (bodies-wicks) held + confluence: 10 EMA & 21 EMA | next buy point None 
