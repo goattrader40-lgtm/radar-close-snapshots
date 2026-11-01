@@ -16,3 +16,5 @@ ZS   2026-09-14 2026-10-30 launch
 ARM  2026-03-25 2026-05-29 pick
 TTAN 2026-10-15 2026-10-30 pick
 LIFE 2026-10-01 2026-10-30 pick   # the user agreed its Oct 8 undercut & reclaim, Oct 20 pop, Oct 21 breakout and Oct 30 flag (44.81)
+AEHR 2026-02-11 2026-04-10 launch   # the user agreed (Nov 1 2026): Mar 31 50 EMA undercut & reclaim, Apr 2 bull flag breakout (closed under the 50 EMA Mar 27 & 30), Apr 6 base breakout
+APLD 2026-04-14 2026-05-08 launch   # the user agreed (Nov 1 2026): May 4 the textbook bull flag breakout (pole Mar 31 - Apr 23, flag Apr 24 - May 1)

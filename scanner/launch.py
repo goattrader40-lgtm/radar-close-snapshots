@@ -363,7 +363,8 @@ def flag_at(a, i):
 
 def flag_shape(a, t, i):
     """the consolidation from the top t to the day before i (your definitions, Nov 1 2026), or None:
-    "bull flag"  a descending channel: lower highs and lower lows on at least half the days down to its low, no higher
+    "bull flag"  a descending channel: lower highs on at least half and lower lows on more than half of the days down to
+                 its low (ACN Oct 23-28 2026: 2 of 4, a pause then a V, the user's "drop and bounce": none), no higher
                  swing low after that low, and that drift down a controlled, lower-volume pullback: at or under 1.1x the
                  20-day average volume (APLD Apr 24-28 2026 0.82x, AEHR Mar 4-30 0.81x, SMCI, CAI, VEEV, ZS, TTAN, ANF
                  0.71-1.04x; not APPN Aug 31 - Sep 10 1.17x, ARM Mar 25-30 1.75x, VEEV Aug 27-31 1.62x: drops on heavy volume)
@@ -389,7 +390,7 @@ def flag_shape(a, t, i):
     lh = sum(1 for x in drift if h[x] < h[x - 1])
     ll = sum(1 for x in drift if l[x] < l[x - 1])
     v_ = avg_rv(t + 1, lo + 1)
-    return "bull flag" if 2 * lh >= len(drift) and 2 * ll >= len(drift) and v_ is not None and v_ <= L["flag_vol_avg"] else None
+    return "bull flag" if 2 * lh >= len(drift) and 2 * ll > len(drift) and v_ is not None and v_ <= L["flag_vol_avg"] else None
 
 
 def line_intact(a, t, i):
