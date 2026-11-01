@@ -13,9 +13,8 @@
             that 1-hour 21 EMA (its low over it)
   entry     the break of the 5-minute opening range high (at that high, or the bar's open when it jumps over it);
             the stop at the opening range low = 1R
-  manage    +2R: the stop to breakeven; +3R: sell 1/3; +5R: sell 1/3; the rest (runners, from the +3R sale on) out on a
-            1-hour close under the 1-hour 21 EMA or the breakeven stop; at any time a daily close under the daily 21 EMA
-            closes whatever is open. Followed on the 5-minute bars the entry day, the 1-hour bars after; a bar that
+  manage    +2R: the stop to breakeven; +3R: sell 1/3; +5R: sell 1/3; the runners out on a daily close under the daily
+            21 EMA or the breakeven stop, whichever comes first (that daily close closes whatever is open, at any time). Followed on the 5-minute bars the entry day, the 1-hour bars after; a bar that
             touches both a stop and a target counts the stop first
 """
 import argparse, collections, datetime, json, os, sys
@@ -122,8 +121,8 @@ def trade(a, k, b5, ema, H):
             S["stop"], S["be"] = max(S["stop"], buy), True
         return False
 
-    def hour_exit(x):                                       # runners: a 1-hour close under the 1-hour 21 EMA
-        return S["sold3"] and x["c"] < x["ema"] and out(x["c"], "1-hour 21 EMA close")
+    def hour_exit(x):                                       # no 1-hour exit: the runners go on the daily 21 EMA close
+        return False
 
     hk = {x["i"]: x for x in H.get(st.dates[k], [])}
     end_j, done = k, False
