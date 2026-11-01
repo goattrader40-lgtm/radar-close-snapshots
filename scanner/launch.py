@@ -85,7 +85,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=300, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -359,6 +359,27 @@ def flag_at(a, i):
     if not shape:
         return None
     return t, depth, line, h[t] + flag_line(a, t, i) * (i + 1 - t), shape     # tomorrow's: and today's; "bull flag" / "pennant"
+
+
+def momentum_start(a, i):
+    """the low the stock's current run started from (the user, Nov 1 2026): the lowest low of its last rest, 40+ sessions
+    without a new 6-month high (the new-run rule); without one in the data, the lowest low of the last year. AEHR: Nov 21
+    2025 (18.70); SMCI 2023: Jan 19"""
+    st = a.st
+    h, l = st.h, st.l
+    if getattr(a, "_newhi120", None) is None:
+        nh = np.zeros(h.size, dtype=bool)
+        if h.size > 120:
+            prev = np.lib.stride_tricks.sliding_window_view(h, 120).max(axis=1)[:-1]
+            nh[120:] = h[120:] > prev
+        a._newhi120 = nh
+    k0 = max(120, i - 600)
+    newhi = k0 + np.flatnonzero(a._newhi120[k0:i + 1])
+    for x in range(newhi.size - 1, 0, -1):
+        if newhi[x] - newhi[x - 1] >= L["rest_days"]:
+            return int(newhi[x - 1] + np.argmin(l[newhi[x - 1]:newhi[x] + 1]))
+    k0 = max(0, i - 252)
+    return int(k0 + np.argmin(l[k0:i + 1]))
 
 
 def flag_shape(a, t, i):
@@ -857,7 +878,8 @@ def follow(a, i0, i, pick=False):
     # the breakout undercut & reclaim (the user's name; CAI Oct 9 2026): after a breakout, 2+ closes back under its level (the broken base's top,
     # its bodies: Oct 6 closed 27.45 under 28.01), the closes since holding over the 50 EMA (Oct 7-8, tight), then the close
     # back over the level (Oct 9, 29.70): an entry, within 5 sessions of the first close under it, once per breakout. One
-    # close under and back is a retest held (GMAB Oct 2, ACN Oct 7 2026)
+    # close under and back is a retest held (GMAB Oct 2, ACN Oct 7 2026). Only after the stock first closed 1.25+ ADRs over
+    # the level (not AEHR Feb 20 2026: its Feb 11 breakout fell right back)
     def under_since(k_):
         if not rlv or k_ <= rlv[0] or c[k_] >= rlv[1]:
             return None
@@ -868,7 +890,8 @@ def follow(a, i0, i, pick=False):
 
     def bo_reclaim(k_):
         m = under_since(k_ - 1)
-        return bool(m is not None and 2 <= k_ - m <= 5 and c[k_] > rlv[1] and all(c[x] > a.e50[x] for x in range(m, k_ + 1)))
+        return bool(m is not None and 2 <= k_ - m <= 5 and c[k_] > rlv[1] and all(c[x] > a.e50[x] for x in range(m, k_ + 1))
+                    and c[rlv[0] + 1:m].max(initial=0) >= rlv[1] * (1 + 1.25 * _adr(st, m) / 100))   # it advanced first
     reclaim_bo = bool(rlv and bo_reclaim(i) and not any(bo_reclaim(x) for x in range(rlv[0] + 2, i)))
     m_bo = under_since(i - 1) if reclaim_bo else None
     m_now = under_since(i)
@@ -1063,12 +1086,17 @@ def follow(a, i0, i, pick=False):
                          f"an ascending triangle, the {nth} try usually breaks out")
             if stage.startswith(("In the base", "Tight", "Consolidation")):
                 stage += " · " + tries_txt
-        elif len(tr) >= 3 and tr[-1] == i and stage.startswith(("In the base", "Tight", "Consolidation")):
-            ntries = len(tr)
-            nth = {3: "3rd", 4: "4th"}.get(len(tr), f"{len(tr)}th")
-            tries_txt = f"the {nth} try of the top {tb:.2f} today (tried {', '.join([st.dates[kt]] + [st.dates[k] for k in tr[1:-1]])}): a heads-up"
-            stage += " · " + tries_txt
-    return dict(
+        else:
+            # the try day's own read, of the main base's top only (the user: RPD Oct 8 2026 tried its 13.25 1-month top right
+            # under the 13.87 main base, resistance: no 3rd try; CAI Oct 21 the 3rd try of its 32.89 main top)
+            tm, km = max(tops)
+            trm, _ = top_tries(a, i, tm, max(i0, i - 60)) if (tm, km) != (tb, kt) else (tr, up)
+            if len(trm) >= 3 and trm[-1] == i and stage.startswith(("In the base", "Tight", "Consolidation")):
+                ntries = len(trm)
+                nth = {3: "3rd", 4: "4th"}.get(len(trm), f"{len(trm)}th")
+                tries_txt = f"the {nth} try of the top {tm:.2f} today (tried {', '.join([st.dates[km]] + [st.dates[k] for k in trm[1:-1]])}): a heads-up"
+                stage += " · " + tries_txt
+    out = dict(
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo, top_tries=ntries, top_tries_note=tries_txt,
         ema21_today=reclaim, ema21_watch=ema21_watch,
         breakout_caution=bool(bo and bo[0] == i and c[i] <= bo[1] * (1 + L["caution_pct"] / 100)),
@@ -1122,6 +1150,15 @@ def follow(a, i0, i, pick=False):
         new_run_after_rest=st.dates[rested] if rested is not None else None,
         days_since_new_high=i - last_new,
     )
+    # too far from its momentum's start (the user, Nov 1 2026): 300%+ over that low, no buy points of any kind (2 years of
+    # buy points: past it -0.4 to -0.8R whatever the entry; AEHR May 2026 +358-451%, SMCI Jul 20 / Aug 4 2023 +340 / +365%)
+    ms = momentum_start(a, i)
+    run_ = 100 * (c[i] / st.l[ms] - 1)
+    out.update(momentum_start=st.dates[ms], momentum_start_low=fnum(st.l[ms]), run_from_start_pct=fnum(run_, 0), extended=bool(run_ >= L["max_run_pct"]))
+    if out["extended"]:
+        out.update(buy_point=None, to_buy_point_pct=None, pattern=None, retest_zone=None, ema21_watch=None, push_level=None, reclaim_level=None,
+                   gap_base_level=None, stage=out["stage"] + f" · EXTENDED: +{run_:.0f}% from its momentum start ({st.dates[ms]}, {st.l[ms]:.2f}), no buy points")
+    return out
 
 
 def load(bars_path, stocks_path):
