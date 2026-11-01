@@ -525,6 +525,7 @@
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
             <th><button class="tgr-th" data-sort="section">Section</button></th>
             <th><button class="tgr-th" data-sort="grade">Grade</button></th>
+            <th class="c3">Why</th>
             <th class="c2"><button class="tgr-th" data-sort="pattern">Pattern</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
@@ -538,7 +539,6 @@
             <th class="num c3"><button class="tgr-th" data-sort="off_52w_high_pct">Off 52W high</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="dollar_vol_30d_m">$ vol 30D $M</button></th>
             <th class="c2"><button class="tgr-th" data-sort="added">Added</button></th>
-            <th class="c3">Why</th>
             <th class="c2">Themes</th>
           </tr></thead>
           <tbody></tbody>
@@ -1676,11 +1676,11 @@ defCalc('industry_perf', {
       }
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade[0], r.grade)); else gd.textContent = '—';
       const sec = (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
-      tr.append(key, h('td', 'nw', sec), gd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
+      tr.append(key, h('td', 'nw', sec), gd, h('td', 'c3 nw', r.why || ''), h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), h('td', 'num', fPrice(r.price)), pctCell(r.chg_1d, 0), h('td', 'num c2', fX(r.rel_vol)),
         h('td', 'c2', r.other), h('td', 'num c3', p1(r.adr_pct)), h('td', 'num c3 ' + tone(r.perf_1m_pct), p1(r.perf_1m_pct, true)),
         h('td', 'num c3 ' + tone(r.perf_3m_pct), p1(r.perf_3m_pct, true)), h('td', 'num c3', p1(r.off_52w_high_pct)), h('td', 'num c3', fDv(r.dollar_vol_30d_m)),
-        h('td', 'c2 nw', r.added ? fDate(r.added).replace(/, \d{4}$/, '') : '—'), h('td', 'c3 nw', r.why || ''), chipCell(r.themes, 'theme', 'c2'));
+        h('td', 'c2 nw', r.added ? fDate(r.added).replace(/, \d{4}$/, '') : '—'), chipCell(r.themes, 'theme', 'c2'));
       tb.append(tr);
     });
     S.wlShown = rows;
