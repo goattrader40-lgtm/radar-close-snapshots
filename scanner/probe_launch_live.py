@@ -98,6 +98,8 @@ def main():
             if t is None or not t.get("broke"):
                 continue
             t.update(sym=s, date=d, pace=pace, minutes=mins + 1, gap=float(a.gap[k]), under200=bool(st.c[k - 1] < a.s200[k - 1]),
+                     rvol_day=float(a.rv[k]), chg_day=float(a.chg[k]), ext200_prev=float(a.ext200_prev[k]), adr=float(st.adr[k - 1]),
+                     grade=launch.grade(a, k),
                      closed_as=("power day" if a.power(k) else "reversal day" if a.reversal(k) else "regular") if k in launched[s] else "not a launch")
             tm.append(t)
     vol = [t for t in tm if (t["pace"] or 0) >= 1.5]
@@ -118,6 +120,14 @@ def main():
                                                                                     ("after 11:00", lambda x: x > 90))},
                by_pace={k: pb.summ([t for t in tm if f(t["pace"] or 0)]) for k, f in (("pace 1.5-3x", lambda x: 1.5 <= x < 3), ("pace 3-6x", lambda x: 3 <= x < 6),
                                                                                     ("pace 6x+", lambda x: x >= 6))})
+    # every trade, for the spreadsheet's own filters (RVOL, gap...)
+    out["trades"] = [dict(date=t["date"], symbol=t["sym"], closed_as=t["closed_as"], grade_if_launch=t["grade"],
+                          gap_pct=round(t["gap"], 2), day_change_pct=round(t["chg_day"], 2), rvol_day=round(t["rvol_day"], 2),
+                          rvol_pace_at_buy=round(t["pace"], 2) if t["pace"] else None, buy_minutes_after_open=t["minutes"],
+                          from_under_200sma=t["under200"], vs_200sma_day_before_pct=round(t["ext200_prev"], 1), adr_pct=round(t["adr"], 2),
+                          risk_pct=round(t["risk"], 2), result_pct=round(float(t["ret"]), 2), R=round(float(t["R"]), 2), win=int(t["ret"] > 0),
+                          reached_2R=int(t["r2"]), reached_3R=int(t["r3"]), reached_5R=int(t["r5"]), exit=t["how"], days_held=t["days"])
+                     for t in tm]
     json.dump(out, open(a_.out, "w"), indent=1)
     print(json.dumps(out, indent=1))
 
