@@ -96,35 +96,59 @@ TOT_3 = tuple((c, "as the alert: " + lab, f) for c, lab, f in TOT[:4]) + tuple(
      ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)")))
 
 
+DESC = {
+    "Launch trades": "LAUNCH DAYS, fair (no hindsight). ENTRY: the gap-up day, over both the 5-minute opening range high and +5%. STOP: the 5-minute low. "
+                     "Then your management (+2R breakeven, 1/3 at +3R, 1/3 at +5R, runners on the daily 21 EMA close).",
+    "Launch 5-min vs close": "LAUNCH DAYS (days that closed as launches). min5_ = ENTRY over the 5-minute high on the launch day, STOP the 5-minute low "
+                             "(hindsight: only days that turned out to be launches). close_ = ENTRY at the launch day's close, STOP the day's low (fair). Your management.",
+    "Buy point trades": "BUY POINTS after the launch. Plain columns (R, win, result_pct, risk_pct) = ENTRY as the alert fires (at the level when it breaks, "
+                        "the open for a push, the close for close signals), STOP the day's low. close_ = ENTRY at that day's close, STOP the day's low. "
+                        "min5_ = ENTRY over the 5-minute high (and the buy point), STOP the 5-minute low (close signals: the next morning). Your management.",
+}
+HEAD = {
+    "Launch trades": {"risk_pct": "risk % (stop: 5-min low)", "R": "R (5-min entry, stop 5-min low)", "result_pct": "result % (5-min entry)", "win": "win (5-min entry)"},
+    "Launch 5-min vs close": {"min5_risk_pct": "5-min entry: risk % (stop 5-min low)", "min5_R": "5-min entry: R", "min5_result_pct": "5-min entry: result %",
+                              "min5_win": "5-min entry: win", "close_risk_pct": "close entry: risk % (stop day's low)", "close_R": "close entry: R",
+                              "close_result_pct": "close entry: result %", "close_win": "close entry: win"},
+    "Buy point trades": {"risk_pct": "alert entry: risk % (stop day's low)", "R": "alert entry: R", "result_pct": "alert entry: result %", "win": "alert entry: win",
+                         "close_risk_pct": "close entry: risk % (stop day's low)", "close_R": "close entry: R", "close_result_pct": "close entry: result %",
+                         "close_win": "close entry: win", "min5_risk_pct": "5-min entry: risk % (stop 5-min low)", "min5_R": "5-min entry: R",
+                         "min5_result_pct": "5-min entry: result %", "min5_win": "5-min entry: win"},
+}
+
+
 def trades(wb, title, rows, spec=TOT):
-    """every trade, a filter on each column; row 2 = the totals of what the filters show"""
+    """every trade, a filter on each column; row 1 = what the entry and stop are, row 3 = the totals of what the filters show"""
     ws = wb.create_sheet(title[:31])
+    ws.append([DESC.get(title, "")])
+    ws["A1"].font = Font(bold=True, color="2F5597")
     cols = []
     for r in rows:
         for c in r:
             if c not in cols:
                 cols.append(c)
-    n = len(rows) + 3
+    n = len(rows) + 4
     L_ = {c: get_column_letter(i + 1) for i, c in enumerate(cols)}
-    tot = [("trades shown", f"=SUBTOTAL(103,{L_[cols[0]]}4:{L_[cols[0]]}{n})")]
+    tot = [("trades shown", f"=SUBTOTAL(103,{L_[cols[0]]}5:{L_[cols[0]]}{n})")]
     for c, lab, f in spec:
         if c in L_:
-            tot.append((lab, f.format(r=f"{L_[c]}4:{L_[c]}{n}")))
+            tot.append((lab, f.format(r=f"{L_[c]}5:{L_[c]}{n}")))
     ws.append([t[0] for t in tot])
     ws.append([t[1] for t in tot])
-    ws.append(cols)
+    ws.append([HEAD.get(title, {}).get(c, c) for c in cols])
     for r in rows:
         ws.append([r.get(c) for c in cols])
-    for c in ws[1]:
-        c.font = Font(bold=True)
     for c in ws[2]:
-        c.font = Font(bold=True, color="C00000")
+        c.font = Font(bold=True)
+        c.alignment = Alignment(wrap_text=True, vertical="top")
     for c in ws[3]:
+        c.font = Font(bold=True, color="C00000")
+    for c in ws[4]:
         c.font = Font(bold=True, color="FFFFFF")
         c.fill = PatternFill("solid", fgColor="2F5597")
         c.alignment = Alignment(wrap_text=True, vertical="top")
-    ws.auto_filter.ref = f"A3:{get_column_letter(len(cols))}{n}"
-    ws.freeze_panes = "C4"
+    ws.auto_filter.ref = f"A4:{get_column_letter(len(cols))}{n}"
+    ws.freeze_panes = "C5"
     for i in range(1, len(cols) + 1):
         ws.column_dimensions[get_column_letter(i)].width = 14
 
