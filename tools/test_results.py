@@ -73,6 +73,10 @@ COLUMNS = (
     ("exit / days_held", "how it ended (stop, breakeven, daily 21 EMA close, still open) and how many days"),
     ("ran20 / failed5", "the stock ran 20%+ within 20 sessions / closed under that day's low within 5 sessions"),
     ("min5_bought", "1 = the 5-minute entry happened (the 5-minute high broke)"),
+    ("risk_in_adr / within_0_7_adr", "the risk in the stock's ADRs; 1 = within your max risk of 0.7 ADR (filter it to 1 to drop the trades you wouldn't take)"),
+    ("theme_status", "the stock's best theme that day: Leading, Turning up, Not trending, or no theme"),
+    ("breakout_grade / early_breakout", "the alerts' breakout grade (see grades above): A = early + Leading theme + volume building, B = early + one of them, C = the rest; early = the 1st or 2nd breakout within 50 sessions of the launch"),
+    ("entry tactic: ... sell at the close if back under / if not a launch", "the same buy, but sold at 4 PM that day when it closed back under the buy point (a launch day: when it didn't close as a launch); otherwise held with your management"),
 )
 
 
@@ -140,6 +144,9 @@ ENTRIES = ("Entry tactics: as the alert fires = at the level when it breaks (the
            "buy at the close = that day's close, stop the day's low; 5-min entry = over the 5-minute high and the buy point (close signals: the next "
            "morning), stop the 5-minute low. Your management. Row 3 = the totals of what you filter. Tags are as of that day's close.")
 DESC = {
+    "Launch fair - compare exits": "LAUNCH DAYS, fair (no hindsight): every gap-up that traded over the 5-minute high and +5%, bought there, STOP the 5-minute low. "
+                                   "Filter 'entry tactic': hold (your management) vs sell at the close if the day doesn't close as a launch. Then rvol, gap, "
+                                   "within_0_7_adr (your max risk). Row 3 = the totals of what you filter.",
     "Launch trades": "LAUNCH DAYS, fair (no hindsight). ENTRY: the gap-up day, over both the 5-minute opening range high and +5%. STOP: the 5-minute low. "
                      "Then your management (+2R breakeven, 1/3 at +3R, 1/3 at +5R, runners on the daily 21 EMA close).",
     "Launch 5-min vs close": "LAUNCH DAYS (days that closed as launches). min5_ = ENTRY over the 5-minute high on the launch day, STOP the 5-minute low "
@@ -167,8 +174,20 @@ HEAD = {
 
 TACTICS = {
     "launch": (("min5_", "5-min entry", "5-min low"), ("close_", "buy at the close", "day's low")),
-    "buypoint": (("", "as the alert fires", "day's low"), ("close_", "buy at the close", "day's low"), ("min5_", "5-min entry", "5-min low")),
+    "buypoint": (("", "as the alert fires", "day's low"), ("alertcx_", "as the alert fires, sell at the close if back under", "day's low"),
+                 ("close_", "buy at the close", "day's low"), ("min5_", "5-min entry", "5-min low"),
+                 ("min5cx_", "5-min entry, sell at the close if back under", "5-min low")),
+    "launchlive": (("", "5-min entry, hold", "5-min low"), ("cx_", "5-min entry, sell at the close if not a launch", "5-min low")),
 }
+
+
+def with_risk_adr(rows):
+    """your max risk is 0.7 ADR: the risk in ADRs and a 1/0 to filter on"""
+    for r in rows:
+        if r.get("risk_pct") is not None and r.get("adr_pct"):
+            r["risk_in_adr"] = round(r["risk_pct"] / r["adr_pct"], 2)
+            r["within_0_7_adr"] = int(r["risk_in_adr"] <= 0.7)
+    return rows
 RESULT = ("risk_pct", "result_pct", "R", "win", "reached_3R", "exit")
 
 
@@ -176,8 +195,8 @@ def long_rows(rows, tactics):
     """one row per trade and entry tactic, so the tactic is a column to filter on"""
     out = []
     for r in rows:
-        base = {k: v for k, v in r.items() if not k.startswith(("min5_", "close_")) and k not in RESULT + ("reached_2R", "reached_5R", "days_held",
-                                                                                                       "ran20", "failed5", "min5_bought")}
+        base = {k: v for k, v in r.items() if not k.startswith(("min5_", "close_", "min5cx_", "alertcx_", "cx_")) and
+                k not in RESULT + ("reached_2R", "reached_5R", "days_held", "ran20", "failed5", "min5_bought")}
         for pre, name, stop in tactics:
             if r.get(pre + "R") is None:
                 continue
@@ -187,7 +206,7 @@ def long_rows(rows, tactics):
             x.update({"entry tactic": name, "stop": stop})
             x.update({k: r.get(pre + k) for k in RESULT})
             out.append(x)
-    return out
+    return with_risk_adr(out)
 
 
 def tactic_grid(wb, title, rows):
@@ -403,11 +422,16 @@ def main():
                                               "gap_pct, the pattern, retest_with (the EMAs with a retest: 10 / 21 / 50) and the tags (caution, double breakout, 3rd try = "
                                               "ascending triangle, flag volume dried, tight days before). " + ENTRIES)
                 trades(wb, f"{short} - entries", sel)
+    d = data("probe_launch_live")
+    if d and d.get("trades") and any("cx_R" in r for r in d["trades"]):
+        ll = long_rows(d["trades"], TACTICS["launchlive"])
+        trades(wb, "Launch fair - compare exits", ll)
+        tactic_grid(wb, "Launch fair exits by RVOL, gap", ll)
     for name, label, rvcol in (("probe_launch_live", "Launch trades", ("rvol_pace_at_buy", "rvol_day")), ("probe_buypoints", "Buy point trades", ("rvol_day",))):
         d = data(name)
         if not d or not d.get("trades"):
             continue
-        trades(wb, label, d["trades"], TOT_3 if name == "probe_buypoints" else TOT)
+        trades(wb, label, with_risk_adr(d["trades"]), TOT_3 if name == "probe_buypoints" else TOT)
         for rv in rvcol:
             grid(wb, f"{label.split()[0]} {'pace' if 'pace' in rv else 'RVOL'} x gap", d["trades"], rv)
     wb.save(OUT)

@@ -26,6 +26,7 @@ import launch  # noqa: E402
 
 L = launch.L
 A = {}
+GROUPS, GS, POS = {}, {}, {}
 KINDS = (("follow-through", "Breakout follow-through", "close"), ("retest", "Retest", "close"), ("push", "Push out", "open"),
          ("21 EMA retest", "21 EMA retest", "close"), ("21 EMA undercut & reclaim", "21 EMA undercut", "close"))
 # the level buy points: every day the price crosses the day before's buy point is a buy, whatever the close (no hindsight)
@@ -80,6 +81,7 @@ def one(key):
         stage = f["stage"]
         pbp, ppat = (prev.get("buy_point"), prev.get("pattern") or "") if prev else (None, "")
         ptight = (prev.get("tight_days") or 0) if prev else 0
+        pbo, pvb, pses = ((prev.get("breakouts") or 0), (prev.get("vol_build") or 0), prev.get("sessions")) if prev else (0, 0, None)
         prev = f
         cands = []
         if pbp and h[j] > pbp and c[j - 1] <= pbp:
@@ -100,6 +102,21 @@ def one(key):
             hi20 = h[j + 1:min(n, j + 21)].max()
             r_ = row(s, st, a, f, i0, j, k, entry, buy, stop, ret, R, r2, r3, r5, ex, days, hi20, c, n, closed if entry == "level" else "")
             r_["level"] = round(float(pbp), 2) if entry == "level" else None
+            # the theme that day and the breakout grade the alerts give (early = 1st / 2nd breakout within 50 sessions of the
+            # launch; a Leading theme; the volume building the 5 days before, 1.1x+)
+            gs = launch.best_group(s, POS[st.dates[j]], GROUPS, GS)[0] if st.dates[j] in POS else -1
+            early, lead, build = pbo < 2 and (j - i0) < 50, gs == 2, pvb >= 1.1
+            r_.update(theme_status={2: "Leading", 1: "Turning up", 0: "Not trending"}.get(gs, "no theme"),
+                      breakout_grade="A" if early and lead and build else "B" if early and (lead or build) else "C",
+                      early_breakout=int(early))
+            # as the alert fires, sold at the close when that day closes back under the buy point (a level buy)
+            if entry == "level" and c[j] <= pbp:
+                px = float(c[j])
+                r_.update(alertcx_risk_pct=r_["risk_pct"], alertcx_result_pct=round(100 * (px / buy - 1), 2), alertcx_R=round((px - buy) / (buy - stop), 2),
+                          alertcx_win=int(px > buy), alertcx_reached_3R=0, alertcx_exit="sold at the close: back under the buy point")
+            elif entry == "level":
+                r_.update(alertcx_risk_pct=r_["risk_pct"], alertcx_result_pct=r_["result_pct"], alertcx_R=r_["R"], alertcx_win=r_["win"],
+                          alertcx_reached_3R=r_["reached_3R"], alertcx_exit=r_["exit"])
             # the tags the Launches tab shows (as of that day's close)
             r_.update(caution_within_0_5pct=int(bool(f.get("breakout_caution"))), double_breakout=int(bool(f.get("double_breakout"))),
                       third_try=int("3rd try of the top" in stage), flag_volume_dried=int(bool(f.get("flag_dry"))),
@@ -143,7 +160,9 @@ def main():
     ap.add_argument("--stocks", required=True)
     ap.add_argument("--out", required=True)
     a_ = ap.parse_args()
+    global GROUPS, GS, POS
     A, groups, GS, cal, S = launch.load(a_.bars, a_.stocks)
+    GROUPS, POS = groups, {d: k for k, d in enumerate(cal)}
     L["catalyst_launch"] = 0
     launch.CATALYST_DAYS.clear()
     keys = sorted({(s, i) for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S) if i >= 200})
@@ -186,6 +205,18 @@ def main():
                 if x and x.get("broke"):
                     t.update(min5_bought=1, min5_day=d, min5_risk_pct=round(x["risk"], 2), min5_result_pct=round(float(x["ret"]), 2),
                              min5_R=round(float(x["R"]), 2), min5_win=int(x["ret"] > 0), min5_reached_3R=int(x["r3"]), min5_reached_5R=int(x["r5"]), min5_exit=x["how"])
+                    # the 5-minute buy of a level buy point, sold at the close when that day closes back under the buy point
+                    if t["level"]:
+                        st_ = A[t["symbol"]].st
+                        buy5 = max(lvl, b[m]["o"])
+                        if not (x["days"] == 0 and x["how"] in ("stop", "breakeven")) and st_.c[k] <= t["level"]:
+                            px = float(st_.c[k])
+                            t.update(min5cx_risk_pct=t["min5_risk_pct"], min5cx_result_pct=round(100 * (px / buy5 - 1), 2),
+                                     min5cx_R=round((px - buy5) / (buy5 * x["risk"] / 100), 2), min5cx_win=int(px > buy5), min5cx_reached_3R=0,
+                                     min5cx_exit="sold at the close: back under the buy point")
+                        else:
+                            t.update(min5cx_risk_pct=t["min5_risk_pct"], min5cx_result_pct=t["min5_result_pct"], min5cx_R=t["min5_R"],
+                                     min5cx_win=t["min5_win"], min5cx_reached_3R=t["min5_reached_3R"], min5cx_exit=t["min5_exit"])
     kinds = [nm for _, nm in LEVEL] + [k for k, _, _ in KINDS]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1], launches=len(keys),
                all=summ(ts), by_buy_point={k: summ([t for t in ts if t["buy_point"] == k]) for k in kinds},

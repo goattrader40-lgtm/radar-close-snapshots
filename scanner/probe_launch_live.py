@@ -30,6 +30,20 @@ import probe_pb1h as pb  # noqa: E402
 L = launch.L
 
 
+def cx_launch(t, A):
+    """the same 5-minute buy, sold at the close of the day when it didn't close as a launch (you know at 4 PM)"""
+    st = A[t["sym"]].st
+    k = st.dates.index(t["date"])
+    same = t["days"] == 0 and t["how"] in ("stop", "breakeven")
+    if same or t["closed_as"] != "not a launch":
+        ret, R, how = float(t["ret"]), float(t["R"]), t["how"]
+    else:
+        px = float(st.c[k])
+        ret, R, how = 100 * (px / t["buy"] - 1), (px - t["buy"]) / (t["buy"] * t["risk"] / 100), "sold at the close: not a launch"
+    return dict(cx_risk_pct=round(t["risk"], 2), cx_result_pct=round(ret, 2), cx_R=round(R, 2), cx_win=int(ret > 0),
+                cx_reached_3R=int(t["r3"]) if how != "sold at the close: not a launch" else 0, cx_exit=how)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--bars", required=True)
@@ -97,6 +111,7 @@ def main():
             t = pb.trade(a, k, b, -1e9, {}, entry=(m, buy))
             if t is None or not t.get("broke"):
                 continue
+            t["buy"] = float(buy)
             t.update(sym=s, date=d, pace=pace, minutes=mins + 1, gap=float(a.gap[k]), under200=bool(st.c[k - 1] < a.s200[k - 1]),
                      rvol_day=float(a.rv[k]), chg_day=float(a.chg[k]), ext200_prev=float(a.ext200_prev[k]), adr=float(st.adr[k - 1]),
                      grade=launch.grade(a, k),
@@ -126,7 +141,8 @@ def main():
                           rvol_pace_at_buy=round(t["pace"], 2) if t["pace"] else None, buy_minutes_after_open=t["minutes"],
                           from_under_200sma=t["under200"], vs_200sma_day_before_pct=round(t["ext200_prev"], 1), adr_pct=round(t["adr"], 2),
                           risk_pct=round(t["risk"], 2), result_pct=round(float(t["ret"]), 2), R=round(float(t["R"]), 2), win=int(t["ret"] > 0),
-                          reached_2R=int(t["r2"]), reached_3R=int(t["r3"]), reached_5R=int(t["r5"]), exit=t["how"], days_held=t["days"])
+                          reached_2R=int(t["r2"]), reached_3R=int(t["r3"]), reached_5R=int(t["r5"]), exit=t["how"], days_held=t["days"],
+                          **cx_launch(t, A))
                      for t in tm]
     json.dump(out, open(a_.out, "w"), indent=1)
     print(json.dumps(out, indent=1))
