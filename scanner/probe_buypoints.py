@@ -103,7 +103,11 @@ def one(key):
             # the tags the Launches tab shows (as of that day's close)
             r_.update(caution_within_0_5pct=int(bool(f.get("breakout_caution"))), double_breakout=int(bool(f.get("double_breakout"))),
                       third_try=int("3rd try of the top" in stage), flag_volume_dried=int(bool(f.get("flag_dry"))),
-                      tight_days_before=int(ptight), volume_building_5d=f.get("vol_build"))
+                      tight_days_before=int(ptight), volume_building_5d=f.get("vol_build"),
+                      # what the buy point came from: the trigger's pattern (base top, flag line, an MSF pattern's pivot: ascending
+                      # triangle, flat base, cup with handle...), the base's MSF name, and the EMAs with a retest (10 / 21 / 50)
+                      pattern=(ppat or None) if entry == "level" else (f.get("pattern") or None), base_pattern=f.get("base_pattern"),
+                      retest_with=(" & ".join(f.get("retest_ema") or []) or "no EMA") if k == "retest" else None)
             out.append(r_)
     return out
 

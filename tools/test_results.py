@@ -36,6 +36,46 @@ LABELS = {"n": "count", "trades": "trades", "setups": "setups", "win": "winners 
           "took_half_at_2R_pct": "took half at 2R %", "hit_next_day_pct": "trigger hit next day %", "became_pct": "became Ready/Triggered %"}
 
 
+GRADES = (
+    ("Launch grade (grade, launch_grade, grade_if_launch)",
+     "From 4 ingredients of the launch day: (1) volume 3x+ its 20-day average, (2) a gap of 3%+, (3) a base breakout = closed above the previous "
+     "20 days' high, (4) a 10%+ day.  A+ = volume 3x+, a gap of 6%+ and a base breakout, jumping from UNDER the 200 SMA (the day before) to over it "
+     "(your 'go day').  A = volume 3x+ and a base breakout, with a 3%+ gap or a 10%+ day.  B = any two of the four.  C = the rest.  A delayed launch "
+     "(a faded high-volume gap that held its base, then launched within 10 sessions) gets that gap day's volume and gap."),
+    ("Breakout grade (the portal's breakout alerts)",
+     "A = an early breakout (the 1st or 2nd since the launch, within 50 sessions of it) in a Leading theme with the volume building the 5 days "
+     "before (1.1x+).  B = early plus one of those two.  C = the rest.  (Not a column in these sheets: the theme status isn't in the tests.)"),
+    ("Watchlist grade (Watchlist tab)",
+     "The trend and pullback grade of the Watchlist (MSF): not used in these tests."),
+)
+COLUMNS = (
+    ("date / symbol", "the day of the buy (or of the signal) and the stock"),
+    ("entry tactic / stop", "how it was bought and where the stop was (see each sheet's row 1)"),
+    ("buy_point / bought", "the Launches trigger; bought = at the level, at the open or at the close"),
+    ("pattern / base_pattern", "what the buy point came from (Base top, Flag line, an MSF pattern: Ascending triangle, Flat base, Cup with handle...) and the base's MSF name"),
+    ("retest_with", "for a retest: the EMAs at the level with it (10 / 21 / 50 EMA, or no EMA)"),
+    ("level", "the buy point price (the day before's buy point)"),
+    ("day_closed", "for a level buy: did that day close over the level (a breakout) or back under it"),
+    ("caution_within_0_5pct / double_breakout / third_try / flag_volume_dried", "the Launches tags as of that day's close (1 = yes): a breakout closing within 0.5% of the top; out of a falling line and the top the same day; the 3rd try of the top (ascending triangle); the volume dried up the 2 days before a flag break"),
+    ("tight_days_before", "tight days just under the buy point the day before"),
+    ("volume_building_5d", "the last 5 days' volume / the 50 days before (over 1 = building)"),
+    ("rvol_day", "that day's volume / its 20-day average (known at the close)"),
+    ("rvol_pace_at_buy", "launch days: the volume from 9:30 to the buy / the stock's usual volume by that time (what you see live)"),
+    ("gap_pct / day_change_pct", "the open vs the day before's close; the close vs the day before's close"),
+    ("close_in_range_pct", "where the day closed in its range (100 = at the high)"),
+    ("vs_200sma_day_before_pct / from_under_200sma", "how far over (+) or under (-) the 200 SMA it was the day before"),
+    ("adr_pct", "average daily range of the last 20 days"),
+    ("leg / sessions_since_launch / launch_date", "which leg of the move, and how long after its launch"),
+    ("closed_as", "launch days: what the day closed as (regular, power day, not a launch) - known only at 4 PM"),
+    ("risk_pct", "from the buy down to the stop, in %"),
+    ("result_pct / R / win", "the trade's result in %, in R (result / risk) and 1 = it made money"),
+    ("reached_2R / 3R / 5R", "1 = it got to 2 / 3 / 5 times the risk at some point"),
+    ("exit / days_held", "how it ended (stop, breakeven, daily 21 EMA close, still open) and how many days"),
+    ("ran20 / failed5", "the stock ran 20%+ within 20 sessions / closed under that day's low within 5 sessions"),
+    ("min5_bought", "1 = the 5-minute entry happened (the 5-minute high broke)"),
+)
+
+
 def data(name):
     try:
         return json.loads(subprocess.run(["git", "show", f"origin/radar-data:{name}.json"], cwd=ROOT, check=True,
@@ -251,7 +291,18 @@ def main():
                "Your management = +2R stop to breakeven, 1/3 sold at +3R, 1/3 at +5R, runners out on a daily close under the 21 EMA "
                "or at breakeven. When one bar touches both the stop and a target, the stop counts first (the safe side). "
                "Costs and slippage are not included.", "", ""])
+    rm.append([])
+    rm.append(["HOW THE GRADES ARE MADE"])
+    for a_, b_ in GRADES:
+        rm.append([a_, "", b_])
+    rm.append([])
+    rm.append(["WHAT EACH COLUMN MEANS (trade sheets)"])
+    for a_, b_ in COLUMNS:
+        rm.append([a_, "", b_])
     style(rm, [30, 16, 110, 24, 22])
+    for row in rm.iter_rows():
+        if row[0].value in ("HOW THE GRADES ARE MADE", "WHAT EACH COLUMN MEANS (trade sheets)", "How to read"):
+            row[0].font = Font(bold=True, color="2F5597", size=12)
     for row in rm.iter_rows(min_row=2):
         for c in row:
             c.alignment = Alignment(wrap_text=True, vertical="top")
@@ -338,9 +389,16 @@ def main():
                          ("follow-through", "Follow-through"), ("retest", "Retest held"), ("push", "Push 21 EMA"),
                          ("21 EMA retest", "21 EMA retest"), ("21 EMA undercut & reclaim", "21 EMA undercut")):
             sel = [r for r in br if r["buy_point"] == k]
+            if k == "pattern pivot":                       # the MSF patterns on their own sheets too (ascending triangle, flat base...)
+                for pat in sorted({r.get("pattern") or "" for r in sel}):
+                    ps = [r for r in sel if (r.get("pattern") or "") == pat]
+                    if pat and len(ps) >= 30:
+                        DESC[f"{pat[:18]} - entries"] = f"{pat.upper()} breakouts (an MSF pattern's pivot). " + ENTRIES
+                        trades(wb, f"{pat[:18]} - entries", ps)
             if sel:
                 DESC[f"{short} - entries"] = (f"{k.upper()} (a Launches trigger), one row per buy point and ENTRY TACTIC: filter 'entry tactic', then rvol_day, "
-                                              "gap_pct and the tags (caution, double breakout, 3rd try, flag volume dried, tight days before). " + ENTRIES)
+                                              "gap_pct, the pattern, retest_with (the EMAs with a retest: 10 / 21 / 50) and the tags (caution, double breakout, 3rd try = "
+                                              "ascending triangle, flag volume dried, tight days before). " + ENTRIES)
                 trades(wb, f"{short} - entries", sel)
     for name, label, rvcol in (("probe_launch_live", "Launch trades", ("rvol_pace_at_buy", "rvol_day")), ("probe_buypoints", "Buy point trades", ("rvol_day",))):
         d = data(name)
