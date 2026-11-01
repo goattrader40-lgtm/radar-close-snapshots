@@ -395,8 +395,9 @@ def main():
                 for pat in sorted({r.get("pattern") or "" for r in sel}):
                     ps = [r for r in sel if (r.get("pattern") or "") == pat]
                     if pat and len(ps) >= 30:
-                        DESC[f"{pat[:18]} - entries"] = f"{pat.upper()} breakouts (an MSF pattern's pivot). " + ENTRIES
-                        trades(wb, f"{pat[:18]} - entries", ps)
+                        nm = "Pattern - " + pat.replace("(", "").replace(")", "")[:21]
+                        DESC[nm] = f"{pat.upper()} breakouts (an MSF pattern's pivot, from the Pattern pivot trigger). " + ENTRIES
+                        trades(wb, nm, ps)
             if sel:
                 DESC[f"{short} - entries"] = (f"{k.upper()} (a Launches trigger), one row per buy point and ENTRY TACTIC: filter 'entry tactic', then rvol_day, "
                                               "gap_pct, the pattern, retest_with (the EMAs with a retest: 10 / 21 / 50) and the tags (caution, double breakout, 3rd try = "
