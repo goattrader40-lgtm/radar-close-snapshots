@@ -227,7 +227,7 @@ def find(live, doc, now=None):
         # the pop out of a consolidation is an entry inside the base, not a new leg (ANF Oct 5 2026); so is the break of
         # a bull flag's falling line: the leg comes with the close over the base top (TTAN Oct 30 2026)
         inside = (r.get("pattern") or "").startswith("Pop out of the consolidation")
-        flag = (r.get("pattern") or "").startswith(("Flag", "Bull flag", "Pennant"))
+        flag = (r.get("pattern") or "").startswith(("Flag", "Bull flag", "Bull pennant", "Pennant"))
         if inside or flag:
             nxt = r.get("leg") or 0
         # confirmation: in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume

@@ -271,7 +271,7 @@ def details(sym, st, d, entry, P):
     if code == 10:
         fl = our_flag(st, i)
         if fl:
-            out.update(pattern=("Pennant" if fl[2] == "pennant" else "Bull flag") + " (falling line)", buy_point=fnum(fl[0]), to_buy_point_pct=fnum(100 * (fl[0] / st.c[i] - 1), 1),
+            out.update(pattern=("Bull pennant" if fl[2] == "pennant" else "Bull flag") + " (falling line)", buy_point=fnum(fl[0]), to_buy_point_pct=fnum(100 * (fl[0] / st.c[i] - 1), 1),
                        flag_top=fnum(fl[1]))
             out["entries"]["flag_line"] = fnum(fl[0])
     out.update({k: v for k, v in entry.items() if k not in ("low",)})
