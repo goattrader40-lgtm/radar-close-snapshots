@@ -161,7 +161,8 @@ def main():
         for c in row:
             c.alignment = Alignment(wrap_text=True, vertical="top")
     sm = wb.create_sheet("Summary")
-    head = ["Test", "Variant", "trades", "winners %", "average %", "median %", "average R", "total R", "reached +3R %", "stopped same day %", "typical risk %", "note"]
+    head = ["Test", "Group", "In plain words", "Trades", "Winners %", "Average result %", "Median result %", "Average R per trade",
+            "Total R", "Reached +3R %", "Stopped out same day %", "Typical risk %", "Note"]
     sm.append(head)
     picks = [("probe_setups3", "ready_orh › all", "Ready, next-day 5-min high, exit A", ""),
              ("probe_setups3", "ready_orh › B_day_low_stop", "Ready, next-day 5-min high, stop under the day's low", ""),
@@ -170,14 +171,20 @@ def main():
              ("probe_pb1h", "by_gap › gap 1-3%", "1-hour 21 EMA pullback, gap 1-3%", ""),
              ("probe_launch_orh", "managed › all", "Launch days, your management", "HINDSIGHT: upper bound"),
              ("probe_launch_orh", "managed › regular", "Launch days, regular", "HINDSIGHT"),
-             ("probe_launch_live", "all", "Launch candidates, fair", "no hindsight"),
-             ("probe_launch_live", "closed_as_all_trades › regular", "…that closed as a regular launch", "known only at the close"),
-             ("probe_launch_live", "closed_as_all_trades › not a launch", "…that did not close as a launch", ""),
+             ("probe_launch_live", "all", "ALL launch-day buys (what you could trade)", "no hindsight: this is the real result"),
+             ("probe_launch_live", "closed_as_all_trades › regular", "split afterwards: the buys that closed as a regular launch", "you only know this at 4 PM, after the buy"),
+             ("probe_launch_live", "closed_as_all_trades › not a launch", "split afterwards: the buys that did NOT close as a launch", "you only know this at 4 PM, after the buy"),
              ("probe_launch_live", "from_under_the_200sma › under the 200 SMA the day before", "…coming from under the 200 SMA", ""),
-             ("probe_buypoints", "all", "Buy points, all", "risk = the day's low"),
-             ("probe_buypoints", "by_buy_point › breakout", "Buy points, base breakout", ""),
-             ("probe_buypoints", "by_buy_point › flag", "Buy points, flag breakout", ""),
-             ("probe_buypoints", "by_buy_point › 21 EMA retest", "Buy points, 21 EMA retest", ""),
+             ("probe_buypoints", "all", "ALL buy points (what you could trade)", "risk = the day's low; average R is pulled up by a few trades with a tiny risk: read average %"),
+             ("probe_buypoints", "by_buy_point › base breakout", "base breakout (every cross of the base top)", ""),
+             ("probe_buypoints", "by_buy_point › flag breakout", "flag breakout (every cross of the flag line)", ""),
+             ("probe_buypoints", "by_buy_point › pop", "pop out of the consolidation", ""),
+             ("probe_buypoints", "by_buy_point › retest", "retest held (bought at the close)", ""),
+             ("probe_buypoints", "by_buy_point › push", "push out of the 21 EMA (bought at the open)", ""),
+             ("probe_buypoints", "by_buy_point › 21 EMA retest", "21 EMA retest (bought at the close)", ""),
+             ("probe_buypoints", "by_buy_point › 21 EMA undercut & reclaim", "21 EMA undercut & reclaim (bought at the close)", ""),
+             ("probe_buypoints", "level_buys_by_close › closed as a breakout", "split afterwards: level buys whose day closed over the level", "you only know this at 4 PM, after the buy"),
+             ("probe_buypoints", "level_buys_by_close › closed back under / no breakout", "split afterwards: level buys whose day closed back under", "you only know this at 4 PM, after the buy"),
              ("probe_earnings", "all", "Earnings-day high breakout", "")]
     for name, path, variant, note in picks:
         d = data(name)
@@ -187,10 +194,24 @@ def main():
         if not r:
             continue
         title = next(t for n, t, *_ in TESTS if n == name)
-        sm.append([title, variant, r.get("trades", r.get("n")), r.get("win"), r.get("avg_pct", r.get("avg")), r.get("med_pct", r.get("med")),
-                   r.get("avg_R"), r.get("total_R"), r.get("reached_3R"), r.get("stopped_same_day", r.get("stopped_same_day_pct")),
-                   r.get("risk_med_pct"), note])
-    style(sm, [28, 52] + [12] * 9 + [26])
+        nt, w, av, ar = r.get("trades", r.get("n")), r.get("win"), r.get("avg_pct", r.get("avg")), r.get("avg_R")
+        words = (f"{nt} trades; {w}% made money; on average {av:+}% a trade, " if None not in (nt, w, av) else "") \
+            + (f"{ar:+} times the risk ({'a gain' if ar > 0 else 'a loss'} of {abs(ar)}R per trade)" if ar is not None else "")
+        sm.append([title, variant, words, nt, w, av, r.get("med_pct", r.get("med")),
+                   ar, r.get("total_R"), r.get("reached_3R"), r.get("stopped_same_day", r.get("stopped_same_day_pct")),
+                   r.get("risk_med_pct"), note or None])
+    style(sm, [26, 40, 56] + [11] * 9 + [24])
+    for row in sm.iter_rows(min_row=2):
+        row[2].alignment = Alignment(wrap_text=True, vertical="top")
+    sm.append([])
+    sm.append(["What the columns mean"])
+    for a, b in (("Trades", "how many buys the test made"), ("Winners %", "of those, how many made money"),
+                 ("Average / median result %", "the gain or loss per trade in %; the median is the middle trade"),
+                 ("Average R per trade", "the result divided by the risk (buy to stop): +1R = made what you risked, -1R = full stop"),
+                 ("Total R", "all trades added up, in R"), ("Reached +3R %", "how many got to 3 times the risk at some point"),
+                 ("Stopped out same day %", "how many hit the stop on the day of the buy"),
+                 ("Typical risk %", "the usual distance from the buy to the stop")):
+        sm.append([a, b])
     for name, title, what, cmd in TESTS:
         d = data(name)
         if not d or "error" in d:
