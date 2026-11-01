@@ -84,18 +84,18 @@ def hourly(rows):
     return out
 
 
-def trade(a, k, b5, ema, H):
+def trade(a, k, b5, ema, H, entry=None):
     """the trade on day k from its 5-minute bars b5 (H = the stock's 1-hour bars by date); None when the opening range
     isn't above the 1-hour 21 EMA of the day before's close"""
     st, c, o, h, l, e21 = a.st, a.st.c, a.st.o, a.st.h, a.st.l, a.e21
     orh, orl = b5[0]["h"], b5[0]["l"]
     if not orl > ema:
         return None
-    m = next((x for x in range(1, len(b5)) if b5[x]["h"] > orh), None)
+    m = next((x for x in range(1, len(b5)) if b5[x]["h"] > orh), None) if entry is None else entry[0]
     t = dict(broke=m is not None, gap=float(100 * (o[k] / c[k - 1] - 1)), cushion_adr=float(100 * (orl / ema - 1) / st.adr[k - 1]))
     if m is None:
         return t
-    buy = max(orh, b5[m]["o"])
+    buy = max(orh, b5[m]["o"]) if entry is None else entry[1]       # entry = (bar, price) given by the caller
     R = buy - orl
     if R <= 0:
         return None
