@@ -29,7 +29,8 @@ L = launch.L
 A = {}
 GROUPS, GS, POS = {}, {}, {}
 KINDS = (("follow-through", "Breakout follow-through", "close"), ("retest", "Retest", "close"), ("push", "Push out", "open"),
-         ("21 EMA retest", "21 EMA retest", "close"), ("21 EMA undercut & reclaim", "21 EMA undercut", "close"))
+         ("21 EMA retest", "21 EMA retest", "close"), ("21 EMA undercut & reclaim", "21 EMA undercut", "close"),
+         ("50 EMA undercut & reclaim", "50 EMA undercut", "close"))
 # the level buy points: every day the price crosses the day before's buy point is a buy, whatever the close (no hindsight)
 LEVEL = (("Base top", "base breakout"), ("Flag", "flag breakout"), ("Pop", "pop"), ("", "pattern pivot"))
 
@@ -48,8 +49,8 @@ def one(key):
     out, prev = [], None
     for j in range(i0 + 1, min(n - 6, i0 + 61)):
         f = launch.follow(a, i0, j)
-        if f["lost_50ema"]:
-            break
+        if f.get("off_50ema") or (f["lost_50ema"] and "off_50ema" not in f):
+            break                       # off the list: the 3rd close in a row under the 50 EMA (after 2: the 50 EMA undercut tab)
         stage = f["stage"]
         pbp, ppat = (prev.get("buy_point"), prev.get("pattern") or "") if prev else (None, "")
         ptight = (prev.get("tight_days") or 0) if prev else 0
@@ -156,6 +157,14 @@ def main():
     keys = sorted({(s, i) for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S) if i >= 200})
     with multiprocessing.get_context("fork").Pool(os.cpu_count() or 2) as pool:
         ts = [t for r in pool.map(one, keys, chunksize=8) for t in r]
+    # one buy point per stock, day and kind: the newest launch's (the Launches tab follows only a stock's newest launch;
+    # the run before this counted 440 of 5,816 twice, AEHR Feb 11 and Mar 31 2026 both reading Apr 2)
+    best = {}
+    for t in ts:
+        k_ = (t["symbol"], t["date"], t["buy_point"], t["bought"])
+        if k_ not in best or t["launch_date"] > best[k_]["launch_date"]:
+            best[k_] = t
+    ts = sorted(best.values(), key=lambda t: (t["date"], t["symbol"]))
     # 2) the same buy point bought at that day's close, the risk the day's low (your management)
     for t in ts:
         a = A[t["symbol"]]
