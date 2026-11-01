@@ -154,4 +154,13 @@ def reset(a, j):
     out.update(reset_at_50ema=int(near50 is not None and near50 <= 0.25), reset_rsi_under_45=int(out["rsi_min_since_top"] <= 45),
                reset_emas_close=int(out["ema21_over_50_adr"] <= 0.8), big_run_8adr=int(out["run_into_top_adr"] >= 8))
     out["reset_any"] = int(out["reset_at_50ema"] or out["reset_rsi_under_45"] or out["reset_emas_close"])
+    # how far the stock has run (the user, Nov 1 2026: "over 500% within 7-8 months, no buy points"): from the lowest low of
+    # the last 3 / 6 / 8 / 12 months to the close the day before, and the sessions since that low; the % over the 200 SMA
+    for nm, w in (("3m", 63), ("6m", 126), ("8m", 168), ("12m", 252)):
+        k0 = max(0, j - w)
+        kl = k0 + int(np.argmin(l[k0:j]))
+        out[f"run_from_{nm}_low_pct"] = round(float(100 * (c[p] / l[kl] - 1)), 1)
+        out[f"sessions_from_{nm}_low"] = j - kl
+    s200 = getattr(a, "s200", None)
+    out["over_200sma_pct"] = round(float(100 * (c[p] / s200[p] - 1)), 1) if s200 is not None and s200[p] > 0 else None
     return out

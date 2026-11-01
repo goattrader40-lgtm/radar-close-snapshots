@@ -596,7 +596,7 @@ def main():
         trades(wb, "Buy points - compare entries", br)
         tactic_grid(wb, "Buy pt entries by RVOL, gap", br)
         # one sheet per Launches trigger, the same layout as "Launch - compare entries"
-        for k, short in (("base breakout", "Base breakout"), ("bull flag breakout", "Bull flag breakout"), ("pop", "Pop"), ("pattern pivot", "Pattern pivot"),
+        for k, short in (("base breakout", "Base breakout"), ("bull flag breakout", "Bull flag breakout"), ("bull pennant breakout", "Bull pennant breakout"), ("pop", "Pop"), ("pattern pivot", "Pattern pivot"),
                          ("follow-through", "Follow-through"), ("retest", "Retest held"), ("push", "Push 21 EMA"),
                          ("21 EMA retest", "21 EMA retest"), ("21 EMA undercut & reclaim", "21 EMA undercut"),
                          ("50 EMA undercut & reclaim", "50 EMA undercut")):

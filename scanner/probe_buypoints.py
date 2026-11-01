@@ -32,7 +32,8 @@ KINDS = (("follow-through", "Breakout follow-through", "close"), ("retest", "Ret
          ("21 EMA retest", "21 EMA retest", "close"), ("21 EMA undercut & reclaim", "21 EMA undercut", "close"),
          ("50 EMA undercut & reclaim", "50 EMA undercut", "close"))
 # the level buy points: every day the price crosses the day before's buy point is a buy, whatever the close (no hindsight)
-LEVEL = (("Base top", "base breakout"), ("Flag", "flag breakout"), ("Pop", "pop"), ("", "pattern pivot"))
+LEVEL = (("Base top", "base breakout"), ("Bull flag", "bull flag breakout"), ("Flag", "bull flag breakout"), ("Bull pennant", "bull pennant breakout"),
+         ("Pop", "pop"), ("", "pattern pivot"))
 
 
 def manage(a, j, buy, stop, same_day_high, runner=21):
@@ -78,7 +79,7 @@ def one(key):
         if kind:
             k, how = kind
             cands.append((k, float(o[j]), "open", float(h[j])) if how == "open" else (k, float(c[j]), "close", None))
-        closed = ("closed as a breakout" if stage.startswith(("Base breakout", "Flag breakout", "Breakout")) else
+        closed = ("closed as a breakout" if stage.startswith(("Base breakout", "Flag breakout", "Bull flag breakout", "Bull pennant breakout", "Breakout")) else
                   "closed as a pop" if stage.startswith("Pop out") else "closed back under / no breakout")
         for k, buy, entry, same_high in cands:
             stop = float(l[j])
@@ -93,7 +94,7 @@ def one(key):
             # flag breakout = the close over the line and the 10 & 21 EMA, not a poke over it during the day (the user,
             # Nov 1 2026: "I checked flag breakouts, nothing matches": 537 of 877 were pokes that closed back under)
             r_["engine_read"] = stage[:180]
-            r_["engine_confirmed"] = int(bool({"flag breakout": f.get("flag_breakout_today"), "base breakout": f.get("base_breakout_today"),
+            r_["engine_confirmed"] = int(bool({"bull flag breakout": f.get("flag_breakout_today"), "bull pennant breakout": f.get("flag_breakout_today"), "base breakout": f.get("base_breakout_today"),
                                                "pop": f.get("dry_entry_today"),
                                                "pattern pivot": f.get("breakout_today") or f.get("base_breakout_today")}.get(k, True))) \
                 if entry == "level" else 1
