@@ -1158,6 +1158,44 @@ S3_FEEDERS = ("1-EP/GAP", "1-UPDAY", "2-POOL")
 S3_SECTIONS = ("Triggered today", "Ready", "Setting up")
 
 
+def s3_read(a, i0, last, was_in=False):
+    """3-SETUPS: where a feeder stock followed from i0 stands at bar `last` (None = not on the list): (section, setup,
+    the follow, buy point, away in ADRs, close, ADR, tight days, retest zone)"""
+    st = a.st
+    if not a.liq_noadr[last] or st.adr[last] < (L["off_adr"] if was_in else L["s3_min_adr"]):
+        return None
+    b0 = base_ok(a, i0, 120)
+    if stale(a, i0, last, b0[0] if b0 and b0[0] > st.h[i0] else None):
+        return None
+    f = follow(a, i0, last, pick=True)
+    if f.get("lost_50ema"):
+        return None
+    c, adr = float(st.c[last]), float(f.get("adr_pct") or st.adr[last])
+    bp = f.get("buy_point")
+    away_adr = (100 * (bp / c - 1)) / adr if bp and adr else None
+    stage, pat = f.get("stage") or "", f.get("pattern") or ""
+    fired = next((t for t, on in (("Base breakout", f.get("base_breakout_today")), ("Flag breakout", f.get("flag_breakout_today")),
+                                  ("Pop out of the consolidation", f.get("dry_entry_today")),
+                                  ("21 EMA undercut & reclaim" if f.get("ema21_today") == "undercut" else "21 EMA retest", f.get("ema21_today")),
+                                  ("Retest held", f.get("retest_today")), ("Push out of the 21 EMA", f.get("push_today")),
+                                  ("Breakout", f.get("breakout_today"))) if on), None)
+    tight = f.get("tight_days") or 0
+    z = f.get("retest_zone")
+    if fired:
+        sec, setup = "Triggered today", fired
+    elif away_adr is not None and 0 <= away_adr <= L["s3_ready_adr"] and ((f.get("base_day") or 0) >= 5 or tight >= 2):
+        sec, setup = "Ready", pat or "Buy point"
+    elif pat.startswith("Flag"):
+        sec, setup = "Setting up", "Flag forming"
+    elif f.get("ema21_watch"):
+        sec, setup = "Setting up", "21 EMA " + ("undercut & reclaim" if f["ema21_watch"] == "undercut" else "retest") + " setup"
+    elif z and f.get("retest_away") and c <= z[1] * (1 + adr / 100) and (f.get("off_high_pct") or 0) >= 1.5 * adr:   # a real pullback
+        sec, setup = "Setting up", "Near the retest zone"
+    else:
+        return None
+    return sec, setup, f, bp, away_adr, c, adr, tight, z
+
+
 def setups3(A, today, wl, prev=(), removed=None):
     """3-SETUPS (your design, Nov 1 2026): every stock on 1-EP/GAP, 1-UPDAY and 2-POOL read by the Launches engine, like a
     pick from the day it came on its list (the gap or up day; the day it entered 2-POOL), with its buy points and
@@ -1184,37 +1222,11 @@ def setups3(A, today, wl, prev=(), removed=None):
         i0 = max((k for k in range(last + 1) if st.dates[k] <= added), default=None)
         if i0 is None or i0 < 60:
             continue
-        if not a.liq_noadr[last] or st.adr[last] < (L["off_adr"] if sym in prev else L["s3_min_adr"]):
+        x = s3_read(a, i0, last, sym in prev)
+        if x is None:
             continue
-        b0 = base_ok(a, i0, 120)
-        if stale(a, i0, last, b0[0] if b0 and b0[0] > st.h[i0] else None):
-            continue
-        f = follow(a, i0, last, pick=True)
-        if f.get("lost_50ema"):
-            continue
-        c, adr = float(st.c[last]), float(f.get("adr_pct") or st.adr[last])
-        bp = f.get("buy_point")
-        away_adr = (100 * (bp / c - 1)) / adr if bp and adr else None
+        sec, setup, f, bp, away_adr, c, adr, tight, z = x
         stage, pat = f.get("stage") or "", f.get("pattern") or ""
-        fired = next((t for t, on in (("Base breakout", f.get("base_breakout_today")), ("Flag breakout", f.get("flag_breakout_today")),
-                                      ("Pop out of the consolidation", f.get("dry_entry_today")),
-                                      ("21 EMA undercut & reclaim" if f.get("ema21_today") == "undercut" else "21 EMA retest", f.get("ema21_today")),
-                                      ("Retest held", f.get("retest_today")), ("Push out of the 21 EMA", f.get("push_today")),
-                                      ("Breakout", f.get("breakout_today"))) if on), None)
-        tight = f.get("tight_days") or 0
-        z = f.get("retest_zone")
-        if fired:
-            sec, setup = "Triggered today", fired
-        elif away_adr is not None and 0 <= away_adr <= L["s3_ready_adr"] and ((f.get("base_day") or 0) >= 5 or tight >= 2):
-            sec, setup = "Ready", pat or "Buy point"
-        elif pat.startswith("Flag"):
-            sec, setup = "Setting up", "Flag forming"
-        elif f.get("ema21_watch"):
-            sec, setup = "Setting up", "21 EMA " + ("undercut & reclaim" if f["ema21_watch"] == "undercut" else "retest") + " setup"
-        elif z and f.get("retest_away") and c <= z[1] * (1 + adr / 100) and (f.get("off_high_pct") or 0) >= 1.5 * adr:   # a real pullback
-            sec, setup = "Setting up", "Near the retest zone"
-        else:
-            continue
         e21 = f.get("ema21")
         if setup.startswith("21 EMA") and sec == "Setting up" and e21:      # the level that matters here is the 21 EMA
             why = setup + f": the 21 EMA {fnum(e21)}, the close {(100 * (c / e21 - 1)) / adr:.1f} ADR over it"

@@ -52,6 +52,15 @@ jobs:
             git add setups/launch.json setups/launch_backtest.json
             git diff --cached --quiet || { git commit -q -m "launches $(TZ=America/New_York date +%F)"; git pull -q --rebase origin main; git push -q; }
           fi
+          if [ "${{ inputs.cmd }}" = "setups3" ]; then
+            # the 2-year check of the new 3-SETUPS (scanner/probe_setups3.py) -> radar-data probe_setups3.json
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json
+            python3 scanner/probe_setups3.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_setups3.json || true
+            python3 radar/publish.py "3-SETUPS check" /tmp/probe_setups3.json
+          fi
           if [ "${{ inputs.cmd }}" = "setupsdry" ]; then
             # the new 3-SETUPS on tonight's Watchlist lists (not saved to main): published as radar-data setups_dry.json
             pip install --quiet numba numpy pandas
