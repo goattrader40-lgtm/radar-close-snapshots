@@ -79,6 +79,7 @@ def one(key):
             break
         stage = f["stage"]
         pbp, ppat = (prev.get("buy_point"), prev.get("pattern") or "") if prev else (None, "")
+        ptight = (prev.get("tight_days") or 0) if prev else 0
         prev = f
         cands = []
         if pbp and h[j] > pbp and c[j - 1] <= pbp:
@@ -99,6 +100,10 @@ def one(key):
             hi20 = h[j + 1:min(n, j + 21)].max()
             r_ = row(s, st, a, f, i0, j, k, entry, buy, stop, ret, R, r2, r3, r5, ex, days, hi20, c, n, closed if entry == "level" else "")
             r_["level"] = round(float(pbp), 2) if entry == "level" else None
+            # the tags the Launches tab shows (as of that day's close)
+            r_.update(caution_within_0_5pct=int(bool(f.get("breakout_caution"))), double_breakout=int(bool(f.get("double_breakout"))),
+                      third_try=int("3rd try of the top" in stage), flag_volume_dried=int(bool(f.get("flag_dry"))),
+                      tight_days_before=int(ptight), volume_building_5d=f.get("vol_build"))
             out.append(r_)
     return out
 

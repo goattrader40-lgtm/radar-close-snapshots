@@ -104,9 +104,8 @@ DESC = {
     "Launch - compare entries": "LAUNCH DAYS, one row per launch and ENTRY TACTIC: filter 'entry tactic' (5-min entry = over the 5-minute high, stop the "
                                "5-minute low, only days that turned out to be launches; buy at the close = the launch day's close, stop the day's low), then RVOL / gap. "
                                "Row 3 = the totals of what you filter. Your management.",
-    "Buy points - compare entries": "BUY POINTS after the launch, one row per buy point and ENTRY TACTIC: filter 'entry tactic' (as the alert fires = at the level / "
-                                   "the open / the close, stop the day's low; buy at the close = that day's close, stop the day's low; 5-min entry = over the "
-                                   "5-minute high and the buy point, stop the 5-minute low), then RVOL / gap. Row 3 = the totals of what you filter.",
+    "Buy points - compare entries": "BUY POINTS after the launch (all triggers), one row per buy point and ENTRY TACTIC: filter 'entry tactic', 'buy_point', "
+                                   "then RVOL / gap. " + ENTRIES,
     "Buy point trades": "BUY POINTS after the launch. Plain columns (R, win, result_pct, risk_pct) = ENTRY as the alert fires (at the level when it breaks, "
                         "the open for a push, the close for close signals), STOP the day's low. close_ = ENTRY at that day's close, STOP the day's low. "
                         "min5_ = ENTRY over the 5-minute high (and the buy point), STOP the 5-minute low (close signals: the next morning). Your management.",
@@ -123,6 +122,9 @@ HEAD = {
 }
 
 
+ENTRIES = ("Entry tactics: as the alert fires = at the level when it breaks (the open for a push, the close for close signals), stop the day's low; "
+           "buy at the close = that day's close, stop the day's low; 5-min entry = over the 5-minute high and the buy point (close signals: the next "
+           "morning), stop the 5-minute low. Your management. Row 3 = the totals of what you filter. Tags are as of that day's close.")
 TACTICS = {
     "launch": (("min5_", "5-min entry", "5-min low"), ("close_", "buy at the close", "day's low")),
     "buypoint": (("", "as the alert fires", "day's low"), ("close_", "buy at the close", "day's low"), ("min5_", "5-min entry", "5-min low")),
@@ -331,6 +333,15 @@ def main():
         br = long_rows(d["trades"], TACTICS["buypoint"])
         trades(wb, "Buy points - compare entries", br)
         tactic_grid(wb, "Buy pt entries by RVOL, gap", br)
+        # one sheet per Launches trigger, the same layout as "Launch - compare entries"
+        for k, short in (("base breakout", "Base breakout"), ("flag breakout", "Flag breakout"), ("pop", "Pop"), ("pattern pivot", "Pattern pivot"),
+                         ("follow-through", "Follow-through"), ("retest", "Retest held"), ("push", "Push 21 EMA"),
+                         ("21 EMA retest", "21 EMA retest"), ("21 EMA undercut & reclaim", "21 EMA undercut")):
+            sel = [r for r in br if r["buy_point"] == k]
+            if sel:
+                DESC[f"{short} - entries"] = (f"{k.upper()} (a Launches trigger), one row per buy point and ENTRY TACTIC: filter 'entry tactic', then rvol_day, "
+                                              "gap_pct and the tags (caution, double breakout, 3rd try, flag volume dried, tight days before). " + ENTRIES)
+                trades(wb, f"{short} - entries", sel)
     for name, label, rvcol in (("probe_launch_live", "Launch trades", ("rvol_pace_at_buy", "rvol_day")), ("probe_buypoints", "Buy point trades", ("rvol_day",))):
         d = data(name)
         if not d or not d.get("trades"):
