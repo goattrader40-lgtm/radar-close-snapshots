@@ -5,9 +5,9 @@ moment of the buy, whether or not the day closed as a launch.
   python3 scanner/probe_launch_live.py --bars BARS.json.gz --stocks radar-data/stocks.json --volprofile radar-data/volprofile.json --out OUT.json
   (needs ALPACA_KEY_ID / ALPACA_SECRET: the 5-minute bars)
 
-  the night before  on the launch watch list: liquid ($10+, $20M+ and 600K+ shares a day, ADR 3.5%+), over the 200 SMA
-                    and at most 28% over it (50% when it gaps 8%+, a power day's room), 30%+ over the 52-week low, no
-                    launch in the last 20 sessions
+  the night before  on the launch watch list: liquid ($10+, $20M+ and 600K+ shares a day, ADR 3.5%+), from 25% under the
+                    200 SMA to 28% over it (50% when it gaps 8%+, a power day's room), no launch in the last 20 sessions
+                    (the price over the 200 SMA and 30%+ over the 52-week low at the buy)
   the day           it gaps up; the buy = the first 5-minute bar trading over both the 5-minute opening range high and
                     5% over the day before's close (the live "Launching today" needs +5%): at the higher of the two (or
                     the bar's open when it jumps over them); the risk = the opening range low
@@ -55,10 +55,10 @@ def main():
         av20 = launch.roll_mean(v, 20)
         for k in range(max(a.start, first) + 1, c.size):
             j = k - 1
-            if not (a.liquid[j] and c[j] > a.s200[j] and o[k] > c[j] and h[k] >= 1.05 * c[j]):
+            if not (a.liquid[j] and o[k] > c[j] and h[k] >= 1.05 * c[j] and h[k] > a.s200[j]):
                 continue
-            ext = 100 * (c[j] / a.s200[j] - 1)
-            if ext > (L["power_ext200"] if a.gap[k] >= L["power_gap"] else L["max_ext200"]):
+            ext = 100 * (c[j] / a.s200[j] - 1)                  # the day before: up to 25% under the 200 SMA (an A+ "go day")
+            if ext < -L["watch_under200"] or ext > (L["power_ext200"] if a.gap[k] >= L["power_gap"] else L["max_ext200"]):
                 continue
             if any(k - L["dedupe_days"] < x < k for x in launched[s]):
                 continue
@@ -82,6 +82,10 @@ def main():
             m = next((x for x in range(1, len(b)) if b[x]["h"] > lvl), None)
             if m is None:
                 continue
+            lvl = max(lvl, float(a.s200[k - 1]) * 1.0001)          # over the 200 SMA at the buy
+            m = next((x for x in range(1, len(b)) if b[x]["h"] > lvl), None)
+            if m is None:
+                continue
             buy = max(lvl, b[m]["o"])
             if buy < st.low52[k - 1] * 1.3:
                 continue
@@ -93,7 +97,7 @@ def main():
             t = pb.trade(a, k, b, -1e9, {}, entry=(m, buy))
             if t is None or not t.get("broke"):
                 continue
-            t.update(sym=s, date=d, pace=pace, minutes=mins + 1, gap=float(a.gap[k]),
+            t.update(sym=s, date=d, pace=pace, minutes=mins + 1, gap=float(a.gap[k]), under200=bool(st.c[k - 1] < a.s200[k - 1]),
                      closed_as=("power day" if a.power(k) else "reversal day" if a.reversal(k) else "regular") if k in launched[s] else "not a launch")
             tm.append(t)
     vol = [t for t in tm if (t["pace"] or 0) >= 1.5]
@@ -101,6 +105,13 @@ def main():
                candidate_days=len(cand),
                all=pb.summ(tm), volume_pace_1_5x=pb.summ(vol), volume_pace_under_1_5x=pb.summ([t for t in tm if (t["pace"] or 0) < 1.5]),
                closed_as={k: pb.summ([t for t in vol if t["closed_as"] == k]) for k in ("regular", "power day", "not a launch")},
+               closed_as_all_trades={k: pb.summ([t for t in tm if t["closed_as"] == k]) for k in ("regular", "power day", "reversal day", "not a launch")},
+               from_under_the_200sma={k: pb.summ([t for t in tm if f(t)]) for k, f in (("under the 200 SMA the day before", lambda t: t["under200"]),
+                                                                                      ("over it the day before", lambda t: not t["under200"]))},
+               by_gap_all_trades={k: pb.summ([t for t in tm if f(t["gap"])]) for k, f in (("gap under 2%", lambda g: g < 2), ("gap 2-5%", lambda g: 2 <= g < 5),
+                                                                                         ("gap 5-8%", lambda g: 5 <= g < 8), ("gap 8%+", lambda g: g >= 8))},
+               by_time_all_trades={k: pb.summ([t for t in tm if f(t["minutes"])]) for k, f in (("bought by 10:00", lambda x: x <= 30), ("10:00-11:00", lambda x: 30 < x <= 90),
+                                                                                              ("after 11:00", lambda x: x > 90))},
                by_gap={k: pb.summ([t for t in vol if f(t["gap"])]) for k, f in (("gap under 2%", lambda g: g < 2), ("gap 2-5%", lambda g: 2 <= g < 5),
                                                                                ("gap 5-8%", lambda g: 5 <= g < 8), ("gap 8%+", lambda g: g >= 8))},
                by_time={k: pb.summ([t for t in vol if f(t["minutes"])]) for k, f in (("bought by 10:00", lambda x: x <= 30), ("10:00-11:00", lambda x: 30 < x <= 90),
