@@ -40,6 +40,8 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               alerts: the gap (volume pace 1x+), the 1-minute opening range high broken and the 5-minute one (each with
               its stop, the range's low, and the risk in ADRs), and at 9:50 the volume check: under 2x = out, whatever
               the trade. A trigger after 9:50 needs 2x+. The stock's other alerts (breakout, touch) stay quiet that day
+  reclaimbo   the breakout undercut & reclaim: a launch that closed under its breakout level 2+ days (holding over the 50
+              EMA) trades back over it (heads-up), from 3:45 PM holding into the close (CAI Oct 9 2026)
   ema50back   the 50 EMA undercut tab (your rule, Nov 1 2026): a launch that closed under its 50 EMA 2 days in a row has to
               close back over it today (a 3rd close under takes it off the list): the heads-up when it trades back over it
   ema50       from 3:45 PM: today's low went under the 50 EMA and under the open, and it trades back over it in the upper
@@ -252,6 +254,16 @@ def find(live, doc, now=None):
                 out.append((f"{sym}:ema21", f"{sym} 21 EMA {'UNDERCUT & RECLAIM' if w21 == 'undercut' else 'RETEST'} holding into the close",
                             f"back over the 21 EMA ${e21:.2f} (the last close's) at ${price:.2f}"
                             f" · the buy: at the close, if it holds over it" + tail21, "high" if w21 == "undercut" else "default", tvs))
+        # the breakout undercut & reclaim (the user's CAI Oct 9 2026): 2+ closes back under the breakout level, holding over the
+        # 50 EMA; today back over it: a heads-up as it crosses, from 3:45 PM holding into the close (the buy: the close)
+        rl = r.get("reclaim_level")
+        if rl and (now.hour, now.minute) >= (9, 35) and price > rl:
+            tail_ = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
+            out.append((f"{sym}:reclaimbo", f"{sym} back over its breakout level", f"${price:.2f} over the breakout level ${rl:.2f} after closing under it"
+                        f" · the buy: the close back over it (the breakout undercut & reclaim)" + tail_, "default", tvs))
+            if (now.hour, now.minute) >= (15, 45):
+                out.append((f"{sym}:reclaimbo2", f"{sym} BREAKOUT UNDERCUT & RECLAIM holding into the close", f"${price:.2f} back over the breakout"
+                            f" level ${rl:.2f} after closing under it, holding over the 50 EMA · the buy: at the close, if it holds" + tail_, "high", tvs))
         # the retest of the last breakout: the zone for today was set at the last close (scanner/launch.py follow)
         z, lvb = r.get("retest_zone"), r.get("retest_level")
         if z and lvb and r.get("retest_away") and (now.hour, now.minute) >= (9, 35):
