@@ -127,6 +127,10 @@
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
   #wl-table td.nw, #ln-table td.nw { white-space: nowrap; }
+  /* Launches Status: wraps in a narrower column, 3 lines at most (tap or click it for the whole text) */
+  #ln-table td.ln-stage { min-width: 11em; max-width: 17em; white-space: normal; line-height: 1.3; cursor: pointer; }
+  #ln-table td.ln-stage > div { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  #ln-table td.ln-stage.open > div { display: block; }
   .tgr-legend { margin: 6px 0 10px; font-size: var(--cds-font-size-caption); }
   .tgr-legend summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
   .tgr-legend ul { margin: 6px 0; padding-left: 1.2em; }
@@ -654,6 +658,7 @@
             <th class="num"><button class="tgr-th" data-sort="gain_now" title="LD = launch day: % from the launch day's close to now">LD → now</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="max_gain_pct">Max</button></th>
             <th><button class="tgr-th" data-sort="stage" title="Where the stock is after the close: in the base, consolidation surfing the 10 & 21 EMA on dry volume (its resting time), tight under the buy point, a breakout, running, a retest that held; green = above the 21 EMA">Status</button></th>
+            <th class="num"><button class="tgr-th" data-sort="adr_pct" title="ADR: the stock's average daily range of the last 20 sessions, in %. A launch day needs 3.5%+; after it, the stock leaves the list under 3.2%">ADR</button></th>
             <th class="num"><button class="tgr-th" data-sort="base_day" title="Day of the base, the same as the Status: counted from the day of the base's high (day 1). Not in a base: sessions since the leg's breakout. ↑ = it turned up today: back over a rising 10 EMA after closing under it">Base day</button></th>
             <th><button class="tgr-th" data-sort="base_pattern" title="The base forming now, as your MSF engine names it: High tight flag, Bull flag, Tight flag, Pennant, Ascending triangle, Flat base, Cup with handle, ... or Base forming (no pattern yet)">Base pattern</button></th>
             <th class="c2"><button class="tgr-th" data-sort="exit_gain_pct">21 EMA exit</button></th>
@@ -1878,8 +1883,11 @@ defCalc('industry_perf', {
       thm.textContent = (r.group || '—') + ' · ' + r.group_status + (r.group_now && (r.group_now !== r.group || r.group_status_now !== r.group_status) ? ' → ' + (r.group_now !== r.group ? r.group_now + ' · ' : '') + r.group_status_now : '') +
         (r.theme_up_since && r.theme_up_since !== r.date ? ' (since ' + fDate(r.theme_up_since).replace(/, \d{4}$/, '') + ')' : '');
       /* the stock's stage after the close (dry-up / consolidation, tight under the buy point, breakout, running, ...) */
-      const stt = h('td', 'nw ' + (r.status === 'Riding' ? 'tgr-up' : 'tgr-dn'), r.stage ? r.stage + (r.stage_since ? ' since ' + fDate(r.stage_since).replace(/, \d{4}$/, '') : '') : r.status === 'Riding' ? 'Above 21 EMA' : 'Below 21 EMA');
-      stt.title = (r.status === 'Riding' ? 'Above' : 'Below') + ' the 21 EMA at the close';
+      const sttText = r.stage ? r.stage + (r.stage_since ? ' since ' + fDate(r.stage_since).replace(/, \d{4}$/, '') : '') : r.status === 'Riding' ? 'Above 21 EMA' : 'Below 21 EMA';
+      const stt = h('td', 'ln-stage ' + (r.status === 'Riding' ? 'tgr-up' : 'tgr-dn'));
+      stt.append(h('div', '', sttText));
+      stt.title = sttText + ' (' + (r.status === 'Riding' ? 'above' : 'below') + ' the 21 EMA at the close)';
+      stt.addEventListener('click', () => stt.classList.toggle('open'));
       const ex = h('td', 'c2', r.first_exit ? fDate(r.first_exit).replace(/, \d{4}$/, '') + ' (' + p1(r.exit_gain_pct, true) + ')' : '—');
       const legTd = h('td', 'num nw' + (r.late ? ' tgr-dn' : ''), r.leg === undefined || r.leg === null ? '—' : (r.leg === 0 ? '0 (in base)' : String(r.leg)) + (r.late ? ' late' : '') + (r.new_run_after_rest ? ' (new run)' : ''));
       if (r.new_run_after_rest) legTd.title = 'A new run after a rest of 40+ sessions, from ' + fDate(r.new_run_after_rest);
@@ -1894,6 +1902,7 @@ defCalc('industry_perf', {
       tr.append(key, ld, gc, pctCell(r.today, 0),
         h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
         h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
+        h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
         h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')),
         h('td', 'nw', r.base_pattern ? r.base_pattern.replace('Base forming (no pattern yet)', 'Forming (no pattern yet)') : '—'), ex, legTd,
         h('td', 'c2' + (r.breakout_today || r.flag_breakout_today || r.base_breakout_today || r.dry_entry_today ? ' tgr-up' : ''),
