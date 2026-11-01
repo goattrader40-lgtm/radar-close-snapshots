@@ -37,6 +37,24 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:47 AM grading has its own session: leave it
 alone.
 
+## Status at the end of the last session (Oct 31 – Nov 1 2026)
+
+- **Live on main**: every rule under "What the user agreed" below (pushed Oct 31, Launches rebuilt with picks.yml);
+  the "Find a ticker" box at the top of Groups & themes; this file and tools/replay.py (all examples pass).
+- **Only on the test branch** `test/flag-inside-base`: main plus one change to the 2-year check
+  (scanner/probe_catalyst.py counts flag breaks within 0.5% of their line: 96 of 428, 17% ran 20%+ and 47% failed,
+  vs 23% / 36% for the decisive ones). Not live; take it over with the next go-live.
+- **Agreed in that session** (all live): the user's ARM read (Mar 31 and Apr 7 retests, Apr 13 flag, Apr 14–16 tight,
+  Apr 17 caution breakout → Apr 20 leg 2, no flag Apr 24 – May 19, May 18 21 EMA retest, May 20 double breakout on
+  the 3rd try); the flag formation rule on top of the pole rule; the two 21 EMA entries; caution breakouts within
+  0.5% with their follow-through; the double breakout and 3rd-try tags; tops named 1-, 3- or 6-month; a flag break
+  within 0.5% keeps the line as the next trigger (TTAN: 84.28, then 87.75); VEEV Oct 9 a double breakout that closed
+  under its 6-month high 296.24; RPD out of 13.87 on Oct 22, 14.80 on Oct 23.
+- **Portal at that close (Oct 30)**: TTAN next 84.28 then 87.75; LIFE 44.81 (flag line); APPN 50.41 (flag line,
+  21 EMA watch); VEEV 325.57 (flag line, 21 EMA watch).
+- **To review with the user**: LIFE's Oct 8 (21 EMA undercut & reclaim), Oct 20 (pop) and Oct 21 (breakout) reads are
+  in the baseline but not agreed yet; plus the open items at the end of this file.
+
 ## The user's ground rules
 
 1. **No change without an explicit go.** Explain the reasoning first and get it agreed ("dont do anything without
