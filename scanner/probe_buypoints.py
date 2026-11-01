@@ -23,6 +23,7 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import launch  # noqa: E402
+import mgmt  # noqa: E402
 
 L = launch.L
 A = {}
@@ -33,38 +34,9 @@ KINDS = (("follow-through", "Breakout follow-through", "close"), ("retest", "Ret
 LEVEL = (("Base top", "base breakout"), ("Flag", "flag breakout"), ("Pop", "pop"), ("", "pattern pivot"))
 
 
-def manage(a, j, buy, stop, same_day_high):
-    """your management from the buy on day j: (result %, R, reached 2R / 3R / 5R, exit, days held)"""
-    c, o, h, l, e21 = a.st.c, a.st.o, a.st.h, a.st.l, a.e21
-    R = buy - stop
-    t2, t3, t5 = buy + 2 * R, buy + 3 * R, buy + 5 * R
-    S = dict(stop=stop, left=1.0, got=0.0, be=False, s3=False, s5=False, r2=False)
-
-    def targets(bo, bh):
-        if bh >= t2:
-            S["r2"] = True
-        if bh >= t3 and not S["s3"]:
-            S["got"] += max(t3, bo) / 3; S["left"] -= 1 / 3; S["s3"] = True
-        if bh >= t5 and not S["s5"]:
-            S["got"] += max(t5, bo) / 3; S["left"] -= 1 / 3; S["s5"] = True
-        if S["r2"] and not S["be"]:
-            S["stop"], S["be"] = max(S["stop"], buy), True
-    if same_day_high is not None:
-        targets(buy, same_day_high)
-    how, end = None, j
-    if c[j] < e21[j]:
-        S["got"] += S["left"] * c[j]; S["left"] = 0; how = "daily 21 EMA close"
-    else:
-        for k in range(j + 1, c.size):
-            end = k
-            if l[k] <= S["stop"]:
-                S["got"] += S["left"] * min(S["stop"], o[k]); S["left"] = 0; how = "breakeven" if S["be"] else "stop"; break
-            targets(o[k], h[k])
-            if c[k] < e21[k]:
-                S["got"] += S["left"] * c[k]; S["left"] = 0; how = "daily 21 EMA close"; break
-        if how is None:
-            S["got"] += S["left"] * c[-1]; how = "open at the end"
-    return 100 * (S["got"] / buy - 1), (S["got"] - buy) / R, S["r2"], S["s3"], S["s5"], how, end - j
+def manage(a, j, buy, stop, same_day_high, runner=21):
+    """your management (scanner/mgmt.py) from the buy on day j, the stop the day's low"""
+    return mgmt.run(a, j, buy, stop, same_day_high=same_day_high, runner=runner)
 
 
 def one(key):
@@ -98,9 +70,9 @@ def one(key):
             stop = float(l[j])
             if buy <= stop:
                 continue
-            ret, R, r2, r3, r5, ex, days = manage(a, j, buy, stop, same_high)
+            x21, x10 = manage(a, j, buy, stop, same_high, 21), manage(a, j, buy, stop, same_high, 10)
             hi20 = h[j + 1:min(n, j + 21)].max()
-            r_ = row(s, st, a, f, i0, j, k, entry, buy, stop, ret, R, r2, r3, r5, ex, days, hi20, c, n, closed if entry == "level" else "")
+            r_ = row(s, st, a, f, i0, j, k, entry, buy, stop, x21, x10, hi20, c, n, closed if entry == "level" else "")
             r_["level"] = round(float(pbp), 2) if entry == "level" else None
             # the theme that day and the breakout grade the alerts give (early = 1st / 2nd breakout within 50 sessions of the
             # launch; a Leading theme; the volume building the 5 days before, 1.1x+)
@@ -110,13 +82,10 @@ def one(key):
                       breakout_grade="A" if early and lead and build else "B" if early and (lead or build) else "C",
                       early_breakout=int(early))
             # as the alert fires, sold at the close when that day closes back under the buy point (a level buy)
-            if entry == "level" and c[j] <= pbp:
-                px = float(c[j])
-                r_.update(alertcx_risk_pct=r_["risk_pct"], alertcx_result_pct=round(100 * (px / buy - 1), 2), alertcx_R=round((px - buy) / (buy - stop), 2),
-                          alertcx_win=int(px > buy), alertcx_reached_3R=0, alertcx_exit="sold at the close: back under the buy point")
-            elif entry == "level":
-                r_.update(alertcx_risk_pct=r_["risk_pct"], alertcx_result_pct=r_["result_pct"], alertcx_R=r_["R"], alertcx_win=r_["win"],
-                          alertcx_reached_3R=r_["reached_3R"], alertcx_exit=r_["exit"])
+            if entry == "level":
+                for x, suf in ((x21, ""), (x10, "_10")):
+                    y = mgmt.sold_at_close(x, a, j, buy, x["risk"], "sold at the close: back under the buy point") if c[j] <= pbp else x
+                    r_.update(mgmt.cols(y, "alertcx_", suf))
             # the tags the Launches tab shows (as of that day's close)
             r_.update(caution_within_0_5pct=int(bool(f.get("breakout_caution"))), double_breakout=int(bool(f.get("double_breakout"))),
                       third_try=int("3rd try of the top" in stage), flag_volume_dried=int(bool(f.get("flag_dry"))),
@@ -129,13 +98,15 @@ def one(key):
     return out
 
 
-def row(s, st, a, f, i0, j, k, entry, buy, stop, ret, R, r2, r3, r5, ex, days, hi20, c, n, closed):
-        return (dict(date=st.dates[j], symbol=s, buy_point=k, bought=entry, day_closed=closed, leg=f.get("leg"), sessions_since_launch=j - i0,
-                        launch_date=st.dates[i0], launch_grade=launch.grade(a, i0), rvol_day=round(float(a.rv[j]), 2),
-                        gap_pct=round(float(a.gap[j]), 2), day_change_pct=round(float(a.chg[j]), 2), close_in_range_pct=round(100 * float(a.clpos[j])),
-                        adr_pct=round(float(st.adr[j]), 2), risk_pct=round(100 * (buy - stop) / buy, 2), result_pct=round(ret, 2), R=round(R, 2),
-                        win=int(ret > 0), reached_2R=int(r2), reached_3R=int(r3), reached_5R=int(r5), exit=ex, days_held=days,
-                        ran20=int(hi20 >= buy * 1.2), failed5=int((c[j + 1:j + 6] < stop).any())))
+def row(s, st, a, f, i0, j, k, entry, buy, stop, x21, x10, hi20, c, n, closed):
+    r = dict(date=st.dates[j], symbol=s, buy_point=k, bought=entry, day_closed=closed, leg=f.get("leg"), sessions_since_launch=j - i0,
+             launch_date=st.dates[i0], launch_grade=launch.grade(a, i0), rvol_day=round(float(a.rv[j]), 2),
+             gap_pct=round(float(a.gap[j]), 2), day_change_pct=round(float(a.chg[j]), 2), close_in_range_pct=round(100 * float(a.clpos[j])),
+             adr_pct=round(float(st.adr[j - 1]), 2), days_held=x21["days"],
+             ran20=int(hi20 >= buy * 1.2), failed5=int((c[j + 1:j + 6] < stop).any()))
+    r.update(mgmt.cols(x21))
+    r.update(mgmt.cols(x10, suf="_10"))
+    return r
 
 
 def summ(ts):
@@ -144,7 +115,7 @@ def summ(ts):
     R = np.array([t["R"] for t in ts])
     return dict(trades=len(ts), win=round(100 * float(np.mean([t["win"] for t in ts]))), avg_pct=round(float(np.mean([t["result_pct"] for t in ts])), 2),
                 avg_R=round(float(R.mean()), 2), med_R=round(float(np.median(R)), 2), total_R=round(float(R.sum()), 1),
-                reached_3R=round(100 * float(np.mean([t["reached_3R"] for t in ts]))), reached_5R=round(100 * float(np.mean([t["reached_5R"] for t in ts]))),
+                reached_2ADR=round(100 * float(np.mean([t["reached_2ADR"] for t in ts]))), reached_5ADR=round(100 * float(np.mean([t["reached_5ADR"] for t in ts]))),
                 ran20=round(100 * float(np.mean([t["ran20"] for t in ts]))), failed5=round(100 * float(np.mean([t["failed5"] for t in ts]))),
                 risk_med_pct=round(float(np.median([t["risk_pct"] for t in ts])), 2))
 
@@ -174,9 +145,8 @@ def main():
         j = a.st.dates.index(t["date"])
         cb, cl = float(a.st.c[j]), float(a.st.l[j])
         if cb > cl:
-            ret, R, r2, r3, r5, ex, days = manage(a, j, cb, cl, None)
-            t.update(close_risk_pct=round(100 * (cb - cl) / cb, 2), close_result_pct=round(ret, 2), close_R=round(R, 2), close_win=int(ret > 0),
-                     close_reached_3R=int(r3), close_reached_5R=int(r5), close_exit=ex)
+            t.update(mgmt.cols(manage(a, j, cb, cl, None, 21), "close_"))
+            t.update(mgmt.cols(manage(a, j, cb, cl, None, 10), "close_", "_10"))
     # 3) your 5-minute entry: over the 5-minute opening range high (and over the buy point for a level buy) on the day,
     # the next morning for a close signal; the risk the 5-minute low; your management (scanner/probe_pb1h.py trade)
     if os.environ.get("ALPACA_KEY_ID"):
@@ -201,29 +171,26 @@ def main():
                 m = next((x for x in range(1, len(b)) if b[x]["h"] > lvl), None)
                 if m is None:
                     continue
-                x = pb.trade(A[t["symbol"]], k, b, -1e9, {}, entry=(m, max(lvl, b[m]["o"])))
-                if x and x.get("broke"):
-                    t.update(min5_bought=1, min5_day=d, min5_risk_pct=round(x["risk"], 2), min5_result_pct=round(float(x["ret"]), 2),
-                             min5_R=round(float(x["R"]), 2), min5_win=int(x["ret"] > 0), min5_reached_3R=int(x["r3"]), min5_reached_5R=int(x["r5"]), min5_exit=x["how"])
+                buy5 = max(lvl, b[m]["o"])
+                a_s = A[t["symbol"]]
+                for runner, suf in ((21, ""), (10, "_10")):
+                    x = pb.trade(a_s, k, b, -1e9, {}, entry=(m, buy5), runner=runner)
+                    if not (x and x.get("broke")):
+                        continue
+                    t["min5_bought"] = 1
+                    t.update(mgmt.cols(x, "min5_", suf))
                     # the 5-minute buy of a level buy point, sold at the close when that day closes back under the buy point
                     if t["level"]:
-                        st_ = A[t["symbol"]].st
-                        buy5 = max(lvl, b[m]["o"])
-                        if not (x["days"] == 0 and x["how"] in ("stop", "breakeven")) and st_.c[k] <= t["level"]:
-                            px = float(st_.c[k])
-                            t.update(min5cx_risk_pct=t["min5_risk_pct"], min5cx_result_pct=round(100 * (px / buy5 - 1), 2),
-                                     min5cx_R=round((px - buy5) / (buy5 * x["risk"] / 100), 2), min5cx_win=int(px > buy5), min5cx_reached_3R=0,
-                                     min5cx_exit="sold at the close: back under the buy point")
-                        else:
-                            t.update(min5cx_risk_pct=t["min5_risk_pct"], min5cx_result_pct=t["min5_result_pct"], min5cx_R=t["min5_R"],
-                                     min5cx_win=t["min5_win"], min5cx_reached_3R=t["min5_reached_3R"], min5cx_exit=t["min5_exit"])
+                        y = mgmt.sold_at_close(x, a_s, k, buy5, x["risk"], "sold at the close: back under the buy point") \
+                            if a_s.st.c[k] <= t["level"] else x
+                        t.update(mgmt.cols(y, "min5cx_", suf))
     kinds = [nm for _, nm in LEVEL] + [k for k, _, _ in KINDS]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1], launches=len(keys),
                all=summ(ts), by_buy_point={k: summ([t for t in ts if t["buy_point"] == k]) for k in kinds},
                by_rvol={nm: summ([t for t in ts if lo <= t["rvol_day"] < hi]) for nm, lo, hi in RV},
                by_gap={nm: summ([t for t in ts if lo <= t["gap_pct"] < hi]) for nm, lo, hi in GAP},
-               by_entry={m: {k: summ([dict(t, R=t[m + "R"], win=t[m + "win"], result_pct=t[m + "result_pct"], reached_3R=t[m + "reached_3R"],
-                                             reached_5R=t[m + "reached_5R"], risk_pct=t[m + "risk_pct"]) for t in ts if (k == "all" or t["buy_point"] == k) and m + "R" in t])
+               by_entry={m: {k: summ([dict(t, R=t[m + "R"], win=t[m + "win"], result_pct=t[m + "result_pct"], reached_2ADR=t[m + "reached_2ADR"],
+                                             reached_5ADR=t[m + "reached_5ADR"], risk_pct=t[m + "risk_pct"]) for t in ts if (k == "all" or t["buy_point"] == k) and m + "R" in t])
                              for k in ["all"] + kinds} for m in ("close_", "min5_")},
                level_buys_by_close={x: summ([t for t in ts if t["day_closed"] == x]) for x in ("closed as a breakout", "closed as a pop", "closed back under / no breakout")},
                by_buy_point_and_rvol={k: {nm: summ([t for t in ts if t["buy_point"] == k and lo <= t["rvol_day"] < hi]) for nm, lo, hi in RV} for k in kinds},

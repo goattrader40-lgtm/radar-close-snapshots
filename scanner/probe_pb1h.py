@@ -25,6 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import launch  # noqa: E402
 import probe_catalyst as pc  # noqa: E402  (Alpaca helpers)
+import mgmt  # noqa: E402  (your management)
 
 
 def candidates(A, first):
@@ -84,7 +85,7 @@ def hourly(rows):
     return out
 
 
-def trade(a, k, b5, ema, H, entry=None):
+def trade(a, k, b5, ema, H, entry=None, runner=21):
     """the trade on day k from its 5-minute bars b5 (H = the stock's 1-hour bars by date); None when the opening range
     isn't above the 1-hour 21 EMA of the day before's close"""
     st, c, o, h, l, e21 = a.st, a.st.c, a.st.o, a.st.h, a.st.l, a.e21
@@ -99,62 +100,9 @@ def trade(a, k, b5, ema, H, entry=None):
     R = buy - orl
     if R <= 0:
         return None
-    S = dict(stop=orl, left=1.0, got=0.0, be=False, sold3=False, sold5=False, how=None, r2=False)
-    t2, t3, t5 = buy + 2 * R, buy + 3 * R, buy + 5 * R
-
-    def out(px, how):
-        S["got"] += S["left"] * px
-        S["left"] = 0.0
-        S["how"] = how
-        return True
-
-    def step(bo, bh, bl):
-        if bl <= S["stop"]:                                 # the stop first
-            return out(min(S["stop"], bo), "breakeven" if S["be"] else "stop")
-        if bh >= t2:
-            S["r2"] = True
-        if bh >= t3 and not S["sold3"]:
-            S["got"] += max(t3, bo) / 3; S["left"] -= 1 / 3; S["sold3"] = True
-        if bh >= t5 and not S["sold5"]:
-            S["got"] += max(t5, bo) / 3; S["left"] -= 1 / 3; S["sold5"] = True
-        if S["r2"] and not S["be"]:
-            S["stop"], S["be"] = max(S["stop"], buy), True
-        return False
-
-    def hour_exit(x):                                       # no 1-hour exit: the runners go on the daily 21 EMA close
-        return False
-
-    hk = {x["i"]: x for x in H.get(st.dates[k], [])}
-    end_j, done = k, False
-    for n, x in enumerate(b5[m:], m):
-        if step(buy if n == m else x["o"], x["h"], x["l"]):
-            done = True; break
-        tt = datetime.datetime.fromisoformat(x["t"].replace("Z", "+00:00")).astimezone(pc.NY)
-        end = tt.hour * 60 + tt.minute + 5 - 570                          # minutes from 9:30 at this bar's end
-        hi = end // 60 - 1 if end % 60 == 0 else 6 if end >= 390 else None   # it closes a 1-hour bar
-        if hi is not None and hi in hk and hour_exit(hk[hi]):
-            done = True; break
-    if not done and c[k] < e21[k]:
-        done = out(c[k], "daily 21 EMA close")
-    j = k + 1
-    while not done and j < c.size:
-        end_j = j
-        hb = H.get(st.dates[j])
-        if hb:
-            for x in hb:
-                if step(x["o"], x["h"], x["l"]) or hour_exit(x):
-                    done = True; break
-        elif step(o[j], h[j], l[j]):
-            done = True
-        if not done and c[j] < e21[j]:
-            done = out(c[j], "daily 21 EMA close")
-        j += 1
-    if not done:
-        out(c[-1], "open at the end")
-    ret = 100 * (S["got"] / buy - 1)
-    t.update(ret=ret, R=(S["got"] - buy) / R, risk=100 * R / buy, days=end_j - k, how=S["how"],
-             same_day=end_j == k and S["how"] in ("stop", "breakeven"), r2=S["r2"], r3=S["sold3"], r5=S["sold5"],
-             mg=float(100 * (h[k:end_j + 1].max() / buy - 1)))
+    x = mgmt.run(a, k, buy, orl, bars=b5[m:], runner=runner)        # your management (scanner/mgmt.py)
+    t.update(ret=x["ret"], R=x["R"], risk=x["risk"], days=x["days"], how=x["how"], same_day=x["same_day"],
+             r2=x["t1"], r3=x["t1"], r5=x["t2"], t1=x["t1"], t2=x["t2"], mg=x["mg"])
     return t
 
 
@@ -167,8 +115,7 @@ def summ(ts):
     return dict(setups=len(ts), broke_orh_pct=round(100 * len(tr) / len(ts)), trades=len(tr),
                 win=round(100 * float(np.mean(ret > 0))), avg_pct=round(float(ret.mean()), 2), med_pct=round(float(np.median(ret)), 2),
                 avg_R=round(float(R.mean()), 2), med_R=round(float(np.median(R)), 2), total_R=round(float(R.sum()), 1),
-                reached_2R=round(100 * float(np.mean([t["r2"] for t in tr]))), reached_3R=round(100 * float(np.mean([t["r3"] for t in tr]))),
-                reached_5R=round(100 * float(np.mean([t["r5"] for t in tr]))),
+                reached_2ADR=round(100 * float(np.mean([t["t1"] for t in tr]))), reached_5ADR=round(100 * float(np.mean([t["t2"] for t in tr]))),
                 stopped_same_day=round(100 * float(np.mean([t["same_day"] for t in tr]))),
                 exits={k: round(100 * v / len(tr)) for k, v in hows.items()},
                 risk_med_pct=round(float(np.median([t["risk"] for t in tr])), 2), days_med=int(np.median([t["days"] for t in tr])),

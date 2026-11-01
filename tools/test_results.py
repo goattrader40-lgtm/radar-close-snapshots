@@ -32,6 +32,7 @@ LABELS = {"n": "count", "trades": "trades", "setups": "setups", "win": "winners 
           "med": "median %", "med_pct": "median %", "avg_R": "average R", "med_R": "median R", "total_R": "total R",
           "ran10": "ran 10%+ %", "ran20": "ran 20%+ %", "ran50": "ran 50%+ %", "fail5": "failed in 5 days %", "med20": "median after 20 days %",
           "reached_2R": "reached +2R %", "reached_3R": "reached +3R %", "reached_5R": "reached +5R %",
+          "reached_2ADR": "reached +2 ADR %", "reached_5ADR": "reached +5 ADR %",
           "stopped_same_day": "stopped same day %", "stopped_same_day_pct": "stopped same day %", "broke_orh_pct": "broke the 5-min high %",
           "risk_med_pct": "typical risk %", "days_med": "typical days held", "C_win": "half-at-2R winners %", "C_avg": "half-at-2R average %",
           "took_half_at_2R_pct": "took half at 2R %", "hit_next_day_pct": "trigger hit next day %", "became_pct": "became Ready/Triggered %"}
@@ -52,6 +53,8 @@ GRADES = (
 COLUMNS = (
     ("date / symbol", "the day of the buy (or of the signal) and the stock"),
     ("entry tactic / stop", "how it was bought and where the stop was (see each sheet's row 1)"),
+    ("runners", "how the last third is held: out on a daily close under the 10 EMA (strong stocks) or the 21 EMA; filter it to one"),
+    ("reached_2ADR / reached_5ADR", "1 = it got to +2 / +5 ADRs over the buy (where you sell a third)"),
     ("buy_point / bought", "the Launches trigger; bought = at the level, at the open or at the close"),
     ("pattern / base_pattern", "what the buy point came from (Base top, Flag line, an MSF pattern: Ascending triangle, Flat base, Cup with handle...) and the base's MSF name"),
     ("retest_with", "for a retest: the EMAs at the level with it (10 / 21 / 50 EMA, or no EMA)"),
@@ -131,7 +134,7 @@ def inb(x, lo, hi):
 
 TOT = (("win", "winners %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("R", "average R", "=ROUND(SUBTOTAL(101,{r}),2)"),
        ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)"),
-       ("reached_3R", "reached +3R %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("failed5", "failed in 5 days %", "=ROUND(100*SUBTOTAL(101,{r}),1)"))
+       ("reached_2ADR", "reached +2 ADR %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("failed5", "failed in 5 days %", "=ROUND(100*SUBTOTAL(101,{r}),1)"))
 TOT_2 = tuple((p + c, lab_p + lab, f) for p, lab_p in (("min5_", "5-min: "), ("close_", "at close: ")) for c, lab, f in
               (("win", "winners %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("R", "average R", "=ROUND(SUBTOTAL(101,{r}),2)"),
                ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)")))
@@ -145,7 +148,7 @@ TOT_3 = tuple((c, "as the alert: " + lab, f) for c, lab, f in TOT[:4]) + tuple(
 
 ENTRIES = ("Entry tactics: as the alert fires = at the level when it breaks (the open for a push, the close for close signals), stop the day's low; "
            "buy at the close = that day's close, stop the day's low; 5-min entry = over the 5-minute high and the buy point (close signals: the next "
-           "morning), stop the 5-minute low. Your management. Row 3 = the totals of what you filter. Tags are as of that day's close.")
+           "morning), stop the 5-minute low. Your management (1/3 at +2 ADR, 1/3 at +5 ADR, breakeven; filter 'runners': 10 or 21 EMA close). Row 3 = the totals of what you filter. Tags are as of that day's close.")
 DESC = {
     "Launch fair - compare exits": "LAUNCH DAYS, fair (no hindsight): every gap-up that traded over the 5-minute high and +5%, bought there, STOP the 5-minute low. "
                                    "Filter 'entry tactic': hold (your management) vs sell at the close if the day doesn't close as a launch. Then rvol, gap, "
@@ -155,7 +158,7 @@ DESC = {
                                  "vs 'out if RVOL < 2x at 20 min' (at 9:50, out if the RVOL isn't 2x). RVOL at the buy 1x+. Your management after. "
                                  "Then filter rvol_at_buy, rvol_at_20min, gap_over_base_high_pct, pattern, theme, within_0_7_adr. Row 3 = the totals.",
     "Launch trades": "LAUNCH DAYS, fair (no hindsight). ENTRY: the gap-up day, over both the 5-minute opening range high and +5%. STOP: the 5-minute low. "
-                     "Then your management (+2R breakeven, 1/3 at +3R, 1/3 at +5R, runners on the daily 21 EMA close).",
+                     "Then your management (1/3 at +2 ADR, 1/3 at +5 ADR, breakeven; runners: the 'runners' column).",
     "Launch 5-min vs close": "LAUNCH DAYS (days that closed as launches). min5_ = ENTRY over the 5-minute high on the launch day, STOP the 5-minute low "
                              "(hindsight: only days that turned out to be launches). close_ = ENTRY at the launch day's close, STOP the day's low (fair). Your management.",
     "Launch - compare entries": "LAUNCH DAYS, one row per launch and ENTRY TACTIC: filter 'entry tactic' (5-min entry = over the 5-minute high, stop the "
@@ -195,24 +198,26 @@ def with_risk_adr(rows):
             r["risk_in_adr"] = round(r["risk_pct"] / r["adr_pct"], 2)
             r["within_0_7_adr"] = int(r["risk_in_adr"] <= 0.7)
     return rows
-RESULT = ("risk_pct", "result_pct", "R", "win", "reached_3R", "exit")
+RESULT = ("risk_pct", "result_pct", "R", "win", "reached_2ADR", "reached_5ADR", "exit")
+RUNNERS = (("", "21 EMA close"), ("_10", "10 EMA close"))
 
 
 def long_rows(rows, tactics):
     """one row per trade and entry tactic, so the tactic is a column to filter on"""
     out = []
     for r in rows:
-        base = {k: v for k, v in r.items() if not k.startswith(("min5_", "close_", "min5cx_", "alertcx_", "cx_")) and
-                k not in RESULT + ("reached_2R", "reached_5R", "days_held", "ran20", "failed5", "min5_bought")}
+        base = {k: v for k, v in r.items() if not k.startswith(("min5_", "close_", "min5cx_", "alertcx_", "cx_")) and not k.endswith("_10") and
+                k not in RESULT + ("reached_2R", "reached_3R", "reached_5R", "days_held", "ran20", "failed5", "min5_bought", "min5_day")}
         for pre, name, stop in tactics:
-            if r.get(pre + "R") is None:
-                continue
             if pre == "" and r.get("bought") == "close":
                 continue                                    # a close signal: "as the alert fires" is the close, kept once as "buy at the close"
-            x = dict(base)
-            x.update({"entry tactic": name, "stop": stop})
-            x.update({k: r.get(pre + k) for k in RESULT})
-            out.append(x)
+            for suf, runners in RUNNERS:
+                if r.get(pre + "R" + suf) is None:
+                    continue
+                x = dict(base)
+                x.update({"entry tactic": name, "runners": runners, "stop": stop})
+                x.update({k: r.get(pre + k + suf) for k in RESULT})
+                out.append(x)
     return with_risk_adr(out)
 
 
@@ -316,8 +321,9 @@ def main():
         rm.append([title, name.replace("probe_", ""), what, f"{d.get('first')} to {d.get('last')}" if d and "first" in d else "not run yet", cmd])
     rm.append([])
     rm.append(["How to read", "", "R = the trade's result divided by its risk (entry to stop). winners % = trades that made money. "
-               "Your management = +2R stop to breakeven, 1/3 sold at +3R, 1/3 at +5R, runners out on a daily close under the 21 EMA "
-               "or at breakeven. When one bar touches both the stop and a target, the stop counts first (the safe side). "
+               "Your management (Nov 1 2026, scanner/mgmt.py) = sell 1/3 at +2 ADR (2 x the stock's ADR over the buy), 1/3 at +5 ADR, then the "
+               "stop to breakeven; the runners out on a daily close under the 10 EMA or the 21 EMA ('runners' column: filter it). The older "
+               "tests (3-SETUPS, 1-hour pullback, earnings) still use +2R breakeven, 1/3 at +3R and +5R. When one bar touches both the stop and a target, the stop counts first (the safe side). "
                "Costs and slippage are not included.", "", ""])
     rm.append([])
     rm.append(["HOW THE GRADES ARE MADE"])
@@ -336,7 +342,7 @@ def main():
             c.alignment = Alignment(wrap_text=True, vertical="top")
     sm = wb.create_sheet("Summary")
     head = ["Test", "Group", "In plain words", "Trades", "Winners %", "Average result %", "Median result %", "Average R per trade",
-            "Total R", "Reached +3R %", "Stopped out same day %", "Typical risk %", "Note"]
+            "Total R", "Reached +2 ADR % (older tests: +3R)", "Stopped out same day %", "Typical risk %", "Note"]
     sm.append(head)
     picks = [("probe_setups3", "ready_orh › all", "Ready, next-day 5-min high, exit A", ""),
              ("probe_setups3", "ready_orh › B_day_low_stop", "Ready, next-day 5-min high, stop under the day's low", ""),
@@ -373,7 +379,7 @@ def main():
         words = (f"{nt} trades; {w}% made money; on average {av:+}% a trade, " if None not in (nt, w, av) else "") \
             + (f"{ar:+} times the risk ({'a gain' if ar > 0 else 'a loss'} of {abs(ar)}R per trade)" if ar is not None else "")
         sm.append([title, variant, words, nt, w, av, r.get("med_pct", r.get("med")),
-                   ar, r.get("total_R"), r.get("reached_3R"), r.get("stopped_same_day", r.get("stopped_same_day_pct")),
+                   ar, r.get("total_R"), r.get("reached_2ADR", r.get("reached_3R")), r.get("stopped_same_day", r.get("stopped_same_day_pct")),
                    r.get("risk_med_pct"), note or None])
     style(sm, [26, 40, 56] + [11] * 9 + [24])
     for row in sm.iter_rows(min_row=2):

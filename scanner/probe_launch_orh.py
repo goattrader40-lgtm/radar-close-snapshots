@@ -22,7 +22,7 @@ sys.path.insert(0, HERE)
 import launch  # noqa: E402
 import probe_catalyst as pc  # noqa: E402
 import probe_pb1h as pb  # noqa: E402
-import probe_buypoints as bpm  # noqa: E402  (your management on daily bars, for the buy at the close)
+import mgmt  # noqa: E402  (your management)
 
 L = launch.L
 
@@ -50,7 +50,8 @@ def simple(a, k, b5):
                 sell, j_out, how = c[j], j, "daily 21 EMA close"; break
     mg = float(100 * (h[k:j_out + 1].max() / buy - 1))
     return dict(broke=True, ret=100 * (sell / buy - 1), R=(sell - buy) / R, risk=100 * R / buy, days=j_out - k, how=how,
-                same_day=j_out == k and how == "stop", r2=mg >= 200 * R / buy, r3=mg >= 300 * R / buy, r5=mg >= 500 * R / buy, mg=mg)
+                same_day=j_out == k and how == "stop", r2=mg >= 200 * R / buy, r3=mg >= 300 * R / buy, r5=mg >= 500 * R / buy, mg=mg,
+                t1=mg >= 2 * float(st.adr[k - 1]), t2=mg >= 5 * float(st.adr[k - 1]))
 
 
 def main():
@@ -110,19 +111,18 @@ def main():
             # the same launch bought at its close (you know it's a launch at 4 PM), the risk the day's low, your management
             a, st = A[s], A[s].st
             cb, cl = float(st.c[i]), float(st.l[i])
-            cr = bpm.manage(a, i, cb, cl, None) if cb > cl else None
             row = dict(date=d, symbol=s, launch_type=kind[(s, i)], grade=launch.grade(a, i), rvol_day=round(float(a.rv[i]), 2),
                        gap_pct=round(float(a.gap[i]), 2), day_change_pct=round(float(a.chg[i]), 2), close_in_range_pct=round(100 * float(a.clpos[i])),
                        vs_200sma_day_before_pct=round(float(a.ext200_prev[i]), 1), adr_pct=round(float(st.adr[i - 1]), 2))
+            row["min5_bought"] = int(bool(x and x.get("broke")))
             if x and x.get("broke"):
-                row.update(min5_bought=1, min5_risk_pct=round(x["risk"], 2), min5_result_pct=round(float(x["ret"]), 2), min5_R=round(float(x["R"]), 2),
-                           min5_win=int(x["ret"] > 0), min5_reached_3R=int(x["r3"]), min5_exit=x["how"], min5_days=x["days"])
-            else:
-                row.update(min5_bought=0)
-            if cr:
-                ret, R, r2, r3, r5, ex, days = cr
-                row.update(close_risk_pct=round(100 * (cb - cl) / cb, 2), close_result_pct=round(ret, 2), close_R=round(R, 2), close_win=int(ret > 0),
-                           close_reached_3R=int(r3), close_exit=ex, close_days=days)
+                row.update(mgmt.cols(x, "min5_"))
+                x10 = pb.trade(a, i, b, -1e9, {}, runner=10)
+                if x10 and x10.get("broke"):
+                    row.update(mgmt.cols(x10, "min5_", "_10"))
+            if cb > cl:
+                row.update(mgmt.cols(mgmt.run(a, i, cb, cl, runner=21), "close_"))
+                row.update(mgmt.cols(mgmt.run(a, i, cb, cl, runner=10), "close_", "_10"))
             rows.append(row)
     kinds = ["regular", "power day", "reversal day", "catalyst (news)"]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[first], last=cal[-1],
@@ -136,7 +136,7 @@ def main():
         out["bought_at_the_close"] = dict(trades=len(cs), win=round(100 * float(np.mean([r["close_win"] for r in cs]))),
                                           avg_pct=round(float(np.mean([r["close_result_pct"] for r in cs])), 2), avg_R=round(float(Rc.mean()), 2),
                                           med_R=round(float(np.median(Rc)), 2), total_R=round(float(Rc.sum()), 1),
-                                          reached_3R=round(100 * float(np.mean([r["close_reached_3R"] for r in cs]))),
+                                          reached_2ADR=round(100 * float(np.mean([r["close_reached_2ADR"] for r in cs]))),
                                           risk_med_pct=round(float(np.median([r["close_risk_pct"] for r in cs])), 2))
     out["trades"] = rows
     json.dump(out, open(a_.out, "w"), indent=1)

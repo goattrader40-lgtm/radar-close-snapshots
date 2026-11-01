@@ -13,8 +13,8 @@ moment of the buy, whether or not the day closed as a launch.
                     the bar's open when it jumps over them); the risk = the opening range low
   volume            "pace": the volume from 9:30 to that bar's end / the stock's usual volume by then (its 20-day
                     average x its own intraday volume curve, radar-data volprofile.json); the live check needs 1.5x+
-  managed           your rules (scanner/probe_pb1h.py trade): +2R breakeven, 1/3 at +3R, 1/3 at +5R, the runners out on
-                    a daily close under the 21 EMA or at breakeven (that close takes whatever is open)
+  managed           your management (scanner/mgmt.py): 1/3 at +2 ADR, 1/3 at +5 ADR, then breakeven; the runners out on a
+                    daily close under the 21 EMA (columns without a suffix) or the 10 EMA (_10)
 Days whose high never reached +5% are left out before the 5-minute bars are read (no buy was possible on them).
 """
 import argparse, collections, datetime, json, os, sys
@@ -26,22 +26,20 @@ sys.path.insert(0, HERE)
 import launch  # noqa: E402
 import probe_catalyst as pc  # noqa: E402
 import probe_pb1h as pb  # noqa: E402
+import mgmt  # noqa: E402
 
 L = launch.L
 
 
 def cx_launch(t, A):
     """the same 5-minute buy, sold at the close of the day when it didn't close as a launch (you know at 4 PM)"""
-    st = A[t["sym"]].st
-    k = st.dates.index(t["date"])
-    same = t["days"] == 0 and t["how"] in ("stop", "breakeven")
-    if same or t["closed_as"] != "not a launch":
-        ret, R, how = float(t["ret"]), float(t["R"]), t["how"]
-    else:
-        px = float(st.c[k])
-        ret, R, how = 100 * (px / t["buy"] - 1), (px - t["buy"]) / (t["buy"] * t["risk"] / 100), "sold at the close: not a launch"
-    return dict(cx_risk_pct=round(t["risk"], 2), cx_result_pct=round(ret, 2), cx_R=round(R, 2), cx_win=int(ret > 0),
-                cx_reached_3R=int(t["r3"]) if how != "sold at the close: not a launch" else 0, cx_exit=how)
+    a = A[t["sym"]]
+    k = a.st.dates.index(t["date"])
+    out = {}
+    for x, suf in ((t, ""), (t["x10"], "_10")):
+        y = mgmt.sold_at_close(x, a, k, t["buy"], x["risk"], "sold at the close: not a launch") if t["closed_as"] == "not a launch" else x
+        out.update(mgmt.cols(y, "cx_", suf))
+    return out
 
 
 def main():
@@ -109,9 +107,10 @@ def main():
             frac = curve[s][mins] if s in curve and len(curve[s]) > mins else (mins + 1) / 390
             pace = cv / (av * frac) if av and frac else None
             t = pb.trade(a, k, b, -1e9, {}, entry=(m, buy))
+            t10 = pb.trade(a, k, b, -1e9, {}, entry=(m, buy), runner=10)
             if t is None or not t.get("broke"):
                 continue
-            t["buy"] = float(buy)
+            t["buy"], t["x10"] = float(buy), t10
             t.update(sym=s, date=d, pace=pace, minutes=mins + 1, gap=float(a.gap[k]), under200=bool(st.c[k - 1] < a.s200[k - 1]),
                      rvol_day=float(a.rv[k]), chg_day=float(a.chg[k]), ext200_prev=float(a.ext200_prev[k]), adr=float(st.adr[k - 1]),
                      grade=launch.grade(a, k),
@@ -140,9 +139,7 @@ def main():
                           gap_pct=round(t["gap"], 2), day_change_pct=round(t["chg_day"], 2), rvol_day=round(t["rvol_day"], 2),
                           rvol_pace_at_buy=round(t["pace"], 2) if t["pace"] else None, buy_minutes_after_open=t["minutes"],
                           from_under_200sma=t["under200"], vs_200sma_day_before_pct=round(t["ext200_prev"], 1), adr_pct=round(t["adr"], 2),
-                          risk_pct=round(t["risk"], 2), result_pct=round(float(t["ret"]), 2), R=round(float(t["R"]), 2), win=int(t["ret"] > 0),
-                          reached_2R=int(t["r2"]), reached_3R=int(t["r3"]), reached_5R=int(t["r5"]), exit=t["how"], days_held=t["days"],
-                          **cx_launch(t, A))
+                          days_held=t["days"], **mgmt.cols(t), **mgmt.cols(t["x10"], suf="_10"), **cx_launch(t, A))
                      for t in tm]
     json.dump(out, open(a_.out, "w"), indent=1)
     print(json.dumps(out, indent=1))

@@ -22,6 +22,7 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import launch  # noqa: E402
+import mgmt  # noqa: E402
 
 L = launch.L
 A = {}
@@ -131,8 +132,8 @@ def main():
                 if not p_buy or p_buy < 1:
                     continue                                # RVOL under 1x at the buy: no trade
                 buy = max(orh, b[m]["o"])
-                hold = pb.trade(a, j, b, -1e9, {}, entry=(m, buy))
-                if not hold or not hold.get("broke"):
+                holds = {r_: pb.trade(a, j, b, -1e9, {}, entry=(m, buy), runner=r_) for r_ in (21, 10)}
+                if not holds[21] or not holds[21].get("broke"):
                     continue
                 # the 9:50 check: RVOL 2x by 20 minutes, else out at that price (if still in)
                 e = next((x for x in range(len(b)) if mins_of(b[x], pc.NY) + (5 if orb == "5-min" else 1) >= 20), None)
@@ -143,30 +144,33 @@ def main():
                 else:
                     rv_out = None if (p20 or 0) >= 2 else "out"
                 res_rv = None
-                if rv_out == "out":
-                    stop, got, left, be = orl, 0.0, 1.0, False
+                if rv_out == "out":                         # your management until 9:50, then out
+                    adr = float(a.st.adr[j - 1])
+                    t1_, t2_ = buy * (1 + 2 * adr / 100), buy * (1 + 5 * adr / 100)
+                    stop, got, left, s1, s2 = orl, 0.0, 1.0, False, False
                     for n in range(m, e + 1):
                         x = b[n]
+                        bo = x["o"] if n > m else buy
                         if x["l"] <= stop:
-                            res_rv = (got + left * min(stop, x["o"] if n > m else buy), "stop before 9:50"); break
-                        if x["h"] >= buy + 3 * R and left > 0.67:
-                            got += (buy + 3 * R) / 3; left -= 1 / 3
-                        if x["h"] >= buy + 2 * R:
-                            stop, be = max(stop, buy), True
+                            res_rv = (got + left * min(stop, bo), "stop before 9:50", s1, s2); break
+                        if x["h"] >= t1_ and not s1:
+                            got += max(t1_, bo) / 3; left -= 1 / 3; s1 = True
+                        if x["h"] >= t2_ and not s2:
+                            got += max(t2_, bo) / 3; left -= 1 / 3; s2 = True
+                        if s1:
+                            stop = max(stop, buy)
                     if res_rv is None:
-                        res_rv = (got + left * b[e]["c"], "out at 9:50: RVOL under 2x")
+                        res_rv = (got + left * b[e]["c"], "out at 9:50: RVOL under 2x", s1, s2)
                 base = {k: v for k, v in t.items() if k != "j"}
                 base.update(rvol_at_buy=round(p_buy, 2), rvol_at_20min=round(p20, 2) if p20 else None,
                             buy_minutes_after_open=mins_of(b[m], pc.NY) + (5 if orb == "5-min" else 1))
                 for var, res in (("hold", None), ("out if RVOL < 2x at 20 min", res_rv if rv_out == "out" else None)):
                     if var != "hold" and rv_out == "skip":
                         continue
-                    if res:
-                        ret, Rr, how, r3 = 100 * (res[0] / buy - 1), (res[0] - buy) / R, res[1], 0
-                    else:
-                        ret, Rr, how, r3 = float(hold["ret"]), float(hold["R"]), hold["how"], int(hold["r3"])
-                    rows.append(dict(base, **{"entry tactic": f"{orb} ORB, {var}", "stop": f"{orb} low", "risk_pct": round(100 * R / buy, 2),
-                                              "result_pct": round(ret, 2), "R": round(Rr, 2), "win": int(ret > 0), "reached_3R": r3, "exit": how}))
+                    for r_, lab in ((21, "21 EMA close"), (10, "10 EMA close")):
+                        hold = holds[r_]
+                        x = dict(hold, ret=100 * (res[0] / buy - 1), R=(res[0] - buy) / R, how=res[1], t1=res[2], t2=res[3]) if res else hold
+                        rows.append(dict(base, **{"entry tactic": f"{orb} ORB, {var}", "runners": lab, "stop": f"{orb} low"}, **mgmt.cols(x)))
     def summ(rs):
         if not rs:
             return dict(trades=0)
@@ -174,9 +178,10 @@ def main():
         return dict(trades=len(rs), win=round(100 * float(np.mean([r["win"] for r in rs]))), avg_pct=round(float(np.mean([r["result_pct"] for r in rs])), 2),
                     avg_R=round(float(R_.mean()), 2), med_R=round(float(np.median(R_)), 2), total_R=round(float(R_.sum()), 1),
                     risk_med_pct=round(float(np.median([r["risk_pct"] for r in rs])), 2))
-    tac = sorted({r["entry tactic"] for r in rows})
+    tac = sorted({(r["entry tactic"], r["runners"]) for r in rows})
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1],
-               gap_out_of_base_days=len(uniq), by_tactic={k: summ([r for r in rows if r["entry tactic"] == k]) for k in tac},
+               gap_out_of_base_days=len(uniq), by_tactic={f"{k} / runners {r_}": summ([r for r in rows if (r["entry tactic"], r["runners"]) == (k, r_)])
+                                                          for k, r_ in tac},
                trades=rows)
     json.dump(out, open(a_.out, "w"))
     print(json.dumps({k: v for k, v in out.items() if k != "trades"}, indent=1))
