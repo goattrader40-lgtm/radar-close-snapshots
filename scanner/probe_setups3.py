@@ -29,6 +29,7 @@ import launch  # noqa: E402
 L = launch.L
 A = {}
 FIRST = 0
+GROUPS, GS, POS = {}, {}, {}
 
 
 def feeder(a, i):
@@ -85,7 +86,10 @@ def one(sym):
         elif sec == "Ready" and bp:
             k = j + 1
             hit = bool(st.h[k] > bp)
-            r = dict(setup=setup.split(" (")[0], src=src, hit=hit, tight=tight >= 2, sym=sym, k=k, bp=float(bp))
+            r = dict(setup=setup.split(" (")[0], src=src, hit=hit, tight=tight >= 2, sym=sym, k=k, bp=float(bp),
+                     theme=launch.best_group(sym, POS[st.dates[j]], GROUPS, GS)[0] if st.dates[j] in POS else -1,
+                     vb=f.get("vol_build"), age=j - i0, depth=f.get("base_depth_adr"), away=away_adr,
+                     hi52=float(c / st.high52[j]) if st.high52[j] else None, adr=adr)
             if hit:
                 r.update(outcome(st, k, max(float(st.o[k]), float(bp))))
             ready.append(r)
@@ -130,7 +134,8 @@ def orh_trades(ready):
             st, k = a.st, r["k"]
             orh, orl = b[0]["h"], b[0]["l"]
             m = next((x for x in range(1, len(b)) if b[x]["h"] > orh), None)
-            t = dict(setup=r["setup"], src=r["src"], over_trigger=orh >= r["bp"], broke=m is not None)
+            t = dict(setup=r["setup"], src=r["src"], over_trigger=orh >= r["bp"], broke=m is not None,
+                     **{x: r.get(x) for x in ("theme", "vb", "age", "depth", "away", "hi52", "adr")})
             if m is not None:
                 t.update(variants(a, k, b, m, orh, orl))
             out.append(t)
@@ -229,6 +234,31 @@ def orh_summ(ts, v="A"):
                 **({"took_half_at_2R_pct": round(100 * float(np.mean([t["took_half"] for t in tr])))} if v == "C" else {}))
 
 
+def splits(ts):
+    """what separates the Ready trades that work: each bucket with exit A (stop at the 5-minute low) and C (half at +2R)"""
+    def cut(name, test):
+        sel = [t for t in ts if test(t)]
+        a, c = orh_summ(sel, "A"), orh_summ(sel, "C")
+        return {name: {k: a.get(k) for k in ("trades", "win", "avg", "med", "ran20", "ran50")} | {"C_win": c.get("win"), "C_avg": c.get("avg")}}
+    tests = [("theme leading", lambda t: t["theme"] == 2), ("theme turning up", lambda t: t["theme"] == 1),
+             ("theme not trending", lambda t: t["theme"] == 0), ("no theme", lambda t: t["theme"] == -1),
+             ("volume building 1.1x+", lambda t: (t["vb"] or 0) >= 1.1), ("volume not building", lambda t: (t["vb"] or 0) < 1.1),
+             ("on its list 10 days or less", lambda t: t["age"] <= 10), ("on its list 11-30 days", lambda t: 10 < t["age"] <= 30),
+             ("on its list 31+ days", lambda t: t["age"] > 30),
+             ("within 10% of the 52-week high", lambda t: (t["hi52"] or 0) >= 0.9), ("10%+ under the 52-week high", lambda t: (t["hi52"] or 0) < 0.9),
+             ("base under 2 ADRs deep", lambda t: (t["depth"] or 0) < 2), ("base 2-4 ADRs deep", lambda t: 2 <= (t["depth"] or 0) <= 4),
+             ("base over 4 ADRs deep", lambda t: (t["depth"] or 0) > 4),
+             ("trigger within 0.3 ADR", lambda t: t["away"] is not None and t["away"] <= 0.3), ("trigger 0.3-0.7 ADR away", lambda t: t["away"] is not None and t["away"] > 0.3),
+             ("ADR 4-6%", lambda t: (t["adr"] or 0) < 6), ("ADR 6%+", lambda t: (t["adr"] or 0) >= 6),
+             ("leading theme + volume building", lambda t: t["theme"] == 2 and (t["vb"] or 0) >= 1.1),
+             ("leading theme + within 10% of the 52-week high", lambda t: t["theme"] == 2 and (t["hi52"] or 0) >= 0.9),
+             ("leading theme + volume building + within 10% of the high", lambda t: t["theme"] == 2 and (t["vb"] or 0) >= 1.1 and (t["hi52"] or 0) >= 0.9)]
+    out = {}
+    for name, test in tests:
+        out.update(cut(name, test))
+    return out
+
+
 def summ(rs):
     rs = [r for r in rs if "ran20" in r]
     if not rs:
@@ -245,7 +275,9 @@ def main():
     ap.add_argument("--stocks", required=True)
     ap.add_argument("--out", required=True)
     a_ = ap.parse_args()
-    A, groups, GS, cal, S = launch.load(a_.bars, a_.stocks)
+    global GROUPS, GS, POS
+    A, GROUPS, GS, cal, S = launch.load(a_.bars, a_.stocks)
+    POS = {d: k for k, d in enumerate(cal)}
     FIRST = 200
     with multiprocessing.get_context("fork").Pool(os.cpu_count() or 2) as pool:
         res = pool.map(one, sorted(A), chunksize=8)
@@ -268,6 +300,7 @@ def main():
         out["ready_orh"] = dict(all=orh_summ(ts), B_day_low_stop=orh_summ(ts, "B"), C_half_at_2R=orh_summ(ts, "C"),
                                 by_setup={k: orh_summ([t for t in ts if t["setup"] == k]) for k in sorted({t["setup"] for t in ts})},
                                 by_list={k: orh_summ([t for t in ts if t["src"] == k]) for k in sorted({t["src"] for t in ts})},
+                                splits=splits(ts),
                                 opening_range_over_trigger=orh_summ([t for t in ts if t["over_trigger"]]),
                                 opening_range_under_trigger=orh_summ([t for t in ts if not t["over_trigger"]]))
     json.dump(out, open(a_.out, "w"), indent=1)
