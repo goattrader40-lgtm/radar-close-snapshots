@@ -43,9 +43,11 @@ alone.
   below. New tonight: **gap out of base** (alerts + portal), the **bull flag** redefined, the **bull pennant**, the
   **breakout undercut & reclaim**, the **try-of-the-top** reads, the **50 EMA undercut tab** (with its reclaim entry;
   off the list at the 3rd close under the 50 EMA), the names "Bull flag" / "Bull pennant", and the 1-minute check
-  watching the tab. After the rebuild: SIMO, CRM, NOW, ASST in the 50 EMA undercut tab; CTSH, KVYO, MNDY, W, CDW,
-  SHOP, SAIL, RBRK, TEAM, GTLB, ZETA, IQV under their breakout level (a breakout undercut & reclaim alert if they get
-  back over it). All agreed examples pass (`tools/replay.py --regress`).
+  watching the tab. The status shows a breakout undercut & reclaim setup ("under its breakout level $X since (date)
+  (N closes), holding over the 50 EMA"); its alert arms from the 2nd close under, after the stock advanced (a first
+  version armed it after 1 close: fixed and live the same evening). After the last rebuild: SIMO, CRM, NOW, ASST in the
+  50 EMA undercut tab; CTSH, KVYO, MNDY, W, CDW, SHOP, SAIL, RBRK, TEAM, GTLB, ZETA, IQV under their breakout level but
+  not set up yet (1st close under or no advance). All agreed examples pass (`tools/replay.py --regress`).
 - **Coded but switched off**: the **momentum cutoff** (`L["max_run_pct"] = 0`). The user decides the rule (see Open
   items); turning it on is that one setting (plus the 200 SMA test if they pick B).
 - **Only on a test branch**: `test/pb1h` holds the backtest tools (scanner/probe_*.py, scanner/mgmt.py = the user's
@@ -253,13 +255,15 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    140%+ over the 200 SMA at once (keeps LIFE, 85-98% over it; but that LIFE-like group lost -0.65 to -0.75R). The time
    since the start added nothing. Code: `L["max_run_pct"]` in scanner/launch.py (0 = off); the status then reads
    "EXTENDED: +X% from its momentum start (date), no buy points" and the stock's alerts stay quiet.
-2. **The Launches row for a breakout reclaim setup**: the 12 stocks under their breakout level have the alert set
-   (reclaim_level) but the row doesn't say it yet: add "under its breakout level $X: reclaim setup" (the user asked).
-3. **The spreadsheet** (tools/test-results.xlsx on test/pb1h): rebuilt at the end of this session from the run on the
-   live engine (each trigger sheet = only the days the engine read as that breakout, with engine_read; failed
-   crosses on their own sheet; bull flag / bull pennant / breakout undercut & reclaim / 50 EMA / gap retest /
-   momentum sheets; one buy point per stock and day). The earlier "deep analysis" counted failed intraday pokes as
-   breakouts: redo its conclusions on the corrected data when the user wants them.
+2. Monday Nov 2: which of the 12 under their breakout level become breakout undercut & reclaim setups (a 2nd close
+   under after an advance), and their alerts.
+3. **The spreadsheet** (tools/test-results.xlsx on test/pb1h, sent to the user Nov 1 evening): the live engine's
+   5,783 buy points; each trigger sheet = only the days the engine read as that breakout (engine_read), failed crosses
+   on their own sheet, sheets for bull flag / bull pennant / breakout undercut / 50 EMA / gap retest / momentum. The
+   corrected analysis (tools/analysis.json, bought at the close, runners 21 EMA): pop +0.37R (90), bull pennant +0.29R
+   (47), push +0.22R (170), 21 EMA undercut & reclaim +0.20R (100), breakout undercut & reclaim +0.07R (116), 50 EMA
+   reclaim -0.04R (138), base breakout -0.07R (997), bull flag -0.21R (228); none beyond luck (t under 1.6). Go
+   through it with the user if they ask.
 4. **"No reset yet" tag** (AEHR's Mar 5-19 2026 buy points, 1R losers before the momentum reset at the 50 EMA): the
    user's momentum rule (1) may replace it; ask if they still want a tag.
 5. Monday Nov 2: check the first live gap-out-of-base and breakout-reclaim alerts, the 50 EMA tab, and the evening
