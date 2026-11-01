@@ -146,6 +146,63 @@ TOT_3 = tuple((c, "as the alert: " + lab, f) for c, lab, f in TOT[:4]) + tuple(
      ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)")))
 
 
+STRATEGY = {
+    "Launch day": "The first day of a new trend. Regular: opens up, closes up 5%+ in the top half of its range on 1.5x+ volume, over the 200 SMA "
+                  "(at most 28% over it the day before), 30%+ over the 52-week low. Power day: volume 4x+, an 8%+ gap and a 10%+ day. Reversal day: "
+                  "opens down, closes up 8%+ in the top half on 2x+ volume over its 1-month high. Catalyst: a 5%+ gap on news / earnings that holds "
+                  "the gap on 2x+ volume over its 1-month base (GMAB Aug 7 2026).",
+    "Base breakout": "A close more than 0.5% over the base top (the highest high of the base: at least 5 sessions old, after a pullback of 1.25+ ADRs); "
+                     "within 0.5% = a breakout with caution, its follow-through starts the leg. Tops are named by their reach: a 1-, 3- or 6-month high "
+                     "(CAI Oct 27 2026, 2.4% over 32.89; RPD Oct 23 over 14.80). Here every cross of the base top counts, whatever the close.",
+    "Flag breakout": "A bull flag: the top at least a 1-month high after a run of 4+ ADRs, then 4+ pullback days, 1.25-4 ADRs deep, 3+ lower highs, "
+                     "riding the 10 or 21 EMA, a controlled pullback; the falling line through the highs is the trigger (TTAN Oct 30 2026 at 84.00, "
+                     "ZS Oct 21, ARM Apr 13 at 149.00).",
+    "Pop": "Pop out of the consolidation, an entry inside the base: after its resting time (volume dried up, surfing the 10 & 21 EMA) and a tight "
+           "candle, the next day opens over that candle's open and close and over the rising 10 & 21 EMA (ANF Oct 5 2026).",
+    "Pattern pivot": "The pivot of an MSF pattern the engine names (ascending triangle, flat base, cup with handle, high tight flag, tight flag, "
+                     "inner base, Qullamaggie breakout): bought when the price crosses it. The 3rd try of a top = an ascending triangle "
+                     "(ARM Apr 24 / May 6 2026, out May 20).",
+    "Follow-through": "After a breakout with caution (a close within 0.5% over the top), within 3 sessions it opens over the day before's close and "
+                      "closes more than 0.5% over the top: that starts the leg (ARM Apr 17 -> Apr 20 2026). Bought at that close.",
+    "Retest held": "After a breakout and a real pullback, the low comes back to the broken base's top (its bodies or its wicks) and the close holds "
+                   "over it and the 21 EMA, and over the 10 EMA unless the low tested the 21 EMA (GMAB Oct 2 2026, ACN Oct 7, SPOT Oct 28, ANF Oct 23). "
+                   "'retest_with' = the EMAs that were at the level with it. Bought at that close.",
+    "Push 21 EMA": "Push out of the 21 EMA: within 5 sessions of the retest's first touch, it opens over the day before's candle and over its 10 & 21 "
+                   "EMA, a gap out of the EMAs (ANF Aug 21 2026, ACN Oct 8, CAI Oct 9). Bought at the open.",
+    "21 EMA retest": "An entry in the base: 5+ days into the base and 1.25+ ADRs off its high, after a controlled pullback (the 3 days before not "
+                     "all up, the closes held over the 21 EMA), the low goes under the 21 EMA and under the open and the close comes back over it "
+                     "in the upper half of the day (TTAN Oct 29 2026, ARM May 18, NTSK Oct 1). Bought at that close.",
+    "21 EMA undercut": "21 EMA undercut & reclaim (strong): the same as the 21 EMA retest, after 2 closes UNDER the 21 EMA by less than half an "
+                       "ADR (the momentum traders' exit), the close comes back over it in the upper half of the day (SMCI Jun 27 2023, ANF Oct 1 "
+                       "2026, RPD Sep 30). Bought at that close.",
+    "Gap out of base": "Gap out of base (Zanger / Qullamaggie): the stock closed in its base under the base high yesterday and opens ABOVE it today "
+                       "with volume; bought on the 1-minute or 5-minute opening range breakout.",
+}
+
+
+UNIVERSE = (
+    ("Every test", "US stocks in the scanner's universe: market cap $700M to $2T (today's market cap: a stock that was smaller then, or has since "
+                   "been delisted, isn't in), with 2 years of daily bars; the first 200 sessions only warm up the averages, so results run from "
+                   "Aug 2025 to Oct 2026. Costs and slippage aren't included."),
+    ("Launch days & Launch fair", "Price $10+, a 20-day average of $20M+ traded and 600K+ shares a day, ADR 3.5%+ (scanner/settings.json 'launch'); "
+                                  "over the 200 SMA at the buy (from 25% under it the day before), at most 28% over it the day before (50% when it "
+                                  "gaps 8%+), 30%+ over its 52-week low, no launch in the 20 sessions before. Fair test: it gaps up and trades "
+                                  "over both the 5-minute high and +5%."),
+    ("Buy points & Gap out of base", "Stocks that launched (regular, power day, reversal day: the launch rules above), followed for the 60 sessions after "
+                                     "the launch until 2 closes in a row under the 50 EMA. Gap out of base: RVOL 1x+ at the buy."),
+    ("3-SETUPS (Ready...)", "The Watchlist's feeder lists rebuilt from daily bars, with the standard filters: $10+, liquid, ADR 3.5%+, over the 50 EMA, "
+                            "30%+ over the 52-week low; 3-SETUPS itself needs an ADR of 4%+ (3.2% to stay on)."),
+    ("1-hour 21 EMA pullback", "$10+, a 20-day average of $30M+ and 700K+ shares a day, market cap $700M+, ADR 4%+; over the 200 SMA and at most 50% "
+                               "over it, 30%+ over the 52-week low; daily 10 EMA > 21 > 50 and a new 20-day high in the last 10 sessions."),
+    ("Earnings-day high", "The same liquidity as the pullback test ($10+, $30M+, 700K+ shares, $700M+ market cap, ADR 4%+); the earnings day closes over "
+                          "its 1-month high, over the 200 SMA, 30%+ over the 52-week low, on 1.5x+ volume, with company earnings news before the open."),
+)
+
+
+def strategy_of(title):
+    return next((v for k, v in STRATEGY.items() if title.startswith(k) or title.startswith("Pattern - ") and k == "Pattern pivot"), "")
+
+
 ENTRIES = ("Entry tactics: as the alert fires = at the level when it breaks (the open for a push, the close for close signals), stop the day's low; "
            "buy at the close = that day's close, stop the day's low; 5-min entry = over the 5-minute high and the buy point (close signals: the next "
            "morning), stop the 5-minute low. Your management (1/3 at +2 ADR, 1/3 at +5 ADR, breakeven; filter 'runners': 10 or 21 EMA close). Row 3 = the totals of what you filter. Tags are as of that day's close.")
@@ -248,7 +305,8 @@ def tactic_grid(wb, title, rows):
 def trades(wb, title, rows, spec=TOT):
     """every trade, a filter on each column; row 1 = what the entry and stop are, row 3 = the totals of what the filters show"""
     ws = wb.create_sheet(title[:31])
-    ws.append([DESC.get(title, "")])
+    what = strategy_of(title)
+    ws.append([("WHAT THIS STRATEGY IS: " + what + "   |   " if what else "") + DESC.get(title, "")])
     ws["A1"].font = Font(bold=True, color="2F5597")
     cols = []
     for r in rows:
@@ -326,6 +384,14 @@ def main():
                "tests (3-SETUPS, 1-hour pullback, earnings) still use +2R breakeven, 1/3 at +3R and +5R. When one bar touches both the stop and a target, the stop counts first (the safe side). "
                "Costs and slippage are not included.", "", ""])
     rm.append([])
+    rm.append(["WHICH STOCKS ARE IN EACH TEST"])
+    for k, v in UNIVERSE:
+        rm.append([k, "", v])
+    rm.append([])
+    rm.append(["THE STRATEGIES"])
+    for k, v in STRATEGY.items():
+        rm.append([k, "", v])
+    rm.append([])
     rm.append(["HOW THE GRADES ARE MADE"])
     for a_, b_ in GRADES:
         rm.append([a_, "", b_])
@@ -335,7 +401,7 @@ def main():
         rm.append([a_, "", b_])
     style(rm, [30, 16, 110, 24, 22])
     for row in rm.iter_rows():
-        if row[0].value in ("HOW THE GRADES ARE MADE", "WHAT EACH COLUMN MEANS (trade sheets)", "How to read"):
+        if row[0].value in ("WHICH STOCKS ARE IN EACH TEST", "THE STRATEGIES", "HOW THE GRADES ARE MADE", "WHAT EACH COLUMN MEANS (trade sheets)", "How to read"):
             row[0].font = Font(bold=True, color="2F5597", size=12)
     for row in rm.iter_rows(min_row=2):
         for c in row:
