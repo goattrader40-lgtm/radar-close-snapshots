@@ -96,6 +96,9 @@ TOT_3 = tuple((c, "as the alert: " + lab, f) for c, lab, f in TOT[:4]) + tuple(
      ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)")))
 
 
+ENTRIES = ("Entry tactics: as the alert fires = at the level when it breaks (the open for a push, the close for close signals), stop the day's low; "
+           "buy at the close = that day's close, stop the day's low; 5-min entry = over the 5-minute high and the buy point (close signals: the next "
+           "morning), stop the 5-minute low. Your management. Row 3 = the totals of what you filter. Tags are as of that day's close.")
 DESC = {
     "Launch trades": "LAUNCH DAYS, fair (no hindsight). ENTRY: the gap-up day, over both the 5-minute opening range high and +5%. STOP: the 5-minute low. "
                      "Then your management (+2R breakeven, 1/3 at +3R, 1/3 at +5R, runners on the daily 21 EMA close).",
@@ -122,9 +125,6 @@ HEAD = {
 }
 
 
-ENTRIES = ("Entry tactics: as the alert fires = at the level when it breaks (the open for a push, the close for close signals), stop the day's low; "
-           "buy at the close = that day's close, stop the day's low; 5-min entry = over the 5-minute high and the buy point (close signals: the next "
-           "morning), stop the 5-minute low. Your management. Row 3 = the totals of what you filter. Tags are as of that day's close.")
 TACTICS = {
     "launch": (("min5_", "5-min entry", "5-min low"), ("close_", "buy at the close", "day's low")),
     "buypoint": (("", "as the alert fires", "day's low"), ("close_", "buy at the close", "day's low"), ("min5_", "5-min entry", "5-min low")),
