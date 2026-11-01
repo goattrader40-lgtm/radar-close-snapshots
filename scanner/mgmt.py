@@ -161,6 +161,18 @@ def reset(a, j):
         kl = k0 + int(np.argmin(l[k0:j]))
         out[f"run_from_{nm}_low_pct"] = round(float(100 * (c[p] / l[kl] - 1)), 1)
         out[f"sessions_from_{nm}_low"] = j - kl
+    # the momentum's starting point (the user, Nov 1 2026): the lowest low of the last rest, 40+ sessions without a new
+    # 6-month high (the engine's new-run rule); AEHR's run from Nov 21 2025 (18.70): Apr 6 2026 +137%, May 11 +420%
+    newhi = [k for k in range(max(120, p - 600), p + 1) if h[k] > h[k - 120:k].max()]
+    m0 = None
+    for x in range(len(newhi) - 1, 0, -1):
+        if newhi[x] - newhi[x - 1] >= 40:
+            k0, k1 = newhi[x - 1], newhi[x]
+            m0 = k0 + int(np.argmin(l[k0:k1 + 1]))
+            break
+    if m0 is None:
+        m0 = max(0, p - 252) + int(np.argmin(l[max(0, p - 252):p + 1]))
+    out.update(momentum_start=a.st.dates[m0], run_from_start_pct=round(float(100 * (c[p] / l[m0] - 1)), 1), sessions_from_start=j - m0)
     s200 = getattr(a, "s200", None)
     out["over_200sma_pct"] = round(float(100 * (c[p] / s200[p] - 1)), 1) if s200 is not None and s200[p] > 0 else None
     return out
