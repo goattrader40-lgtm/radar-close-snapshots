@@ -4,7 +4,7 @@
   python3 scanner/probe_pb1h.py --bars BARS.json.gz --stocks radar-data/stocks.json --out OUT.json
   (needs ALPACA_KEY_ID / ALPACA_SECRET: 30-minute bars for the 1-hour 21 EMA, 5-minute bars for the trade)
 
-  stocks    liquid ($10+, $20M+ and 600K+ shares a day) with an ADR of 4%+
+  stocks    liquid ($10+, $20M+ and 600K+ shares a day) with an ADR of 4%+, over the 200 SMA, 30%+ over the 52-week low
   uptrend   daily 10 EMA > 21 EMA > 50 EMA, a new 20-day high within the last 10 sessions (still advancing), at
             most 50% over the 200 SMA
   setup     a day that closes under the 1-hour 21 EMA (regular session; 1-hour bars built from 30-minute bars:
@@ -33,7 +33,8 @@ def candidates(A, first):
         st = a.st
         c, h, o = st.c, st.h, st.o
         for i in range(max(a.start, first), c.size - 1):
-            if not (a.liq_noadr[i] and st.adr[i] >= 4 and a.e10[i] > a.e21[i] > a.e50[i] and c[i] <= 1.5 * a.s200[i]):
+            if not (a.liq_noadr[i] and st.adr[i] >= 4 and a.e10[i] > a.e21[i] > a.e50[i] and a.s200[i] < c[i] <= 1.5 * a.s200[i]
+                    and c[i] >= st.low52[i] * 1.3):                # the standard: over the 200 SMA, 30%+ over the 52-week low
                 continue
             if int(np.argmax(h[i - 19:i + 1])) < 10:          # the 20-day high made within the last 10 sessions
                 continue
