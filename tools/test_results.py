@@ -90,6 +90,12 @@ TOT_2 = tuple((p + c, lab_p + lab, f) for p, lab_p in (("min5_", "5-min: "), ("c
                ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)")))
 
 
+TOT_3 = tuple((c, "as the alert: " + lab, f) for c, lab, f in TOT[:4]) + tuple(
+    (p + c, lab_p + lab, f) for p, lab_p in (("close_", "at the close: "), ("min5_", "5-min entry: ")) for c, lab, f in
+    (("win", "winners %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("R", "average R", "=ROUND(SUBTOTAL(101,{r}),2)"),
+     ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)")))
+
+
 def trades(wb, title, rows, spec=TOT):
     """every trade, a filter on each column; row 2 = the totals of what the filters show"""
     ws = wb.create_sheet(title[:31])
@@ -245,7 +251,7 @@ def main():
         d = data(name)
         if not d or not d.get("trades"):
             continue
-        trades(wb, label, d["trades"])
+        trades(wb, label, d["trades"], TOT_3 if name == "probe_buypoints" else TOT)
         for rv in rvcol:
             grid(wb, f"{label.split()[0]} {'pace' if 'pace' in rv else 'RVOL'} x gap", d["trades"], rv)
     wb.save(OUT)

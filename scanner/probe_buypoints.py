@@ -97,8 +97,9 @@ def one(key):
                 continue
             ret, R, r2, r3, r5, ex, days = manage(a, j, buy, stop, same_high)
             hi20 = h[j + 1:min(n, j + 21)].max()
-            out.append(row(s, st, a, f, i0, j, k, entry, buy, stop, ret, R, r2, r3, r5, ex, days, hi20, c, n,
-                           closed if entry == "level" else ""))
+            r_ = row(s, st, a, f, i0, j, k, entry, buy, stop, ret, R, r2, r3, r5, ex, days, hi20, c, n, closed if entry == "level" else "")
+            r_["level"] = round(float(pbp), 2) if entry == "level" else None
+            out.append(r_)
     return out
 
 
@@ -139,11 +140,51 @@ def main():
     keys = sorted({(s, i) for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S) if i >= 200})
     with multiprocessing.get_context("fork").Pool(os.cpu_count() or 2) as pool:
         ts = [t for r in pool.map(one, keys, chunksize=8) for t in r]
+    # 2) the same buy point bought at that day's close, the risk the day's low (your management)
+    for t in ts:
+        a = A[t["symbol"]]
+        j = a.st.dates.index(t["date"])
+        cb, cl = float(a.st.c[j]), float(a.st.l[j])
+        if cb > cl:
+            ret, R, r2, r3, r5, ex, days = manage(a, j, cb, cl, None)
+            t.update(close_risk_pct=round(100 * (cb - cl) / cb, 2), close_result_pct=round(ret, 2), close_R=round(R, 2), close_win=int(ret > 0),
+                     close_reached_3R=int(r3), close_reached_5R=int(r5), close_exit=ex)
+    # 3) your 5-minute entry: over the 5-minute opening range high (and over the buy point for a level buy) on the day,
+    # the next morning for a close signal; the risk the 5-minute low; your management (scanner/probe_pb1h.py trade)
+    if os.environ.get("ALPACA_KEY_ID"):
+        import probe_catalyst as pc
+        import probe_pb1h as pb
+        by_day = collections.defaultdict(list)
+        for t in ts:
+            a = A[t["symbol"]]
+            j = a.st.dates.index(t["date"])
+            k = j if t["bought"] in ("level", "open") else j + 1
+            if k < a.st.c.size:
+                by_day[a.st.dates[k]].append((t, k))
+        for d, tk in sorted(by_day.items()):
+            t0 = datetime.datetime.fromisoformat(d + "T09:30").replace(tzinfo=pc.NY)
+            b5 = pb.bars(sorted({t["symbol"] for t, k in tk}), t0, t0 + datetime.timedelta(minutes=390), "5Min")
+            for t, k in tk:
+                b = b5.get(pc.alp(t["symbol"]))
+                t["min5_bought"] = 0
+                if not b or not b[0]["t"].startswith(pc.iso(t0)[:16]):
+                    continue
+                lvl = max(b[0]["h"], t["level"] or 0)
+                m = next((x for x in range(1, len(b)) if b[x]["h"] > lvl), None)
+                if m is None:
+                    continue
+                x = pb.trade(A[t["symbol"]], k, b, -1e9, {}, entry=(m, max(lvl, b[m]["o"])))
+                if x and x.get("broke"):
+                    t.update(min5_bought=1, min5_day=d, min5_risk_pct=round(x["risk"], 2), min5_result_pct=round(float(x["ret"]), 2),
+                             min5_R=round(float(x["R"]), 2), min5_win=int(x["ret"] > 0), min5_reached_3R=int(x["r3"]), min5_reached_5R=int(x["r5"]), min5_exit=x["how"])
     kinds = [nm for _, nm in LEVEL] + [k for k, _, _ in KINDS]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1], launches=len(keys),
                all=summ(ts), by_buy_point={k: summ([t for t in ts if t["buy_point"] == k]) for k in kinds},
                by_rvol={nm: summ([t for t in ts if lo <= t["rvol_day"] < hi]) for nm, lo, hi in RV},
                by_gap={nm: summ([t for t in ts if lo <= t["gap_pct"] < hi]) for nm, lo, hi in GAP},
+               by_entry={m: {k: summ([dict(t, R=t[m + "R"], win=t[m + "win"], result_pct=t[m + "result_pct"], reached_3R=t[m + "reached_3R"],
+                                             reached_5R=t[m + "reached_5R"], risk_pct=t[m + "risk_pct"]) for t in ts if (k == "all" or t["buy_point"] == k) and m + "R" in t])
+                             for k in ["all"] + kinds} for m in ("close_", "min5_")},
                level_buys_by_close={x: summ([t for t in ts if t["day_closed"] == x]) for x in ("closed as a breakout", "closed as a pop", "closed back under / no breakout")},
                by_buy_point_and_rvol={k: {nm: summ([t for t in ts if t["buy_point"] == k and lo <= t["rvol_day"] < hi]) for nm, lo, hi in RV} for k in kinds},
                trades=ts)
