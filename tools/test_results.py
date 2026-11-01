@@ -82,16 +82,26 @@ def inb(x, lo, hi):
     return x is not None and (lo is None or x >= lo) and (hi is None or x < hi)
 
 
-def trades(wb, title, rows):
+TOT = (("win", "winners %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("R", "average R", "=ROUND(SUBTOTAL(101,{r}),2)"),
+       ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)"),
+       ("reached_3R", "reached +3R %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("failed5", "failed in 5 days %", "=ROUND(100*SUBTOTAL(101,{r}),1)"))
+TOT_2 = tuple((p + c, lab_p + lab, f) for p, lab_p in (("min5_", "5-min: "), ("close_", "at close: ")) for c, lab, f in
+              (("win", "winners %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("R", "average R", "=ROUND(SUBTOTAL(101,{r}),2)"),
+               ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)")))
+
+
+def trades(wb, title, rows, spec=TOT):
     """every trade, a filter on each column; row 2 = the totals of what the filters show"""
     ws = wb.create_sheet(title[:31])
-    cols = list(rows[0].keys())
+    cols = []
+    for r in rows:
+        for c in r:
+            if c not in cols:
+                cols.append(c)
     n = len(rows) + 3
     L_ = {c: get_column_letter(i + 1) for i, c in enumerate(cols)}
     tot = [("trades shown", f"=SUBTOTAL(103,{L_[cols[0]]}4:{L_[cols[0]]}{n})")]
-    for c, lab, f in (("win", "winners %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("R", "average R", "=ROUND(SUBTOTAL(101,{r}),2)"),
-                      ("R", "total R", "=ROUND(SUBTOTAL(109,{r}),1)"), ("result_pct", "average %", "=ROUND(SUBTOTAL(101,{r}),2)"),
-                      ("reached_3R", "reached +3R %", "=ROUND(100*SUBTOTAL(101,{r}),1)"), ("failed5", "failed in 5 days %", "=ROUND(100*SUBTOTAL(101,{r}),1)")):
+    for c, lab, f in spec:
         if c in L_:
             tot.append((lab, f.format(r=f"{L_[c]}4:{L_[c]}{n}")))
     ws.append([t[0] for t in tot])
@@ -171,6 +181,7 @@ def main():
              ("probe_pb1h", "by_gap › gap 1-3%", "1-hour 21 EMA pullback, gap 1-3%", ""),
              ("probe_launch_orh", "managed › all", "Launch days, your management", "HINDSIGHT: upper bound"),
              ("probe_launch_orh", "managed › regular", "Launch days, regular", "HINDSIGHT"),
+             ("probe_launch_orh", "bought_at_the_close", "the same launch days bought at their CLOSE, risk the day's low", "no hindsight: at 4 PM you know it's a launch"),
              ("probe_launch_live", "all", "ALL launch-day buys (what you could trade)", "no hindsight: this is the real result"),
              ("probe_launch_live", "closed_as_all_trades › regular", "split afterwards: the buys that closed as a regular launch", "you only know this at 4 PM, after the buy"),
              ("probe_launch_live", "closed_as_all_trades › not a launch", "split afterwards: the buys that did NOT close as a launch", "you only know this at 4 PM, after the buy"),
@@ -227,6 +238,9 @@ def main():
         for path, v in rows:
             ws.append([path or "all"] + [v.get(k) for k in cols])
         style(ws, [62] + [13] * len(cols))
+    d = data("probe_launch_orh")
+    if d and d.get("trades"):
+        trades(wb, "Launch 5-min vs close", d["trades"], TOT_2)
     for name, label, rvcol in (("probe_launch_live", "Launch trades", ("rvol_pace_at_buy", "rvol_day")), ("probe_buypoints", "Buy point trades", ("rvol_day",))):
         d = data(name)
         if not d or not d.get("trades"):

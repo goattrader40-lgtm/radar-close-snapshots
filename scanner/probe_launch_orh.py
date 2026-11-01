@@ -10,6 +10,8 @@
            is open); the entry day on 5-minute bars, the days after on daily bars (the stop first when a day
            touches both)
   simple   the stop at the 5-minute low the whole way, out on the first daily close under the 21 EMA
+  close    the same launch bought at its close (known as a launch at 4 PM: no hindsight), the risk the day's low, your
+           management (scanner/probe_buypoints.py manage); every launch is saved with both, for the spreadsheet
 """
 import argparse, collections, datetime, json, os, sys, time
 
@@ -20,6 +22,7 @@ sys.path.insert(0, HERE)
 import launch  # noqa: E402
 import probe_catalyst as pc  # noqa: E402
 import probe_pb1h as pb  # noqa: E402
+import probe_buypoints as bpm  # noqa: E402  (your management on daily bars, for the buy at the close)
 
 L = launch.L
 
@@ -90,7 +93,7 @@ def main():
     for s, i in kind:
         if i < A[s].st.c.size:
             by_day[A[s].st.dates[i]].append((s, i))
-    tm, ts = [], []
+    tm, ts, rows = [], [], []
     for d, ks in sorted(by_day.items()):
         t0 = datetime.datetime.fromisoformat(d + "T09:30").replace(tzinfo=pc.NY)
         b5 = pb.bars(sorted({s for s, i in ks}), t0, t0 + datetime.timedelta(minutes=390), "5Min")
@@ -104,12 +107,38 @@ def main():
                 if t is not None:
                     t.update(kind=kind[(s, i)], sym=s, date=d, grade=launch.grade(A[s], i))
                     lst.append(t)
+            # the same launch bought at its close (you know it's a launch at 4 PM), the risk the day's low, your management
+            a, st = A[s], A[s].st
+            cb, cl = float(st.c[i]), float(st.l[i])
+            cr = bpm.manage(a, i, cb, cl, None) if cb > cl else None
+            row = dict(date=d, symbol=s, launch_type=kind[(s, i)], grade=launch.grade(a, i), rvol_day=round(float(a.rv[i]), 2),
+                       gap_pct=round(float(a.gap[i]), 2), day_change_pct=round(float(a.chg[i]), 2), close_in_range_pct=round(100 * float(a.clpos[i])),
+                       vs_200sma_day_before_pct=round(float(a.ext200_prev[i]), 1), adr_pct=round(float(st.adr[i - 1]), 2))
+            if x and x.get("broke"):
+                row.update(min5_bought=1, min5_risk_pct=round(x["risk"], 2), min5_result_pct=round(float(x["ret"]), 2), min5_R=round(float(x["R"]), 2),
+                           min5_win=int(x["ret"] > 0), min5_reached_3R=int(x["r3"]), min5_exit=x["how"], min5_days=x["days"])
+            else:
+                row.update(min5_bought=0)
+            if cr:
+                ret, R, r2, r3, r5, ex, days = cr
+                row.update(close_risk_pct=round(100 * (cb - cl) / cb, 2), close_result_pct=round(ret, 2), close_R=round(R, 2), close_win=int(ret > 0),
+                           close_reached_3R=int(r3), close_exit=ex, close_days=days)
+            rows.append(row)
     kinds = ["regular", "power day", "reversal day", "catalyst (news)"]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[first], last=cal[-1],
                launches={k: sum(1 for v in kind.values() if v == k) for k in kinds},
                managed=dict(all=pb.summ(tm), **{k: pb.summ([t for t in tm if t["kind"] == k]) for k in kinds},
                             by_grade={g: pb.summ([t for t in tm if t["grade"] == g]) for g in ("A+", "A", "B", "C")}),
                simple=dict(all=pb.summ(ts), **{k: pb.summ([t for t in ts if t["kind"] == k]) for k in kinds}))
+    cs = [r for r in rows if "close_R" in r]
+    if cs:
+        Rc = np.array([r["close_R"] for r in cs])
+        out["bought_at_the_close"] = dict(trades=len(cs), win=round(100 * float(np.mean([r["close_win"] for r in cs]))),
+                                          avg_pct=round(float(np.mean([r["close_result_pct"] for r in cs])), 2), avg_R=round(float(Rc.mean()), 2),
+                                          med_R=round(float(np.median(Rc)), 2), total_R=round(float(Rc.sum()), 1),
+                                          reached_3R=round(100 * float(np.mean([r["close_reached_3R"] for r in cs]))),
+                                          risk_med_pct=round(float(np.median([r["close_risk_pct"] for r in cs])), 2))
+    out["trades"] = rows
     json.dump(out, open(a_.out, "w"), indent=1)
     print(json.dumps(out, indent=1))
 
