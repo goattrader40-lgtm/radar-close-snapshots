@@ -3,7 +3,7 @@
 GMAB 2026-08-07 2026-10-30 launch
 ANF  2026-08-03 2026-10-30 launch
 ANF  2026-08-26 2026-10-30 launch
-RPD  2026-09-14 2026-10-30 launch
+RPD  2026-09-14 2026-10-30 launch   # the user, Nov 1 2026: Oct 8 the 3rd try of its 1-month base top 13.25 under the main base (Aug 27) and the bigger base (Aug 11)
 SPOT 2026-10-22 2026-10-30 launch
 ACN  2026-10-01 2026-10-30 launch
 SMCI 2023-05-03 2023-08-14 launch

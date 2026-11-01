@@ -85,7 +85,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=300, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -1096,6 +1096,22 @@ def follow(a, i0, i, pick=False):
                 nth = {3: "3rd", 4: "4th"}.get(len(trm), f"{len(trm)}th")
                 tries_txt = f"the {nth} try of the top {tm:.2f} today (tried {', '.join([st.dates[km]] + [st.dates[k] for k in trm[1:-1]])}): a heads-up"
                 stage += " · " + tries_txt
+            elif (tm, km) != (tb, kt) and len(tr) >= 3 and tr[-1] == i and stage.startswith(("In the base", "Tight", "Consolidation")):
+                # a smaller base's top tried under the main base (the user: RPD Oct 8 2026, the 3rd try of its 13.25 1-month
+                # top, the 13.87 main base right above it)
+                ntries = len(tr)
+                nth = {3: "3rd", 4: "4th"}.get(len(tr), f"{len(tr)}th")
+                rm_ = reach(a, i, tb)
+                # the main base's top: the highest level between the bigger base's top and this one, its latest touch (RPD:
+                # 13.90 Aug 14 / 13.87 Aug 27, a double top: Aug 27; the bigger base's 14.80 of Aug 11)
+                hl_ = st.h[km + 1:kt].max() if kt - km > 1 else 0
+                kmid = next((k for k in range(kt - 1, km, -1) if st.h[k] >= hl_ * (1 - 0.15 * _adr(st, k) / 100) and st.h[k] >= st.h[k - 1]
+                             and st.h[k] >= st.h[k + 1]), None) if hl_ > tb else None
+                above = (f"the main base's top {st.h[kmid]:.2f} ({st.dates[kmid]}) and the bigger base's {tm:.2f} ({st.dates[km]}) above"
+                         if kmid is not None and tb < st.h[kmid] < tm else f"the main base's top {tm:.2f} ({st.dates[km]}) above")
+                tries_txt = (f"the {nth} try of its {str(rm_) + '-month' if rm_ else 'smaller'} base's top {tb:.2f} today (tried "
+                             f"{', '.join([st.dates[kt]] + [st.dates[k] for k in tr[1:-1]])}), {above}: a heads-up")
+                stage += " · " + tries_txt
     out = dict(
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo, top_tries=ntries, top_tries_note=tries_txt,
         ema21_today=reclaim, ema21_watch=ema21_watch,
@@ -1154,7 +1170,7 @@ def follow(a, i0, i, pick=False):
     # buy points: past it -0.4 to -0.8R whatever the entry; AEHR May 2026 +358-451%, SMCI Jul 20 / Aug 4 2023 +340 / +365%)
     ms = momentum_start(a, i)
     run_ = 100 * (c[i] / st.l[ms] - 1)
-    out.update(momentum_start=st.dates[ms], momentum_start_low=fnum(st.l[ms]), run_from_start_pct=fnum(run_, 0), extended=bool(run_ >= L["max_run_pct"]))
+    out.update(momentum_start=st.dates[ms], momentum_start_low=fnum(st.l[ms]), run_from_start_pct=fnum(run_, 0), extended=bool(L["max_run_pct"] and run_ >= L["max_run_pct"]))
     if out["extended"]:
         out.update(buy_point=None, to_buy_point_pct=None, pattern=None, retest_zone=None, ema21_watch=None, push_level=None, reclaim_level=None,
                    gap_base_level=None, stage=out["stage"] + f" · EXTENDED: +{run_:.0f}% from its momentum start ({st.dates[ms]}, {st.l[ms]:.2f}), no buy points")

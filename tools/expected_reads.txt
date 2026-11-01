@@ -28,6 +28,7 @@ RPD from 2026-09-14 (launch)
   2026-09-14 c 12.79 | leg 0 | Launch day | next buy point 13.82 Inner base (last 20 days)
   2026-09-30 c 12.22 | leg 0 | 21 EMA undercut & reclaim (entry, strong): 2 closes under the 21 EMA, today down to 11.70, closed 12.22 back over 12.04 | next buy point 13.25 Base top
   2026-10-05 c 12.36 | leg 0 | Pop out of the consolidation (entry in base) | next buy point 13.25 Base top
+  2026-10-08 c 12.96 | leg 0 | In the base, day 11, 2% under the top 13.25 (set 2026-09-24) · the 3rd try of its 1-month base's top 13.25 today (tried 2026-09-24, 2026-10-06), the main base's top 13.82 (2026-08-27) and the bigger base's 14.80 (2026-08-11) above: a heads-up | next buy point 13.25 Base top
   2026-10-21 c 13.51 | leg 0 | Tight under 13.87, the base high (2 days) · base 8 sessions, 14% deep (2.1 ADRs), Cup (no handle) | next buy point 13.87 Base top
   2026-10-22 c 14.73 | leg 1 | Base breakout (leg 1), closed 6.2% (0.9 ADR) over the base high 13.87 (a 1-month high); the 6-month high 14.80 (2026-08-11) right above: closed 14.73 under it, not out of it yet | next buy point 14.8 Base top
 SPOT from 2026-10-22 (launch)
@@ -65,7 +66,8 @@ CAI from 2026-08-07 (launch)
   2026-09-10 c 24.04 | leg 2 | Retest of the breakout level 23.40-23.66 (bodies-wicks) held + confluence: 21 EMA | next buy point 25.56 Bull flag (trendline)
   2026-09-14 c 26.05 | leg 2 | Bull flag breakout: closed over its falling line 25.33 and the 10 & 21 EMA, an entry in the base (leg 2), the volume dried up the 2 days before (0.52x, 0.36x) | next buy point 28.32 Base top
   2026-09-15 c 28.50 | leg 3 | Base breakout (leg 3), closed 0.6% (0.1 ADR) over the base high 28.32 (a 6-month high) | next buy point None Bull flag
-  2026-10-09 c 29.70 | leg 3 | 21 EMA undercut & reclaim (entry, strong): 2 closes under the 21 EMA, today down to 27.67, closed 29.70 back over 28.63 and the breakout level 28.01, also a push out of it with a gap | next buy point 32.89 Base top
+  2026-10-09 c 29.70 | leg 3 | Breakout undercut & reclaim (entry): 3 closes under the breakout level 28.01 since 2026-10-06, holding over the 50 EMA, closed 29.70 back over it | next buy point 32.89 Base top
+  2026-10-21 c 32.35 | leg 3 | In the base, day 21, 2% under the top 32.89 (set 2026-09-23) · the 3rd try of the top 32.89 today (tried 2026-09-23, 2026-10-06): a heads-up | next buy point 32.77 Inner base (last 20 days)
   2026-10-23 c 32.00 | leg 3 | Tight under 32.89, the base high (2 days) · base 22 sessions, 21% deep (3.1 ADRs), High tight flag | next buy point 32.89 Base top
   2026-10-26 c 32.46 | leg 3 | Tight under 32.89, the base high (3 days) · base 23 sessions, 21% deep (3.1 ADRs), High tight flag | next buy point 32.89 Base top
   2026-10-27 c 33.67 | leg 4 | Base breakout (leg 4), closed 2.4% (0.3 ADR) over the base high 32.89 (a 6-month high), on light volume (0.95x) · double breakout: also out of the falling line from its 2026-09-23 high 32.89, squeezing with higher lows | next buy point None 
