@@ -52,6 +52,15 @@ jobs:
             git add setups/launch.json setups/launch_backtest.json
             git diff --cached --quiet || { git commit -q -m "launches $(TZ=America/New_York date +%F)"; git pull -q --rebase origin main; git push -q; }
           fi
+          if [ "${{ inputs.cmd }}" = "pb1h" ]; then
+            # the user's 1-hour 21 EMA pullback test (scanner/probe_pb1h.py) -> radar-data probe_pb1h.json
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json
+            python3 scanner/probe_pb1h.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_pb1h.json || true
+            python3 radar/publish.py "1-hour 21 EMA pullback test" /tmp/probe_pb1h.json
+          fi
           if [ "${{ inputs.cmd }}" = "setups3" ]; then
             # the 2-year check of the new 3-SETUPS (scanner/probe_setups3.py) -> radar-data probe_setups3.json
             pip install --quiet numba numpy pandas
