@@ -1477,7 +1477,9 @@ defCalc('industry_perf', {
   /* your picks: the Follow button saves the stock to setups/picks.json in your repo (with a GitHub key kept in this
      browser, made once per device); a GitHub job (Follow picks) then rebuilds the Launches list with it in a few
      minutes, and from then on it is followed like a launch. ✕ on the Launches tab removes it the same way. */
-  const PKEY = 'radar-gh-key', PPEND = 'radar-picks-pending';
+  const PKEY = 'radar-gh-key', PPEND = 'radar-picks-pending', PGONE = 'radar-launch-removed';
+  /* the launches you removed with ✕ (symbol -> launch day), hidden here right away, before the rebuild drops them */
+  const goneNow = () => { try { return JSON.parse(localStorage.getItem(PGONE) || '{}'); } catch (e) { return {}; } };
   const ghKey = () => { try { return localStorage.getItem(PKEY) || ''; } catch (e) { return ''; } };
   const dropKey = () => { try { localStorage.removeItem(PKEY); } catch (e) { /* private window */ } };
   const pendingPicks = () => { try { return JSON.parse(localStorage.getItem(PPEND) || '{}'); } catch (e) { return {}; } };
@@ -1512,7 +1514,7 @@ defCalc('industry_perf', {
   });
   const b64 = (s) => btoa(unescape(encodeURIComponent(s)));
   const unb64 = (s) => decodeURIComponent(escape(atob(s.replace(/\s/g, ''))));
-  const savePick = async (sym, on, opt) => {
+  const savePick = async (sym, on, opt) => {   /* opt.remove = the launch day: ✕ takes the stock off the Launches list */
     let key = ghKey() || await askKey();
     if (!key) return false;
     const url = 'https://api.github.com/repos/' + GH.owner + '/' + GH.repo + '/contents/setups/picks.json';
@@ -1525,7 +1527,8 @@ defCalc('industry_perf', {
       else if (g.status !== 404) throw new Error('GitHub answered ' + g.status);
       doc.picks = doc.picks || {};
       if (on) doc.picks[sym] = { added: (opt && opt.added) || nyIso(), from: (opt && opt.from) || 'Watchlist ' + S.wl }; else delete doc.picks[sym];
-      const body = { message: (on ? 'Follow ' : 'Stop following ') + sym + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
+      if (opt && opt.remove) { doc.removed = doc.removed || {}; doc.removed[sym] = { launch: opt.remove, at: nyIso() }; }
+      const body = { message: (opt && opt.remove ? 'Remove ' + sym + ' from Launches' : (on ? 'Follow ' : 'Stop following ') + sym) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
       if (sha) body.sha = sha;
       const p = await fetch(url, { method: 'PUT', headers: hd, body: JSON.stringify(body) });
       if (p.ok) return true;
@@ -1544,7 +1547,8 @@ defCalc('industry_perf', {
       if (await savePick(sym, on, opt)) {
         const p = pendingPicks(); p[sym] = [on, Date.now()];
         try { localStorage.setItem(PPEND, JSON.stringify(p)); } catch (e) { /* private window */ }
-        toast(on ? sym + ' followed: it shows on the Launches tab in about 5 minutes, then it alerts like a launch.' : sym + ' no longer followed: it leaves the Launches tab in about 5 minutes.');
+        if (opt && opt.remove) { const g = goneNow(); g[sym] = opt.remove; try { localStorage.setItem(PGONE, JSON.stringify(g)); } catch (e) { /* private window */ } }
+        toast(opt && opt.remove ? sym + ' removed from Launches: it is gone from this list now, and from the alerts after the rebuild in about 5 minutes. A new launch of it on a later day shows again.' : on ? sym + ' followed: it shows on the Launches tab in about 5 minutes, then it alerts like a launch.' : sym + ' no longer followed: it leaves the Launches tab in about 5 minutes.');
       }
     } catch (e) { toast('Not saved: ' + e.message + '.'); }
     draw();
@@ -1800,7 +1804,10 @@ defCalc('industry_perf', {
     const table = $('#ln-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
     setState('ln-table', ['launch']);
     $('#ln-wolf').checked = S.lnwolf;
-    const all = doc ? doc.launches.map((r) => {
+    /* hidden right away: the launches you removed (✕) and the picks you stopped following, until the rebuild drops them */
+    const gone = goneNow(), unpicked = pendingPicks();
+    const kept = (r) => r.grade === 'You' ? !(unpicked[r.symbol] && !unpicked[r.symbol][0] && Date.now() - unpicked[r.symbol][1] < 30 * 60 * 1000) : !(gone[r.symbol] && r.date <= gone[r.symbol]);
+    const all = doc ? doc.launches.filter(kept).map((r) => {
       const m = symMap.get(r.symbol);
       const px = m && num(m.price) !== null ? num(m.price) : r.price;
       /* today: the live (or the latest close's) change and relative volume, not the launch day's */
@@ -1821,24 +1828,25 @@ defCalc('industry_perf', {
       ['Liquid: ', 'price $' + lqd.min_price + '+, a 20-day average of $' + lqd.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(lqd.min_avg_vol_20d) + '+ shares a day, ADR ' + lqd.min_adr + '%+.'],
       ['One at a time: ', 'another launch of the same stock within ' + lr.dedupe_days + ' sessions counts only after it closed under the 21 EMA, or when it grades higher.'],
       ['Your picks: ', 'the Follow button on the Watchlist tab; followed from the close you add them at, launch day or not.'],
-      ['Off the list: ', 'a launch leaves after 2 closes in a row under the 50 EMA, or ' + lr.follow_days + ' sessions after its launch day, or when the same stock launches again (the newest launch replaces it). Your picks stay until you remove them (✕). The first close under the 21 EMA is only the exit signal: the stock stays. Lone wolves are only hidden (tick the box to show them).'],
+      ['Off the list: ', 'a launch leaves after 2 closes in a row under the 50 EMA, or ' + lr.follow_days + ' sessions after its launch day, or when the same stock launches again (the newest launch replaces it). ✕ on any row removes it by hand: a pick is no longer followed, a launch leaves with its alerts until it launches again on a later day. Your picks stay until you remove them. The first close under the 21 EMA is only the exit signal: the stock stays. Lone wolves are only hidden (tick the box to show them).'],
     ] : []).map(([k, v]) => { const d = h('div', ''); d.append(h('strong', '', k), document.createTextNode(v)); return d; }));
     $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
     const today = doc ? all.filter((r) => r.date === doc.date && r.grade !== 'You').length : 0;
     const npick = all.filter((r) => r.pick).length;
     const LQ = doc && doc.liquidity;
-    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close)' + (npick ? ', ' + npick + ' of them your picks' : '') + '. Your picks = the Follow button on the Watchlist tab: followed from the close you added them at, until you remove them (✕). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
+    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches from the last 120 sessions (' + today + ' on the ' + fDate(doc.date) + ' close)' + (npick ? ', ' + npick + ' of them your picks' : '') + '. Your picks = the Follow button on the Watchlist tab: followed from the close you added them at, until you remove them. ✕ takes any stock off this list: a pick is no longer followed, a launch is removed with its alerts (a new launch of it on a later day shows again). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
       (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
     sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern'], 'grade');
     if (doc && !rows.length) noRows(tb, 25, 'No launch matches these filters.');
     rows.forEach((r) => {
       const tr = h('tr');
       const key = tkCell(r.symbol, r.tv);
-      if (r.pick) {
-        const t = h('span', 'tgr-gm', 'your pick'); t.title = 'You follow it (Follow button, ' + fDate(r.pick.slice(0, 10)) + ')'; key.append(t);
-        const rm = h('button', 'tgr-lite tgr-follow', '✕'); rm.type = 'button'; rm.title = 'Stop following ' + r.symbol + (r.grade === 'You' ? ' (it leaves this list)' : ' as your pick (it stays as a launch)');
+      if (r.pick) { const t = h('span', 'tgr-gm', 'your pick'); t.title = 'You follow it (Follow button, ' + fDate(r.pick.slice(0, 10)) + ')'; key.append(t); }
+      {  /* ✕ = off the list: a pick is no longer followed, a launch is removed (until it launches again on a later day) */
+        const rm = h('button', 'tgr-lite tgr-follow', '✕'); rm.type = 'button';
+        rm.title = 'Remove ' + r.symbol + ' from Launches' + (r.grade === 'You' ? ' (stop following it)' : ' (and its alerts; a new launch on a later day shows again)');
         rm.setAttribute('aria-label', rm.title);
-        rm.addEventListener('click', () => { if (confirm('Stop following ' + r.symbol + '?')) followPick(r.symbol, false, rm); });
+        rm.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from Launches?')) followPick(r.symbol, false, rm, r.grade === 'You' ? undefined : { remove: r.date }); });
         key.append(rm);
       }
       if (r.lone_wolf) { const w = h('span', 'tgr-flag', 'lone wolf'); w.style.marginLeft = '6px'; key.append(w); }

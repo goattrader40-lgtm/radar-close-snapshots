@@ -1124,7 +1124,16 @@ def picks_of(path):
         return {}
 
 
-def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None):
+def removed_of(path):
+    """{symbol: the launch day you removed (YYYY-MM-DD)} from setups/picks.json (the portal's ✕ on the Launches tab).
+    Only that launch is left out: a new launch of the stock on a later day shows again"""
+    try:
+        return {s.upper(): p["launch"] for s, p in json.load(open(path)).get("removed", {}).items() if p.get("launch")}
+    except Exception:
+        return {}
+
+
+def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
     T = len(cal) - 1
@@ -1153,7 +1162,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None)
     for s, i, k, gs, gn, leader in [e + ("",) for e in ev] + detect_followers(A, groups, GS, cal, ev):
         a = A[s]
         last = len(a.st.dates) - 1
-        if a.st.dates[last] != today or last - i > L["follow_days"]:
+        if a.st.dates[last] != today or last - i > L["follow_days"] or a.st.dates[i] <= (removed or {}).get(s, ""):    # removed by you (✕), with any older launch of it
             continue
         f = follow(a, i, last)
         if f["lost_50ema"]:
@@ -1333,7 +1342,7 @@ def main():
     ENTRY = a.entry
     A, groups, GS, cal, S = load(a.bars, a.stocks)
     daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {},
-          picks_of(a.picks) if a.picks else {})
+          picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {})
     if a.backtest:
         backtest(A, groups, GS, cal, S, a.backtest)
 
