@@ -89,6 +89,14 @@ def one(key):
             r_ = row(s, st, a, f, i0, j, k, entry, buy, stop, x21, x10, hi20, c, n, closed if entry == "level" else "")
             r_["level"] = round(float(pbp_used), 2) if entry == "level" else None
             r_["also_crossed"] = also if entry == "level" else None
+            # what the engine (the Launches tab) reads that day after the close, and whether it read this very breakout: a
+            # flag breakout = the close over the line and the 10 & 21 EMA, not a poke over it during the day (the user,
+            # Nov 1 2026: "I checked flag breakouts, nothing matches": 537 of 877 were pokes that closed back under)
+            r_["engine_read"] = stage[:180]
+            r_["engine_confirmed"] = int(bool({"flag breakout": f.get("flag_breakout_today"), "base breakout": f.get("base_breakout_today"),
+                                               "pop": f.get("dry_entry_today"),
+                                               "pattern pivot": f.get("breakout_today") or f.get("base_breakout_today")}.get(k, True))) \
+                if entry == "level" else 1
             # the theme that day and the breakout grade the alerts give (early = 1st / 2nd breakout within 50 sessions of the
             # launch; a Leading theme; the volume building the 5 days before, 1.1x+)
             gs = launch.best_group(s, POS[st.dates[j]], GROUPS, GS)[0] if st.dates[j] in POS else -1
@@ -170,7 +178,7 @@ def main():
         a = A[t["symbol"]]
         j = a.st.dates.index(t["date"])
         cb, cl = float(a.st.c[j]), float(a.st.l[j])
-        if cb > cl:
+        if cb > cl and t.get("engine_confirmed", 1):      # a level buy only when the day closed as that breakout
             t.update(mgmt.cols(manage(a, j, cb, cl, None, 21), "close_"))
             t.update(mgmt.cols(manage(a, j, cb, cl, None, 10), "close_", "_10"))
     # 3) your 5-minute entry: over the 5-minute opening range high (and over the buy point for a level buy) on the day,

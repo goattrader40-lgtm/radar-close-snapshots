@@ -60,6 +60,8 @@ COLUMNS = (
     ("pattern / base_pattern", "what the buy point came from (Base top, Flag line, an MSF pattern: Ascending triangle, Flat base, Cup with handle...) and the base's MSF name"),
     ("retest_with", "for a retest: the EMAs at the level with it (10 / 21 / 50 EMA, or no EMA)"),
     ("level", "the buy point price (the day before's buy point)"),
+    ("engine_read / engine_confirmed", "the Launches engine's own read of that day after the close (the portal's Status text), and 1 when it read this "
+     "very breakout (a flag breakout = the close over the line and the 10 & 21 EMA). Each trigger sheet has only engine_confirmed = 1"),
     ("reset_any / reset_at_50ema / reset_rsi_under_45 / reset_emas_close", "the MOMENTUM RESET before the buy (your AEHR read): 1 = since the latest top "
      "(the highest high of the 60 sessions before) a low came within a quarter ADR of the 50 EMA or under it / the RSI(14) dipped under 45 / the 21 EMA "
      "was at most 0.8 ADR over the 50 EMA the day before; reset_any = one of them. AEHR Mar 6-19 and May 5-26 2026: 0 (all lost); Mar 31 - Apr 6: 1"),
@@ -587,7 +589,7 @@ def main():
                          ("follow-through", "Follow-through"), ("retest", "Retest held"), ("push", "Push 21 EMA"),
                          ("21 EMA retest", "21 EMA retest"), ("21 EMA undercut & reclaim", "21 EMA undercut"),
                          ("50 EMA undercut & reclaim", "50 EMA undercut")):
-            sel = [r for r in br if r["buy_point"] == k]
+            sel = [r for r in br if r["buy_point"] == k and r.get("engine_confirmed", 1)]   # the days the engine read as it
             if k == "pattern pivot":                       # the MSF patterns on their own sheets too (ascending triangle, flat base...)
                 for pat in sorted({r.get("pattern") or "" for r in sel}):
                     ps = [r for r in sel if (r.get("pattern") or "") == pat]
@@ -596,10 +598,21 @@ def main():
                         DESC[nm] = f"{pat.upper()} breakouts (an MSF pattern's pivot, from the Pattern pivot trigger). " + ENTRIES
                         trades(wb, nm, ps)
             if sel:
-                DESC[f"{short} - entries"] = (f"{k.upper()} (a Launches trigger), one row per buy point and ENTRY TACTIC: filter 'entry tactic', then rvol_day, "
+                DESC[f"{short} - entries"] = (f"{k.upper()} (a Launches trigger), ONLY the days the engine read as it after the close (engine_read = the "
+                                              "Launches tab's own text that day; failed pokes over the level are on 'Failed crosses - entries'). Intraday "
+                                              "tactics here know the day closed as a breakout. One row per buy point and ENTRY TACTIC: filter 'entry tactic', then rvol_day, "
                                               "gap_pct, the pattern, retest_with (the EMAs with a retest: 10 / 21 / 50) and the tags (caution, double breakout, 3rd try = "
                                               "ascending triangle, flag volume dried, tight days before). " + ENTRIES)
                 trades(wb, f"{short} - entries", sel)
+        # the level crosses the engine did NOT read as a breakout: a poke over the line / top during the day that closed back
+        # under (what buying as the alert fires costs when the close fails)
+        fails = [r for r in br if r.get("bought") == "level" and not r.get("engine_confirmed", 1)]
+        if fails:
+            DESC["Failed crosses - entries"] = ("FAILED CROSSES: days the price traded over a buy point (base top, flag line, pattern pivot) during the day "
+                                                "but the engine did NOT read a breakout at the close (it closed back under, or under the 10 / 21 EMA for "
+                                                "a flag). Not on the trigger sheets: there each row is a day the engine read as that breakout "
+                                                "(engine_read). Here = what buying as the alert fires (or the 5-min entry) cost on those days. " + ENTRIES)
+            trades(wb, "Failed crosses - entries", fails)
     d = data("probe_launch_live")
     if d and d.get("trades") and any("cx_R" in r for r in d["trades"]):
         ll = long_rows(d["trades"], TACTICS["launchlive"])
