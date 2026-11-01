@@ -127,6 +127,7 @@
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
   #wl-table td.nw, #ln-table td.nw { white-space: nowrap; }
+  #wl-table td.wl-why { min-width: 17em; max-width: 24em; }
   #wl-table .wl-stage { max-width: 22em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   /* Launches Status: wraps in a narrower column, 3 lines at most (tap or click it for the whole text) */
   #ln-table td.ln-stage { min-width: 11em; max-width: 17em; white-space: normal; line-height: 1.3; cursor: pointer; }
@@ -1694,7 +1695,7 @@ defCalc('industry_perf', {
         key.append(rm);
       }
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade[0], r.grade)); else gd.textContent = '—';
-      const whyTd = h('td', 'c3' + (r.stage ? '' : ' nw'), r.why || '');
+      const whyTd = h('td', 'c3' + (r.stage ? ' wl-why' : ' nw'), r.why || '');
       if (r.stage) { const sl = h('div', 'tgr-lbl wl-stage', r.stage); whyTd.title = r.stage; whyTd.append(sl); }
       const sec = (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
       tr.append(key, h('td', 'nw', sec), gd, whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),

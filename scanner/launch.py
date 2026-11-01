@@ -1215,10 +1215,16 @@ def setups3(A, today, wl, prev=(), removed=None):
             sec, setup = "Setting up", "Near the retest zone"
         else:
             continue
-        why = setup + (f" {fnum(bp)}" if bp and sec != "Triggered today" else "") \
-            + (f", {away_adr:.1f} ADR away" if away_adr is not None and sec != "Triggered today" else "") \
-            + (f" · tight ×{tight}" if tight >= 2 else "") + f" (from {src} {added})"
-        row = {k: v for k, v in w.items() if k not in ("section", "setups", "why", "promoted")}
+        e21 = f.get("ema21")
+        if setup.startswith("21 EMA") and sec == "Setting up" and e21:      # the level that matters here is the 21 EMA
+            why = setup + f": the 21 EMA {fnum(e21)}, the close {(100 * (c / e21 - 1)) / adr:.1f} ADR over it"
+        elif setup == "Near the retest zone" and z:
+            why = setup + f" {fnum(z[0])}-{fnum(z[1])}, the close {(100 * (c / z[1] - 1)) / adr:.1f} ADR over it"
+        else:
+            why = setup + (f" {fnum(bp)}" if bp and sec != "Triggered today" else "") \
+                + (f", {away_adr:.1f} ADR away" if away_adr is not None and sec != "Triggered today" else "")
+        why += (f" · tight ×{tight}" if tight >= 2 else "") + f" (from {src} {added})"
+        row = {k: v for k, v in w.items() if k not in ("section", "setups", "why", "promoted", "ema_triggers_tomorrow")}   # the old PB screens' note
         row.update(section=sec, setup=setup, setups=[], source=src, added=added, last_hit=None, why=why, stage=stage,
                    pattern=pat or w.get("pattern"), buy_point=fnum(bp) if bp else None,
                    to_buy_point_pct=fnum(100 * (bp / c - 1), 1) if bp else None, away_adr=fnum(away_adr, 2) if away_adr is not None else None,
