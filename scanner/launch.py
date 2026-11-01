@@ -85,7 +85,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -134,8 +134,9 @@ class Arr:
         # your launch-list minimums (settings.json "launch"): price, 20-day average $ volume and shares, ADR
         LQ = dict(LIQ, **(S if S and "min_dollar_vol_20d_millions" in S else {}))
         avgv20, dv20 = roll_mean(v, 20), roll_mean(c * v, 20) / 1e6
-        self.liquid = np.array([c[i] >= LQ["min_price"] and avgv20[i] >= LQ["min_avg_vol_20d"]
-                                and dv20[i] >= LQ["min_dollar_vol_20d_millions"] and st.adr[i] >= LQ["min_adr"] for i in range(n)])
+        self.liq_noadr = np.array([c[i] >= LQ["min_price"] and avgv20[i] >= LQ["min_avg_vol_20d"]
+                                   and dv20[i] >= LQ["min_dollar_vol_20d_millions"] for i in range(n)])
+        self.liquid = self.liq_noadr & (st.adr >= LQ["min_adr"])
         self.ret21 = np.full(n, np.nan)
         self.ret21[21:] = 100 * (c[21:] / c[:-21] - 1)
         self.ret5 = np.full(n, np.nan)
@@ -1126,6 +1127,14 @@ def picks_of(path):
         return {}
 
 
+def removed_setups_of(path):
+    """{symbol: the feeder-list day it came on} you removed from 3-SETUPS with ✕ (setups/picks.json "removed_setups")"""
+    try:
+        return {s.upper(): p["added"] for s, p in json.load(open(path)).get("removed_setups", {}).items() if p.get("added")}
+    except Exception:
+        return {}
+
+
 def stale(a, i0, last, top=None):
     """off the list (your rule, Nov 1 2026): 62 sessions from its highest point without a new high, at any time since the
     launch (or your pick; top = the base top a pick started under). A $60 high 5 days ago with the stock at $55 today
@@ -1145,7 +1154,109 @@ def removed_of(path):
         return {}
 
 
-def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None):
+S3_FEEDERS = ("1-EP/GAP", "1-UPDAY", "2-POOL")
+S3_SECTIONS = ("Triggered today", "Ready", "Setting up")
+
+
+def setups3(A, today, wl, prev=(), removed=None):
+    """3-SETUPS (your design, Nov 1 2026): every stock on 1-EP/GAP, 1-UPDAY and 2-POOL read by the Launches engine, like a
+    pick from the day it came on its list (the gap or up day; the day it entered 2-POOL), with its buy points and
+    triggers. Sections:
+      Triggered today  a base breakout, flag break, pop, 21 EMA retest or undercut & reclaim, retest held or push today
+      Ready            a trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it: tomorrow's buys
+      Setting up       a flag forming (its line more than 0.7 ADR away), a pullback set up for the 21 EMA, or a pullback
+                       near the retest zone of its last breakout
+    In: liquid with an ADR of 4%+ (3.2%+ once on the list). Off: 2 closes in a row under the 50 EMA, 62 sessions from its
+    highest point without a new high, its ADR under 3.2%, or your ✕ (until it comes on a feeder list again)."""
+    seen, rows = {}, []
+    for name in S3_FEEDERS:
+        for r in wl.get("lists", {}).get(name, []):
+            seen.setdefault(r["symbol"], (name, r))
+    for sym, (src, w) in seen.items():
+        a = A.get(sym)
+        added = w.get("added") or w.get("section")
+        if a is None or not added:
+            continue
+        st = a.st
+        last = len(st.dates) - 1
+        if st.dates[last] != today or (removed or {}).get(sym, "") >= added:
+            continue
+        i0 = max((k for k in range(last + 1) if st.dates[k] <= added), default=None)
+        if i0 is None or i0 < 60:
+            continue
+        if not a.liq_noadr[last] or st.adr[last] < (L["off_adr"] if sym in prev else L["s3_min_adr"]):
+            continue
+        b0 = base_ok(a, i0, 120)
+        if stale(a, i0, last, b0[0] if b0 and b0[0] > st.h[i0] else None):
+            continue
+        f = follow(a, i0, last, pick=True)
+        if f.get("lost_50ema"):
+            continue
+        c, adr = float(st.c[last]), float(f.get("adr_pct") or st.adr[last])
+        bp = f.get("buy_point")
+        away_adr = (100 * (bp / c - 1)) / adr if bp and adr else None
+        stage, pat = f.get("stage") or "", f.get("pattern") or ""
+        fired = next((t for t, on in (("Base breakout", f.get("base_breakout_today")), ("Flag breakout", f.get("flag_breakout_today")),
+                                      ("Pop out of the consolidation", f.get("dry_entry_today")),
+                                      ("21 EMA undercut & reclaim" if f.get("ema21_today") == "undercut" else "21 EMA retest", f.get("ema21_today")),
+                                      ("Retest held", f.get("retest_today")), ("Push out of the 21 EMA", f.get("push_today")),
+                                      ("Breakout", f.get("breakout_today"))) if on), None)
+        tight = f.get("tight_days") or 0
+        z = f.get("retest_zone")
+        if fired:
+            sec, setup = "Triggered today", fired
+        elif away_adr is not None and 0 <= away_adr <= L["s3_ready_adr"] and ((f.get("base_day") or 0) >= 5 or tight >= 2):
+            sec, setup = "Ready", pat or "Buy point"
+        elif pat.startswith("Flag"):
+            sec, setup = "Setting up", "Flag forming"
+        elif f.get("ema21_watch"):
+            sec, setup = "Setting up", "21 EMA " + ("undercut & reclaim" if f["ema21_watch"] == "undercut" else "retest") + " setup"
+        elif z and f.get("retest_away") and c <= z[1] * (1 + adr / 100) and (f.get("off_high_pct") or 0) >= 1.5 * adr:   # a real pullback
+            sec, setup = "Setting up", "Near the retest zone"
+        else:
+            continue
+        why = setup + (f" {fnum(bp)}" if bp and sec != "Triggered today" else "") \
+            + (f", {away_adr:.1f} ADR away" if away_adr is not None and sec != "Triggered today" else "") \
+            + (f" · tight ×{tight}" if tight >= 2 else "") + f" (from {src} {added})"
+        row = {k: v for k, v in w.items() if k not in ("section", "setups", "why", "promoted")}
+        row.update(section=sec, setup=setup, setups=[], source=src, added=added, last_hit=None, why=why, stage=stage,
+                   pattern=pat or w.get("pattern"), buy_point=fnum(bp) if bp else None,
+                   to_buy_point_pct=fnum(100 * (bp / c - 1), 1) if bp else None, away_adr=fnum(away_adr, 2) if away_adr is not None else None,
+                   base_day=f.get("base_day"), base_depth_adr=f.get("base_depth_adr"), tight_days=tight, vol_dryup=f.get("vol_dryup"),
+                   adr_pct=fnum(adr, 2), leg=f.get("leg"))
+        rows.append(row)
+    rows.sort(key=lambda r: (S3_SECTIONS.index(r["section"]), r["away_adr"] if r["away_adr"] is not None else 99, r["symbol"]))
+    return rows
+
+
+def write_watchlist(rows, wl_path, wl):
+    """the new 3-SETUPS into the Watchlist's files: latest.json, the day's history file, the TradingView import file and
+    the README (run.py builds the other three lists before this)"""
+    wl["lists"]["3-SETUPS"] = rows
+    wl["counts"]["3-SETUPS"] = len(rows)
+    json.dump(wl, open(wl_path, "w"), indent=1)
+    out = os.path.dirname(wl_path)
+    hp = os.path.join(out, "history", wl["date"] + ".json")
+    if os.path.exists(hp):
+        h = json.load(open(hp))
+        h["setups"] = rows
+        h.setdefault("lists", {})["3-SETUPS"] = [r["symbol"] for r in rows]
+        h.setdefault("counts", {})["3-SETUPS"] = len(rows)
+        json.dump(h, open(hp, "w"), separators=(",", ":"))
+    lines = []
+    for sec in S3_SECTIONS:
+        tv = [r["tv"] for r in rows if r["section"] == sec]
+        if tv:
+            lines += ["###" + sec] + tv
+    os.makedirs(os.path.join(out, "tradingview"), exist_ok=True)
+    open(os.path.join(out, "tradingview", "3-SETUPS.txt"), "w").write("\n".join(lines) + "\n")
+    try:
+        open(os.path.join(out, "README.md"), "w").write(run.summary_md(wl))
+    except Exception as e:                              # the README is a convenience: never fail the scan on it
+        print("README not rewritten:", e)
+
+
+def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None, s3=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
     T = len(cal) - 1
@@ -1153,9 +1264,11 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     # the earnings and news days a catalyst launch can come on: tonight's tags plus the ones kept from earlier nights
     # (Yahoo's earnings date moves on to the next report; the grade log keeps only the last days)
     try:
-        kept = {(d[0], d[1]): d[2] for d in json.load(open(out_path)).get("catalyst_days", [])}
+        old_doc = json.load(open(out_path))
     except Exception:
-        kept = {}
+        old_doc = {}
+    kept = {(d[0], d[1]): d[2] for d in old_doc.get("catalyst_days", [])}
+    prev_s3 = old_doc.get("setups3", [])
     tags = dict(kept)
     for s, d in (earnings or {}).items():
         a = A.get(s)
@@ -1284,7 +1397,10 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50", "low_52w"],
                launches=rows, watch=watch, groups=[g for g in G if g["status"] != "Not trending"],
-               catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()))
+               catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()),
+               # 3-SETUPS for the live alerts (desktop: every trigger; phone: Ready only); kept from the evening scan when
+               # a Follow-button rebuild doesn't pass the Watchlist
+               setups3=s3 if s3 is not None else prev_s3)
     with open(out_path, "w") as f:
         json.dump(doc, f, separators=(",", ":"))
     n_today = sum(1 for r in rows if r["date"] == today)
@@ -1358,12 +1474,25 @@ def main():
     ap.add_argument("--gradelog", help="the pre-market grade log (radar-data gradelog.json), for news tags")
     ap.add_argument("--live", help="the day's last live quotes (radar-data live.json), for earnings tags")
     ap.add_argument("--picks", help="setups/picks.json: the stocks you follow (the portal's Follow button)")
+    ap.add_argument("--watchlist", help="setups/latest.json (run.py, just before): 3-SETUPS is built from its other three lists")
     a = ap.parse_args()
     global ENTRY
     ENTRY = a.entry
     A, groups, GS, cal, S = load(a.bars, a.stocks)
+    s3 = None
+    if a.watchlist:
+        wl = json.load(open(a.watchlist))
+        try:
+            prev = {r["symbol"] for r in json.load(open(a.out)).get("setups3", [])}
+        except Exception:
+            prev = set()
+        rows = setups3(A, cal[-1], wl, prev, removed_setups_of(a.picks) if a.picks else {})
+        write_watchlist(rows, a.watchlist, wl)
+        s3 = [dict(symbol=r["symbol"], tv=r.get("tv"), section=r["section"], setup=r["setup"], buy_point=r["buy_point"],
+                   away_adr=r["away_adr"], adr_pct=r["adr_pct"]) for r in rows]
+        print("3-SETUPS:", {sec: sum(1 for r in rows if r["section"] == sec) for sec in S3_SECTIONS})
     daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {},
-          picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {})
+          picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3)
     if a.backtest:
         backtest(A, groups, GS, cal, S, a.backtest)
 

@@ -20,6 +20,7 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
   reversal    a reversal launch as it happens: opened under yesterday's close, now up 8%+ on a volume pace of 2x+, over
               its 1-month high (the previous 20 sessions' highest high), in the top half of today's range (1-minute chart),
               above the 200 SMA (at most 28% over it the day before) and 30%+ over its 52-week low (GDDY Oct 30 2026)
+  3-SETUPS    a Watchlist 3-SETUPS stock in the Ready section trades over its trigger (not one already on Launches)
   launch      A+ or A off the watch list (setups/launch.json, from the last close), graded like the portal's
               Launching today: volume pace 3x+ and above its base high (the previous 20 days' high), with a 3%+
               gap or a 10%+ day; A+ = a 6%+ gap jumping from under the 200 SMA. Also needs: up 5%+, opened up,
@@ -311,6 +312,17 @@ def find(live, doc, now=None):
                         + (" (light)" if rv < 1 else "") + " · "
                         + (f"an entry in the base (still leg {nxt}), the base top is next" if flag else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "")) + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
                         + since(r), "high" if g == "A" else "default", tvs))
+    # 3-SETUPS (Watchlist), the Ready section only: over its trigger (the portal's desktop alerts cover every section); a
+    # stock also on the Launches list alerts from there
+    on_launches = {r["symbol"] for r in doc.get("launches", [])}
+    for r in doc.get("setups3", []):
+        if r.get("section") != "Ready" or r["symbol"] in on_launches or not r.get("buy_point") or (now.hour, now.minute) < (9, 35):
+            continue
+        q = rows.get(r["symbol"])
+        if not q or len(q) < 5 or q[4] is None or not q[0] > r["buy_point"]:
+            continue
+        out.append((f"{r['symbol']}:s3", f"{r['symbol']} 3-SETUPS Ready: {r.get('setup') or 'buy point'} trigger",
+                    f"${q[0]:.2f} over ${r['buy_point']:.2f} · {q[1]:+.1f}% · vol {q[4]:.1f}x for the time of day", "high", r.get("tv") or r["symbol"]))
     return out
 
 

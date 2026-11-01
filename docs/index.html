@@ -127,6 +127,7 @@
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
   #wl-table td.nw, #ln-table td.nw { white-space: nowrap; }
+  #wl-table .wl-stage { max-width: 22em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   /* Launches Status: wraps in a narrower column, 3 lines at most (tap or click it for the whole text) */
   #ln-table td.ln-stage { min-width: 11em; max-width: 17em; white-space: normal; line-height: 1.3; cursor: pointer; }
   #ln-table td.ln-stage > div { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -1478,7 +1479,7 @@ defCalc('industry_perf', {
 
   /* watchlist: the setup scanner's lists, with today's live price on top */
   const WL_LISTS = ['3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'];
-  const WL_ORDER = { '3-SETUPS': ['Tight', 'PB 21', 'PB 50'], '2-POOL': ['Momentum', '50 EMA reclaim', 'Growth'] };
+  const WL_ORDER = { '3-SETUPS': ['Triggered today', 'Ready', 'Setting up'], '2-POOL': ['Momentum', '50 EMA reclaim', 'Growth'] };
   /* your picks: the Follow button saves the stock to setups/picks.json in your repo (with a GitHub key kept in this
      browser, made once per device); a GitHub job (Follow picks) then rebuilds the Launches list with it in a few
      minutes, and from then on it is followed like a launch. ✕ on the Launches tab removes it the same way. */
@@ -1531,9 +1532,10 @@ defCalc('industry_perf', {
       if (g.ok) { const j = await g.json(); sha = j.sha; try { doc = JSON.parse(unb64(j.content)); } catch (e) { /* unreadable: start it again */ } }
       else if (g.status !== 404) throw new Error('GitHub answered ' + g.status);
       doc.picks = doc.picks || {};
-      if (on) doc.picks[sym] = { added: (opt && opt.added) || nyIso(), from: (opt && opt.from) || 'Watchlist ' + S.wl }; else delete doc.picks[sym];
+      if (!(opt && opt.keepPick)) { if (on) doc.picks[sym] = { added: (opt && opt.added) || nyIso(), from: (opt && opt.from) || 'Watchlist ' + S.wl }; else delete doc.picks[sym]; }
       if (opt && opt.remove) { doc.removed = doc.removed || {}; doc.removed[sym] = { launch: opt.remove, at: nyIso() }; }
-      const body = { message: (opt && opt.remove ? 'Remove ' + sym + ' from Launches' : (on ? 'Follow ' : 'Stop following ') + sym) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
+      if (opt && opt.removeSetup) { doc.removed_setups = doc.removed_setups || {}; doc.removed_setups[sym] = { added: opt.removeSetup, at: nyIso() }; }
+      const body = { message: (opt && opt.removeSetup ? 'Remove ' + sym + ' from 3-SETUPS' : opt && opt.remove ? 'Remove ' + sym + ' from Launches' : (on ? 'Follow ' : 'Stop following ') + sym) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
       if (sha) body.sha = sha;
       const p = await fetch(url, { method: 'PUT', headers: hd, body: JSON.stringify(body) });
       if (p.ok) return true;
@@ -1558,6 +1560,19 @@ defCalc('industry_perf', {
     } catch (e) { toast('Not saved: ' + e.message + '.'); }
     draw();
   };
+  /* ✕ on 3-SETUPS: saved to setups/picks.json "removed_setups" (the evening scan leaves it out until it comes on a feeder list again) */
+  const S3GONE = 'radar-setups-removed';
+  const s3Gone = () => { try { return JSON.parse(localStorage.getItem(S3GONE) || '{}'); } catch (e) { return {}; } };
+  const removeSetup = async (r, btn) => {
+    btn.disabled = true; btn.textContent = 'Removing…';
+    try {
+      if (await savePick(r.symbol, pickedNow().has(r.symbol), { removeSetup: r.added, keepPick: true })) {
+        const g = s3Gone(); g[r.symbol] = r.added; try { localStorage.setItem(S3GONE, JSON.stringify(g)); } catch (e) { /* private window */ }
+        toast(r.symbol + ' removed from 3-SETUPS: it comes back only when it comes on 1-EP/GAP, 1-UPDAY or 2-POOL again.');
+      }
+    } catch (e) { toast('Not saved: ' + e.message + '.'); }
+    draw();
+  };
   const wlSecs = (list, rows) => {   /* same section order as the TradingView import files */
     const have = [...new Set(rows.map((r) => r.section || ''))];
     if (list.startsWith('1-')) return have.sort().reverse();
@@ -1569,7 +1584,8 @@ defCalc('industry_perf', {
   const wlRows = (symMap) => {
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
     if (!doc || !doc.lists) return [];
-    return (doc.lists[S.wl] || []).map((r, i) => {
+    const gone3 = S.wl === '3-SETUPS' ? s3Gone() : {};
+    return (doc.lists[S.wl] || []).filter((r) => !(gone3[r.symbol] && (r.added || '') <= gone3[r.symbol])).map((r, i) => {
       const m = symMap.get(r.symbol);
       const price = m && num(m.price) !== null ? num(m.price) : num(r.close);
       const ent = r.entries || {};
@@ -1602,13 +1618,10 @@ defCalc('industry_perf', {
         ', the momentum leaders: up ' + X['MOMENTUM-1W'].perf_pct + '%+ in a week, ' + X['MOMENTUM-1M'].perf_pct + '%+ in a month, ' + X['MOMENTUM-3M'].perf_pct + '%+ in 3 months or ' +
         M6.perf_pct + '%+ in 6 months' + (M6.above_sma200 ? ' (that one also above the 200 SMA' + (M6.min_pct_above_52w_low ? ' and ' + M6.min_pct_above_52w_low + '%+ over its 52-week low' : '') + ')' : '') + ' (section "Momentum").',
         nb + ' closes in a row below the 50 EMA; at the ' + day + ' refresh, a close below the 200 SMA or no longer liquid.'],
-      '3-SETUPS': ['a name from the other three lists' + (Ls.setups_need_above_sma200 ? ', above the 200 SMA,' : '') + ' in a setup: Tight (today a tight day and ' + T.min_tight_days + ' of the last ' + T.within_last_days +
-        ': volume ' + T.vol_below_avg30_pct + '%+ under its 30-day average' + (T.range_vs_avg10_max ? ' and a range at most ' + T.range_vs_avg10_max + '× the 10-day average' : '') + '; ' + T.min_pct_above_52w_low +
-        '%+ over the 52-week low, within ' + T.max_pct_below_52w_high + '% of the 52-week high), a 21 EMA pullback (within ' + X['PULLBACK TO 21EMA-MAIN'].max_above_ema_pct +
-        '% above the 21 EMA, the 21 EMA over the 50 EMA) or a 50 EMA pullback (within ' + X['PULLBACK TO 50EMA'].max_above_ema_pct + '% above the 50 EMA, the 21 EMA over the 50 EMA). Section = the setup.',
-        nb + ' closes in a row below the 50 EMA' + (Ls.setups_need_above_sma200 ? ' or a close below the 200 SMA' : '') + '; every ' + day + ' the list is trimmed to the best ' + Ls.setups_max +
-        ', ranked: a setup in the last 5 trading days first, then the grade (A+, A, B, none), then the MSF score (40 for a pattern, +15 trend template, +10 stronger than the S&P 500 over the year, ' +
-        '+10 RS line at a 3-month high, +10 volume dried up, +10 tight last 5 days, +5 within 5% under the buy point, +10 the 21 EMA over the 50 EMA), then the newest setup.'],
+      '3-SETUPS': ['a name from 1-EP/GAP, 1-UPDAY or 2-POOL read by the Launches engine, like a pick from the day it came on its list (the gap or up day; the day it entered 2-POOL): its buy points and triggers. ' +
+        'Triggered today = a base breakout, flag break, pop, 21 EMA retest or undercut & reclaim, retest held or push today. Ready = its trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it: tomorrow\'s buys (LIFE Oct 30, 2026: 44.81, 0.5 ADR away, tight 4 days). ' +
+        'Setting up = a flag forming (its line further away), a pullback set up for the 21 EMA, or a pullback near the retest zone of its last breakout. Liquid with an ADR of 4%+ to come on. Alerts: desktop for every trigger; phone for Ready only.',
+        '2 closes in a row under the 50 EMA, 62 sessions from its highest point without a new high, its ADR under 3.2%, or your ✕ (it comes back only when it comes on a feeder list again).'],
     }[list];
     if (!R) return null;
     const every = 'price $' + S0.min_price + '+, market cap $' + Math.round(S0.min_mcap / 1e6) + 'M+, 30-day average volume ' + Math.round(S0.min_avg_vol_30d / 1000) + 'k+ shares and $' +
@@ -1674,9 +1687,17 @@ defCalc('industry_perf', {
         fb.addEventListener('click', () => followPick(r.symbol, !fol, fb));
         key.append(fb);
       }
+      if (S.wl === '3-SETUPS') {
+        const rm = h('button', 'tgr-lite tgr-follow', '✕'); rm.type = 'button'; rm.title = 'Remove ' + r.symbol + ' from 3-SETUPS (it comes back only when it comes on a feeder list again)';
+        rm.setAttribute('aria-label', rm.title);
+        rm.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from 3-SETUPS?')) removeSetup(r, rm); });
+        key.append(rm);
+      }
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade[0], r.grade)); else gd.textContent = '—';
+      const whyTd = h('td', 'c3' + (r.stage ? '' : ' nw'), r.why || '');
+      if (r.stage) { const sl = h('div', 'tgr-lbl wl-stage', r.stage); whyTd.title = r.stage; whyTd.append(sl); }
       const sec = (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
-      tr.append(key, h('td', 'nw', sec), gd, h('td', 'c3 nw', r.why || ''), h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
+      tr.append(key, h('td', 'nw', sec), gd, whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), h('td', 'num', fPrice(r.price)), pctCell(r.chg_1d, 0), h('td', 'num c2', fX(r.rel_vol)),
         h('td', 'c2', r.other), h('td', 'num c3', p1(r.adr_pct)), h('td', 'num c3 ' + tone(r.perf_1m_pct), p1(r.perf_1m_pct, true)),
         h('td', 'num c3 ' + tone(r.perf_3m_pct), p1(r.perf_3m_pct, true)), h('td', 'num c3', p1(r.off_52w_high_pct)), h('td', 'num c3', fDv(r.dollar_vol_30d_m)),
@@ -2006,6 +2027,15 @@ defCalc('industry_perf', {
       if (top && ago !== null && ago !== undefined && ago <= 2 && op && op > top && price > top && rv >= 2) {
         out.push([r.symbol + ':confirm', r.symbol + ' breakout confirmed', 'opened ' + fPrice(op) + ', trades ' + fPrice(price) + ' above the base top ' + fPrice(top) + ' · ' + f1(chg) + vol, r.tv]);
       }
+    });
+    /* 3-SETUPS (Watchlist tab): a stock trading over its trigger, any section, here on the desktop (the phone gets Ready only);
+       a stock also on the Launches list alerts from there */
+    const onLaunches = new Set((doc.launches || []).map((r) => r.symbol));
+    (doc.setups3 || []).forEach((r) => {
+      if (onLaunches.has(r.symbol) || !r.buy_point) return;
+      const q = LIVE.rows[r.symbol]; if (!q || q[4] === null || q[4] === undefined) return;
+      if (q[0] > r.buy_point) out.push([r.symbol + ':s3', r.symbol + ' 3-SETUPS ' + r.section + ': ' + r.setup + ' trigger',
+        fPrice(q[0]) + ' over ' + fPrice(r.buy_point) + ' · ' + f1(q[1]) + ' · vol ' + q[4].toFixed(1) + '× for the time of day', r.tv]);
     });
     return out;
   };

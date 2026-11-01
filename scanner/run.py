@@ -3,8 +3,8 @@
   Step 1  EP-GAPUP-BREAKOUT → 1-EP/GAP · HOTTEST STOCKS → 1-UPDAY        (daily, a section per date)
   Step 2  50 EMA FIRST CLOSE → 2-POOL › 50 EMA reclaim                    (daily)
           MOMENTUM-1W/1M/3M/6M → 2-POOL › Momentum                         (weekly refresh)
-  Step 3  DAILY TIGHTNESS / PULLBACK TO 21EMA-MAIN / PULLBACK TO 50EMA run on 1-EP/GAP + 1-UPDAY + 2-POOL
-          → 3-SETUPS (only above the 200 SMA, after a higher high + higher low, not up 300%+ in a year)
+  Step 3  3-SETUPS: built right after this by scanner/launch.py --watchlist, the Launches engine's buy points and
+          triggers on 1-EP/GAP + 1-UPDAY + 2-POOL (Triggered today / Ready / Setting up; your Nov 1 2026 design)
   Deletes: 2 closes in a row below the 50 EMA (any list) · 1-lists: close below the gap / up-day low, or 15
   trading days with no setup · 2-POOL weekly: below 200 SMA, illiquid, up 300%+ · 3-SETUPS: below 200 SMA,
   weekly trim to the best 30.
@@ -182,35 +182,14 @@ def step(state, d, stocks, cfg, cal, log):
     if weekly:
         state["pool_refresh"] = d
 
-    # 3) step 3: setup screeners on 1-EP/GAP + 1-UPDAY + 2-POOL
-    feeders = {}
+    # 3) step 3: 3-SETUPS is built after this by scanner/launch.py --watchlist (your Nov 1 2026 design: the Launches
+    # engine's buy points and triggers on these three lists; the Tight / PB 21 / PB 50 screens are gone). A stock it
+    # took last night is "promoted": it is not deleted for 15 days without a setup
     for name in ("1-EP/GAP", "1-UPDAY", "2-POOL"):
         for sym in lists[name]:
-            feeders.setdefault(sym, name)
-    for sym, src in feeders.items():
-        st = today.get(sym)
-        if st is None:
-            continue
-        i = st.pos[d]
-        found = [SETUP_SCREENS[n] for n in hits[sym] if n in SETUP_SCREENS]
-        if not found:
-            continue
-        if L["setups_need_above_sma200"] and not st.c[i] > st.sma200[i]:
-            continue
-        if not hhhl_ok(st, i, L["setups_higher_high_low"]):
-            continue
-        if chased(st, i):
-            continue
-        add("3-SETUPS", sym, dict(section=found[0], setups=found, last_hit=d, source=src, why=" + ".join(found) + f" (from {src})"))
-        for name in ("1-EP/GAP", "1-UPDAY", "2-POOL"):
-            if sym in lists[name]:
+            if sym in state.get("_prev3", ()):
                 lists[name][sym]["promoted"] = True
-
-    # weekly trim of 3-SETUPS to the best N
-    if weekly and len(lists["3-SETUPS"]) > L["setups_max"]:
-        ranked = sorted(lists["3-SETUPS"], key=lambda s: rank_key(s, lists["3-SETUPS"][s], today, d, cal))
-        for sym in ranked[L["setups_max"]:]:
-            remove("3-SETUPS", sym, f"weekly trim to the best {L['setups_max']}")
+    lists["3-SETUPS"] = {}
     state["asof"] = d
 
 
@@ -355,7 +334,7 @@ def summary_md(doc):
            " · ".join(f"**{n}** {doc['counts'][n]}" for n in LISTS), "",
            "TradingView import files are in [`tradingview/`](tradingview/) (Watchlist menu → Import list).", "",
            "## 3-SETUPS", "",
-           "Armed = the 21 / 50 EMA pullback trigger's daily rules pass and price is within 1 ADR above that EMA.", "",
+           "Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Launches engine (scanner/launch.py).", "",
            "| # | Symbol | Setup (last hit) | Grade | Pattern | Buy point | Away | Other entries | ADR | From |",
            "|---|---|---|---|---|---|---|---|---|---|"]
     for k, r in enumerate(L["3-SETUPS"], 1):
@@ -365,7 +344,7 @@ def summary_md(doc):
             other = (other + ", " if other else "") + "armed: " + " + ".join(r["ema_triggers_tomorrow"]) + " pullback"
         away = f"{r['to_buy_point_pct']:+.1f}%" if r.get("to_buy_point_pct") is not None else ""
         hit = datetime.date.fromisoformat(r["last_hit"]).strftime("%b %d") if r.get("last_hit") else ""
-        out.append(f"| {k} | {r['symbol']} | {' + '.join(r.get('setups', []))} ({hit}) | {r['grade']} | {r['pattern']} | "
+        out.append(f"| {k} | {r['symbol']} | {r.get('section', '')}: {r.get('setup') or ' + '.join(r.get('setups') or [])}{f' ({hit})' if hit else ''} | {r.get('grade')} | {r.get('pattern')} | "
                    f"{r['buy_point'] or ''} | {away} | {other} | {r['adr_pct']}% | {r.get('source', '')} |")
     ch = doc["changes_today"]
     if ch:
@@ -402,6 +381,10 @@ def main():
         state = json.load(open(STATE))
         days = [x for x in cal if state["asof"] < x <= last]
     log = state.setdefault("log", [])
+    try:                                                # last night's 3-SETUPS (scanner/launch.py), for the promotion
+        state["_prev3"] = {r["symbol"] for r in json.load(open(os.path.join(OUT, "latest.json")))["lists"].get("3-SETUPS", [])}
+    except Exception:
+        state["_prev3"] = set()
     for d in days:
         step(state, d, stocks, cfg, cal, log)
         print(d, {n_: len(state["lists"][n_]) for n_ in LISTS})
@@ -411,6 +394,7 @@ def main():
     cutoff = (datetime.date.fromisoformat(last) - datetime.timedelta(days=45)).isoformat()
     state["log"] = [x for x in log if x["date"] >= cutoff]
     state["_cal"] = cal
+    state.pop("_prev3", None)
     write_outputs(state, stocks, cfg, P, state["log"], last)
     state.pop("_cal")
     with open(STATE, "w") as f:
