@@ -181,6 +181,8 @@ def long_rows(rows, tactics):
         for pre, name, stop in tactics:
             if r.get(pre + "R") is None:
                 continue
+            if pre == "" and r.get("bought") == "close":
+                continue                                    # a close signal: "as the alert fires" is the close, kept once as "buy at the close"
             x = dict(base)
             x.update({"entry tactic": name, "stop": stop})
             x.update({k: r.get(pre + k) for k in RESULT})
