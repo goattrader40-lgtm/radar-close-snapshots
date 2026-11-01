@@ -24,6 +24,7 @@ TESTS = [
     ("probe_launch_live", "Launch days, fair (no hindsight)", "Every stock on the launch watch list (from 25% under to 28% over the 200 SMA, 50% for 8%+ gaps, liquid, ADR 3.5%+, no launch in 20 sessions) that gaps up and trades over both the 5-minute high and +5%: bought there, risk the 5-minute low, your management. Split by what the day closed as, gap, buy time, coming from under the 200 SMA, volume pace.", "cmd launchlive"),
     ("probe_buypoints", "Buy points, bought at the breakout", "Our Launches buy points (base breakout, follow-through, flag, pop, retest, push, 21 EMA retest, undercut & reclaim) for 60 sessions after each launch, bought as the alerts fire (at the level when it breaks, a push at the open, the close for close signals); the risk the low of that day; your management. Each one saved with its RVOL (the day's volume / 20-day average) and gap.", "cmd buypoints"),
     ("probe_gapbase", "Gap out of base", "A Launches stock that closed under its base high opens above it: bought on the 1-minute or 5-minute opening range high (stop that bar's low) with RVOL 1x+ at the buy; out at 9:50 if the RVOL isn't 2x by then, or held; your management after.", "cmd gapbase"),
+    ("probe_gapretest", "Gap retest", "A 6%+ gap on a power day, a launch day or a big gap-up day (2x+ volume, the gap held), then the first pullback back into the gap (the day before's high to the gap day's low) that closes back over the day before's high, with the 10 / 21 EMA there: bought at that close (stop its low) or the next morning over the 5-minute high (stop the 5-minute low). Your management.", "cmd gapretest"),
     ("probe_earnings", "Earnings-day high breakout", "An earnings day (company earnings news) that closed over its 1-month high, over the 200 SMA, 30%+ over the 52-week low, liquid ($10+, $30M and 700K a day, $700M+ market cap, ADR 4%+); a later day (within 10 sessions) breaking the earnings-day high: bought over both the 5-minute high and the earnings-day high, risk the 5-minute low, your management.", "cmd earnings"),
 ]
 
@@ -59,6 +60,15 @@ COLUMNS = (
     ("pattern / base_pattern", "what the buy point came from (Base top, Flag line, an MSF pattern: Ascending triangle, Flat base, Cup with handle...) and the base's MSF name"),
     ("retest_with", "for a retest: the EMAs at the level with it (10 / 21 / 50 EMA, or no EMA)"),
     ("level", "the buy point price (the day before's buy point)"),
+    ("reset_any / reset_at_50ema / reset_rsi_under_45 / reset_emas_close", "the MOMENTUM RESET before the buy (your AEHR read): 1 = since the latest top "
+     "(the highest high of the 60 sessions before) a low came within a quarter ADR of the 50 EMA or under it / the RSI(14) dipped under 45 / the 21 EMA "
+     "was at most 0.8 ADR over the 50 EMA the day before; reset_any = one of them. AEHR Mar 6-19 and May 5-26 2026: 0 (all lost); Mar 31 - Apr 6: 1"),
+    ("days_since_top / run_into_top_adr / big_run_8adr / pullback_adr", "sessions since that top; the run into it in ADRs (from the lowest low of the "
+     "25 sessions before it), big_run_8adr = 1 when 8+ ADRs; the pullback since the top in ADRs"),
+    ("ema21_over_50_adr / close_over_50_adr / pullback_low_vs_50_adr / rsi_min_since_top", "the day before the buy: the 21 EMA's and the close's "
+     "distance over the 50 EMA in ADRs; the closest a low came to the 50 EMA since the top (negative = under it); the lowest RSI(14) since the top"),
+    ("gap_date / gap_day / rvol_gap_day / sessions_after_gap", "gap retest: the gap day, what it was (power day, launch day, big gap-up day), its "
+     "volume vs the 20-day average, and the sessions from it to the retest"),
     ("day_closed", "for a level buy: did that day close over the level (a breakout) or back under it"),
     ("caution_within_0_5pct / double_breakout / third_try / flag_volume_dried", "the Launches tags as of that day's close (1 = yes): a breakout closing within 0.5% of the top; out of a falling line and the top the same day; the 3rd try of the top (ascending triangle); the volume dried up the 2 days before a flag break"),
     ("tight_days_before", "tight days just under the buy point the day before"),
@@ -176,6 +186,13 @@ STRATEGY = {
     "21 EMA undercut": "21 EMA undercut & reclaim (strong): the same as the 21 EMA retest, after 2 closes UNDER the 21 EMA by less than half an "
                        "ADR (the momentum traders' exit), the close comes back over it in the upper half of the day (SMCI Jun 27 2023, ANF Oct 1 "
                        "2026, RPD Sep 30). Bought at that close.",
+    "50 EMA undercut": "50 EMA undercut & reclaim (new, on the test branch): after 2 closes in a row UNDER the 50 EMA (any depth), the next "
+                       "session's low goes under it and under the open and the close comes back over it in the upper half of the day (AEHR Mar 31 "
+                       "2026). A 3rd close under takes the launch off the list. Bought at that close.",
+    "Gap retest": "Gap retest (your rule): a 6%+ gap on a launch-type day (power day, launch day, or a big gap-up day: 2x+ volume, the gap held at "
+                  "the close); after the stock first closed an ADR+ over the gap, the first pullback whose low comes back into the gap (from half "
+                  "an ADR under the day before's high to a quarter ADR over the gap day's low) and closes back over the day before's high. "
+                  "'retest_with' = the 10 / 21 EMA at the gap with it (the low touched it, the close over it).",
     "Gap out of base": "Gap out of base (Zanger / Qullamaggie): the stock closed in its base under the base high yesterday and opens ABOVE it today "
                        "with volume; bought on the 1-minute or 5-minute opening range breakout.",
 }
@@ -190,7 +207,11 @@ UNIVERSE = (
                                   "gaps 8%+), 30%+ over its 52-week low, no launch in the 20 sessions before. Fair test: it gaps up and trades "
                                   "over both the 5-minute high and +5%."),
     ("Buy points & Gap out of base", "Stocks that launched (regular, power day, reversal day: the launch rules above), followed for the 60 sessions after "
-                                     "the launch until 2 closes in a row under the 50 EMA. Gap out of base: RVOL 1x+ at the buy."),
+                                     "the launch until 3 closes in a row under the 50 EMA (the new 50 EMA undercut rule; the gap out of base test: 2), "
+                                     "one buy point per stock and day (the newest launch's). The flag rule of the test branch (22 sessions; a dip "
+                                     "under the 21 / 50 EMA allowed on light volume). Gap out of base: RVOL 1x+ at the buy."),
+    ("Gap retest", "Any stock in the universe, liquid on the gap day (price $10+, $20M+ and 600K+ shares a day, ADR 3.5%+), a 6%+ gap on a power day, "
+                   "a launch day or a big gap-up day (2x+ volume, closed over the day before's high)."),
     ("3-SETUPS (Ready...)", "The Watchlist's feeder lists rebuilt from daily bars, with the standard filters: $10+, liquid, ADR 3.5%+, over the 50 EMA, "
                             "30%+ over the 52-week low; 3-SETUPS itself needs an ADR of 4%+ (3.2% to stay on)."),
     ("1-hour 21 EMA pullback", "$10+, a 20-day average of $30M+ and 700K+ shares a day, market cap $700M+, ADR 4%+; over the 200 SMA and at most 50% "
@@ -246,6 +267,7 @@ TACTICS = {
                  ("close_", "buy at the close", "day's low"), ("min5_", "5-min entry", "5-min low"),
                  ("min5cx_", "5-min entry, sell at the close if back under", "5-min low")),
     "launchlive": (("", "5-min entry, hold", "5-min low"), ("cx_", "5-min entry, sell at the close if not a launch", "5-min low")),
+    "gapretest": (("close_", "buy at the close", "day's low"), ("min5_", "5-min entry next morning", "5-min low")),
 }
 
 
@@ -413,6 +435,38 @@ def analysis_sheet(wb):
         ws.column_dimensions[get_column_letter(i)].width = w
 
 
+def reset_sheet(wb):
+    """tools/reset_analysis.json (tools/reset_analysis.py): buy points with and without a momentum reset"""
+    p = os.path.join(ROOT, "tools", "reset_analysis.json")
+    if not os.path.exists(p):
+        return
+    an = json.load(open(p))
+    ws = wb.create_sheet("Momentum reset", 3)
+    ws.append(["MOMENTUM RESET (your AEHR read): buy points with a reset before them vs without, after 0.15% costs, the risk floored at 1%. Reset = since "
+               "the latest top a low came to the 50 EMA (within a quarter ADR) / the RSI(14) dipped under 45 / the 21 EMA was within 0.8 ADR of the 50 EMA; "
+               "'any' = one of them. halves = the average R before / after " + an["middle_date"] + ". LUCK p = how often shuffling the reset / no-reset "
+               "labels 2,000 times gave a gap as big as the real one (under 0.05 = unlikely to be luck)."])
+    ws["A1"].font = Font(bold=True, color="2F5597")
+    ws["A1"].alignment = Alignment(wrap_text=True, vertical="top")
+    ws.row_dimensions[1].height = 60
+    ws.append(["entry tactic", "reset", "which buy points", "reset: trades", "reset: winners %", "reset: average R", "reset: R 1st / 2nd half",
+               "no reset: trades", "no reset: winners %", "no reset: average R", "no reset: R 1st / 2nd half", "luck p"])
+    for c in ws[2]:
+        c.font = Font(bold=True, color="FFFFFF")
+        c.fill = PatternFill("solid", fgColor="2F5597")
+        c.alignment = Alignment(wrap_text=True, vertical="top")
+    half = lambda s: f"{s['half1']:+.2f} / {s['half2']:+.2f}" if s and s.get("half1") is not None and s.get("half2") is not None else None
+    for tac, T in an["tactics"].items():
+        for rname, groups in T.items():
+            for grp, c in groups.items():
+                y, n = c.get("reset") or {}, c.get("no_reset") or {}
+                ws.append([tac, rname, grp, y.get("n"), y.get("win"), y.get("avgR"), half(y), n.get("n"), n.get("win"), n.get("avgR"), half(n), c.get("p")])
+    ws.auto_filter.ref = f"A2:L{ws.max_row}"
+    ws.freeze_panes = "D3"
+    for i, w in enumerate([30, 26, 40] + [12] * 9, 1):
+        ws.column_dimensions[get_column_letter(i)].width = w
+
+
 def main():
     wb = Workbook()
     rm = wb.active
@@ -531,7 +585,8 @@ def main():
         # one sheet per Launches trigger, the same layout as "Launch - compare entries"
         for k, short in (("base breakout", "Base breakout"), ("flag breakout", "Flag breakout"), ("pop", "Pop"), ("pattern pivot", "Pattern pivot"),
                          ("follow-through", "Follow-through"), ("retest", "Retest held"), ("push", "Push 21 EMA"),
-                         ("21 EMA retest", "21 EMA retest"), ("21 EMA undercut & reclaim", "21 EMA undercut")):
+                         ("21 EMA retest", "21 EMA retest"), ("21 EMA undercut & reclaim", "21 EMA undercut"),
+                         ("50 EMA undercut & reclaim", "50 EMA undercut")):
             sel = [r for r in br if r["buy_point"] == k]
             if k == "pattern pivot":                       # the MSF patterns on their own sheets too (ascending triangle, flat base...)
                 for pat in sorted({r.get("pattern") or "" for r in sel}):
@@ -555,6 +610,16 @@ def main():
         gr = with_risk_adr(d["trades"])
         trades(wb, "Gap out of base - entries", gr)
         tactic_grid(wb, "Gap out of base by RVOL, gap", gr)
+    d = data("probe_gapretest")
+    if d and d.get("trades"):
+        gq = long_rows(d["trades"], TACTICS["gapretest"])
+        DESC["Gap retest - entries"] = ("GAP RETEST (your rule): a 6%+ gap on a power day, launch day or big gap-up day, then the first pullback into the "
+                                        "gap that closes back over the day before's high. Filter 'entry tactic' (buy at the close, stop the day's low / "
+                                        "5-min entry next morning, stop the 5-minute low), 'retest_with' (10 EMA, 21 EMA, both, no EMA), gap_day, "
+                                        "gap_pct, rvol_gap_day, the reset columns. Row 3 = the totals of what you filter. Your management.")
+        trades(wb, "Gap retest - entries", gq)
+        tactic_grid(wb, "Gap retest by RVOL, gap", gq)
+    reset_sheet(wb)
     for name, label, rvcol in (("probe_launch_live", "Launch trades", ("rvol_pace_at_buy", "rvol_day")), ("probe_buypoints", "Buy point trades", ("rvol_day",))):
         d = data(name)
         if not d or not d.get("trades"):
