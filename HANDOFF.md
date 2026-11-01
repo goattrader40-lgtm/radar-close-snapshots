@@ -45,9 +45,12 @@ alone.
   off the list at the 3rd close under the 50 EMA), the names "Bull flag" / "Bull pennant", and the 1-minute check
   watching the tab. The status shows a breakout undercut & reclaim setup ("under its breakout level $X since (date)
   (N closes), holding over the 50 EMA"); its alert arms from the 2nd close under, after the stock advanced (a first
-  version armed it after 1 close: fixed and live the same evening). After the last rebuild: SIMO, CRM, NOW, ASST in the
-  50 EMA undercut tab; CTSH, KVYO, MNDY, W, CDW, SHOP, SAIL, RBRK, TEAM, GTLB, ZETA, IQV under their breakout level but
-  not set up yet (1st close under or no advance). All agreed examples pass (`tools/replay.py --regress`).
+  version armed it after 1 close: fixed and live the same evening). Before the setup the status says it too: "closed
+  back under its breakout level $X (1st close): a 2nd close under, holding over the 50 EMA, sets up a breakout undercut
+  & reclaim" (CAI Oct 6 2026), or "back under its breakout level $X: the breakout didn't advance, the base is still
+  valid" (AEHR Feb 12-19 2026, W Oct 30). After the last rebuild (119 launches): SIMO, CRM, NOW, ASST in the 50 EMA
+  undercut tab; 1st close under: CDW, SHOP, RBRK, RGEN, TEAM; back under without an advance: CTSH, KVYO, MNDY, W, SAIL,
+  GTLB, ZETA, HPQ, IQV. All agreed examples pass (`tools/replay.py --regress`).
 - **Coded but switched off**: the **momentum cutoff** (`L["max_run_pct"] = 0`). The user decides the rule (see Open
   items); turning it on is that one setting (plus the 200 SMA test if they pick B).
 - **Only on a test branch**: `test/pb1h` holds the backtest tools (scanner/probe_*.py, scanner/mgmt.py = the user's
@@ -255,8 +258,8 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    140%+ over the 200 SMA at once (keeps LIFE, 85-98% over it; but that LIFE-like group lost -0.65 to -0.75R). The time
    since the start added nothing. Code: `L["max_run_pct"]` in scanner/launch.py (0 = off); the status then reads
    "EXTENDED: +X% from its momentum start (date), no buy points" and the stock's alerts stay quiet.
-2. Monday Nov 2: which of the 12 under their breakout level become breakout undercut & reclaim setups (a 2nd close
-   under after an advance), and their alerts.
+2. Monday Nov 2: CDW, SHOP, RBRK, RGEN, TEAM: a 2nd close under their breakout level (holding over the 50 EMA) makes
+   them breakout undercut & reclaim setups, alerting from Tuesday; check the reads and alerts with the user.
 3. **The spreadsheet** (tools/test-results.xlsx on test/pb1h, sent to the user Nov 1 evening): the live engine's
    5,783 buy points; each trigger sheet = only the days the engine read as that breakout (engine_read), failed crosses
    on their own sheet, sheets for bull flag / bull pennant / breakout undercut / 50 EMA / gap retest / momentum. The
