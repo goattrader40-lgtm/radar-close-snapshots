@@ -85,7 +85,7 @@ def one(sym):
         elif sec == "Ready" and bp:
             k = j + 1
             hit = bool(st.h[k] > bp)
-            r = dict(setup=setup.split(" (")[0], src=src, hit=hit, tight=tight >= 2)
+            r = dict(setup=setup.split(" (")[0], src=src, hit=hit, tight=tight >= 2, sym=sym, k=k, bp=float(bp))
             if hit:
                 r.update(outcome(st, k, max(float(st.o[k]), float(bp))))
             ready.append(r)
@@ -96,6 +96,84 @@ def one(sym):
     for r in setting:
         r["became"] = any(r["j"] < j <= r["j"] + 10 for j in later)
     return sym, trig, ready, setting
+
+
+def orh_trades(ready):
+    """your entry on the Ready stocks the next day: over the 5-minute opening range high (at that high, or the bar's open
+    when it jumps over it), the stop at the opening range low the whole way (a bar that breaks the high and that low
+    counts as stopped); else out on the first close under the 21 EMA (as the Launches test)"""
+    import probe_catalyst as pc                 # Alpaca's 5-minute bars (ALPACA_KEY_ID / ALPACA_SECRET)
+    by_day = collections.defaultdict(list)
+    for r in ready:
+        by_day[A[r["sym"]].st.dates[r["k"]]].append(r)
+    out = []
+    for d, rs in sorted(by_day.items()):
+        t0 = datetime.datetime.fromisoformat(d + "T09:30").replace(tzinfo=pc.NY)
+        syms = sorted({r["sym"] for r in rs})
+        bars = collections.defaultdict(list)
+        for c0 in range(0, len(syms), 100):
+            q = {"symbols": ",".join(pc.alp(s) for s in syms[c0:c0 + 100]), "timeframe": "5Min", "feed": "sip", "adjustment": "split",
+                 "limit": 10000, "start": pc.iso(t0), "end": pc.iso(t0 + datetime.timedelta(minutes=390))}
+            while True:
+                res = pc.get("https://data.alpaca.markets/v2/stocks/bars", q)
+                for s_, rows in (res.get("bars") or {}).items():
+                    bars[s_].extend(rows)
+                if not res.get("next_page_token"):
+                    break
+                q["page_token"] = res["next_page_token"]
+            pc.time.sleep(0.3)
+        for r in rs:
+            b = bars.get(pc.alp(r["sym"]))
+            if not b or not b[0]["t"].startswith(pc.iso(t0)[:16]):
+                continue                                    # no 9:30 bar: left out
+            a = A[r["sym"]]
+            st, k = a.st, r["k"]
+            orh, orl = b[0]["h"], b[0]["l"]
+            m = next((x for x in range(1, len(b)) if b[x]["h"] > orh), None)
+            t = dict(setup=r["setup"], src=r["src"], over_trigger=orh >= r["bp"], broke=m is not None)
+            if m is not None:
+                buy = max(orh, b[m]["o"])
+                risk = 100 * (buy / orl - 1) if orl < buy else None
+                sell = None
+                if any(x["l"] <= orl for x in b[m:]):
+                    j_out, sell = k, orl                    # stopped the same day
+                    t["same_day_stop"] = True
+                else:
+                    j_out = None
+                    for j in range(k + 1, st.c.size):
+                        if st.l[j] <= orl:
+                            j_out, sell = j, min(orl, st.o[j])
+                            break
+                        if st.c[j] < a.e21[j]:
+                            j_out, sell = j, st.c[j]
+                            break
+                    if j_out is None:
+                        j_out, sell = st.c.size - 1, st.c[-1]   # still open at the end of the data
+                    t["same_day_stop"] = False
+                ret = 100 * (sell / buy - 1)
+                mg = 100 * (st.h[k:j_out + 1].max() / buy - 1)
+                t.update(ret=ret, mg=mg, risk=risk, R=ret / risk if risk else None, mgR=mg / risk if risk else None)
+            out.append(t)
+    return out
+
+
+def orh_summ(ts):
+    if not ts:
+        return dict(n=0)
+    tr = [t for t in ts if t["broke"]]
+    if not tr:
+        return dict(n=len(ts), broke_orh_pct=0)
+    ret, mg = np.array([t["ret"] for t in tr]), np.array([t["mg"] for t in tr])
+    R = np.array([t["R"] for t in tr if t["R"] is not None])
+    mgR = np.array([t["mgR"] for t in tr if t["mgR"] is not None])
+    return dict(n=len(ts), broke_orh_pct=round(100 * len(tr) / len(ts)), trades=len(tr),
+                stopped_same_day_pct=round(100 * float(np.mean([t["same_day_stop"] for t in tr]))),
+                win=round(100 * float(np.mean(ret > 0))), avg=round(float(ret.mean()), 1), med=round(float(np.median(ret)), 1),
+                ran20=round(100 * float(np.mean(mg >= 20))), ran50=round(100 * float(np.mean(mg >= 50))),
+                risk_med_pct=round(float(np.median([t["risk"] for t in tr if t["risk"]])), 1),
+                avg_R=round(float(R.mean()), 2) if R.size else None, med_R=round(float(np.median(R)), 2) if R.size else None,
+                reached_2R=round(100 * float(np.mean(mgR >= 2))) if mgR.size else None,
+                reached_5R=round(100 * float(np.mean(mgR >= 5))) if mgR.size else None)
 
 
 def summ(rs):
@@ -132,6 +210,12 @@ def main():
                                by_setup={k: dict(days=sum(1 for r in setting if r["setup"] == k),
                                                  became_pct=round(100 * np.mean([r["became"] for r in setting if r["setup"] == k])))
                                          for k in sorted({r["setup"] for r in setting})}))
+    if os.environ.get("ALPACA_KEY_ID"):
+        ts = orh_trades(ready)
+        out["ready_orh"] = dict(all=orh_summ(ts), by_setup={k: orh_summ([t for t in ts if t["setup"] == k]) for k in sorted({t["setup"] for t in ts})},
+                                by_list={k: orh_summ([t for t in ts if t["src"] == k]) for k in sorted({t["src"] for t in ts})},
+                                opening_range_over_trigger=orh_summ([t for t in ts if t["over_trigger"]]),
+                                opening_range_under_trigger=orh_summ([t for t in ts if not t["over_trigger"]]))
     json.dump(out, open(a_.out, "w"), indent=1)
     print(json.dumps(out, indent=1))
 
