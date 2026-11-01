@@ -40,6 +40,10 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               alerts: the gap (volume pace 1x+), the 1-minute opening range high broken and the 5-minute one (each with
               its stop, the range's low, and the risk in ADRs), and at 9:50 the volume check: under 2x = out, whatever
               the trade. A trigger after 9:50 needs 2x+. The stock's other alerts (breakout, touch) stay quiet that day
+  ema50back   the 50 EMA undercut tab (your rule, Nov 1 2026): a launch that closed under its 50 EMA 2 days in a row has to
+              close back over it today (a 3rd close under takes it off the list): the heads-up when it trades back over it
+  ema50       from 3:45 PM: today's low went under the 50 EMA and under the open, and it trades back over it in the upper
+              half of the day: the 50 EMA undercut & reclaim holding into the close (AEHR Mar 31 2026). The buy is the close
   touch       a launch being followed traded over its buy point (today's high) but is back under it at the check: not a
               breakout, a heads-up (LION Oct 29 2026 touched $12.98 at 1:26 PM and fell back between two 5-minute updates)
   confirm     in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
@@ -321,6 +325,28 @@ def find(live, doc, now=None):
                         + (" (light)" if rv < 1 else "") + " · "
                         + (f"an entry in the base (still leg {nxt}), the base top is next" if flag else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "")) + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
                         + since(r), "high" if g == "A" else "default", tvs))
+    # the 50 EMA undercut tab: 2 closes in a row under the 50 EMA at the last close; today it has to close back over it
+    for r in doc.get("ema50_undercut", []):
+        q = rows.get(r["symbol"])
+        if not q or len(q) < 5 or q[4] is None or (now.hour, now.minute) < (9, 35):
+            continue
+        sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
+        price, chg, rv = q[0], q[1], q[4]
+        e50, adr50 = r.get("ema50"), r.get("adr_pct") or 5.0
+        if not e50 or price <= e50:
+            continue
+        dates = " & ".join(r.get("ema50_under_dates") or [])
+        tail50 = f" · {chg:+.1f}% · vol {rv:.1f}x" + since(r)
+        out.append((f"{sym}:ema50back", f"{sym} back over its 50 EMA",
+                    f"${price:.2f} over the 50 EMA ${e50:.2f} (the last close's) after 2 closes under it ({dates}) · the buy: the close back"
+                    f" over it, in the upper half of the day (the 50 EMA undercut & reclaim); a 3rd close under takes it off the list" + tail50,
+                    "default", tvs))
+        if (now.hour, now.minute) >= (15, 45) and price <= e50 * (1 + 1.5 * adr50 / 100):
+            # today's low under the 50 EMA and the open, the price in the upper half of the day: checked on today's
+            # 1-minute chart before it goes out (main)
+            out.append((f"{sym}:ema50", f"{sym} 50 EMA UNDERCUT & RECLAIM holding into the close",
+                        f"back over the 50 EMA ${e50:.2f} (the last close's) at ${price:.2f} after 2 closes under it ({dates})"
+                        f" · the buy: at the close, if it holds over it" + tail50, "high", tvs))
     return out
 
 
@@ -569,6 +595,16 @@ def main():
             op_ = q_[5] if q_ and len(q_) > 5 else None
             if not (q_ and lo_ and hi_ and op_ and lo_ < e21_ and lo_ < op_ and q_[0] - lo_ >= 0.5 * (hi_ - lo_)):
                 print(f"{key}: today's low {lo_} / high {hi_} / open {op_}: no undercut and reclaim of the 21 EMA {e21_} yet, not sent")
+                continue
+            msg += f" · today's low ${lo_:.2f} under it"
+        if title is not None and key.endswith(":ema50"):
+            # today's low under the 50 EMA and under the open, the price in the upper half of today's range
+            r_ = next((x for x in doc.get("ema50_undercut", []) if x["symbol"] == key.split(":")[0]), {})
+            q_, lo_, hi_ = live["rows"].get(key.split(":")[0]), chart_low_today(key.split(":")[0]), chart_high_today(key.split(":")[0])
+            e50_ = r_.get("ema50") or 0
+            op_ = q_[5] if q_ and len(q_) > 5 else None
+            if not (q_ and lo_ and hi_ and op_ and lo_ < e50_ and lo_ < op_ and q_[0] - lo_ >= 0.5 * (hi_ - lo_)):
+                print(f"{key}: today's low {lo_} / high {hi_} / open {op_}: no undercut and reclaim of the 50 EMA {e50_} yet, not sent")
                 continue
             msg += f" · today's low ${lo_:.2f} under it"
         if title is not None and key.endswith(":reversal"):

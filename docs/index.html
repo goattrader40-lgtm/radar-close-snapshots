@@ -682,6 +682,29 @@
         <div class="tgr-state dash-skeleton" data-for="launch"></div>
       </div>
     </div>
+    <div class="tgr-card" id="ln-u50-card">
+      <div class="tgr-cardhead">
+        <h2>50 EMA undercut</h2>
+        <span class="tgr-lbl" id="ln-u50-time">—</span>
+      </div>
+      <p class="tgr-note" id="ln-u50-note"></p>
+      <div class="tgr-scroll">
+        <table class="tgr-table" id="ln-u50-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="date" title="The launch day">Launched</button></th>
+            <th><button class="tgr-th" data-sort="grade">Grade</button></th>
+            <th title="The 2 closes in a row under the 50 EMA, and how far under it in the stock's ADR">Closes under the 50 EMA</th>
+            <th class="num"><button class="tgr-th" data-sort="ema50" title="The 50 EMA at the last close: the level to close back over">50 EMA</button></th>
+            <th class="num"><button class="tgr-th" data-sort="px" title="Live during market hours, else the last close">Price</button></th>
+            <th class="num"><button class="tgr-th" data-sort="vs50" title="The price vs the 50 EMA of the last close">vs 50 EMA</button></th>
+            <th class="num"><button class="tgr-th" data-sort="today">Today</button></th>
+            <th><button class="tgr-th" data-sort="group">Theme</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
     <div class="tgr-card" id="ln-g-card">
       <h2>Trending groups</h2>
       <p class="tgr-note">Each theme on the portal (or a stock's industry when it has no theme), and one level up its area. Leading = 60%+ of members close above their 50 EMA and the median 1-month move is +8% or more; Turning up = half or more close above their 21 EMA and the median week is up. Days = sessions in a row it has been trending.</p>
@@ -1863,7 +1886,7 @@ defCalc('industry_perf', {
       ['One at a time: ', 'another launch of the same stock within ' + lr.dedupe_days + ' sessions counts only after it closed under the 21 EMA, or when it grades higher.'],
       ['Your picks: ', 'the Follow button on the Watchlist tab; followed from the close you add them at, launch day or not.'],
       ['Gap out of base (a buy point): ', 'a stock on this list closed at or under its base high (the base top or your MSF pattern\'s pivot; not a flag line or a pop) and opens above it. Only with an ADR of ' + (lr.gob_min_adr || 4) + '%+, ' + g0.format(lr.gob_min_shares || 600000) + '+ shares and $' + (lr.gob_min_dv || 30) + 'M+ a day (20-day averages) and a $' + (lr.gob_min_mcap || 700) + 'M+ market cap. The entry: over the 1- or 5-minute opening range high, the stop its low, with a volume pace of ' + (lr.gob_rv || 1) + '×+ at the buy; out at 9:50 if the volume pace isn\'t ' + (lr.gob_rv20 || 2) + '× by then, whatever the trade. Phone alerts: the gap, each trigger with its stop, and the 9:50 check; its plain breakout alert stays quiet that day.'],
-      ['Off the list: ', 'a launch leaves after 2 closes in a row under the 50 EMA; or ' + (lr.off_days || 62) + ' sessions from its highest point without a new high (a $60 high with the stock at $55 now: counted from the $60 day), your picks too; or when its ADR (20 days) drops under ' + (lr.off_adr || 3.2) + '% (a launch day needs ' + lqd.min_adr + '%+; TECH: 0.2% after its Jun 25 gap); or when the same stock launches again (the newest launch replaces it). ✕ on any row removes it by hand: a pick is no longer followed, a launch leaves with its alerts until it launches again on a later day. The first close under the 21 EMA is only the exit signal: the stock stays. Lone wolves are only hidden (tick the box to show them).'],
+      ['Off the list: ', 'a launch leaves after 3 closes in a row under the 50 EMA (after 2 it waits in the 50 EMA undercut tab below: the next session has to close back over it, and that reclaim is an entry); or ' + (lr.off_days || 62) + ' sessions from its highest point without a new high (a $60 high with the stock at $55 now: counted from the $60 day), your picks too; or when its ADR (20 days) drops under ' + (lr.off_adr || 3.2) + '% (a launch day needs ' + lqd.min_adr + '%+; TECH: 0.2% after its Jun 25 gap); or when the same stock launches again (the newest launch replaces it). ✕ on any row removes it by hand: a pick is no longer followed, a launch leaves with its alerts until it launches again on a later day. The first close under the 21 EMA is only the exit signal: the stock stays. Lone wolves are only hidden (tick the box to show them).'],
     ] : []).map(([k, v]) => { const d = h('div', ''); d.append(h('strong', '', k), document.createTextNode(v)); return d; }));
     $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
     const today = doc ? all.filter((r) => r.date === doc.date && r.grade !== 'You').length : 0;
@@ -1943,6 +1966,34 @@ defCalc('industry_perf', {
         h('td', 'num c3', p1(r.pct_of_52w_high)), h('td', 'num c3', p1(r.correction_pct)));
       tb.append(tr);
     });
+    /* the 50 EMA undercut tab (your rule, Nov 1 2026): launches that closed under their 50 EMA 2 days in a row; the next
+       session has to close back over it (the reclaim), a 3rd close under takes them off the list */
+    {
+      const ut = $('#ln-u50-table'), utb = ut.querySelector('tbody'); utb.replaceChildren();
+      const us = doc ? (doc.ema50_undercut || []).filter(kept).map((r) => {
+        const m = symMap.get(r.symbol);
+        const px = m && num(m.price) !== null ? num(m.price) : r.price;
+        const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct);
+        return Object.assign({}, r, { px, today, vs50: px && r.ema50 ? r2((px / r.ema50 - 1) * 100) : null });
+      }) : [];
+      $('#ln-u50-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : '—';
+      $('#ln-u50-note').textContent = 'Launches that closed under their 50 EMA 2 days in a row. The next session has to close back over it: then the stock is back on the Launches list; a 3rd close under takes it off. The reclaim is an entry, the 50 EMA undercut & reclaim: the low under the 50 EMA and under the open, the close back over it in the upper half of the day (AEHR Mar 31, 2026). Alerts: when it trades back over the 50 EMA, and from 3:45 PM when it holds over it into the close.';
+      sortRows(ut, us, null, ['symbol', 'date', 'group'], 'grade');
+      if (doc && !us.length) noRows(utb, 9, 'No launch closed under its 50 EMA 2 days in a row.');
+      us.forEach((r) => {
+        const tr = h('tr');
+        const key = tkCell(r.symbol, r.tv);
+        const rm = h('button', 'tgr-lite tgr-follow', '✕'); rm.type = 'button';
+        rm.title = 'Remove ' + r.symbol + ' (and its alerts; a new launch on a later day shows again)'; rm.setAttribute('aria-label', rm.title);
+        rm.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + '?')) followPick(r.symbol, false, rm, { remove: r.date }); });
+        key.append(rm);
+        const under = (r.ema50_under_dates || []).map((d, k) => fDate(d).replace(/, \d{4}$/, '') + ' (' + ((r.ema50_under_adr || [])[k] ?? '—') + ' ADR)').join(', ');
+        tr.append(key, h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), gradeCell(r.grade), h('td', 'nw', under || '—'),
+          h('td', 'num', fPrice(r.ema50)), h('td', 'num', fPrice(r.px)), h('td', 'num ' + tone(r.vs50), p1(r.vs50, true)), pctCell(r.today, 0),
+          h('td', '', (r.group_now || r.group || '—') + ' · ' + (r.group_status_now || r.group_status || '')));
+        utb.append(tr);
+      });
+    }
     /* trending groups */
     const gt = $('#ln-g-table'), gtb = gt.querySelector('tbody'); gtb.replaceChildren();
     const gs = doc ? doc.groups.slice() : [];
@@ -2045,6 +2096,11 @@ defCalc('industry_perf', {
       if (top && ago !== null && ago !== undefined && ago <= 2 && op && op > top && price > top && rv >= 2) {
         out.push([r.symbol + ':confirm', r.symbol + ' breakout confirmed', 'opened ' + fPrice(op) + ', trades ' + fPrice(price) + ' above the base top ' + fPrice(top) + ' · ' + f1(chg) + vol, r.tv]);
       }
+    });
+    /* the 50 EMA undercut tab: back over the 50 EMA today (the reclaim it needs: the close holding over it) */
+    (doc.ema50_undercut || []).forEach((r) => {
+      const q = LIVE.rows[r.symbol]; if (!q || q[4] === null || q[4] === undefined || !r.ema50) return;
+      if (q[0] > r.ema50) out.push([r.symbol + ':ema50back', r.symbol + ' back over its 50 EMA', fPrice(q[0]) + ' over the 50 EMA ' + fPrice(r.ema50) + ' after 2 closes under it · the buy: the close back over it, in the upper half of the day (the 50 EMA undercut & reclaim) · ' + f1(q[1]) + ' · vol ' + q[4].toFixed(1) + '×', r.tv]);
     });
     /* 3-SETUPS (Watchlist tab): a stock trading over its trigger, any section, here on the desktop (the phone gets Ready only);
        a stock also on the Launches list alerts from there */
