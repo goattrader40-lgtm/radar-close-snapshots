@@ -132,35 +132,87 @@ def orh_trades(ready):
             m = next((x for x in range(1, len(b)) if b[x]["h"] > orh), None)
             t = dict(setup=r["setup"], src=r["src"], over_trigger=orh >= r["bp"], broke=m is not None)
             if m is not None:
-                buy = max(orh, b[m]["o"])
-                risk = 100 * (buy / orl - 1) if orl < buy else None
-                sell = None
-                if any(x["l"] <= orl for x in b[m:]):
-                    j_out, sell = k, orl                    # stopped the same day
-                    t["same_day_stop"] = True
-                else:
-                    j_out = None
-                    for j in range(k + 1, st.c.size):
-                        if st.l[j] <= orl:
-                            j_out, sell = j, min(orl, st.o[j])
-                            break
-                        if st.c[j] < a.e21[j]:
-                            j_out, sell = j, st.c[j]
-                            break
-                    if j_out is None:
-                        j_out, sell = st.c.size - 1, st.c[-1]   # still open at the end of the data
-                    t["same_day_stop"] = False
-                ret = 100 * (sell / buy - 1)
-                mg = 100 * (st.h[k:j_out + 1].max() / buy - 1)
-                t.update(ret=ret, mg=mg, risk=risk, R=ret / risk if risk else None, mgR=mg / risk if risk else None)
+                t.update(variants(a, k, b, m, orh, orl))
             out.append(t)
     return out
 
 
-def orh_summ(ts):
+def variants(a, k, b, m, orh, orl):
+    """the same entry (over the 5-minute opening range high) with three exits:
+      A  stop at the opening range low the whole way, else the first close under the 21 EMA
+      B  your usual stop: under the entry day's low, from the next day; else the first close under the 21 EMA
+      C  as A, but half sold at +2R (R = entry - opening range low) and the stop on the rest moved to the entry
+    when one 5-minute bar or one day touches both the target and the stop, the stop counts first"""
+    st, c, o, h, l, e21 = a.st, a.st.c, a.st.o, a.st.h, a.st.l, a.e21
+    n = c.size
+    buy = max(orh, b[m]["o"])
+    rA = buy - orl
+    out = {}
+
+    def done(ret_pct, j_out, risk_pct, same_day):
+        mg = 100 * (h[k:j_out + 1].max() / buy - 1)
+        return dict(ret=ret_pct, mg=mg, risk=risk_pct, R=ret_pct / risk_pct if risk_pct else None,
+                    mgR=mg / risk_pct if risk_pct else None, same_day_stop=same_day)
+    # A
+    if any(x["l"] <= orl for x in b[m:]):
+        out["A"] = done(100 * (orl / buy - 1), k, 100 * rA / buy, True)
+    else:
+        j_out, sell = n - 1, c[-1]
+        for j in range(k + 1, n):
+            if l[j] <= orl:
+                j_out, sell = j, min(orl, o[j]); break
+            if c[j] < e21[j]:
+                j_out, sell = j, c[j]; break
+        out["A"] = done(100 * (sell / buy - 1), j_out, 100 * rA / buy, False)
+    # B
+    stop = float(l[k])
+    j_out, sell = n - 1, c[-1]
+    for j in range(k + 1, n):
+        if l[j] <= stop:
+            j_out, sell = j, min(stop, o[j]); break
+        if c[j] < e21[j]:
+            j_out, sell = j, c[j]; break
+    out["B"] = done(100 * (sell / buy - 1), j_out, 100 * (buy - stop) / buy if stop < buy else None, False)
+    # C
+    tgt = buy + 2 * rA
+    half, rest, j_out, same = None, None, None, False
+    for x in b[m:]:
+        if half is None:
+            if x["l"] <= orl:
+                rest, j_out, same = orl, k, True; break
+            if x["h"] >= tgt:
+                half = max(tgt, x["o"])
+        elif x["l"] <= buy:
+            rest, j_out = buy, k; break
+    if rest is None:
+        for j in range(k + 1, n):
+            if half is None:
+                if l[j] <= orl:
+                    rest, j_out = min(orl, o[j]), j; break
+                if h[j] >= tgt:
+                    half = max(tgt, o[j])
+                    if c[j] < e21[j]:
+                        rest, j_out = c[j], j; break
+                    continue
+                if c[j] < e21[j]:
+                    rest, j_out = c[j], j; break
+            else:
+                if l[j] <= buy:
+                    rest, j_out = min(buy, o[j]), j; break
+                if c[j] < e21[j]:
+                    rest, j_out = c[j], j; break
+        if rest is None:
+            rest, j_out = c[-1], n - 1
+    ret = 100 * ((0.5 * half + 0.5 * rest) / buy - 1) if half is not None else 100 * (rest / buy - 1)
+    out["C"] = done(ret, j_out, 100 * rA / buy, same)
+    out["C"]["took_half"] = half is not None
+    return out
+
+
+def orh_summ(ts, v="A"):
     if not ts:
         return dict(n=0)
-    tr = [t for t in ts if t["broke"]]
+    tr = [t[v] for t in ts if t["broke"]]
     if not tr:
         return dict(n=len(ts), broke_orh_pct=0)
     ret, mg = np.array([t["ret"] for t in tr]), np.array([t["mg"] for t in tr])
@@ -173,7 +225,8 @@ def orh_summ(ts):
                 risk_med_pct=round(float(np.median([t["risk"] for t in tr if t["risk"]])), 1),
                 avg_R=round(float(R.mean()), 2) if R.size else None, med_R=round(float(np.median(R)), 2) if R.size else None,
                 reached_2R=round(100 * float(np.mean(mgR >= 2))) if mgR.size else None,
-                reached_5R=round(100 * float(np.mean(mgR >= 5))) if mgR.size else None)
+                reached_5R=round(100 * float(np.mean(mgR >= 5))) if mgR.size else None,
+                **({"took_half_at_2R_pct": round(100 * float(np.mean([t["took_half"] for t in tr])))} if v == "C" else {}))
 
 
 def summ(rs):
@@ -212,7 +265,8 @@ def main():
                                          for k in sorted({r["setup"] for r in setting})}))
     if os.environ.get("ALPACA_KEY_ID"):
         ts = orh_trades(ready)
-        out["ready_orh"] = dict(all=orh_summ(ts), by_setup={k: orh_summ([t for t in ts if t["setup"] == k]) for k in sorted({t["setup"] for t in ts})},
+        out["ready_orh"] = dict(all=orh_summ(ts), B_day_low_stop=orh_summ(ts, "B"), C_half_at_2R=orh_summ(ts, "C"),
+                                by_setup={k: orh_summ([t for t in ts if t["setup"] == k]) for k in sorted({t["setup"] for t in ts})},
                                 by_list={k: orh_summ([t for t in ts if t["src"] == k]) for k in sorted({t["src"] for t in ts})},
                                 opening_range_over_trigger=orh_summ([t for t in ts if t["over_trigger"]]),
                                 opening_range_under_trigger=orh_summ([t for t in ts if not t["over_trigger"]]))
