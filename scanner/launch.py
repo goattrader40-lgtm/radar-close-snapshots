@@ -610,6 +610,11 @@ def follow(a, i0, i, pick=False):
     st, c = a.st, a.st.c
     exit_k = next((k for k in range(i0 + 1, i + 1) if c[k] < a.e21[k]), None)
     out50 = next((k for k in range(i0 + 2, i + 1) if c[k] < a.e50[k] and c[k - 1] < a.e50[k - 1]), None)
+    # the 50 EMA undercut (your rule, Nov 1 2026): after 2 closes in a row under the 50 EMA a launch waits in the 50 EMA
+    # undercut tab; the next session has to close back over it (the reclaim: AEHR Mar 31 2026 after Mar 27 & 30), a 3rd
+    # close under takes it off the list
+    off50 = next((k for k in range(i0 + 3, i + 1) if all(c[m] < a.e50[m] for m in (k - 2, k - 1, k))), None)
+    under50 = bool(i >= i0 + 2 and c[i] < a.e50[i] and c[i - 1] < a.e50[i - 1] and off50 is None)
     r = st.df.iloc[i]
     code = int(r.code)
 
@@ -809,6 +814,11 @@ def follow(a, i0, i, pick=False):
             return "retest"
         return None
     reclaim = ema_back(i) if i - last_new >= 4 and not any(k > last_new for k in rdays) and not any(ema_back(k) for k in range(last_new + 4, i)) else None
+    # the 50 EMA undercut & reclaim (an entry, like the 21 EMA one): the 2 closes before under the 50 EMA (no depth limit,
+    # your OK Nov 1 2026), today the low under it and under the open, the close back over it in the upper half of the day,
+    # in the base (AEHR Mar 31 2026: Mar 27 & 30 under 33.79 / 33.64, down to 33.00, closed 37.08 over 33.78)
+    reclaim50 = bool(i >= i0 + 3 and c[i - 2] < a.e50[i - 2] and c[i - 1] < a.e50[i - 1] and st.l[i] < a.e50[i] and st.l[i] < st.o[i]
+                     and c[i] > a.e50[i] and c[i] - st.l[i] >= 0.5 * (st.h[i] - st.l[i]) and c[i] < st.h[i0:i].max())
     # tomorrow's 21 EMA setup (radar/alerts.py: the heads-up when it trades down to the 21 EMA, the alert from 3:45 PM
     # when it holds back over it): "undercut" after 2 closes under it (today and yesterday, within half an ADR), "retest"
     # while the closes held over it after a pullback that was no advance
@@ -951,6 +961,9 @@ def follow(a, i0, i, pick=False):
     elif retest:
         lv_txt = f"{rlv[1]:.2f}" if rlv[2] <= rlv[1] * 1.001 else f"{rlv[1]:.2f}-{rlv[2]:.2f} (bodies-wicks)"
         stage = f"Retest of the breakout level {lv_txt} held" + (" + confluence: " + " & ".join(retest_ema) if retest_ema else "")
+    elif reclaim50:
+        stage = (f"50 EMA undercut & reclaim (entry): 2 closes under the 50 EMA ({st.dates[i - 2]}, {st.dates[i - 1]}), today down to "
+                 f"{st.l[i]:.2f}, closed {c[i]:.2f} back over {a.e50[i]:.2f} in the upper half of the day")
     elif reclaim:
         stage = (f"21 EMA retest in the base (entry): dipped to {st.l[i]:.2f} under the 21 EMA {a.e21[i]:.2f}, closed {c[i]:.2f} back over it"
                  if reclaim == "retest" else
@@ -1018,6 +1031,9 @@ def follow(a, i0, i, pick=False):
         status=status, first_exit=st.dates[exit_k] if exit_k is not None else None,
         exit_gain_pct=fnum(100 * (c[exit_k] / c[i0] - 1), 1) if exit_k is not None else None,
         lost_50ema=st.dates[out50] if out50 is not None else None,
+        off_50ema=st.dates[off50] if off50 is not None else None, ema50_under2=under50, ema50_today=reclaim50,
+        ema50_under_dates=[st.dates[i - 1], st.dates[i]] if under50 else None,
+        ema50_under_adr=[fnum(100 * (c[m] / a.e50[m] - 1) / _adr(st, m), 1) for m in (i - 1, i)] if under50 else None,
         price=fnum(c[i]), chg_today_pct=fnum(a.chg[i], 1), rel_vol_today=fnum(a.rv[i], 1),
         pattern=pat, buy_point=fnum(bp) if bp else None, to_buy_point_pct=fnum(100 * (bp / c[i] - 1), 1) if bp else None,
         buy_point_top_date=top_date,
@@ -1340,14 +1356,15 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         last = len(a.st.dates) - 1
         if a.st.dates[last] != today or a.st.dates[i] <= (removed or {}).get(s, ""):    # removed by you (✕), with any older launch of it
             continue
-        # off the list: 2 closes in a row under the 50 EMA, 62 sessions from its highest point without a new high, or its
-        # ADR (20 days) now under 3.2% (a launch day needs 3.5%+; TECH Jun 25 2026, a buyout-like 19% gap, then 0.2%)
+        # off the list: 3 closes in a row under the 50 EMA (after 2 it waits in the 50 EMA undercut tab for the reclaim:
+        # your rule, Nov 1 2026), 62 sessions from its highest point without a new high, or its ADR (20 days) now under
+        # 3.2% (a launch day needs 3.5%+; TECH Jun 25 2026, a buyout-like 19% gap, then 0.2%)
         c_, e50_ = a.st.c, a.e50
-        if (np.any((c_[i + 2:last + 1] < e50_[i + 2:last + 1]) & (c_[i + 1:last] < e50_[i + 1:last])) or stale(a, i, last)
-                or a.st.adr[last] < L["off_adr"]):
+        if (np.any((c_[i + 3:last + 1] < e50_[i + 3:last + 1]) & (c_[i + 2:last] < e50_[i + 2:last]) & (c_[i + 1:last - 1] < e50_[i + 1:last - 1]))
+                or stale(a, i, last) or a.st.adr[last] < L["off_adr"]):
             continue
         f = follow(a, i, last)
-        if f["lost_50ema"]:
+        if f["off_50ema"]:
             continue
         r = launch_row(s, a, i, gs, gn, S)
         r.update(f)
@@ -1369,6 +1386,9 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     # closed below the 21 EMA on Aug 17; both followed gave two alerts with different legs)
     seen = set()
     rows = [r for r in rows if not (r["symbol"] in seen or seen.add(r["symbol"]))]
+    # the 50 EMA undercut tab: 2 closes in a row under the 50 EMA at this close, the reclaim has to come next session
+    under50 = [r for r in rows if r.get("ema50_under2")]
+    rows = [r for r in rows if not r.get("ema50_under2")]
     # your picks (the portal's Follow button on the Watchlist tab), followed like a launch from the close you added
     # them at (that day's close after 4 PM, else the session before), until you remove them. A stock already
     # followed as a launch keeps its launch row, marked as yours too
@@ -1447,7 +1467,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50", "low_52w"],
-               launches=rows, watch=watch, groups=[g for g in G if g["status"] != "Not trending"],
+               launches=rows, ema50_undercut=under50, watch=watch, groups=[g for g in G if g["status"] != "Not trending"],
                catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()),
                # 3-SETUPS for the live alerts (desktop: every trigger; phone: Ready only); kept from the evening scan when
                # a Follow-button rebuild doesn't pass the Watchlist
@@ -1455,7 +1475,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     with open(out_path, "w") as f:
         json.dump(doc, f, separators=(",", ":"))
     n_today = sum(1 for r in rows if r["date"] == today)
-    print(f"launch: {n_today} today, {len(rows)} followed, {len(watch)} on watch, {len(doc['groups'])} groups trending")
+    print(f"launch: {n_today} today, {len(rows)} followed, {len(under50)} in the 50 EMA undercut tab, {len(watch)} on watch, {len(doc['groups'])} groups trending")
 
 
 def backtest(A, groups, GS, cal, S, out_path):
