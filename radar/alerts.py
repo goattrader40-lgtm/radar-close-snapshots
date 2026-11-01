@@ -34,6 +34,16 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               after closing under it the day before; graded from 2 years of data (grade_breakout): A = an early
               breakout (1st / 2nd, within 50 sessions of the launch) in a leading theme with volume building before,
               B = early plus one of those, C = the rest
+  gap out of base  a launch being followed closed at or under its base high (the base top or your MSF pattern's pivot;
+              not a flag line, not a pop) and opens above it today (your rule, Nov 1 2026; Zanger / Qullamaggie). Only
+              stocks with an ADR of 4%+, 600K+ shares and $30M+ a day (20-day averages) and a $700M+ market cap. Four
+              alerts: the gap (volume pace 1x+), the 1-minute opening range high broken and the 5-minute one (each with
+              its stop, the range's low, and the risk in ADRs), and at 9:50 the volume check: under 2x = out, whatever
+              the trade. A trigger after 9:50 needs 2x+. The stock's other alerts (breakout, touch) stay quiet that day
+  ema50back   the 50 EMA undercut tab (your rule, Nov 1 2026): a launch that closed under its 50 EMA 2 days in a row has to
+              close back over it today (a 3rd close under takes it off the list): the heads-up when it trades back over it
+  ema50       from 3:45 PM: today's low went under the 50 EMA and under the open, and it trades back over it in the upper
+              half of the day: the 50 EMA undercut & reclaim holding into the close (AEHR Mar 31 2026). The buy is the close
   touch       a launch being followed traded over its buy point (today's high) but is back under it at the check: not a
               breakout, a heads-up (LION Oct 29 2026 touched $12.98 at 1:26 PM and fell back between two 5-minute updates)
   confirm     in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
@@ -205,6 +215,8 @@ def find(live, doc, now=None):
         q = rows.get(r["symbol"])
         if not q or len(q) < 5 or q[4] is None:
             continue
+        if gob_of(r, q):
+            continue                    # gapping out of its base: the gap-out-of-base alerts (find_gob) have it today
         price, chg, rv = q[0], q[1], q[4]
         op = q[5] if len(q) > 5 else None
         sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
@@ -313,7 +325,113 @@ def find(live, doc, now=None):
                         + (" (light)" if rv < 1 else "") + " · "
                         + (f"an entry in the base (still leg {nxt}), the base top is next" if flag else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "")) + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
                         + since(r), "high" if g == "A" else "default", tvs))
+    # the 50 EMA undercut tab: 2 closes in a row under the 50 EMA at the last close; today it has to close back over it
+    for r in doc.get("ema50_undercut", []):
+        q = rows.get(r["symbol"])
+        if not q or len(q) < 5 or q[4] is None or (now.hour, now.minute) < (9, 35):
+            continue
+        sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
+        price, chg, rv = q[0], q[1], q[4]
+        e50, adr50 = r.get("ema50"), r.get("adr_pct") or 5.0
+        if not e50 or price <= e50:
+            continue
+        dates = " & ".join(r.get("ema50_under_dates") or [])
+        tail50 = f" · {chg:+.1f}% · vol {rv:.1f}x" + since(r)
+        out.append((f"{sym}:ema50back", f"{sym} back over its 50 EMA",
+                    f"${price:.2f} over the 50 EMA ${e50:.2f} (the last close's) after 2 closes under it ({dates}) · the buy: the close back"
+                    f" over it, in the upper half of the day (the 50 EMA undercut & reclaim); a 3rd close under takes it off the list" + tail50,
+                    "default", tvs))
+        if (now.hour, now.minute) >= (15, 45) and price <= e50 * (1 + 1.5 * adr50 / 100):
+            # today's low under the 50 EMA and the open, the price in the upper half of the day: checked on today's
+            # 1-minute chart before it goes out (main)
+            out.append((f"{sym}:ema50", f"{sym} 50 EMA UNDERCUT & RECLAIM holding into the close",
+                        f"back over the 50 EMA ${e50:.2f} (the last close's) at ${price:.2f} after 2 closes under it ({dates})"
+                        f" · the buy: at the close, if it holds over it" + tail50, "high", tvs))
     return out
+
+
+def gob_of(r, q):
+    """a followed launch gapping out of its base today (your rule, Nov 1 2026): (base high, open) or None. The base high
+    is last night's (scanner/launch.py gap_base_level: the base top or a pattern's pivot, not a flag line or a pop), the
+    stock qualified at that close (gap_base_ok: ADR 4%+, 600K+ shares and $30M+ a day, market cap $700M+) and closed at
+    or under it"""
+    gl = r.get("gap_base_level")
+    op = q[5] if q and len(q) > 5 else None
+    if not (gl and r.get("gap_base_ok") and op and (r.get("price") or 0) <= gl < op):
+        return None
+    return gl, op
+
+
+def find_gob(live, doc, now=None):
+    """the gap-out-of-base candidates right now; main() reads today's 1-minute chart for the opening ranges before
+    they go out (gob_bars)"""
+    R, rows, out = doc["rules"], live["rows"], []
+    now = now or datetime.datetime.now(NY)
+    m = now.hour * 60 + now.minute - 570                # minutes since 9:30
+    if m < 1:
+        return out
+    for r in doc.get("launches", []):
+        sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
+        q = rows.get(sym)
+        if not q or len(q) < 6 or q[4] is None:
+            continue
+        g = gob_of(r, q)
+        if not g:
+            continue
+        gl, op = g
+        price, chg, rv = q[0], q[1], q[4]
+        pat = r.get("gap_base_pattern") or "Base top"
+        base = f"opened ${op:.2f}, {100 * (op / gl - 1):+.1f}% over its base high ${gl:.2f} ({pat})"
+        tail = f" · vol {rv:.1f}x for the time of day" + since(r)
+        if 20 <= m <= 60:                               # 9:50-10:30: the volume check (sent only after a gap alert)
+            ok = rv >= R.get("gob_rv20", 2)
+            out.append((f"{sym}:gob950", f"{sym} gap out of base: " + (f"keep it, vol {rv:.1f}x at 9:50" if ok else f"OUT, vol {rv:.1f}x under 2x at 9:50"),
+                        f"your rule: a volume pace of 2x+ by 20 minutes after the open, else out whatever the trade · ${price:.2f} ({chg:+.1f}%) · {base}"
+                        + since(r), "default" if ok else "high", tvs))
+        if price <= gl:
+            continue                                    # back under its base high: the gap failed, no buy
+        if rv < (R.get("gob_rv", 1) if m < 20 else R.get("gob_rv20", 2)):
+            continue                                    # the volume pace your rule needs at the buy: 1x+, after 9:50 2x+
+        out.append((f"{sym}:gapbase", f"{sym} GAP OUT OF BASE", f"{base} · now ${price:.2f} ({chg:+.1f}%)" + tail
+                    + " · the entry: over the 1-minute or the 5-minute opening range high, the stop its low; out at 9:50 if the volume pace isn't 2x",
+                    "default", tvs))
+        out.append((f"{sym}:gob1", f"{sym} gap out of base: 1-min high broke", base + tail, "high", tvs))
+        if m >= 5:
+            out.append((f"{sym}:gob5", f"{sym} gap out of base: 5-min high broke", base + tail, "high", tvs))
+    return out
+
+
+def gob_bars(sym):
+    """today's 1-minute bars from 9:30 on, from Yahoo's chart: [(minutes since 9:30, high, low)], or None"""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=1d&interval=1m"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            res = json.load(r)["chart"]["result"][0]
+        today = datetime.datetime.now(NY).date()
+        qd = res["indicators"]["quote"][0]
+        out = []
+        for t, hi, lo in zip(res.get("timestamp") or [], qd.get("high") or [], qd.get("low") or []):
+            d = datetime.datetime.fromtimestamp(t, NY)
+            mm = d.hour * 60 + d.minute - 570
+            if hi and lo and d.date() == today and mm >= 0:
+                out.append((mm, hi, lo))
+        return out or None
+    except Exception:
+        return None
+
+
+def gob_range(bars, n):
+    """the opening range of the first n minutes (1 or 5) and whether a later bar traded over its high: (high, low, broke)"""
+    if not bars or bars[0][0] > 5:
+        return None
+    t0 = bars[0][0]                                     # the first minute of trading (a late NYSE open counts from it)
+    rng = [b for b in bars if b[0] < t0 + n]
+    after = [b for b in bars if b[0] >= t0 + n]
+    if not rng:
+        return None
+    hi, lo = max(b[1] for b in rng), min(b[2] for b in rng)
+    return hi, lo, any(b[1] > hi for b in after)
 
 
 def since(r):
@@ -393,7 +511,8 @@ def main():
         print("alerts: not in today's session yet")
         return
     sent = set(state["sent"])
-    found = find_early(live, doc, now) if early else find(live, doc, now)
+    found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
+    gbars = {}
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
     cat_now = {a[0].split(":")[0] for a in found if a[0].endswith(":catalyst") and a[0] not in sent}
     new, quiet = [], []
@@ -418,6 +537,34 @@ def main():
             + [(a[0], None, None, None, None) for a in new[MAX_PER_RUN - 1:]]
     new += quiet
     for key, title, msg, prio, tvs in new:
+        if title is not None and key.endswith((":gapbase", ":gob1", ":gob5", ":gob950")):
+            # gap out of base: the opening ranges from today's 1-minute chart; the 9:50 check only after a gap alert
+            sym_ = key.split(":")[0]
+            if key.endswith(":gob950"):
+                # only for a gap alerted before 9:50 (after 9:50 a trigger already needs 2x+)
+                if not any(it.get("key") == f"{sym_}:{k_}" and it.get("time", "99:99") < "09:50"
+                           for it in state.get("items", []) for k_ in ("gapbase", "gob1", "gob5")):
+                    continue
+            else:
+                if sym_ not in gbars:
+                    gbars[sym_] = gob_bars(sym_)
+                r_ = next((x for x in doc.get("launches", []) if x["symbol"] == sym_), {})
+                adr_ = r_.get("adr_pct") or 5.0
+                q_ = live["rows"].get(sym_)
+                if key.endswith(":gapbase"):
+                    one = gob_range(gbars[sym_], 1)
+                    if one:
+                        msg += f" · the 1-min range ${one[1]:.2f}-${one[0]:.2f}"
+                else:
+                    n_ = 1 if key.endswith(":gob1") else 5
+                    rg = gob_range(gbars[sym_], n_)
+                    if not (rg and rg[2] and q_ and q_[0] > rg[1]):
+                        print(f"{key}: the {n_}-min high not broken yet ({rg}), not sent")
+                        continue
+                    risk = 100 * (rg[0] / rg[1] - 1)
+                    msg = (f"${q_[0]:.2f} over the {n_}-minute opening range high ${rg[0]:.2f} · stop ${rg[1]:.2f}, its low: risk {risk:.1f}%"
+                           f" = {risk / adr_:.1f} ADR" + (" (over your 0.7 ADR)" if risk / adr_ > 0.7 else "") + " · " + msg
+                           + " · out at 9:50 if the volume pace isn't 2x")
         if title is not None and key.endswith(":retest"):
             # today's low (1-minute chart) came into the zone, after a real pullback; with the EMA, the low at it
             sym_ = key.split(":")[0]
@@ -448,6 +595,16 @@ def main():
             op_ = q_[5] if q_ and len(q_) > 5 else None
             if not (q_ and lo_ and hi_ and op_ and lo_ < e21_ and lo_ < op_ and q_[0] - lo_ >= 0.5 * (hi_ - lo_)):
                 print(f"{key}: today's low {lo_} / high {hi_} / open {op_}: no undercut and reclaim of the 21 EMA {e21_} yet, not sent")
+                continue
+            msg += f" · today's low ${lo_:.2f} under it"
+        if title is not None and key.endswith(":ema50"):
+            # today's low under the 50 EMA and under the open, the price in the upper half of today's range
+            r_ = next((x for x in doc.get("ema50_undercut", []) if x["symbol"] == key.split(":")[0]), {})
+            q_, lo_, hi_ = live["rows"].get(key.split(":")[0]), chart_low_today(key.split(":")[0]), chart_high_today(key.split(":")[0])
+            e50_ = r_.get("ema50") or 0
+            op_ = q_[5] if q_ and len(q_) > 5 else None
+            if not (q_ and lo_ and hi_ and op_ and lo_ < e50_ and lo_ < op_ and q_[0] - lo_ >= 0.5 * (hi_ - lo_)):
+                print(f"{key}: today's low {lo_} / high {hi_} / open {op_}: no undercut and reclaim of the 50 EMA {e50_} yet, not sent")
                 continue
             msg += f" · today's low ${lo_:.2f} under it"
         if title is not None and key.endswith(":reversal"):
