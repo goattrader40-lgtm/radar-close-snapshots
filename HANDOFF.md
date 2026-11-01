@@ -4,6 +4,39 @@ Read this first in every new session. It is what earlier sessions agreed with th
 same rules with the user's examples (scanner/launch.py, scanner/run.py, radar/alerts.py), and the portal legend
 (docs/index.html) shows them to the user. Keep this file current: before a session ends, update it with what changed.
 
+## Session routine (the user's cheat sheet)
+
+**Start of every session** (the user pastes this):
+
+> Repo: goattrader40-lgtm/radar-close-snapshots. Read HANDOFF.md first and follow its ground rules (no change without
+> my explicit go; test branch first; replay my examples with tools/replay.py --regress; 2-year check; push to main
+> only when I say "go live"). Tell me in 5 short lines what you understood, what is live now and what is open. Then
+> wait for my task.
+
+**Short commands during the session** (what each one means):
+
+| The user says | Claude does |
+|---|---|
+| "explain first" | the reasoning and the dates/prices it would change, no code |
+| "test it" | builds it on a test branch only, replays the examples, shows what changed |
+| "2-year check" | runs radar-tools.yml `catalyst` on the test branch, reports the numbers per signal |
+| "go live" | pushes to main, rebuilds Launches (picks.yml), checks the result |
+| "replay TICKER from DATE to DATE" | tools/replay.py on that stock: what the portal and alerts did each day |
+| "add it to the examples" | the agreed read goes into tools/examples.txt and tools/expected_reads.txt |
+| "stop" | stops and waits |
+
+**End of every session** (the user pastes this):
+
+> We're wrapping up. 1) Update HANDOFF.md with what we changed and agreed today (rules with my example dates, what is
+> live, what is only on the test branch, open items). 2) If I agreed new reads, add them to tools/examples.txt and
+> rewrite tools/expected_reads.txt. 3) Commit and push that (docs and tools only), and check nothing is left
+> uncommitted. 4) Give me a 5-line summary: live, test only, open.
+
+**How long a session**: one topic or one working day, whichever comes first (roughly 30–50 of the user's messages;
+fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Code compacts the conversation, or when
+Claude starts asking again about agreed things or gets them wrong. The 8:47 AM grading has its own session: leave it
+alone.
+
 ## The user's ground rules
 
 1. **No change without an explicit go.** Explain the reasoning first and get it agreed ("dont do anything without
