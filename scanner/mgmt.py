@@ -103,3 +103,55 @@ def liquidity(a, k):
     dv, av = _DV[key]
     j = k - 1
     return dict(dollar_vol_20d_m=round(float(dv[j]), 1) if j >= 19 else None, avg_shares_20d=int(av[j]) if j >= 19 else None)
+
+
+_RSI = {}
+
+
+def rsi14(a):
+    """Wilder's 14-day RSI of a stock's closes (cached)"""
+    key = id(a)
+    if key not in _RSI:
+        import numpy as np
+        c = a.st.c
+        d = np.diff(c, prepend=c[0])
+        up, dn = np.where(d > 0, d, 0.0), np.where(d < 0, -d, 0.0)
+        au, ad = np.zeros(c.size), np.zeros(c.size)
+        if c.size > 15:
+            au[14], ad[14] = up[1:15].mean(), dn[1:15].mean()
+            for k in range(15, c.size):
+                au[k] = (au[k - 1] * 13 + up[k]) / 14
+                ad[k] = (ad[k - 1] * 13 + dn[k]) / 14
+        _RSI[key] = 100 - 100 / (1 + au / np.where(ad > 0, ad, 1e-9))
+    return _RSI[key]
+
+
+def reset(a, j):
+    """the momentum reset before a buy on day j, from the bars up to the day before (no hindsight; the user's AEHR read,
+    Nov 1 2026: its Mar 6-19 and May 6-26 2026 buy points came before any reset, Mar 31 - Apr 6 after the shakeout under
+    the 50 EMA). The latest top = the highest high of the 60 sessions before j; its run = from the lowest low of the 25
+    sessions before it, in the stock's ADRs; the pullback since it, how close its lows came to the 50 EMA, the 21 EMA's
+    spread over the 50 EMA, and the lowest RSI(14) since the top"""
+    import numpy as np
+    st = a.st
+    c, h, l = st.c, st.h, st.l
+    p = j - 1
+    if j < 90:
+        return {}
+    top = j - 60 + int(np.argmax(h[j - 60:j]))
+    adr_t = float(st.adr[top]) if st.adr[top] > 0 else 5.0
+    adr_p = float(st.adr[p]) if st.adr[p] > 0 else 5.0
+    lo0 = top - 25 + int(np.argmin(l[top - 25:top]))
+    rs = rsi14(a)
+    after = range(top + 1, j)
+    near50 = min((100 * (l[k] / a.e50[k] - 1) / (st.adr[k] if st.adr[k] > 0 else 5.0) for k in after), default=None)
+    out = dict(days_since_top=j - top, run_into_top_adr=round(100 * (h[top] / l[lo0] - 1) / adr_t, 1),
+               pullback_adr=round(100 * (1 - l[top + 1:j].min() / h[top]) / adr_t, 1) if j - top > 1 else 0.0,
+               ema21_over_50_adr=round(100 * (a.e21[p] / a.e50[p] - 1) / adr_p, 2),
+               close_over_50_adr=round(100 * (c[p] / a.e50[p] - 1) / adr_p, 2),
+               pullback_low_vs_50_adr=round(near50, 2) if near50 is not None else None,
+               rsi_min_since_top=round(float(rs[top + 1:j].min() if j - top > 1 else rs[p]), 1), rsi_day_before=round(float(rs[p]), 1))
+    out.update(reset_at_50ema=int(near50 is not None and near50 <= 0.25), reset_rsi_under_45=int(out["rsi_min_since_top"] <= 45),
+               reset_emas_close=int(out["ema21_over_50_adr"] <= 0.8), big_run_8adr=int(out["run_into_top_adr"] >= 8))
+    out["reset_any"] = int(out["reset_at_50ema"] or out["reset_rsi_under_45"] or out["reset_emas_close"])
+    return out

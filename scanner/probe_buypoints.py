@@ -120,6 +120,7 @@ def row(s, st, a, f, i0, j, k, entry, buy, stop, x21, x10, hi20, c, n, closed):
              adr_pct=round(float(st.adr[j - 1]), 2), days_held=x21["days"],
              ran20=int(hi20 >= buy * 1.2), failed5=int((c[j + 1:j + 6] < stop).any()))
     r.update(mgmt.liquidity(a, j))
+    r.update(mgmt.reset(a, j))                  # the momentum reset before the buy (your AEHR read, Nov 1 2026)
     r.update(mgmt.cols(x21))
     r.update(mgmt.cols(x10, suf="_10"))
     return r
