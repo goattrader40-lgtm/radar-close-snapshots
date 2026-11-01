@@ -85,7 +85,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, undercut_adr=1.0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -835,7 +835,7 @@ def follow(a, i0, i, pick=False):
     retest_ema = retest_on(i)[1] if retest else []
 
     # the two 21 EMA entries in the base, once per pullback (none after a retest of the breakout level in it)
-    def ema_back(k):
+    def ema_back(k, deep=False):
         """the day trades down through the 21 EMA (the low under it and under the open) and closes back over it in the
         upper half of its range, over the 50 EMA, in the base (pulled back 1.25+ ADRs from its high, under it).
         "retest": the closes since the high held over it (a quarter ADR) and the 3 days before were no advance (a
@@ -847,12 +847,21 @@ def follow(a, i0, i, pick=False):
         if not (st.l[k] < a.e21[k] and st.l[k] < st.o[k] and c[k] > a.e21[k] and c[k] > a.e50[k] and c[k] < top
                 and c[k] - st.l[k] >= 0.5 * (st.h[k] - st.l[k]) and st.l[last_new:k + 1].min() <= top * (1 - 1.25 * ak / 100)):
             return None
-        if all(a.e21[m] * (1 - ak / 200) <= c[m] < a.e21[m] for m in (k - 2, k - 1)):
+        if all(a.e21[m] * (1 - (L["undercut_adr"] if deep else 0.5) * ak / 100) <= c[m] < a.e21[m] for m in (k - 2, k - 1)):
             return "undercut"
         if (c[last_new:k] >= a.e21[last_new:k] * (1 - ak / 400)).all() and not all(c[m] > c[m - 1] for m in (k - 3, k - 2, k - 1)):
             return "retest"
         return None
     reclaim = ema_back(i) if i - last_new >= 4 and not any(k > last_new for k in rdays) and not any(ema_back(k) for k in range(last_new + 4, i)) else None
+    # under the breakout level too: 2 closes back under the broken base's top (its bodies) and under the 21 EMA by up to an
+    # ADR, then the day that takes back both is an undercut & reclaim (the user's CAI Oct 9 2026: Oct 2 touched 28.07 at its
+    # 28.01-28.32 level, Oct 7-8 closed 27.10 / 27.50, 0.8 / 0.6 ADR under the 21 EMA; Oct 9 down to 27.67, closed 29.70
+    # over both). Once after each breakout
+    deep_rc = lambda k_: bool(rlv and k_ - rlv[0] >= 3 and all(c[m] < rlv[1] for m in (k_ - 2, k_ - 1)) and c[k_] > rlv[1]
+                              and ema_back(k_, True) == "undercut")
+    level_rc = bool(not reclaim and i - last_new >= 4 and deep_rc(i) and not any(deep_rc(x) for x in range(rlv[0] + 3, i)))
+    if level_rc:
+        reclaim = "undercut"
     # the 50 EMA undercut & reclaim (an entry, like the 21 EMA one): the 2 closes before under the 50 EMA (no depth limit,
     # your OK Nov 1 2026), today the low under it and under the open, the close back over it in the upper half of the day,
     # in the base (AEHR Mar 31 2026: Mar 27 & 30 under 33.79 / 33.64, down to 33.00, closed 37.08 over 33.78)
@@ -862,7 +871,10 @@ def follow(a, i0, i, pick=False):
     # when it holds back over it): "undercut" after 2 closes under it (today and yesterday, within half an ADR), "retest"
     # while the closes held over it after a pullback that was no advance
     ema21_watch = None
-    if i - last_new >= 3 and not any(k > last_new for k in rdays) and not any(ema_back(k) for k in range(last_new + 4, i + 1)) \
+    if rlv and i - rlv[0] >= 2 and c[i] > a.e50[i] and all(c[m] < rlv[1] and a.e21[m] * (1 - L["undercut_adr"] * adr / 100) <= c[m] < a.e21[m]
+                                                         for m in (i - 1, i)) and not any(deep_rc(x) for x in range(rlv[0] + 3, i + 1)):
+        ema21_watch = "undercut"          # tomorrow: the reclaim of the breakout level and the 21 EMA
+    elif i - last_new >= 3 and not any(k > last_new for k in rdays) and not any(ema_back(k) for k in range(last_new + 4, i + 1)) \
             and c[i] < st.h[i0:i + 1].max() and c[i] > a.e50[i]:
         if all(a.e21[m] * (1 - adr / 200) <= c[m] < a.e21[m] for m in (i - 1, i)):
             ema21_watch = "undercut"
@@ -995,7 +1007,7 @@ def follow(a, i0, i, pick=False):
                if (u50 := [k for k in range(ftop + 1, i) if c[k] < a.e50[k]]) else "")
     elif dry_day == i:
         stage = "Pop out of the consolidation (entry in base)"
-    elif push_day == i:
+    elif push_day == i and reclaim != "undercut":
         stage = f"Push out of the 21 EMA with a gap, after the retest of {rlv[1]:.2f}" + (f"-{rlv[2]:.2f}" if rlv[2] > rlv[1] * 1.001 else "") \
             + (f", on light volume ({a.rv[i]:.2f}x)" if a.rv[i] < 1 else "")
     elif retest:
@@ -1007,7 +1019,9 @@ def follow(a, i0, i, pick=False):
     elif reclaim:
         stage = (f"21 EMA retest in the base (entry): dipped to {st.l[i]:.2f} under the 21 EMA {a.e21[i]:.2f}, closed {c[i]:.2f} back over it"
                  if reclaim == "retest" else
-                 f"21 EMA undercut & reclaim (entry, strong): 2 closes under the 21 EMA, today down to {st.l[i]:.2f}, closed {c[i]:.2f} back over {a.e21[i]:.2f}")
+                 f"21 EMA undercut & reclaim (entry, strong): 2 closes under the 21 EMA, today down to {st.l[i]:.2f}, closed {c[i]:.2f} back over {a.e21[i]:.2f}"
+                 + (f" and the breakout level {rlv[1]:.2f}" if level_rc else "")
+                 + (", also a push out of it with a gap" if push_day == i else ""))
     elif tight >= 2:
         stage = f"Tight under {tlv:.2f}, the base high ({tight} days)" + (
             f" · base {blen} sessions, {bdeep:.0f}% deep ({bdeep_adr:.1f} ADRs)" + (f", {msf_pat}" if msf_pat else "") if blen else "")

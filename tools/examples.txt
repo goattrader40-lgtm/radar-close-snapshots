@@ -8,7 +8,7 @@ SPOT 2026-10-22 2026-10-30 launch
 ACN  2026-10-01 2026-10-30 launch
 SMCI 2023-05-03 2023-08-14 launch
 ATRC 2026-07-24 2026-10-30 launch
-CAI  2026-08-07 2026-10-30 launch
+CAI  2026-08-07 2026-10-30 launch   # the user, Nov 1 2026: Aug 19 bull flag, Aug 20 base breakout, Sep 10 retest + 21 EMA, Sep 14 bull flag, Sep 15 base breakout, Oct 9 21 EMA undercut & reclaim, Oct 21-26 tightening, Oct 27 base breakout
 NTSK 2026-09-14 2026-10-30 launch
 APPN 2026-08-07 2026-10-30 launch
 VEEV 2026-08-07 2026-10-30 launch
