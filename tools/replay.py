@@ -19,7 +19,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scanner"))
 import launch  # noqa: E402
 
-SIGNALS = ("Launch day", "breakout", "Breakout", "Retest", "Tight", "Pop", "Flag", "Push", "21 EMA retest", "21 EMA undercut", "50 EMA undercut")
+SIGNALS = ("Launch day", "breakout", "Breakout", "Retest", "Tight", "Pop", "Flag", "Bull flag", "Push", "21 EMA retest", "21 EMA undercut", "50 EMA undercut")
 EXAMPLES = os.path.join(ROOT, "tools", "examples.txt")
 EXPECTED = os.path.join(ROOT, "tools", "expected_reads.txt")
 

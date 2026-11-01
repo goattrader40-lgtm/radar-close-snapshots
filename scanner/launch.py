@@ -738,7 +738,7 @@ def follow(a, i0, i, pick=False):
     # closed 84.26 over 84.00: 84.28 next, then 87.75)
     flag_caution = bool(fl and fl[2] < c[i] <= fl[2] * (1 + L["caution_pct"] / 100))
     if fl and (fl[0] not in used_flags or (flag_day == i and flag_caution)) and c[i] < fl[3] and (c[i] <= fl[2] or flag_caution):
-        cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
+        cands.append((fl[3], "Bull flag (trendline)", i - fl[0], fl[1]))
     if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
         cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
     for top, k in tops:
@@ -750,7 +750,7 @@ def follow(a, i0, i, pick=False):
     top_date = next((st.dates[k] for t, k in tops if bp is not None and t == bp), None)
     # gap out of base (your rule, Nov 1 2026; Zanger / Qullamaggie): the nearest base high over the close, the base top or a
     # pattern's pivot, not a flag line or a pop; an open above it tomorrow is a gap out of the base (radar/alerts.py)
-    gb = min((x for x in cands if not x[1].startswith(("Flag", "Pop"))), default=None)
+    gb = min((x for x in cands if not x[1].startswith(("Flag", "Bull flag", "Pop"))), default=None)
     adr = _adr(st, i)
     # retest held, at the close: within 20 sessions of a breakout, while it hasn't closed an ADR under the level, the
     # low comes back to the level, the bodies' top or the wick top (from 1.5 ADRs under the bodies' top up to the wick
@@ -949,9 +949,9 @@ def follow(a, i0, i, pick=False):
             + (f" and held over {bo[1]:.2f} all day" if st.l[i] > bo[1] else "") \
             + f", closed {100 * (c[i] / bo[1] - 1):.1f}% ({(c[i] / bo[1] - 1) * 100 / _adr(st, i):.1f} ADR) over {bo[1]:.2f}"
     elif flag_bo:
-        stage = (f"Flag breakout: closed over its falling line {fline:.2f} and the 10 & 21 EMA, an entry in the base (leg {leg})"
+        stage = (f"Bull flag breakout: closed over its falling line {fline:.2f} and the 10 & 21 EMA, an entry in the base (leg {leg})"
                  if c[i] > fline * (1 + L["caution_pct"] / 100) else
-                 f"Flag breakout with caution: closed {100 * (c[i] / fline - 1):.2f}% over its falling line {fline:.2f}, within "
+                 f"Bull flag breakout with caution: closed {100 * (c[i] / fline - 1):.2f}% over its falling line {fline:.2f}, within "
                  f"{L['caution_pct']}%, and over the 10 & 21 EMA, an entry in the base (leg {leg}): the line is the next trigger again") \
             + (f", the volume dried up the 2 days before ({a.rv[i - 2]:.2f}x, {a.rv[i - 1]:.2f}x)" if max(a.rv[i - 2], a.rv[i - 1]) < 1 else "") \
             + ((" · closed under the 50 EMA during the flag (" + ", ".join(st.dates[k] for k in u50) + "): you judge the grade")
@@ -1227,7 +1227,7 @@ def s3_read(a, i0, last, was_in=False):
     bp = f.get("buy_point")
     away_adr = (100 * (bp / c - 1)) / adr if bp and adr else None
     stage, pat = f.get("stage") or "", f.get("pattern") or ""
-    fired = next((t for t, on in (("Base breakout", f.get("base_breakout_today")), ("Flag breakout", f.get("flag_breakout_today")),
+    fired = next((t for t, on in (("Base breakout", f.get("base_breakout_today")), ("Bull flag breakout", f.get("flag_breakout_today")),
                                   ("Pop out of the consolidation", f.get("dry_entry_today")),
                                   ("21 EMA undercut & reclaim" if f.get("ema21_today") == "undercut" else "21 EMA retest", f.get("ema21_today")),
                                   ("Retest held", f.get("retest_today")), ("Push out of the 21 EMA", f.get("push_today")),
@@ -1238,8 +1238,8 @@ def s3_read(a, i0, last, was_in=False):
         sec, setup = "Triggered today", fired
     elif away_adr is not None and 0 <= away_adr <= L["s3_ready_adr"] and ((f.get("base_day") or 0) >= 5 or tight >= 2):
         sec, setup = "Ready", pat or "Buy point"
-    elif pat.startswith("Flag"):
-        sec, setup = "Setting up", "Flag forming"
+    elif pat.startswith(("Flag", "Bull flag")):
+        sec, setup = "Setting up", "Bull flag forming"
     elif f.get("ema21_watch"):
         sec, setup = "Setting up", "21 EMA " + ("undercut & reclaim" if f["ema21_watch"] == "undercut" else "retest") + " setup"
     elif z and f.get("retest_away") and c <= z[1] * (1 + adr / 100) and (f.get("off_high_pct") or 0) >= 1.5 * adr:   # a real pullback
@@ -1253,7 +1253,7 @@ def setups3(A, today, wl, prev=(), removed=None):
     """3-SETUPS (your design, Nov 1 2026): every stock on 1-EP/GAP, 1-UPDAY and 2-POOL read by the Launches engine, like a
     pick from the day it came on its list (the gap or up day; the day it entered 2-POOL), with its buy points and
     triggers. Sections:
-      Triggered today  a base breakout, flag break, pop, 21 EMA retest or undercut & reclaim, retest held or push today
+      Triggered today  a base breakout, bull flag breakout, pop, 21 EMA retest or undercut & reclaim, retest held or push today
       Ready            a trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it: tomorrow's buys
       Setting up       a flag forming (its line more than 0.7 ADR away), a pullback set up for the 21 EMA, or a pullback
                        near the retest zone of its last breakout
