@@ -92,6 +92,18 @@ AT_CLOSE = {"launch": ["RVOL day", "grade_if_launch"],
             "gapbase": ["RVOL at 9:50", "RVOL day"]}
 
 
+def realism(strategy, tactic):
+    """fair = the trigger and the stop are known when the trade is taken; upper limit = an intraday buy with the day's-low
+    stop (the low is only known at the close: no stop on the buy day, the size from later); hindsight = a push bought
+    during the day (a push day is only known at its close)"""
+    t = tactic or ""
+    if strategy.endswith(": push") and ("alert" in t or "5-min" in t):
+        return "hindsight"
+    if t.startswith("as the alert fires"):
+        return "upper limit"
+    return "fair"
+
+
 def stats(rs, mid):
     n = len(rs)
     if not n:
@@ -134,16 +146,19 @@ def scan(rows, kind, strategy, mid):
     for r in rows:
         groups[(r.get("entry tactic"), r.get("runners"))].append(r)
     for (tac, run), rs in groups.items():
-        close_known = "close" in (tac or "") or "sell at the close" in (tac or "")
+        # a filter known only at the close can pick trades only for a buy AT the close; an intraday buy can't be chosen by
+        # what the day did after it (a sell-at-the-close exit uses the close to get out, not to choose the trade)
+        close_known = (tac or "") == "buy at the close"
         dims = AT_BUY[kind] + (AT_CLOSE[kind] if close_known else [])
         base = stats(rs, mid)
-        out.append(dict(strategy=strategy, tactic=tac, runners=run, filters="(none)", **base))
+        real = realism(strategy, tac)
+        out.append(dict(strategy=strategy, tactic=tac, runners=run, filters="(none)", realism=real, **base))
         for d in dims:
             for v in sorted({r.get(d) for r in rs if r.get(d) is not None}, key=str):
                 sel = [r for r in rs if r.get(d) == v]
                 s = stats(sel, mid)
                 if s and s["n"] >= MIN_N:
-                    out.append(dict(strategy=strategy, tactic=tac, runners=run, filters=f"{d} = {v}", **s))
+                    out.append(dict(strategy=strategy, tactic=tac, runners=run, filters=f"{d} = {v}", realism=real, **s))
         for d1, d2 in itertools.combinations(dims, 2):
             vals = collections.defaultdict(list)
             for r in rs:
@@ -152,7 +167,7 @@ def scan(rows, kind, strategy, mid):
             for (v1, v2), sel in vals.items():
                 if len(sel) >= MIN_N:
                     s = stats(sel, mid)
-                    out.append(dict(strategy=strategy, tactic=tac, runners=run, filters=f"{d1} = {v1} & {d2} = {v2}", **s))
+                    out.append(dict(strategy=strategy, tactic=tac, runners=run, filters=f"{d1} = {v1} & {d2} = {v2}", realism=real, **s))
     return out
 
 
@@ -183,7 +198,7 @@ def main():
         for f in found:
             f["robust"] = bool(robust(f))
     # the strongest robust combinations, by the net R per trade x how far it is from luck
-    keep = [f for f in res if f["robust"]]
+    keep = [f for f in res if f["robust"] and f["realism"] == "fair" and f["t"] >= 2]
     keep.sort(key=lambda f: (-(f["avgR"] * min(f["t"], 4)), -f["n"]))
     seen = set()
     for f in keep:
@@ -201,13 +216,13 @@ def main():
     base = [f for f in res if f["filters"] == "(none)"]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), middle_date=mid, cost_pct=COST,
                risk_floor_pct=FLOOR, min_trades=MIN_N, baseline=base, best=best[:60], all=res)
-    json.dump(out, open(os.path.join(ROOT, "tools", "analysis.json"), "w"))
+    json.dump({k: v for k, v in out.items() if k != "all"}, open(os.path.join(ROOT, "tools", "analysis.json"), "w"), indent=1)
     print("middle date", mid)
     print("\nBASELINES (no filter), net R per trade:")
-    for f in sorted(base, key=lambda f: -f["avgR"]):
-        print(f"  {f['strategy'][:34]:34} | {f['tactic'][:46]:46} | {f['runners']:12} | n {f['n']:5} win {f['win']:3}% "
+    for f in sorted(base, key=lambda f: (f["realism"] != "fair", -f["avgR"])):
+        print(f"  {f['realism'][:11]:11} | {f['strategy'][:34]:34} | {f['tactic'][:46]:46} | {f['runners']:12} | n {f['n']:5} win {f['win']:3}% avg {f['avg_pct']:+.2f}% "
               f"avgR {f['avgR']:+.3f} t {f['t']:+.1f} halves {f['half1'][1]} / {f['half2'][1]} no-top5% {f['avgR_without_top5pct']}")
-    print("\nBEST ROBUST COMBINATIONS:")
+    print("\nBEST ROBUST COMBINATIONS (fair only, positive in both halves, t 2+):")
     for f in best[:30]:
         print(f"  {f['strategy'][:30]:30} | {f['tactic'][:40]:40} | {f['runners']:12} | {f['filters'][:60]:60} | n {f['n']:4} "
               f"win {f['win']:3}% avgR {f['avgR']:+.3f} t {f['t']:+.1f} h {f['half1'][1]}/{f['half2'][1]} no-top {f['avgR_without_top5pct']} "

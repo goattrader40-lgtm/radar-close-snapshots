@@ -1,0 +1,3491 @@
+{
+ "made_at": "2026-11-01T16:40:38+00:00",
+ "middle_date": "2026-05-11",
+ "cost_pct": 0.15,
+ "risk_floor_pct": 1.0,
+ "min_trades": 40,
+ "baseline": [
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 5578,
+   "win": 34,
+   "avg_pct": 0.53,
+   "avgR": 0.115,
+   "t": 3.5,
+   "totalR": 643.6,
+   "pf": 1.18,
+   "half1": [
+    2879,
+    0.193
+   ],
+   "half2": [
+    2699,
+    0.032
+   ],
+   "avgR_without_top5pct": -0.294,
+   "per_month": 371.9,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 5578,
+   "win": 33,
+   "avg_pct": 0.51,
+   "avgR": 0.11,
+   "t": 3.36,
+   "totalR": 612.3,
+   "pf": 1.17,
+   "half1": [
+    2879,
+    0.193
+   ],
+   "half2": [
+    2699,
+    0.021
+   ],
+   "avgR_without_top5pct": -0.292,
+   "per_month": 371.9,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, sell at the close if not a launch",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 5578,
+   "win": 40,
+   "avg_pct": -0.03,
+   "avgR": -0.026,
+   "t": -1.35,
+   "totalR": -144.7,
+   "pf": 0.93,
+   "half1": [
+    2879,
+    -0.009
+   ],
+   "half2": [
+    2699,
+    -0.044
+   ],
+   "avgR_without_top5pct": -0.229,
+   "per_month": 371.9,
+   "robust": false
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, sell at the close if not a launch",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 5578,
+   "win": 40,
+   "avg_pct": -0.04,
+   "avgR": -0.029,
+   "t": -1.58,
+   "totalR": -163.7,
+   "pf": 0.92,
+   "half1": [
+    2879,
+    -0.027
+   ],
+   "half2": [
+    2699,
+    -0.032
+   ],
+   "avgR_without_top5pct": -0.225,
+   "per_month": 371.9,
+   "robust": false
+  },
+  {
+   "strategy": "Launch day, bought at the close",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 1384,
+   "win": 34,
+   "avg_pct": -0.34,
+   "avgR": -0.041,
+   "t": -0.87,
+   "totalR": -56.3,
+   "pf": 0.93,
+   "half1": [
+    761,
+    0.084
+   ],
+   "half2": [
+    623,
+    -0.193
+   ],
+   "avgR_without_top5pct": -0.319,
+   "per_month": 92.3,
+   "robust": false
+  },
+  {
+   "strategy": "Launch day, bought at the close",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 1384,
+   "win": 34,
+   "avg_pct": -0.42,
+   "avgR": -0.044,
+   "t": -1.01,
+   "totalR": -60.6,
+   "pf": 0.92,
+   "half1": [
+    761,
+    0.03
+   ],
+   "half2": [
+    623,
+    -0.134
+   ],
+   "avgR_without_top5pct": -0.297,
+   "per_month": 92.3,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: 21 EMA retest",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 415,
+   "win": 24,
+   "avg_pct": -0.33,
+   "avgR": -0.092,
+   "t": -0.91,
+   "totalR": -38.3,
+   "pf": 0.88,
+   "half1": [
+    205,
+    -0.056
+   ],
+   "half2": [
+    210,
+    -0.128
+   ],
+   "avgR_without_top5pct": -0.457,
+   "per_month": 27.7,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: 21 EMA retest",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 415,
+   "win": 11,
+   "avg_pct": 0.17,
+   "avgR": 0.014,
+   "t": 0.27,
+   "totalR": 6.0,
+   "pf": 1.07,
+   "half1": [
+    205,
+    0.111
+   ],
+   "half2": [
+    210,
+    -0.08
+   ],
+   "avgR_without_top5pct": -0.173,
+   "per_month": 27.7,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: 21 EMA retest",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 306,
+   "win": 17,
+   "avg_pct": -0.4,
+   "avgR": -0.215,
+   "t": -1.42,
+   "totalR": -65.7,
+   "pf": 0.77,
+   "half1": [
+    154,
+    -0.057
+   ],
+   "half2": [
+    152,
+    -0.374
+   ],
+   "avgR_without_top5pct": -0.711,
+   "per_month": 21.9,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: 21 EMA retest",
+   "tactic": "5-min entry",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 306,
+   "win": 22,
+   "avg_pct": -0.34,
+   "avgR": -0.184,
+   "t": -1.3,
+   "totalR": -56.3,
+   "pf": 0.77,
+   "half1": [
+    154,
+    0.005
+   ],
+   "half2": [
+    152,
+    -0.376
+   ],
+   "avgR_without_top5pct": -0.631,
+   "per_month": 21.9,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: 21 EMA undercut & reclaim",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 96,
+   "win": 29,
+   "avg_pct": 1.03,
+   "avgR": 0.208,
+   "t": 0.96,
+   "totalR": 20.0,
+   "pf": 1.35,
+   "half1": [
+    44,
+    0.301
+   ],
+   "half2": [
+    52,
+    0.129
+   ],
+   "avgR_without_top5pct": -0.099,
+   "per_month": 6.9,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: 21 EMA undercut & reclaim",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 96,
+   "win": 16,
+   "avg_pct": 0.3,
+   "avgR": 0.131,
+   "t": 0.87,
+   "totalR": 12.5,
+   "pf": 1.41,
+   "half1": [
+    44,
+    0.215
+   ],
+   "half2": [
+    52,
+    0.059
+   ],
+   "avgR_without_top5pct": -0.109,
+   "per_month": 6.9,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: 21 EMA undercut & reclaim",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 61,
+   "win": 18,
+   "avg_pct": 0.27,
+   "avgR": 0.187,
+   "t": 0.41,
+   "totalR": 11.4,
+   "pf": 1.22,
+   "half1": [
+    31,
+    0.758
+   ],
+   "half2": [
+    30,
+    -0.404
+   ],
+   "avgR_without_top5pct": -0.501,
+   "per_month": 5.1,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: 21 EMA undercut & reclaim",
+   "tactic": "5-min entry",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 61,
+   "win": 20,
+   "avg_pct": 0.41,
+   "avgR": 0.261,
+   "t": 0.57,
+   "totalR": 15.9,
+   "pf": 1.32,
+   "half1": [
+    31,
+    0.701
+   ],
+   "half2": [
+    30,
+    -0.193
+   ],
+   "avgR_without_top5pct": -0.444,
+   "per_month": 5.1,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "as the alert fires",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 2257,
+   "win": 26,
+   "avg_pct": -0.44,
+   "avgR": 0.251,
+   "t": 3.16,
+   "totalR": 565.4,
+   "pf": 1.29,
+   "half1": [
+    1130,
+    0.326
+   ],
+   "half2": [
+    1127,
+    0.175
+   ],
+   "avgR_without_top5pct": -0.431,
+   "per_month": 150.5,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "as the alert fires",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 2257,
+   "win": 27,
+   "avg_pct": -0.31,
+   "avgR": 0.275,
+   "t": 3.79,
+   "totalR": 621.4,
+   "pf": 1.34,
+   "half1": [
+    1130,
+    0.292
+   ],
+   "half2": [
+    1127,
+    0.259
+   ],
+   "avgR_without_top5pct": -0.34,
+   "per_month": 150.5,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "as the alert fires, sell at the close if back under",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 2257,
+   "win": 19,
+   "avg_pct": -0.21,
+   "avgR": 0.279,
+   "t": 3.75,
+   "totalR": 628.6,
+   "pf": 1.43,
+   "half1": [
+    1130,
+    0.398
+   ],
+   "half2": [
+    1127,
+    0.159
+   ],
+   "avgR_without_top5pct": -0.369,
+   "per_month": 150.5,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "as the alert fires, sell at the close if back under",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 2257,
+   "win": 20,
+   "avg_pct": -0.21,
+   "avgR": 0.274,
+   "t": 4.06,
+   "totalR": 617.7,
+   "pf": 1.44,
+   "half1": [
+    1130,
+    0.344
+   ],
+   "half2": [
+    1127,
+    0.203
+   ],
+   "avgR_without_top5pct": -0.313,
+   "per_month": 150.5,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 2253,
+   "win": 23,
+   "avg_pct": -0.53,
+   "avgR": -0.17,
+   "t": -2.94,
+   "totalR": -382.4,
+   "pf": 0.81,
+   "half1": [
+    1129,
+    -0.199
+   ],
+   "half2": [
+    1124,
+    -0.14
+   ],
+   "avgR_without_top5pct": -0.645,
+   "per_month": 150.2,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 2253,
+   "win": 24,
+   "avg_pct": -0.3,
+   "avgR": -0.099,
+   "t": -1.81,
+   "totalR": -223.2,
+   "pf": 0.88,
+   "half1": [
+    1129,
+    -0.174
+   ],
+   "half2": [
+    1124,
+    -0.024
+   ],
+   "avgR_without_top5pct": -0.556,
+   "per_month": 150.2,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 1976,
+   "win": 22,
+   "avg_pct": -0.32,
+   "avgR": -0.097,
+   "t": -1.54,
+   "totalR": -191.8,
+   "pf": 0.89,
+   "half1": [
+    996,
+    0.002
+   ],
+   "half2": [
+    980,
+    -0.197
+   ],
+   "avgR_without_top5pct": -0.611,
+   "per_month": 131.7,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "5-min entry",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 1976,
+   "win": 23,
+   "avg_pct": -0.27,
+   "avgR": -0.085,
+   "t": -1.44,
+   "totalR": -168.2,
+   "pf": 0.9,
+   "half1": [
+    996,
+    -0.011
+   ],
+   "half2": [
+    980,
+    -0.161
+   ],
+   "avgR_without_top5pct": -0.56,
+   "per_month": 131.7,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "5-min entry, sell at the close if back under",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 1976,
+   "win": 18,
+   "avg_pct": -0.19,
+   "avgR": -0.086,
+   "t": -1.47,
+   "totalR": -169.0,
+   "pf": 0.88,
+   "half1": [
+    996,
+    0.039
+   ],
+   "half2": [
+    980,
+    -0.212
+   ],
+   "avgR_without_top5pct": -0.561,
+   "per_month": 131.7,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "5-min entry, sell at the close if back under",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 1976,
+   "win": 19,
+   "avg_pct": -0.22,
+   "avgR": -0.093,
+   "t": -1.72,
+   "totalR": -184.7,
+   "pf": 0.87,
+   "half1": [
+    996,
+    0.009
+   ],
+   "half2": [
+    980,
+    -0.198
+   ],
+   "avgR_without_top5pct": -0.53,
+   "per_month": 131.7,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "as the alert fires",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 1023,
+   "win": 23,
+   "avg_pct": -0.53,
+   "avgR": 0.188,
+   "t": 1.65,
+   "totalR": 191.9,
+   "pf": 1.22,
+   "half1": [
+    437,
+    0.193
+   ],
+   "half2": [
+    586,
+    0.184
+   ],
+   "avgR_without_top5pct": -0.452,
+   "per_month": 73.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "as the alert fires",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 1023,
+   "win": 24,
+   "avg_pct": -0.25,
+   "avgR": 0.32,
+   "t": 2.95,
+   "totalR": 327.5,
+   "pf": 1.45,
+   "half1": [
+    437,
+    0.323
+   ],
+   "half2": [
+    586,
+    0.318
+   ],
+   "avgR_without_top5pct": -0.323,
+   "per_month": 73.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "as the alert fires, sell at the close if back under",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 1023,
+   "win": 17,
+   "avg_pct": -0.44,
+   "avgR": 0.228,
+   "t": 2.13,
+   "totalR": 233.3,
+   "pf": 1.36,
+   "half1": [
+    437,
+    0.244
+   ],
+   "half2": [
+    586,
+    0.216
+   ],
+   "avgR_without_top5pct": -0.383,
+   "per_month": 73.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "as the alert fires, sell at the close if back under",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 1023,
+   "win": 20,
+   "avg_pct": -0.2,
+   "avgR": 0.363,
+   "t": 3.46,
+   "totalR": 371.2,
+   "pf": 1.64,
+   "half1": [
+    437,
+    0.378
+   ],
+   "half2": [
+    586,
+    0.352
+   ],
+   "avgR_without_top5pct": -0.273,
+   "per_month": 73.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 1022,
+   "win": 20,
+   "avg_pct": -0.37,
+   "avgR": -0.141,
+   "t": -1.76,
+   "totalR": -144.5,
+   "pf": 0.83,
+   "half1": [
+    437,
+    -0.14
+   ],
+   "half2": [
+    585,
+    -0.143
+   ],
+   "avgR_without_top5pct": -0.598,
+   "per_month": 73.0,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 1022,
+   "win": 18,
+   "avg_pct": -0.09,
+   "avgR": -0.044,
+   "t": -0.6,
+   "totalR": -44.9,
+   "pf": 0.93,
+   "half1": [
+    437,
+    -0.054
+   ],
+   "half2": [
+    585,
+    -0.036
+   ],
+   "avgR_without_top5pct": -0.465,
+   "per_month": 73.0,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 862,
+   "win": 18,
+   "avg_pct": -0.57,
+   "avgR": -0.243,
+   "t": -2.93,
+   "totalR": -209.3,
+   "pf": 0.73,
+   "half1": [
+    369,
+    -0.279
+   ],
+   "half2": [
+    493,
+    -0.216
+   ],
+   "avgR_without_top5pct": -0.677,
+   "per_month": 61.6,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "5-min entry",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 862,
+   "win": 20,
+   "avg_pct": -0.36,
+   "avgR": -0.127,
+   "t": -1.48,
+   "totalR": -109.9,
+   "pf": 0.84,
+   "half1": [
+    369,
+    -0.172
+   ],
+   "half2": [
+    493,
+    -0.094
+   ],
+   "avgR_without_top5pct": -0.587,
+   "per_month": 61.6,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "5-min entry, sell at the close if back under",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 862,
+   "win": 15,
+   "avg_pct": -0.4,
+   "avgR": -0.186,
+   "t": -2.34,
+   "totalR": -160.7,
+   "pf": 0.76,
+   "half1": [
+    369,
+    -0.208
+   ],
+   "half2": [
+    493,
+    -0.17
+   ],
+   "avgR_without_top5pct": -0.61,
+   "per_month": 61.6,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "5-min entry, sell at the close if back under",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 862,
+   "win": 17,
+   "avg_pct": -0.2,
+   "avgR": -0.079,
+   "t": -0.94,
+   "totalR": -68.0,
+   "pf": 0.89,
+   "half1": [
+    369,
+    -0.115
+   ],
+   "half2": [
+    493,
+    -0.052
+   ],
+   "avgR_without_top5pct": -0.528,
+   "per_month": 61.6,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: follow-through",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 90,
+   "win": 19,
+   "avg_pct": -0.26,
+   "avgR": -0.244,
+   "t": -1.01,
+   "totalR": -21.9,
+   "pf": 0.73,
+   "half1": [
+    47,
+    0.03
+   ],
+   "half2": [
+    43,
+    -0.543
+   ],
+   "avgR_without_top5pct": -0.595,
+   "per_month": 6.4,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: follow-through",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 90,
+   "win": 21,
+   "avg_pct": -0.64,
+   "avgR": -0.272,
+   "t": -1.26,
+   "totalR": -24.4,
+   "pf": 0.69,
+   "half1": [
+    47,
+    -0.057
+   ],
+   "half2": [
+    43,
+    -0.506
+   ],
+   "avgR_without_top5pct": -0.601,
+   "per_month": 6.4,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: follow-through",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 70,
+   "win": 7,
+   "avg_pct": -0.78,
+   "avgR": -0.446,
+   "t": -1.44,
+   "totalR": -31.2,
+   "pf": 0.52,
+   "half1": [
+    37,
+    -0.903
+   ],
+   "half2": [
+    33,
+    0.067
+   ],
+   "avgR_without_top5pct": -0.921,
+   "per_month": 5.4,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: follow-through",
+   "tactic": "5-min entry",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 70,
+   "win": 9,
+   "avg_pct": -1.18,
+   "avgR": -0.673,
+   "t": -4.65,
+   "totalR": -47.1,
+   "pf": 0.26,
+   "half1": [
+    37,
+    -0.903
+   ],
+   "half2": [
+    33,
+    -0.414
+   ],
+   "avgR_without_top5pct": -0.895,
+   "per_month": 5.4,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "as the alert fires",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 617,
+   "win": 26,
+   "avg_pct": -0.43,
+   "avgR": 0.179,
+   "t": 1.05,
+   "totalR": 110.1,
+   "pf": 1.22,
+   "half1": [
+    287,
+    0.517
+   ],
+   "half2": [
+    330,
+    -0.116
+   ],
+   "avgR_without_top5pct": -0.502,
+   "per_month": 41.1,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "as the alert fires",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 617,
+   "win": 27,
+   "avg_pct": -0.3,
+   "avgR": 0.184,
+   "t": 1.23,
+   "totalR": 113.7,
+   "pf": 1.24,
+   "half1": [
+    287,
+    0.396
+   ],
+   "half2": [
+    330,
+    -0.0
+   ],
+   "avgR_without_top5pct": -0.444,
+   "per_month": 41.1,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "as the alert fires, sell at the close if back under",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 617,
+   "win": 17,
+   "avg_pct": -0.57,
+   "avgR": 0.151,
+   "t": 0.95,
+   "totalR": 93.3,
+   "pf": 1.24,
+   "half1": [
+    287,
+    0.323
+   ],
+   "half2": [
+    330,
+    0.002
+   ],
+   "avgR_without_top5pct": -0.455,
+   "per_month": 41.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "as the alert fires, sell at the close if back under",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 617,
+   "win": 18,
+   "avg_pct": -0.51,
+   "avgR": 0.147,
+   "t": 1.05,
+   "totalR": 90.8,
+   "pf": 1.25,
+   "half1": [
+    287,
+    0.221
+   ],
+   "half2": [
+    330,
+    0.083
+   ],
+   "avgR_without_top5pct": -0.426,
+   "per_month": 41.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 616,
+   "win": 23,
+   "avg_pct": -0.46,
+   "avgR": -0.102,
+   "t": -0.82,
+   "totalR": -62.9,
+   "pf": 0.88,
+   "half1": [
+    286,
+    0.187
+   ],
+   "half2": [
+    330,
+    -0.353
+   ],
+   "avgR_without_top5pct": -0.627,
+   "per_month": 41.1,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 616,
+   "win": 24,
+   "avg_pct": -0.33,
+   "avgR": -0.093,
+   "t": -0.85,
+   "totalR": -57.6,
+   "pf": 0.88,
+   "half1": [
+    286,
+    0.083
+   ],
+   "half2": [
+    330,
+    -0.247
+   ],
+   "avgR_without_top5pct": -0.558,
+   "per_month": 41.1,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 547,
+   "win": 22,
+   "avg_pct": -0.53,
+   "avgR": -0.199,
+   "t": -1.79,
+   "totalR": -108.7,
+   "pf": 0.77,
+   "half1": [
+    250,
+    0.007
+   ],
+   "half2": [
+    297,
+    -0.372
+   ],
+   "avgR_without_top5pct": -0.656,
+   "per_month": 36.5,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "5-min entry",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 547,
+   "win": 22,
+   "avg_pct": -0.46,
+   "avgR": -0.202,
+   "t": -2.02,
+   "totalR": -110.5,
+   "pf": 0.75,
+   "half1": [
+    250,
+    -0.106
+   ],
+   "half2": [
+    297,
+    -0.283
+   ],
+   "avgR_without_top5pct": -0.61,
+   "per_month": 36.5,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "5-min entry, sell at the close if back under",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 547,
+   "win": 16,
+   "avg_pct": -0.69,
+   "avgR": -0.232,
+   "t": -2.41,
+   "totalR": -126.8,
+   "pf": 0.67,
+   "half1": [
+    250,
+    -0.119
+   ],
+   "half2": [
+    297,
+    -0.327
+   ],
+   "avgR_without_top5pct": -0.606,
+   "per_month": 36.5,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pattern pivot",
+   "tactic": "5-min entry, sell at the close if back under",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 547,
+   "win": 16,
+   "avg_pct": -0.61,
+   "avgR": -0.237,
+   "t": -2.72,
+   "totalR": -129.7,
+   "pf": 0.66,
+   "half1": [
+    250,
+    -0.211
+   ],
+   "half2": [
+    297,
+    -0.259
+   ],
+   "avgR_without_top5pct": -0.582,
+   "per_month": 36.5,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "as the alert fires",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 94,
+   "win": 28,
+   "avg_pct": 0.5,
+   "avgR": 1.197,
+   "t": 2.13,
+   "totalR": 112.5,
+   "pf": 2.68,
+   "half1": [
+    43,
+    0.869
+   ],
+   "half2": [
+    51,
+    1.474
+   ],
+   "avgR_without_top5pct": 0.245,
+   "per_month": 7.2,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "as the alert fires",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 94,
+   "win": 28,
+   "avg_pct": 0.74,
+   "avgR": 1.383,
+   "t": 2.33,
+   "totalR": 130.0,
+   "pf": 3.05,
+   "half1": [
+    43,
+    1.096
+   ],
+   "half2": [
+    51,
+    1.626
+   ],
+   "avgR_without_top5pct": 0.399,
+   "per_month": 7.2,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "as the alert fires, sell at the close if back under",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 94,
+   "win": 24,
+   "avg_pct": 0.29,
+   "avgR": 1.068,
+   "t": 1.95,
+   "totalR": 100.4,
+   "pf": 2.72,
+   "half1": [
+    43,
+    0.973
+   ],
+   "half2": [
+    51,
+    1.148
+   ],
+   "avgR_without_top5pct": 0.11,
+   "per_month": 7.2,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "as the alert fires, sell at the close if back under",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "upper limit",
+   "n": 94,
+   "win": 26,
+   "avg_pct": 0.61,
+   "avgR": 1.313,
+   "t": 2.24,
+   "totalR": 123.4,
+   "pf": 3.17,
+   "half1": [
+    43,
+    1.198
+   ],
+   "half2": [
+    51,
+    1.41
+   ],
+   "avgR_without_top5pct": 0.326,
+   "per_month": 7.2,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 93,
+   "win": 23,
+   "avg_pct": 0.55,
+   "avgR": 0.165,
+   "t": 0.51,
+   "totalR": 15.4,
+   "pf": 1.22,
+   "half1": [
+    43,
+    -0.346
+   ],
+   "half2": [
+    50,
+    0.605
+   ],
+   "avgR_without_top5pct": -0.418,
+   "per_month": 7.2,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 93,
+   "win": 20,
+   "avg_pct": 0.67,
+   "avgR": 0.14,
+   "t": 0.47,
+   "totalR": 13.0,
+   "pf": 1.21,
+   "half1": [
+    43,
+    -0.366
+   ],
+   "half2": [
+    50,
+    0.576
+   ],
+   "avgR_without_top5pct": -0.349,
+   "per_month": 7.2,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 69,
+   "win": 14,
+   "avg_pct": 0.01,
+   "avgR": 0.19,
+   "t": 0.31,
+   "totalR": 13.1,
+   "pf": 1.22,
+   "half1": [
+    34,
+    0.607
+   ],
+   "half2": [
+    35,
+    -0.215
+   ],
+   "avgR_without_top5pct": -0.689,
+   "per_month": 5.3,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "5-min entry",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 69,
+   "win": 16,
+   "avg_pct": 0.28,
+   "avgR": 0.359,
+   "t": 0.56,
+   "totalR": 24.8,
+   "pf": 1.42,
+   "half1": [
+    34,
+    0.817
+   ],
+   "half2": [
+    35,
+    -0.086
+   ],
+   "avgR_without_top5pct": -0.566,
+   "per_month": 5.3,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "5-min entry, sell at the close if back under",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 69,
+   "win": 14,
+   "avg_pct": 0.01,
+   "avgR": 0.19,
+   "t": 0.31,
+   "totalR": 13.1,
+   "pf": 1.22,
+   "half1": [
+    34,
+    0.607
+   ],
+   "half2": [
+    35,
+    -0.215
+   ],
+   "avgR_without_top5pct": -0.689,
+   "per_month": 5.3,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: pop",
+   "tactic": "5-min entry, sell at the close if back under",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 69,
+   "win": 16,
+   "avg_pct": 0.28,
+   "avgR": 0.359,
+   "t": 0.56,
+   "totalR": 24.8,
+   "pf": 1.42,
+   "half1": [
+    34,
+    0.817
+   ],
+   "half2": [
+    35,
+    -0.086
+   ],
+   "avgR_without_top5pct": -0.566,
+   "per_month": 5.3,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: push",
+   "tactic": "as the alert fires",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "hindsight",
+   "n": 169,
+   "win": 32,
+   "avg_pct": 3.33,
+   "avgR": 2.3,
+   "t": 4.39,
+   "totalR": 388.6,
+   "pf": 4.45,
+   "half1": [
+    90,
+    2.791
+   ],
+   "half2": [
+    79,
+    1.74
+   ],
+   "avgR_without_top5pct": 1.168,
+   "per_month": 12.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: push",
+   "tactic": "as the alert fires",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "hindsight",
+   "n": 169,
+   "win": 36,
+   "avg_pct": 2.89,
+   "avgR": 2.001,
+   "t": 4.72,
+   "totalR": 338.2,
+   "pf": 4.44,
+   "half1": [
+    90,
+    2.383
+   ],
+   "half2": [
+    79,
+    1.565
+   ],
+   "avgR_without_top5pct": 1.134,
+   "per_month": 12.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: push",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 169,
+   "win": 30,
+   "avg_pct": 1.6,
+   "avgR": 0.326,
+   "t": 1.39,
+   "totalR": 55.1,
+   "pf": 1.42,
+   "half1": [
+    90,
+    0.364
+   ],
+   "half2": [
+    79,
+    0.284
+   ],
+   "avgR_without_top5pct": -0.199,
+   "per_month": 12.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: push",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 169,
+   "win": 29,
+   "avg_pct": 1.14,
+   "avgR": 0.158,
+   "t": 0.89,
+   "totalR": 26.7,
+   "pf": 1.22,
+   "half1": [
+    90,
+    0.213
+   ],
+   "half2": [
+    79,
+    0.095
+   ],
+   "avgR_without_top5pct": -0.186,
+   "per_month": 12.1,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: push",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "hindsight",
+   "n": 146,
+   "win": 24,
+   "avg_pct": 2.12,
+   "avgR": 0.9,
+   "t": 2.22,
+   "totalR": 131.4,
+   "pf": 2.11,
+   "half1": [
+    79,
+    1.501
+   ],
+   "half2": [
+    67,
+    0.192
+   ],
+   "avgR_without_top5pct": 0.025,
+   "per_month": 10.4,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: push",
+   "tactic": "5-min entry",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "hindsight",
+   "n": 146,
+   "win": 27,
+   "avg_pct": 1.41,
+   "avgR": 0.616,
+   "t": 1.99,
+   "totalR": 89.9,
+   "pf": 1.8,
+   "half1": [
+    79,
+    1.05
+   ],
+   "half2": [
+    67,
+    0.104
+   ],
+   "avgR_without_top5pct": -0.049,
+   "per_month": 10.4,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: retest",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 643,
+   "win": 21,
+   "avg_pct": 0.03,
+   "avgR": -0.051,
+   "t": -0.51,
+   "totalR": -33.1,
+   "pf": 0.94,
+   "half1": [
+    344,
+    -0.057
+   ],
+   "half2": [
+    299,
+    -0.045
+   ],
+   "avgR_without_top5pct": -0.516,
+   "per_month": 45.9,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: retest",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 643,
+   "win": 13,
+   "avg_pct": -0.21,
+   "avgR": -0.054,
+   "t": -0.73,
+   "totalR": -34.8,
+   "pf": 0.87,
+   "half1": [
+    344,
+    -0.014
+   ],
+   "half2": [
+    299,
+    -0.1
+   ],
+   "avgR_without_top5pct": -0.377,
+   "per_month": 45.9,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: retest",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 462,
+   "win": 13,
+   "avg_pct": -0.55,
+   "avgR": -0.284,
+   "t": -2.1,
+   "totalR": -131.4,
+   "pf": 0.7,
+   "half1": [
+    253,
+    -0.037
+   ],
+   "half2": [
+    209,
+    -0.584
+   ],
+   "avgR_without_top5pct": -0.805,
+   "per_month": 33.0,
+   "robust": false
+  },
+  {
+   "strategy": "Buy point: retest",
+   "tactic": "5-min entry",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 462,
+   "win": 18,
+   "avg_pct": -0.38,
+   "avgR": -0.183,
+   "t": -1.59,
+   "totalR": -84.7,
+   "pf": 0.77,
+   "half1": [
+    253,
+    0.028
+   ],
+   "half2": [
+    209,
+    -0.439
+   ],
+   "avgR_without_top5pct": -0.651,
+   "per_month": 33.0,
+   "robust": false
+  },
+  {
+   "strategy": "Gap out of base",
+   "tactic": "1-min ORB, hold",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 91,
+   "win": 27,
+   "avg_pct": 1.1,
+   "avgR": 0.37,
+   "t": 0.95,
+   "totalR": 33.7,
+   "pf": 1.45,
+   "half1": [
+    57,
+    0.725
+   ],
+   "half2": [
+    34,
+    -0.225
+   ],
+   "avgR_without_top5pct": -0.277,
+   "per_month": 6.5,
+   "robust": false
+  },
+  {
+   "strategy": "Gap out of base",
+   "tactic": "1-min ORB, hold",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 91,
+   "win": 29,
+   "avg_pct": 1.13,
+   "avgR": 0.401,
+   "t": 1.09,
+   "totalR": 36.5,
+   "pf": 1.5,
+   "half1": [
+    57,
+    0.807
+   ],
+   "half2": [
+    34,
+    -0.279
+   ],
+   "avgR_without_top5pct": -0.175,
+   "per_month": 6.5,
+   "robust": false
+  },
+  {
+   "strategy": "Gap out of base",
+   "tactic": "1-min ORB, out if RVOL < 2x at 20 min",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 82,
+   "win": 43,
+   "avg_pct": 0.53,
+   "avgR": 0.187,
+   "t": 0.83,
+   "totalR": 15.4,
+   "pf": 1.38,
+   "half1": [
+    50,
+    0.498
+   ],
+   "half2": [
+    32,
+    -0.298
+   ],
+   "avgR_without_top5pct": -0.152,
+   "per_month": 5.9,
+   "robust": false
+  },
+  {
+   "strategy": "Gap out of base",
+   "tactic": "1-min ORB, out if RVOL < 2x at 20 min",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 82,
+   "win": 44,
+   "avg_pct": 0.46,
+   "avgR": 0.159,
+   "t": 0.94,
+   "totalR": 13.0,
+   "pf": 1.33,
+   "half1": [
+    50,
+    0.343
+   ],
+   "half2": [
+    32,
+    -0.129
+   ],
+   "avgR_without_top5pct": -0.073,
+   "per_month": 5.9,
+   "robust": false
+  },
+  {
+   "strategy": "Gap out of base",
+   "tactic": "5-min ORB, hold",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 67,
+   "win": 28,
+   "avg_pct": -0.06,
+   "avgR": 0.252,
+   "t": 0.59,
+   "totalR": 16.9,
+   "pf": 1.32,
+   "half1": [
+    44,
+    0.416
+   ],
+   "half2": [
+    23,
+    -0.062
+   ],
+   "avgR_without_top5pct": -0.369,
+   "per_month": 4.8,
+   "robust": false
+  },
+  {
+   "strategy": "Gap out of base",
+   "tactic": "5-min ORB, hold",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 67,
+   "win": 30,
+   "avg_pct": 0.55,
+   "avgR": 0.379,
+   "t": 0.9,
+   "totalR": 25.4,
+   "pf": 1.52,
+   "half1": [
+    44,
+    0.432
+   ],
+   "half2": [
+    23,
+    0.279
+   ],
+   "avgR_without_top5pct": -0.237,
+   "per_month": 4.8,
+   "robust": true
+  },
+  {
+   "strategy": "Gap out of base",
+   "tactic": "5-min ORB, out if RVOL < 2x at 20 min",
+   "runners": "21 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 50,
+   "win": 36,
+   "avg_pct": -1.2,
+   "avgR": -0.219,
+   "t": -1.42,
+   "totalR": -11.0,
+   "pf": 0.58,
+   "half1": [
+    34,
+    -0.05
+   ],
+   "half2": [
+    16,
+    -0.579
+   ],
+   "avgR_without_top5pct": -0.349,
+   "per_month": 3.8,
+   "robust": false
+  },
+  {
+   "strategy": "Gap out of base",
+   "tactic": "5-min ORB, out if RVOL < 2x at 20 min",
+   "runners": "10 EMA close",
+   "filters": "(none)",
+   "realism": "fair",
+   "n": 50,
+   "win": 38,
+   "avg_pct": -0.9,
+   "avgR": -0.175,
+   "t": -1.44,
+   "totalR": -8.8,
+   "pf": 0.61,
+   "half1": [
+    34,
+    -0.115
+   ],
+   "half2": [
+    16,
+    -0.303
+   ],
+   "avgR_without_top5pct": -0.273,
+   "per_month": 3.8,
+   "robust": false
+  }
+ ],
+ "best": [
+  {
+   "strategy": "Buy point: push",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "early_breakout = 1 & volume building = yes (1.1x+)",
+   "realism": "fair",
+   "n": 46,
+   "win": 41,
+   "avg_pct": 7.09,
+   "avgR": 1.526,
+   "t": 2.44,
+   "totalR": 70.2,
+   "pf": 3.44,
+   "half1": [
+    27,
+    1.666
+   ],
+   "half2": [
+    19,
+    1.328
+   ],
+   "avgR_without_top5pct": 0.903,
+   "per_month": 3.5,
+   "robust": true,
+   "max_open": 4,
+   "avg_open": 1.4
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & flag_volume_dried = 1",
+   "realism": "fair",
+   "n": 60,
+   "win": 47,
+   "avg_pct": 2.67,
+   "avgR": 1.046,
+   "t": 2.65,
+   "totalR": 62.8,
+   "pf": 3.27,
+   "half1": [
+    25,
+    1.444
+   ],
+   "half2": [
+    35,
+    0.763
+   ],
+   "avgR_without_top5pct": 0.568,
+   "per_month": 4.3,
+   "robust": true,
+   "max_open": 4,
+   "avg_open": 1.3
+  },
+  {
+   "strategy": "Buy point: push",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "theme_status = Leading & launch_grade = B",
+   "realism": "fair",
+   "n": 41,
+   "win": 49,
+   "avg_pct": 5.08,
+   "avgR": 0.973,
+   "t": 2.54,
+   "totalR": 39.9,
+   "pf": 3.05,
+   "half1": [
+    23,
+    1.355
+   ],
+   "half2": [
+    18,
+    0.485
+   ],
+   "avgR_without_top5pct": 0.669,
+   "per_month": 3.2,
+   "robust": true,
+   "max_open": 3,
+   "avg_open": 1.2
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "theme_status = Not trending & flag_volume_dried = 1",
+   "realism": "fair",
+   "n": 59,
+   "win": 42,
+   "avg_pct": 2.62,
+   "avgR": 0.914,
+   "t": 2.53,
+   "totalR": 53.9,
+   "pf": 3.02,
+   "half1": [
+    26,
+    0.577
+   ],
+   "half2": [
+    33,
+    1.179
+   ],
+   "avgR_without_top5pct": 0.599,
+   "per_month": 4.5,
+   "robust": true,
+   "max_open": 3,
+   "avg_open": 1.3
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "$vol = 50-100M & ADR = under 4%",
+   "realism": "fair",
+   "n": 150,
+   "win": 32,
+   "avg_pct": 1.46,
+   "avgR": 0.873,
+   "t": 2.5,
+   "totalR": 130.9,
+   "pf": 2.11,
+   "half1": [
+    82,
+    0.686
+   ],
+   "half2": [
+    68,
+    1.098
+   ],
+   "avgR_without_top5pct": 0.182,
+   "per_month": 10.7,
+   "robust": true,
+   "max_open": 3,
+   "avg_open": 1.4
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "$vol = 50-100M & theme_status = Turning up",
+   "realism": "fair",
+   "n": 91,
+   "win": 32,
+   "avg_pct": 2.7,
+   "avgR": 0.915,
+   "t": 2.22,
+   "totalR": 83.3,
+   "pf": 2.57,
+   "half1": [
+    34,
+    0.444
+   ],
+   "half2": [
+    57,
+    1.196
+   ],
+   "avgR_without_top5pct": 0.303,
+   "per_month": 7.0,
+   "robust": true,
+   "max_open": 4,
+   "avg_open": 1.3
+  },
+  {
+   "strategy": "Buy point: retest",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "breakout_grade = A & volume building = yes (1.1x+)",
+   "realism": "fair",
+   "n": 77,
+   "win": 32,
+   "avg_pct": 2.96,
+   "avgR": 0.981,
+   "t": 2.02,
+   "totalR": 75.5,
+   "pf": 2.42,
+   "half1": [
+    40,
+    1.764
+   ],
+   "half2": [
+    37,
+    0.134
+   ],
+   "avgR_without_top5pct": 0.322,
+   "per_month": 7.0,
+   "robust": true,
+   "max_open": 4,
+   "avg_open": 1.4
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "5-min entry",
+   "runners": "21 EMA close",
+   "filters": "breakout_grade = C & launch_grade = A+",
+   "realism": "fair",
+   "n": 73,
+   "win": 34,
+   "avg_pct": 3.41,
+   "avgR": 0.907,
+   "t": 2.12,
+   "totalR": 66.2,
+   "pf": 2.33,
+   "half1": [
+    50,
+    0.426
+   ],
+   "half2": [
+    23,
+    1.952
+   ],
+   "avgR_without_top5pct": 0.394,
+   "per_month": 5.6,
+   "robust": true,
+   "max_open": 2,
+   "avg_open": 1.2
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "$vol = 20-50M & days since launch = 1-10",
+   "realism": "fair",
+   "n": 42,
+   "win": 36,
+   "avg_pct": 2.95,
+   "avgR": 0.919,
+   "t": 2.0,
+   "totalR": 38.6,
+   "pf": 3.0,
+   "half1": [
+    18,
+    1.475
+   ],
+   "half2": [
+    24,
+    0.502
+   ],
+   "avgR_without_top5pct": 0.486,
+   "per_month": 3.8,
+   "robust": true,
+   "max_open": 2,
+   "avg_open": 1.1
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "$vol = 50-100M & flag_volume_dried = 1",
+   "realism": "fair",
+   "n": 58,
+   "win": 38,
+   "avg_pct": 2.83,
+   "avgR": 0.847,
+   "t": 2.16,
+   "totalR": 49.1,
+   "pf": 2.54,
+   "half1": [
+    28,
+    1.249
+   ],
+   "half2": [
+    30,
+    0.472
+   ],
+   "avgR_without_top5pct": 0.54,
+   "per_month": 4.1,
+   "robust": true,
+   "max_open": 3,
+   "avg_open": 1.3
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "theme_status = Not trending & launch_grade = A+",
+   "realism": "fair",
+   "n": 42,
+   "win": 40,
+   "avg_pct": 3.74,
+   "avgR": 0.825,
+   "t": 2.15,
+   "totalR": 34.6,
+   "pf": 2.52,
+   "half1": [
+    23,
+    0.745
+   ],
+   "half2": [
+    19,
+    0.922
+   ],
+   "avgR_without_top5pct": 0.515,
+   "per_month": 3.8,
+   "robust": true,
+   "max_open": 3,
+   "avg_open": 1.1
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "gap = 5-8% & risk<=0.7ADR = no",
+   "realism": "fair",
+   "n": 95,
+   "win": 51,
+   "avg_pct": 3.29,
+   "avgR": 0.663,
+   "t": 2.58,
+   "totalR": 63.0,
+   "pf": 2.43,
+   "half1": [
+    59,
+    0.878
+   ],
+   "half2": [
+    36,
+    0.309
+   ],
+   "avgR_without_top5pct": 0.286,
+   "per_month": 6.3,
+   "robust": true,
+   "max_open": 6,
+   "avg_open": 1.3
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "theme_status = Turning up & flag_volume_dried = 1",
+   "realism": "fair",
+   "n": 76,
+   "win": 39,
+   "avg_pct": 2.34,
+   "avgR": 0.737,
+   "t": 2.24,
+   "totalR": 56.0,
+   "pf": 2.23,
+   "half1": [
+    33,
+    1.354
+   ],
+   "half2": [
+    43,
+    0.264
+   ],
+   "avgR_without_top5pct": 0.386,
+   "per_month": 5.4,
+   "robust": true,
+   "max_open": 4,
+   "avg_open": 1.4
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "gap = 0-2% & RVOL day = 1-1.5x",
+   "realism": "fair",
+   "n": 112,
+   "win": 25,
+   "avg_pct": 1.6,
+   "avgR": 0.616,
+   "t": 2.1,
+   "totalR": 68.9,
+   "pf": 2.17,
+   "half1": [
+    45,
+    0.564
+   ],
+   "half2": [
+    67,
+    0.65
+   ],
+   "avgR_without_top5pct": 0.102,
+   "per_month": 8.6,
+   "robust": true,
+   "max_open": 6,
+   "avg_open": 1.5
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & days since launch = 31-60",
+   "realism": "fair",
+   "n": 288,
+   "win": 33,
+   "avg_pct": 0.84,
+   "avgR": 0.509,
+   "t": 2.54,
+   "totalR": 146.7,
+   "pf": 1.72,
+   "half1": [
+    106,
+    0.298
+   ],
+   "half2": [
+    182,
+    0.633
+   ],
+   "avgR_without_top5pct": -0.117,
+   "per_month": 22.2,
+   "robust": true,
+   "max_open": 9,
+   "avg_open": 2.0
+  },
+  {
+   "strategy": "Buy point: 21 EMA undercut & reclaim",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "breakout_grade = C & early_breakout = 1",
+   "realism": "fair",
+   "n": 42,
+   "win": 24,
+   "avg_pct": 2.07,
+   "avgR": 0.606,
+   "t": 2.08,
+   "totalR": 25.5,
+   "pf": 3.97,
+   "half1": [
+    16,
+    0.677
+   ],
+   "half2": [
+    26,
+    0.563
+   ],
+   "avgR_without_top5pct": 0.314,
+   "per_month": 3.0,
+   "robust": true,
+   "max_open": 3,
+   "avg_open": 1.2
+  },
+  {
+   "strategy": "Buy point: 21 EMA undercut & reclaim",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "$vol = 100M+ & RVOL day = under 1x",
+   "realism": "fair",
+   "n": 40,
+   "win": 22,
+   "avg_pct": 1.79,
+   "avgR": 0.614,
+   "t": 2.0,
+   "totalR": 24.6,
+   "pf": 3.86,
+   "half1": [
+    16,
+    0.746
+   ],
+   "half2": [
+    24,
+    0.526
+   ],
+   "avgR_without_top5pct": 0.307,
+   "per_month": 3.3,
+   "robust": true,
+   "max_open": 3,
+   "avg_open": 1.2
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "breakout_grade = C & flag_volume_dried = 1",
+   "realism": "fair",
+   "n": 143,
+   "win": 34,
+   "avg_pct": 1.3,
+   "avgR": 0.513,
+   "t": 2.34,
+   "totalR": 73.3,
+   "pf": 1.84,
+   "half1": [
+    58,
+    0.822
+   ],
+   "half2": [
+    85,
+    0.302
+   ],
+   "avgR_without_top5pct": 0.09,
+   "per_month": 10.2,
+   "robust": true,
+   "max_open": 5,
+   "avg_open": 1.5
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, sell at the close if not a launch",
+   "runners": "10 EMA close",
+   "filters": "gap = 8%+ & RVOL at buy = under 1x",
+   "realism": "fair",
+   "n": 95,
+   "win": 48,
+   "avg_pct": 1.89,
+   "avgR": 0.579,
+   "t": 2.04,
+   "totalR": 55.0,
+   "pf": 2.21,
+   "half1": [
+    33,
+    0.369
+   ],
+   "half2": [
+    62,
+    0.69
+   ],
+   "avgR_without_top5pct": 0.168,
+   "per_month": 8.6,
+   "robust": true,
+   "max_open": 30,
+   "avg_open": 2.4
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, sell at the close if not a launch",
+   "runners": "10 EMA close",
+   "filters": "RVOL at buy = 3x+ & ADR = 5-7%",
+   "realism": "fair",
+   "n": 50,
+   "win": 56,
+   "avg_pct": 4.26,
+   "avgR": 0.546,
+   "t": 2.16,
+   "totalR": 27.3,
+   "pf": 2.32,
+   "half1": [
+    29,
+    0.348
+   ],
+   "half2": [
+    21,
+    0.82
+   ],
+   "avgR_without_top5pct": 0.327,
+   "per_month": 3.6,
+   "robust": true,
+   "max_open": 3,
+   "avg_open": 1.2
+  },
+  {
+   "strategy": "Buy point: 21 EMA retest",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "breakout_grade = B & launch_grade = C",
+   "realism": "fair",
+   "n": 54,
+   "win": 26,
+   "avg_pct": 2.2,
+   "avgR": 0.551,
+   "t": 2.08,
+   "totalR": 29.7,
+   "pf": 3.89,
+   "half1": [
+    28,
+    1.027
+   ],
+   "half2": [
+    26,
+    0.037
+   ],
+   "avgR_without_top5pct": 0.293,
+   "per_month": 3.6,
+   "robust": true,
+   "max_open": 4,
+   "avg_open": 1.3
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "21 EMA close",
+   "filters": "gap = under 0% & ADR = under 4%",
+   "realism": "fair",
+   "n": 185,
+   "win": 38,
+   "avg_pct": 0.74,
+   "avgR": 0.499,
+   "t": 2.09,
+   "totalR": 92.3,
+   "pf": 1.68,
+   "half1": [
+    95,
+    0.691
+   ],
+   "half2": [
+    90,
+    0.297
+   ],
+   "avgR_without_top5pct": -0.101,
+   "per_month": 12.3,
+   "robust": true,
+   "max_open": 6,
+   "avg_open": 1.6
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "5-min entry, sell at the close if back under",
+   "runners": "21 EMA close",
+   "filters": "$vol = 50-100M & breakout_grade = B",
+   "realism": "fair",
+   "n": 188,
+   "win": 26,
+   "avg_pct": 1.44,
+   "avgR": 0.492,
+   "t": 2.08,
+   "totalR": 92.5,
+   "pf": 1.8,
+   "half1": [
+    102,
+    0.868
+   ],
+   "half2": [
+    86,
+    0.047
+   ],
+   "avgR_without_top5pct": -0.119,
+   "per_month": 12.5,
+   "robust": true,
+   "max_open": 5,
+   "avg_open": 1.4
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "ADR = 4-5% & buy time = after 11",
+   "realism": "fair",
+   "n": 715,
+   "win": 38,
+   "avg_pct": 1.07,
+   "avgR": 0.314,
+   "t": 3.24,
+   "totalR": 224.3,
+   "pf": 1.59,
+   "half1": [
+    345,
+    0.381
+   ],
+   "half2": [
+    370,
+    0.251
+   ],
+   "avgR_without_top5pct": -0.096,
+   "per_month": 47.7,
+   "robust": true,
+   "max_open": 40,
+   "avg_open": 3.3
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & theme_status = Turning up",
+   "realism": "fair",
+   "n": 306,
+   "win": 31,
+   "avg_pct": 0.64,
+   "avgR": 0.419,
+   "t": 2.28,
+   "totalR": 128.3,
+   "pf": 1.6,
+   "half1": [
+    142,
+    0.263
+   ],
+   "half2": [
+    164,
+    0.554
+   ],
+   "avgR_without_top5pct": -0.183,
+   "per_month": 20.4,
+   "robust": true,
+   "max_open": 7,
+   "avg_open": 2.0
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "volume building = no & flag_volume_dried = 1",
+   "realism": "fair",
+   "n": 213,
+   "win": 33,
+   "avg_pct": 1.22,
+   "avgR": 0.375,
+   "t": 2.21,
+   "totalR": 79.9,
+   "pf": 1.6,
+   "half1": [
+    88,
+    0.697
+   ],
+   "half2": [
+    125,
+    0.149
+   ],
+   "avgR_without_top5pct": -0.036,
+   "per_month": 15.2,
+   "robust": true,
+   "max_open": 5,
+   "avg_open": 1.8
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "early_breakout = 1 & flag_volume_dried = 1",
+   "realism": "fair",
+   "n": 190,
+   "win": 36,
+   "avg_pct": 1.74,
+   "avgR": 0.401,
+   "t": 2.01,
+   "totalR": 76.3,
+   "pf": 1.6,
+   "half1": [
+    85,
+    0.558
+   ],
+   "half2": [
+    105,
+    0.275
+   ],
+   "avgR_without_top5pct": -0.04,
+   "per_month": 13.6,
+   "robust": true,
+   "max_open": 5,
+   "avg_open": 1.7
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & caution_within_0_5pct = 0",
+   "realism": "fair",
+   "n": 615,
+   "win": 29,
+   "avg_pct": 0.56,
+   "avgR": 0.318,
+   "t": 2.5,
+   "totalR": 195.5,
+   "pf": 1.44,
+   "half1": [
+    306,
+    0.246
+   ],
+   "half2": [
+    309,
+    0.389
+   ],
+   "avgR_without_top5pct": -0.248,
+   "per_month": 41.0,
+   "robust": true,
+   "max_open": 12,
+   "avg_open": 2.7
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "gap = 0-2% & from under 200 SMA = no",
+   "realism": "fair",
+   "n": 2234,
+   "win": 36,
+   "avg_pct": 0.91,
+   "avgR": 0.202,
+   "t": 3.92,
+   "totalR": 450.5,
+   "pf": 1.35,
+   "half1": [
+    1170,
+    0.26
+   ],
+   "half2": [
+    1064,
+    0.138
+   ],
+   "avgR_without_top5pct": -0.191,
+   "per_month": 148.9,
+   "robust": true,
+   "max_open": 50,
+   "avg_open": 8.1
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "$vol = 50-100M & ADR = 4-5%",
+   "realism": "fair",
+   "n": 408,
+   "win": 40,
+   "avg_pct": 1.36,
+   "avgR": 0.304,
+   "t": 2.58,
+   "totalR": 123.9,
+   "pf": 1.55,
+   "half1": [
+    226,
+    0.292
+   ],
+   "half2": [
+    182,
+    0.319
+   ],
+   "avgR_without_top5pct": -0.088,
+   "per_month": 27.2,
+   "robust": true,
+   "max_open": 16,
+   "avg_open": 2.3
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & volume building = no",
+   "realism": "fair",
+   "n": 500,
+   "win": 29,
+   "avg_pct": 0.62,
+   "avgR": 0.325,
+   "t": 2.4,
+   "totalR": 162.3,
+   "pf": 1.46,
+   "half1": [
+    234,
+    0.237
+   ],
+   "half2": [
+    266,
+    0.401
+   ],
+   "avgR_without_top5pct": -0.238,
+   "per_month": 35.7,
+   "robust": true,
+   "max_open": 11,
+   "avg_open": 2.5
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "ADR = 4-5% & risk<=0.7ADR = no",
+   "realism": "fair",
+   "n": 1245,
+   "win": 37,
+   "avg_pct": 0.93,
+   "avgR": 0.212,
+   "t": 3.34,
+   "totalR": 264.1,
+   "pf": 1.38,
+   "half1": [
+    652,
+    0.278
+   ],
+   "half2": [
+    593,
+    0.14
+   ],
+   "avgR_without_top5pct": -0.161,
+   "per_month": 83.0,
+   "robust": true,
+   "max_open": 38,
+   "avg_open": 4.7
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & early_breakout = 1",
+   "realism": "fair",
+   "n": 512,
+   "win": 29,
+   "avg_pct": 0.63,
+   "avgR": 0.31,
+   "t": 2.26,
+   "totalR": 158.9,
+   "pf": 1.45,
+   "half1": [
+    273,
+    0.384
+   ],
+   "half2": [
+    239,
+    0.227
+   ],
+   "avgR_without_top5pct": -0.241,
+   "per_month": 34.1,
+   "robust": true,
+   "max_open": 10,
+   "avg_open": 2.3
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "ADR = 5-7% & risk<=0.7ADR = no",
+   "realism": "fair",
+   "n": 879,
+   "win": 35,
+   "avg_pct": 1.21,
+   "avgR": 0.232,
+   "t": 3.01,
+   "totalR": 203.5,
+   "pf": 1.39,
+   "half1": [
+    456,
+    0.286
+   ],
+   "half2": [
+    423,
+    0.173
+   ],
+   "avgR_without_top5pct": -0.123,
+   "per_month": 58.6,
+   "robust": true,
+   "max_open": 15,
+   "avg_open": 3.5
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & third_try = 0",
+   "realism": "fair",
+   "n": 673,
+   "win": 29,
+   "avg_pct": 0.53,
+   "avgR": 0.287,
+   "t": 2.4,
+   "totalR": 193.0,
+   "pf": 1.4,
+   "half1": [
+    336,
+    0.251
+   ],
+   "half2": [
+    337,
+    0.323
+   ],
+   "avgR_without_top5pct": -0.267,
+   "per_month": 44.9,
+   "robust": true,
+   "max_open": 13,
+   "avg_open": 2.9
+  },
+  {
+   "strategy": "Buy point: flag breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "tight days before = 0-1 & flag_volume_dried = 1",
+   "realism": "fair",
+   "n": 237,
+   "win": 34,
+   "avg_pct": 1.3,
+   "avgR": 0.342,
+   "t": 2.0,
+   "totalR": 81.0,
+   "pf": 1.52,
+   "half1": [
+    98,
+    0.476
+   ],
+   "half2": [
+    139,
+    0.247
+   ],
+   "avgR_without_top5pct": -0.073,
+   "per_month": 16.9,
+   "robust": true,
+   "max_open": 5,
+   "avg_open": 1.8
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "ADR = 4-5% & from under 200 SMA = no",
+   "realism": "fair",
+   "n": 1341,
+   "win": 35,
+   "avg_pct": 0.88,
+   "avgR": 0.225,
+   "t": 2.96,
+   "totalR": 301.7,
+   "pf": 1.35,
+   "half1": [
+    744,
+    0.271
+   ],
+   "half2": [
+    597,
+    0.168
+   ],
+   "avgR_without_top5pct": -0.225,
+   "per_month": 89.4,
+   "robust": true,
+   "max_open": 46,
+   "avg_open": 5.2
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "RVOL at buy = under 1x & risk<=0.7ADR = no",
+   "realism": "fair",
+   "n": 2226,
+   "win": 36,
+   "avg_pct": 0.8,
+   "avgR": 0.176,
+   "t": 3.74,
+   "totalR": 391.6,
+   "pf": 1.31,
+   "half1": [
+    1117,
+    0.226
+   ],
+   "half2": [
+    1109,
+    0.125
+   ],
+   "avgR_without_top5pct": -0.187,
+   "per_month": 148.4,
+   "robust": true,
+   "max_open": 63,
+   "avg_open": 7.9
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4%",
+   "realism": "fair",
+   "n": 680,
+   "win": 28,
+   "avg_pct": 0.5,
+   "avgR": 0.275,
+   "t": 2.33,
+   "totalR": 187.2,
+   "pf": 1.38,
+   "half1": [
+    339,
+    0.242
+   ],
+   "half2": [
+    341,
+    0.308
+   ],
+   "avgR_without_top5pct": -0.283,
+   "per_month": 45.3,
+   "robust": true,
+   "max_open": 13,
+   "avg_open": 2.9
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & flag_volume_dried = 0",
+   "realism": "fair",
+   "n": 680,
+   "win": 28,
+   "avg_pct": 0.5,
+   "avgR": 0.275,
+   "t": 2.33,
+   "totalR": 187.2,
+   "pf": 1.38,
+   "half1": [
+    339,
+    0.242
+   ],
+   "half2": [
+    341,
+    0.308
+   ],
+   "avgR_without_top5pct": -0.283,
+   "per_month": 45.3,
+   "robust": true,
+   "max_open": 13,
+   "avg_open": 2.9
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "gap = 0-2% & risk<=0.7ADR = no",
+   "realism": "fair",
+   "n": 2198,
+   "win": 36,
+   "avg_pct": 0.73,
+   "avgR": 0.164,
+   "t": 3.87,
+   "totalR": 361.3,
+   "pf": 1.3,
+   "half1": [
+    1132,
+    0.213
+   ],
+   "half2": [
+    1066,
+    0.113
+   ],
+   "avgR_without_top5pct": -0.15,
+   "per_month": 146.5,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "gap = 0-2% & buy time = after 11",
+   "realism": "fair",
+   "n": 1452,
+   "win": 36,
+   "avg_pct": 0.79,
+   "avgR": 0.184,
+   "t": 3.43,
+   "totalR": 266.6,
+   "pf": 1.35,
+   "half1": [
+    727,
+    0.232
+   ],
+   "half2": [
+    725,
+    0.135
+   ],
+   "avgR_without_top5pct": -0.148,
+   "per_month": 96.8,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "risk<=0.7ADR = no",
+   "realism": "fair",
+   "n": 3042,
+   "win": 36,
+   "avg_pct": 0.72,
+   "avgR": 0.153,
+   "t": 3.99,
+   "totalR": 466.7,
+   "pf": 1.27,
+   "half1": [
+    1615,
+    0.208
+   ],
+   "half2": [
+    1427,
+    0.092
+   ],
+   "avgR_without_top5pct": -0.195,
+   "per_month": 202.8,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & double_breakout = 0",
+   "realism": "fair",
+   "n": 651,
+   "win": 28,
+   "avg_pct": 0.49,
+   "avgR": 0.272,
+   "t": 2.23,
+   "totalR": 177.1,
+   "pf": 1.37,
+   "half1": [
+    321,
+    0.259
+   ],
+   "half2": [
+    330,
+    0.284
+   ],
+   "avgR_without_top5pct": -0.288,
+   "per_month": 43.4,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "$vol = 50-100M & buy time = after 11",
+   "realism": "fair",
+   "n": 452,
+   "win": 36,
+   "avg_pct": 1.14,
+   "avgR": 0.26,
+   "t": 2.33,
+   "totalR": 117.5,
+   "pf": 1.5,
+   "half1": [
+    216,
+    0.242
+   ],
+   "half2": [
+    236,
+    0.277
+   ],
+   "avgR_without_top5pct": -0.158,
+   "per_month": 30.1,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "RVOL at buy = under 1x & from under 200 SMA = no",
+   "realism": "fair",
+   "n": 3493,
+   "win": 34,
+   "avg_pct": 0.66,
+   "avgR": 0.16,
+   "t": 3.58,
+   "totalR": 557.3,
+   "pf": 1.25,
+   "half1": [
+    1787,
+    0.234
+   ],
+   "half2": [
+    1706,
+    0.081
+   ],
+   "avgR_without_top5pct": -0.282,
+   "per_month": 232.9,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "$vol = 100M+ & ADR = 5-7%",
+   "realism": "fair",
+   "n": 908,
+   "win": 32,
+   "avg_pct": 0.81,
+   "avgR": 0.224,
+   "t": 2.55,
+   "totalR": 203.6,
+   "pf": 1.34,
+   "half1": [
+    430,
+    0.358
+   ],
+   "half2": [
+    478,
+    0.104
+   ],
+   "avgR_without_top5pct": -0.233,
+   "per_month": 60.5,
+   "robust": true
+  },
+  {
+   "strategy": "Buy point: base breakout",
+   "tactic": "buy at the close",
+   "runners": "10 EMA close",
+   "filters": "ADR = under 4% & tight days before = 0-1",
+   "realism": "fair",
+   "n": 634,
+   "win": 28,
+   "avg_pct": 0.4,
+   "avgR": 0.262,
+   "t": 2.15,
+   "totalR": 166.2,
+   "pf": 1.37,
+   "half1": [
+    318,
+    0.2
+   ],
+   "half2": [
+    316,
+    0.325
+   ],
+   "avgR_without_top5pct": -0.287,
+   "per_month": 42.3,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "gap = 0-2% & $vol = 50-100M",
+   "realism": "fair",
+   "n": 658,
+   "win": 36,
+   "avg_pct": 1.06,
+   "avgR": 0.222,
+   "t": 2.5,
+   "totalR": 146.3,
+   "pf": 1.41,
+   "half1": [
+    320,
+    0.232
+   ],
+   "half2": [
+    338,
+    0.213
+   ],
+   "avgR_without_top5pct": -0.156,
+   "per_month": 43.9,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "buy time = after 11",
+   "realism": "fair",
+   "n": 2038,
+   "win": 35,
+   "avg_pct": 0.69,
+   "avgR": 0.168,
+   "t": 3.29,
+   "totalR": 342.4,
+   "pf": 1.29,
+   "half1": [
+    1021,
+    0.283
+   ],
+   "half2": [
+    1017,
+    0.052
+   ],
+   "avgR_without_top5pct": -0.208,
+   "per_month": 135.9,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "ADR = 4-5%",
+   "realism": "fair",
+   "n": 1752,
+   "win": 35,
+   "avg_pct": 0.77,
+   "avgR": 0.186,
+   "t": 2.96,
+   "totalR": 325.4,
+   "pf": 1.29,
+   "half1": [
+    941,
+    0.224
+   ],
+   "half2": [
+    811,
+    0.141
+   ],
+   "avgR_without_top5pct": -0.238,
+   "per_month": 116.8,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "gap = 0-2%",
+   "realism": "fair",
+   "n": 2844,
+   "win": 35,
+   "avg_pct": 0.74,
+   "avgR": 0.153,
+   "t": 3.53,
+   "totalR": 434.9,
+   "pf": 1.26,
+   "half1": [
+    1450,
+    0.224
+   ],
+   "half2": [
+    1394,
+    0.079
+   ],
+   "avgR_without_top5pct": -0.207,
+   "per_month": 189.6,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "ADR = 7%+ & buy time = by 10:00",
+   "realism": "fair",
+   "n": 520,
+   "win": 36,
+   "avg_pct": 0.8,
+   "avgR": 0.247,
+   "t": 2.11,
+   "totalR": 128.5,
+   "pf": 1.39,
+   "half1": [
+    237,
+    0.512
+   ],
+   "half2": [
+    283,
+    0.026
+   ],
+   "avgR_without_top5pct": -0.235,
+   "per_month": 34.7,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "RVOL at buy = under 1x & $vol = 100M+",
+   "realism": "fair",
+   "n": 2377,
+   "win": 33,
+   "avg_pct": 0.54,
+   "avgR": 0.164,
+   "t": 3.15,
+   "totalR": 388.9,
+   "pf": 1.25,
+   "half1": [
+    1152,
+    0.311
+   ],
+   "half2": [
+    1225,
+    0.025
+   ],
+   "avgR_without_top5pct": -0.271,
+   "per_month": 158.5,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "$vol = 20-50M & risk<=0.7ADR = no",
+   "realism": "fair",
+   "n": 929,
+   "win": 35,
+   "avg_pct": 1.03,
+   "avgR": 0.197,
+   "t": 2.61,
+   "totalR": 182.7,
+   "pf": 1.34,
+   "half1": [
+    525,
+    0.233
+   ],
+   "half2": [
+    404,
+    0.149
+   ],
+   "avgR_without_top5pct": -0.162,
+   "per_month": 61.9,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "$vol = 100M+ & buy time = by 10:00",
+   "realism": "fair",
+   "n": 1284,
+   "win": 32,
+   "avg_pct": 0.64,
+   "avgR": 0.194,
+   "t": 2.65,
+   "totalR": 248.6,
+   "pf": 1.28,
+   "half1": [
+    638,
+    0.383
+   ],
+   "half2": [
+    646,
+    0.006
+   ],
+   "avgR_without_top5pct": -0.26,
+   "per_month": 85.6,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "21 EMA close",
+   "filters": "risk<=0.7ADR = no & from under 200 SMA = no",
+   "realism": "fair",
+   "n": 2283,
+   "win": 36,
+   "avg_pct": 0.7,
+   "avgR": 0.153,
+   "t": 3.36,
+   "totalR": 349.5,
+   "pf": 1.26,
+   "half1": [
+    1246,
+    0.208
+   ],
+   "half2": [
+    1037,
+    0.087
+   ],
+   "avgR_without_top5pct": -0.203,
+   "per_month": 152.2,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "ADR = 5-7% & from under 200 SMA = no",
+   "realism": "fair",
+   "n": 1425,
+   "win": 31,
+   "avg_pct": 0.77,
+   "avgR": 0.191,
+   "t": 2.69,
+   "totalR": 272.1,
+   "pf": 1.28,
+   "half1": [
+    731,
+    0.323
+   ],
+   "half2": [
+    694,
+    0.052
+   ],
+   "avgR_without_top5pct": -0.263,
+   "per_month": 95.0,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "gap = 0-2% & $vol = 100M+",
+   "realism": "fair",
+   "n": 1332,
+   "win": 35,
+   "avg_pct": 0.69,
+   "avgR": 0.172,
+   "t": 2.91,
+   "totalR": 229.3,
+   "pf": 1.32,
+   "half1": [
+    675,
+    0.329
+   ],
+   "half2": [
+    657,
+    0.011
+   ],
+   "avgR_without_top5pct": -0.184,
+   "per_month": 88.8,
+   "robust": true
+  },
+  {
+   "strategy": "Launch day (fair)",
+   "tactic": "5-min entry, hold",
+   "runners": "10 EMA close",
+   "filters": "ADR = 5-7% & buy time = by 10:00",
+   "realism": "fair",
+   "n": 794,
+   "win": 32,
+   "avg_pct": 0.84,
+   "avgR": 0.218,
+   "t": 2.29,
+   "totalR": 173.5,
+   "pf": 1.3,
+   "half1": [
+    392,
+    0.342
+   ],
+   "half2": [
+    402,
+    0.098
+   ],
+   "avgR_without_top5pct": -0.218,
+   "per_month": 52.9,
+   "robust": true
+  }
+ ]
+}

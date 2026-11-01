@@ -382,6 +382,37 @@ def grid(wb, title, rows, rv):
         ws.column_dimensions[get_column_letter(i)].width = 12
 
 
+def analysis_sheet(wb):
+    """tools/analysis.json (tools/analyze.py): every strategy x entry x runner without filters, fair first"""
+    p = os.path.join(ROOT, "tools", "analysis.json")
+    if not os.path.exists(p):
+        return
+    an = json.load(open(p))
+    ws = wb.create_sheet("Analysis", 2)
+    ws.append(["THE ANALYSIS (tools/analyze.py): every strategy, entry and runner, after 0.15% costs, the risk floored at 1%. 'fair' = the trigger and the stop "
+               "are known when you buy; 'upper limit' = an intraday buy with the day's-low stop (that low is only known at 4 PM: no stop on the buy day); "
+               "'hindsight' = a push bought during the day (a push is only known at its close). halves = the average R before / after " + an["middle_date"] + ". "
+               "LUCK TEST: the same search on shuffled results found as many 'robust' filter combinations (80-132) as the real data (134), and luck reached "
+               "t = 3.1-4.1: no filter combination here is stronger than luck."])
+    ws["A1"].font = Font(bold=True, color="2F5597")
+    ws["A1"].alignment = Alignment(wrap_text=True, vertical="top")
+    ws.row_dimensions[1].height = 75
+    ws.append(["realism", "strategy", "entry tactic", "runners", "trades", "winners %", "average % (net)", "average R (net)", "t (2+ = unlikely luck)",
+               "R 1st half", "R 2nd half", "R without the best 5%", "trades a month"])
+    for c in ws[2]:
+        c.font = Font(bold=True, color="FFFFFF")
+        c.fill = PatternFill("solid", fgColor="2F5597")
+        c.alignment = Alignment(wrap_text=True, vertical="top")
+    order = {"fair": 0, "upper limit": 1, "hindsight": 2}
+    for f in sorted(an["baseline"], key=lambda f: (order.get(f["realism"], 3), -f["avgR"])):
+        ws.append([f["realism"], f["strategy"], f["tactic"], f["runners"], f["n"], f["win"], f["avg_pct"], f["avgR"], f["t"],
+                   f["half1"][1], f["half2"][1], f["avgR_without_top5pct"], f["per_month"]])
+    ws.auto_filter.ref = f"A2:M{ws.max_row}"
+    ws.freeze_panes = "C3"
+    for i, w in enumerate([12, 34, 46, 14] + [12] * 9, 1):
+        ws.column_dimensions[get_column_letter(i)].width = w
+
+
 def main():
     wb = Workbook()
     rm = wb.active
@@ -531,6 +562,7 @@ def main():
         trades(wb, label, with_risk_adr(d["trades"]), TOT_3 if name == "probe_buypoints" else TOT)
         for rv in rvcol:
             grid(wb, f"{label.split()[0]} {'pace' if 'pace' in rv else 'RVOL'} x gap", d["trades"], rv)
+    analysis_sheet(wb)
     wb.save(OUT)
     print("saved", OUT)
 
