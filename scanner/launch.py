@@ -85,7 +85,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -712,6 +712,9 @@ def follow(a, i0, i, pick=False):
         cands.append((ib[0], "Inner base (last 20 days)", i + 1 - ib[1], 100 * (1 - st.l[ib[1]:i + 1].min() / ib[0])))
     bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)
     top_date = next((st.dates[k] for t, k in tops if bp is not None and t == bp), None)
+    # gap out of base (your rule, Nov 1 2026; Zanger / Qullamaggie): the nearest base high over the close, the base top or a
+    # pattern's pivot, not a flag line or a pop; an open above it tomorrow is a gap out of the base (radar/alerts.py)
+    gb = min((x for x in cands if not x[1].startswith(("Flag", "Pop"))), default=None)
     adr = _adr(st, i)
     # retest held, at the close: within 20 sessions of a breakout, while it hasn't closed an ADR under the level, the
     # low comes back to the level, the bodies' top or the wick top (from 1.5 ADRs under the bodies' top up to the wick
@@ -986,6 +989,7 @@ def follow(a, i0, i, pick=False):
         exit_gain_pct=fnum(100 * (c[exit_k] / c[i0] - 1), 1) if exit_k is not None else None,
         lost_50ema=st.dates[out50] if out50 is not None else None,
         price=fnum(c[i]), chg_today_pct=fnum(a.chg[i], 1), rel_vol_today=fnum(a.rv[i], 1),
+        gap_base_level=fnum(gb[0]) if gb else None, gap_base_pattern=gb[1] if gb else None,
         pattern=pat, buy_point=fnum(bp) if bp else None, to_buy_point_pct=fnum(100 * (bp / c[i] - 1), 1) if bp else None,
         buy_point_top_date=top_date,
         base_breakout_today=bool(bo and bo[0] == i),
@@ -1274,6 +1278,24 @@ def write_watchlist(rows, wl_path, wl):
         print("README not rewritten:", e)
 
 
+def gap_base_fields(a, i, prev=None):
+    """gap out of base (your rule, Nov 1 2026): whether the stock qualifies at this close (ADR 4%+, 600K+ shares and
+    $30M+ traded a day, 20-day averages, market cap $700M+) and whether today opened above last night's base high
+    (prev: last night's row of it) from a close at or under it"""
+    st = a.st
+    c, v = st.c, st.v
+    dv = float(np.dot(c[i - 19:i + 1], v[i - 19:i + 1])) / 20 / 1e6 if i >= 19 else 0.0
+    av = float(v[i - 19:i + 1].mean()) if i >= 19 else 0.0
+    ok = bool(st.adr[i] >= L["gob_min_adr"] and av >= L["gob_min_shares"] and dv >= L["gob_min_dv"]
+              and (getattr(st, "mcap", None) or 0) >= L["gob_min_mcap"] * 1e6)
+    out = dict(dollar_vol_20d_m=fnum(dv, 1), avg_vol_20d=int(av), gap_base_ok=ok, gap_out_today=None)
+    lv = (prev or {}).get("gap_base_level")
+    if lv and prev.get("gap_base_ok") and i >= 1 and c[i - 1] <= lv < st.o[i]:
+        out["gap_out_today"] = dict(level=lv, pattern=prev.get("gap_base_pattern"), open_pct=fnum(100 * (st.o[i] / lv - 1), 1),
+                                    closed_over=bool(c[i] > lv))
+    return out
+
+
 def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None, s3=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
@@ -1287,6 +1309,15 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         old_doc = {}
     kept = {(d[0], d[1]): d[2] for d in old_doc.get("catalyst_days", [])}
     prev_s3 = old_doc.get("setups3", [])
+    old_rows = {r_["symbol"]: r_ for r_ in old_doc.get("launches", [])}
+    same_day = old_doc.get("date") == today
+
+    def gap_fields(s_, a_, i_):
+        if same_day:
+            g_ = gap_base_fields(a_, i_)
+            g_["gap_out_today"] = old_rows.get(s_, {}).get("gap_out_today")
+            return g_
+        return gap_base_fields(a_, i_, old_rows.get(s_) if len(cal) > 1 and old_doc.get("date") == cal[-2] else None)
     tags = dict(kept)
     for s, d in (earnings or {}).items():
         a = A.get(s)
@@ -1319,6 +1350,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         r = launch_row(s, a, i, gs, gn, S)
         r.update(f)
         r["follows"] = leader or None
+        r.update(gap_fields(s, a, last))
         r["news"] = (news or {}).get((s, r["date"]))
         r["earnings"] = (earnings or {}).get(s) == r["date"] or CATALYST_DAYS.get((s, r["date"])) == "earnings"
         if r["catalyst"]:
@@ -1366,6 +1398,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         cgs, cgn = best_group(s, T, groups, GS)
         r.update(grade="You", pick=added, follows=None, news=None, earnings=False, group_now=cgn,
                  group_status_now=STATUS.get(cgs, "No group"), theme_up_since=None, lone_wolf=False)
+        r.update(gap_fields(s, a, last))
         rows.append(r)
     # watch list for the intraday trigger: liquid, from 25% under to 50% over the 200 SMA (over 28%: power days
     # only; under it: only once it trades back above it, e.g. a catalyst gap), no launch in 20 days
