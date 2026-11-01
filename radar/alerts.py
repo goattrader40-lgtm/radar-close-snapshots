@@ -107,7 +107,7 @@ def find_early(live, doc, now=None):
         if not s200 or price <= s200 or gap < R.get("ep_gap", 5):
             continue
         ext = (close0 / s200 - 1) * 100
-        power = gap >= R.get("power_gap", 10)
+        power = gap >= R.get("power_gap", 8)
         if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not power):
             continue
         under = [n for n, m in (("50 EMA", s50), ("200 SMA", s200)) if m and close0 < m]
@@ -152,7 +152,7 @@ def find(live, doc, now=None):
         if not s200 or price <= s200:
             continue
         ext = (close0 / s200 - 1) * 100
-        power = rv >= R.get("power_rv", 4) and gap is not None and gap >= R.get("power_gap", 10) and chg >= R.get("power_chg", 15)
+        power = rv >= R.get("power_rv", 4) and gap is not None and gap >= R.get("power_gap", 8) and chg >= R.get("power_chg", 10)
         if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not power):
             continue
         theme = f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"

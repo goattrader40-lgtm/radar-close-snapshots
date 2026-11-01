@@ -201,11 +201,32 @@ def main():
         launch.CATALYST_DAYS.clear()
         launch.CATALYST_DAYS.update(days)
         sets[name] = {(s, i) for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S)}
+    # your Nov 1 2026 launch rules (power day an 8%+ gap and a 10%+ day, was 10% / 15%; catalyst 2x+ volume; the reversal day)
+    # against the rules before them, without the catalyst days (news): the launches they add and the ones they drop
+    L["catalyst_launch"] = 0
+    launch.CATALYST_DAYS.clear()
+    keep = {k: L[k] for k in ("power_gap", "power_chg", "cat_rv", "reversal_launch")}
+    L.update(power_gap=10, power_chg=15, cat_rv=1.5, reversal_launch=0)
+    before = {(s, i) for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S)}
+    L.update(keep)
+    added, dropped = sorted(sets["current"] - before), sorted(before - sets["current"])
+    rev = [k for k in added if A[k[0]].reversal(k[1])]
+    pw = [k for k in added if A[k[0]].power(k[1]) and not A[k[0]].reversal(k[1])]
     cur = sets["current"]
     cat = sorted(k for k in sets["with_news"] - cur if (k[0], A[k[0]].st.dates[k[1]]) in news)
     nonews = sorted(k for k in sets["no_news_needed"] - cur if (k[0], A[k[0]].st.dates[k[1]]) not in news)
     gone = sorted(cur - sets["with_news"])
-    orh = orh_entries(A, sorted(cur | set(cat) | set(nonews)))
+    orh = orh_entries(A, sorted(cur | set(cat) | set(nonews) | set(dropped)))
+    rule = dict(before=len(before), now=len(cur), added=len(added), dropped=len(dropped), reversal=len(rev), power=len(pw),
+                power_faded=sum(1 for s, i in pw if A[s].clpos[i] < L["min_clpos"]),
+                launch_day_orh=dict(reversal=launch_day(A, rev, orh), power=launch_day(A, pw, orh), dropped=launch_day(A, dropped, orh),
+                                    all_now=launch_day(A, cur, orh)),
+                buy_points=dict(reversal=buy_points(A, rev).get("all"), power=buy_points(A, pw).get("all"),
+                                dropped=buy_points(A, dropped).get("all")),
+                examples=[[A[s].st.dates[i], s, "reversal" if A[s].reversal(i) else "power" if A[s].power(i) else "other",
+                           round(float(A[s].gap[i]), 1), round(float(A[s].chg[i]), 1), round(float(A[s].rv[i]), 1)]
+                          for s, i in sorted(added, key=lambda k: A[k[0]].st.dates[k[1]])[-40:]],
+                dropped_examples=[[A[s].st.dates[i], s, round(float(A[s].gap[i]), 1), round(float(A[s].chg[i]), 1)] for s, i in dropped[-20:]])
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1],
                candidate_days=len(maybe), with_news=len(news), earnings=sum(1 for v in news.values() if v[0] == "earnings"),
                launches=dict(current=len(cur), catalyst_with_news=len(cat), catalyst_without_news=len(nonews), current_absorbed=len(gone)),
@@ -216,6 +237,7 @@ def main():
                                               orh=launch_day(A, [(s, i) for s, i in cat if A[s].cleared(i) == n], orh),
                                               buy_points=buy_points(A, [(s, i) for s, i in cat if A[s].cleared(i) == n]).get("all"))
                         for n in launch.BASES},
+               rule_change_nov1=rule,
                check=check,
                examples=[[A[s].st.dates[i], s, round(float(A[s].gap[i]), 1), round(float(A[s].chg[i]), 1), A[s].cleared(i)] + list(news[(s, A[s].st.dates[i])])
                          for s, i in sorted(cat, key=lambda k: A[k[0]].st.dates[k[1]])[-40:]])

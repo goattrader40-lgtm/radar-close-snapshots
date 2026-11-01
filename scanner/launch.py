@@ -8,8 +8,9 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
               28% above it: a neglected stock or one coming out of a correction, not a trend already running;
               your launches were -6% to +25% from it, the continuation days of MU / DELL / APPN +30% to +77%),
               and closed at least 30% above its 52-week low (your standard filter; your launches were 57-166% above).
-              A power day (an episodic pivot: volume 4x+, a 10%+ gap, a 15%+ day) may start up to 50% above the
-              200 SMA: SMCI May 3 2023 launched at an all-time high 32% over it; 2 years of these: 54% ran 20%+
+              A power day (an episodic pivot: volume 4x+, an 8%+ gap, a 10%+ day; your Nov 1 2026 rule, was a 10%+ gap and
+              a 15%+ day: ARM Mar 25 2026, a 9.9% gap, +16.4% on 6.1x) may start up to 50% above the 200 SMA: SMCI May 3
+              2023 launched at an all-time high 32% over it
   earnings    tagged when the stock reported that day or the evening before (Yahoo's earnings date, from the live job)
   ingredients volume 3x+ · gap 3%+ · base breakout (closed above the previous 20 days' high) ·
               its group is trending · within 30% of the 52-week high · neglected (40+ days since its high,
@@ -21,9 +22,12 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
               A = volume 3x+ and a base breakout, with a 3%+ gap or a 10%+ day · B = two of the four · C = the rest
   news        tagged when the 8:47 pre-market grading gave the stock an A or B gap-up grade that morning
   catalyst    a launch on earnings or meaningful news (the two tags above) that gapped 5%+, closed net positive and
-              still in the gap (over the day before's high) and cleared at least its 1-month base, though up less
+              still in the gap (over the day before's high) on 2x+ volume and cleared at least its 1-month base, though up less
               than 5% or not in the top half of its range (GMAB Aug 7 2026: earnings, a 5.4% gap, +4.8%). Kept
               night to night in launch.json's catalyst_days
+  reversal    opened under the day before's close, closed up 8%+ in the top half of its range on 2x+ volume and over at
+              least its 1-month base, with the same 200 SMA, 52-week-low and liquidity rules (GDDY Oct 30 2026). Like a
+              catalyst launch it comes on top of the regular ones and never blocks one
   legs        the launch is leg 1; each later leg = a close out of a base: above the base top (the highest high of
               the last ~6 months, at least 5 sessions old, with a pullback of 1.25+ of the stock's own ADRs from it)
               on 1x+ volume, from under it the day before; or a close above the falling trendline of a flag that formed at the highs. One leg per
@@ -78,9 +82,9 @@ import msf  # noqa: E402
 import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
-L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=10, power_chg=15, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
+L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -174,13 +178,21 @@ class Arr:
         a 5.4% gap, +4.8%, over its 6-month base)"""
         st = self.st
         return bool(L["catalyst_launch"] and self.gap[i] >= L["ep_gap"] and self.chg[i] > 0 and st.c[i] > st.h[i - 1]
-                    and self.cleared(i) >= BASES[-1] and (self.sym, st.dates[i]) in CATALYST_DAYS)
+                    and self.rv[i] >= L["cat_rv"] and self.cleared(i) >= BASES[-1] and (self.sym, st.dates[i]) in CATALYST_DAYS)
+
+    def reversal(self, i):
+        """a reversal day (your rule, Nov 1 2026, from GDDY Oct 30 2026): it opens under the day before's close, then closes
+        up 8%+ in the top half of the day's range on 2x+ volume and over at least its 1-month base (by the candle bodies)"""
+        st = self.st
+        return bool(L["reversal_launch"] and self.gap[i] < 0 and self.chg[i] >= L["rev_chg"] and self.clpos[i] >= L["min_clpos"]
+                    and self.rv[i] >= L["rev_rv"] and self.cleared(i) >= BASES[-1])
 
     def candidate(self, i, catalyst=True):
-        """the must-haves of a launch day (catalyst=False: the regular launch only)"""
+        """the must-haves of a launch day (catalyst=False: the regular launch only, without the catalyst and reversal days)"""
         st = self.st
-        return bool(i >= self.start and self.liquid[i] and self.gap[i] > 0
-                    and ((self.chg[i] >= L["min_chg"] and self.held(i)) or (catalyst and self.catalyst(i)))
+        return bool(i >= self.start and self.liquid[i]
+                    and ((self.gap[i] > 0 and self.chg[i] >= L["min_chg"] and self.held(i))
+                         or (catalyst and (self.catalyst(i) or self.reversal(i))))
                     and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
                     and (self.ext200_prev[i] <= L["max_ext200"] or (self.power(i) and self.ext200_prev[i] <= L["power_ext200"]))
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
@@ -293,6 +305,7 @@ def launch_row(sym, a, i, gstat, gname, S):
         # the longest base the launch day cleared (by the bodies): "6-month", "3-month", "1-month" or None
         cleared={120: "6-month", 63: "3-month", 21: "1-month"}.get(a.cleared(i)),
         catalyst=bool(a.catalyst(i) and not (a.chg[i] >= L["min_chg"] and a.held(i))),     # in on the catalyst rule only
+        reversal=a.reversal(i),                                                            # opened down, closed up 8%+
     )
 
 
@@ -1034,7 +1047,7 @@ def detect(A, groups, GS, cal, S, upto=None):
             elif rank[grade(a, i)] < rank[grade(a, last)]:
                 own[-1] = (s, i, k, gs, gn)
                 last = i
-        # a catalyst launch comes on top and never blocks a regular one (those stay exactly as they were): it counts
+        # a catalyst or reversal launch comes on top and never blocks a regular one (those stay exactly as they were): it counts
         # when no launch came in the 20 sessions before it, or the last one closed below the 21 EMA since
         for i, k in cat:
             prev = max((e[1] for e in own if e[1] < i), default=-10 ** 9)
