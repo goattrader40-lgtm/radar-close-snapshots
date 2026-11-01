@@ -85,7 +85,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, pennant_low=0.25, flag_legs=1, flag_surf=0, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -355,7 +355,41 @@ def flag_at(a, i):
         if pk is None or line < st.l[pk] + 0.5 * (h[t] - st.l[pk]) or not line_intact(a, t, i) \
                 or any(a.chg[k] <= -L["flag_relax_drop"] * _adr(st, k) and a.rv[k] >= L["flag_relax_rv"] for k in range(t + 1, i + 1)):
             return None
-    return t, depth, line, h[t] + flag_line(a, t, i) * (i + 1 - t)     # tomorrow's: and today's
+    shape = flag_shape(a, t, i)
+    if not shape:
+        return None
+    return t, depth, line, h[t] + flag_line(a, t, i) * (i + 1 - t), shape     # tomorrow's: and today's; "bull flag" / "pennant"
+
+
+def flag_shape(a, t, i):
+    """the consolidation from the top t to the day before i (your definitions, Nov 1 2026), or None:
+    "bull flag"  a descending channel: lower highs and lower lows on at least half the days down to its low, no higher
+                 swing low after that low, and that drift down a controlled, lower-volume pullback: at or under 1.1x the
+                 20-day average volume (APLD Apr 24-28 2026 0.82x, AEHR Mar 4-30 0.81x, SMCI, CAI, VEEV, ZS, TTAN, ANF
+                 0.71-1.04x; not APPN Aug 31 - Sep 10 1.17x, ARM Mar 25-30 1.75x, VEEV Aug 27-31 1.62x: drops on heavy volume)
+    "pennant"    converging, a symmetrical triangle: after its first low a higher swing low (a quarter ADR+ over it) while the
+                 highs keep stepping down, the volume after that first low at or under 1.1x (ARM Mar 25 - Apr 10 2026:
+                 highs Mar 25, Apr 1 down, lows Mar 30, Apr 2 / 7 up, 0.91x after Mar 30)
+    Riding the 10 / 21 EMA is no part of it (the user, Nov 1 2026)."""
+    st = a.st
+    h, l = st.h, st.l
+    if i - t < 2:
+        return None
+    lo = t + 1 + int(np.argmin(l[t + 1:i]))
+
+    def avg_rv(k0, k1):
+        x = a.rv[k0:k1]
+        x = x[np.isfinite(x)]
+        return float(x.mean()) if x.size else None
+    adr = _adr(st, lo)
+    if any(l[x] <= l[x - 1] and l[x] <= l[x + 1] and l[x] >= l[lo] * (1 + L["pennant_low"] * adr / 100) for x in range(lo + 2, i - 1)):
+        v_ = avg_rv(lo + 1, i)
+        return "pennant" if v_ is not None and v_ <= L["flag_vol_avg"] else None
+    drift = range(t + 1, lo + 1)
+    lh = sum(1 for x in drift if h[x] < h[x - 1])
+    ll = sum(1 for x in drift if l[x] < l[x - 1])
+    v_ = avg_rv(t + 1, lo + 1)
+    return "bull flag" if 2 * lh >= len(drift) and 2 * ll >= len(drift) and v_ is not None and v_ <= L["flag_vol_avg"] else None
 
 
 def line_intact(a, t, i):
@@ -647,7 +681,7 @@ def follow(a, i0, i, pick=False):
     rlv = (i0, min(body(i0 - 20, i0), st.h[i0 - 20:i0].max()), float(st.h[i0 - 20:i0].max())) \
         if i0 >= 20 and c[i0] > st.h[i0 - 20:i0].max() else None
     dry_done, dry_day, flag_day, fline = False, None, None, None        # one dry-up entry per base (ANF: Oct 5 2026, not again)
-    ftop = None
+    ftop, fshape = None, None
     weak_bo, thru_day = None, None                          # a weak breakout (day, top) waiting for its follow-through
     inner_day = None                                        # the day of the last inner base breakout
     lvl = H                                                 # the level the leg broke out of: the launch day's high, then the base top
@@ -687,7 +721,7 @@ def follow(a, i0, i, pick=False):
                 last_leg, armed, thru_day = j, False, j
             weak_bo = None
         if flag_go:                                       # an entry in the base: the leg and its level stay
-            flag_day, fline, ftop = j, f[2], f[0]
+            flag_day, fline, ftop, fshape = j, f[2], f[0], f[4]
             used_flags.add(f[0])
         if b:
             nbo += 1
@@ -738,7 +772,7 @@ def follow(a, i0, i, pick=False):
     # closed 84.26 over 84.00: 84.28 next, then 87.75)
     flag_caution = bool(fl and fl[2] < c[i] <= fl[2] * (1 + L["caution_pct"] / 100))
     if fl and (fl[0] not in used_flags or (flag_day == i and flag_caution)) and c[i] < fl[3] and (c[i] <= fl[2] or flag_caution):
-        cands.append((fl[3], "Flag (trendline)", i - fl[0], fl[1]))
+        cands.append((fl[3], ("Bull pennant" if fl[4] == "pennant" else "Bull flag") + " (trendline)", i - fl[0], fl[1]))
     if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
         cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
     for top, k in tops:
@@ -750,7 +784,7 @@ def follow(a, i0, i, pick=False):
     top_date = next((st.dates[k] for t, k in tops if bp is not None and t == bp), None)
     # gap out of base (your rule, Nov 1 2026; Zanger / Qullamaggie): the nearest base high over the close, the base top or a
     # pattern's pivot, not a flag line or a pop; an open above it tomorrow is a gap out of the base (radar/alerts.py)
-    gb = min((x for x in cands if not x[1].startswith(("Flag", "Pop"))), default=None)
+    gb = min((x for x in cands if not x[1].startswith(("Flag", "Bull flag", "Bull pennant", "Pennant", "Pop"))), default=None)
     adr = _adr(st, i)
     # retest held, at the close: within 20 sessions of a breakout, while it hasn't closed an ADR under the level, the
     # low comes back to the level, the bodies' top or the wick top (from 1.5 ADRs under the bodies' top up to the wick
@@ -949,9 +983,10 @@ def follow(a, i0, i, pick=False):
             + (f" and held over {bo[1]:.2f} all day" if st.l[i] > bo[1] else "") \
             + f", closed {100 * (c[i] / bo[1] - 1):.1f}% ({(c[i] / bo[1] - 1) * 100 / _adr(st, i):.1f} ADR) over {bo[1]:.2f}"
     elif flag_bo:
-        stage = (f"Flag breakout: closed over its falling line {fline:.2f} and the 10 & 21 EMA, an entry in the base (leg {leg})"
+        fname = "Bull pennant" if fshape == "pennant" else "Bull flag"
+        stage = (f"{fname} breakout: closed over its falling line {fline:.2f} and the 10 & 21 EMA, an entry in the base (leg {leg})"
                  if c[i] > fline * (1 + L["caution_pct"] / 100) else
-                 f"Flag breakout with caution: closed {100 * (c[i] / fline - 1):.2f}% over its falling line {fline:.2f}, within "
+                 f"{fname} breakout with caution: closed {100 * (c[i] / fline - 1):.2f}% over its falling line {fline:.2f}, within "
                  f"{L['caution_pct']}%, and over the 10 & 21 EMA, an entry in the base (leg {leg}): the line is the next trigger again") \
             + (f", the volume dried up the 2 days before ({a.rv[i - 2]:.2f}x, {a.rv[i - 1]:.2f}x)" if max(a.rv[i - 2], a.rv[i - 1]) < 1 else "") \
             + ((" · closed under the 50 EMA during the flag (" + ", ".join(st.dates[k] for k in u50) + "): you judge the grade")
@@ -1047,6 +1082,7 @@ def follow(a, i0, i, pick=False):
         last_breakout_base_days=below_since(a, bo[0], bo[1], bo[2]) if bo else None,
         base_days=fnum(bdays, 0) if bdays is not None else None, base_depth_pct=fnum(bdep, 1) if bdep is not None else None,
         flag_breakout_today=flag_bo, dry_entry_today=dry_day == i,
+        flag_shape=fshape if flag_bo else (fl[4] if fl else None),
         base_depth_adr=fnum((bdep if bdep is not None else np.nan) / (st.adr[i] if st.adr[i] > 0 else np.nan), 1), surf10=surf(a.e10), surf21=surf(a.e21),
         vol_dryup=fnum(dry, 2), off_high_pct=fnum(100 * (1 - c[i] / hi), 1), ema21=fnum(a.e21[i]),
         breakout_today=bool(code and msf.is_pat(code) and r.bo == 1), leg=leg, late=leg >= L["late_leg"],
@@ -1227,7 +1263,7 @@ def s3_read(a, i0, last, was_in=False):
     bp = f.get("buy_point")
     away_adr = (100 * (bp / c - 1)) / adr if bp and adr else None
     stage, pat = f.get("stage") or "", f.get("pattern") or ""
-    fired = next((t for t, on in (("Base breakout", f.get("base_breakout_today")), ("Flag breakout", f.get("flag_breakout_today")),
+    fired = next((t for t, on in (("Base breakout", f.get("base_breakout_today")), ("Bull pennant breakout" if f.get("flag_shape") == "pennant" else "Bull flag breakout", f.get("flag_breakout_today")),
                                   ("Pop out of the consolidation", f.get("dry_entry_today")),
                                   ("21 EMA undercut & reclaim" if f.get("ema21_today") == "undercut" else "21 EMA retest", f.get("ema21_today")),
                                   ("Retest held", f.get("retest_today")), ("Push out of the 21 EMA", f.get("push_today")),
@@ -1238,8 +1274,8 @@ def s3_read(a, i0, last, was_in=False):
         sec, setup = "Triggered today", fired
     elif away_adr is not None and 0 <= away_adr <= L["s3_ready_adr"] and ((f.get("base_day") or 0) >= 5 or tight >= 2):
         sec, setup = "Ready", pat or "Buy point"
-    elif pat.startswith("Flag"):
-        sec, setup = "Setting up", "Flag forming"
+    elif pat.startswith(("Flag", "Bull flag", "Bull pennant", "Pennant")):
+        sec, setup = "Setting up", ("Bull pennant" if pat.startswith(("Bull pennant", "Pennant")) else "Bull flag") + " forming"
     elif f.get("ema21_watch"):
         sec, setup = "Setting up", "21 EMA " + ("undercut & reclaim" if f["ema21_watch"] == "undercut" else "retest") + " setup"
     elif z and f.get("retest_away") and c <= z[1] * (1 + adr / 100) and (f.get("off_high_pct") or 0) >= 1.5 * adr:   # a real pullback
@@ -1253,7 +1289,7 @@ def setups3(A, today, wl, prev=(), removed=None):
     """3-SETUPS (your design, Nov 1 2026): every stock on 1-EP/GAP, 1-UPDAY and 2-POOL read by the Launches engine, like a
     pick from the day it came on its list (the gap or up day; the day it entered 2-POOL), with its buy points and
     triggers. Sections:
-      Triggered today  a base breakout, flag break, pop, 21 EMA retest or undercut & reclaim, retest held or push today
+      Triggered today  a base breakout, bull flag breakout, pop, 21 EMA retest or undercut & reclaim, retest held or push today
       Ready            a trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it: tomorrow's buys
       Setting up       a flag forming (its line more than 0.7 ADR away), a pullback set up for the 21 EMA, or a pullback
                        near the retest zone of its last breakout
