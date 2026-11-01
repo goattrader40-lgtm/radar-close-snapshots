@@ -23,6 +23,7 @@ TESTS = [
     ("probe_launch_orh", "Launch days, WITH HINDSIGHT", "Launch days (regular, power, reversal, catalyst) bought on the 5-minute opening range high, risk the 5-minute low. Uses days known to close as launches: an upper bound, NOT tradable as is. managed = your rules; simple = the 5-minute low stop and the daily 21 EMA close.", "cmd launchorh"),
     ("probe_launch_live", "Launch days, fair (no hindsight)", "Every stock on the launch watch list (from 25% under to 28% over the 200 SMA, 50% for 8%+ gaps, liquid, ADR 3.5%+, no launch in 20 sessions) that gaps up and trades over both the 5-minute high and +5%: bought there, risk the 5-minute low, your management. Split by what the day closed as, gap, buy time, coming from under the 200 SMA, volume pace.", "cmd launchlive"),
     ("probe_buypoints", "Buy points, bought at the breakout", "Our Launches buy points (base breakout, follow-through, flag, pop, retest, push, 21 EMA retest, undercut & reclaim) for 60 sessions after each launch, bought as the alerts fire (at the level when it breaks, a push at the open, the close for close signals); the risk the low of that day; your management. Each one saved with its RVOL (the day's volume / 20-day average) and gap.", "cmd buypoints"),
+    ("probe_gapbase", "Gap out of base", "A Launches stock that closed under its base high opens above it: bought on the 1-minute or 5-minute opening range high (stop that bar's low) with RVOL 1x+ at the buy; out at 9:50 if the RVOL isn't 2x by then, or held; your management after.", "cmd gapbase"),
     ("probe_earnings", "Earnings-day high breakout", "An earnings day (company earnings news) that closed over its 1-month high, over the 200 SMA, 30%+ over the 52-week low, liquid ($10+, $30M and 700K a day, $700M+ market cap, ADR 4%+); a later day (within 10 sessions) breaking the earnings-day high: bought over both the 5-minute high and the earnings-day high, risk the 5-minute low, your management.", "cmd earnings"),
 ]
 
@@ -73,6 +74,8 @@ COLUMNS = (
     ("exit / days_held", "how it ended (stop, breakeven, daily 21 EMA close, still open) and how many days"),
     ("ran20 / failed5", "the stock ran 20%+ within 20 sessions / closed under that day's low within 5 sessions"),
     ("min5_bought", "1 = the 5-minute entry happened (the 5-minute high broke)"),
+    ("base_high / gap_over_base_high_pct", "gap out of base: the base high it opened above, and how far above it it opened"),
+    ("rvol_at_buy / rvol_at_20min", "gap out of base: the RVOL at the moment of the buy and at 9:50 (the volume so far / the stock's usual volume by then)"),
     ("risk_in_adr / within_0_7_adr", "the risk in the stock's ADRs; 1 = within your max risk of 0.7 ADR (filter it to 1 to drop the trades you wouldn't take)"),
     ("theme_status", "the stock's best theme that day: Leading, Turning up, Not trending, or no theme"),
     ("breakout_grade / early_breakout", "the alerts' breakout grade (see grades above): A = early + Leading theme + volume building, B = early + one of them, C = the rest; early = the 1st or 2nd breakout within 50 sessions of the launch"),
@@ -147,6 +150,10 @@ DESC = {
     "Launch fair - compare exits": "LAUNCH DAYS, fair (no hindsight): every gap-up that traded over the 5-minute high and +5%, bought there, STOP the 5-minute low. "
                                    "Filter 'entry tactic': hold (your management) vs sell at the close if the day doesn't close as a launch. Then rvol, gap, "
                                    "within_0_7_adr (your max risk). Row 3 = the totals of what you filter.",
+    "Gap out of base - entries": "GAP OUT OF BASE (Zanger / Qullamaggie): a Launches stock that closed under its base high yesterday opens ABOVE it today. "
+                                 "Filter 'entry tactic': 1-min ORB (over the first 1-minute high, stop its low) or 5-min ORB (stop the 5-minute low); 'hold' "
+                                 "vs 'out if RVOL < 2x at 20 min' (at 9:50, out if the RVOL isn't 2x). RVOL at the buy 1x+. Your management after. "
+                                 "Then filter rvol_at_buy, rvol_at_20min, gap_over_base_high_pct, pattern, theme, within_0_7_adr. Row 3 = the totals.",
     "Launch trades": "LAUNCH DAYS, fair (no hindsight). ENTRY: the gap-up day, over both the 5-minute opening range high and +5%. STOP: the 5-minute low. "
                      "Then your management (+2R breakeven, 1/3 at +3R, 1/3 at +5R, runners on the daily 21 EMA close).",
     "Launch 5-min vs close": "LAUNCH DAYS (days that closed as launches). min5_ = ENTRY over the 5-minute high on the launch day, STOP the 5-minute low "
@@ -427,6 +434,11 @@ def main():
         ll = long_rows(d["trades"], TACTICS["launchlive"])
         trades(wb, "Launch fair - compare exits", ll)
         tactic_grid(wb, "Launch fair exits by RVOL, gap", ll)
+    d = data("probe_gapbase")
+    if d and d.get("trades"):
+        gr = with_risk_adr(d["trades"])
+        trades(wb, "Gap out of base - entries", gr)
+        tactic_grid(wb, "Gap out of base by RVOL, gap", gr)
     for name, label, rvcol in (("probe_launch_live", "Launch trades", ("rvol_pace_at_buy", "rvol_day")), ("probe_buypoints", "Buy point trades", ("rvol_day",))):
         d = data(name)
         if not d or not d.get("trades"):

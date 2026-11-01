@@ -52,6 +52,15 @@ jobs:
             git add setups/launch.json setups/launch_backtest.json
             git diff --cached --quiet || { git commit -q -m "launches $(TZ=America/New_York date +%F)"; git pull -q --rebase origin main; git push -q; }
           fi
+          if [ "${{ inputs.cmd }}" = "gapbase" ]; then
+            # gap out of base: 1-/5-minute opening range entries with the RVOL rules (scanner/probe_gapbase.py)
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json && git show origin/radar-data:volprofile.json > /tmp/rd/volprofile.json
+            python3 scanner/probe_gapbase.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --volprofile /tmp/rd/volprofile.json --out /tmp/probe_gapbase.json || true
+            python3 radar/publish.py "gap out of base test" /tmp/probe_gapbase.json
+          fi
           if [ "${{ inputs.cmd }}" = "buypoints" ]; then
             # our Launches buy points bought as the alerts fire, the risk the day's low (scanner/probe_buypoints.py)
             pip install --quiet numba numpy pandas
