@@ -1814,8 +1814,8 @@ defCalc('industry_perf', {
     const lr = doc && doc.rules, lqd = doc && doc.liquidity;
     $('#ln-rules').replaceChildren(...(lr && lqd ? [
       ['Opens up and runs: ', 'opens above the day before\'s close and closes up ' + lr.min_chg + '%+ in the top half of its range, on ' + lr.min_rv + '×+ its 20-day average volume.'],
-      ['Or a catalyst launch: ', 'a ' + lr.ep_gap + '%+ gap on earnings or news that closes up, still in the gap (over the day before\'s high), on ' + lr.cat_rv + '×+ volume and over at least its 1-month base.'],
-      ['Or a reversal day: ', 'opens under the day before\'s close, then closes up ' + lr.rev_chg + '%+ in the top half of its range, on ' + lr.rev_rv + '×+ volume and over at least its 1-month base (GDDY Oct 30, 2026).'],
+      ['Or a catalyst launch: ', 'a ' + lr.ep_gap + '%+ gap on earnings or news that closes up, still in the gap (over the day before\'s high), on ' + (lr.cat_rv || 2) + '×+ volume and over at least its 1-month base.'],
+      ['Or a reversal day: ', 'opens under the day before\'s close, then closes up ' + (lr.rev_chg || 8) + '%+ in the top half of its range, on ' + (lr.rev_rv || 2) + '×+ volume and over at least its 1-month base (GDDY Oct 30, 2026).'],
       ['Trend: ', 'closes above the 200 SMA, at most ' + lr.max_ext200 + '% over it the day before; at least ' + lr.min_above_low52 + '% above the 52-week low.'],
       ['Power day: ', 'volume ' + lr.power_rv + '×+, a ' + lr.power_gap + '%+ gap and a ' + lr.power_chg + '%+ day; may start up to ' + lr.power_ext200 + '% over the 200 SMA and need not close in the top half if it holds half its gap.'],
       ['Liquid: ', 'price $' + lqd.min_price + '+, a 20-day average of $' + lqd.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(lqd.min_avg_vol_20d) + '+ shares a day, ADR ' + lqd.min_adr + '%+.'],
