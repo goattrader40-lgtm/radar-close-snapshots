@@ -26,9 +26,10 @@ import launch  # noqa: E402
 
 L = launch.L
 A = {}
-KINDS = (("breakout", "Base breakout", "level"), ("follow-through", "Breakout follow-through", "close"), ("flag", "Flag breakout", "level"),
-         ("pop", "Pop out", "level"), ("retest", "Retest", "close"), ("push", "Push out", "open"),
+KINDS = (("follow-through", "Breakout follow-through", "close"), ("retest", "Retest", "close"), ("push", "Push out", "open"),
          ("21 EMA retest", "21 EMA retest", "close"), ("21 EMA undercut & reclaim", "21 EMA undercut", "close"))
+# the level buy points: every day the price crosses the day before's buy point is a buy, whatever the close (no hindsight)
+LEVEL = (("Base top", "base breakout"), ("Flag", "flag breakout"), ("Pop", "pop"), ("", "pattern pivot"))
 
 
 def manage(a, j, buy, stop, same_day_high):
@@ -77,32 +78,37 @@ def one(key):
         if f["lost_50ema"]:
             break
         stage = f["stage"]
-        kind = next(((k, how) for k, w, how in KINDS if stage.startswith(w)), None)
-        pbp = prev.get("buy_point") if prev else None
+        pbp, ppat = (prev.get("buy_point"), prev.get("pattern") or "") if prev else (None, "")
         prev = f
-        if not kind:
-            continue
-        k, how = kind
-        same_high = None
-        if how == "level" and pbp and h[j] > pbp:
-            buy, entry = max(float(pbp), float(o[j])), "level"
-            same_high = float(h[j])
-        elif how == "open":
-            buy, entry, same_high = float(o[j]), "open", float(h[j])
-        else:
-            buy, entry = float(c[j]), "close"
-        stop = float(l[j])
-        if buy <= stop:
-            continue
-        ret, R, r2, r3, r5, ex, days = manage(a, j, buy, stop, same_high)
-        hi20 = h[j + 1:min(n, j + 21)].max()
-        out.append(dict(date=st.dates[j], symbol=s, buy_point=k, bought=entry, leg=f.get("leg"), sessions_since_launch=j - i0,
+        cands = []
+        if pbp and h[j] > pbp and c[j - 1] <= pbp:
+            k = next(nm for w, nm in LEVEL if ppat.startswith(w))
+            if k != "pop" or o[j] > pbp:                    # a pop opens over its level
+                cands.append((k, max(float(pbp), float(o[j])), "level", float(h[j])))
+        kind = next(((k, how) for k, w, how in KINDS if stage.startswith(w)), None)
+        if kind:
+            k, how = kind
+            cands.append((k, float(o[j]), "open", float(h[j])) if how == "open" else (k, float(c[j]), "close", None))
+        closed = ("closed as a breakout" if stage.startswith(("Base breakout", "Flag breakout", "Breakout")) else
+                  "closed as a pop" if stage.startswith("Pop out") else "closed back under / no breakout")
+        for k, buy, entry, same_high in cands:
+            stop = float(l[j])
+            if buy <= stop:
+                continue
+            ret, R, r2, r3, r5, ex, days = manage(a, j, buy, stop, same_high)
+            hi20 = h[j + 1:min(n, j + 21)].max()
+            out.append(row(s, st, a, f, i0, j, k, entry, buy, stop, ret, R, r2, r3, r5, ex, days, hi20, c, n,
+                           closed if entry == "level" else ""))
+    return out
+
+
+def row(s, st, a, f, i0, j, k, entry, buy, stop, ret, R, r2, r3, r5, ex, days, hi20, c, n, closed):
+        return (dict(date=st.dates[j], symbol=s, buy_point=k, bought=entry, day_closed=closed, leg=f.get("leg"), sessions_since_launch=j - i0,
                         launch_date=st.dates[i0], launch_grade=launch.grade(a, i0), rvol_day=round(float(a.rv[j]), 2),
                         gap_pct=round(float(a.gap[j]), 2), day_change_pct=round(float(a.chg[j]), 2), close_in_range_pct=round(100 * float(a.clpos[j])),
                         adr_pct=round(float(st.adr[j]), 2), risk_pct=round(100 * (buy - stop) / buy, 2), result_pct=round(ret, 2), R=round(R, 2),
                         win=int(ret > 0), reached_2R=int(r2), reached_3R=int(r3), reached_5R=int(r5), exit=ex, days_held=days,
                         ran20=int(hi20 >= buy * 1.2), failed5=int((c[j + 1:j + 6] < stop).any())))
-    return out
 
 
 def summ(ts):
@@ -133,11 +139,12 @@ def main():
     keys = sorted({(s, i) for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S) if i >= 200})
     with multiprocessing.get_context("fork").Pool(os.cpu_count() or 2) as pool:
         ts = [t for r in pool.map(one, keys, chunksize=8) for t in r]
-    kinds = [k for k, _, _ in KINDS]
+    kinds = [nm for _, nm in LEVEL] + [k for k, _, _ in KINDS]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[200], last=cal[-1], launches=len(keys),
                all=summ(ts), by_buy_point={k: summ([t for t in ts if t["buy_point"] == k]) for k in kinds},
                by_rvol={nm: summ([t for t in ts if lo <= t["rvol_day"] < hi]) for nm, lo, hi in RV},
                by_gap={nm: summ([t for t in ts if lo <= t["gap_pct"] < hi]) for nm, lo, hi in GAP},
+               level_buys_by_close={x: summ([t for t in ts if t["day_closed"] == x]) for x in ("closed as a breakout", "closed as a pop", "closed back under / no breakout")},
                by_buy_point_and_rvol={k: {nm: summ([t for t in ts if t["buy_point"] == k and lo <= t["rvol_day"] < hi]) for nm, lo, hi in RV} for k in kinds},
                trades=ts)
     json.dump(out, open(a_.out, "w"))
