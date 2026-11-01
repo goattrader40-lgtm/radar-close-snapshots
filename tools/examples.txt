@@ -15,4 +15,4 @@ VEEV 2026-08-07 2026-10-30 launch
 ZS   2026-09-14 2026-10-30 launch
 ARM  2026-03-25 2026-05-29 pick
 TTAN 2026-10-15 2026-10-30 pick
-LIFE 2026-10-01 2026-10-30 pick   # the user agreed its Oct 30 flag (44.81); Oct 8, 20, 21 not reviewed yet
+LIFE 2026-10-01 2026-10-30 pick   # the user agreed its Oct 8 undercut & reclaim, Oct 20 pop, Oct 21 breakout and Oct 30 flag (44.81)
