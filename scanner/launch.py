@@ -85,7 +85,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -325,14 +325,12 @@ def flag_at(a, i):
     if i < 50:
         return None
     t = i - 24 + int(np.argmax(h[i - 24:i + 1]))
-    if not L["flag_days"] <= i - t <= 20 or h[t] < h[max(0, t - 21):t].max():
+    # 4 to 22 sessions from its top (your count, Nov 1 2026: AEHR's Mar 4 2026 top, the break Apr 2 on the 21st session)
+    if not L["flag_days"] <= i - t <= L["flag_max_days"] or h[t] < h[max(0, t - 21):t].max():
         return None
     depth = 100 * (1 - l[t + 1:i + 1].min() / h[t])
     adr = st.adr[t] if st.adr[t] > 0 else 5.0
-    # it holds its 21 EMA (no close half an ADR under it: APPN Sep 8-11 2026 fell 1.4 ADRs under it from its Aug 31
-    # high, a drop and bounce, no flag; SMCI Jun 2023 -0.2, ANF Aug 2026 -0.4)
-    if not L["flag_adr_min"] <= depth / adr <= L["flag_adr_max"] or any(c[k] < a.e50[k] for k in range(t + 1, i + 1)) \
-            or any(100 * (c[k] / a.e21[k] - 1) < -0.5 * _adr(st, k) for k in range(t + 1, i + 1)):
+    if not L["flag_adr_min"] <= depth / adr <= L["flag_adr_max"]:
         return None
     # a flag pulls back in a controlled way: no violent drop, a gap down of 0.7+ ADR that closes 1+ ADR down on 1.3x+
     # volume, sellers with conviction (ARM Apr 27-28 2026 after its Apr 24 top: -1.3 ADR twice on 1.6x, gapping -0.7 and
@@ -343,7 +341,33 @@ def flag_at(a, i):
     slope = flag_line(a, t, i - 1)                 # today's line: through the highs up to yesterday
     if slope >= 0:
         return None
-    return t, depth, h[t] + slope * (i - t), h[t] + flag_line(a, t, i) * (i + 1 - t)     # tomorrow's: and today's
+    line = h[t] + slope * (i - t)
+    # it holds its 21 EMA (no close half an ADR under it: APPN Sep 8-11 2026 fell 1.4 ADRs under it from its Aug 31
+    # high, a drop and bounce, no flag; SMCI Jun 2023 -0.2, ANF Aug 2026 -0.4) and closes above the 50 EMA; unless (your
+    # rule, Nov 1 2026) its falling line is intact (no close over it since the top) and the line is in the upper half of
+    # the pole, its run into the top: AEHR Mar 26-30 2026 closed 1.4 ADRs under the 21 EMA and under the 50 EMA, the line
+    # held, and broke at 40.65 on Apr 2, 74% up its 22.66 - 46.95 pole. The breakout says when it closed under the 50 EMA.
+    # And the drop came on light volume: no day down half an ADR+ on 1.3x+ volume (AEHR's down days 0.7-1.0x; APPN Sep 4
+    # 2026 -1.2 ADR on 1.4x and Sep 8 -1.8 ADR on 2.4x, LIFE Sep 16-17 -0.6 / -0.8 ADR on 2.1x / 2.3x: sellers with
+    # conviction, no flag)
+    if any(c[k] < a.e50[k] or 100 * (c[k] / a.e21[k] - 1) < -0.5 * _adr(st, k) for k in range(t + 1, i + 1)):
+        pk = pole_of(a, t)
+        if pk is None or line < st.l[pk] + 0.5 * (h[t] - st.l[pk]) or not line_intact(a, t, i) \
+                or any(a.chg[k] <= -L["flag_relax_drop"] * _adr(st, k) and a.rv[k] >= L["flag_relax_rv"] for k in range(t + 1, i + 1)):
+            return None
+    return t, depth, line, h[t] + flag_line(a, t, i) * (i + 1 - t)     # tomorrow's: and today's
+
+
+def line_intact(a, t, i):
+    """no close over a flag's falling line from the day it can break (5 sessions after its top t, like a flag break) to
+    the day before i (each day's line: through the highs up to the day before it); AEHR Mar 9 2026 closed over its 2-day
+    line, before there was a flag"""
+    st = a.st
+    for k in range(t + L["flag_days"] + 1, i):
+        s_ = flag_line(a, t, k - 1)
+        if s_ is not None and st.c[k] > st.h[t] + s_ * (k - t):
+            return False
+    return True
 
 
 def flag_line(a, t, upto):
@@ -368,6 +392,12 @@ def flag_run(a, t):
     """the run into a flag's top t: from the lowest low of the 25 sessions before it, 4+ of the stock's ADRs, and made
     by the trend, no single day 50%+ of it (CAI Aug 18 - 25 2026: 20.78 to 28.32, 5 ADRs, its biggest day a quarter of
     it; ANF's Aug 26 2026 gap day was most of its run: no flag after it, the Oct 5 pop is the entry)"""
+    return pole_of(a, t) is not None
+
+
+def pole_of(a, t):
+    """the pole of a flag's top t (flag_run): the index of the low its run starts from, or None (AEHR's Mar 4 2026 top:
+    from Feb 5's 22.66)"""
     st, c = a.st, a.st.c
     lo0 = max(1, t - 25)
     for m in range(t - 5, lo0 - 1, -1):     # an earlier high at that level with a pullback since: the pole starts after it
@@ -377,8 +407,8 @@ def flag_run(a, t):
     k = lo0 + int(np.argmin(st.l[lo0:t + 1]))
     run = st.h[t] - st.l[k]
     if k >= t or run <= 0 or 100 * run / st.l[k] < L["flag_run_adr"] * _adr(st, t):
-        return False
-    return max(c[m] - c[m - 1] for m in range(k + 1, t + 1)) <= 0.5 * run
+        return None
+    return k if max(c[m] - c[m - 1] for m in range(k + 1, t + 1)) <= 0.5 * run else None
 
 
 def surfing(a, t, j):
@@ -612,6 +642,7 @@ def follow(a, i0, i, pick=False):
     rlv = (i0, min(body(i0 - 20, i0), st.h[i0 - 20:i0].max()), float(st.h[i0 - 20:i0].max())) \
         if i0 >= 20 and c[i0] > st.h[i0 - 20:i0].max() else None
     dry_done, dry_day, flag_day, fline = False, None, None, None        # one dry-up entry per base (ANF: Oct 5 2026, not again)
+    ftop = None
     weak_bo, thru_day = None, None                          # a weak breakout (day, top) waiting for its follow-through
     inner_day = None                                        # the day of the last inner base breakout
     lvl = H                                                 # the level the leg broke out of: the launch day's high, then the base top
@@ -651,7 +682,7 @@ def follow(a, i0, i, pick=False):
                 last_leg, armed, thru_day = j, False, j
             weak_bo = None
         if flag_go:                                       # an entry in the base: the leg and its level stay
-            flag_day, fline = j, f[2]
+            flag_day, fline, ftop = j, f[2], f[0]
             used_flags.add(f[0])
         if b:
             nbo += 1
@@ -909,7 +940,9 @@ def follow(a, i0, i, pick=False):
                  if c[i] > fline * (1 + L["caution_pct"] / 100) else
                  f"Flag breakout with caution: closed {100 * (c[i] / fline - 1):.2f}% over its falling line {fline:.2f}, within "
                  f"{L['caution_pct']}%, and over the 10 & 21 EMA, an entry in the base (leg {leg}): the line is the next trigger again") \
-            + (f", the volume dried up the 2 days before ({a.rv[i - 2]:.2f}x, {a.rv[i - 1]:.2f}x)" if max(a.rv[i - 2], a.rv[i - 1]) < 1 else "")
+            + (f", the volume dried up the 2 days before ({a.rv[i - 2]:.2f}x, {a.rv[i - 1]:.2f}x)" if max(a.rv[i - 2], a.rv[i - 1]) < 1 else "") \
+            + ((" · closed under the 50 EMA during the flag (" + ", ".join(st.dates[k] for k in u50) + "): you judge the grade")
+               if (u50 := [k for k in range(ftop + 1, i) if c[k] < a.e50[k]]) else "")
     elif dry_day == i:
         stage = "Pop out of the consolidation (entry in base)"
     elif push_day == i:
