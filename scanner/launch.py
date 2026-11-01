@@ -25,8 +25,8 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
               still in the gap (over the day before's high) on 2x+ volume and cleared at least its 1-month base, though up less
               than 5% or not in the top half of its range (GMAB Aug 7 2026: earnings, a 5.4% gap, +4.8%). Kept
               night to night in launch.json's catalyst_days
-  reversal    opened under the day before's close, closed up 8%+ in the top half of its range on 2x+ volume and over at
-              least its 1-month base, with the same 200 SMA, 52-week-low and liquidity rules (GDDY Oct 30 2026). Like a
+  reversal    opened under the day before's close, closed up 8%+ in the top half of its range on 2x+ volume and over its
+              1-month high (the previous 20 sessions' highest high, wicks and bodies), with the same 200 SMA, 52-week-low and liquidity rules (GDDY Oct 30 2026). Like a
               catalyst launch it comes on top of the regular ones and never blocks one
   legs        the launch is leg 1; each later leg = a close out of a base: above the base top (the highest high of
               the last ~6 months, at least 5 sessions old, with a pullback of 1.25+ of the stock's own ADRs from it)
@@ -59,7 +59,8 @@ Group = each of its themes on the portal (or its industry when it has none), and
   Leading     when 60%+ of its members close above their 50 EMA and its median 1-month change is +8% or more
   Turning up  when half or more close above their 21 EMA and its median 1-week change is positive
 Exit signal = the first close below the 21 EMA after the launch. A launch is followed until 2 closes in a
-row below the 50 EMA or 120 sessions, with your MSF patterns (flags, pennants, triangles, flat bases,
+row below the 50 EMA, 62 sessions from its highest point without a new high (your picks too), or its ADR under
+3.2% (TECH 2026: 0.2% after a buyout-like gap; a launch day needs 3.5%+), with your MSF patterns (flags, pennants, triangles, flat bases,
 breakouts) and their buy points as they form.
 
   python3 scanner/launch.py --bars BARS.json.gz --stocks radar-data/stocks.json [--out setups/launch.json]
@@ -84,7 +85,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -182,10 +183,11 @@ class Arr:
 
     def reversal(self, i):
         """a reversal day (your rule, Nov 1 2026, from GDDY Oct 30 2026): it opens under the day before's close, then closes
-        up 8%+ in the top half of the day's range on 2x+ volume and over at least its 1-month base (by the candle bodies)"""
+        up 8%+ in the top half of the day's range on 2x+ volume, over its 1-month high (the highest high of the previous
+        20 sessions, wicks and bodies: a regular breakout, the close has to be over it)"""
         st = self.st
         return bool(L["reversal_launch"] and self.gap[i] < 0 and self.chg[i] >= L["rev_chg"] and self.clpos[i] >= L["min_clpos"]
-                    and self.rv[i] >= L["rev_rv"] and self.cleared(i) >= BASES[-1])
+                    and self.rv[i] >= L["rev_rv"] and st.c[i] > self.hi20[i])
 
     def candidate(self, i, catalyst=True):
         """the must-haves of a launch day (catalyst=False: the regular launch only, without the catalyst and reversal days)"""
@@ -1124,6 +1126,16 @@ def picks_of(path):
         return {}
 
 
+def stale(a, i0, last, top=None):
+    """off the list (your rule, Nov 1 2026): 62 sessions from its highest point without a new high, at any time since the
+    launch (or your pick; top = the base top a pick started under). A $60 high 5 days ago with the stock at $55 today
+    counts from the $60 day. Once off, it stays off (a new launch on a later day is a new row)"""
+    h = a.st.h[i0:last + 1]
+    m = np.maximum.accumulate(np.concatenate(([top if top else h[0]], h[1:])))
+    new = [0] + [k for k in range(1, h.size) if m[k] > m[k - 1]] + [h.size - 1]
+    return any(b - a_ >= L["off_days"] for a_, b in zip(new, new[1:]))
+
+
 def removed_of(path):
     """{symbol: the launch day you removed (YYYY-MM-DD)} from setups/picks.json (the portal's ✕ on the Launches tab).
     Only that launch is left out: a new launch of the stock on a later day shows again"""
@@ -1162,7 +1174,13 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     for s, i, k, gs, gn, leader in [e + ("",) for e in ev] + detect_followers(A, groups, GS, cal, ev):
         a = A[s]
         last = len(a.st.dates) - 1
-        if a.st.dates[last] != today or last - i > L["follow_days"] or a.st.dates[i] <= (removed or {}).get(s, ""):    # removed by you (✕), with any older launch of it
+        if a.st.dates[last] != today or a.st.dates[i] <= (removed or {}).get(s, ""):    # removed by you (✕), with any older launch of it
+            continue
+        # off the list: 2 closes in a row under the 50 EMA, 62 sessions from its highest point without a new high, or its
+        # ADR (20 days) now under 3.2% (a launch day needs 3.5%+; TECH Jun 25 2026, a buyout-like 19% gap, then 0.2%)
+        c_, e50_ = a.st.c, a.e50
+        if (np.any((c_[i + 2:last + 1] < e50_[i + 2:last + 1]) & (c_[i + 1:last] < e50_[i + 1:last])) or stale(a, i, last)
+                or a.st.adr[last] < L["off_adr"]):
             continue
         f = follow(a, i, last)
         if f["lost_50ema"]:
@@ -1209,6 +1227,9 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
             continue
         k0 = pos.get(a.st.dates[i0], T)
         gs, gn = best_group(s, k0, groups, GS)
+        b0 = base_ok(a, i0, 120)
+        if stale(a, i0, last, b0[0] if b0 and b0[0] > a.st.h[i0] else None):   # 62 sessions from its highest point, no new high
+            continue
         r = launch_row(s, a, i0, gs, gn, S)
         r.update(follow(a, i0, last, pick=True))
         cgs, cgn = best_group(s, T, groups, GS)
@@ -1248,7 +1269,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                     int(days), fnum(depth, 0), gn, gs, run.tv_symbol(s, st.exchange),
                     [st.dates[g], fnum(a.hi20[g])] if g >= 0 else None,
                     " ".join(sorted({x for t in groups.get(s, ([], []))[0] for x in leaders.get(t, ()) if x != s})) or None,
-                    fnum(st.c[i - 49:i + 1].mean()) if i >= 49 else None]
+                    fnum(st.c[i - 49:i + 1].mean()) if i >= 49 else None, fnum(st.low52[i])]
     G = []
     for g, (ms, stt, sh21, m21) in GS.items():
         hist = [int(x) for x in stt[-20:]]
@@ -1261,7 +1282,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     doc = dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
-                             "sma50"],
+                             "sma50", "low_52w"],
                launches=rows, watch=watch, groups=[g for g in G if g["status"] != "Not trending"],
                catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()))
     with open(out_path, "w") as f:

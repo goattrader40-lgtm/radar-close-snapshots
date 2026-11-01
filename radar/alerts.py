@@ -9,7 +9,7 @@ breakouts. 9:31-9:34 (the 1-minute check only): the early heads-up (find_early),
 volume can be read.
 
 Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the radar-data branch):
-  power day   volume pace 4x+ for the time of day, a 10%+ gap, up 15%+, above the 200 SMA, at most 50% over it
+  power day   volume pace 4x+ for the time of day, an 8%+ gap, up 10%+, above the 200 SMA, at most 50% over it
   catalyst    an episodic pivot, the moment it happens: a neglected stock (closed under its 50 EMA or 200 SMA the
               day before) gaps up 5%+ on earnings or news with volume pace 3x+ and trades above both the 50 EMA and
               the 200 SMA. No base breakout needed, and no clean base either (HRI on Oct 27 2026: earnings, gapped 9.3%
@@ -17,6 +17,9 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               the base high is cleared yet; if not, a 2nd trigger follows when it is (volume 1x+). Such a stock
               gets these two instead of a launch alert. Earnings = reported after the last close; without
               earnings it says to check the news
+  reversal    a reversal launch as it happens: opened under yesterday's close, now up 8%+ on a volume pace of 2x+, over
+              its 1-month high (the previous 20 sessions' highest high), in the top half of today's range (1-minute chart),
+              above the 200 SMA (at most 28% over it the day before) and 30%+ over its 52-week low (GDDY Oct 30 2026)
   launch      A+ or A off the watch list (setups/launch.json, from the last close), graded like the portal's
               Launching today: volume pace 3x+ and above its base high (the previous 20 days' high), with a 3%+
               gap or a 10%+ day; A+ = a 6%+ gap jumping from under the 200 SMA. Also needs: up 5%+, opened up,
@@ -181,6 +184,16 @@ def find(live, doc, now=None):
             out.append((f"{sym}:catalyst", f"{sym} CATALYST GAP: " + ("earnings" if earn else "news? (no earnings)")
                         + ", over its 50 EMA & 200 SMA", f"{facts} · ${price:.2f}{crossed}{neglect} · base high ${pivot:.2f} "
                         + (f"cleared (grade so far {g})" if price > pivot else "not cleared yet: 2nd alert when it is") + f" · theme {theme}", "high", tvs))
+        # a reversal launch (your rule, Nov 1 2026; GDDY Oct 30): it opened under yesterday's close and now trades up 8%+ on
+        # a volume pace of 2x+, over its 1-month high (the previous 20 sessions' highest high, wicks and bodies) and 30%+
+        # over its 52-week low; the top half of today's range is checked on today's 1-minute chart before it goes out (main)
+        low52 = w[14] if len(w) > 14 else None
+        if (R.get("reversal_launch") and gap is not None and gap < 0 and chg >= R.get("rev_chg", 8) and rv >= R.get("rev_rv", 2)
+                and price > pivot and (not low52 or price >= low52 * (1 + R["min_above_low52"] / 100))):
+            out.append((f"{sym}:reversal", f"{sym} REVERSAL launch" + (" on earnings" if earn else ""),
+                        f"opened {gap:+.1f}%, now {chg:+.1f}% · vol {rv:.1f}x for the time of day · ${price:.2f} over its 1-month high"
+                        f" ${pivot:.2f}{crossed}{neglect} · the close confirms it (up 8%+, top half of the day) · theme {theme}", "high", tvs))
+            continue
         if chg < R["min_chg"] or rv < R["min_rv"] or (gap is not None and gap <= 0):
             continue
         if g in ("A+", "A"):
@@ -435,6 +448,13 @@ def main():
                 print(f"{key}: today's low {lo_} / high {hi_} / open {op_}: no undercut and reclaim of the 21 EMA {e21_} yet, not sent")
                 continue
             msg += f" · today's low ${lo_:.2f} under it"
+        if title is not None and key.endswith(":reversal"):
+            # in the top half of today's range (today's 1-minute chart: the quote's day low can be missing or yesterday's)
+            q_, lo_, hi_ = live["rows"].get(key.split(":")[0]), chart_low_today(key.split(":")[0]), chart_high_today(key.split(":")[0])
+            if not (q_ and lo_ and hi_ and q_[0] - lo_ >= 0.5 * (hi_ - lo_)):
+                print(f"{key}: today's low {lo_} / high {hi_}: not in the top half of the day yet, not sent")
+                continue
+            msg += f" · today's range ${lo_:.2f}-${hi_:.2f}"
         if title is not None and key.endswith(":touch"):
             # only when today's 1-minute chart shows the trade over the buy point (the quote's day high can be yesterday's)
             r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
