@@ -280,6 +280,89 @@ def group_status(A, groups, cal):
     return out
 
 
+GR_TOP, GR_STRONG = 0.97, 0.90   # group rank tiers: ★ Top group = top 3%, Strong = 3-10% (2-year test, Nov 2 2026)
+
+
+def _pct_rank(v):
+    """percentile rank 0-1 of each value among the non-NaN ones (5+ needed), as in the 2-year test"""
+    out = np.full(v.size, np.nan)
+    ok = ~np.isnan(v)
+    k = int(ok.sum())
+    if k >= 5:
+        out[ok] = v[ok].argsort().argsort() / (k - 1)
+    return out
+
+
+def group_rank(A, cal, stocks_rows, back=5):
+    """Each theme on the portal and each industry (3+ stocks), ranked against the other groups of its kind (themes
+    vs themes, industries vs industries) the Qullamaggie way: the median 1-, 3- and 6-month return of its stocks, each
+    ranked as a percentile among the groups, averaged, and that average ranked again. Tier: top 3% = Top, 3-10% =
+    Strong, the rest only a rank number (the 2-year test: below the top 10% no group did better than the bottom half).
+    Also the rank `back` sessions ago, for the change. Returns {"asof", "themes", "industries", "rows": [...]}"""
+    import warnings
+    mem = collections.defaultdict(list)
+    for r in stocks_rows:
+        s = r["symbol"]
+        if s not in A:
+            continue
+        for t in [x for x in (r.get("themes") or "").split(" | ") if x]:
+            mem["theme:" + t].append(s)
+        if r.get("industry"):
+            mem["ind:" + r["industry"]].append(s)
+    names = sorted(g for g, ms in mem.items() if len(ms) >= 3)
+    cols = [len(cal) - 1, len(cal) - 1 - back]
+    calset = set(cal)
+    ret = {}                                      # {symbol: {calendar day: (1M, 3M, 6M)}}
+    for s in {x for g in names for x in mem[g]}:
+        st = A[s].st
+        if any(d not in calset for d in st.dates):  # as the test: a stock off the market calendar is left out
+            continue
+        where = {d: i for i, d in enumerate(st.dates[-(back + 2):])}
+        off = len(st.dates) - len(where)
+        ret[s] = {}
+        for k in cols:
+            i = where.get(cal[k])
+            if i is None:
+                continue
+            i += off
+            ret[s][k] = tuple(100 * (st.c[i] / st.c[i - n] - 1) if i >= n else np.nan for n in (21, 63, 126))
+    P = {}
+    med = {}
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        for k in cols:
+            M = np.array([np.nanmedian(np.array([ret[s][k] for s in mem[g] if s in ret and k in ret[s]] or [(np.nan,) * 3]), axis=0)
+                          for g in names]).reshape(len(names), 3)
+            med[k] = M
+            P[k] = np.full(len(names), np.nan)
+            for kind in ("theme:", "ind:"):
+                rows = [j for j, g in enumerate(names) if g.startswith(kind)]
+                if not rows:
+                    continue
+                sub = M[rows]
+                avg = np.nanmean([_pct_rank(sub[:, 0]), _pct_rank(sub[:, 1]), _pct_rank(sub[:, 2])], axis=0)
+                P[k][rows] = _pct_rank(avg)
+    out = {"asof": cal[-1], "back_sessions": back, "top_pct": round(100 * (1 - GR_TOP)), "strong_pct": round(100 * (1 - GR_STRONG)), "rows": []}
+    for kind, label in (("theme:", "themes"), ("ind:", "industries")):
+        rows = [j for j, g in enumerate(names) if g.startswith(kind)]
+        rk = {}
+        for k in cols:
+            ok = sorted((j for j in rows if not np.isnan(P[k][j])), key=lambda j: -P[k][j])
+            rk[k] = {j: n + 1 for n, j in enumerate(ok)}
+        out[label] = len(rk[cols[0]])
+        for j in rows:
+            p = P[cols[0]][j]
+            if np.isnan(p):
+                continue
+            m = med[cols[0]][j]
+            out["rows"].append(dict(group=names[j][len(kind):], kind=kind[:-1], rank=rk[cols[0]][j], of=len(rk[cols[0]]),
+                                    pct=round(100 * float(p), 1), tier="Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else "",
+                                    rank_before=rk[cols[1]].get(j), members=len(mem[names[j]]),
+                                    median_1m=fnum(m[0], 1), median_3m=fnum(m[1], 1), median_6m=fnum(m[2], 1)))
+    out["rows"].sort(key=lambda r: (r["kind"], r["rank"]))
+    return out
+
+
 def best_group(sym, k, groups, GS):
     """(status, name) of the best-trending group the stock belongs to on calendar day k: its themes first,
     then its area ("AI & Semis area"); -1 when it has none"""
@@ -1539,7 +1622,7 @@ def gap_base_fields(a, i, prev=None):
     return out
 
 
-def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None, s3=None):
+def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None, s3=None, grank=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
     T = len(cal) - 1
@@ -1742,7 +1825,9 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                news_days=sorted([s, d, w] for (s, d), w in NEWS_DAYS.items()),
                # 3-SETUPS for the live alerts (desktop: every trigger; phone: Ready only); kept from the evening scan when
                # a Follow-button rebuild doesn't pass the Watchlist
-               setups3=s3 if s3 is not None else prev_s3)
+               setups3=s3 if s3 is not None else prev_s3,
+               # each theme / industry ranked against the others of its kind after this close (★ Top 3%, Strong 3-10%)
+               group_rank=grank if grank is not None else old_doc.get("group_rank"))
     with open(out_path, "w") as f:
         json.dump(doc, f, separators=(",", ":"))
     n_today = sum(1 for r in rows if r["date"] == today)
@@ -1834,8 +1919,15 @@ def main():
         s3 = [dict(symbol=r["symbol"], tv=r.get("tv"), section=r["section"], setup=r["setup"], buy_point=r["buy_point"],
                    away_adr=r["away_adr"], adr_pct=r["adr_pct"], why=r["why"]) for r in rows]
         print("3-SETUPS:", {sec: sum(1 for r in rows if r["section"] == sec) for sec in S3_SECTIONS})
+    grank = None
+    try:
+        grank = group_rank(A, cal, json.load(open(a.stocks)))
+        print("group rank:", grank["themes"], "themes,", grank["industries"], "industries; Top:",
+              ", ".join(r["group"] for r in grank["rows"] if r["tier"] == "Top"))
+    except Exception as e:                       # the rank must never stop the launch list
+        print("group rank failed:", e)
     daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {},
-          picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3)
+          picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3, grank)
     if a.backtest:
         backtest(A, groups, GS, cal, S, a.backtest)
 
