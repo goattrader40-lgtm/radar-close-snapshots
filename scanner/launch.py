@@ -97,6 +97,7 @@ LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000,
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
 CATALYST_DAYS = {}     # {(symbol, date): "earnings" / the news}: the days a catalyst launch can come on
 NEWS_DAYS = {}         # the same tags without the 5%-gap filter: the days a laggard launch can come on
+RES_A = {}             # the loaded stocks, for the watchlist's resistance column
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
 
 
@@ -1467,11 +1468,33 @@ def setups3(A, today, wl, prev=(), removed=None):
     return rows
 
 
+RES_SPANS = ((63, "3m"), (126, "6m"), (189, "9m"), (252, "52w"))
+
+
+def resistance(a, i, floor=None):
+    """the highs overhead the stock still has to clear (your rule, Nov 2 2026): the 3-, 6-, 9-month and 52-week highs
+    over the close and over the buy point (shown on its own), lowest first, [[label, level]]; a high that is the top of
+    several spans takes the shortest one's label"""
+    st = a.st
+    lo = max(float(st.c[i]), float(floor or 0)) * 1.005
+    out = []
+    for n, lab in RES_SPANS:
+        hi = float(st.h[max(0, i - n + 1):i + 1].max())
+        if hi > lo and not any(abs(hi / x[1] - 1) < 0.005 for x in out):
+            out.append([lab, round(hi, 2)])
+    return out
+
+
 def write_watchlist(rows, wl_path, wl):
     """the new 3-SETUPS into the Watchlist's files: latest.json, the day's history file, the TradingView import file and
     the README (run.py builds the other three lists before this)"""
     wl["lists"]["3-SETUPS"] = rows
     wl["counts"]["3-SETUPS"] = len(rows)
+    for lst in wl["lists"].values():                    # the overhead highs, on every list
+        for r in lst:
+            a = RES_A.get(r.get("symbol"))
+            if a is not None:
+                r["resistance"] = resistance(a, len(a.st.dates) - 1, r.get("buy_point"))
     json.dump(wl, open(wl_path, "w"), indent=1)
     out = os.path.dirname(wl_path)
     hp = os.path.join(out, "history", wl["date"] + ".json")
@@ -1583,6 +1606,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         up = next((kk for kk in range(k, T + 1) if best_group(s, kk, groups, GS)[0] >= 1), None)
         r["theme_up_since"] = cal[up] if up is not None else None      # first day from the launch its theme was trending
         r["lone_wolf"] = up is None
+        r["resistance"] = resistance(a, last, r.get("buy_point"))
         return r
 
     ev = detect(A, groups, GS, cal, S)
@@ -1657,6 +1681,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         r.update(grade="You", pick=added, follows=None, news=None, earnings=False, group_now=cgn,
                  group_status_now=STATUS.get(cgs, "No group"), theme_up_since=None, lone_wolf=False)
         r.update(gap_fields(s, a, last))
+        r["resistance"] = resistance(a, last, r.get("buy_point"))
         rows.append(r)
     # watch list for the intraday trigger: liquid, from 25% under to 50% over the 200 SMA (over 28%: power days
     # only; under it: only once it trades back above it, e.g. a catalyst gap), no launch in 20 days
@@ -1790,6 +1815,7 @@ def main():
     global ENTRY
     ENTRY = a.entry
     A, groups, GS, cal, S = load(a.bars, a.stocks)
+    RES_A.update(A)
     s3 = None
     if a.watchlist:
         wl = json.load(open(a.watchlist))
