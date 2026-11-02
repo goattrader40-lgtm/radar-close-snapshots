@@ -209,7 +209,7 @@
     <div class="tgr-grid">
       <div class="tgr-card" id="themes-card">
         <div class="tgr-cardhead"><h2 id="themes-h">Themes</h2></div>
-        <p class="tgr-note">Ranked across all themes; click any column to sort. <b>vs ETF</b> = the theme's move minus its area's main ETF (SMH for AI &amp; semis, IGV for software…), so it shows which themes lead or lag their area. Pick "By area" in Layout to see each area under its main ETF. Your baskets, each with any extra names that pass the same co-movement test, plus auto groups the test found on its own. Only liquid names count and show: market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+. Strength = how tightly the whole group moves together: <span class="tgr-sdot s1"></span>0.6+ tight pack (Cybersecurity is 0.63), <span class="tgr-sdot s2"></span>0.45–0.6, <span class="tgr-sdot s3"></span>looser. Click a theme to list its names, or an industry chip to jump to that industry.</p>
+        <p class="tgr-note">Ranked across all themes; click any column to sort. <b>vs ETF</b> = the theme's move minus its area's main ETF (SMH for AI &amp; semis, IGV for software…), so it shows which themes lead or lag their area. Pick "By area" in Layout to see each area under its main ETF. Your baskets, each with any extra names that pass the same co-movement test, plus auto groups the test found on its own. Only liquid names count and show: market cap $700M+, 20-day average volume 700K+ shares, 20-day average $ volume $20M+. Strength = how tightly the whole group moves together: <span class="tgr-sdot s1"></span>0.6+ tight pack (Cybersecurity is 0.63), <span class="tgr-sdot s2"></span>0.45–0.6, <span class="tgr-sdot s3"></span>looser. Click a theme to list its names, or an industry chip to jump to that industry.</p>
         <div class="tgr-scroll">
           <table class="tgr-table" id="theme-table">
             <thead><tr>
@@ -307,7 +307,7 @@
       <label class="tgr-f"><input type="checkbox" data-param="g_above200"> Above 200-day SMA</label>
       <label class="tgr-f"><input type="checkbox" data-param="g_above50e"> Above 50-day EMA</label>
       <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-param="g_mcap_b" aria-label="Minimum market cap, billions"> B</label>
-      <label class="tgr-f">30-day avg volume ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-param="g_avgvol_k" aria-label="Minimum 30-day average volume, thousands of shares"> K shares</label>
+      <label class="tgr-f">20-day avg volume ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-param="g_avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K shares</label>
       <button class="tgr-lite" id="g-reset" type="button">Reset to my defaults</button>
     </div>
     <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. Rel vol = today's volume ÷ the average of the last 20 trading days: during market hours by this time of day (volume from 9:30 to now vs the same stretch on those days), after the close the full day; it's rough in the first 5 minutes. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list.</p>
@@ -398,8 +398,8 @@
         <label class="tgr-f">Pre-mkt chg <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-pm="chg_min" aria-label="Minimum pre-market change, %"> % to <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-pm="chg_max" aria-label="Maximum pre-market change, %"> %</label>
         <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-pm="price"></label>
         <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-pm="mcap_b"> B</label>
-        <label class="tgr-f">Avg vol 30D ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-pm="avgvol_k"> K</label>
-        <label class="tgr-f">Price × avg vol 30D ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-pm="dvol_m"> M</label>
+        <label class="tgr-f">Avg vol 20D ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-pm="avgvol_k"> K</label>
+        <label class="tgr-f">Price × avg vol 20D ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-pm="dvol_m"> M</label>
         <label class="tgr-f">ADR ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-pm="adr"> %</label>
         <label class="tgr-f">Pre-mkt vol ≥ <input class="tgr-num" type="number" inputmode="decimal" step="10" min="0" data-pm="pmvol_k"> K</label>
         <label class="tgr-f">52W low ≥ <input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-pm="low52"> % below price</label>
@@ -438,7 +438,7 @@
     <h2 class="tgr-sub" id="pmg-h">Graded gappers (5%+, top 8 up and 4 down by pre-market $ volume)</h2>
     <div class="tgr-bar"><span class="tgr-seg" data-k="pmdir"><button data-v="up" aria-pressed="true">Gap ups</button><button data-v="down" aria-pressed="false">Gap downs</button></span>
       <span class="tgr-seg" data-k="pmshow"><button data-v="ab" aria-pressed="true">A &amp; B only</button><button data-v="all" aria-pressed="false">Show all</button></span></div>
-    <p class="tgr-rule">Gapping 5%+ up or down before the open and passing your rules (market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+, ADR 3%+). Scanned at <span class="em" id="pm-time">—</span> ET on <span class="em" id="pm-date">—</span><span id="pm-stale" hidden> (not today: today's list posts by 9:10 AM ET on weekdays)</span>.</p>
+    <p class="tgr-rule">Gapping 5%+ up or down before the open and passing your rules (market cap $700M+, 20-day average volume 700K+ shares, 20-day average $ volume $20M+, ADR 3%+). Scanned at <span class="em" id="pm-time">—</span> ET on <span class="em" id="pm-date">—</span><span id="pm-stale" hidden> (not today: today's list posts by 9:10 AM ET on weekdays)</span>.</p>
     <p class="tgr-note">Grade = how solid the news behind the gap is, from reading the actual filings, releases and earnings: <span class="tgr-grade gA">A</span> real fundamental change (earnings beat with raised guidance, big growth inflection, FDA approval, takeover), <span class="tgr-grade gB">B</span> decent (meaningful contract, partnership, index add), <span class="tgr-grade gC">C</span> weak (analyst call, sympathy move, hype, no clear news), <span class="tgr-grade gF">F</span> warning (offering or other dilution, promotional release, reverse split, unconfirmed news). For gap downs the grade means how real and lasting the bad news is: <span class="tgr-grade gA">A</span> serious damage (guidance cut, big miss, lost customer), <span class="tgr-grade gB">B</span> meaningful but contained, <span class="tgr-grade gC">C</span> weak or no real news (possible overreaction). Inflection = a change in the business trend: Turnaround (a decline reverses), Acceleration (growth speeds up), New business (a new product or customer that changes the company), Margin (profits jump on cost or mix), Deterioration (the trend breaks down); scored 1–10 for how big and how confirmed it is. The top 8 gap ups and top 4 gap downs by pre-market $ volume are graded, and only A and B grades show unless you pick Show all. If fewer stocks pass your rules, only those are researched; if none pass, nothing is. <span class="tgr-gm">EP</span> = gap of 10%+ with pre-market volume already 25%+ of a normal day (Qullamaggie's episodic pivot asks for a 10%+ gap on huge early volume). Gap ÷ ADR shows how big the gap is for that stock. vs 200D and vs 50 EMA = the pre-market price at scan time vs the 200-day SMA and 50-day EMA as of yesterday's close. Pre-market prices come from Yahoo's 5-minute bars at scan time; check live prints in TradingView.</p>
     <div class="tgr-card" id="pm-card">
       <div class="tgr-scroll tall">
@@ -768,7 +768,7 @@ function defCalc(id, spec) { CALCS[id] = spec; }
 /* ───────── calculations (readers can see these) ───────── */
 defCalc('theme_perf', {
   title: 'Theme performance',
-  description: 'Per theme (your basket plus its auto-added names, or an auto group), liquid names only (market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+): median and cap-weighted 1D/1W/1M/3M change, share up today, member industries, group strength and each member’s co-movement score.',
+  description: 'Per theme (your basket plus its auto-added names, or an auto group), liquid names only (market cap $700M+, 20-day average volume 700K+ shares, 20-day average $ volume $20M+): median and cap-weighted 1D/1W/1M/3M change, share up today, member industries, group strength and each member’s co-movement score.',
   inputs: ['stocks', 'themes'],
   fn: (stocks, themes) => {
     const v = (x) => (x === null || x === undefined || x === '' ? null : Number(x));
@@ -778,7 +778,7 @@ defCalc('theme_perf', {
     const tally = (rs, k) => Object.entries(rs.reduce((o, r) => ((o[r[k]] = (o[r[k]] || 0) + 1), o), {})).sort((a, b) => b[1] - a[1]).map(([n, c]) => n + ' (' + c + ')').join(' | ');
     const bySym = new Map(stocks.map((r) => [r.symbol, r]));
     return themes.map((t) => {
-      const liquid = (s) => { const r = bySym.get(s); return !!r && v(r.mcap_b) >= 0.7 && v(r.avg_vol_30d) >= 700000 && v(r.dvol_20_m) >= 20; };
+      const liquid = (s) => { const r = bySym.get(s); return !!r && v(r.mcap_b) >= 0.7 && v(r.avg_vol_20) >= 700000 && v(r.dvol_20_m) >= 20; };   /* 20-day volume and $ (Nov 2 2026) */
       const coreSyms = String(t.members || '').split(' ').filter(liquid);
       const extSyms = String(t.ext || '').split(' ').filter(liquid);
       const rs = coreSyms.concat(extSyms).map((s) => bySym.get(s));
@@ -869,7 +869,7 @@ defCalc('industry_perf', {
     const rv = n(r.rel_vol);                    /* today's volume vs the last 20 trading days (by this time of day while the market is open) */
     if (p.g_rv !== null && p.g_rv !== undefined && rv !== null && rv < p.g_rv) return false;
     if (p.g_mcap_b !== null && (n(r.mcap_b) ?? -1) < p.g_mcap_b) return false;
-    if (p.g_avgvol_k !== null && (n(r.avg_vol_30d) ?? -1) < p.g_avgvol_k * 1000) return false;
+    if (p.g_avgvol_k !== null && (n(r.avg_vol_20) ?? -1) < p.g_avgvol_k * 1000) return false;
     const adr = n(r.adr_20);
     if (p.g_adr !== null && adr !== null && adr < p.g_adr) return false;
     const dv = n(r[p.g_dvol_days === 10 ? 'dvol_10_m' : 'dvol_20_m']);
@@ -879,8 +879,8 @@ defCalc('industry_perf', {
     return true;
   };
   const LIST_MAX = 600;
-  /* themes show liquid names only: market cap $700M+, 30-day average volume 700K+ shares, 20-day average $ volume $20M+ */
-  const liquidRow = (r) => { const n = (x) => (x === null || x === undefined || x === '' ? null : Number(x)); return (n(r.mcap_b) ?? 0) >= 0.7 && (n(r.avg_vol_30d) ?? 0) >= 700000 && (n(r.dvol_20_m) ?? 0) >= 20; };
+  /* themes show liquid names only: market cap $700M+, 20-day average volume 700K+ shares, 20-day average $ volume $20M+ */
+  const liquidRow = (r) => { const n = (x) => (x === null || x === undefined || x === '' ? null : Number(x)); return (n(r.mcap_b) ?? 0) >= 0.7 && (n(r.avg_vol_20) ?? 0) >= 700000 && (n(r.dvol_20_m) ?? 0) >= 20; };
 
   /* ───────── helpers ───────── */
   const $ = (s) => document.querySelector(s);
@@ -1428,7 +1428,7 @@ defCalc('industry_perf', {
     BASE.stocks.forEach((r) => {
       const q = live[r.symbol]; if (!q) return;
       const [pm_last, pm_chg, pm_gap, pm_vol, pm_dvol] = q;
-      const adv = num(r.avg_vol_30d);
+      const adv = num(r.avg_vol_20) ?? num(r.avg_vol_30d);
       const g = grades.get(r.symbol);
       out.push(Object.assign({}, r, { pm_last, pm_chg, pm_gap, pm_vol, pm_dvol_m: pm_dvol / 1e6,
         pm_pct_adv: adv ? (pm_vol / adv) * 100 : null,
@@ -1449,7 +1449,7 @@ defCalc('industry_perf', {
     if (p.chg_max !== null && mv > p.chg_max) return false;
     if (p.price !== null && (num(r.price) ?? -1) < p.price) return false;
     if (p.mcap_b !== null && (num(r.mcap_b) ?? -1) < p.mcap_b) return false;
-    if (p.avgvol_k !== null && (num(r.avg_vol_30d) ?? -1) < p.avgvol_k * 1000) return false;
+    if (p.avgvol_k !== null && (num(r.avg_vol_20) ?? -1) < p.avgvol_k * 1000) return false;
     if (p.dvol_m !== null && (r.tv_dvol_m ?? -1) < p.dvol_m) return false;
     if (p.adr !== null && num(r.adr_20) !== null && num(r.adr_20) < p.adr) return false;
     if (p.pmvol_k !== null && r.pm_vol < p.pmvol_k * 1000) return false;
@@ -1632,7 +1632,7 @@ defCalc('industry_perf', {
       'MOMENTUM-1W': { perf_pct: 10 }, 'MOMENTUM-1M': { perf_pct: 25 }, 'MOMENTUM-3M': { perf_pct: 50 }, 'MOMENTUM-6M': { perf_pct: 50, above_sma200: true, min_pct_above_52w_low: 50 },
       'DAILY TIGHTNESS': { min_pct_above_52w_low: 40, max_pct_below_52w_high: 30, vol_below_avg30_pct: 20, range_vs_avg10_max: 0.8, min_tight_days: 3, within_last_days: 5 },
       'PULLBACK TO 21EMA-MAIN': { max_above_ema_pct: 3 }, 'PULLBACK TO 50EMA': { max_above_ema_pct: 3 } }, (set && set.screeners) || {});
-    const S0 = Object.assign({ min_price: 10, min_mcap: 7e8, min_avg_vol_30d: 700000, min_dollar_vol_30d_millions: 20, min_adr: 4, above_ema50: true, min_pct_above_52w_low: 30 }, (set && set.standard) || {});
+    const S0 = Object.assign({ min_price: 10, min_mcap: 7e8, min_avg_vol_20d: 700000, min_dollar_vol_20d_millions: 20, min_adr: 4, above_ema50: true, min_pct_above_52w_low: 30 }, (set && set.standard) || {});
     const Ls = Object.assign({ delete_after_closes_below_ema50: 2, new_mover_days_without_setup: 15, delete_below_gap_low: false, delete_below_upday_low: true,
       pool_refresh_weekday: 4, setups_max: 30, setups_need_above_sma200: true }, (set && set.lists) || {});
     const day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'][Ls.pool_refresh_weekday] || 'week';
@@ -1653,8 +1653,8 @@ defCalc('industry_perf', {
         '2 closes in a row under the 50 EMA, 62 sessions from its highest point without a new high, its ADR under 3.2%, or your ✕ (it comes back only when it comes on a feeder list again).'],
     }[list];
     if (!R) return null;
-    const every = 'price $' + S0.min_price + '+, market cap $' + Math.round(S0.min_mcap / 1e6) + 'M+, 30-day average volume ' + Math.round(S0.min_avg_vol_30d / 1000) + 'k+ shares and $' +
-      S0.min_dollar_vol_30d_millions + 'M+ a day, ADR ' + S0.min_adr + '%+' + (S0.above_ema50 ? ', a close above the 50 EMA' : '') + (S0.min_pct_above_52w_low ? ', at least ' + S0.min_pct_above_52w_low + '% above the 52-week low' : '') + '.';
+    const every = 'price $' + S0.min_price + '+, market cap $' + Math.round(S0.min_mcap / 1e6) + 'M+, 20-day average volume ' + Math.round(S0.min_avg_vol_20d / 1000) + 'k+ shares and $' +
+      S0.min_dollar_vol_20d_millions + 'M+ a day (20-day), ADR ' + S0.min_adr + '%+' + (S0.above_ema50 ? ', a close above the 50 EMA' : '') + (S0.min_pct_above_52w_low ? ', at least ' + S0.min_pct_above_52w_low + '% above the 52-week low' : '') + '.';
     return [['Gets on: ', R[0]], ['It leaves on: ', R[1]], ['Every list also needs: ', every], ['Grade: ', 'the trend and the last pullback, the same on every list (How the grade works, below).']];
   };
   /* the list's rules and the "About these lists" note open or stay closed the way you left them (this browser only) */

@@ -18,8 +18,8 @@ SET = json.load(open(os.path.join(ROOT, "scanner", "settings.json")))
 ST, LA = SET["standard"], SET["launch"]
 LAUNCH_LIQ = (f"Price ${LA['min_price']}+, 20-day avg $ volume ${LA['min_dollar_vol_20d_millions']}M+, "
               f"{LA['min_avg_vol_20d'] / 1000:.0f}K+ shares a day (20-day avg), ADR {LA['min_adr']}%+")
-WATCH_LIQ = (f"Price ${ST['min_price']}+, market cap ${ST['min_mcap'] / 1e6:.0f}M+, 30-day avg volume "
-             f"{ST['min_avg_vol_30d'] / 1000:.0f}K+ shares and ${ST['min_dollar_vol_30d_millions']}M+ a day (30-day), ADR "
+WATCH_LIQ = (f"Price ${ST['min_price']}+, market cap ${ST['min_mcap'] / 1e6:.0f}M+, 20-day avg volume "
+             f"{ST['min_avg_vol_20d'] / 1000:.0f}K+ shares and ${ST['min_dollar_vol_20d_millions']}M+ a day (20-day), ADR "
              f"{ST['min_adr']}%+" + (", close above the 50 EMA" if ST.get("above_ema50") else "")
              + (f", {ST['min_pct_above_52w_low']}%+ above the 52-week low" if ST.get("min_pct_above_52w_low") else ""))
 SHEETS = {
@@ -128,7 +128,7 @@ SHEETS.update({
 ]),
 "P1 Pre-market grading": (["Item", "Rule"], [
  ["When", "Starts 8:50 AM ET on weekdays; final price check at 8:57; posted by 9:05. If it starts late it still grades everything"],
- ["Which gappers", "Gap of 5%+ (up or down) at the latest pre-market price; market cap $700M+, 30-day avg volume 700K+, 20-day avg $ volume $20M+, ADR 3%+"],
+ ["Which gappers", "Gap of 5%+ (up or down) at the latest pre-market price; market cap $700M+, 20-day avg volume 700K+, 20-day avg $ volume $20M+, ADR 3%+"],
  ["How many graded", "Top 8 gap-ups and top 4 gap-downs by pre-market $ volume; the rest show ungraded under Show all"],
  ["Prices", "Newest of Yahoo's 5-minute bars, Yahoo's live pre-market quote and Alpaca (about 15 min behind); pre-market volume from Alpaca, about 15 minutes behind"],
  ["Searches per stock", "'Why is <company> stock moving today'; the company's own news / 8-K; for asset-driven companies (crypto treasuries, miners, holding companies, single-drug biotechs) the asset's news too"],
@@ -147,13 +147,13 @@ SHEETS.update({
  ["Both", "Inflection 1-10", "Turnaround, Acceleration, New business, Margin, Deterioration or None (0); scored on size and how confirmed"],
 ]),
 "P3 Pre-market scanner": (["Filter", "Your default"], [
- ["Direction", "Gap ups"], ["Pre-market change", "0.5% to 5%"], ["Price", "$5+"], ["Market cap", "$0.7B+"], ["Avg volume (30D)", "600K+"],
+ ["Direction", "Gap ups"], ["Pre-market change", "0.5% to 5%"], ["Price", "$5+"], ["Market cap", "$0.7B+"], ["Avg volume (20D)", "600K+"],
  ["Price x avg volume", "$20M+"], ["ADR", "4%+"], ["52-week low", "30%+ below price"], ["Above 200-day SMA", "off"], ["Above 50-day EMA", "off"],
  ["Updates", "Every 5 minutes, 7:00-9:29 AM ET"],
 ]),
 "G1 Gainers filter": (["Filter", "Your default"], [
  ["Direction", "Gainers"], ["Day's change", "4%+"], ["Price", "$5+"], ["ADR", "3.5%+"], ["$ volume", "$30M+ (20-day)"],
- ["Above 200 SMA", "on"], ["Above 50 EMA", "off"], ["Market cap", "$0.7B+"], ["Avg volume", "700K+"],
+ ["Above 200 SMA", "on"], ["Above 50 EMA", "off"], ["Market cap", "$0.7B+"], ["Avg volume (20D)", "700K+"],
 ]),
 "A1 Alerts": (["Alert", "When it fires", "Checked"], [
  ["Pre-market grades", "The morning's graded gappers", "About 9:05 AM ET"],

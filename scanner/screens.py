@@ -40,6 +40,9 @@ class Stock:
         self.ema21, self.ema50, self.sma200, self.adr = (d[k].to_numpy() for k in ("ema21", "ema50", "sma200", "adr"))
         self.avgv30 = roll_mean(self.v, 30)
         self.dv30 = self.c * self.avgv30 / 1e6
+        # the liquidity rule: 20-day average shares and $ traded (your rule, Nov 2 2026; was 30-day)
+        self.avgv20 = roll_mean(self.v, 20)
+        self.dv20 = roll_mean(self.c * self.v, 20) / 1e6
         prev10 = np.full(self.v.size, np.nan)
         prev10[1:] = roll_mean(self.v, 10)[:-1]
         with np.errstate(divide="ignore", invalid="ignore"):
@@ -56,7 +59,7 @@ class Stock:
     def standard(self, i, S):
         c = self.c[i]
         return bool(c >= S["min_price"] and S["min_mcap"] <= self.mcap <= S["max_mcap"]
-                    and self.avgv30[i] > S["min_avg_vol_30d"] and self.dv30[i] > S["min_dollar_vol_30d_millions"]
+                    and self.avgv20[i] >= S["min_avg_vol_20d"] and self.dv20[i] >= S["min_dollar_vol_20d_millions"]
                     and self.adr[i] >= S["min_adr"] and (not S["above_ema50"] or self.ema50[i] < c)
                     and c >= self.low52[i] * (1 + S["min_pct_above_52w_low"] / 100))
 

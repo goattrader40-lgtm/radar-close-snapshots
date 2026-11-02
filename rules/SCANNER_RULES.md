@@ -6,7 +6,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 
 | Rule | Requirement | Notes |
 |---|---|---|
-| Liquid | Price $10+, 20-day avg $ volume $20M+, 600K+ shares a day (20-day avg), ADR 3.5%+ | Your settings (scanner/settings.json, 'launch') |
+| Liquid | Price $10+, 20-day avg $ volume $20M+, 700K+ shares a day (20-day avg), ADR 3.5%+ | Your settings (scanner/settings.json, 'launch') |
 | History | 200+ sessions | A newer listing needs 60+ sessions and uses its average close since listing as the 200 SMA |
 | Above 52-week low | Close 30%+ above the 52-week low | - |
 | 200 SMA | Close ABOVE the 200 SMA; the day before at most 28% above it (power day: up to 50%) | Laggards are the exception: they close UNDER it |
@@ -97,7 +97,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Item | Rule |
 |---|---|
 | Universe | Every US stock with a market cap of $700M+ (Nasdaq's list; 2 years of daily bars) |
-| Liquid | Price $10+, 20-day avg $ volume $20M+, 600K+ shares a day (20-day avg), ADR 3.5%+ |
+| Liquid | Price $10+, 20-day avg $ volume $20M+, 700K+ shares a day (20-day avg), ADR 3.5%+ |
 | History | 200+ sessions (60+ for a new listing) |
 | 200 SMA range | From 60% under to 50% over its 200 SMA (28-50% over: power days only; under it: laggards or once it trades back over) |
 | Not launched | No launch in the last 20 sessions (those are followed on the Launches list) |
@@ -109,7 +109,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 
 | List | Gets on | Leaves on | Sections |
 |---|---|---|---|
-| Every list needs | Price $10+, market cap $700M+, 30-day avg volume 700K+ shares and $20M+ a day (30-day), ADR 3.5%+, close above the 50 EMA, 30%+ above the 52-week low | - | - |
+| Every list needs | Price $10+, market cap $700M+, 20-day avg volume 700K+ shares and $20M+ a day (20-day), ADR 3.5%+, close above the 50 EMA, 30%+ above the 52-week low | - | - |
 | 1-EP/GAP | Gap up of more than 5% at the open with relative volume 2.5x+ (no 200 SMA rule) | 2 closes in a row below the 50 EMA, or 15 trading days without reaching 3-SETUPS | The gap day (a new gap moves it to the newer section) |
 | 1-UPDAY | Up 4%+ on the day with relative volume 1x+ (no 200 SMA rule) | 2 closes in a row below the 50 EMA, a close below the up day's low, or 15 trading days without reaching 3-SETUPS | The up day |
 | 2-POOL | First close back above the 50 EMA after 2+ closes below it; or, refreshed every Friday, momentum leaders: +10% in 1 week, +25% in 1 month, +50% in 3 months, or +50% in 6 months (that one also above the 200 SMA and 50%+ over its 52-week low) | 2 closes in a row below the 50 EMA; at the Friday refresh, a close below the 200 SMA or no longer liquid | 50 EMA reclaim / Momentum |
@@ -165,7 +165,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Item | Rule |
 |---|---|
 | When | Starts 8:50 AM ET on weekdays; final price check at 8:57; posted by 9:05. If it starts late it still grades everything |
-| Which gappers | Gap of 5%+ (up or down) at the latest pre-market price; market cap $700M+, 30-day avg volume 700K+, 20-day avg $ volume $20M+, ADR 3%+ |
+| Which gappers | Gap of 5%+ (up or down) at the latest pre-market price; market cap $700M+, 20-day avg volume 700K+, 20-day avg $ volume $20M+, ADR 3%+ |
 | How many graded | Top 8 gap-ups and top 4 gap-downs by pre-market $ volume; the rest show ungraded under Show all |
 | Prices | Newest of Yahoo's 5-minute bars, Yahoo's live pre-market quote and Alpaca (about 15 min behind); pre-market volume from Alpaca, about 15 minutes behind |
 | Searches per stock | 'Why is <company> stock moving today'; the company's own news / 8-K; for asset-driven companies (crypto treasuries, miners, holding companies, single-drug biotechs) the asset's news too |
@@ -194,7 +194,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Pre-market change | 0.5% to 5% |
 | Price | $5+ |
 | Market cap | $0.7B+ |
-| Avg volume (30D) | 600K+ |
+| Avg volume (20D) | 600K+ |
 | Price x avg volume | $20M+ |
 | ADR | 4%+ |
 | 52-week low | 30%+ below price |
@@ -214,7 +214,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Above 200 SMA | on |
 | Above 50 EMA | off |
 | Market cap | $0.7B+ |
-| Avg volume | 700K+ |
+| Avg volume (20D) | 700K+ |
 
 ## Alerts
 

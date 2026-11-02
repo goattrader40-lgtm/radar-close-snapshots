@@ -2,7 +2,7 @@
 """Pre-market gappers for Theme & Group Radar.
 
   prepare <premarket/latest.json> <stocks.json> <out_dir> [n_grade_up] [n_grade_down] [--live=premarket_live.json]
-      Keeps gaps of 5%+ up or down that pass the liquidity rules (market cap $700M+, 30-day average volume 700K+ shares,
+      Keeps gaps of 5%+ up or down that pass the liquidity rules (market cap $700M+, 20-day average volume 700K+ shares,
       20-day average $ volume $20M+, ADR% 3+), adds ADR%, theme, the pre-market price vs the 200-day SMA
       and the 50-day EMA (both as of the last close), an EP badge, and writes
       <out_dir>/rows.json plus <out_dir>/to_grade.json (by pre-market $ volume: top 20 gap-ups and top 8 gap-downs).
@@ -50,7 +50,7 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
         s = stocks.get(g["symbol"])
         if not s or abs(g["gap_pct"]) < GAP_MIN:
             continue
-        mcap, avgv, dv = num(s.get("mcap_b")), num(s.get("avg_vol_30d")), num(s.get("dvol_20_m"))
+        mcap, avgv, dv = num(s.get("mcap_b")), num(s.get("avg_vol_20") or s.get("avg_vol_30d")), num(s.get("dvol_20_m"))   # 20-day (your rule, Nov 2 2026)
         if not (mcap and mcap >= MCAP_MIN and avgv and avgv >= AVGVOL_MIN and dv and dv >= DVOL_MIN):
             continue
         adr = num(s.get("adr_20"))
