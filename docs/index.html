@@ -445,7 +445,7 @@
     <div class="tgr-bar"><span class="tgr-seg" data-k="pmdir"><button data-v="up" aria-pressed="true">Gap ups</button><button data-v="down" aria-pressed="false">Gap downs</button></span>
       <span class="tgr-seg" data-k="pmshow"><button data-v="ab" aria-pressed="true">A &amp; B only</button><button data-v="all" aria-pressed="false">Show all</button></span></div>
     <p class="tgr-rule">Gapping 5%+ up or down before the open and passing your rules (market cap $700M+, 20-day average volume 700K+ shares, 20-day average $ volume $20M+, ADR 3%+). Scanned at <span class="em" id="pm-time">—</span> ET on <span class="em" id="pm-date">—</span><span id="pm-stale" hidden> (not today: today's list posts by 9:10 AM ET on weekdays)</span>.</p>
-    <p class="tgr-note">Grade = how solid the news behind the gap is, from reading the actual filings, releases and earnings: <span class="tgr-grade gA">A</span> real fundamental change (earnings beat with raised guidance, big growth inflection, FDA approval, takeover), <span class="tgr-grade gB">B</span> decent (meaningful contract, partnership, index add), <span class="tgr-grade gC">C</span> weak (analyst call, sympathy move, hype, no clear news), <span class="tgr-grade gF">F</span> warning (offering or other dilution, promotional release, reverse split, unconfirmed news). For gap downs the grade means how real and lasting the bad news is: <span class="tgr-grade gA">A</span> serious damage (guidance cut, big miss, lost customer), <span class="tgr-grade gB">B</span> meaningful but contained, <span class="tgr-grade gC">C</span> weak or no real news (possible overreaction). Inflection = a change in the business trend: Turnaround (a decline reverses), Acceleration (growth speeds up), New business (a new product or customer that changes the company), Margin (profits jump on cost or mix), Deterioration (the trend breaks down); scored 1–10 for how big and how confirmed it is. The top 8 gap ups and top 4 gap downs by pre-market $ volume are graded, and only A and B grades show unless you pick Show all. If fewer stocks pass your rules, only those are researched; if none pass, nothing is. <span class="tgr-gm">EP</span> = gap of 10%+ with pre-market volume already 25%+ of a normal day (Qullamaggie's episodic pivot asks for a 10%+ gap on huge early volume). Gap ÷ ADR shows how big the gap is for that stock. vs 200D and vs 50 EMA = the pre-market price at scan time vs the 200-day SMA and 50-day EMA as of yesterday's close. Pre-market prices come from Yahoo's 5-minute bars at scan time; check live prints in TradingView. Group rank = the stock's best-ranked group (its themes and its industry) after yesterday's close: <span class="tgr-up">★ Top</span> = top 3% of its kind, <span class="tgr-up">Strong</span> = top 3–10%; it isn't part of the news grade (in 2 years it didn't change how many gaps faded on the day, but Top-group gaps ran 20%+ within 20 days 44% of the time vs 28–29% outside the top 10%).</p>
+    <p class="tgr-note">Grade = how solid the news behind the gap is, from reading the actual filings, releases and earnings: <span class="tgr-grade gA">A</span> real fundamental change (earnings beat with raised guidance, big growth inflection, FDA approval, takeover), <span class="tgr-grade gB">B</span> decent (meaningful contract, partnership, index add), <span class="tgr-grade gC">C</span> weak (analyst call, sympathy move, hype, no clear news), <span class="tgr-grade gF">F</span> warning (offering or other dilution, promotional release, reverse split, unconfirmed news). For gap downs the grade means how real and lasting the bad news is: <span class="tgr-grade gA">A</span> serious damage (guidance cut, big miss, lost customer), <span class="tgr-grade gB">B</span> meaningful but contained, <span class="tgr-grade gC">C</span> weak or no real news (possible overreaction). Inflection = a change in the business trend: Turnaround (a decline reverses), Acceleration (growth speeds up), New business (a new product or customer that changes the company), Margin (profits jump on cost or mix), Deterioration (the trend breaks down); scored 1–10 for how big and how confirmed it is. The top 8 gap ups and top 4 gap downs by pre-market $ volume are graded, and only A and B grades show unless you pick Show all. If fewer stocks pass your rules, only those are researched; if none pass, nothing is. <span class="tgr-gm">EP</span> = gap of 10%+ with pre-market volume already 25%+ of a normal day (Qullamaggie's episodic pivot asks for a 10%+ gap on huge early volume). Gap ÷ ADR shows how big the gap is for that stock. vs 200D and vs 50 EMA = the pre-market price at scan time vs the 200-day SMA and 50-day EMA as of yesterday's close. Pre-market prices come from Yahoo's 5-minute bars at scan time; check live prints in TradingView. Group rank = the stock's best-ranked group (its themes and its industry) after yesterday's close: <span class="tgr-up">★ Top</span> = top 3% of its kind, <span class="tgr-up">Strong</span> = top 3–10%; it isn't part of the news grade (in 2 years it didn't change how many gaps faded on the day, but Top-group gaps ran 20%+ within 20 days 44% of the time vs 28–29% outside the top 10%). Under it: the group and the stock's place in it (its own 1-, 3- and 6-month moves vs the group's other stocks); <span class="tgr-gm">#1 in group</span> = the leader of a group of 5+ stocks (in a Top group these gaps ran 20%+ 61% of the time vs 41% for the rest of the group, but swung harder both ways).</p>
     <div class="tgr-card" id="pm-card">
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="pm-table">
@@ -535,6 +535,7 @@
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
             <th><select class="tgr-thsel" id="wl-sec-th" aria-label="Show one section"></select></th>
             <th><button class="tgr-th" data-sort="grade">Grade</button></th>
+            <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after the last close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%. Under it: the group and the stock's place in it (its own 1-, 3- and 6-month moves vs the group's other stocks)">Group rank</button></th>
             <th class="c3">Why</th>
             <th class="c2"><button class="tgr-th" data-sort="pattern">Pattern</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
@@ -1132,6 +1133,9 @@ defCalc('industry_perf', {
     return c.sort((a, b) => b.pct - a.pct || a.rank - b.rank)[0] || null;
   };
   const grTierN = (g) => (!g ? null : g.tier === 'Top' ? 2 : g.tier === 'Strong' ? 1 : 0);
+  /* the stock's place inside that group (its own 1-, 3- and 6-month moves vs the group's other stocks) */
+  const grPlace = (g, sym) => { if (!g || !g.order) return null; const o = g.order.split(' '); const i = o.indexOf(sym); return i < 0 ? null : { place: i + 1, of: o.length }; };
+  const GR_LEAD_MIN = 5;
   const grTitle = (g) => !g ? 'No rank: fewer than 3 stocks with 6 months of data, or not in tonight\'s scan' :
     (g.kind === 'theme' ? 'Theme ' : 'Industry ') + g.group + ': #' + g.rank + ' of ' + g.of + (g.kind === 'theme' ? ' themes' : ' industries') +
     (g.tier === 'Top' ? ' (★ Top group: top 3%)' : g.tier === 'Strong' ? ' (Strong: top 3-10%)' : '') + (g.rank_before ? '; #' + g.rank_before + ' a week ago' : '') +
@@ -1145,11 +1149,19 @@ defCalc('industry_perf', {
     return td;
   };
   const grTierCell = (g) => { const td = h('td', 'nw' + (g && g.tier ? ' tgr-up' : ''), g && g.tier === 'Top' ? '★ Top' : g && g.tier === 'Strong' ? 'Strong' : ''); td.title = grTitle(g); return td; };
-  const grStockCell = (g) => {  /* a stock's best group: ★ Top #2/99, its name under it */
+  const grStockCell = (g, sym, leadTag) => {  /* a stock's best group: ★ Top #2/99, its name and the stock's place in it under it */
     const td = h('td', 'nw'); td.title = grTitle(g);
     if (!g) { td.textContent = '—'; return td; }
-    td.append(h('div', g.tier ? 'tgr-up' : '', (g.tier === 'Top' ? '★ Top ' : g.tier === 'Strong' ? 'Strong ' : '') + '#' + g.rank + '/' + g.of),
-      h('div', 'tgr-lbl', g.group + (g.kind === 'ind' ? ' (industry)' : '')));
+    const pl = grPlace(g, sym);
+    const top = h('div', g.tier ? 'tgr-up' : '', (g.tier === 'Top' ? '★ Top ' : g.tier === 'Strong' ? 'Strong ' : '') + '#' + g.rank + '/' + g.of);
+    /* the leader tag (pre-market gappers only): #1 of its group of 5+ stocks */
+    if (leadTag && pl && pl.place === 1 && pl.of >= GR_LEAD_MIN) {
+      const t = h('span', 'tgr-gm', '#1 in group');
+      t.title = 'The leader of ' + g.group + ': its own 1-, 3- and 6-month moves rank first among the group\'s ' + pl.of + ' stocks. In 2 years, 5%+ gap-ups by the #1 of a Top group ran 20%+ within 20 days 61% of the time (54 gaps) vs 41% for the rest of the group; but their average 20 days later was no better and they faded on the gap day more often (57% vs 49%): a bigger swing both ways';
+      top.append(t);
+    }
+    td.append(top, h('div', 'tgr-lbl', g.group + (g.kind === 'ind' ? ' (industry)' : '') + (pl ? ' · #' + pl.place + ' of ' + pl.of + ' in it' : '')));
+    if (pl) td.title += '\n' + sym + ' is #' + pl.place + ' of ' + pl.of + ' in this group on its own 1-, 3- and 6-month moves';
     return td;
   };
 
@@ -1435,7 +1447,7 @@ defCalc('industry_perf', {
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade, r.grade)); else gd.textContent = '—';
       const sx = h('td', 'c2 tgr-src');
       String(r.sources || '').split(' ').filter(Boolean).forEach((u, i) => { if (i) sx.append(h('span', 'tgr-sep', ' ')); const l = h('a', '', u); l.href = u; l.target = '_blank'; l.rel = 'noopener'; sx.append(l); });
-      tr.append(key, gd, grStockCell(r.gr), pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
+      tr.append(key, gd, grStockCell(r.gr, r.symbol, true), pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
         h('td', 'num c3', r.pm_vol_pct_adv === null || r.pm_vol_pct_adv === undefined ? '—' : g1.format(num(r.pm_vol_pct_adv)) + '%'),
         h('td', 'num c3', r.gap_x_adr === null || r.gap_x_adr === undefined ? '—' : num(r.gap_x_adr).toFixed(2) + '×'),
         h('td', '', r.catalyst || ''), h('td', '', r.inflection || ''), h('td', 'num', r.inflection_score === null || r.inflection_score === undefined || r.inflection_score === '' ? '—' : String(r.inflection_score)), h('td', 'name', r.reason || ''), h('td', 'c2 tgr-flags', r.flags || ''),
@@ -1748,6 +1760,7 @@ defCalc('industry_perf', {
     $('#wl-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' names in ' + S.wl + '. Prices: ' +
       (LIVE_ON ? 'live at ' + fTime(LIVE.saved_at) + ' ET' : b ? 'the ' + fDate(b.asof) + ' close' : '—') + '.';
     const gord = { 'A+': 0, A: 1, B: 2, C: 3, F: 4 };
+    rows.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; });
     const spec = S.sort['wl-table'];
     if (spec) {
       const txt = ['symbol', 'section', 'pattern', 'added', 'other'].includes(spec.key);
@@ -1756,7 +1769,7 @@ defCalc('industry_perf', {
       rows.sort((a, c) => (blank(val(a)) - blank(val(c))) || (spec.dir > 0 ? cmp(val(a), val(c)) : cmp(val(c), val(a))));
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
-    if (doc && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'No names in this list' + (S.wlsec || q ? ' match.' : ' right now.')); td.colSpan = 19; tr.append(td); tb.append(tr); }
+    if (doc && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'No names in this list' + (S.wlsec || q ? ' match.' : ' right now.')); td.colSpan = 20; tr.append(td); tb.append(tr); }
     const picked = pickedNow(), ldoc = st('launch').status === 'ok' ? st('launch').data : null;
     const launchedSet = new Set(ldoc ? ldoc.launches.filter((r) => r.grade !== 'You').map((r) => r.symbol) : []);
     rows.forEach((r) => {
@@ -1782,7 +1795,7 @@ defCalc('industry_perf', {
       const whyTd = h('td', 'c3' + (r.stage ? ' wl-why' : ' nw'), r.why || '');
       if (r.stage) { const sl = h('div', 'tgr-lbl wl-stage', r.stage); whyTd.title = r.stage; whyTd.append(sl); }
       const sec = (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
-      tr.append(key, h('td', 'nw', sec), gd, whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
+      tr.append(key, h('td', 'nw', sec), gd, grStockCell(r.gr, r.symbol, false), whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), resCell(r, num(r.price)), h('td', 'num', fPrice(r.price)), pctCell(r.chg_1d, 0), h('td', 'num c2', fX(r.rel_vol)),
         h('td', 'c2', r.other), h('td', 'num c3', p1(r.adr_pct)), h('td', 'num c3 ' + tone(r.perf_1m_pct), p1(r.perf_1m_pct, true)),
         h('td', 'num c3 ' + tone(r.perf_3m_pct), p1(r.perf_3m_pct, true)), h('td', 'num c3', p1(r.off_52w_high_pct)), h('td', 'num c3', fDv(r.dollar_vol_30d_m)),
@@ -2074,7 +2087,7 @@ defCalc('industry_perf', {
         Follower: 'Follower: a breakout within 10 sessions of a launch by ' + (r.follows || '') + ' in its theme (up 2%+ over its 20-day high on 2x+ volume)',
         Launch: 'Launch: opened up, closed up 5%+ in the top half of its range on 1.5x+ volume, over the 200 SMA' })[x]).join('\n');
       tr.append(key, ld, gc, ty, pctCell(r.today, 0),
-        h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm, grStockCell(r.gr),
+        h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm, grStockCell(r.gr, r.symbol, false),
         h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
         h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
         h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')),

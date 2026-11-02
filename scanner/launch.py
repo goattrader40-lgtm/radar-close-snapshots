@@ -283,14 +283,19 @@ def group_status(A, groups, cal):
 GR_TOP, GR_STRONG = 0.97, 0.90   # group rank tiers: ★ Top group = top 3%, Strong = 3-10% (2-year test, Nov 2 2026)
 
 
-def _pct_rank(v):
-    """percentile rank 0-1 of each value among the non-NaN ones (5+ needed), as in the 2-year test"""
+def _pct_rank_need(v, need):
+    """percentile rank 0-1 of each value among the non-NaN ones (`need`+ of them, else all NaN)"""
     out = np.full(v.size, np.nan)
     ok = ~np.isnan(v)
     k = int(ok.sum())
-    if k >= 5:
-        out[ok] = v[ok].argsort().argsort() / (k - 1)
+    if k >= need:
+        out[ok] = v[ok].argsort(kind="stable").argsort(kind="stable") / (k - 1)
     return out
+
+
+def _pct_rank(v):
+    """percentile rank 0-1 of each value among the non-NaN ones (5+ needed), as in the 2-year test"""
+    return _pct_rank_need(v, 5)
 
 
 def group_rank(A, cal, stocks_rows, back=5):
@@ -342,7 +347,21 @@ def group_rank(A, cal, stocks_rows, back=5):
                 sub = M[rows]
                 avg = np.nanmean([_pct_rank(sub[:, 0]), _pct_rank(sub[:, 1]), _pct_rank(sub[:, 2])], axis=0)
                 P[k][rows] = _pct_rank(avg)
-    out = {"asof": cal[-1], "back_sessions": back, "top_pct": round(100 * (1 - GR_TOP)), "strong_pct": round(100 * (1 - GR_STRONG)), "rows": []}
+    # each group's stocks in order, the leader first (the 2-year leader test, Nov 2 2026): each stock's own 1-, 3- and
+    # 6-month return ranked as a percentile among the group's stocks, averaged; the tag needs a group of 5+ stocks
+    order = {}
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        for g in names:
+            ms = [s for s in mem[g] if s in ret and cols[0] in ret[s]]
+            if len(ms) < 3:
+                continue
+            X = np.array([ret[s][cols[0]] for s in ms], dtype=float).reshape(len(ms), 3)
+            sc = np.nanmean([_pct_rank_need(X[:, h], 3) for h in range(3)], axis=0)
+            ok = [j for j in range(len(ms)) if not np.isnan(sc[j])]
+            order[g] = [ms[j] for j in sorted(ok, key=lambda j: -sc[j])]
+    out = {"asof": cal[-1], "back_sessions": back, "top_pct": round(100 * (1 - GR_TOP)), "strong_pct": round(100 * (1 - GR_STRONG)),
+           "leader_min_stocks": 5, "rows": []}
     for kind, label in (("theme:", "themes"), ("ind:", "industries")):
         rows = [j for j, g in enumerate(names) if g.startswith(kind)]
         rk = {}
@@ -358,7 +377,8 @@ def group_rank(A, cal, stocks_rows, back=5):
             out["rows"].append(dict(group=names[j][len(kind):], kind=kind[:-1], rank=rk[cols[0]][j], of=len(rk[cols[0]]),
                                     pct=round(100 * float(p), 1), tier="Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else "",
                                     rank_before=rk[cols[1]].get(j), members=len(mem[names[j]]),
-                                    median_1m=fnum(m[0], 1), median_3m=fnum(m[1], 1), median_6m=fnum(m[2], 1)))
+                                    median_1m=fnum(m[0], 1), median_3m=fnum(m[1], 1), median_6m=fnum(m[2], 1),
+                                    order=" ".join(order.get(names[j], []))))
     out["rows"].sort(key=lambda r: (r["kind"], r["rank"]))
     return out
 
