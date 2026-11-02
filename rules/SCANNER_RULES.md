@@ -173,7 +173,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Reliable sources only | Facts only from primary sources (company release, SEC filing, exchange/regulator notice, earnings release or call) or major outlets (Reuters, Bloomberg, WSJ/Barron's/MarketWatch, FT, CNBC, AP). Social media, crypto/flash sites, aggregators, blogs and AI summaries = rumor: C at best, F if the move rests only on it |
 | No hindsight | Graded only from the news as it stood before the open, not from price action |
 | Report | Phone notification with the save time, 'prices as of' time, counts and A/B tickers; PRICES STALE if prices are 15+ minutes old |
-| Group rank | Each gapper shows its best group's rank after yesterday's close (G2), beside the grade; not part of the news grade |
+| Group rank | Each gapper shows its best group's rank after yesterday's close (G2), its place in that group and a '#1 in group' tag for a leader (group of 5+); beside the grade, not part of the news grade |
 
 ## Gap grades
 
@@ -231,7 +231,11 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Breadth | Not used: 98% of top-3% groups already had 60%+ of their stocks over the 50 EMA |
 | When | After each close (the 4:40 PM scan, and each Launches rebuild); stays the same during the day |
 | Stock's group rank | Its best-ranked group among its themes and its industry |
-| Where it shows | Groups & themes tab (Rank, Tier); Pre-market graded gappers, Launches and Launch laggards (Group rank column) |
+| Where it shows | Groups & themes tab (Rank, Tier); Group rank column on Pre-market graded gappers, Watchlist, Launches and Launch laggards |
+| Place in its group | Under the rank: the group and the stock's place in it, e.g. '#2 of 14': its own 1-, 3- and 6-month returns, each ranked among the group's stocks, averaged |
+| #1 in group tag | Pre-market graded gappers only: the stock is #1 in its best-ranked group and the group has 5+ stocks |
+| Leader test: gap-ups | In a Top group the #1 ran 20%+ 61% (54) vs #2-3 51% (65) vs the rest 41-42%; but its average 20 days later was no better (+3.1% vs +3.6%) and it faded on the gap day more often (57% vs 49%) |
+| Leader test: launches | No tag: the group's #1 launching ran 20%+ 20% (86) vs 29% for the rest of its group; in Top groups the bottom two-thirds did best (38%) |
 | Not in the grades | Shown beside the news grade and the launch grade, not part of them |
 | 2-year test: 5%+ gap-ups | Ran 20%+ within 20 days: Top 44% (739), Strong 37% (457), 10-20% 28%, 20-50% 29%, bottom half 29%. Gap-day fade about the same in every band (52-57%) |
 | 2-year test: 10%+ gap-ups | Top 42% (142), Strong 42% (84), the rest 26-30% |

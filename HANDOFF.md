@@ -342,7 +342,9 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    (52, +6.1%). Examples: SNDK #1 in Memory & Storage at every month-end Sep 2025 - Jun 2026; DELL #2 in AI Servers
    Feb 2026 while the group ranked low, #1 Mar and May; in the CPUs theme INTC, not AMD, led Mar-Jun 2026. NVDA is not
    in the scans: settings.json max_mcap = $2T leaves out stocks over $2T (so AI Compute has no rank). Waiting for the
-   user: a "leader" tag (display only) and/or including $2T+ stocks in the group ranks. (b) whether the
+   user: including $2T+ stocks in the group ranks. The "#1 in group" tag on pre-market gappers (display only) and a
+   Group rank column on the Watchlist: the user's go Nov 2 (each group's leader order = group_rank rows "order").
+   (b) whether the
    new rank should replace the old Leading status in the breakout grade (needs its own test); (c) 3-SETUPS triggers
    on the phone / 1-minute checks.
 8. Older: move the Launches rules box to the top of the tab; picks reading their history from the start; an intraday
