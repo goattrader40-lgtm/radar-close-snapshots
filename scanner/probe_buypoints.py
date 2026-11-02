@@ -234,6 +234,26 @@ def main():
                 t["min5_bought"] = 0
                 if not b or not b[0]["t"].startswith(pc.iso(t0)[:16]):
                     continue
+                # the bot's level entry (Nov 2 2026): a buy-stop at the level, filled the first 5-minute bar that trades over it,
+                # at the level (or that bar's open when it opens over it); the stop under the day's low so far (the bars before the
+                # fill); then your management on the 5-minute bars that day and daily after. A level crossed in the first 5 minutes
+                # has no low yet: flagged lvl_first5 (the 5-minute ORH entry covers it)
+                if t.get("level") and t["bought"] in ("level", "open"):
+                    lv = t["level"]
+                    m0 = next((x for x in range(len(b)) if b[x]["h"] > lv), None)
+                    if m0 == 0:
+                        t["lvl_first5"] = 1
+                    elif m0 is not None:
+                        a_l = A[t["symbol"]]
+                        buyL, stopL = max(lv, b[m0]["o"]), min(x["l"] for x in b[:m0]) - 0.01
+                        if buyL > stopL:
+                            t["lvl_first5"], t["lvl_minute"] = 0, 5 * m0
+                            for runner, suf in ((21, ""), (10, "_10")):
+                                x = mgmt.run(a_l, k, buyL, stopL, bars=b[m0:], runner=runner)
+                                t.update(mgmt.cols(x, "lvl_", suf))
+                                y = mgmt.sold_at_close(x, a_l, k, buyL, x["risk"], "sold at the close: back under the buy point") \
+                                    if a_l.st.c[k] <= lv else x
+                                t.update(mgmt.cols(y, "lvlcx_", suf))
                 lvl = max(b[0]["h"], t["level"] or 0)
                 m = next((x for x in range(1, len(b)) if b[x]["h"] > lvl), None)
                 if m is None:
