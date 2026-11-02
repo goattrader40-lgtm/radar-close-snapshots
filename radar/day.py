@@ -120,7 +120,7 @@ def live_once():
         open(os.path.join(OUT, "launch.json"), "w").write(lj)
         load_alert_state()
         r = sh(sys.executable, os.path.join(HERE, "alerts.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "launch.json"),
-               os.path.join(OUT, "alerts.json"), check=False)
+               os.path.join(OUT, "alerts.json"), *premarket_args(), check=False)
         log((r.stdout or r.stderr).strip()[-600:])
         if r.returncode == 0 and os.path.exists(os.path.join(OUT, "alerts.json")):
             files.append(os.path.join(OUT, "alerts.json"))
@@ -141,6 +141,16 @@ def load_alert_state():
         open(p, "w").write(st)
 
 
+def premarket_args():
+    """this morning's pre-market grades for the laggard launch alerts (news days), as alerts.py arguments"""
+    p = os.path.join(OUT, "premarket_grades.json")
+    if not (os.path.exists(p) and time.time() - os.path.getmtime(p) < 600):     # re-read every 10 minutes, not every check
+        txt = data_file("premarket.json")
+        if txt:
+            open(p, "w").write(txt)
+    return ["--premarket", p] if os.path.exists(p) else []
+
+
 def fast_window(x):
     """the 1-minute checks run in the morning and the last hour (the user's choice, Oct 29 2026)"""
     return (9, 31) <= x < (12, 0) or (15, 0) <= x < (16, 0)
@@ -157,7 +167,7 @@ def fast_once():
         log("fast:", (r.stderr or r.stdout).strip()[-300:])
         return
     load_alert_state()
-    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", check=False)
+    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", *premarket_args(), check=False)
     txt = (r.stdout or r.stderr).strip()
     if r.returncode == 0 and " 0 new," not in txt:
         log("fast:", txt[-600:])

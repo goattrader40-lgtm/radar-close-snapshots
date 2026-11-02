@@ -19,7 +19,7 @@ def main():
     launch_p, stocks_p, prof_p, cal_p, out_p = sys.argv[1:6]
     now = datetime.datetime.now(NY)
     doc = json.load(open(launch_p))
-    syms = sorted(set(doc.get("watch", {})) | {r["symbol"] for r in doc.get("launches", []) + doc.get("ema50_undercut", [])})   # + the 50 EMA undercut tab: its reclaim within a minute
+    syms = sorted(set(doc.get("watch", {})) | {r["symbol"] for r in doc.get("launches", []) + doc.get("ema50_undercut", []) + doc.get("laggards", [])})   # + the 50 EMA undercut tab: its reclaim within a minute
     try:
         prof = json.load(open(prof_p))["rows"]
     except Exception:

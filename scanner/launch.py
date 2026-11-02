@@ -50,6 +50,11 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
   follower    a breakout in the leader's wake: within 10 sessions of an A or B launch by another member of one
               of its themes, the stock closes up 2%+ above its previous 20 days' high on 2x+ volume, in the top half
               of the range, above the 200 SMA and still near it (DXC Oct 8 2026 after ACN's earnings launch)
+  laggard     a launch that closed UNDER the 200 SMA (the portal's Launch Laggards tab; your rule, Nov 2 2026): the same
+              launch day otherwise (opened up, up 5%+ in the top half of the range, 30%+ over the 52-week low, liquid),
+              on 2x+ volume, and only on a catalyst: earnings that day or the evening before, or company news the 8:47
+              pre-market grading gave an A or B (a confirmed fundamental change). Followed like a launch (legs, buy points);
+              after 5 closes in a row over the 200 SMA it moves to the launch list, marked "promoted" with that day
   theme       shown beside the grade, not in it: its group's status on the launch day, now, and the day it
               turned up. A leader launches before its theme (DELL Feb 27 2026 while semis were still
               correcting; its group led by April). "Lone wolf" = no group of it trending, then or since.
@@ -85,11 +90,13 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5)
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5,
+         lag_rv=2, lag_under200=60)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=600000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
 CATALYST_DAYS = {}     # {(symbol, date): "earnings" / the news}: the days a catalyst launch can come on
+NEWS_DAYS = {}         # the same tags without the 5%-gap filter: the days a laggard launch can come on
 ENTRY = "open"          # history test: "open" (launch-day open, stop under its low) or "close" (launch-day close)
 
 
@@ -199,6 +206,13 @@ class Arr:
                     and self.rv[i] >= L["min_rv"] and st.c[i] > self.s200[i]
                     and (self.ext200_prev[i] <= L["max_ext200"] or (self.power(i) and self.ext200_prev[i] <= L["power_ext200"]))
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
+
+    def laggard(self, i):
+        """a launch day under the 200 SMA, on 2x+ volume and a catalyst (earnings or graded company news)"""
+        st = self.st
+        return bool(i >= self.start and self.liquid[i] and self.gap[i] > 0 and self.chg[i] >= L["min_chg"] and self.held(i)
+                    and self.rv[i] >= L["lag_rv"] and st.c[i] <= self.s200[i]
+                    and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100) and (self.sym, st.dates[i]) in NEWS_DAYS)
 
     def power(self, i):
         """a power day (an episodic pivot): volume 4x+, a 10%+ gap and a 15%+ day"""
@@ -1251,6 +1265,23 @@ def detect(A, groups, GS, cal, S, upto=None):
     return events
 
 
+def detect_laggards(A, groups, GS, cal):
+    """every laggard launch day (under the 200 SMA, on a catalyst), one per stock per dedupe window like a launch"""
+    pos = {d: k for k, d in enumerate(cal)}
+    events = []
+    for s, a in A.items():
+        last = -10 ** 9
+        for i in range(L["min_sessions"], len(a.st.dates)):
+            k = pos.get(a.st.dates[i])
+            if k is None or not a.laggard(i):
+                continue
+            if i - last > L["dedupe_days"] or any(a.st.c[j] < a.e21[j] for j in range(last + 1, i)):
+                gs, gn = best_group(s, k, groups, GS)
+                events.append((s, i, k, gs, gn))
+                last = i
+    return events
+
+
 def detect_followers(A, groups, GS, cal, events):
     """breakouts in a leader's wake: (sym, i, k, gs, gn, leader) for each follower day"""
     pos = {d: k for k, d in enumerate(cal)}
@@ -1492,7 +1523,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         old_doc = json.load(open(out_path))
     except Exception:
         old_doc = {}
-    kept = {(d[0], d[1]): d[2] for d in old_doc.get("catalyst_days", [])}
+    kept = {(d[0], d[1]): d[2] for d in old_doc.get("catalyst_days", []) + old_doc.get("news_days", [])}
     prev_s3 = old_doc.get("setups3", [])
     old_rows = {r_["symbol"]: r_ for r_ in old_doc.get("launches", [])}
     same_day = old_doc.get("date") == today
@@ -1512,27 +1543,33 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                 tags[(s, a.st.dates[m])] = "earnings"           # on Aug 6 2026, the gap came Aug 7
     tags.update({k: "news " + v for k, v in (news or {}).items()})
     CATALYST_DAYS.clear()
+    NEWS_DAYS.clear()
+    for (s, d), w in tags.items():
+        a = A.get(s)
+        if a is not None and d in a.st.dates[-200:]:
+            NEWS_DAYS[(s, d)] = w
     for (s, d), w in tags.items():
         a = A.get(s)
         k = a.st.dates.index(d) if a is not None and d in a.st.dates[-200:] else None
         if k is not None and a.gap[k] >= L["ep_gap"]:
             CATALYST_DAYS[(s, d)] = w
-    ev = detect(A, groups, GS, cal, S)
-    for s, i, k, gs, gn, leader in [e + ("",) for e in ev] + detect_followers(A, groups, GS, cal, ev):
+
+    def build(s, i, k, gs, gn, leader):
+        """a launch's row for the list, or None when it is off the list"""
         a = A[s]
         last = len(a.st.dates) - 1
         if a.st.dates[last] != today or a.st.dates[i] <= (removed or {}).get(s, ""):    # removed by you (✕), with any older launch of it
-            continue
+            return None
         # off the list: 3 closes in a row under the 50 EMA (after 2 it waits in the 50 EMA undercut tab for the reclaim:
         # your rule, Nov 1 2026), 62 sessions from its highest point without a new high, or its ADR (20 days) now under
         # 3.2% (a launch day needs 3.5%+; TECH Jun 25 2026, a buyout-like 19% gap, then 0.2%)
         c_, e50_ = a.st.c, a.e50
         if (np.any((c_[i + 3:last + 1] < e50_[i + 3:last + 1]) & (c_[i + 2:last] < e50_[i + 2:last]) & (c_[i + 1:last - 1] < e50_[i + 1:last - 1]))
                 or stale(a, i, last) or a.st.adr[last] < L["off_adr"]):
-            continue
+            return None
         f = follow(a, i, last)
         if f["off_50ema"]:
-            continue
+            return None
         r = launch_row(s, a, i, gs, gn, S)
         r.update(f)
         r["follows"] = leader or None
@@ -1546,7 +1583,13 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         up = next((kk for kk in range(k, T + 1) if best_group(s, kk, groups, GS)[0] >= 1), None)
         r["theme_up_since"] = cal[up] if up is not None else None      # first day from the launch its theme was trending
         r["lone_wolf"] = up is None
-        rows.append(r)
+        return r
+
+    ev = detect(A, groups, GS, cal, S)
+    for e in [e + ("",) for e in ev] + detect_followers(A, groups, GS, cal, ev):
+        r = build(*e)
+        if r is not None:
+            rows.append(r)
     order = {"A+": -1, "A": 0, "B": 1, "C": 2}
     rows.sort(key=lambda r: (order[r["grade"]], -r["rel_vol"]))
     rows.sort(key=lambda r: r["date"], reverse=True)              # newest first, best grade first within a day
@@ -1557,6 +1600,32 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     # the 50 EMA undercut tab: 2 closes in a row under the 50 EMA at this close, the reclaim has to come next session
     under50 = [r for r in rows if r.get("ema50_under2")]
     rows = [r for r in rows if not r.get("ema50_under2")]
+    # Launch Laggards: launches under the 200 SMA on a catalyst (earnings or graded news), followed the same way; a stock
+    # already on the launch list stays there only
+    # Once a laggard closes over the 200 SMA 5 sessions in a row it moves to the launch list, marked with the day it
+    # did (your rule, Nov 2 2026)
+    lag, promoted = [], []
+    for e in detect_laggards(A, groups, GS, cal):
+        r = build(*e, "")
+        if r is None:
+            continue
+        w = NEWS_DAYS.get((r["symbol"], r["date"]), "")
+        r["laggard_catalyst"] = w
+        r["earnings"] = r["earnings"] or w == "earnings"
+        r["news"] = r["news"] or (w[5:] if w.startswith("news ") else None)
+        a, i = A[e[0]], e[1]
+        above = a.st.c > a.s200
+        j = next((m for m in range(i + 5, len(a.st.dates)) if above[m - 4:m + 1].all()), None)
+        r["promoted"] = a.st.dates[j] if j is not None else None
+        (promoted if j is not None else lag).append(r)
+    on_list = {r["symbol"] for r in rows} | {r["symbol"] for r in under50}
+    for grp in (lag, promoted):
+        grp.sort(key=lambda r: (order[r["grade"]], -r["rel_vol"]))
+        grp.sort(key=lambda r: r["date"], reverse=True)
+    seen = set()
+    promoted = [r for r in promoted if r["symbol"] not in on_list and not (r["symbol"] in seen or seen.add(r["symbol"]))]
+    lag = [r for r in lag if r["symbol"] not in on_list and not (r["symbol"] in seen or seen.add(r["symbol"]))]
+    rows = sorted(rows + promoted, key=lambda r: r["date"], reverse=True)
     # your picks (the portal's Follow button on the Watchlist tab), followed like a launch from the close you added
     # them at (that day's close after 4 PM, else the session before), until you remove them. A stock already
     # followed as a launch keeps its launch row, marked as yours too
@@ -1591,7 +1660,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         rows.append(r)
     # watch list for the intraday trigger: liquid, from 25% under to 50% over the 200 SMA (over 28%: power days
     # only; under it: only once it trades back above it, e.g. a catalyst gap), no launch in 20 days
-    launched = {r["symbol"] for r in rows if r["sessions"] < L["dedupe_days"] and not r["first_exit"] and r["grade"] != "You"}
+    launched = {r["symbol"] for r in rows + lag if r["sessions"] < L["dedupe_days"] and not r["first_exit"] and r["grade"] != "You"}
     leaders = collections.defaultdict(set)              # theme -> A / B launches of the last 10 sessions (for followers)
     for r in rows:
         if r["grade"] in ("A+", "A", "B") and not r.get("follows") and r["sessions"] < 10:
@@ -1604,7 +1673,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         if st.dates[i] != today or s in launched or not a.liquid[i] or i < a.start:
             continue
         ext = 100 * (st.c[i] / a.s200[i] - 1)
-        if ext > L["power_ext200"] or ext < -L["watch_under200"]:  # 28-50% over: power days only (the trigger checks)
+        # 28-50% over: power days only (the trigger checks); down to 60% under for a laggard launch on a catalyst
+        if ext > L["power_ext200"] or ext < -max(L["watch_under200"], L["lag_under200"]):
             continue
         hi20 = st.h[i - L["base_days"] + 1:i + 1].max()          # tomorrow's "previous 20 days' high"
         hh = st.h[max(0, i - 119):i + 1]
@@ -1636,15 +1706,16 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50", "low_52w"],
-               launches=rows, ema50_undercut=under50, watch=watch, groups=[g for g in G if g["status"] != "Not trending"],
+               launches=rows, ema50_undercut=under50, laggards=lag, watch=watch, groups=[g for g in G if g["status"] != "Not trending"],
                catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()),
+               news_days=sorted([s, d, w] for (s, d), w in NEWS_DAYS.items()),
                # 3-SETUPS for the live alerts (desktop: every trigger; phone: Ready only); kept from the evening scan when
                # a Follow-button rebuild doesn't pass the Watchlist
                setups3=s3 if s3 is not None else prev_s3)
     with open(out_path, "w") as f:
         json.dump(doc, f, separators=(",", ":"))
     n_today = sum(1 for r in rows if r["date"] == today)
-    print(f"launch: {n_today} today, {len(rows)} followed, {len(under50)} in the 50 EMA undercut tab, {len(watch)} on watch, {len(doc['groups'])} groups trending")
+    print(f"launch: {n_today} today, {len(rows)} followed, {len(lag)} laggards, {len(under50)} in the 50 EMA undercut tab, {len(watch)} on watch, {len(doc['groups'])} groups trending")
 
 
 def backtest(A, groups, GS, cal, S, out_path):

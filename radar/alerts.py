@@ -166,6 +166,18 @@ def find(live, doc, now=None):
         s50 = w[4]                                                 # the 50 EMA
         ern = q[6] if len(q) > 6 else None
         earn = bool(ern and after_close <= ern <= now.timestamp() + 3600)  # reported after the last close (or this morning)
+        if s200 and price <= s200:
+            # a laggard launch (the Launch Laggards tab): under the 200 SMA, on earnings or this morning's A/B-graded news,
+            # up 5%+ from an up open on 2x+ volume
+            news, lo52 = doc.get("_news_today", {}).get(sym), (w[14] if len(w) > 14 else None)
+            if ((earn or news) and gap is not None and gap > 0 and chg >= R["min_chg"] and rv >= R.get("lag_rv", 2)
+                    and (not lo52 or price >= lo52 * (1 + R["min_above_low52"] / 100))):
+                g = grade(rv, price > pivot, gap, chg, R, False)
+                out.append((f"{sym}:laggard", f"{sym} {g} LAGGARD launch on " + ("earnings" if earn else "news (" + news + ")"),
+                            f"{chg:+.1f}% · gap {gap:+.1f}% · vol {rv:.1f}x for the time of day · ${price:.2f}, "
+                            f"{100 * (price / s200 - 1):+.1f}% vs the 200 SMA ${s200:.2f} · base high ${pivot:.2f} "
+                            + ("cleared" if price > pivot else "not cleared") + " · moves to Launches after 5 closes over the 200 SMA",
+                            "default", tvs))
         if not s200 or price <= s200:
             continue
         ext = (close0 / s200 - 1) * 100
@@ -213,7 +225,7 @@ def find(live, doc, now=None):
         if g in ("A+", "A"):
             out.append((f"{sym}:launch", f"{sym} {g} launch", f"{facts}{cat} · ${price:.2f} through its base high ${pivot:.2f}"
                         + (" (delayed: faded gap " + mem[0] + ")" if mem else "") + f"{crossed} · theme {theme}", "high" if g == "A+" else "default", tvs))
-    for r in doc.get("launches", []):
+    for r in doc.get("launches", []) + doc.get("laggards", []):
         q = rows.get(r["symbol"])
         if not q or len(q) < 5 or q[4] is None:
             continue
@@ -511,6 +523,14 @@ def main():
     fast = "--fast" in sys.argv                          # the 1-minute check (radar/fast.py)
     now = datetime.datetime.now(NY)
     live, doc = json.load(open(live_p)), json.load(open(launch_p))
+    # this morning's A/B-graded gap-ups (the pre-market grading): company news a laggard launch can come on
+    if "--premarket" in sys.argv:
+        try:
+            pm = json.load(open(sys.argv[sys.argv.index("--premarket") + 1]))
+            doc["_news_today"] = {r["symbol"]: r["grade"] + ": " + (r.get("catalyst") or "") for r in pm
+                                  if r.get("scan_date") == now.date().isoformat() and r.get("grade") in ("A", "B") and r.get("direction") == "up"}
+        except Exception as e:
+            print(f"no pre-market grades: {e}", file=sys.stderr)
     today = now.date().isoformat()
     try:
         state = json.load(open(state_p))

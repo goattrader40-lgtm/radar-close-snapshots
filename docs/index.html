@@ -185,6 +185,7 @@
     <button class="tgr-tab" id="tab-premarket" role="tab" aria-selected="false" aria-controls="premarket" data-tab="premarket">Pre-market</button>
     <button class="tgr-tab" id="tab-watchlist" role="tab" aria-selected="false" aria-controls="watchlist" data-tab="watchlist">Watchlist</button>
     <button class="tgr-tab" id="tab-launches" role="tab" aria-selected="false" aria-controls="launches" data-tab="launches">Launches</button>
+    <button class="tgr-tab" id="tab-laggards" role="tab" aria-selected="false" aria-controls="launches" data-tab="laggards">Launch laggards</button>
   </nav>
 
   <!-- ───────── Tab 1: groups & themes ───────── -->
@@ -602,7 +603,7 @@
     </div>
     <div class="tgr-card" id="ln-live-card">
       <div class="tgr-cardhead">
-        <h2>Launching today</h2>
+        <h2 id="ln-live-h">Launching today</h2>
         <span class="tgr-lbl" id="ln-live-time">—</span>
       </div>
       <p class="tgr-note" id="ln-live-note"></p>
@@ -1017,7 +1018,7 @@ defCalc('industry_perf', {
     $('#gainers').hidden = S.tab !== 'gainers';
     $('#premarket').hidden = S.tab !== 'premarket';
     $('#watchlist').hidden = S.tab !== 'watchlist';
-    $('#launches').hidden = S.tab !== 'launches';
+    $('#launches').hidden = S.tab !== 'launches' && S.tab !== 'laggards';     /* Launch laggards: the same page, its own list */
   };
   document.querySelectorAll('.tgr-seg[data-k]').forEach((seg) => seg.addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
@@ -1054,7 +1055,7 @@ defCalc('industry_perf', {
 
   /* selections: rows and chips */
   const select = (kind, name) => {
-    if (S.tab === 'premarket' || S.tab === 'watchlist' || S.tab === 'launches') { S.tab = 'groups'; history.replaceState(null, '', '#groups'); }   /* a theme chip on the pre-market or watchlist tab opens that theme */
+    if (S.tab === 'premarket' || S.tab === 'watchlist' || S.tab === 'launches' || S.tab === 'laggards') { S.tab = 'groups'; history.replaceState(null, '', '#groups'); }   /* a theme chip on the pre-market or watchlist tab opens that theme */
     if (S.tab === 'groups') { S.sel = { kind, name }; S.q = ''; $('#drill-search').value = ''; draw(); $('#drill-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
     else { S.gsel = { kind, name }; draw(); $('#g-list-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   };
@@ -1820,6 +1821,29 @@ defCalc('industry_perf', {
     });
     return out;
   };
+  /* Launch laggards launching now (your rule, Nov 2 2026): a launch day under the 200 SMA, on 2x+ volume, only on earnings
+     (reported after the last close) or company news the pre-market grading gave an A or B this morning */
+  const lagLive = (doc) => {
+    if (!doc || !doc.watch || !LIVE_ON || !LIVE || !LIVE.rows) return [];
+    const R = doc.rules, out = [];
+    const [yy, mm, dd] = doc.date.split('-').map(Number);
+    const lastClose = Date.UTC(yy, mm - 1, dd, 19, 30) / 1000;
+    const today = todayNY();
+    const news = new Map(rowsOf('premarket').filter((r) => r.scan_date === today && (r.grade === 'A' || r.grade === 'B') && r.direction === 'up').map((r) => [r.symbol, r.grade + (r.catalyst ? ': ' + r.catalyst : '')]));
+    Object.entries(doc.watch).forEach(([sym, w]) => {
+      const q = LIVE.rows[sym]; if (!q) return;
+      const price = q[0], chg = q[1], rv = q[4], open = q[5], ern = q[6];
+      const ernDay = !!ern && ern >= lastClose && ern <= Date.now() / 1000 + 3600, nw = news.get(sym);
+      const [close0, pivot, s200, , , h52, days, corr, group, gstat, tvs] = w;
+      const low52 = w[14], prev = price / (1 + chg / 100), gap = open ? r2((open / prev - 1) * 100) : null;
+      if (!s200 || price > s200 || !(ernDay || nw) || gap === null || gap <= 0 || chg < R.min_chg || !(rv >= (R.lag_rv || 2))) return;
+      if (low52 && price < low52 * (1 + R.min_above_low52 / 100)) return;
+      const bo = price > pivot;
+      out.push({ symbol: sym, tv_symbol: tvs, grade: lnGrade(rv, bo, gap, chg, R, false), chg, gap, rv, price, earnings: ernDay, news: nw || null, pivot, bo, group, gstat, corr, days,
+        mem: null, follows: null, h52: h52 ? (price / h52) * 100 : null, ep: false, shape: false, under: [], over: false, reversal: false, vs200: r2((price / s200 - 1) * 100) });
+    });
+    return out;
+  };
   const sortRows = (table, rows, def, txtKeys, gradeKey) => {
     const spec = S.sort[table.id] || def;
     if (spec) {
@@ -1837,7 +1861,11 @@ defCalc('industry_perf', {
     const doc = st('launch').status === 'ok' ? st('launch').data : null;
     /* launching today (live) */
     const lt = $('#ln-live-table'), ltb = lt.querySelector('tbody'); ltb.replaceChildren();
-    const live = lnLive(doc);
+    const LAG = S.tab === 'laggards';
+    $('#ln-live-h').textContent = LAG ? 'Laggards launching today' : 'Launching today';
+    $('#ln-h').textContent = LAG ? 'Launch laggards' : 'Launches';
+    $('#ln-u50-card').hidden = LAG;
+    const live = LAG ? lagLive(doc) : lnLive(doc);
     $('#ln-live-time').textContent = LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : marketOpen() ? 'Waiting for the first live update' : 'Live during market hours';
     $('#ln-live-note').textContent = !doc ? '' : (doc.watch ? Object.keys(doc.watch).length : 0) + ' stocks on watch from the ' + fDate(doc.date) + ' close. ' +
       (LIVE_ON ? live.length + ' of them are launching right now. "Grade so far" uses the volume pace and price so far; the close still has to hold the top half of the day. After the close (about 4:30 PM ET) this list clears, and the ones that held move to the Launches table below, dated today.' : 'They are checked every 5 minutes from 9:30 AM ET. After the close this list clears: the day\'s launches that held at the close are in the Launches table below, dated that day (the evening scan, about 4:40 PM ET).');
@@ -1851,6 +1879,8 @@ defCalc('industry_perf', {
       if (r.follows) { const t = h('span', 'tgr-gm', 'follows ' + r.follows); t.title = 'Breaking out within 10 sessions of a launch by ' + r.follows + ' in its theme'; k0.append(t); }
       if (r.earnings) { const t = h('span', 'tgr-gm', 'earnings'); t.title = 'Reported earnings after the last close (yesterday evening or this morning)'; k0.append(t); }
       if (r.reversal) { const t = h('span', 'tgr-gm', 'reversal'); t.title = 'Opened ' + p1(r.gap, true) + ' under yesterday\'s close, now ' + p1(r.chg, true) + ' on ' + r.rv.toFixed(1) + '× volume, over its 1-month high: a reversal launch if the close holds (up 8%+, top half of the day)'; k0.append(t); }
+      if (r.news) { const t = h('span', 'tgr-gm', 'news'); t.title = 'Pre-market grade ' + r.news; k0.append(t); }
+      if (r.vs200 !== undefined) { const t = h('span', 'tgr-flag', p1(r.vs200, true) + ' vs 200 SMA'); t.style.marginLeft = '6px'; t.title = 'Under its 200-day SMA: a laggard launch'; k0.append(t); }
       if (r.ep) { const t = h('span', 'tgr-gm', 'catalyst gap'); t.title = 'Was under its ' + r.under.join(' & ') + ' at the last close; gapped ' + p1(r.gap, true) + ' on ' + (r.earnings ? 'earnings' : 'news? (no earnings: check the headline)') + ' and trades above the 50 EMA & 200 SMA'; k0.append(t); }
       tr.append(k0, gradeCell(r.grade), pctCell(r.chg, 0), h('td', 'num', r.gap === null ? '—' : p1(r.gap, true)), h('td', 'num' + (r.rv >= 3 ? ' tgr-up' : ''), fX(r.rv)),
         h('td', 'num', fPrice(r.price)), h('td', 'num' + (r.bo ? ' tgr-up' : ''), fPrice(r.pivot) + (r.bo ? ' ✓' : '')), th,
@@ -1864,7 +1894,7 @@ defCalc('industry_perf', {
     /* hidden right away: the launches you removed (✕) and the picks you stopped following, until the rebuild drops them */
     const gone = goneNow(), unpicked = pendingPicks();
     const kept = (r) => r.grade === 'You' ? !(unpicked[r.symbol] && !unpicked[r.symbol][0] && Date.now() - unpicked[r.symbol][1] < 30 * 60 * 1000) : !(gone[r.symbol] && r.date <= gone[r.symbol]);
-    const all = doc ? doc.launches.filter(kept).map((r) => {
+    const all = doc ? (LAG ? doc.laggards || [] : doc.launches).filter(kept).map((r) => {
       const m = symMap.get(r.symbol);
       const px = m && num(m.price) !== null ? num(m.price) : r.price;
       /* today: the live (or the latest close's) change and relative volume, not the launch day's */
@@ -1892,7 +1922,7 @@ defCalc('industry_perf', {
     const today = doc ? all.filter((r) => r.date === doc.date && r.grade !== 'You').length : 0;
     const npick = all.filter((r) => r.pick).length;
     const LQ = doc && doc.liquidity;
-    $('#ln-note').textContent = !doc ? '' : rows.length + ' of ' + all.length + ' launches on the list (' + today + ' on the ' + fDate(doc.date) + ' close)' + (npick ? ', ' + npick + ' of them your picks' : '') + '. Your picks = the Follow button on the Watchlist tab: followed from the close you added them at, until you remove them. ✕ takes any stock off this list: a pick is no longer followed, a launch is removed with its alerts (a new launch of it on a later day shows again). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
+    $('#ln-note').textContent = !doc ? '' : (LAG ? 'Launch laggards: the same launch day as the Launches tab (opened up, closed up ' + doc.rules.min_chg + '%+ in the top half of its range, 30%+ over its 52-week low, liquid) but closed UNDER the 200-day SMA, on ' + (doc.rules.lag_rv || 2) + '×+ volume, and only on a catalyst: earnings that day or the evening before, or company news the pre-market grading gave an A or B (a confirmed fundamental change). After 5 closes in a row over the 200 SMA a laggard moves to the Launches tab, tagged "from laggards". ' : '') + rows.length + ' of ' + all.length + (LAG ? ' laggards' : ' launches') + ' on the list (' + today + ' on the ' + fDate(doc.date) + ' close)' + (npick ? ', ' + npick + ' of them your picks' : '') + '. Your picks = the Follow button on the Watchlist tab: followed from the close you added them at, until you remove them. ✕ takes any stock off this list: a pick is no longer followed, a launch is removed with its alerts (a new launch of it on a later day shows again). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
       (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
     sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern'], 'grade');
     if (doc && !rows.length) noRows(tb, 25, 'No launch matches these filters.');
@@ -1911,6 +1941,8 @@ defCalc('industry_perf', {
       if (r.power) { const t = h('span', 'tgr-gm', 'power'); t.title = 'Power day: volume 4x+, an 8%+ gap, a 10%+ day'; key.append(t); }
       if (r.faded) { const t = h('span', 'tgr-flag', 'faded'); t.style.marginLeft = '6px'; t.title = 'Closed ' + r.close_in_range + '% up its range: the day\'s low is a tight stop (2 years: most such days broke it, 13% still ran 50%+)'; key.append(t); }
       if (r.earnings) { const t = h('span', 'tgr-gm', 'earnings'); t.title = 'Launched on its earnings report'; key.append(t); }
+      if (r.promoted) { const t = h('span', 'tgr-gm', 'from laggards'); t.title = 'Launched under the 200 SMA on ' + fDate(r.date) + ' (Launch laggards tab); closed over the 200 SMA 5 days in a row by ' + fDate(r.promoted) + ', so it moved here'; key.append(t); }
+      if (LAG) { const t = h('span', 'tgr-flag', p1(r.vs_200_pct, true) + ' vs 200 SMA'); t.style.marginLeft = '6px'; t.title = 'Where the launch day closed vs its 200-day SMA. It moves to Launches after 5 closes in a row over the 200 SMA'; key.append(t); }
       if (r.news) { const t = h('span', 'tgr-gm', 'news'); t.title = 'Pre-market grade ' + r.news; key.append(t); }
       if (r.catalyst) { const t = h('span', 'tgr-gm', 'catalyst'); t.title = 'Catalyst launch (' + r.catalyst + '): a 5%+ gap that closed up, still in the gap and over its base, on 2x+ volume, though up less than 5% or not in the top half of its range'; key.append(t); }
       if (r.reversal) { const t = h('span', 'tgr-gm', 'reversal'); t.title = 'Reversal day: opened under the day before\'s close, closed up 8%+ in the top half of its range on 2x+ volume, over its 1-month high'; key.append(t); }
@@ -2038,6 +2070,8 @@ defCalc('industry_perf', {
     if (snapM < 571) return [];
     const R = doc.rules, out = [];
     const f1 = (x) => (x > 0 ? '+' : '') + x.toFixed(1) + '%';
+    lagLive(doc).forEach((r) => out.push([r.symbol + ':laggard', r.symbol + ' ' + r.grade + ' LAGGARD launch on ' + (r.earnings ? 'earnings' : 'news (' + r.news + ')'),
+      f1(r.chg) + (r.gap !== null ? ' · gap ' + f1(r.gap) : '') + ' · vol ' + r.rv.toFixed(1) + '× · ' + fPrice(r.price) + ', ' + f1(r.vs200) + ' vs the 200 SMA · base high ' + fPrice(r.pivot) + (r.bo ? ' cleared' : ' not cleared') + ' · moves to Launches after 5 closes over the 200 SMA', r.tv_symbol]));
     lnLive(doc).forEach((r) => {
       const facts = f1(r.chg) + (r.gap !== null ? ' · gap ' + f1(r.gap) : '') + ' · vol ' + r.rv.toFixed(1) + '× for the time of day · ' + fPrice(r.price);
       const power = r.rv >= (R.power_rv || 4) && r.gap !== null && r.gap >= (R.power_gap || 8) && r.chg >= (R.power_chg || 10);
@@ -2054,7 +2088,7 @@ defCalc('industry_perf', {
         if ((r.grade === 'A+' || r.grade === 'A') && (r.chg >= R.min_chg && r.rv >= R.min_rv)) out.push([r.symbol + ':launch', r.symbol + ' ' + r.grade + ' launch', facts + (r.earnings ? ' · EARNINGS' : '') + ' · through its base high ' + fPrice(r.pivot) + crossed + ' · ' + (r.group || 'no group'), r.tv_symbol]);
       }
     });
-    (doc.launches || []).forEach((r) => {
+    (doc.launches || []).concat(doc.laggards || []).forEach((r) => {
       const q = LIVE.rows[r.symbol]; if (!q || q[4] === null || q[4] === undefined) return;
       const price = q[0], chg = q[1], rv = q[4], op = q[5];
       const gap = op ? (op / (price / (1 + chg / 100)) - 1) * 100 : null;
@@ -2422,7 +2456,7 @@ defCalc('industry_perf', {
   setInterval(() => { if (!document.hidden || alertsOn) refresh(false); }, 90000);    /* alerts on: keep checking in a background tab */
 
   const named = location.hash.slice(1);
-  if (['gainers', 'groups', 'premarket', 'watchlist', 'launches'].includes(named)) S.tab = named;
+  if (['gainers', 'groups', 'premarket', 'watchlist', 'launches', 'laggards'].includes(named)) S.tab = named;
   draw();
   refresh(true);
 })();
