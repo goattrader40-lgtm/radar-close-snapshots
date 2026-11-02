@@ -1874,6 +1874,7 @@ defCalc('industry_perf', {
     /* launching today (live) */
     const lt = $('#ln-live-table'), ltb = lt.querySelector('tbody'); ltb.replaceChildren();
     const LAG = S.tab === 'laggards';
+    drawAlog(loadDay('log', '[]'));
     $('#ln-live-h').textContent = LAG ? 'Laggards launching today' : 'Launching today';
     $('#ln-h').textContent = LAG ? 'Launch laggards' : 'Launches';
     $('#ln-u50-card').hidden = LAG;
@@ -2229,9 +2230,16 @@ defCalc('industry_perf', {
   function drawAlog(log) {
     const ul = $('#ln-alert-log'); ul.replaceChildren();
     const q = ($('#ln-alert-search').value || '').trim().toUpperCase();
-    const shown = q ? log.filter((x) => new RegExp('· ' + q.replace(/[^A-Z0-9.\-]/g, '') + '\\b').test(x)) : log;
+    /* each tab shows its own alerts: Launch laggards the laggard launches and the alerts of stocks on its list, Launches the rest */
+    const ldoc = st('launch').status === 'ok' ? st('launch').data : null;
+    const lag = new Set(ldoc ? (ldoc.laggards || []).map((r) => r.symbol) : []), LAG = S.tab === 'laggards';
+    const isLag = (x) => / LAGGARD /.test(x) || lag.has(((/· (\S+)/.exec(x) || [])[1] || ''));
+    $('#ln-alert-card h2').textContent = LAG ? 'Desktop alerts · laggards' : 'Desktop alerts';
+    const mine = log.filter((x) => isLag(x) === LAG);
+    const shown = q ? mine.filter((x) => new RegExp('· ' + q.replace(/[^A-Z0-9.\-]/g, '') + '\\b').test(x)) : mine;
     shown.forEach((x) => ul.append(h('li', '', x)));
-    if (q && !shown.length) ul.append(h('li', 'tgr-lbl', 'No alerts for ' + q + ' today.'));
+    if (q && !shown.length) ul.append(h('li', 'tgr-lbl', 'No alerts for ' + q + ' today' + (LAG ? ' on this tab.' : '.')));
+    else if (!shown.length && log.length) ul.append(h('li', 'tgr-lbl', 'No ' + (LAG ? 'laggard' : 'launch') + ' alerts yet today.'));
   }
   $('#ln-alert-search').addEventListener('input', () => drawAlog(loadDay('log', '[]')));
   $('#ln-alert-btn').addEventListener('click', async () => {
