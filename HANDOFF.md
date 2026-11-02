@@ -54,6 +54,9 @@ alone.
 - **Watchlist note fixed** (Nov 2 2026): the "About these lists" box described the old Tight / 21 / 50 EMA pullback
   screens; it now describes 3-SETUPS as it is. The user: don't touch anything about the 50 EMA undercut there (3-SETUPS
   still drops a name at 2 closes under the 50 EMA).
+- **3-SETUPS** (Nov 2 2026): the breakout undercut & reclaim is a "Triggered today" signal; the evening scan was re-run
+  by hand on the new engine (Oct 30 close): 55 names, 8 Triggered (TTAN bull flag breakout; IOT, AI, BSP 21 EMA retest;
+  VSXY, DXC, CART retest held; CDNA breakout), 21 Ready, 26 Setting up (bull flag / bull pennant names).
 - **Coded but switched off**: the **momentum cutoff** (`L["max_run_pct"] = 0`). The user decides the rule (see Open
   items); turning it on is that one setting (plus the 200 SMA test if they pick B).
 - **Only on a test branch**: `test/pb1h` holds the backtest tools (scanner/probe_*.py, scanner/mgmt.py = the user's
