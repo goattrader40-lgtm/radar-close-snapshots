@@ -70,6 +70,15 @@ jobs:
             python3 scanner/probe_buypoints.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_buypoints.json || true
             python3 radar/publish.py "buy points test" /tmp/probe_buypoints.json
           fi
+          if [ "${{ inputs.cmd }}" = "buypointsx" ]; then
+            # the buy points followed as the live tab does (no 60-session cap) + how late / how clean (scanner/feats.py)
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json
+            LIVE=1 python3 scanner/probe_buypoints.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_buypoints_x.json || true
+            python3 radar/publish.py "buy points test, live follow + late / clean measures" /tmp/probe_buypoints_x.json
+          fi
           if [ "${{ inputs.cmd }}" = "gapretest" ]; then
             # the gap retest: a 6%+ gap launch-type day, then the retest of its gap holding the 10 / 21 EMA (scanner/probe_gapretest.py)
             pip install --quiet numba numpy pandas

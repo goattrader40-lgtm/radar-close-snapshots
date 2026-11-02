@@ -15,6 +15,9 @@
                both; on the buy day only a level / open buy can reach a target (its high came after the buy)
   also         ran 10% / 20% within 20 sessions, failed = a close under that day's low within 5 sessions (the old check)
 Every buy point is saved with its RVOL (that day's volume / the 20-day average) and gap, for the spreadsheet's filters.
+LIVE=1 (cmd buypointsx, Nov 2 2026): each launch followed as the live tab does (no 60-session cap: off at the 3rd close under
+the 50 EMA, 62 sessions without a new high, ADR under 3.2% or a newer launch), and every buy point measured for how late in
+its run it is and how clean its trend is (scanner/feats.py), plus the market (SPY).
 """
 import argparse, collections, datetime, json, multiprocessing, os, sys
 
@@ -24,10 +27,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import launch  # noqa: E402
 import mgmt  # noqa: E402
+import feats  # noqa: E402
 
 L = launch.L
 A = {}
 GROUPS, GS, POS = {}, {}, {}
+NEXT, SPY = {}, None
+LIVE = os.environ.get("LIVE") == "1"
 KINDS = (("follow-through", "Breakout follow-through", "close"), ("retest", "Retest", "close"), ("push", "Push out", "open"),
          ("21 EMA retest", "21 EMA retest", "close"), ("21 EMA undercut & reclaim", "21 EMA undercut", "close"),
          ("50 EMA undercut & reclaim", "50 EMA undercut", "close"), ("breakout undercut & reclaim", "Breakout undercut", "close"))
@@ -48,7 +54,9 @@ def one(key):
     c, o, h, l = st.c, st.o, st.h, st.l
     n = c.size
     out, prev = [], None
-    for j in range(i0 + 1, min(n - 6, i0 + 61)):
+    for j in range(i0 + 1, n - 6 if LIVE else min(n - 6, i0 + 61)):
+        if LIVE and (j >= NEXT.get((s, i0), 10 ** 9) or launch.stale(a, i0, j) or st.adr[j] < L["off_adr"]):
+            break                       # the live tab drops it: 62 sessions without a new high, ADR under 3.2%, a newer launch
         f = launch.follow(a, i0, j)
         if f.get("off_50ema") or (f["lost_50ema"] and "off_50ema" not in f):
             break                       # off the list: the 3rd close in a row under the 50 EMA (after 2: the 50 EMA undercut tab)
@@ -56,6 +64,7 @@ def one(key):
         pbp, ppat = (prev.get("buy_point"), prev.get("pattern") or "") if prev else (None, "")
         ptight = (prev.get("tight_days") or 0) if prev else 0
         pbo, pvb, pses = ((prev.get("breakouts") or 0), (prev.get("vol_build") or 0), prev.get("sessions")) if prev else (0, 0, None)
+        pleg = (prev.get("leg") or 0) if prev else 0
         prev = f
         cands = []
         # a day whose high crosses a base top (the 6- or 3-month base the engine calls a breakout of) is a base breakout,
@@ -89,6 +98,12 @@ def one(key):
             hi20 = h[j + 1:min(n, j + 21)].max()
             r_ = row(s, st, a, f, i0, j, k, entry, buy, stop, x21, x10, hi20, c, n, closed if entry == "level" else "")
             r_["level"] = round(float(pbp_used), 2) if entry == "level" else None
+            r_["leg_before"] = pleg
+            if LIVE:
+                r_.update(feats.late(a, j))
+                r_.update(feats.trend(a, j, i0))
+                if SPY is not None:
+                    r_.update(feats.market(SPY, st.dates[j]))
             r_["also_crossed"] = also if entry == "level" else None
             # what the engine (the Launches tab) reads that day after the close, and whether it read this very breakout: a
             # flag breakout = the close over the line and the 10 & 21 EMA, not a poke over it during the day (the user,
@@ -164,6 +179,17 @@ def main():
     L["catalyst_launch"] = 0
     launch.CATALYST_DAYS.clear()
     keys = sorted({(s, i) for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S) if i >= 200})
+    global NEXT, SPY
+    by = collections.defaultdict(list)
+    for s_, i_ in keys:
+        by[s_].append(i_)
+    NEXT = {(s_, i_): (ii[x + 1] if x + 1 < len(ii) else 10 ** 9) for s_, ii in by.items() for x, i_ in enumerate(ii)}
+    if LIVE:
+        import gzip, types
+        sb = json.load(gzip.open(a_.bars, "rt"))["bars"]["SPY"]
+        c_ = np.array([b[4] for b in sb], float)
+        SPY = types.SimpleNamespace(st=types.SimpleNamespace(dates=[b[0] for b in sb], c=c_), e21=launch.ema(c_, 21), e50=launch.ema(c_, 50),
+                                    s200=np.array([c_[max(0, k - 199):k + 1].mean() for k in range(c_.size)]))
     with multiprocessing.get_context("fork").Pool(os.cpu_count() or 2) as pool:
         ts = [t for r in pool.map(one, keys, chunksize=8) for t in r]
     # one buy point per stock, day and kind: the newest launch's (the Launches tab follows only a stock's newest launch;
