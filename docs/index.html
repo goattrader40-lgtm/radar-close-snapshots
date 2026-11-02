@@ -566,7 +566,7 @@
     <div class="tgr-card" id="ln-alert-card">
       <div class="tgr-cardhead">
         <h2>Desktop alerts</h2>
-        <span class="tgr-ctl"><button class="tgr-lite" id="ln-alert-btn" type="button">Turn on</button> <button class="tgr-lite" id="ln-alert-test" type="button">Test</button></span>
+        <span class="tgr-ctl"><input class="tgr-search" id="ln-alert-search" type="search" placeholder="Find a ticker" aria-label="Show only this ticker's alerts"> <button class="tgr-lite" id="ln-alert-btn" type="button">Turn on</button> <button class="tgr-lite" id="ln-alert-test" type="button">Test</button></span>
       </div>
       <p class="tgr-note" id="ln-alert-note"></p>
       <ul class="tgr-alog" id="ln-alert-log"></ul>
@@ -2218,14 +2218,22 @@ defCalc('industry_perf', {
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100));
     }
-    const ul = $('#ln-alert-log'); ul.replaceChildren();
-    log.forEach((x) => ul.append(h('li', '', x)));
+    drawAlog(log);
     $('#ln-alert-btn').textContent = alertsOn ? 'Turn off' : 'Turn on';
     $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
       : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
       : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day. ' + (log.length ? 'Today:' : 'None yet today.')
       : 'Off. Turn on to get desktop pop-ups while this page is open.';
   }
+  /* today's alert log, or only one ticker's alerts (each line: "3:12 PM · LION C breakout: ... — ...") */
+  function drawAlog(log) {
+    const ul = $('#ln-alert-log'); ul.replaceChildren();
+    const q = ($('#ln-alert-search').value || '').trim().toUpperCase();
+    const shown = q ? log.filter((x) => new RegExp('· ' + q.replace(/[^A-Z0-9.\-]/g, '') + '\\b').test(x)) : log;
+    shown.forEach((x) => ul.append(h('li', '', x)));
+    if (q && !shown.length) ul.append(h('li', 'tgr-lbl', 'No alerts for ' + q + ' today.'));
+  }
+  $('#ln-alert-search').addEventListener('input', () => drawAlog(loadDay('log', '[]')));
   $('#ln-alert-btn').addEventListener('click', async () => {
     if (alertsOn) { alertsOn = false; try { localStorage.setItem(AKEY, '0'); } catch (e) { /* private window */ } runAlerts(); return; }
     if (!canNotify()) { runAlerts(); return; }
