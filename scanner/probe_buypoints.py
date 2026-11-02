@@ -28,6 +28,7 @@ sys.path.insert(0, HERE)
 import launch  # noqa: E402
 import mgmt  # noqa: E402
 import feats  # noqa: E402
+import mgmt_x  # noqa: E402
 
 L = launch.L
 A = {}
@@ -214,6 +215,8 @@ def main():
         if cb > cl and t.get("engine_confirmed", 1):      # a level buy only when the day closed as that breakout
             t.update(mgmt.cols(manage(a, j, cb, cl, None, 21), "close_"))
             t.update(mgmt.cols(manage(a, j, cb, cl, None, 10), "close_", "_10"))
+            if LIVE:
+                t.update(mgmt_x.cols(a, j, cb, cl, "close_"))        # the exit plans (scanner/mgmt_x.py)
     # 3) your 5-minute entry: over the 5-minute opening range high (and over the buy point for a level buy) on the day,
     # the next morning for a close signal; the risk the 5-minute low; your management (scanner/probe_pb1h.py trade)
     if os.environ.get("ALPACA_KEY_ID"):
@@ -266,6 +269,8 @@ def main():
                         continue
                     t["min5_bought"] = 1
                     t.update(mgmt.cols(x, "min5_", suf))
+                    if LIVE and suf == "":
+                        t.update(mgmt_x.cols(a_s, k, buy5, b[0]["l"], "min5_", bars=b[m:]))
                     # the 5-minute buy of a level buy point, sold at the close when that day closes back under the buy point
                     if t["level"]:
                         y = mgmt.sold_at_close(x, a_s, k, buy5, x["risk"], "sold at the close: back under the buy point") \
