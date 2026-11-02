@@ -1364,6 +1364,7 @@ def s3_read(a, i0, last, was_in=False):
     stage, pat = f.get("stage") or "", f.get("pattern") or ""
     fired = next((t for t, on in (("Base breakout", f.get("base_breakout_today")), ("Bull pennant breakout" if f.get("flag_shape") == "pennant" else "Bull flag breakout", f.get("flag_breakout_today")),
                                   ("Pop out of the consolidation", f.get("dry_entry_today")),
+                                  ("Breakout undercut & reclaim", f.get("breakout_reclaim_today")),        # the user, Nov 2 2026
                                   ("21 EMA undercut & reclaim" if f.get("ema21_today") == "undercut" else "21 EMA retest", f.get("ema21_today")),
                                   ("Retest held", f.get("retest_today")), ("Push out of the 21 EMA", f.get("push_today")),
                                   ("Breakout", f.get("breakout_today"))) if on), None)
@@ -1388,7 +1389,7 @@ def setups3(A, today, wl, prev=(), removed=None):
     """3-SETUPS (your design, Nov 1 2026): every stock on 1-EP/GAP, 1-UPDAY and 2-POOL read by the Launches engine, like a
     pick from the day it came on its list (the gap or up day; the day it entered 2-POOL), with its buy points and
     triggers. Sections:
-      Triggered today  a base breakout, bull flag breakout, pop, 21 EMA retest or undercut & reclaim, retest held or push today
+      Triggered today  a base breakout, bull flag / pennant breakout, breakout undercut & reclaim, pop, 21 EMA retest or undercut & reclaim, retest held or push today
       Ready            a trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it: tomorrow's buys
       Setting up       a flag forming (its line more than 0.7 ADR away), a pullback set up for the 21 EMA, or a pullback
                        near the retest zone of its last breakout
