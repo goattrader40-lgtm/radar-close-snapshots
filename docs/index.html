@@ -635,6 +635,7 @@
       <div class="tgr-bar">
         <span class="tgr-seg" data-k="lng" aria-label="Grades"><button data-v="all" aria-pressed="true">All grades</button><button data-v="AB" aria-pressed="false">A+, A &amp; B</button><button data-v="A" aria-pressed="false">A+ &amp; A</button></span>
         <span class="tgr-seg" data-k="lnst" aria-label="Status"><button data-v="all" aria-pressed="true">All</button><button data-v="riding" aria-pressed="false">Above 21 EMA</button><button data-v="base" aria-pressed="false">In a pattern</button></span>
+        <select class="tgr-search" id="ln-type" aria-label="Launch type" style="max-width:11em"><option value="all">All types</option><option>Launch</option><option>Power day</option><option>Catalyst</option><option>Reversal</option><option>Delayed</option><option>Follower</option><option>Your pick</option></select>
         <label class="tgr-f"><input type="checkbox" id="ln-wolf"> Show lone wolves</label>
         <input class="tgr-search" id="ln-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
       </div>
@@ -655,6 +656,7 @@
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
             <th><button class="tgr-th" data-sort="date" title="The launch day; under it, that day's move, gap and volume (× its 20-day average)">Launched</button></th>
             <th><button class="tgr-th" data-sort="grade">Grade</button></th>
+            <th><button class="tgr-th" data-sort="ltype" title="The kind of launch day: Launch (regular), Power day, Catalyst, Reversal, Delayed, Follower, Laggard, or Your pick. A launch that fits several shows the strongest, the others under it">Type</button></th>
             <th class="num"><button class="tgr-th" data-sort="today" title="Today's % change: live during market hours, the day's final after the close">Today</button></th>
             <th class="num"><button class="tgr-th" data-sort="rv_today" title="Today's relative volume: live during market hours (volume so far ÷ the usual by this time of day), the full day after the close">Rel vol</button></th>
             <th class="c2">Base BO</th>
@@ -844,7 +846,7 @@ defCalc('industry_perf', {
 <script>
 (() => {
   /* ───────── state ───────── */
-  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', gq: '', lng: 'all', lnst: 'all', lnwolf: false, sort: {} };
+  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', gq: '', lng: 'all', lnst: 'all', lntype: 'all', lnwolf: false, sort: {} };
   const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
   const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
   const fitMap = (scores) => {
@@ -1748,6 +1750,7 @@ defCalc('industry_perf', {
   $('#wl-sec').addEventListener('change', (e) => { S.wlsec = e.target.value; draw(); });
   $('#wl-search').addEventListener('input', (e) => { S.wlq = e.target.value.trim(); draw(); });
   $('#ln-search').addEventListener('input', (e) => { S.lnq = e.target.value.trim(); draw(); });
+  $('#ln-type').addEventListener('change', (e) => { S.lntype = e.target.value; draw(); });
   /* follow any ticker by hand (a launch the rules missed, GDDY Oct 30 2026): saved like the Watchlist's Follow button,
      followed from the chosen day's close (empty: the latest close) */
   $('#ln-add-go').addEventListener('click', () => {
@@ -1858,6 +1861,13 @@ defCalc('industry_perf', {
   };
   const tkCell = (sym, tvs) => { const td = h('td', 'key'); const a = h('a', 'tgr-tk', sym); a.href = tv(tvs || sym); a.target = TVTAB; td.append(a); return td; };
   const gradeCell = (g) => { const td = h('td', ''); if (g) td.append(h('span', 'tgr-grade g' + g[0], g)); else td.textContent = '—'; return td; };
+  /* the kind of launch day: the strongest one it fits, then the others (your request, Nov 2 2026) */
+  const lnTypes = (r, lag) => {
+    if (r.grade === 'You') return ['Your pick'];
+    const t = [lag ? 'Laggard' : null, r.power ? 'Power day' : null, r.catalyst ? 'Catalyst' : null, r.reversal ? 'Reversal' : null,
+      r.delayed_from ? 'Delayed' : null, r.follows ? 'Follower' : null].filter(Boolean);
+    return t.length ? t : ['Launch'];
+  };
   /* resistance (your rule, Nov 2 2026): the overhead 3/6/9-month and 52-week highs, nearest first, from the price now */
   const resAway = (r, px) => { const l = (r.resistance || [])[0]; return l && px ? r2((l[1] / px - 1) * 100) : null; };
   const resCell = (r, px) => {
@@ -1912,12 +1922,13 @@ defCalc('industry_perf', {
       const px = m && num(m.price) !== null ? num(m.price) : r.price;
       /* today: the live (or the latest close's) change and relative volume, not the launch day's */
       const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct), rvToday = m && num(m.rel_vol) !== null ? num(m.rel_vol) : num(r.rel_vol_today);
-      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px) });
+      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px), types: lnTypes(r, LAG), ltype: lnTypes(r, LAG)[0] });
     }) : [];
     /* a ticker search shows that stock whatever the other filters */
     const lq = S.lnq.toUpperCase();
     const rows = lq ? all.filter((r) => r.symbol.includes(lq)) : all.filter((r) => (S.lng === 'all' || r.grade === 'You' || S.lng.includes(r.grade[0])) && (S.lnwolf || !r.lone_wolf) &&
-      (S.lnst === 'all' || (S.lnst === 'riding' ? r.status === 'Riding' : !!r.pattern)));
+      (S.lnst === 'all' || (S.lnst === 'riding' ? r.status === 'Riding' : !!r.pattern)) && (S.lntype === 'all' || r.types.includes(S.lntype)));
+    $('#ln-type').value = S.lntype;
     const lr = doc && doc.rules, lqd = doc && doc.liquidity;
     $('#ln-rules').replaceChildren(...(lr && lqd ? [
       ['Opens up and runs: ', 'opens above the day before\'s close and closes up ' + lr.min_chg + '%+ in the top half of its range, on ' + lr.min_rv + '×+ its 20-day average volume.'],
@@ -1937,8 +1948,8 @@ defCalc('industry_perf', {
     const LQ = doc && doc.liquidity;
     $('#ln-note').textContent = !doc ? '' : (LAG ? 'Launch laggards: the same launch day as the Launches tab (opened up, closed up ' + doc.rules.min_chg + '%+ in the top half of its range, 30%+ over its 52-week low, liquid) but closed UNDER the 200-day SMA, on ' + (doc.rules.lag_rv || 2) + '×+ volume, and only on a catalyst: earnings that day or the evening before, or company news the pre-market grading gave an A or B (a confirmed fundamental change). After 5 closes in a row over the 200 SMA a laggard moves to the Launches tab, tagged "from laggards". ' : '') + rows.length + ' of ' + all.length + (LAG ? ' laggards' : ' launches') + ' on the list (' + today + ' on the ' + fDate(doc.date) + ' close)' + (npick ? ', ' + npick + ' of them your picks' : '') + '. Your picks = the Follow button on the Watchlist tab: followed from the close you added them at, until you remove them. ✕ takes any stock off this list: a pick is no longer followed, a launch is removed with its alerts (a new launch of it on a later day shows again). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
       (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
-    sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern'], 'grade');
-    if (doc && !rows.length) noRows(tb, 26, 'No launch matches these filters.');
+    sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern', 'ltype'], 'grade');
+    if (doc && !rows.length) noRows(tb, 27, 'No launch matches these filters.');
     rows.forEach((r) => {
       const tr = h('tr');
       const key = tkCell(r.symbol, r.tv);
@@ -1951,14 +1962,11 @@ defCalc('industry_perf', {
         key.append(rm);
       }
       if (r.lone_wolf) { const w = h('span', 'tgr-flag', 'lone wolf'); w.style.marginLeft = '6px'; key.append(w); }
-      if (r.power) { const t = h('span', 'tgr-gm', 'power'); t.title = 'Power day: volume 4x+, an 8%+ gap, a 10%+ day'; key.append(t); }
       if (r.faded) { const t = h('span', 'tgr-flag', 'faded'); t.style.marginLeft = '6px'; t.title = 'Closed ' + r.close_in_range + '% up its range: the day\'s low is a tight stop (2 years: most such days broke it, 13% still ran 50%+)'; key.append(t); }
       if (r.earnings) { const t = h('span', 'tgr-gm', 'earnings'); t.title = 'Launched on its earnings report'; key.append(t); }
       if (r.promoted) { const t = h('span', 'tgr-gm', 'from laggards'); t.title = 'Launched under the 200 SMA on ' + fDate(r.date) + ' (Launch laggards tab); closed over the 200 SMA 5 days in a row by ' + fDate(r.promoted) + ', so it moved here'; key.append(t); }
       if (LAG) { const t = h('span', 'tgr-flag', p1(r.vs_200_pct, true) + ' vs 200 SMA'); t.style.marginLeft = '6px'; t.title = 'Where the launch day closed vs its 200-day SMA. It moves to Launches after 5 closes in a row over the 200 SMA'; key.append(t); }
       if (r.news) { const t = h('span', 'tgr-gm', 'news'); t.title = 'Pre-market grade ' + r.news; key.append(t); }
-      if (r.catalyst) { const t = h('span', 'tgr-gm', 'catalyst'); t.title = 'Catalyst launch (' + r.catalyst + '): a 5%+ gap that closed up, still in the gap and over its base, on 2x+ volume, though up less than 5% or not in the top half of its range'; key.append(t); }
-      if (r.reversal) { const t = h('span', 'tgr-gm', 'reversal'); t.title = 'Reversal day: opened under the day before\'s close, closed up 8%+ in the top half of its range on 2x+ volume, over its 1-month high'; key.append(t); }
       {  /* gap out of base: live, today's open over last night's base high; after the close, that day's read */
         const q = LIVE_ON && LIVE && LIVE.rows ? LIVE.rows[r.symbol] : null, op = q ? q[5] : null, gl = r.gap_base_level, go = r.gap_out_today;
         if (gl && r.gap_base_ok && op && (r.price || 0) <= gl && op > gl) {
@@ -1968,8 +1976,6 @@ defCalc('industry_perf', {
         }
       }
       if (r.cleared) { const t = h('span', 'tgr-gm', 'cleared ' + r.cleared.replace('-month', '-mo') + ' base'); t.title = 'The launch day closed over the top of its ' + r.cleared + ' base, by the candle bodies'; key.append(t); }
-      if (r.follows) { const t = h('span', 'tgr-gm', 'follows ' + r.follows); t.title = 'A breakout within 10 sessions of a launch by ' + r.follows + ' in its theme'; key.append(t); }
-      if (r.delayed_from) { const t = h('span', 'tgr-gm', 'delayed'); t.title = 'Faded high-volume gap on ' + fDate(r.delayed_from) + ', base held, then launched'; key.append(t); }
       if (r.neglected) { const n = h('span', 'tgr-gm', 'neglected'); n.title = r.days_since_high + ' days since its high, ' + r.correction_pct + '% correction'; key.append(n); }
       if (r.tight_days >= 2) { const t = h('span', 'tgr-gm', 'tight ×' + r.tight_days); t.title = r.tight_days + ' tight days in a row just under the buy point (tight bodies of half an ADR or less, whatever the wicks, within an ADR of it): a breakout may come next'; key.append(t); }
       if (r.retest_today) {
@@ -1998,7 +2004,19 @@ defCalc('industry_perf', {
         h('div', 'tgr-lbl', (r.chg_pct > 0 ? '+' : '') + Math.round(r.chg_pct) + '%' + (num(r.gap_pct) !== null ? ' gap ' + Math.round(r.gap_pct) + '%' : '') + ' ' + num(r.rel_vol).toFixed(1) + '×'));
       const gc = r.grade === 'You' ? h('td', '') : gradeCell(r.grade);
       if (r.grade === 'You') { const t = h('span', 'tgr-gm', 'You'); t.title = 'Your pick: no launch day to grade'; gc.append(t); }
-      tr.append(key, ld, gc, pctCell(r.today, 0),
+      const ty = h('td', 'nw');
+      ty.append(h('div', '', r.types[0]));
+      if (r.types.length > 1) ty.append(h('div', 'tgr-lbl', '+ ' + r.types.slice(1).join(', ')));
+      if (r.follows) ty.append(h('div', 'tgr-lbl', 'follows ' + r.follows));
+      ty.title = r.types.map((x) => ({ 'Your pick': 'Your pick: followed from the close you added it, no launch day to grade',
+        Laggard: 'Laggard: launched under the 200 SMA on 2x+ volume and a catalyst (' + (r.laggard_catalyst || 'earnings or news') + '); moves to Launches after 5 closes over the 200 SMA',
+        'Power day': 'Power day: volume 4x+, an 8%+ gap, a 10%+ day',
+        Catalyst: 'Catalyst launch (' + (r.catalyst || '') + '): a 5%+ gap on earnings or news that closed up, still in the gap and over at least its 1-month base, on 2x+ volume, though up less than 5% or not in the top half of its range',
+        Reversal: 'Reversal: opened under the day before\'s close, closed up 8%+ in the top half of its range on 2x+ volume, over its 1-month high',
+        Delayed: 'Delayed: a faded high-volume gap on ' + (r.delayed_from ? fDate(r.delayed_from) : '') + ', base held, then launched (graded with that gap day)',
+        Follower: 'Follower: a breakout within 10 sessions of a launch by ' + (r.follows || '') + ' in its theme (up 2%+ over its 20-day high on 2x+ volume)',
+        Launch: 'Launch: opened up, closed up 5%+ in the top half of its range on 1.5x+ volume, over the 200 SMA' })[x]).join('\n');
+      tr.append(key, ld, gc, ty, pctCell(r.today, 0),
         h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm,
         h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
         h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
