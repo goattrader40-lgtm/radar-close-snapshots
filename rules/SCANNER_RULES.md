@@ -30,7 +30,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Grade | Rule |
 |---|---|
 | Ingredients | Volume 3x+ · gap 3%+ · base breakout (close over the previous 20 days' high) · a 10%+ day |
-| A+ | Volume 3x+, a 6%+ gap and a base breakout, jumping from under the 200 SMA to over it ('go day') |
+| A+ | Volume 3x+, a 6%+ gap and a base breakout, jumping from under the 200 SMA to over it ('go day'). Laggards top out at A (they close under the 200 SMA) |
 | A | Volume 3x+ and a base breakout, with a 3%+ gap or a 10%+ day |
 | B | Two of the four ingredients |
 | C | The rest |

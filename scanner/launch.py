@@ -1639,6 +1639,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
             continue
         w = NEWS_DAYS.get((r["symbol"], r["date"]), "")
         r["laggard_catalyst"] = w
+        if r["grade"] == "A+":        # A+ = a jump from under the 200 SMA to over it: a laggard closed under it (NCLH Oct 29 2026)
+            r["grade"] = "A"
         r["earnings"] = r["earnings"] or w == "earnings"
         r["news"] = r["news"] or (w[5:] if w.startswith("news ") else None)
         a, i = A[e[0]], e[1]
