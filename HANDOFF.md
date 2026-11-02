@@ -51,6 +51,9 @@ alone.
   valid" (AEHR Feb 12-19 2026, W Oct 30). After the last rebuild (119 launches): SIMO, CRM, NOW, ASST in the 50 EMA
   undercut tab; 1st close under: CDW, SHOP, RBRK, RGEN, TEAM; back under without an advance: CTSH, KVYO, MNDY, W, SAIL,
   GTLB, ZETA, HPQ, IQV. All agreed examples pass (`tools/replay.py --regress`).
+- **Watchlist note fixed** (Nov 2 2026): the "About these lists" box described the old Tight / 21 / 50 EMA pullback
+  screens; it now describes 3-SETUPS as it is. The user: don't touch anything about the 50 EMA undercut there (3-SETUPS
+  still drops a name at 2 closes under the 50 EMA).
 - **Coded but switched off**: the **momentum cutoff** (`L["max_run_pct"] = 0`). The user decides the rule (see Open
   items); turning it on is that one setting (plus the 200 SMA test if they pick B).
 - **Only on a test branch**: `test/pb1h` holds the backtest tools (scanner/probe_*.py, scanner/mgmt.py = the user's
