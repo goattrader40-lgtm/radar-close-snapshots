@@ -157,6 +157,53 @@ def main():
             "gaps": {k: summ(v) for k, v in sorted(gaps.items())},
             "launches": {k: {kk: vv for kk, vv in summ(v).items() if kk not in ("faded_pct", "held_pct", "avg_day_from_open")}
                          for k, v in sorted(lr.items())}}
+    # separate bands (not cumulative), by the stock's best group rank: overall, its best theme, its best industry;
+    # top bands also split by breadth (60%+ of the group over its 50 EMA)
+    def band(p):
+        return None if p is None or np.isnan(p) else "1 top 3%" if p >= 0.97 else "2 3-10%" if p >= 0.90 else "3 10-20%" if p >= 0.80 \
+            else "4 20-50%" if p >= 0.50 else "5 bottom half"
+    out["bands"] = {}
+    for nm in ("qull", "mix"):
+        P = rk[nm]
+
+        def best_p(s, k, pref):
+            c = [(P[gi[g], k], b50[gi[g], k]) for g in sg.get(s, []) if g in gi and g.startswith(pref) and not np.isnan(P[gi[g], k])]
+            return max(c) if c else (None, None)
+        res = {w: collections.defaultdict(list) for w in ("gaps", "gaps 10%+", "launches")}
+        def add(where, s, k, r):
+            for lab_, pref in (("best group", ""), ("best theme", "theme:"), ("best industry", "ind:")):
+                p, br = best_p(s, k, pref)
+                bd = band(p)
+                if bd is None:
+                    continue
+                res[where][lab_ + " · " + bd].append(r)
+                if bd < "3":
+                    res[where][lab_ + " · " + bd + (" · breadth 60%+" if br >= 0.6 else " · breadth under 60%")].append(r)
+        for s, a in A.items():
+            st = a.st
+            n = len(st.dates)
+            for i in range(max(a.start, 21), n - 1):
+                if not (a.gap[i] >= 5 and a.liquid[i - 1]):
+                    continue
+                k = pos.get(st.dates[i])
+                if k is None or k < 130:
+                    continue
+                o = st.o[i]
+                j20 = min(i + 20, n - 1)
+                r = dict(day=100 * (st.c[i] / o - 1), r5=100 * (st.c[min(i + 5, n - 1)] / o - 1) if i + 5 < n else None,
+                         r20=100 * (st.c[j20] / o - 1) if i + 20 < n else None, mx=100 * (st.h[i:j20 + 1].max() / o - 1))
+                add("gaps", s, k - 1, r)
+                if a.gap[i] >= 10:
+                    add("gaps 10%+", s, k - 1, r)
+        for s, i, k, gs, gn in ev:
+            a = A[s]
+            st = a.st
+            if i + 20 >= len(st.dates) or k < 130:
+                continue
+            c0 = st.c[i]
+            add("launches", s, k, dict(day=0.0, r5=100 * (st.c[i + 5] / c0 - 1), r20=100 * (st.c[i + 20] / c0 - 1),
+                                       mx=100 * (st.h[i + 1:i + 21].max() / c0 - 1)))
+        out["bands"][nm] = {w: {k: summ(v) for k, v in sorted(d.items())} for w, d in res.items()}
     json.dump(out, open(a_.out, "w"), indent=1)
     print(json.dumps(out)[:2000])
 
