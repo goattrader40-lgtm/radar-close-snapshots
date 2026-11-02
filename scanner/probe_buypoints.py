@@ -99,6 +99,12 @@ def one(key):
             r_ = row(s, st, a, f, i0, j, k, entry, buy, stop, x21, x10, hi20, c, n, closed if entry == "level" else "")
             r_["level"] = round(float(pbp_used), 2) if entry == "level" else None
             r_["leg_before"] = pleg
+            # known before the buy day's volume and close (for an intraday buy): the volume building the 5 days to the day
+            # before, and the theme's status the day before
+            r_["volume_building_prev"] = pvb or None
+            if st.dates[j - 1] in POS:
+                gp = launch.best_group(s, POS[st.dates[j - 1]], GROUPS, GS)[0]
+                r_["theme_prev"] = {2: "Leading", 1: "Turning up", 0: "Not trending"}.get(gp, "no theme")
             if LIVE:
                 r_.update(feats.late(a, j))
                 r_.update(feats.trend(a, j, i0))
