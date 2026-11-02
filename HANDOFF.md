@@ -70,6 +70,16 @@ alone.
   (28-30% ran 20%+); group 1-month up 8%+ faded 50% vs down 57%; 1-week alone doesn't change the gap day. Launches:
   Turning up on the launch day ran 20%+ 17% vs Leading 30% / Not trending 27%. The old "65% of A+ with the theme
   confirmed ran 20%+" did not reproduce over 20 sessions (27% vs A 23%).
+- **Group rank (went live Nov 2 evening, the user's "build and go live")**: `group_rank()` in scanner/launch.py, in
+  launch.json `group_rank` after each close. Every theme (vs themes) and industry (vs industries), 3+ stocks: median
+  1/3/6-month return, each a percentile among its kind, averaged, ranked again (Qullamaggie style). **Top = top 3%,
+  Strong = 3-10%**, the rest a rank number only (no Lagging / Emerging tags: below the top 10% no band beat the bottom
+  half; breadth added nothing). A stock's group rank = its best-ranked theme or industry. Portal: Groups tab Rank (with
+  the change vs 5 sessions ago) and Tier columns; Group rank column on Pre-market graded gappers, Launches, Launch
+  laggards. Display only: the news grade, the launch grade and the old Leading / Turning up status (breakout grades)
+  are unchanged. Test (scanner/probe_grouprank.py bands, radar-tools `grouprank` on test/gapstudy), 2 years, ran 20%+
+  in 20 days: gap-ups Top 44% (739) / Strong 37% (457) / 10-20% 28% / 20-50% 29% / bottom half 29%; launches 35% / 31%
+  / 23% / 22% / 21%. The gap-day fade barely changes (52% vs 53-57%).
 
 ## Status at the end of the last session (Nov 1 2026, evening)
 
@@ -322,12 +332,11 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    Ready file (after the user subscribes ntfy).
 6. Offered, never decided: require the 10 / 21 EMA at the level for a retest; a fairer breakout stop test (0.7 ADR
    under the buy, then the day's low); trigger a bull flag on the higher of the line and the day before's high.
-7. **Nov 2 2026, waiting for the user**: (a) the new group definitions: a daily RANKING of themes and industries
-   (median 1-month 50% / 3-month 30% / 1-week 20%), Leading = top ~5% with 60%+ above the 50 EMA, Emerging = from the
-   bottom half into the top 25% within 10 sessions with half over the 21 EMA, Lagging = bottom half; test 2-3 cut-offs
-   on the gap / launch study first, the user picks; then (b) group status + "group not Leading" flag in the pre-market
-   grading and (c) a "theme Turning up/Emerging" caution tag on launch day (both agreed in principle). "Theme
-   confirmed" dropped (hindsight). (d) 3-SETUPS triggers on the phone / 1-minute checks.
+7. Group rank: DONE and live (Nov 2, see Changes). Emerging / Lagging dropped by the test. Open: (a) the user's
+   "leader inside the group" idea (AMD over NVDA, SNDK over MU, DELL in AI servers): study scanner/probe_leaders.py,
+   radar-tools `leaders` on test/gapstudy -> radar-data probe_leaders.json; report, the user decides; (b) whether the
+   new rank should replace the old Leading status in the breakout grade (needs its own test); (c) 3-SETUPS triggers
+   on the phone / 1-minute checks.
 8. Older: move the Launches rules box to the top of the tab; picks reading their history from the start; an intraday
    surge alert without a gap; the 3-SETUPS weaker Ready groups (kept as is).
 

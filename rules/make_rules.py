@@ -135,6 +135,7 @@ SHEETS.update({
  ["Reliable sources only", "Facts only from primary sources (company release, SEC filing, exchange/regulator notice, earnings release or call) or major outlets (Reuters, Bloomberg, WSJ/Barron's/MarketWatch, FT, CNBC, AP). Social media, crypto/flash sites, aggregators, blogs and AI summaries = rumor: C at best, F if the move rests only on it"],
  ["No hindsight", "Graded only from the news as it stood before the open, not from price action"],
  ["Report", "Phone notification with the save time, 'prices as of' time, counts and A/B tickers; PRICES STALE if prices are 15+ minutes old"],
+ ["Group rank", "Each gapper shows its best group's rank after yesterday's close (G2), beside the grade; not part of the news grade"],
 ]),
 "P2 Gap grades": (["Direction", "Grade", "Meaning"], [
  ["Gap-up", "A", "Real fundamental change: beat with raised guidance or clear growth acceleration, FDA approval, signed takeover at a premium, signed transformational contract, confirmed inflection 7+"],
@@ -184,6 +185,23 @@ SHEETS.update({
  ["Lone wolf", "None of its groups has trended since the launch"],
  ["Theme confirmed (2-year launch test)", "Its theme turned up (Turning up or Leading) after the launch: A+ launches then ran 20%+ 65% of the time vs 52% for other A's"],
  ["Breakout grade", "A Leading theme counts toward an A/B breakout; Turning up did no better than not trending in the 2-year test"],
+ ["Group rank (separate)", "See G2: each theme ranked among themes and each industry among industries (Top 3%, Strong 3-10%); shown beside, not used in the Leading / Turning up status above"],
+]),
+"G2 Group rank": (["Item", "Rule"], [
+ ["Groups", "Every theme on the portal and every industry (Broad list), 3+ stocks with data; themes ranked only against themes, industries only against industries"],
+ ["Score", "Median 1-month, 3-month and 6-month return of the group's stocks; each ranked as a percentile among the groups of its kind; the three averaged and ranked again (Qullamaggie's 1/3/6-month lists)"],
+ ["Rank", "#1 = best, shown as #2/99 (2nd of 99 themes); change vs 5 sessions earlier shown as up/down arrows"],
+ ["Top group (star)", "Top 3% of its kind (about 3 themes and 3 industries)"],
+ ["Strong", "Top 3-10% of its kind (about 7 themes and 5 industries)"],
+ ["The rest", "Rank number only: below the top 10% no band did better than the bottom half in the 2-year test, so no Lagging or Emerging tag"],
+ ["Breadth", "Not used: 98% of top-3% groups already had 60%+ of their stocks over the 50 EMA"],
+ ["When", "After each close (the 4:40 PM scan, and each Launches rebuild); stays the same during the day"],
+ ["Stock's group rank", "Its best-ranked group among its themes and its industry"],
+ ["Where it shows", "Groups & themes tab (Rank, Tier); Pre-market graded gappers, Launches and Launch laggards (Group rank column)"],
+ ["Not in the grades", "Shown beside the news grade and the launch grade, not part of them"],
+ ["2-year test: 5%+ gap-ups", "Ran 20%+ within 20 days: Top 44% (739), Strong 37% (457), 10-20% 28%, 20-50% 29%, bottom half 29%. Gap-day fade about the same in every band (52-57%)"],
+ ["2-year test: 10%+ gap-ups", "Top 42% (142), Strong 42% (84), the rest 26-30%"],
+ ["2-year test: launches", "Top 35% (200, avg +4.4% in 20 days), Strong 31% (186, +1.5%), 10-20% 23%, 20-50% 22%, bottom half 21%"],
 ]),
 "L9 Live watch list": (["Item", "Rule"], [
  ["Universe", f"Every US stock with a market cap of ${ST['min_mcap'] / 1e6:.0f}M+ (Nasdaq's list; 2 years of daily bars)"],
@@ -236,7 +254,7 @@ for name, (cols, rows) in SHEETS.items():
     ws.freeze_panes = "A2"; ws.row_dimensions[1].height = 30
 info = wb.create_sheet("About", 0)
 for line in ["Theme & Group Radar: scanner rules", "As of Nov 2, 2026. Source of truth: scanner/launch.py, scanner/settings.json, radar/ and the morning grading instructions.",
-             "L = Launches (L1-L9) · W = Watchlist (W1-W2) · B = Buy points, legs & status (B1-B2) · P = Pre-market (P1-P3) · G = Gainers (G1) · A = Alerts (A1) · O = Open items · X = Agreed examples",
+             "L = Launches (L1-L9) · W = Watchlist (W1-W2) · B = Buy points, legs & status (B1-B2) · P = Pre-market (P1-P3) · G = Gainers (G1), Group rank (G2) · A = Alerts (A1) · O = Open items · X = Agreed examples",
              "Regenerate with: python3 rules/make_rules.py (any rule change updates it in the same commit)"]:
     info.append([line])
 info["A1"].font = Font(name="Arial", bold=True, size=14)
