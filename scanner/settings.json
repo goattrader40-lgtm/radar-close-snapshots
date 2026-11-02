@@ -5,7 +5,7 @@
     "_about": "Who can be on the Launches list and trigger alerts (not the other screens). Change a number here; it applies from the next evening scan.",
     "min_price": 10,
     "min_dollar_vol_20d_millions": 20,
-    "min_avg_vol_20d": 600000,
+    "min_avg_vol_20d": 700000,
     "min_adr": 3.5
   },
 
@@ -13,8 +13,8 @@
     "min_price": 10,
     "min_mcap": 700e6,
     "max_mcap": 2e12,
-    "min_avg_vol_30d": 700000,
-    "min_dollar_vol_30d_millions": 20,
+    "min_avg_vol_20d": 700000,
+    "min_dollar_vol_20d_millions": 20,
     "min_adr": 3.5,
     "above_ema50": true,
     "min_pct_above_52w_low": 30,

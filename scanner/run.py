@@ -148,7 +148,7 @@ def step(state, d, stocks, cfg, cal, log):
                 S = cfg["standard"]
                 if not st.c[i] > st.sma200[i]:
                     remove(name, sym, "below the 200 SMA (weekly refresh)")
-                elif not (st.c[i] >= S["min_price"] and st.avgv30[i] > S["min_avg_vol_30d"] and st.dv30[i] > S["min_dollar_vol_30d_millions"]):
+                elif not (st.c[i] >= S["min_price"] and st.avgv20[i] >= S["min_avg_vol_20d"] and st.dv20[i] >= S["min_dollar_vol_20d_millions"]):
                     remove(name, sym, "no longer liquid (weekly refresh)")
                 elif chased(st, i):
                     remove(name, sym, f"up {L['no_chase_1y_pct']}%+ in a year (weekly refresh)")
