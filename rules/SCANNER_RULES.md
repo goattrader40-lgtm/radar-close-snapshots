@@ -6,7 +6,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 
 | Rule | Requirement | Notes |
 |---|---|---|
-| Liquid | Price $10+, 20-day avg $ volume $20M+, 600K+ shares a day, ADR 3.5%+ | Your settings (scanner/settings.json) |
+| Liquid | Price $10+, 20-day avg $ volume $20M+, 600K+ shares a day (20-day avg), ADR 3.5%+ | Your settings (scanner/settings.json, 'launch') |
 | History | 200+ sessions | A newer listing needs 60+ sessions and uses its average close since listing as the 200 SMA |
 | Above 52-week low | Close 30%+ above the 52-week low | - |
 | 200 SMA | Close ABOVE the 200 SMA; the day before at most 28% above it (power day: up to 50%) | Laggards are the exception: they close UNDER it |
@@ -79,11 +79,37 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Touched & back under | Every check | Traded over the buy point (today's high) but is back under it: a heads-up, not a breakout |
 | Table update | After the close (scan about 4:40 PM ET) | Launches that held at the close are added, dated that day |
 
+## Groups & themes
+
+| Item | Rule |
+|---|---|
+| Group | Each of the stock's themes on the portal (or its industry when it has none), and one level up its area (AI & Semis, Software, Energy... or its sector) |
+| Leading | 60%+ of the group's members close above their 50 EMA and its median 1-month change is +8% or more |
+| Turning up | Half or more of the members close above their 21 EMA and its median 1-week change is positive |
+| Not trending | Neither of the above |
+| Theme then -> now | The group's status on the launch day and today; 'since' = the first day from the launch it was trending (Turning up or Leading) |
+| Lone wolf | None of its groups has trended since the launch |
+| Theme confirmed (2-year launch test) | Its theme turned up (Turning up or Leading) after the launch: A+ launches then ran 20%+ 65% of the time vs 52% for other A's |
+| Breakout grade | A Leading theme counts toward an A/B breakout; Turning up did no better than not trending in the 2-year test |
+
+## Live watch list
+
+| Item | Rule |
+|---|---|
+| Universe | Every US stock with a market cap of $700M+ (Nasdaq's list; 2 years of daily bars) |
+| Liquid | Price $10+, 20-day avg $ volume $20M+, 600K+ shares a day (20-day avg), ADR 3.5%+ |
+| History | 200+ sessions (60+ for a new listing) |
+| 200 SMA range | From 60% under to 50% over its 200 SMA (28-50% over: power days only; under it: laggards or once it trades back over) |
+| Not launched | No launch in the last 20 sessions (those are followed on the Launches list) |
+| Rebuilt | Every evening at the 4:40 PM scan |
+| 5-minute checks | Live prices for all ~3,300 stocks (tables); the launch and laggard rules on the watch list |
+| 1-minute checks | 9:31-12:00 and 3:00-4:00: the watch list plus Launches, Launch laggards and the 50 EMA undercut list |
+
 ## Watchlist lists
 
 | List | Gets on | Leaves on | Sections |
 |---|---|---|---|
-| Every list needs | Price $10+, market cap $700M+, 30-day avg volume 700K+ shares and $20M+ a day, ADR 3.5%+, close above the 50 EMA, 30%+ above the 52-week low | - | - |
+| Every list needs | Price $10+, market cap $700M+, 30-day avg volume 700K+ shares and $20M+ a day (30-day), ADR 3.5%+, close above the 50 EMA, 30%+ above the 52-week low | - | - |
 | 1-EP/GAP | Gap up of more than 5% at the open with relative volume 2.5x+ (no 200 SMA rule) | 2 closes in a row below the 50 EMA, or 15 trading days without reaching 3-SETUPS | The gap day (a new gap moves it to the newer section) |
 | 1-UPDAY | Up 4%+ on the day with relative volume 1x+ (no 200 SMA rule) | 2 closes in a row below the 50 EMA, a close below the up day's low, or 15 trading days without reaching 3-SETUPS | The up day |
 | 2-POOL | First close back above the 50 EMA after 2+ closes below it; or, refreshed every Friday, momentum leaders: +10% in 1 week, +25% in 1 month, +50% in 3 months, or +50% in 6 months (that one also above the 200 SMA and 50%+ over its 52-week low) | 2 closes in a row below the 50 EMA; at the Friday refresh, a close below the 200 SMA or no longer liquid | 50 EMA reclaim / Momentum |
@@ -209,3 +235,35 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Retest zone / hold | Pulls into the retest zone of its last breakout; from 3:45 PM, holding into the close | Every check |
 | After the close | Tight closes under a buy point, a retest of a broken base top that held; 3-SETUPS Ready list to the phone | After the 4:40 PM scan |
 | Rules | Each stock and kind once a day; phone via ntfy, desktop pop-ups while the portal page is open | - |
+
+## Open items
+
+| Item | Status |
+|---|---|
+| Momentum cutoff | Coded but OFF (L['max_run_pct'] = 0): no buy points once the stock has run 300%+ from its momentum start (option A) or 300%+ and 140%+ over the 200 SMA (option B). Your decision |
+| 'No reset yet' tag | Offered; may be replaced by the momentum cutoff |
+| Retest needs the 10/21 EMA at the level | Offered, not decided |
+| Bull flag trigger on the higher of the line and the day before's high | Offered, not decided |
+
+## Agreed examples
+
+| Ticker | From | To | Launch / pick | What you agreed |
+|---|---|---|---|---|
+| GMAB | 2026-08-07 | 2026-10-30 | launch | - |
+| ANF | 2026-08-03 | 2026-10-30 | launch | - |
+| ANF | 2026-08-26 | 2026-10-30 | launch | - |
+| RPD | 2026-09-14 | 2026-10-30 | launch | the user, Nov 1 2026: Oct 8 the 3rd try of its 1-month base top 13.25 under the main base (Aug 27) and the bigger base (Aug 11) |
+| SPOT | 2026-10-22 | 2026-10-30 | launch | - |
+| ACN | 2026-10-01 | 2026-10-30 | launch | - |
+| SMCI | 2023-05-03 | 2023-08-14 | launch | - |
+| ATRC | 2026-07-24 | 2026-10-30 | launch | - |
+| CAI | 2026-08-07 | 2026-10-30 | launch | the user, Nov 1 2026: Aug 19 bull flag, Aug 20 base breakout, Sep 10 retest + 21 EMA, Sep 14 bull flag, Sep 15 base breakout, Oct 9 21 EMA undercut & reclaim, Oct 21-26 tightening, Oct 27 base breakout |
+| NTSK | 2026-09-14 | 2026-10-30 | launch | - |
+| APPN | 2026-08-07 | 2026-10-30 | launch | - |
+| VEEV | 2026-08-07 | 2026-10-30 | launch | - |
+| ZS | 2026-09-14 | 2026-10-30 | launch | - |
+| ARM | 2026-03-25 | 2026-05-29 | pick | - |
+| TTAN | 2026-10-15 | 2026-10-30 | pick | - |
+| LIFE | 2026-10-01 | 2026-10-30 | pick | the user agreed its Oct 8 undercut & reclaim, Oct 20 pop, Oct 21 breakout and Oct 30 flag (44.81) |
+| AEHR | 2026-02-11 | 2026-04-10 | launch | the user agreed (Nov 1 2026): Mar 31 50 EMA undercut & reclaim, Apr 2 bull flag breakout (closed under the 50 EMA Mar 27 & 30), Apr 6 base breakout |
+| APLD | 2026-04-14 | 2026-05-08 | launch | the user agreed (Nov 1 2026): May 4 the textbook bull flag breakout (pole Mar 31 - Apr 23, flag Apr 24 - May 1) |
