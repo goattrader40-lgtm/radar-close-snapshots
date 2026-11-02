@@ -9,7 +9,8 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
               your launches were -6% to +25% from it, the continuation days of MU / DELL / APPN +30% to +77%),
               and closed at least 30% above its 52-week low (your standard filter; your launches were 57-166% above).
               A power day (an episodic pivot: volume 4x+, an 8%+ gap, a 10%+ day; your Nov 1 2026 rule, was a 10%+ gap and
-              a 15%+ day: ARM Mar 25 2026, a 9.9% gap, +16.4% on 6.1x) may start up to 50% above the 200 SMA: SMCI May 3
+              a 15%+ day: ARM Mar 25 2026, a 9.9% gap, +16.4% on 6.1x; since Nov 2 2026 it must also close over its 1-month
+              high, the previous 20 sessions' highest high) may start up to 50% above the 200 SMA: SMCI May 3
               2023 launched at an all-time high 32% over it
   earnings    tagged when the stock reported that day or the evening before (Yahoo's earnings date, from the live job)
   ingredients volume 3x+ · gap 3%+ · base breakout (closed above the previous 20 days' high) ·
@@ -52,7 +53,7 @@ Launch day (from your examples: DELL Feb 27 2026, TEAM and APPN Aug 7 2026, the 
               of the range, above the 200 SMA and still near it (DXC Oct 8 2026 after ACN's earnings launch)
   laggard     a launch that closed UNDER the 200 SMA (the portal's Launch Laggards tab; your rule, Nov 2 2026): the same
               launch day otherwise (opened up, up 5%+ in the top half of the range, 30%+ over the 52-week low, liquid),
-              on 2x+ volume, and only on a catalyst: earnings that day or the evening before, or company news the 8:47
+              on 2x+ volume, closing over its 1-month high (the previous 20 sessions' highest high), and only on a catalyst: earnings that day or the evening before, or company news the 8:47
               pre-market grading gave an A or B (a confirmed fundamental change). Followed like a launch (legs, buy points);
               after 5 closes in a row over the 200 SMA it moves to the launch list, marked "promoted" with that day
   theme       shown beside the grade, not in it: its group's status on the launch day, now, and the day it
@@ -209,15 +210,18 @@ class Arr:
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100))
 
     def laggard(self, i):
-        """a launch day under the 200 SMA, on 2x+ volume and a catalyst (earnings or graded company news)"""
+        """a launch day under the 200 SMA, on 2x+ volume and a catalyst (earnings or graded company news), closing over its
+        1-month high (the previous 20 sessions' highest high: your rule, Nov 2 2026)"""
         st = self.st
         return bool(i >= self.start and self.liquid[i] and self.gap[i] > 0 and self.chg[i] >= L["min_chg"] and self.held(i)
-                    and self.rv[i] >= L["lag_rv"] and st.c[i] <= self.s200[i]
+                    and self.rv[i] >= L["lag_rv"] and st.c[i] <= self.s200[i] and st.c[i] > self.hi20[i]
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100) and (self.sym, st.dates[i]) in NEWS_DAYS)
 
     def power(self, i):
-        """a power day (an episodic pivot): volume 4x+, a 10%+ gap and a 15%+ day"""
-        return bool(self.rv[i] >= L["power_rv"] and self.gap[i] >= L["power_gap"] and self.chg[i] >= L["power_chg"])
+        """a power day (an episodic pivot): volume 4x+, an 8%+ gap and a 10%+ day, closing over its 1-month high (the
+        previous 20 sessions' highest high: your rule, Nov 2 2026)"""
+        return bool(self.rv[i] >= L["power_rv"] and self.gap[i] >= L["power_gap"] and self.chg[i] >= L["power_chg"]
+                    and self.st.c[i] > self.hi20[i])
 
     def neglect(self, i):
         """days since the highest high of the last 250 sessions (the base can be long), and the correction from it (%)"""

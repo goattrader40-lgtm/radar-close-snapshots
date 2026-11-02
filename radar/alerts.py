@@ -170,7 +170,7 @@ def find(live, doc, now=None):
             # a laggard launch (the Launch Laggards tab): under the 200 SMA, on earnings or this morning's A/B-graded news,
             # up 5%+ from an up open on 2x+ volume
             news, lo52 = doc.get("_news_today", {}).get(sym), (w[14] if len(w) > 14 else None)
-            if ((earn or news) and gap is not None and gap > 0 and chg >= R["min_chg"] and rv >= R.get("lag_rv", 2)
+            if ((earn or news) and gap is not None and gap > 0 and chg >= R["min_chg"] and rv >= R.get("lag_rv", 2) and price > pivot
                     and (not lo52 or price >= lo52 * (1 + R["min_above_low52"] / 100))):
                 g = grade(rv, price > pivot, gap, chg, R, False)
                 out.append((f"{sym}:laggard", f"{sym} {g} LAGGARD launch on " + ("earnings" if earn else "news (" + news + ")"),
@@ -181,7 +181,8 @@ def find(live, doc, now=None):
         if not s200 or price <= s200:
             continue
         ext = (close0 / s200 - 1) * 100
-        power = rv >= R.get("power_rv", 4) and gap is not None and gap >= R.get("power_gap", 8) and chg >= R.get("power_chg", 10)
+        power = (rv >= R.get("power_rv", 4) and gap is not None and gap >= R.get("power_gap", 8) and chg >= R.get("power_chg", 10)
+                 and price > pivot)                                # over its 1-month high (your rule, Nov 2 2026)
         if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not power):
             continue
         theme = f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
