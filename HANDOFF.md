@@ -334,7 +334,15 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    under the buy, then the day's low); trigger a bull flag on the higher of the line and the day before's high.
 7. Group rank: DONE and live (Nov 2, see Changes). Emerging / Lagging dropped by the test. Open: (a) the user's
    "leader inside the group" idea (AMD over NVDA, SNDK over MU, DELL in AI servers): study scanner/probe_leaders.py,
-   radar-tools `leaders` on test/gapstudy -> radar-data probe_leaders.json; report, the user decides; (b) whether the
+   radar-tools `leaders` on test/gapstudy -> radar-data probe_leaders.json (groups of 5+ stocks). Gap-ups in a Top
+   group: the group's #1 ran 20%+ 61% (54) vs #2-3 51% (65) vs the rest 41-42%, but the average 20-day result was no
+   better (+3.1% vs +3.6%) and the leaders faded more on the gap day (57% vs 49%). Launches: the opposite (the group's
+   #1 launching 20% (86) vs the rest of its group 29% (570); in Top groups the best were the bottom two-thirds, 38%).
+   Market-wide rank (the stock vs all stocks) helped launches: top 3% 34% (100) vs 25%; with a Top/Strong group 40%
+   (52, +6.1%). Examples: SNDK #1 in Memory & Storage at every month-end Sep 2025 - Jun 2026; DELL #2 in AI Servers
+   Feb 2026 while the group ranked low, #1 Mar and May; in the CPUs theme INTC, not AMD, led Mar-Jun 2026. NVDA is not
+   in the scans: settings.json max_mcap = $2T leaves out stocks over $2T (so AI Compute has no rank). Waiting for the
+   user: a "leader" tag (display only) and/or including $2T+ stocks in the group ranks. (b) whether the
    new rank should replace the old Leading status in the breakout grade (needs its own test); (c) 3-SETUPS triggers
    on the phone / 1-minute checks.
 8. Older: move the Launches rules box to the top of the tab; picks reading their history from the start; an intraday
