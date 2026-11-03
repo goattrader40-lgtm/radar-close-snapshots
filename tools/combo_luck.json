@@ -1,0 +1,47 @@
+{
+ "launch day live ORH|50": {
+  "median": 0.46,
+  "p95": 0.87,
+  "p99": 0.99
+ },
+ "launch day live ORH|150": {
+  "median": 0.23,
+  "p95": 0.44,
+  "p99": 0.57
+ },
+ "launch day live ORH|300": {
+  "median": 0.15,
+  "p95": 0.29,
+  "p99": 0.42
+ },
+ "bought at the close|50": {
+  "median": 0.65,
+  "p95": 0.99,
+  "p99": 1.1
+ },
+ "bought at the close|150": {
+  "median": 0.34,
+  "p95": 0.62,
+  "p99": 0.74
+ },
+ "bought at the close|300": {
+  "median": 0.2,
+  "p95": 0.36,
+  "p99": 0.47
+ },
+ "5-min ORH|50": {
+  "median": 0.7,
+  "p95": 1.22,
+  "p99": 1.49
+ },
+ "5-min ORH|150": {
+  "median": 0.28,
+  "p95": 0.55,
+  "p99": 0.68
+ },
+ "5-min ORH|300": {
+  "median": 0.15,
+  "p95": 0.37,
+  "p99": 0.47
+ }
+}
