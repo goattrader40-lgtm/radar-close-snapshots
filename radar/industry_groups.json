@@ -4,7 +4,7 @@
   "list first, else Yahoo's industry (radar-data profiles.json); Banks - Regional / Diversified not listed: US Regional",
   "($3B+) or US Community; Biotechnology / Software not listed: 'Biotech: Other' / 'Software: Other'. Each group is then",
   "pruned by the same co-movement test as the themes (score vs the rest of the group 0.6+, 120 sessions to the last",
-  "Friday); a stock that fails it ranks under '<broad industry> \u00b7 other' with no Top / Strong tier.",
+  "Friday); a stock that fails it ranks under '<broad industry> · other' with no Top / Strong tier.",
   "Edit a list here to move a stock; the next evening's build uses it."
  ],
  "regional_mid_b": 3.0,
@@ -32,11 +32,11 @@
   "AI Cloud & Data-Center Hosting": "ORCL CRWV IREN CIFR WULF CORZ HUT APLD NBIS GLXY WYFI SHAZ",
   "Software: AI Applications": "PLTR AI SOUN RZLV RZAI BRUN PATH BBAI INOD",
   "Quantum Computing": "QNT INFQ XNDU HQ IONQ RGTI QBTS QUBT IQMX PSQL",
-  "Software: Cybersecurity": "PANW CRWD FTNT ZS OKTA CHKP S QLYS TENB RPD VRNS SAIL NTSK CVLT RBRK GEN MITK YOU CGNT CLBT TLS ALLT BB OSPN ATEN RDWR RSKD NTCT",
-  "Software: Cloud, Data & Observability": "SNOW DDOG MDB ESTC NTNX DT FROG GTLB NET FSLY AKAM DOCN TDC PD BLZE RXT TWLO BAND API FFIV AVPT",
+  "Software: Cybersecurity": "PANW CRWD FTNT ZS OKTA CHKP S QLYS TENB RPD VRNS SAIL NTSK CVLT RBRK GEN MITK YOU CGNT CLBT TLS ALLT BB OSPN RSKD",
+  "Software: Cloud, Data & Observability": "SNOW DDOG MDB ESTC NTNX DT FROG GTLB NET DOCN PD BLZE RXT TWLO BAND API AVPT",
   "Software: Web Presence & Domains": "GDDY VRSN WIX",
   "Software: Marketing & Ad Tech": "HUBS BRZE KVYO CXM SPT AMPL SMWB YEXT GTM ZETA RAMP DSP PUBM MNTN APPS IBTA",
-  "Software: Collaboration & Communications": "FRSH ZM DOCU MNDY ASAN BOX DBX RNG FIVN EGHT OOMA NICE PEGA APPN",
+  "Software: Collaboration & Communications": "FRSH ZM DOCU MNDY ASAN BOX DBX RNG FIVN EGHT OOMA NICE PEGA APPN TDC",
   "Software: HR & Payroll": "ADP PAYX PAYC PCTY",
   "Software: Finance & Banking": "BILL BL WK VERX DFIN SSNC FICO QTWO NCNO ALKT ACIW",
   "Payments": "XYZ TOST CPAY WEX FOUR PAY PAYO FLYW DLO EEFT EVTC MQ RELY PAGS NYAX RPAY PSFE PRTH PAYS IIIV LSAK PAYP KSPI PYPL AFRM STNE",
@@ -76,7 +76,7 @@
   "Land & Royalty": "TPL LB",
   "Preferred & Duplicate Shares": "ZIONP CDZIP FRMEP WAFDP",
   "Semis: AI Accelerators & CPUs": "NVDA AMD INTC ARM AVGO CBRS",
-  "Semis: AI Connectivity & Interconnect": "ALAB CRDO MRVL RMBS MTSI SMTC MXL AIP",
+  "Semis: AI Connectivity & Interconnect": "ALAB CRDO MRVL RMBS MTSI SMTC MXL AIP AMBA",
   "Memory & Storage Chips": "MU SKHY SNDK WDC STX SIMO MRAM",
   "Semis: Foundry": "TSM UMC GFS TSEM",
   "Semis: Analog, Auto & Power": "TXN ADI MCHP NXPI ON MPWR ALGM DIOD POWI AOSL NVTS WOLF INDI VICR",
@@ -101,6 +101,8 @@
   "China Data Centers": "GDS VNET",
   "Digital Ads & Social Media": "GOOGL GOOG META PINS SNAP RDDT TBLA NXDR",
   "China Internet": "BIDU TME BILI JOYY WB MOMO ATHM BZ",
-  "Online Marketplaces & Listings": "ZG Z CARG CARS YELP UPWK FVRR ZIP GRPN EVER MAX NRDS"
+  "Online Marketplaces & Listings": "ZG Z CARG CARS YELP UPWK FVRR ZIP GRPN EVER MAX NRDS",
+  "Network & App Delivery": "FFIV AKAM FSLY NTCT ATEN RDWR",
+  "Aerospace Components": "GE HWM HEI WWD SARO VSEC HXL"
  }
 }
