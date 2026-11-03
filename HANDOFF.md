@@ -147,6 +147,13 @@ alone.
   shows in the top table as "new" (LIFE).
   Every Earnings column sorts on a header click (live Nov 3; empty values last; default = reported first, newest first).
 
+- **Alert rules (live Nov 3 2026, the user's "go live, a")**: every alert, phone (radar/alerts.py main, from
+  base_stocks.json) and desktop (the portal's runAlerts, from stocks.json), fires only when the price is 30%+ over the
+  52-week low at that moment; 3-SETUPS triggers (key SYM:s3) only while the price is over the 200 SMA (ECHO Nov 3
+  2026: base top 100.90 under its 200 SMA 106.63, the alert at 101.19 on 0.9x). Not changed (the user chose a only):
+  the 3-SETUPS alert text (it says the section, "Ready", and no "(light)" on the desktop).
+- **Watchlist**: vs 21 EMA and vs 50 EMA columns after Rel vol (live price vs the last close's EMAs; sortable).
+
 ## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above: the group rank (Groups tab Rank / Tier; Group rank
