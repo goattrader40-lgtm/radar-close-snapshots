@@ -2043,6 +2043,7 @@ def main():
         stocks_rows = json.load(open(a.stocks))
         grank = group_rank(A, cal, stocks_rows)
         rsmap = grank.pop("_rs", {})
+        grank["rs"] = rsmap                       # every stock's RS, for the Watchlist column (the user, Nov 3 2026)
         gbest = best_ranks(grank, stocks_rows)
         for s_, v_ in rsmap.items():
             gbest.setdefault(s_, {})["rs"] = v_
