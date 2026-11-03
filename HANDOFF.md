@@ -102,22 +102,24 @@ alone.
   pre-market scanner, pre-market grades, the big Launches note, the data footer); each remembers open / closed in
   that browser (localStorage `radar-more-<key>`). Keep new long notes inside such a box.
 
-## Status at the end of the last session (Nov 2 2026, late evening)
+## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
-- **Live on main**: everything in "Changes on Nov 2 2026" above, incl. the group rank (Groups tab Rank / Tier; Group
-  rank column on Pre-market graded gappers, Watchlist, Launches, Launch laggards; "#1 in group" tag on pre-market
-  gappers). Launches rebuilt after go live (picks.yml): 115 launches, 1 laggard; the ranks come from the Nov 2 close
-  and refresh with every evening scan / Launches rebuild. Tonight's Top groups: themes IT Services & Consulting,
-  Biotech, Enterprise SaaS; industries Health Care Technology, Hotel REITs, IT Services. `tools/replay.py --regress`:
-  every agreed example reads the same.
-- **Test branches**: `test/grouprank` and `test/groupleader` are merged (nothing left on them). `test/gapstudy` holds
-  the studies only (not for main): scanner/probe_gapgroups.py, probe_grouprank.py, probe_leaders.py and the radar-tools
-  commands `gapgroups`, `grouprank`, `leaders` (results on radar-data: probe_gapgroups.json, probe_grouprank.json,
-  probe_leaders.json). `test/pb1h` as before.
-- **First thing to check next session (Tue Nov 3)**: the morning's pre-market graded gappers show the Group rank
-  column (and the tag when a gapper leads its group); the Watchlist / Launches columns fill after the evening scan.
-  The 8:45 AM grading session itself is unchanged (the rank is display only, beside the news grade).
-- **Nothing is waiting on the user's go from this session.** Open ideas are in Open items 7.
+- **Live on main**: everything in "Changes on Nov 2 2026" above: the group rank (Groups tab Rank / Tier; Group rank
+  column with the place in the group on Pre-market graded gappers, Watchlist, Launches, Launch laggards; "#1 in
+  group" tag on pre-market gappers only); the **breakout alert grade on the group rank** (Top or Strong instead of
+  "theme Leading", phone and desktop); the **long explanations folded** into one-line boxes. Launches rebuilt after
+  each go live (115 launches, 19 in a Top group, 7 Strong). `tools/replay.py --regress`: every agreed example reads
+  the same.
+- **Test branches**: `test/grouprank`, `test/groupleader`, `test/bonew`, `test/foldnotes` are merged (nothing left).
+  Studies only, not for main: `test/gapstudy` (probe_gapgroups / probe_grouprank / probe_leaders, radar-tools
+  `gapgroups` / `grouprank` / `leaders`) and `test/bograde` (probe_bograde with copies of test/pb1h's
+  probe_buypoints.py and mgmt.py, radar-tools `bograde`); results on radar-data probe_*.json. `test/pb1h` as before.
+- **Decided by the user**: no Emerging tag (the test rejected it), no $2T+ stocks, breakout grades stay A / B / C
+  (Top and Strong count the same: no A+ split, the data didn't support one).
+- **First thing to check next session**: a breakout alert's text reads "group ★ Top <group> #n/N" or "group Strong
+  ..." or "group not top 10% ..."; the pre-market graded gappers show the Group rank column; the folded boxes.
+- **Nothing is waiting on the user's go from this session.** Open ideas: Open items 7 (a) a market-wide rank tag on
+  Launches, (c) 3-SETUPS triggers on the phone; and the older items.
 
 ## Status at the end of the session before (Nov 1 2026, evening)
 
