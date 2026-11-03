@@ -235,24 +235,29 @@ alone.
   came from (Launches first); sorted by the Trend, most days first; it leaves when the Trend turns Negative or loses
   its label (still on its own list). 137 names on Nov 3. Rules T1.
 
-## Status at the end of the last session (Nov 3 2026, the Earnings session)
+## Status at the end of the last session (Nov 3 2026: Earnings, Trend, 200 SMA rule)
 
 - **Live on main** (each after the user's "go live"; `tools/replay.py --regress`: every agreed example reads the same):
-  the **Earnings tab** (radar/earnings.py, earnings.yml, no Claude: Nasdaq calendar + Yahoo + SEC press releases;
-  the views All week / Today's reactions / Day 2; sortable columns; frozen narrow Stock column); **every alert needs
-  the price 30%+ over the 52-week low** when it fires, and **3-SETUPS alerts only over the 200 SMA** (ECHO Nov 3);
-  **Watchlist vs 21 EMA / vs 50 EMA** columns. Details under "Changes on Nov 2 2026" (the Nov 3 entries).
-- **Test branches**: `test/earnings` and `test/alerts52` are the same as main (nothing waiting). `test/pmrs` was merged
-  by another session (not this one).
-- **The SEC_UA secret** (the user's contact for the SEC) is set by the user; earnings.py trims its line break.
-- **Phone alerts: left alone** at the user's wish (they don't use them yet); the Nov 3 day job ran on the old code.
+  the **Earnings tab** (no Claude; All week / Today's reactions / Day 2; week grid most liquid first, grouped by area;
+  sortable; frozen narrow Stock column); **every alert needs the price 30%+ over the 52-week low**, **3-SETUPS
+  alerts only over the 200 SMA**; **Watchlist vs 21 / vs 50 EMA**; the **Trend column** (Watchlist, Earnings,
+  Gainers, Launches); the **TREND list** on the Watchlist; the **200 SMA rule** for 3-SETUPS and Launches (from the
+  Nov 4 4:40 PM scan). Details in the Nov 3 entries above.
+- **Test branches**: test/earnings, test/alerts52, test/trend, test/sma200, test/trendlist = main (nothing waiting).
+  Other sessions merged test/pmrs, test/techgroups work (groups / theme adds) the same day: the rules workbook was
+  regenerated after each merge (rules/scanner_rules.xlsx conflicts: always re-run rules/make_rules.py, never pick a side).
 - **No new agreed reads** this session (tools/examples.txt unchanged).
-- **First thing to check next session**: the Earnings tab after the 7:10-8:55 AM runs (estimates saved before the
-  report from Wed Nov 4 on, so the revenue surprise fills in); Day 2 moves forward each morning (Wed Nov 4: Mon after
-  close + Tue before open).
-- **Open from this session**: the Earnings reader's misses (fix + bump GV); revenue from the release's tables (SHOP:
-  ≈ from growth); the 3-SETUPS alert text ("Ready" in a trigger alert, no "(light)" on the desktop): offered as (b),
-  the user chose (a) only.
+- **Phone alerts: left alone** at the user's wish (they don't use them yet).
+- **First thing to check next session (Wed Nov 4)**: the Trend in the morning (from trend.json of the Nov 3 close,
+  live from 9:30); the Nov 4 nightly build carries the Trend in stocks.json itself (the first on the new pipeline
+  code; then trend.json is no longer used); the 4:40 PM scan applies the 200 SMA rule (3-SETUPS should drop ECHO
+  BLDR QDEL STOK TEX RH TNDM SHAK BEAM LEGN if still under; Launches: BEAM while under); the Earnings tab after the
+  7:10-8:55 AM runs (estimates saved before the report from Nov 4 on).
+- **Open from this session**: the Earnings reader's misses (fix + bump GV); revenue from the release's tables (SHOP);
+  the 3-SETUPS alert text ("Ready" in a trigger alert, no "(light)" on the desktop; the user chose (a) only).
+- **Watch out**: radar-tools keeps one pending run per group: a new dispatch cancels the waiting one (Nov 3: a
+  setupsdry dispatch cancelled the waiting trendnow; other sessions use radar-tools too). Dispatch the next only once
+  the previous is running.
 
 ## Status at the session before (Nov 2 - early Nov 3 2026)
 
