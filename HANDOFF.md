@@ -415,6 +415,12 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 
 ## Open items: the to-do list for the next session (each needs the user's go)
 
+00. **Martin Luk study and plan (Nov 3 2026, session branch ccr-d58ac612-mlgp5r only; nothing built, nothing live)**:
+   `plans/martin-luk/PLAN.md` (Task 1: his risk model and a trade-management spec for the user's IBKR bot; Task 2: an
+   A-Z plan for the Radar: Trend column, AVWAP levels, exit line, size helper, breadth gauge, Pullback zone / 10 EMA
+   reclaim, Short watch, studies S1-S6) and `plans/martin-luk/luk_risk_sim.py` (the Monte Carlo behind it). Waiting
+   on the user's answers to its section 5 (8 questions) before any step. The bot's code is not in this repo.
+
 0. **Earnings tab, first live week**: check the reads with the user (Wed-Fri reports get estimates saved before
    the report); the guidance reader's misses go in as fixes with a GV bump. Not done: revenue from the release's
    tables (SHOP-style releases give only growth up front: ≈ from growth), the prior quarter's growth (acceleration).
