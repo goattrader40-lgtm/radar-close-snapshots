@@ -141,6 +141,12 @@ alone.
   Checked by hand Nov 3 against the releases: PLTR, HNGE, LIFE, LSCC, AEHR, ON, XMTR, TEM, SHOP (low-thirties = 32%).
   radar-tools `earnings` / `earnprobe SYM ...` run it / the source check on any branch. No phone alerts (the user).
 
+- **(Nov 3 2026, on test/pmrs until "go live")** plain RS column on the Pre-market graded gappers (RS 97+ on gap-ups
+  added nothing inside a Top / Strong group); **Launching today** shows the Group rank cell (place in the group) and
+  RS (★ at 97+) instead of the old "theme · Turning up" status; the **phone launch alerts** say the same (watch fields
+  [15] group rank text, [16] RS; alerts.py gtext(), the old status only when they are missing); the **first column of
+  every table stays put** when it scrolls sideways (CSS sticky, opaque background).
+
 ## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above: the group rank (Groups tab Rank / Tier; Group rank
