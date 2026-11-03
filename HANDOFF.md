@@ -157,6 +157,16 @@ alone.
   activate the phone and tell you." Don't restart the Radar day job or change anything for the phone until then. The
   Nov 3 day job ran on the old code; the new alert rules reach the phone with the next morning's job on their own.
 
+- **(Nov 3 2026, on test/pmrs until "go live")** plain RS column on the Pre-market graded gappers (RS 97+ on gap-ups
+  added nothing inside a Top / Strong group); **Launching today** shows the Group rank cell (place in the group) and
+  RS (★ at 97+) instead of the old "theme · Turning up" status; the **phone launch alerts** say the same (watch fields
+  [15] group rank text, [16] RS; alerts.py gtext(), the old status only when they are missing); the **first column of
+  every table stays put** when it scrolls sideways (CSS sticky, opaque background).
+  Also **"Group on launch day"** replaces "Theme then -> now" on Launches / Launch laggards: the best group's rank at
+  the launch day's close (launch rows group_rank_launch / group_tier_launch / group_pct_launch, from
+  rank_history(full=True) + launch_day_rank()). The lone-wolf tag still uses the old status (the user, Nov 3: keep it;
+  a new-rank version needs its own test).
+
 ## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above: the group rank (Groups tab Rank / Tier; Group rank

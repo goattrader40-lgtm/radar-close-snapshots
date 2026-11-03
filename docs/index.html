@@ -92,6 +92,12 @@
   .tgr-table tr.click { cursor: pointer; }
   .tgr-table tr.click:hover td { background: color-mix(in srgb, var(--color-fg) 5%, transparent); }
   .tgr-table tr.sel td { background: color-mix(in srgb, var(--color-fg) 10%, transparent); }
+  /* the ticker / name column stays put when a table scrolls sideways (your request, Nov 3 2026) */
+  .tgr-table th:first-child, .tgr-table td:first-child { position: sticky; left: 0; z-index: 2; background: var(--color-panel); box-shadow: 1px 0 0 var(--color-border-line); }
+  .tgr-table th:first-child { z-index: 3; }
+  .tgr-table tr.sel td:first-child { background: color-mix(in srgb, var(--color-fg) 10%, var(--color-panel)); }
+  .tgr-table tr.umb td:first-child { background: color-mix(in srgb, var(--color-fg) 6%, var(--color-panel)); }
+  .tgr-table td[colspan]:first-child { position: static; box-shadow: none; }
   .tgr-table td.key { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
   .tgr-up { color: var(--color-ok); }
   .tgr-dn { color: var(--color-bad); }
@@ -517,6 +523,7 @@
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
             <th><button class="tgr-th" data-sort="grade">Grade</button></th>
             <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after yesterday's close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%: in 2 years, 5%+ gap-ups in a Top group ran 20%+ within 20 days 44% of the time, Strong 37%, the rest 28-29%. Not part of the news grade">Group rank</button></th>
+            <th class="num"><button class="tgr-th" data-sort="rs" title="RS = the stock's rank against the whole market after yesterday's close, 1-99 (99 = the best; like IBD's RS rating). Information only: in 2 years of 5%+ gap-ups, RS 97+ ran 20%+ within 20 days more often (42% vs 31%) but averaged worse 20 days later (-3.6% vs -0.4%), and inside a Top or Strong group it added nothing (44.5% vs 44%)">RS</button></th>
             <th class="num"><button class="tgr-th" data-sort="gap_pct">Gap</button></th>
             <th class="num"><button class="tgr-th" data-sort="pm_volume">PM volume</button></th>
             <th class="num"><button class="tgr-th" data-sort="pm_dvol_m">PM $ vol $M</button></th>
@@ -693,7 +700,8 @@
             <th class="num"><button class="tgr-th" data-sort="rv" title="Volume so far ÷ the 20-day average volume by this time of day">Rel vol</button></th>
             <th class="num"><button class="tgr-th" data-sort="price">Price</button></th>
             <th class="num"><button class="tgr-th" data-sort="pivot" title="Highest high of the previous 20 days: above it = base breakout">Base high</button></th>
-            <th><button class="tgr-th" data-sort="group">Theme</button></th>
+            <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after the last close (its themes and its industry). ★ Top = top 3%, Strong = top 3-10%; under it the group and the stock's place in it">Group rank</button></th>
+            <th class="num"><button class="tgr-th" data-sort="rs" title="RS = the stock's rank against the whole market after the last close, 1-99. Green with a star = RS 97+: in the test, launches with RS 97+ ran 20%+ 58% of the time vs 32% (72% in a ★ Top or Strong group)">RS</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="corr">Correction</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="days">Days since high</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="h52">% of 52W high</button></th>
@@ -735,7 +743,7 @@
             <th class="num"><button class="tgr-th" data-sort="today" title="Today's % change: live during market hours, the day's final after the close">Today</button></th>
             <th class="num"><button class="tgr-th" data-sort="rv_today" title="Today's relative volume: live during market hours (volume so far ÷ the usual by this time of day), the full day after the close">Rel vol</button></th>
             <th class="c2">Base BO</th>
-            <th><button class="tgr-th" data-sort="group">Theme then → now</button></th>
+            <th><button class="tgr-th" data-sort="grank_launch" title="Its best group's rank on the launch day, at that day's close (its themes and its industry): ★ Top = top 3%, Strong = top 3-10%. Group rank (next column) is now. In the History test, launches in a ★ Top group ran 20%+ 44% of the time, Strong 41%, the rest 30%; with RS 97+ in a Top or Strong group 72%">Group on launch day</button></th>
             <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after the last close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%: in 2 years, launches in a Top group ran 20%+ within 20 days 35% of the time, Strong 31%, the rest 21-23%">Group rank</button></th>
             <th class="num"><button class="tgr-th" data-sort="rs_now" title="RS = the stock's rank against the whole market after the last close, 1-99 (99 = the best): its own 1-, 3- and 6-month moves, each ranked among all the stocks the scanner follows, averaged and ranked again (like IBD's RS rating). Green = RS 97+, the top 3%: in the test, launches with RS 97+ on the launch day ran 20%+ within 20 days 34% of the time vs 25% for the rest; in a ★ Top or Strong group 40%">RS</button></th>
             <th class="num"><button class="tgr-th" data-sort="gain_now" title="LD = launch day: % from the launch day's close to now">LD → now</button></th>
@@ -1540,7 +1548,8 @@ defCalc('industry_perf', {
     const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
     $('#pm-stale').hidden = !first || first.scan_date === today;
     const order = { A: 0, B: 1, C: 2, F: 3 };
-    rows.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; });
+    const rsAllPm = ldocRS();
+    rows.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsAllPm[r.symbol] ?? null; });
     const spec = S.sort['pm-table'];
     if (spec) {
       const txt = ['symbol', 'catalyst', 'inflection'].includes(spec.key);
@@ -1549,7 +1558,7 @@ defCalc('industry_perf', {
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
     const tb = table.querySelector('tbody'); tb.replaceChildren();
-    if (ok('premarket') && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', S.pmshow === 'all' ? 'No liquid stock is gapping 5%+ this way in this scan.' : 'No A or B grade this way in this scan. Pick Show all to see the rest.'); td.colSpan = 18; tr.append(td); tb.append(tr); }
+    if (ok('premarket') && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', S.pmshow === 'all' ? 'No liquid stock is gapping 5%+ this way in this scan.' : 'No A or B grade this way in this scan. Pick Show all to see the rest.'); td.colSpan = 19; tr.append(td); tb.append(tr); }
     rows.forEach((r) => {
       const tr = h('tr'); tr.dataset.key = r.symbol;
       const key = h('td', 'key');
@@ -1558,7 +1567,7 @@ defCalc('industry_perf', {
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade, r.grade)); else gd.textContent = '—';
       const sx = h('td', 'c2 tgr-src');
       String(r.sources || '').split(' ').filter(Boolean).forEach((u, i) => { if (i) sx.append(h('span', 'tgr-sep', ' ')); const l = h('a', '', u); l.href = u; l.target = '_blank'; l.rel = 'noopener'; sx.append(l); });
-      tr.append(key, gd, grStockCell(r.gr, r.symbol, true), pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
+      tr.append(key, gd, grStockCell(r.gr, r.symbol, true), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
         h('td', 'num c3', r.pm_vol_pct_adv === null || r.pm_vol_pct_adv === undefined ? '—' : g1.format(num(r.pm_vol_pct_adv)) + '%'),
         h('td', 'num c3', r.gap_x_adr === null || r.gap_x_adr === undefined ? '—' : num(r.gap_x_adr).toFixed(2) + '×'),
         h('td', '', r.catalyst || ''), h('td', '', r.inflection || ''), h('td', 'num', r.inflection_score === null || r.inflection_score === undefined || r.inflection_score === '' ? '—' : String(r.inflection_score)), h('td', 'name', r.reason || ''), h('td', 'c2 tgr-flags', r.flags || ''),
@@ -2079,11 +2088,12 @@ defCalc('industry_perf', {
     $('#ln-live-time').textContent = LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : marketOpen() ? 'Waiting for the first live update' : 'Live during market hours';
     $('#ln-live-note').textContent = !doc ? '' : (doc.watch ? Object.keys(doc.watch).length : 0) + ' stocks on watch from the ' + fDate(doc.date) + ' close. ' +
       (LIVE_ON ? live.length + ' of them are launching right now. "Grade so far" uses the volume pace and price so far; the close still has to hold the top half of the day. After the close (about 4:30 PM ET) this list clears, and the ones that held move to the Launches table below, dated today.' : 'They are checked every 5 minutes from 9:30 AM ET. After the close this list clears: the day\'s launches that held at the close are in the Launches table below, dated that day (the evening scan, about 4:40 PM ET).');
+    const rsLive = ldocRS();
+    live.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsLive[r.symbol] ?? null; });
     sortRows(lt, live, { key: 'grade', dir: 1 }, ['symbol', 'group'], 'grade');
-    if (doc && LIVE_ON && !live.length) noRows(ltb, 11, 'Nothing on the watch list is launching right now.');
+    if (doc && LIVE_ON && !live.length) noRows(ltb, 12, 'Nothing on the watch list is launching right now.');
     live.forEach((r) => {
       const tr = h('tr');
-      const th = h('td', ''); th.textContent = r.group ? r.group + ' · ' + (GSTAT[r.gstat] || '') : '—';
       const k0 = tkCell(r.symbol, r.tv_symbol);
       if (r.mem) { const t = h('span', 'tgr-gm', 'delayed'); t.title = 'Faded high-volume gap on ' + fDate(r.mem[0]) + ', base held since'; k0.append(t); }
       if (r.follows) { const t = h('span', 'tgr-gm', 'follows ' + r.follows); t.title = 'Breaking out within 10 sessions of a launch by ' + r.follows + ' in its theme'; k0.append(t); }
@@ -2093,7 +2103,8 @@ defCalc('industry_perf', {
       if (r.vs200 !== undefined) { const t = h('span', 'tgr-flag', p1(r.vs200, true) + ' vs 200 SMA'); t.style.marginLeft = '6px'; t.title = 'Under its 200-day SMA: a laggard launch'; k0.append(t); }
       if (r.ep) { const t = h('span', 'tgr-gm', 'catalyst gap'); t.title = 'Was under its ' + r.under.join(' & ') + ' at the last close; gapped ' + p1(r.gap, true) + ' on ' + (r.earnings ? 'earnings' : 'news? (no earnings: check the headline)') + ' and trades above the 50 EMA & 200 SMA'; k0.append(t); }
       tr.append(k0, gradeCell(r.grade), pctCell(r.chg, 0), h('td', 'num', r.gap === null ? '—' : p1(r.gap, true)), h('td', 'num' + (r.rv >= 3 ? ' tgr-up' : ''), fX(r.rv)),
-        h('td', 'num', fPrice(r.price)), h('td', 'num' + (r.bo ? ' tgr-up' : ''), fPrice(r.pivot) + (r.bo ? ' ✓' : '')), th,
+        h('td', 'num', fPrice(r.price)), h('td', 'num' + (r.bo ? ' tgr-up' : ''), fPrice(r.pivot) + (r.bo ? ' ✓' : '')), grStockCell(r.gr, r.symbol, false),
+        h('td', 'num' + (num(r.rs) !== null && r.rs >= 97 ? ' tgr-up' : ''), num(r.rs) === null ? '—' : (r.rs >= 97 ? '★ ' : '') + r.rs),
         h('td', 'num c2', p1(r.corr)), h('td', 'num c2', r.days === null ? '—' : String(r.days)), h('td', 'num c3', p1(r.h52)));
       ltb.append(tr);
     });
@@ -2109,7 +2120,7 @@ defCalc('industry_perf', {
       const px = m && num(m.price) !== null ? num(m.price) : r.price;
       /* today: the live (or the latest close's) change and relative volume, not the launch day's */
       const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct), rvToday = m && num(m.rel_vol) !== null ? num(m.rel_vol) : num(r.rel_vol_today);
-      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px), types: lnTypes(r, LAG), ltype: lnTypes(r, LAG)[0], gr: grBest(r.symbol), grank: (grBest(r.symbol) || {}).pct ?? null });
+      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px), types: lnTypes(r, LAG), ltype: lnTypes(r, LAG)[0], gr: grBest(r.symbol), grank: (grBest(r.symbol) || {}).pct ?? null, grank_launch: r.group_pct_launch ?? null });
     }) : [];
     /* a ticker search shows that stock whatever the other filters */
     const lq = S.lnq.toUpperCase();
@@ -2171,9 +2182,12 @@ defCalc('industry_perf', {
         t.title = 'Pulled back to its breakout level ' + lv + (r.retest_from ? ' (broken ' + fDate(r.retest_from).replace(/, \d{4}$/, '') + ')' : '') + ' today and closed above it' + ((r.retest_ema || []).length ? ', with the ' + r.retest_ema.join(' & ') + ' there too' : '') + ': another entry';
         key.append(t);
       }
-      const thm = h('td', '');
-      thm.textContent = (r.group || '—') + ' · ' + r.group_status + (r.group_now && (r.group_now !== r.group || r.group_status_now !== r.group_status) ? ' → ' + (r.group_now !== r.group ? r.group_now + ' · ' : '') + r.group_status_now : '') +
-        (r.theme_up_since && r.theme_up_since !== r.date ? ' (since ' + fDate(r.theme_up_since).replace(/, \d{4}$/, '') + ')' : '');
+      /* the group rank on the launch day (replaced "Theme then -> now", Nov 3 2026); the old status only for launch.json without it */
+      const thm = h('td', 'nw' + (r.group_tier_launch ? ' tgr-up' : ''));
+      if (r.group_rank_launch !== undefined) {
+        const t0 = r.group_rank_launch || '—', i = t0.indexOf(' ', t0.indexOf('#'));
+        thm.append(h('div', '', i > 0 ? t0.slice(0, i) : t0), h('div', 'tgr-lbl', i > 0 ? t0.slice(i + 1) : ''));
+      } else thm.textContent = (r.group || '—') + ' · ' + r.group_status;
       /* the stock's stage after the close (dry-up / consolidation, tight under the buy point, breakout, running, ...) */
       const sttText = r.stage ? r.stage + (r.stage_since ? ' since ' + fDate(r.stage_since).replace(/, \d{4}$/, '') : '') : r.status === 'Riding' ? 'Above 21 EMA' : 'Below 21 EMA';
       const stt = h('td', 'ln-stage ' + (r.status === 'Riding' ? 'tgr-up' : 'tgr-dn'));
