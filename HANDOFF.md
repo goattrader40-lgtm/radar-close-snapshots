@@ -1,5 +1,9 @@
 # Handoff: how to work on the Theme & Group Radar
 
+New session: work in this repo (goattrader40-lgtm/radar-close-snapshots) with push access. Start the session with
+the repo selected; if it is missing or read-only, tell the user at once (claude.ai/connect-github, or a new session
+with the repo selected) before any other work.
+
 Read this first in every new session. It is what earlier sessions agreed with the user; the code comments carry the
 same rules with the user's examples (scanner/launch.py, scanner/run.py, radar/alerts.py), and the portal legend
 (docs/index.html) shows them to the user. Keep this file current: before a session ends, update it with what changed.
@@ -396,8 +400,8 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    Storage at every month-end Sep 2025 - Jun 2026; DELL #2 in AI Servers Feb 2026 while the group ranked low, #1 Mar
    and May; in the CPUs theme INTC, not AMD, led Mar-Jun 2026. Still open, only if the user asks: (a) the stock's rank
    vs the whole market helped launches (top 3% of all stocks 34% (100) vs 25%; with a Top/Strong group 40% (52), avg
-   +6.1%): could be a tag on Launches, needs the user's go; (b) DONE Nov 3: the rank replaced Leading in the breakout
-   grade; (c) 3-SETUPS triggers on the phone / 1-minute checks. Emerging: tested and rejected (gap-ups 24% ran 20%+
+   +6.1%): DONE Nov 3 as the RS column on Launches (and plain on the Watchlist); (b) DONE Nov 3: the rank replaced Leading in the breakout
+   grade; (c) DONE Nov 3: 3-SETUPS triggers on the phone and in the 1-minute checks. Emerging: tested and rejected (gap-ups 24% ran 20%+
    vs bottom half 29%; launches 20%, avg -5.5%).
 8. Older: move the Launches rules box to the top of the tab; picks reading their history from the start; an intraday
    surge alert without a gap; the 3-SETUPS weaker Ready groups (kept as is).
