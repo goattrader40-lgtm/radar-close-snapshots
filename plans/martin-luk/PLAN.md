@@ -4,6 +4,29 @@ Study and proposal, Nov 3 2026 (session "Radar: Martin Luk study"). **Nothing he
 ground rules each step waits for your "test it", then a replay and (where it applies) the 2-year check, then "go live".
 The numbers come from `plans/martin-luk/luk_risk_sim.py` (run it: `python3 plans/martin-luk/luk_risk_sim.py`).
 
+## Delivered (Nov 3 2026)
+
+- **Task 1, the bot:** `bot/lukbot` on this branch. Sizing, portfolio checks, the brake, trade management (trim,
+  financed stop, daily-close trail with MOC orders, day-0 cut, earnings and event cuts), journal, Radar feed and an
+  IBKR (`ib_async`) adapter. 29 tests pass; `bot/README.md` shows how to plug it in.
+- **Task 2, the portal:** branch `test/luk`, display only. On Launches: Trend, AVWAP, Exit line and Stop · size
+  columns, a pullback-zone tag and the market gauge strip. On 3-SETUPS: a Trend tag. Waiting for your "go live".
+- **The article** is by James Muninn (@Muninn), "How To Trade Like Future Market Wizard Martin Luk". He logged 112
+  streams (211 hours) and reconstructed ~100% of Luk's 2026 swing trades: 461 campaigns (604 trades).
+
+  | | Muninn's dataset | Kinfo verified |
+  |---|---|---|
+  | Win rate | 19.3% (89 / 372) | 20.4% |
+  | Average gain per trade | +0.95% | +0.90% |
+  | Win / loss | 8.0:1 | ~7:1 |
+
+  Other numbers from the article:
+  - Risk: 0.5% a trade in 2025, **0.3% in 2026**, with a **1.28% median stop** set on the 1/5-minute AVWAP.
+  - Average loss −1.30%.
+  - Through August 2026 the account was +844.5%, then +150% in October.
+  - Against Qullamaggie's 905 trades: 24.6% wins, a 2.40% median stop (the daily candle low), an average winner of
+    +26.7%, holds of several weeks on the 10-day SMA.
+
 ---
 
 ## 0. The short answer
