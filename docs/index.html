@@ -168,6 +168,10 @@
   .er-chip.r2 { border-left-color: var(--color-warn); }
   .er-chip.r1 { border-left-color: var(--color-bad); background: color-mix(in srgb, var(--color-bad) 12%, var(--color-panel)); }
   .er-chip.r0 { border-left-color: var(--color-border-line); }
+  .er-chip.big { padding: 4px 8px; }
+  .er-chip.big b { font-size: 1rem; }
+  .er-area { flex-basis: 100%; margin-top: 4px; font-size: .64rem; color: var(--color-fg-muted); border-bottom: 1px dotted var(--color-border-line); padding-bottom: 1px; }
+  .er-slot > .tgr-lbl:first-child + .er-area { margin-top: 0; }
   .er-chip.under { opacity: .78; }
   .er-key { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
   .er-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; border: 1px solid var(--color-border-line); }
@@ -838,7 +842,7 @@
         <span class="tgr-lbl" id="er-time">—</span>
       </div>
       <p class="tgr-rule" id="er-rule">—</p>
-      <div class="er-key" aria-label="Read colors"><span>Chip: ticker · <span class="tgr-up">★</span> Top / <span class="tgr-up">S</span> Strong group · RS (green 97+); faded = under the 200-day SMA.</span><span class="er-sw r5"></span>Strong bullish <span class="er-sw r4"></span>Bullish <span class="er-sw r3"></span>Mixed <span class="er-sw r2"></span>Somewhat bearish <span class="er-sw r1"></span>Bearish <span class="er-sw r0"></span>Not reported yet</div>
+      <div class="er-key" aria-label="Read colors"><span>Most liquid first, grouped by area (AI &amp; Semis, Software…); big chip = $1B+ a day. Chip: ticker · <span class="tgr-up">★</span> Top / <span class="tgr-up">S</span> Strong group · RS (green 97+); faded = under the 200-day SMA.</span><span class="er-sw r5"></span>Strong bullish <span class="er-sw r4"></span>Bullish <span class="er-sw r3"></span>Mixed <span class="er-sw r2"></span>Somewhat bearish <span class="er-sw r1"></span>Bearish <span class="er-sw r0"></span>Not reported yet</div>
       <div class="er-scroll"><div class="er-week" id="er-week"></div></div>
     </div>
     <div class="tgr-bar">
@@ -2669,22 +2673,55 @@ defCalc('industry_perf', {
     $('#er-rule').textContent = 'Your rules: market cap $' + (R.min_mcap / 1e6) + 'M+, 20-day average $' + R.min_dollar_vol_20d_millions + 'M+ traded and ' + (R.min_avg_vol_20d / 1000) + 'K+ shares a day, $' + R.min_price + '+, ADR ' + R.min_adr + '%+, ' + R.min_pct_above_52w_low + '%+ over the 52-week low. Over / under the 200-day SMA on the pre-market price. Click a stock to find it in the tables.';
     /* the week grid */
     week.replaceChildren();
-    const order = (a, b) => (erOf(b) - erOf(a)) || ((num(rsAll[b.sym]) || 0) - (num(rsAll[a.sym]) || 0));
+    /* like the Earnings Whispers card (the user, Nov 3 2026): the most liquid, tradeable names first, each kept with its
+       group (AMD, ANET, ALAB together); the area with the biggest name first, inside it the theme, then $ volume */
+    const catOf = new Map(((BASE && BASE.themes) || []).map((t) => [t.theme, t.category]));
+    let IA = null;
+    const indArea = () => {      /* each industry -> the area most of its themed stocks are in (3+ of them) */
+      if (IA) return IA;
+      const cnt = new Map();
+      ((BASE && BASE.stocks) || []).forEach((x) => {
+        const core = String(x.themes || '').split(' | ').find((t) => catOf.get(t) && catOf.get(t) !== 'Auto groups');
+        if (!core || !x.industry) return;
+        const m = cnt.get(x.industry) || new Map(); m.set(catOf.get(core), (m.get(catOf.get(core)) || 0) + 1); cnt.set(x.industry, m);
+      });
+      IA = new Map([...cnt].map(([ind, m]) => [ind, [...m].sort((p, q) => q[1] - p[1])[0]]).filter(([, top]) => top[1] >= 3).map(([ind, top]) => [ind, top[0]]));
+      return IA;
+    };
+    const areaOf = (r) => {
+      const th = String(r.themes || '').split(' | ').filter(Boolean);
+      const core = th.find((t) => catOf.get(t) && catOf.get(t) !== 'Auto groups');
+      if (core) return { area: catOf.get(core), theme: core };
+      const ia = indArea().get(r.industry);                           /* no theme: its industry's usual area (SWKS -> AI & Semis) */
+      if (ia) return { area: ia, theme: r.industry };
+      if (th.length) return { area: th[0], theme: th[0] };            /* an auto group's own name (Electric Utilities…) */
+      return { area: r.industry || 'Other', theme: r.industry || 'Other' };
+    };
+    const dv = (r) => num(r.dvol_20_m) || 0;
+    const groupSort = (list) => {
+      const A = new Map();
+      list.forEach((r) => { const a = areaOf(r); r._area = a.area; r._theme = a.theme; const g = A.get(a.area) || { top: 0, th: new Map() }; g.top = Math.max(g.top, dv(r)); g.th.set(a.theme, Math.max(g.th.get(a.theme) || 0, dv(r))); A.set(a.area, g); });
+      return list.sort((a, b) => (A.get(b._area).top - A.get(a._area).top) || a._area.localeCompare(b._area)
+        || (A.get(a._area).th.get(b._theme) - A.get(a._area).th.get(a._theme)) || a._theme.localeCompare(b._theme) || dv(b) - dv(a));
+    };
+    const BIG = 1000;   /* $1B+ a day (20-day average): a market-moving name, a bigger chip */
     doc.days.forEach((d) => {
       const col = h('div', 'er-day' + (d === today ? ' today' : ''));
       const dh = h('div', 'er-dh'); dh.append(h('span', '', new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' })), h('span', 'tgr-lbl', new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + (d === today ? ' · today' : '')));
       const slots = h('div', 'er-slots');
       [['Before open', (r) => r.when === 'bmo'], ['After close', (r) => r.when !== 'bmo']].forEach(([lab, f]) => {
         const sl = h('div', 'er-slot'); sl.append(h('span', 'tgr-lbl', lab));
-        const list = doc.rows.filter((r) => r.date === d && f(r)).sort(order);
+        const list = groupSort(doc.rows.filter((r) => r.date === d && f(r)));
         if (!list.length) sl.append(h('span', 'tgr-lbl', '—'));
+        let lastArea = null;
         list.forEach((r) => {
-          const c = h('button', 'er-chip r' + erOf(r) + ((r.vs200 ?? 0) < 0 ? ' under' : '')); c.type = 'button';
+          if (r._area !== lastArea) { sl.append(h('span', 'er-area', r._area)); lastArea = r._area; }
+          const c = h('button', 'er-chip r' + erOf(r) + ((r.vs200 ?? 0) < 0 ? ' under' : '') + (dv(r) >= BIG ? ' big' : '')); c.type = 'button';
           const g = grBest(r.sym), rsv = num(rsAll[r.sym]);
           c.append(h('b', '', r.sym));
           if (g && g.tier) c.append(h('span', 'st', g.tier === 'Top' ? '★' : 'S'));
           if (rsv !== null) c.append(h('span', rsv >= 97 ? 'st' : '', String(rsv)));
-          c.title = r.sym + (r.name ? ' · ' + r.name : '') + '\n' + (r.read ? r.read + ': ' + (r.why || '') : (ER_WHEN[r.when] || '') + ', not reported yet') + (g ? '\nGroup: ' + (g.tier === 'Top' ? '★ Top ' : g.tier === 'Strong' ? 'Strong ' : '') + '#' + g.rank + '/' + g.of + ' ' + g.group : '') + (rsv !== null ? '\nRS ' + rsv : '') + ((r.vs200 ?? 0) < 0 ? '\nUnder the 200-day SMA' : '');
+          c.title = r.sym + (r.name ? ' · ' + r.name : '') + '\n$' + (dv(r) >= 1000 ? (dv(r) / 1000).toFixed(1) + 'B' : Math.round(dv(r)) + 'M') + ' a day · ADR ' + (num(r.adr) ?? '—') + '% · ' + r._theme + '\n' + (r.read ? r.read + ': ' + (r.why || '') : (ER_WHEN[r.when] || '') + ', not reported yet') + (g ? '\nGroup: ' + (g.tier === 'Top' ? '★ Top ' : g.tier === 'Strong' ? 'Strong ' : '') + '#' + g.rank + '/' + g.of + ' ' + g.group : '') + (rsv !== null ? '\nRS ' + rsv : '') + ((r.vs200 ?? 0) < 0 ? '\nUnder the 200-day SMA' : '');
           c.addEventListener('click', () => {
             S.erq = r.sym; $('#er-q').value = r.sym; S.erday = 'all'; S.ershow = 'all'; draw();
             const row = document.querySelector('.er-table tr[data-sym="' + r.sym + '"]');
