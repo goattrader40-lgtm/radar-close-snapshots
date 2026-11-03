@@ -242,9 +242,22 @@ def _examples():
         if len(f) >= 4:
             rows.append([f[0], f[1], f[2], f[3], note.strip() or "-"])
     return rows
+ER = SET["earnings"]
+SHEETS["E1 Earnings tab"] = (["Item", "Rule"], [
+ ["Who", f"Stocks on Nasdaq's earnings calendar Monday-Friday of this week (weekend: next week) passing on the last close: market cap ${ER['min_mcap'] / 1e6:.0f}M+, 20-day avg $ volume ${ER['min_dollar_vol_20d_millions']}M+ and {ER['min_avg_vol_20d'] / 1000:.0f}K+ shares, price ${ER['min_price']}+, ADR {ER['min_adr']}%+, {ER['min_pct_above_52w_low']}%+ over the 52-week low (scanner/settings.json 'earnings'). Once on, it stays for the week"],
+ ["Two tables", "Over / under the 200-day SMA on the pre-market price (before the open; live in the session). Not filtered on the 50 EMA: vs 50 EMA is a column (the user, Nov 3 2026)"],
+ ["Sources (no Claude)", "Nasdaq calendar (date, before open / after close); Yahoo (report time, estimates saved before the report, EPS, quotes, daily bars); the SEC press release (8-K item 2.02, exhibit 99): revenue, adjusted EPS, guidance"],
+ ["EPS", "Adjusted: Yahoo's actual, else the release's non-GAAP EPS, else Nasdaq's; vs the estimate (Nasdaq's estimate when Yahoo's is 3x+ off it). EPS growth vs the same quarter a year ago ('turned +' from a loss)"],
+ ["Revenue", "The release's revenue figure before its outlook (checked within 0.6-1.7x of the estimate); else the release's 'revenue grew X%' x last year's quarter; else Yahoo's quarterly revenue. Growth vs the same quarter a year ago"],
+ ["Guidance", "From the release's words: raised / lowered / reaffirmed / given / none; a revenue range or figure in the outlook (not a result or a company profile) -> its midpoint vs the analysts' estimate for that quarter or year, and vs the same period a year ago (Guide growth); 'low/mid/high-thirties' = 32/35/38%"],
+ ["Read points", "Revenue beat +1 (2%+ +2) / miss -1 (-2); EPS beat +1 (10%+ +2) / miss -1 (-2); guidance raised +2, above the street +1 (+2 without a raise), below -2, lowered -3; revenue growth 25%+ +1 / shrinking -1; the move after the report +2%: +1, +5%: +2, -2%: -1, -5%: -2"],
+ ["Read", "6+ Strong bullish, 3-5 Bullish, 0-2 Mixed, -1 to -3 Somewhat bearish, -4 or less Bearish"],
+ ["Columns at the end", "vs 200D, vs 50 EMA (pre-market price vs the last close's SMA / EMA), vs 20D high (vs the highest high of the previous 20 sessions; 'cleared' = above it), over the 52-week low; Group rank and RS as on Launches"],
+ ["When", "Weekdays about 7:10-8:55 AM ET (final by 9:00), 4:50 / 6:30 / 8:30 PM ET, Sunday 6 PM ET (earnings.yml -> radar-data earnings.json). No phone alerts"],
+])
 SHEETS["X1 Agreed examples"] = (["Ticker", "From", "To", "Launch / pick", "What you agreed"], _examples())
 
-SHEETS = dict(sorted(SHEETS.items(), key=lambda kv: ("LWBPGAOX".index(kv[0][0]), kv[0])))
+SHEETS = dict(sorted(SHEETS.items(), key=lambda kv: ("LWBPGAEOX".index(kv[0][0]), kv[0])))
 wb = Workbook(); wb.remove(wb.active)
 hdr_fill = PatternFill("solid", fgColor="1F3864"); alt = PatternFill("solid", fgColor="EEF2F8")
 thin = Side(style="thin", color="C8CED8"); bd = Border(top=thin, bottom=thin, left=thin, right=thin)

@@ -9,6 +9,17 @@
     "min_adr": 3.5
   },
 
+  "earnings": {
+    "_about": "Who shows on the Earnings tab (radar/earnings.py), checked on the last close before the stock first comes on the week's list. Your rules, Nov 3 2026.",
+    "min_mcap": 700e6,
+    "max_mcap": 2e12,
+    "min_dollar_vol_20d_millions": 30,
+    "min_avg_vol_20d": 600000,
+    "min_price": 10,
+    "min_adr": 3.5,
+    "min_pct_above_52w_low": 30
+  },
+
   "standard": {
     "min_price": 10,
     "min_mcap": 700e6,

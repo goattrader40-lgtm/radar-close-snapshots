@@ -268,6 +268,21 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | After the close | Tight closes under a buy point, a retest of a broken base top that held; 3-SETUPS Ready list to the phone | After the 4:40 PM scan |
 | Rules | Each stock and kind once a day; phone via ntfy, desktop pop-ups while the portal page is open | - |
 
+## Earnings tab
+
+| Item | Rule |
+|---|---|
+| Who | Stocks on Nasdaq's earnings calendar Monday-Friday of this week (weekend: next week) passing on the last close: market cap $700M+, 20-day avg $ volume $30M+ and 600K+ shares, price $10+, ADR 3.5%+, 30%+ over the 52-week low (scanner/settings.json 'earnings'). Once on, it stays for the week |
+| Two tables | Over / under the 200-day SMA on the pre-market price (before the open; live in the session). Not filtered on the 50 EMA: vs 50 EMA is a column (the user, Nov 3 2026) |
+| Sources (no Claude) | Nasdaq calendar (date, before open / after close); Yahoo (report time, estimates saved before the report, EPS, quotes, daily bars); the SEC press release (8-K item 2.02, exhibit 99): revenue, adjusted EPS, guidance |
+| EPS | Adjusted: Yahoo's actual, else the release's non-GAAP EPS, else Nasdaq's; vs the estimate (Nasdaq's estimate when Yahoo's is 3x+ off it). EPS growth vs the same quarter a year ago ('turned +' from a loss) |
+| Revenue | The release's revenue figure before its outlook (checked within 0.6-1.7x of the estimate); else the release's 'revenue grew X%' x last year's quarter; else Yahoo's quarterly revenue. Growth vs the same quarter a year ago |
+| Guidance | From the release's words: raised / lowered / reaffirmed / given / none; a revenue range or figure in the outlook (not a result or a company profile) -> its midpoint vs the analysts' estimate for that quarter or year, and vs the same period a year ago (Guide growth); 'low/mid/high-thirties' = 32/35/38% |
+| Read points | Revenue beat +1 (2%+ +2) / miss -1 (-2); EPS beat +1 (10%+ +2) / miss -1 (-2); guidance raised +2, above the street +1 (+2 without a raise), below -2, lowered -3; revenue growth 25%+ +1 / shrinking -1; the move after the report +2%: +1, +5%: +2, -2%: -1, -5%: -2 |
+| Read | 6+ Strong bullish, 3-5 Bullish, 0-2 Mixed, -1 to -3 Somewhat bearish, -4 or less Bearish |
+| Columns at the end | vs 200D, vs 50 EMA (pre-market price vs the last close's SMA / EMA), vs 20D high (vs the highest high of the previous 20 sessions; 'cleared' = above it), over the 52-week low; Group rank and RS as on Launches |
+| When | Weekdays about 7:10-8:55 AM ET (final by 9:00), 4:50 / 6:30 / 8:30 PM ET, Sunday 6 PM ET (earnings.yml -> radar-data earnings.json). No phone alerts |
+
 ## Open items
 
 | Item | Status |
