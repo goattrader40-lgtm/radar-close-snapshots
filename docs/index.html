@@ -92,6 +92,12 @@
   .tgr-table tr.click { cursor: pointer; }
   .tgr-table tr.click:hover td { background: color-mix(in srgb, var(--color-fg) 5%, transparent); }
   .tgr-table tr.sel td { background: color-mix(in srgb, var(--color-fg) 10%, transparent); }
+  /* the ticker / name column stays put when a table scrolls sideways (your request, Nov 3 2026) */
+  .tgr-table th:first-child, .tgr-table td:first-child { position: sticky; left: 0; z-index: 2; background: var(--color-panel); box-shadow: 1px 0 0 var(--color-border-line); }
+  .tgr-table th:first-child { z-index: 3; }
+  .tgr-table tr.sel td:first-child { background: color-mix(in srgb, var(--color-fg) 10%, var(--color-panel)); }
+  .tgr-table tr.umb td:first-child { background: color-mix(in srgb, var(--color-fg) 6%, var(--color-panel)); }
+  .tgr-table td[colspan]:first-child { position: static; box-shadow: none; }
   .tgr-table td.key { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
   .tgr-up { color: var(--color-ok); }
   .tgr-dn { color: var(--color-bad); }
