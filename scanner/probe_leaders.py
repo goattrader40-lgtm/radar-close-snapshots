@@ -160,7 +160,54 @@ def main():
         c0 = st.c[i]
         add("launches", s, k, dict(day=0.0, r5=100 * (st.c[i + 5] / c0 - 1), r20=100 * (st.c[i + 20] / c0 - 1),
                                    mx=100 * (st.h[i + 1:i + 21].max() / c0 - 1)))
-    out = {"stocks": len(syms), "groups": len(names),
+    # does the group's size matter? (Nov 3 2026: 16 themes have only 3-4 stocks, 4 of the 10 Strong themes are tiny)
+    # its best group's tier, split by that group's size; and the tiers when only groups of 5+ / 8+ stocks are ranked
+    size_res = {w: collections.defaultdict(list) for w in ("gaps", "launches")}
+    Pmin = {}
+    for mn in (5, 8):
+        Pm = np.full((G, T), np.nan)
+        for pref in ("theme:", "ind:"):
+            rows_ = [gi[g] for g in names if g.startswith(pref) and len(mem[g]) >= mn]
+            Pm[rows_] = pct_cols(np.nanmean([pct_cols(med[n][rows_], 5) for n in R], axis=0), 5)
+        Pmin[mn] = Pm
+
+    def tier(p):
+        return "Top" if p >= 0.97 else "Strong" if p >= 0.90 else "rest"
+
+    def add_size(where, s, k, r):
+        p, g = best(s, k)
+        if g is None:
+            return
+        n = len(mem[g])
+        size_res[where][f"current · {tier(p)} · group of " + ("3-4" if n <= 4 else "5-7" if n <= 7 else "8-19" if n < 20 else "20+")].append(r)
+        size_res[where][f"current · {tier(p)}"].append(r)
+        for mn, Pm in Pmin.items():
+            c = [(Pm[gi[x], k], x) for x in sg.get(s, []) if x in gi and not np.isnan(Pm[gi[x], k])]
+            if c:
+                size_res[where][f"min {mn} stocks · {tier(max(c)[0])}"].append(r)
+    for s in syms:
+        a = A[s]
+        st = a.st
+        n_ = len(st.dates)
+        for i in range(max(a.start, 21), n_ - 21):
+            if not (a.gap[i] >= 5 and a.liquid[i - 1]):
+                continue
+            k = pos[st.dates[i]]
+            if k < 130:
+                continue
+            o = st.o[i]
+            add_size("gaps", s, k - 1, dict(day=100 * (st.c[i] / o - 1), r5=100 * (st.c[i + 5] / o - 1), r20=100 * (st.c[i + 20] / o - 1),
+                                            mx=100 * (st.h[i:i + 21].max() / o - 1)))
+    for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S):
+        if s not in si:
+            continue
+        st = A[s].st
+        if i + 20 >= len(st.dates) or k < 130:
+            continue
+        c0 = st.c[i]
+        add_size("launches", s, k, dict(day=0.0, r5=100 * (st.c[i + 5] / c0 - 1), r20=100 * (st.c[i + 20] / c0 - 1),
+                                        mx=100 * (st.h[i + 1:i + 21].max() / c0 - 1)))
+    out = {"stocks": len(syms), "groups": len(names), "by_size": {w: {k: summ(v) for k, v in sorted(d.items())} for w, d in size_res.items()},
            "results": {w: {k: summ(v) for k, v in sorted(d.items())} for w, d in res.items()}}
     # examples: month-ends from the first with 6 months of data
     ex = {}
