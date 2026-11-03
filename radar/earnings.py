@@ -27,7 +27,7 @@ NY = zoneinfo.ZoneInfo("America/New_York")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RULES = json.load(open(os.path.join(ROOT, "scanner", "settings.json")))["earnings"]
 SEC_UA = (os.environ.get("SEC_UA") or "").strip() or "radar-close-snapshots research"
-GV = 3          # the press-release reader's version: a change re-reads every release of the week
+GV = 4          # the press-release reader's version: a change re-reads every release of the week
 MON = {m: i for i, m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1)}
 
 
@@ -250,7 +250,7 @@ def rev_growth_from(text):
 def eps_from(text, est):
     """the adjusted (non-GAAP) EPS in the release, checked against the estimate"""
     head = text[:15000]
-    for m in re.finditer(r"(?:non-gaap|adjusted)[^.;]{0,120}?(?:\$\s?(\(?-?\d+\.\d{2}\)?)\s+per (?:diluted )?share|(?:eps|earnings per (?:diluted )?share|net income per (?:diluted )?share)\b[^.;$]{0,40}?\(?\$\s?(\(?-?\d+\.\d{2}\)?))", head, re.I):
+    for m in re.finditer(r"(?:non-gaap|adjusted)(?:[^.;]|\.(?=\d)){0,140}?(?:\$\s?(\(?-?\d+\.\d{2}\)?)\s+per (?:diluted )?share|(?:eps|earnings per (?:diluted )?share|net income per (?:diluted )?share)\b[^.;$]{0,40}?\(?\$\s?(\(?-?\d+\.\d{2}\)?))", head, re.I):
         v = num(m.group(1) or m.group(2))
         if v is None:
             continue
@@ -587,6 +587,9 @@ def main():
             r["reported"], r["est_frozen"] = True, True
         r["eps_surprise"] = (round((r["eps_act"] - r["eps_est"]) / abs(r["eps_est"]) * 100, 1)
                              if r.get("eps_act") is not None and r.get("eps_est") not in (None, 0) else None)
+        if r["eps_surprise"] is not None and r["eps_act"] and (abs(r["eps_est"]) > 3 * abs(r["eps_act"]) or abs(r["eps_act"]) > 3 * abs(r["eps_est"])) \
+                and abs(r["eps_act"] - r["eps_est"]) > 0.5:
+            r["eps_surprise"], r["eps_est_odd"] = None, True      # 3x+ apart: a bad estimate or a one-off, no surprise scored (MPC)
         if r.get("eps_yago") is None and r.get("nasdaq_eps_yago") is not None:
             r["eps_yago"] = r["nasdaq_eps_yago"]
         r["eps_growth"] = pct(r.get("eps_act"), r.get("eps_yago")) if r.get("eps_act") is not None else None

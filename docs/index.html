@@ -2556,7 +2556,7 @@ defCalc('industry_perf', {
     const ep = h('td', 'num');
     if (r.eps_act !== null && r.eps_act !== undefined) {
       ep.append(h('div', r.eps_surprise > 0 ? 'tgr-up' : r.eps_surprise < 0 ? 'tgr-dn' : '', erEps(r.eps_act)));
-      ep.append(h('span', 'tgr-lbl', 'est ' + erEps(r.eps_est) + (r.eps_surprise !== null && r.eps_surprise !== undefined ? ' · ' + p1(r.eps_surprise, true) : '')));
+      ep.append(h('span', 'tgr-lbl', 'est ' + erEps(r.eps_est) + (r.eps_est_odd ? ' (3×+ apart: not scored)' : r.eps_surprise !== null && r.eps_surprise !== undefined ? ' · ' + p1(r.eps_surprise, true) : '')));
       ep.title = 'EPS ' + erEps(r.eps_act) + ' (' + (r.eps_src || '') + ') vs the estimate ' + erEps(r.eps_est);
     } else ep.append(h('span', 'tgr-lbl', 'est ' + erEps(r.eps_est ?? r.nasdaq_eps_est)));
     const eg = h('td', 'num');
