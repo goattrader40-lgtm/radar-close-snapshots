@@ -199,6 +199,12 @@
   .er-table tr.er-up td a.tgr-tk { color: var(--color-fg); }
   .er-table tr.er-flash td { background: color-mix(in srgb, var(--color-warn) 18%, transparent); transition: background 1.2s; }
   .er-table th.er-end, .er-table td.er-end { border-left: 1px solid var(--color-border-line); }
+  .tr-pill { display: inline-block; padding: 0 7px; border-radius: 999px; font-size: .72rem; font-weight: var(--cds-font-weight-medium); line-height: 1.6; white-space: nowrap; border: 1px solid var(--color-border-line); }
+  .tr-pill.t-up { background: var(--color-ok); border-color: var(--color-ok); color: var(--color-bg); }
+  .tr-pill.t-turn { border-color: var(--color-ok); color: var(--color-ok); }
+  .tr-pill.t-reclaim { border: 1px dashed var(--color-ok); color: var(--color-ok); }
+  .tr-pill.t-rest { color: var(--color-fg-muted); }
+  .tr-pill.t-neg { border-color: var(--color-bad); color: var(--color-bad); }
   .tgr-legend { margin: 6px 0 10px; font-size: var(--cds-font-size-caption); }
   .tgr-legend summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
   .tgr-legend ul { margin: 6px 0; padding-left: 1.2em; }
@@ -442,6 +448,7 @@
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
             <th class="c2"><button class="tgr-th" data-sort="name">Company</button></th>
             <th class="num"><button class="tgr-th" data-sort="chg_1d">1D</button></th>
+            <th><button class="tgr-th" data-sort="trend" title="Trend (live in the session): Up = 10 &gt; 21 &gt; 50 EMA, over the 21 and 50, the 10 and 21 rising · Resting = the stack, the 10 or 21 flat · Turn up = the 5 EMA crossed over the 10 today · Reclaim = back over the 21 EMA after a close under it · Negative = under the 21 EMA; the positive ones need the 21 over the 50 and the 50 higher than 5 sessions ago. Nd = sessions in it">Trend</button></th>
             <th class="num"><button class="tgr-th" data-sort="rel_vol" title="Volume from 9:30 to now ÷ the 20-day average volume from 9:30 to the same time (after the close: full day ÷ 20-day average)">Rel vol</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="price">Price</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
@@ -614,6 +621,7 @@
             <th><button class="tgr-th" data-sort="grade">Grade</button></th>
             <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after the last close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%. Under it: the group and the stock's place in it (its own 1-, 3- and 6-month moves vs the group's other stocks)">Group rank</button></th>
             <th class="num"><button class="tgr-th" data-sort="rs" title="RS = the stock's rank against the whole market after the last close, 1-99 (99 = the best): its own 1-, 3- and 6-month moves, each ranked among all the stocks the scanner follows, averaged and ranked again (like IBD's RS rating). Information only on the Watchlist: in the test (2 years of buy points after launches: base breakouts, flags, retests, pops), RS 97+ did not do better (27% ran 20%+ within 20 days vs 21-23% lower down, but a lower average result: high-RS stocks are often extended); the RS edge is on the launch day (the Launches tab)">RS</button></th>
+            <th><button class="tgr-th" data-sort="trend_n" title="Trend (live in the session): Up = 10 &gt; 21 &gt; 50 EMA, over the 21 and 50, the 10 and 21 rising · Resting = the stack, the 10 or 21 flat · Turn up = the 5 EMA crossed over the 10 today · Reclaim = back over the 21 EMA after a close under it · Negative = under the 21 EMA; the positive ones need the 21 over the 50 and the 50 higher than 5 sessions ago. Nd = sessions in it">Trend</button></th>
             <th class="c3">Why</th>
             <th class="c2"><button class="tgr-th" data-sort="pattern">Pattern</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
@@ -752,6 +760,7 @@
             <th><button class="tgr-th" data-sort="grank_launch" title="Its best group's rank on the launch day, at that day's close (its themes and its industry): ★ Top = top 3%, Strong = top 3-10%. Group rank (next column) is now. In the History test, launches in a ★ Top group ran 20%+ 44% of the time, Strong 41%, the rest 30%; with RS 97+ in a Top or Strong group 72%">Group on launch day</button></th>
             <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after the last close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%: in 2 years, launches in a Top group ran 20%+ within 20 days 35% of the time, Strong 31%, the rest 21-23%">Group rank</button></th>
             <th class="num"><button class="tgr-th" data-sort="rs_now" title="RS = the stock's rank against the whole market after the last close, 1-99 (99 = the best): its own 1-, 3- and 6-month moves, each ranked among all the stocks the scanner follows, averaged and ranked again (like IBD's RS rating). Green = RS 97+, the top 3%: in the test, launches with RS 97+ on the launch day ran 20%+ within 20 days 34% of the time vs 25% for the rest; in a ★ Top or Strong group 40%">RS</button></th>
+            <th><button class="tgr-th" data-sort="trend_n" title="Trend (live in the session): Up = 10 &gt; 21 &gt; 50 EMA, over the 21 and 50, the 10 and 21 rising · Resting = the stack, the 10 or 21 flat · Turn up = the 5 EMA crossed over the 10 today · Reclaim = back over the 21 EMA after a close under it · Negative = under the 21 EMA; the positive ones need the 21 over the 50 and the 50 higher than 5 sessions ago. Nd = sessions in it">Trend</button></th>
             <th class="num"><button class="tgr-th" data-sort="gain_now" title="LD = launch day: % from the launch day's close to now">LD → now</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="max_gain_pct">Max</button></th>
             <th><button class="tgr-th" data-sort="stage" title="Where the stock is after the close: in the base, consolidation surfing the 10 & 21 EMA on dry volume (its resting time), tight under the buy point, a breakout, running, a retest that held; green = above the 21 EMA">Status</button></th>
@@ -1254,6 +1263,41 @@ defCalc('industry_perf', {
     const c = String(s.themes || '').split(' | ').filter(Boolean).map((t) => grOf('theme', t)).concat([grOf('ind', s.industry)]).filter(Boolean);
     return c.sort((a, b) => b.pct - a.pct || a.rank - b.rank)[0] || null;
   };
+  /* Trend (your rule, Nov 3 2026), first match wins: Negative (under the 21 EMA), Reclaim (back over the 21 after a close
+     under it), Turn up (the 5 EMA crosses over the 10, that day), Up (10 > 21 > 50, over the 21 and 50, the 10 and 21
+     rising), Resting (10 > 21 > 50, the 10 or 21 not rising); the positive ones need the 21 over the 50 and the 50 higher
+     than 5 sessions ago. The nightly build gives it at the close (stocks.json trend, trend_days, tr); during the session
+     the EMAs move on with the live price: today's EMA = the last close's + 2/(n+1) x (price - it). */
+  const TR_N = { Up: 5, 'Turn up': 4, Reclaim: 3, Resting: 2, '': 1, Negative: 0 };
+  const TR_CLS = { Up: 't-up', 'Turn up': 't-turn', Reclaim: 't-reclaim', Resting: 't-rest', Negative: 't-neg' };
+  let TRS = null, TRSsrc;
+  const trendOf = (sym) => {
+    const stocks = BASE ? BASE.stocks : null;
+    if (stocks !== TRSsrc) { TRSsrc = stocks; TRS = new Map((stocks || []).map((x) => [x.symbol, x])); }
+    const st0 = TRS.get(sym);
+    if (!st0 || st0.trend === null || st0.trend === undefined) return null;
+    const q = LIVE_ON && LIVE && LIVE.rows ? LIVE.rows[sym] : null;
+    const t = st0.tr;
+    if (!q || !q[0] || !t || t.some((x) => x === null || x === undefined)) return { st: st0.trend, d: st0.trend_days, live: false, t, p: t ? t[5] : null };
+    const [e5, e10, e21, e50, e50b, c] = t, p = q[0], mv = (e, n) => e + (2 / (n + 1)) * (p - e);
+    const E5 = mv(e5, 5), E10 = mv(e10, 10), E21 = mv(e21, 21), E50 = mv(e50, 50);
+    const base = E21 > E50 && E50 > e50b, stack = E10 > E21 && E21 > E50;
+    const st = p < E21 ? 'Negative' : !base ? '' : c < e21 ? 'Reclaim' : E5 > E10 && e5 <= e10 ? 'Turn up'
+      : stack && p > E50 && E10 > e10 && E21 > e21 ? 'Up' : stack ? 'Resting' : '';
+    return { st, d: st === st0.trend ? st0.trend_days + 1 : 1, live: true, t: [E5, E10, E21, E50, e50b, c], p };
+  };
+  const trendN = (sym) => { const x = trendOf(sym); return x ? TR_N[x.st] * 1000 + Math.min(x.d || 0, 999) : null; };
+  const trendCell = (sym) => {
+    const td = h('td', 'nw'), x = trendOf(sym);
+    if (!x) { td.textContent = '—'; td.title = 'No trend yet: not enough history'; return td; }
+    if (!x.st) { td.append(h('span', 'tgr-lbl', '—')); }
+    else td.append(h('span', 'tr-pill ' + TR_CLS[x.st], x.st + ' ' + x.d + 'd'));
+    const f = (v) => (v === null || v === undefined ? '—' : Number(v).toFixed(2));
+    if (x.t) td.title = (x.st || 'No trend') + (x.st ? ' for ' + x.d + ' session' + (x.d > 1 ? 's' : '') : '') + (x.live ? ' (live)' : ' (last close)') + '\nPrice ' + f(x.p) +
+      ' · 5 EMA ' + f(x.t[0]) + ' · 10 EMA ' + f(x.t[1]) + ' · 21 EMA ' + f(x.t[2]) + ' · 50 EMA ' + f(x.t[3]) + ' (5 sessions ago ' + f(x.t[4]) + ')' +
+      '\nNegative: under the 21 EMA · Reclaim: back over it after a close under · Turn up: 5 EMA crossed over the 10 · Up: 10 > 21 > 50, 10 & 21 rising · Resting: 10 > 21 > 50, 10 or 21 flat · the positive ones need the 21 over the 50 and the 50 rising';
+    return td;
+  };
   const grTierN = (g) => (!g ? null : g.tier === 'Top' ? 2 : g.tier === 'Strong' ? 1 : 0);
   /* the stock's place inside that group (its own 1-, 3- and 6-month moves vs the group's other stocks) */
   const grPlace = (g, sym) => { if (!g || !g.order) return null; const o = g.order.split(' '); const i = o.indexOf(sym); return i < 0 ? null : { place: i + 1, of: o.length }; };
@@ -1378,6 +1422,7 @@ defCalc('industry_perf', {
     cols.forEach((c) => {
       if (c === 'symbol') tr.append(symbolCell(r, extSet && extSet.has(r.symbol), fit));
       else if (c === 'name') tr.append(h('td', 'name c2', r.name));
+      else if (c === 'trend') tr.append(trendCell(r.symbol));
       else if (c.startsWith('chg_')) { const td = pctCell(r[c], 0); if (c !== 'chg_1d' && cols.includes('index')) td.classList.add('c2'); tr.append(td); }
       else if (c === 'mcap_b') tr.append(h('td', 'num c3', fCap(r.mcap_b)));
       else if (c === 'price') tr.append(h('td', 'num c3', fPrice(r.price)));
@@ -1398,7 +1443,7 @@ defCalc('industry_perf', {
   };
   const sortStocks = (rows, tableId, def) => {
     const spec = sortSpec(tableId, def);
-    const val = (r) => (spec.key === 'ind' ? r[S.level] : spec.key === 'dvol' ? num(r[dvKey()]) :
+    const val = (r) => (spec.key === 'ind' ? r[S.level] : spec.key === 'dvol' ? num(r[dvKey()]) : spec.key === 'trend' ? trendN(r.symbol) :
       spec.key === 'q_rev_m' ? num((REVOF(r.symbol) || {}).q_rev_m) : spec.key === 'rev_growth' ? num((REVOF(r.symbol) || {}).growth) : spec.key === 'next_q_growth' ? num((REVOF(r.symbol) || {}).next_q_growth) : ['symbol', 'name', 'themes'].includes(spec.key) ? String(r[spec.key] || '') : num(r[spec.key]));
     rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
     markSort($('#' + tableId), spec);
@@ -1540,7 +1585,7 @@ defCalc('industry_perf', {
     const clr = $('#g-clear'); clr.hidden = !S.gsel; clr.textContent = S.gsel ? S.gsel.name + '  ×' : '';
     $('#g-list-h').textContent = (S.gsel ? 'Today’s ' + word.toLowerCase() + ' · ' + S.gsel.name : 'Today’s ' + word.toLowerCase()) + (rows.length > LIST_MAX ? ' (first ' + LIST_MAX + ' of ' + rows.length + ')' : '');
     sortStocks(rows, 'g-table', { key: 'chg_1d', dir: down ? 1 : -1 });
-    rows.slice(0, LIST_MAX).forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'rel_vol', 'price', 'adr_20', 'dvol', 'vs_200', 'vs_50e', 'mcap_b', 'avg_vol_30d', 'chg_1w', 'chg_1m', 'chg_3m', 'ind', 'themes', 'index'], symMap)));
+    rows.slice(0, LIST_MAX).forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'trend', 'rel_vol', 'price', 'adr_20', 'dvol', 'vs_200', 'vs_50e', 'mcap_b', 'avg_vol_30d', 'chg_1w', 'chg_1m', 'chg_3m', 'ind', 'themes', 'index'], symMap)));
   };
 
   const drawPremarket = (symMap) => {
@@ -1891,6 +1936,7 @@ defCalc('industry_perf', {
       r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsAll[r.symbol] ?? null;
       const px = num(r.price), e21 = num(r.ema21), e50 = num(r.ema50);
       r.vs21e = px && e21 ? r2((px / e21 - 1) * 100) : null; r.vs50e = px && e50 ? r2((px / e50 - 1) * 100) : null;
+      r.trend_n = trendN(r.symbol);
     });
     const spec = S.sort['wl-table'];
     if (spec) {
@@ -1900,7 +1946,7 @@ defCalc('industry_perf', {
       rows.sort((a, c) => (blank(val(a)) - blank(val(c))) || (spec.dir > 0 ? cmp(val(a), val(c)) : cmp(val(c), val(a))));
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
-    if (doc && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'No names in this list' + (S.wlsec || q ? ' match.' : ' right now.')); td.colSpan = 23; tr.append(td); tb.append(tr); }
+    if (doc && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'No names in this list' + (S.wlsec || q ? ' match.' : ' right now.')); td.colSpan = 24; tr.append(td); tb.append(tr); }
     const picked = pickedNow(), ldoc = st('launch').status === 'ok' ? st('launch').data : null;
     const launchedSet = new Set(ldoc ? ldoc.launches.filter((r) => r.grade !== 'You').map((r) => r.symbol) : []);
     rows.forEach((r) => {
@@ -1926,7 +1972,7 @@ defCalc('industry_perf', {
       const whyTd = h('td', 'c3' + (r.stage ? ' wl-why' : ' nw'), r.why || '');
       if (r.stage) { const sl = h('div', 'tgr-lbl wl-stage', r.stage); whyTd.title = r.stage; whyTd.append(sl); }
       const sec = (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
-      tr.append(key, h('td', 'nw', sec), gd, grStockCell(r.gr, r.symbol, false), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
+      tr.append(key, h('td', 'nw', sec), gd, grStockCell(r.gr, r.symbol, false), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), trendCell(r.symbol), whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), resCell(r, num(r.price)), h('td', 'num', fPrice(r.price)), pctCell(r.chg_1d, 0), h('td', 'num c2', fX(r.rel_vol)),
         h('td', 'num ' + tone(r.vs21e), p1(r.vs21e, true)), h('td', 'num ' + tone(r.vs50e), p1(r.vs50e, true)),
         h('td', 'c2', r.other), h('td', 'num c3', p1(r.adr_pct)), h('td', 'num c3 ' + tone(r.perf_1m_pct), p1(r.perf_1m_pct, true)),
@@ -2152,6 +2198,7 @@ defCalc('industry_perf', {
     const LQ = doc && doc.liquidity;
     $('#ln-note').textContent = !doc ? '' : (LAG ? 'Launch laggards: the same launch day as the Launches tab (opened up, closed up ' + doc.rules.min_chg + '%+ in the top half of its range, 30%+ over its 52-week low, liquid) but closed UNDER the 200-day SMA and over its 1-month high (the previous 20 sessions\' highest high), on ' + (doc.rules.lag_rv || 2) + '×+ volume, and only on a catalyst: earnings that day or the evening before, or company news the pre-market grading gave an A or B (a confirmed fundamental change). After 5 closes in a row over the 200 SMA a laggard moves to the Launches tab, tagged "from laggards". ' : '') + rows.length + ' of ' + all.length + (LAG ? ' laggards' : ' launches') + ' on the list (' + today + ' on the ' + fDate(doc.date) + ' close)' + (npick ? ', ' + npick + ' of them your picks' : '') + '. Your picks = the Follow button on the Watchlist tab: followed from the close you added them at, until you remove them. ✕ takes any stock off this list: a pick is no longer followed, a launch is removed with its alerts (a new launch of it on a later day shows again). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
       (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
+    rows.forEach((r) => { r.trend_n = trendN(r.symbol); });
     sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern', 'ltype'], 'grade');
     if (doc && !rows.length) noRows(tb, 29, 'No launch matches these filters.');
     rows.forEach((r) => {
@@ -2226,7 +2273,7 @@ defCalc('industry_perf', {
       tr.append(key, ld, gc, ty, pctCell(r.today, 0),
         h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm, grStockCell(r.gr, r.symbol, false),
         h('td', 'num' + (num(r.rs_now) !== null && r.rs_now >= 97 ? ' tgr-up' : ''), num(r.rs_now) === null ? '—' : (r.rs_now >= 97 ? '★ ' : '') + r.rs_now),
-        h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
+        trendCell(r.symbol), h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
         h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
         h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')),
         h('td', 'nw', r.base_pattern ? r.base_pattern.replace('Base forming (no pattern yet)', 'Forming (no pattern yet)') : '—'), ex, legTd,
@@ -2627,12 +2674,12 @@ defCalc('industry_perf', {
     const v20 = erPct(r.vs20h);
     if (r.vs20h !== null && r.vs20h !== undefined) { if (r.vs20h >= 0) v20.append(h('span', 'tgr-lbl tgr-up', 'cleared')); v20.title = '20-day high $' + r.high20; }
     const lo = h('td', 'num', r.over_low52 === null || r.over_low52 === undefined ? '—' : '+' + Math.round(r.over_low52) + '%');
-    tr.append(tk, rd, ep, eg, rv, rg, gd, gg, mv, gc, rs, v200, v50, v20, lo);
+    tr.append(tk, rd, ep, eg, rv, rg, gd, gg, mv, gc, rs, trendCell(r.sym), v200, v50, v20, lo);
     return tr;
   }
   /* each column's sort key and value (empty values always sort last) */
   const ER_GDIR = { raised: 4, given: 2, reaffirmed: 2, mixed: 1, lowered: 0 };
-  const ER_KEYS = ['symbol', 'read', 'eps_surprise', 'eps_growth', 'rev_surprise', 'rev_growth', 'guide', 'guide_growth', 'move', 'grank', 'rs', 'vs200', 'vs50', 'vs20h', 'over_low52'];
+  const ER_KEYS = ['symbol', 'read', 'eps_surprise', 'eps_growth', 'rev_surprise', 'rev_growth', 'guide', 'guide_growth', 'move', 'grank', 'rs', 'trend', 'vs200', 'vs50', 'vs20h', 'over_low52'];
   const erVal = (r, k, rsAll) => {
     const n = (x) => (x === null || x === undefined || x === '' || isNaN(Number(x)) ? null : Number(x));
     switch (k) {
@@ -2643,6 +2690,7 @@ defCalc('industry_perf', {
       case 'guide_growth': return r.guide ? n(r.guide.growth) : null;
       case 'grank': { const g = grBest(r.sym); return g ? g.pct : null; }
       case 'rs': return n(rsAll[r.sym]);
+      case 'trend': return trendN(r.sym);
       default: return n(r[k]);
     }
   };
@@ -2650,7 +2698,7 @@ defCalc('industry_perf', {
     ['EPS', 'Adjusted EPS vs the estimate, and the surprise'], ['EPS growth', 'vs the same quarter a year ago'], ['Revenue', 'Revenue vs the estimate, and the surprise'],
     ['Rev growth', 'vs the same quarter a year ago'], ['Guidance', 'Read from the press release: raised / lowered / reaffirmed / given; the guided revenue vs the analysts (hover for the words)'],
     ['Guide growth', 'The guided revenue vs the same period a year ago'], ['Move', 'Pre-market (after hours on the report evening, live in the session) vs the last close'],
-    ['Group rank', 'The stock\'s best-ranked theme or industry after the last close'], ['RS', 'Market rank 1-99 after the last close (green 97+)'],
+    ['Group rank', 'The stock\'s best-ranked theme or industry after the last close'], ['RS', 'Market rank 1-99 after the last close (green 97+)'], ['Trend', 'Up / Turn up / Reclaim / Resting / Negative from the 5, 10, 21 and 50 EMA (live in the session); Nd = sessions in it'],
     ['vs 200D', 'Pre-market price vs the 200-day SMA'], ['vs 50 EMA', 'Pre-market price vs the 50-day EMA'], ['vs 20D high', 'Pre-market price vs the highest high of the previous 20 sessions'],
     ['Over 52W low', 'Pre-market price above the 52-week low']];
   function drawEarnings() {

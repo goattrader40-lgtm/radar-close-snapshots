@@ -116,6 +116,11 @@ jobs:
             python3 scanner/probe_gaps.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --volprofile /tmp/rd/volprofile.json --out /tmp/probe_gaps.json
             python3 radar/publish.py "gap study" /tmp/probe_gaps.json
           fi
+          if [ "${{ inputs.cmd }}" = "pipedry" ]; then
+            # the nightly build on this branch, NOT published as stocks.json: radar-data stocks_dry.json (the Trend check)
+            python3 -I radar/pipeline.py /tmp/pwork /tmp/pout "$GITHUB_REPOSITORY" | tail -5
+            cp /tmp/pout/stocks.json /tmp/stocks_dry.json && python3 radar/publish.py "pipeline dry run" /tmp/stocks_dry.json
+          fi
           if [ "${{ inputs.cmd }}" = "earnings" ]; then
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
