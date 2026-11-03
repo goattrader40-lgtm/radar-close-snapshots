@@ -97,6 +97,15 @@ jobs:
             python3 scanner/probe_catalyst.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_catalyst.json || true
             python3 radar/publish.py "catalyst launch test" /tmp/probe_catalyst.json
           fi
+          if [ "${{ inputs.cmd }}" = "rolling" ]; then
+            # the fair test of the pruned groups, pruned month by month (scanner/probe_rolling.py) -> radar-data probe_rolling.json
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json && git show origin/radar-data:profiles.json > /tmp/rd/profiles.json
+            python3 scanner/probe_rolling.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --profiles /tmp/rd/profiles.json --out /tmp/probe_rolling.json
+            python3 radar/publish.py "rolling group test" /tmp/probe_rolling.json
+          fi
           if [ "${{ inputs.cmd }}" = "prune" ]; then
             # the proposed groups through the portal's co-movement test (scanner/probe_prune.py) -> radar-data probe_prune.json
             pip install --quiet numba numpy pandas
