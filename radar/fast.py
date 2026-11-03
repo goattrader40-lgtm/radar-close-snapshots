@@ -20,6 +20,7 @@ def main():
     now = datetime.datetime.now(NY)
     doc = json.load(open(launch_p))
     syms = sorted(set(doc.get("watch", {})) | {r["symbol"] for r in doc.get("launches", []) + doc.get("ema50_undercut", []) + doc.get("laggards", [])})   # + the 50 EMA undercut tab: its reclaim within a minute
+    syms = sorted(set(syms) | {r["symbol"] for r in doc.get("setups3") or [] if r.get("buy_point")})   # + 3-SETUPS triggers (Nov 3 2026)
     try:
         prof = json.load(open(prof_p))["rows"]
     except Exception:

@@ -383,6 +383,20 @@ def find(live, doc, now=None):
             out.append((f"{sym}:ema50", f"{sym} 50 EMA UNDERCUT & RECLAIM holding into the close",
                         f"back over the 50 EMA ${e50:.2f} (the last close's) at ${price:.2f} after 2 closes under it ({dates})"
                         f" · the buy: at the close, if it holds over it" + tail50, "high", tvs))
+    # 3-SETUPS (Watchlist tab) on the phone too (the user, Nov 3 2026; the desktop had them): a name trading over its
+    # trigger, any section, once a day; a name also on Launches / Launch laggards alerts from there
+    followed = {r["symbol"] for r in doc.get("launches", []) + doc.get("laggards", [])}
+    for r in doc.get("setups3") or []:
+        sym, bp = r.get("symbol"), r.get("buy_point")
+        if not sym or not bp or sym in followed or (r.get("away_adr") is not None and r["away_adr"] < 0):
+            continue                                    # no trigger, or the close was already over it
+        q = rows.get(sym)
+        if not q or len(q) < 5 or q[4] is None or not q[0] > bp:
+            continue
+        price, chg, rv = q[0], q[1], q[4]
+        out.append((f"{sym}:s3", f"{sym} 3-SETUPS {r.get('section', '')}: {r.get('setup', '')} trigger",
+                    f"${price:.2f} over ${bp:.2f} · {chg:+.1f}% · vol {rv:.1f}x for the time of day" + (" (light)" if rv < 1 else "")
+                    + (f" · {r['why']}" if r.get("why") else ""), "default", r.get("tv") or sym))
     return out
 
 

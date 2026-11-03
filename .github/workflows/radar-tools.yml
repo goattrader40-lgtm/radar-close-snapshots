@@ -81,6 +81,16 @@ jobs:
             python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/launch_dry.json --picks /tmp/picks_dry.json
             python3 radar/publish.py "launch dry run" /tmp/launch_dry.json;;
           esac
+          if [ "${{ inputs.cmd }}" = "launchbt" ]; then
+            # the launch build AND the History test on this branch, not saved to main: radar-data launch_dry.json + launch_bt_dry.json
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json && { git show origin/radar-data:gradelog.json > /tmp/rd/gradelog.json || true; } && { git show origin/radar-data:live.json > /tmp/rd/live.json || true; }
+            cp setups/launch.json /tmp/launch_dry.json
+            python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/launch_dry.json --backtest /tmp/launch_bt_dry.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json --picks setups/picks.json
+            python3 radar/publish.py "launch + history dry run" /tmp/launch_dry.json /tmp/launch_bt_dry.json
+          fi
           if [ "${{ inputs.cmd }}" = "levels" ]; then
             pip install --quiet numba numpy pandas
             python3 scanner/fetch.py /tmp/bars.json.gz

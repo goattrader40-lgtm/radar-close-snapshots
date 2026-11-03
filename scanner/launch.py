@@ -360,8 +360,18 @@ def group_rank(A, cal, stocks_rows, back=5):
             sc = np.nanmean([_pct_rank_need(X[:, h], 3) for h in range(3)], axis=0)
             ok = [j for j in range(len(ms)) if not np.isnan(sc[j])]
             order[g] = [ms[j] for j in sorted(ok, key=lambda j: -sc[j])]
+    # each stock's rank against the whole market (the user, Nov 3 2026; like IBD's RS rating): its own 1-, 3- and 6-month
+    # return, each ranked as a percentile among all these stocks, averaged and ranked again; RS = 1-99 (99 = the best)
+    ss = [s for s in ret if cols[0] in ret[s]]
+    rs = {}
+    if len(ss) >= 5:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            X = np.array([ret[s][cols[0]] for s in ss], dtype=float).reshape(len(ss), 3)
+            pr = _pct_rank_need(np.nanmean([_pct_rank_need(X[:, h], 5) for h in range(3)], axis=0), 5)
+        rs = {s: int(min(99, max(1, math.floor(100 * pr[j])))) for j, s in enumerate(ss) if not np.isnan(pr[j])}
     out = {"asof": cal[-1], "back_sessions": back, "top_pct": round(100 * (1 - GR_TOP)), "strong_pct": round(100 * (1 - GR_STRONG)),
-           "leader_min_stocks": 5, "rows": []}
+           "leader_min_stocks": 5, "rows": [], "_rs": rs}
     for kind, label in (("theme:", "themes"), ("ind:", "industries")):
         rows = [j for j, g in enumerate(names) if g.startswith(kind)]
         rk = {}
@@ -381,6 +391,57 @@ def group_rank(A, cal, stocks_rows, back=5):
                                     order=" ".join(order.get(names[j], []))))
     out["rows"].sort(key=lambda r: (r["kind"], r["rank"]))
     return out
+
+
+def _pct_cols(X, need=5):
+    """percentile rank 0-1 of each row within each column (NaN stays NaN; fewer than `need` values in a column: NaN)"""
+    ok = ~np.isnan(X)
+    k = ok.sum(axis=0)
+    Xf = np.where(ok, X, -np.inf)
+    order = Xf.argsort(axis=0, kind="stable").argsort(axis=0, kind="stable") - (X.shape[0] - k)[None, :]
+    with np.errstate(all="ignore"):
+        P = order / np.maximum(k - 1, 1)[None, :]
+    return np.where(ok & (k >= need)[None, :], P, np.nan)
+
+
+def rank_history(A, cal, stocks_rows):
+    """the group rank and the market rank (as group_rank) on every day of the calendar, for the History test:
+    (best group percentile per stock {symbol: array over days}, market percentile {symbol: array over days})"""
+    import warnings
+    pos = {d: k for k, d in enumerate(cal)}
+    T = len(cal)
+    mem, sg = collections.defaultdict(list), collections.defaultdict(list)
+    for r in stocks_rows:
+        s = r["symbol"]
+        if s not in A or any(d not in pos for d in A[s].st.dates):
+            continue
+        for t in [x for x in (r.get("themes") or "").split(" | ") if x]:
+            mem["theme:" + t].append(s); sg[s].append("theme:" + t)
+        if r.get("industry"):
+            mem["ind:" + r["industry"]].append(s); sg[s].append("ind:" + r["industry"])
+    names = [g for g, ms in mem.items() if len(ms) >= 3]
+    gi = {g: j for j, g in enumerate(names)}
+    syms = sorted({s for g in names for s in mem[g]})
+    si = {s: j for j, s in enumerate(syms)}
+    R = {n: np.full((len(syms), T), np.nan) for n in (21, 63, 126)}
+    for s in syms:
+        st = A[s].st
+        idx = [pos[d] for d in st.dates]
+        for n in R:
+            x = np.full(st.c.size, np.nan)
+            x[n:] = 100 * (st.c[n:] / st.c[:-n] - 1)
+            R[n][si[s], idx] = x
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        med = {n: np.array([np.nanmedian(R[n][[si[s] for s in mem[g]]], axis=0) for g in names]) for n in R}
+        P = np.full((len(names), T), np.nan)
+        for pref in ("theme:", "ind:"):
+            rows = [gi[g] for g in names if g.startswith(pref)]
+            if rows:
+                P[rows] = _pct_cols(np.nanmean([_pct_cols(med[n][rows]) for n in R], axis=0))
+        MK = _pct_cols(np.nanmean([_pct_cols(R[n]) for n in R], axis=0))
+        best = {s: np.nanmax(P[[gi[g] for g in sg[s] if g in gi]], axis=0) for s in syms if any(g in gi for g in sg[s])}
+    return best, {s: MK[si[s]] for s in syms}
 
 
 def best_ranks(grank, stocks_rows):
@@ -1845,10 +1906,11 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     # the breakout alert grade's group (the user, Nov 3 2026: the new group rank replaces "Leading"): the stock's best
     # group rank after this close; Top or Strong (top 10%) counts
     for r in rows + lag:
-        b = (gbest or {}).get(r["symbol"])
+        b = (gbest or {}).get(r["symbol"]) or {}
         if gbest:
-            r["group_tier_now"] = b["tier"] if b else ""
-            r["group_rank_now"] = f"{b['group']} #{b['rank']}/{b['of']}" if b else None
+            r["group_tier_now"] = b.get("tier", "") if b.get("group") else ""
+            r["group_rank_now"] = f"{b['group']} #{b['rank']}/{b['of']}" if b.get("group") else None
+            r["rs_now"] = b.get("rs")             # its market rank (RS 1-99) after this close
     G = []
     for g, (ms, stt, sh21, m21) in GS.items():
         hist = [int(x) for x in stt[-20:]]
@@ -1876,10 +1938,16 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     print(f"launch: {n_today} today, {len(rows)} followed, {len(lag)} laggards, {len(under50)} in the 50 EMA undercut tab, {len(watch)} on watch, {len(doc['groups'])} groups trending")
 
 
-def backtest(A, groups, GS, cal, S, out_path):
+def backtest(A, groups, GS, cal, S, out_path, stocks_rows=None):
     """each launch since the data starts: from the launch close to the first close below the 21 EMA"""
     res = []
     ev = detect(A, groups, GS, cal, S)
+    # the group rank and the market rank on the launch day (at its close: known that evening), for the table by tier
+    try:
+        gbest_h, mk_h = rank_history(A, cal, stocks_rows) if stocks_rows else ({}, {})
+    except Exception as e:
+        print("rank history failed:", e)
+        gbest_h, mk_h = {}, {}
     for s, i, k, gs, gn, leader in [e + ("",) for e in ev] + detect_followers(A, groups, GS, cal, ev):
         a = A[s]
         c, o, lo = a.st.c, a.st.o, a.st.l
@@ -1904,7 +1972,11 @@ def backtest(A, groups, GS, cal, S, out_path):
             continue                          # still open: no result yet
         g = grade(a, i)
         t10 = any(best_group(s, kk, groups, GS)[0] >= 1 for kk in range(k, min(k + 11, len(cal))))
+        gp = float(gbest_h[s][k]) if s in gbest_h and not np.isnan(gbest_h[s][k]) else None
+        mp = float(mk_h[s][k]) if s in mk_h and not np.isnan(mk_h[s][k]) else None
+        tier = None if gp is None else "Top" if gp >= GR_TOP else "Strong" if gp >= GR_STRONG else "other"
         res.append(dict(sym=s, date=a.st.dates[i], grade=g, follower=bool(leader), theme=gs >= 1, theme10=t10, vol3=bool(a.rv[i] >= 3), bo=bool(c[i] > a.hi20[i]),
+                        tier=tier, rs97=None if mp is None else mp >= 0.97,
                         ret=100 * (px / buy - 1), days=exit_k - i, maxg=100 * (a.st.h[i:exit_k + 1].max() / buy - 1),
                         r20=100 * (c[min(i + 20, n - 1)] / buy - 1) if i + 20 < n else None))
 
@@ -1926,7 +1998,12 @@ def backtest(A, groups, GS, cal, S, out_path):
                theme_within_10d=summ([r for r in res if r["theme10"]]), lone_wolf_10d=summ([r for r in res if not r["theme10"]]),
                by_grade_theme10={g + (" theme" if t else " lone wolf"): summ([r for r in res if r["grade"] == g and r["theme10"] == t]) for g in ("A+", "A", "B", "C") for t in (True, False)},
                vol3=summ([r for r in res if r["vol3"]]), vol_under3=summ([r for r in res if not r["vol3"]]),
-               base_breakout=summ([r for r in res if r["bo"]]), no_breakout=summ([r for r in res if not r["bo"]]))
+               base_breakout=summ([r for r in res if r["bo"]]), no_breakout=summ([r for r in res if not r["bo"]]),
+               # the History test table (the user, Nov 3 2026): by the group rank on the launch day, and the market rank
+               by_tier={t: summ([r for r in res if r["tier"] == t]) for t in ("Top", "Strong", "other")},
+               by_grade_tier={g + " " + t: summ([r for r in res if r["grade"] == g and r["tier"] == t]) for g in ("A+", "A", "B", "C") for t in ("Top", "Strong", "other")},
+               rs97=summ([r for r in res if r["rs97"]]), rs_under97=summ([r for r in res if r["rs97"] is False]),
+               rs97_top_strong=summ([r for r in res if r["rs97"] and r["tier"] in ("Top", "Strong")]))
     with open(out_path, "w") as f:
         json.dump(out, f, indent=1)
     print(json.dumps({k: (v if not isinstance(v, dict) or "n" not in v else {x: v[x] for x in ("n", "win_pct", "avg_exit_pct", "ran_20pct", "ran_50pct")})
@@ -1965,7 +2042,10 @@ def main():
     try:
         stocks_rows = json.load(open(a.stocks))
         grank = group_rank(A, cal, stocks_rows)
+        rsmap = grank.pop("_rs", {})
         gbest = best_ranks(grank, stocks_rows)
+        for s_, v_ in rsmap.items():
+            gbest.setdefault(s_, {})["rs"] = v_
         print("group rank:", grank["themes"], "themes,", grank["industries"], "industries; Top:",
               ", ".join(r["group"] for r in grank["rows"] if r["tier"] == "Top"))
     except Exception as e:                       # the rank must never stop the launch list
@@ -1973,7 +2053,11 @@ def main():
     daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {},
           picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3, grank, gbest)
     if a.backtest:
-        backtest(A, groups, GS, cal, S, a.backtest)
+        try:
+            srows = json.load(open(a.stocks)) if a.stocks else None
+        except Exception:
+            srows = None
+        backtest(A, groups, GS, cal, S, a.backtest, srows)
 
 
 if __name__ == "__main__":

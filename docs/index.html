@@ -681,6 +681,7 @@
             <th class="c2">Base BO</th>
             <th><button class="tgr-th" data-sort="group">Theme then → now</button></th>
             <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after the last close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%: in 2 years, launches in a Top group ran 20%+ within 20 days 35% of the time, Strong 31%, the rest 21-23%">Group rank</button></th>
+            <th class="num"><button class="tgr-th" data-sort="rs_now" title="RS = the stock's rank against the whole market after the last close, 1-99 (99 = the best): its own 1-, 3- and 6-month moves, each ranked among all the stocks the scanner follows, averaged and ranked again (like IBD's RS rating). Green = RS 97+, the top 3%: in the test, launches with RS 97+ on the launch day ran 20%+ within 20 days 34% of the time vs 25% for the rest; in a ★ Top or Strong group 40%">RS</button></th>
             <th class="num"><button class="tgr-th" data-sort="gain_now" title="LD = launch day: % from the launch day's close to now">LD → now</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="max_gain_pct">Max</button></th>
             <th><button class="tgr-th" data-sort="stage" title="Where the stock is after the close: in the base, consolidation surfing the 10 & 21 EMA on dry volume (its resting time), tight under the buy point, a breakout, running, a retest that held; green = above the 21 EMA">Status</button></th>
@@ -2034,7 +2035,7 @@ defCalc('industry_perf', {
     $('#ln-note').textContent = !doc ? '' : (LAG ? 'Launch laggards: the same launch day as the Launches tab (opened up, closed up ' + doc.rules.min_chg + '%+ in the top half of its range, 30%+ over its 52-week low, liquid) but closed UNDER the 200-day SMA and over its 1-month high (the previous 20 sessions\' highest high), on ' + (doc.rules.lag_rv || 2) + '×+ volume, and only on a catalyst: earnings that day or the evening before, or company news the pre-market grading gave an A or B (a confirmed fundamental change). After 5 closes in a row over the 200 SMA a laggard moves to the Launches tab, tagged "from laggards". ' : '') + rows.length + ' of ' + all.length + (LAG ? ' laggards' : ' launches') + ' on the list (' + today + ' on the ' + fDate(doc.date) + ' close)' + (npick ? ', ' + npick + ' of them your picks' : '') + '. Your picks = the Follow button on the Watchlist tab: followed from the close you added them at, until you remove them. ✕ takes any stock off this list: a pick is no longer followed, a launch is removed with its alerts (a new launch of it on a later day shows again). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
       (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
     sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern', 'ltype'], 'grade');
-    if (doc && !rows.length) noRows(tb, 28, 'No launch matches these filters.');
+    if (doc && !rows.length) noRows(tb, 29, 'No launch matches these filters.');
     rows.forEach((r) => {
       const tr = h('tr');
       const key = tkCell(r.symbol, r.tv);
@@ -2103,6 +2104,7 @@ defCalc('industry_perf', {
         Launch: 'Launch: opened up, closed up 5%+ in the top half of its range on 1.5x+ volume, over the 200 SMA' })[x]).join('\n');
       tr.append(key, ld, gc, ty, pctCell(r.today, 0),
         h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm, grStockCell(r.gr, r.symbol, false),
+        h('td', 'num' + (num(r.rs_now) !== null && r.rs_now >= 97 ? ' tgr-up' : ''), num(r.rs_now) === null ? '—' : (r.rs_now >= 97 ? '★ ' : '') + r.rs_now),
         h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
         h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
         h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')),
@@ -2157,12 +2159,21 @@ defCalc('industry_perf', {
     const B = LNBT;
     $('#ln-bt-note').textContent = !B ? 'Runs after each close.' : 'Every launch from ' + fDate(B.first) + ' to ' + fDate(B.last) + ' that has finished, bought ' +
       (B.entry === 'open' ? "at the launch day's open (your opening-range-high entry is a little higher), stopped under that day's low, otherwise sold" : "at the launch day's close and sold") +
-      ' on the first close below the 21 EMA. Theme = one of its groups was trending within 10 sessions of the launch. Read it as a guide, not a promise: it only counts days that ended strong (a launch that faded by the close never shows up here), and it covers one strong market.';
+      ' on the first close below the 21 EMA. ★ Top / Strong / other = its best group rank on the launch day (★ Top = top 3% of themes or industries, Strong = 3–10%, at that day\'s close). RS = the stock\'s own market rank that day (RS 97+ = the top 3% of all stocks). Read it as a guide, not a promise: it only counts days that ended strong (a launch that faded by the close never shows up here), and it covers one strong market.' +
+      (B.by_grade_tier ? '' : ' (The group-rank rows fill in after the next evening scan.)');
     if (B) {
       const line = (label, v) => { if (!v) return; const tr = h('tr'); tr.append(h('td', 'key', label), h('td', 'num', String(v.n)), h('td', 'num', v.win_pct + '%'), pctCell(v.avg_exit_pct, 0), pctCell(v.median_exit_pct, 0), h('td', 'num c2', String(v.avg_days)), h('td', 'num', v.ran_20pct + '%'), h('td', 'num', v.ran_50pct + '%')); bt.append(tr); };
       line('All launches', B.all);
       line('Followers', B.followers);
-      ['A+', 'A', 'B', 'C'].forEach((g) => { const x = B.by_grade_theme10 || {}; line(g + ', theme confirmed', x[g + ' theme']); line(g + ', lone wolf', x[g + ' lone wolf']); });
+      if (B.by_tier) {
+        /* by the group rank and the market rank on the launch day (your request, Nov 3 2026; replaced "theme confirmed / lone wolf") */
+        const t = B.by_tier, tl = { Top: '★ Top group', Strong: 'Strong group', other: 'other groups' };
+        ['Top', 'Strong', 'other'].forEach((k) => line(tl[k], t[k]));
+        line('RS 97+ (top 3% of all stocks)', B.rs97);
+        line('RS 97+ in a ★ Top / Strong group', B.rs97_top_strong);
+        line('RS under 97', B.rs_under97);
+        ['A+', 'A', 'B', 'C'].forEach((g) => { const x = B.by_grade_tier || {}; ['Top', 'Strong', 'other'].forEach((k) => line(g + ', ' + tl[k], x[g + ' ' + k])); });
+      } else ['A+', 'A', 'B', 'C'].forEach((g) => line(g, (B.by_grade || {})[g]));
     }
   };
   $('#ln-wolf').addEventListener('change', (e) => { S.lnwolf = e.target.checked; draw(); });
