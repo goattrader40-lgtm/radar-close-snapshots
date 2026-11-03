@@ -36,9 +36,9 @@ G = {
     "Bio Tools & Services": "TECH MRVI FTRE TWST DNA CAI",
     # ---- software
     "Software: Majors": "MSFT SAP CRM NOW ADBE INTU WDAY ADSK TEAM ROP",
-    "AI Cloud & Data-Center Hosting": "ORCL CRWV IREN CIFR WULF CORZ HUT APLD NBIS GLXY",
-    "Software: AI Applications": "PLTR AI SOUN RZLV RZAI BRUN PATH BBAI",
-    "Quantum Computing": "QNT INFQ XNDU HQ IONQ RGTI QBTS QUBT",
+    "AI Cloud & Data-Center Hosting": "ORCL CRWV IREN CIFR WULF CORZ HUT APLD NBIS GLXY WYFI SHAZ",
+    "Software: AI Applications": "PLTR AI SOUN RZLV RZAI BRUN PATH BBAI INOD",
+    "Quantum Computing": "QNT INFQ XNDU HQ IONQ RGTI QBTS QUBT IQMX PSQL",
     "Software: Cybersecurity": "PANW CRWD FTNT ZS OKTA CHKP S QLYS TENB RPD VRNS SAIL NTSK CVLT RBRK GEN MITK YOU CGNT CLBT TLS "
                                "ALLT BB OSPN ATEN RDWR RSKD NTCT",
     "Software: Cloud, Data & Observability": "SNOW DDOG MDB ESTC NTNX DT FROG GTLB NET FSLY AKAM DOCN TDC PD BLZE RXT TWLO BAND "
@@ -58,7 +58,6 @@ G = {
     "Consumer Apps & Ride-Hailing": "UBER LYFT GRAB DUOL GRND LIF YALA YMM VIA NAVN SRAD BSP YB",
     "Autonomous Driving & Robotaxi": "WRD ENRD AEVA",
     "IP Licensing": "IDCC ADEA",
-    "Computer Hardware": "NTAP",
     # ---- banks
     "Banks: US Money-Center": "JPM BAC C WFC",
     "Banks: Custody & Trust": "BNY STT NTRS",
@@ -91,6 +90,34 @@ G = {
     "Solar": "DQ",
     "Land & Royalty": "TPL LB",
     "Preferred & Duplicate Shares": "ZIONP CDZIP FRMEP WAFDP",
+    # ---- tech, split finest (the user, Nov 3 2026: "top priority should be tech, where the momentum is")
+    "Semis: AI Accelerators & CPUs": "NVDA AMD INTC ARM AVGO CBRS",
+    "Semis: AI Connectivity & Interconnect": "ALAB CRDO MRVL RMBS MTSI SMTC MXL AIP",
+    "Memory & Storage Chips": "MU SKHY SNDK WDC STX SIMO MRAM",
+    "Semis: Foundry": "TSM UMC GFS TSEM",
+    "Semis: Analog, Auto & Power": "TXN ADI MCHP NXPI ON MPWR ALGM DIOD POWI AOSL NVTS WOLF INDI VICR",
+    "Semis: Mobile & RF": "QCOM SWKS QRVO CRUS HIMX CEVA PI",
+    "Semis: IoT, Edge & FPGA": "LSCC SITM SLAB SYNA AMBQ NVEC LAES",
+    "Semi Equipment: Front-End": "ASML AMAT LRCX KLAC NVMI ONTO CAMT ACMR ACLS VECO",
+    "Semi Equipment: Test & Packaging": "TER FORM COHU AEHR KLIC AMKR ASX IMOS",
+    "Semi Materials & Subsystems": "ENTG Q AXTI PLAB UCTT ICHR NANO MKSI",
+    "Optical Networking & Photonics": "COHR LITE AAOI FN CIEN POET LPTH LASR VIAV",
+    "AI Servers": "DELL SMCI HPE PENG",
+    "Contract Electronics Manufacturing": "CLS FLEX JBL SANM PLXS BHE TTMI",
+    "Networking Equipment": "ANET CSCO UI EXTR NTGR ADTN CLFD CALX HLIT DGII NOK ERIC",
+    "Storage Systems": "NTAP P QMCO",
+    "PCs, Devices & Peripherals": "AAPL HPQ LOGI CRSR CRCT SONY SONO LPL",
+    "3D Printing": "SSYS DDD",
+    "Satellite Communications": "ASTS VSAT TSAT GILT IRDM",
+    "Connectors & Passive Components": "APH TEL GLW LFUS VSH BELFB BELFA ROG CTS KN MEI ALNT",
+    "Test, Measurement & Sensors": "KEYS TDY CGNX NOVT ST VPG ESE",
+    "IT Consulting & Outsourcing": "ACN INFY CTSH WIT GIB EPAM G EXLS GLOB GDYN DXC KD CNXC TASK IBEX HCKT III FORTY CINT",
+    "Government IT & Defense Services": "LDOS CACI SAIC PSN BAH",
+    "Financial Tech Processors": "FIS JKHY BR FISV GPN",
+    "China Data Centers": "GDS VNET",
+    "Digital Ads & Social Media": "GOOGL GOOG META PINS SNAP RDDT TBLA NXDR",
+    "China Internet": "BIDU TME BILI JOYY WB MOMO ATHM BZ",
+    "Online Marketplaces & Listings": "ZG Z CARG CARS YELP UPWK FVRR ZIP GRPN EVER MAX NRDS",
 }
 EXCLUDE = {"Preferred & Duplicate Shares"}        # not ranked (a second share class of a company already counted)
 HAND = {s: g for g, syms in G.items() for s in syms.split()}
