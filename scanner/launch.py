@@ -89,7 +89,7 @@ import msf  # noqa: E402
 import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
-L = dict(bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
+L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
          near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5,
          lag_rv=2, lag_under200=60)
@@ -1588,12 +1588,35 @@ S3_FEEDERS = ("1-EP/GAP", "1-UPDAY", "2-POOL")
 S3_SECTIONS = ("Triggered today", "Ready", "Setting up")
 
 
+def under200(a, start, last, n=None):
+    """n closes in a row under the 200 SMA after bar `start`, up to `last` (your rule, Nov 3 2026: off Launches and
+    3-SETUPS after 2); a new listing's stand-in average counts, no average at all never does"""
+    n = n or L["off_200"]
+    c, s = a.st.c, a.s200
+    if last - start < n:
+        return False
+    run = 0
+    for k in range(start + 1, last + 1):
+        run = run + 1 if (not np.isnan(s[k]) and c[k] < s[k]) else 0
+        if run >= n:
+            return True
+    return False
+
+
 def s3_read(a, i0, last, was_in=False):
     """3-SETUPS: where a feeder stock followed from i0 stands at bar `last` (None = not on the list): (section, setup,
     the follow, buy point, away in ADRs, close, ADR, tight days, retest zone)"""
     st = a.st
     if not a.liq_noadr[last] or st.adr[last] < (L["off_adr"] if was_in else L["s3_min_adr"]):
         return None
+    # the 200 SMA (your rule, Nov 3 2026: ECHO on 3-SETUPS at 98.23 under its 200 SMA 106.63): to come on, the close
+    # over it; once on, off after 2 closes in a row under it (no 200 SMA yet: a new listing, not held back)
+    s200 = a.s200[last]
+    if not np.isnan(s200):
+        if not was_in and not st.c[last] > s200:
+            return None
+        if was_in and under200(a, last - L["off_200"], last):
+            return None
     b0 = base_ok(a, i0, 120)
     if stale(a, i0, last, b0[0] if b0 and b0[0] > st.h[i0] else None):
         return None
@@ -1804,7 +1827,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         if k is not None and a.gap[k] >= L["ep_gap"]:
             CATALYST_DAYS[(s, d)] = w
 
-    def build(s, i, k, gs, gn, leader):
+    def build(s, i, k, gs, gn, leader, lagg=False):
         """a launch's row for the list, or None when it is off the list"""
         a = A[s]
         last = len(a.st.dates) - 1
@@ -1816,6 +1839,10 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         c_, e50_ = a.st.c, a.e50
         if (np.any((c_[i + 3:last + 1] < e50_[i + 3:last + 1]) & (c_[i + 2:last] < e50_[i + 2:last]) & (c_[i + 1:last - 1] < e50_[i + 1:last - 1]))
                 or stale(a, i, last) or a.st.adr[last] < L["off_adr"]):
+            return None
+        # 2 closes in a row under the 200 SMA after the launch day: off (your rule, Nov 3 2026); not for a laggard
+        # (under it by design: it is checked from the day it moved to the launch list)
+        if not lagg and under200(a, i, last):
             return None
         f = follow(a, i, last)
         if f["off_50ema"]:
@@ -1857,7 +1884,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     # did (your rule, Nov 2 2026)
     lag, promoted = [], []
     for e in detect_laggards(A, groups, GS, cal):
-        r = build(*e, "")
+        r = build(*e, "", lagg=True)
         if r is None:
             continue
         w = NEWS_DAYS.get((r["symbol"], r["date"]), "")
@@ -1870,6 +1897,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         above = a.st.c > a.s200
         j = next((m for m in range(i + 5, len(a.st.dates)) if above[m - 4:m + 1].all()), None)
         r["promoted"] = a.st.dates[j] if j is not None else None
+        if j is not None and under200(a, j, len(a.st.dates) - 1):     # on the launch list it follows the 200 SMA rule
+            continue
         (promoted if j is not None else lag).append(r)
     on_list = {r["symbol"] for r in rows} | {r["symbol"] for r in under50}
     for grp in (lag, promoted):
