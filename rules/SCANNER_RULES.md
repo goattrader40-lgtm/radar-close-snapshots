@@ -107,6 +107,17 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | 5-minute checks | Live prices for all ~3,300 stocks (tables); the launch and laggard rules on the watch list |
 | 1-minute checks | 9:31-12:00 and 3:00-4:00: the watch list plus Launches, Launch laggards and the 50 EMA undercut list |
 
+## Luk columns (test)
+
+| Column | What it shows | Rule |
+|---|---|---|
+| Trend | Martin Luk's lists: Leading / Mediocre / Lagging / Pillar | Leading = close > 10 > 21 > 50 EMA with the 10 and 21 rising; Lagging = close < 10 < 21 EMA with both falling; Pillar = $200B+ market cap; display only |
+| AVWAP | The nearest anchored VWAP under the price, in ADRs; confluence; under the AVWAP from the high | Anchors: the launch day, the last breakout, the 3-month high, the pullback low after it, the last earnings day (daily typical price x volume); confluence = 2+ of the 10 EMA, 21 EMA, an AVWAP within 0.25 ADR, within 1 ADR of the close |
+| Exit line | Where the core of a position exits: the first daily close under it | 10 EMA (fast) when the last 10 closes averaged 1+ ADR over the 21 EMA with at most 1 close under the 10 EMA; else the 21 EMA (steady). The 21 EMA exit column is unchanged |
+| Stop · size | The stop at the last session's low (% and ADRs) and the position at your risk % | risk 0.3% / stop %, capped 35% ($100M+ a day) / 25% ($50M+) / 15% ($20M+); red over half an ADR (scanner/settings.json 'risk') |
+| Pullback zone (tag) | Luk's pullback entry forming | A new 1-month high, then day 3-7 of a pullback 1.25-4 ADRs deep on volume at or under its 20-day average, 10 > 21 > 50 EMA with the 21 and 50 rising, the pullback's low within 0.5 ADR of the 10 / 21 EMA or an AVWAP; no alert (IONQ May 15-20 2026) |
+| Market gauge (strip) | GREEN / YELLOW / RED over Launches + 3-SETUPS | Leading / Lagging shares now and 5 sessions ago, breakouts of the last 5 sessions back under their level, gap-downs, SPY / QQQ / IWM vs 9 / 21 EMA and distribution days; GREEN = Leading 40%+, the index 9 EMA over its 21, under half the breakouts failed; RED = Lagging 60%+, or 50%+ with the index under its 21 and its 9 under its 21. Placeholders until the regime test |
+
 ## Watchlist lists
 
 | List | Gets on | Leaves on | Sections |

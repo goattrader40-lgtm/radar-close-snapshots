@@ -20,6 +20,13 @@
     "min_pct_above_52w_low": 30
   },
 
+  "risk": {
+    "_about": "The size helper on Launches (Martin Luk's numbers, the user's Task 2, Nov 3 2026): position = risk / stop, capped by the stock's liquidity tier ($M traded a day, 20-day average). Display only; the IBKR bot (bot/lukbot on the session branch) has its own copy.",
+    "risk_pct": 0.3,
+    "luk_median_stop_pct": 1.28,
+    "tiers": [[100, 35], [50, 25], [20, 15]]
+  },
+
   "standard": {
     "min_price": 10,
     "min_mcap": 700e6,

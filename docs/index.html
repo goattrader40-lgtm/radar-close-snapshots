@@ -735,6 +735,12 @@
         <button class="tgr-lite" id="ln-add-go" type="button">Follow</button>
       </div>
       <p class="tgr-note" id="ln-note"></p>
+      <p class="tgr-note" id="ln-market" hidden></p>
+      <details class="tgr-legend tgr-more" data-key="luk"><summary>Martin Luk's columns (test): Trend, AVWAP, Exit line, Stop · size, pullback zone, the market gauge</summary>
+        <p class="tgr-note">Display only: they change no launch, status, buy point or alert. From Martin Luk's own posts and streams (2025 US Investing Champion, +969.8%), James Muninn's audit of 461 of his 2026 trades (65.9% pullbacks, 2.3% base breakouts; 0.3% risk a trade, a 1.28% median stop, positions 20-30% capped at 35%) and Brian Shannon's anchored VWAP.
+        <strong>Pullback zone</strong> (a green tag on the ticker): the stock proved itself (a new 1-month high), then pulls back 3 to 7 days, 1.25 to 4 ADRs, on light volume, into the rising 10 / 21 EMA or an AVWAP, with 10 &gt; 21 &gt; 50 EMA. Luk buys the reclaim of that level on the 1- or 5-minute chart with the stop under the flush low (IONQ: zone May 15-20 2026 at the 21 EMA and the AVWAP; Luk bought the reclaim at 49.35 on May 20 and rode it to 73.65).
+        <strong>Market gauge</strong>: the share of these names Leading and Lagging now and 5 sessions ago, recent breakouts back under their level, gap-downs, SPY / QQQ / IWM against their 9 / 21 EMA and their distribution days. GREEN / YELLOW / RED are placeholders until the regime test sets them; the bot halves its size on YELLOW and takes no new longs on RED.</p>
+      </details>
       <details class="tgr-legend" id="ln-rules-box" open>
         <summary>What counts as a launch day, a power day, and what takes a stock off the list</summary>
         <div class="tgr-note" id="ln-rules"></div>
@@ -752,6 +758,7 @@
             <th><button class="tgr-th" data-sort="grank_launch" title="Its best group's rank on the launch day, at that day's close (its themes and its industry): ★ Top = top 3%, Strong = top 3-10%. Group rank (next column) is now. In the History test, launches in a ★ Top group ran 20%+ 44% of the time, Strong 41%, the rest 30%; with RS 97+ in a Top or Strong group 72%">Group on launch day</button></th>
             <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after the last close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%: in 2 years, launches in a Top group ran 20%+ within 20 days 35% of the time, Strong 31%, the rest 21-23%">Group rank</button></th>
             <th class="num"><button class="tgr-th" data-sort="rs_now" title="RS = the stock's rank against the whole market after the last close, 1-99 (99 = the best): its own 1-, 3- and 6-month moves, each ranked among all the stocks the scanner follows, averaged and ranked again (like IBD's RS rating). Green = RS 97+, the top 3%: in the test, launches with RS 97+ on the launch day ran 20%+ within 20 days 34% of the time vs 25% for the rest; in a ★ Top or Strong group 40%">RS</button></th>
+            <th><button class="tgr-th" data-sort="trend" title="Martin Luk's lists (test, Nov 3 2026): Leading = the close over a rising 10 and 21 EMA, 10 > 21 > 50 EMA; Lagging = under a falling 10 and 21 EMA; Pillar = a $200B+ mega cap; Mediocre = the rest. When the Leading list shrinks and the Lagging list grows, Luk stops forcing longs (the market gauge above)">Trend</button></th>
             <th class="num"><button class="tgr-th" data-sort="gain_now" title="LD = launch day: % from the launch day's close to now">LD → now</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="max_gain_pct">Max</button></th>
             <th><button class="tgr-th" data-sort="stage" title="Where the stock is after the close: in the base, consolidation surfing the 10 & 21 EMA on dry volume (its resting time), tight under the buy point, a breakout, running, a retest that held; green = above the 21 EMA">Status</button></th>
@@ -764,6 +771,9 @@
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
             <th><button class="tgr-th" data-sort="res_away" title="Resistance: the highs overhead it still has to clear after the buy point: the 3-, 6-, 9-month and 52-week highs, nearest first, with how far each is from the price">Resistance</button></th>
+            <th><button class="tgr-th" data-sort="avwap_dist" title="Anchored VWAP (Brian Shannon / Martin Luk, test): the average price paid since an anchor day: the launch (catalyst) day, the last breakout, the 3-month high, the pullback low after it, the last earnings day. Shown: the nearest one under the price, in ADRs under it; confluence = 2+ of the 10 EMA, 21 EMA and an AVWAP within a quarter ADR of each other near the price. Under the AVWAP from the high = everyone who bought since the high is losing: Luk never buys a pullback basing under it. Daily bars (the typical price); the bot uses minute bars">AVWAP</button></th>
+            <th><button class="tgr-th" data-sort="exit_line" title="Luk's exit for the core of a position (test): the first daily CLOSE under the line, wicks don't count. 10 EMA (fast) = the last 10 sessions closed on average 1+ ADR over the 21 EMA with at most 1 close under the 10 EMA; 21 EMA (steady) = the rest. Luk uses the 9 EMA; the Radar's 10 is the same in practice. Your 21 EMA exit column stays as it is">Exit line</button></th>
+            <th class="num"><button class="tgr-th" data-sort="lod_pct" title="Stop and size (test): the stop at the last session's low, in % and in ADRs, and the position that risks your % of the account at that stop (scanner/settings.json risk, 0.3% = Luk 2026), capped by the stock's liquidity: 35% of the account at $100M+ a day, 25% at $50M+, 15% at $20M+. Red = the stop is wider than half an ADR, wider than Luk takes: wait for a tighter entry (the flush low, the 1-5 minute AVWAP). Luk's median stop is 1.28%">Stop · size</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_days" title="How long the trigger's base is: for a base top, the sessions since anything traded above it">Base length</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_pct">Depth</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_adr" title="The base's depth in the stock's own ADRs: each ticker has its own character">Depth in ADRs</button></th>
@@ -1921,6 +1931,8 @@ defCalc('industry_perf', {
         rm.setAttribute('aria-label', rm.title);
         rm.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from 3-SETUPS?')) removeSetup(r, rm); });
         key.append(rm);
+        const s3t = ((ldoc && ldoc.setups3) || []).find((x) => x.symbol === r.symbol);
+        if (s3t && s3t.trend) { const t = h('span', s3t.trend.startsWith('Leading') ? 'tgr-gm' : 'tgr-flag', s3t.trend.split(' ·')[0]); t.title = 'Martin Luk\'s lists (test): ' + s3t.trend + '. Leading = the close over a rising 10 and 21 EMA, 10 > 21 > 50; Lagging = under a falling 10 and 21 EMA'; key.append(t); }
       }
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade[0], r.grade)); else gd.textContent = '—';
       const whyTd = h('td', 'c3' + (r.stage ? ' wl-why' : ' nw'), r.why || '');
@@ -2062,6 +2074,49 @@ defCalc('industry_perf', {
     } else markSort(table, { key: '', dir: -1 });
   };
   const tkCell = (sym, tvs) => { const td = h('td', 'key'); const a = h('a', 'tgr-tk', sym); a.href = tv(tvs || sym); a.target = TVTAB; td.append(a); return td; };
+  /* Martin Luk's reads (display only, test/luk, Nov 3 2026): Trend, AVWAP, Exit line, Stop · size, the market gauge */
+  const trendTone = (t) => !t ? '' : t.startsWith('Leading') ? ' tgr-up' : t.startsWith('Lagging') ? ' tgr-dn' : '';
+  const trendCell = (r) => h('td', 'nw' + trendTone(r.trend), r.trend || '—');
+  const avwapCell = (r) => {
+    const td = h('td', 'nw');
+    const nr = r.avwap_near;
+    td.append(h('div', '', nr ? fPrice(nr[1]) + ' ' + nr[0] : '—'));
+    if (nr) td.append(h('div', 'tgr-lbl', num(nr[2]).toFixed(1) + ' ADR under'));
+    if (r.confluence) td.append(h('div', 'tgr-lbl tgr-up', '⊕ ' + r.confluence));
+    if (r.avwap_over) td.append(h('div', 'tgr-lbl tgr-dn', 'under the high\'s ' + fPrice(r.avwap_over[0])));
+    const all = Object.entries(r.avwap || {}).map(([k, v]) => k + ' ' + fPrice(v)).join(' · ');
+    td.title = 'AVWAP from: ' + (all || '—') + (r.confluence ? '\nConfluence: ' + r.confluence : '') + (r.avwap_over ? '\nUnder the AVWAP from the high (' + fPrice(r.avwap_over[0]) + ', ' + r.avwap_over[1] + ' ADR over the price): everyone who bought since the high is losing; Luk doesn\'t buy pullbacks basing under it' : '');
+    return td;
+  };
+  const exitCell = (r) => {
+    const td = h('td', 'nw' + (r.exit_under ? ' tgr-dn' : ''));
+    td.append(h('div', '', r.exit_line || '—'));
+    if (r.exit_level) td.append(h('div', 'tgr-lbl', fPrice(r.exit_level) + (r.exit_under ? ' · closed under' : '')));
+    return td;
+  };
+  const lukRisk = (doc) => (doc && doc.risk) || { risk_pct: 0.3, luk_median_stop_pct: 1.28, tiers: [[100, 35], [50, 25], [20, 15]] };
+  const lukSize = (rk, stopPct, dvM) => {
+    const cap = ((rk.tiers || []).find(([f]) => (dvM || 0) >= f) || [0, 0])[1];
+    return { cap, pct: stopPct > 0 ? Math.min(100 * rk.risk_pct / stopPct, cap) : null };
+  };
+  const sizeCell = (r, doc) => {
+    if (num(r.lod_pct) === null) return h('td', 'num', '—');
+    const rk = lukRisk(doc), z = lukSize(rk, r.lod_pct, r.dollar_vol_20d_m), zl = lukSize(rk, rk.luk_median_stop_pct, r.dollar_vol_20d_m);
+    const td = h('td', 'num nw' + (r.lod_adr > 0.5 ? ' tgr-dn' : ''));
+    td.append(h('div', '', num(r.lod_pct).toFixed(2) + '% · ' + num(r.lod_adr).toFixed(2) + ' ADR'));
+    td.append(h('div', 'tgr-lbl', z.cap ? 'size ' + z.pct.toFixed(1) + '% (cap ' + z.cap + '%)' : 'under $20M a day'));
+    td.title = 'Stop at the last session\'s low ' + fPrice(r.day_low) + ': ' + r.lod_pct + '% = ' + r.lod_adr + ' ADR. At ' + rk.risk_pct + '% risk that is ' + (z.pct === null ? '—' : z.pct.toFixed(1)) + '% of the account (capped at ' + z.cap + '% for $' + Math.round(r.dollar_vol_20d_m || 0) + 'M a day). At Luk\'s median ' + rk.luk_median_stop_pct + '% stop: ' + (zl.pct === null ? '—' : zl.pct.toFixed(1)) + '%.' + (r.lod_adr > 0.5 ? '\nWider than half an ADR: Luk waits for a tighter entry (the flush low, the 1-5 minute AVWAP).' : '');
+    return td;
+  };
+  const marketStrip = (el, doc) => {
+    const B = doc && doc.breadth;
+    el.hidden = !B;
+    if (!B) return;
+    const mode = h('strong', B.mode === 'GREEN' ? 'tgr-up' : B.mode === 'RED' ? 'tgr-dn' : '', 'Market ' + B.mode);
+    const ix = Object.entries(B.index || {}).map(([k, v]) => k + (v.over21 ? ' over' : ' under') + ' its 21 EMA, 9 ' + (v.ema9_over21 ? 'over' : 'under') + ' 21, ' + v.dist_days + ' distribution days in 25').join(' · ');
+    const txt = ' (Martin Luk\'s breadth gauge, test) · ' + B.names + ' names on Launches and 3-SETUPS: Leading ' + B.leading_pct + '% (' + B.leading_pct_5d_ago + '% 5 days ago), Lagging ' + B.lagging_pct + '% (' + B.lagging_pct_5d_ago + '%) · breakouts in 5 sessions ' + B.breakouts_5d + ', back under their level ' + B.failed_breakouts_5d + (B.failed && B.failed.length ? ' (' + B.failed.join(', ') + ')' : '') + ' · gap-downs today ' + B.gap_downs_today + (ix ? ' · ' + ix : '') + (B.distribution_bounce ? ' · the last session was a distribution day: Luk got stopped out buying the next day\'s bounce' : '') + '. GREEN = ' + B.thresholds.green + '; RED = ' + B.thresholds.red + ' (' + B.thresholds.note + ').';
+    el.replaceChildren(mode, document.createTextNode(txt));
+  };
   const gradeCell = (g) => { const td = h('td', ''); if (g) td.append(h('span', 'tgr-grade g' + g[0], g)); else td.textContent = '—'; return td; };
   /* the kind of launch day: the strongest one it fits, then the others (your request, Nov 2 2026) */
   const lnTypes = (r, lag) => {
@@ -2126,7 +2181,7 @@ defCalc('industry_perf', {
       const px = m && num(m.price) !== null ? num(m.price) : r.price;
       /* today: the live (or the latest close's) change and relative volume, not the launch day's */
       const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct), rvToday = m && num(m.rel_vol) !== null ? num(m.rel_vol) : num(r.rel_vol_today);
-      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px), types: lnTypes(r, LAG), ltype: lnTypes(r, LAG)[0], gr: grBest(r.symbol), grank: (grBest(r.symbol) || {}).pct ?? null, grank_launch: r.group_pct_launch ?? null });
+      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px), types: lnTypes(r, LAG), ltype: lnTypes(r, LAG)[0], gr: grBest(r.symbol), grank: (grBest(r.symbol) || {}).pct ?? null, grank_launch: r.group_pct_launch ?? null, avwap_dist: r.avwap_near ? r.avwap_near[2] : null });
     }) : [];
     /* a ticker search shows that stock whatever the other filters */
     const lq = S.lnq.toUpperCase();
@@ -2147,13 +2202,14 @@ defCalc('industry_perf', {
       ['Off the list: ', 'a launch leaves after 3 closes in a row under the 50 EMA (after 2 it waits in the 50 EMA undercut tab below: the next session has to close back over it, and that reclaim is an entry); or ' + (lr.off_days || 62) + ' sessions from its highest point without a new high (a $60 high with the stock at $55 now: counted from the $60 day), your picks too; or when its ADR (20 days) drops under ' + (lr.off_adr || 3.2) + '% (a launch day needs ' + lqd.min_adr + '%+; TECH: 0.2% after its Jun 25 gap); or when the same stock launches again (the newest launch replaces it). ✕ on any row removes it by hand: a pick is no longer followed, a launch leaves with its alerts until it launches again on a later day. The first close under the 21 EMA is only the exit signal: the stock stays. Lone wolves are only hidden (tick the box to show them).'],
     ] : []).map(([k, v]) => { const d = h('div', ''); d.append(h('strong', '', k), document.createTextNode(v)); return d; }));
     $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
+    marketStrip($('#ln-market'), doc);
     const today = doc ? all.filter((r) => r.date === doc.date && r.grade !== 'You').length : 0;
     const npick = all.filter((r) => r.pick).length;
     const LQ = doc && doc.liquidity;
     $('#ln-note').textContent = !doc ? '' : (LAG ? 'Launch laggards: the same launch day as the Launches tab (opened up, closed up ' + doc.rules.min_chg + '%+ in the top half of its range, 30%+ over its 52-week low, liquid) but closed UNDER the 200-day SMA and over its 1-month high (the previous 20 sessions\' highest high), on ' + (doc.rules.lag_rv || 2) + '×+ volume, and only on a catalyst: earnings that day or the evening before, or company news the pre-market grading gave an A or B (a confirmed fundamental change). After 5 closes in a row over the 200 SMA a laggard moves to the Launches tab, tagged "from laggards". ' : '') + rows.length + ' of ' + all.length + (LAG ? ' laggards' : ' launches') + ' on the list (' + today + ' on the ' + fDate(doc.date) + ' close)' + (npick ? ', ' + npick + ' of them your picks' : '') + '. Your picks = the Follow button on the Watchlist tab: followed from the close you added them at, until you remove them. ✕ takes any stock off this list: a pick is no longer followed, a launch is removed with its alerts (a new launch of it on a later day shows again). Under each launch date: that day\'s move, gap and volume. Today and Rel vol = today\'s. LD → now = from the launch day\'s close to ' + (LIVE_ON ? 'the live price' : 'the latest close') + '. Lone wolves are hidden unless ticked.' +
       (LQ ? ' Only stocks priced $' + LQ.min_price + '+ with a 20-day average of $' + LQ.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(LQ.min_avg_vol_20d) + '+ shares a day and an ADR of ' + LQ.min_adr + '%+ (your settings, in scanner/settings.json).' : '');
-    sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern', 'ltype'], 'grade');
-    if (doc && !rows.length) noRows(tb, 29, 'No launch matches these filters.');
+    sortRows(table, rows, null, ['symbol', 'date', 'group', 'status', 'stage', 'pattern', 'base_pattern', 'ltype', 'trend', 'exit_line'], 'grade');
+    if (doc && !rows.length) noRows(tb, 33, 'No launch matches these filters.');
     rows.forEach((r) => {
       const tr = h('tr');
       const key = tkCell(r.symbol, r.tv);
@@ -2188,6 +2244,7 @@ defCalc('industry_perf', {
         t.title = 'Pulled back to its breakout level ' + lv + (r.retest_from ? ' (broken ' + fDate(r.retest_from).replace(/, \d{4}$/, '') + ')' : '') + ' today and closed above it' + ((r.retest_ema || []).length ? ', with the ' + r.retest_ema.join(' & ') + ' there too' : '') + ': another entry';
         key.append(t);
       }
+      if (r.luk_zone) { const t = h('span', 'tgr-gm', 'pullback zone d' + r.luk_zone.day); t.title = r.luk_zone.text + ' (Martin Luk\'s setup, test: display only, no alert)'; key.append(t); }
       /* the group rank on the launch day (replaced "Theme then -> now", Nov 3 2026); the old status only for launch.json without it */
       const thm = h('td', 'nw' + (r.group_tier_launch ? ' tgr-up' : ''));
       if (r.group_rank_launch !== undefined) {
@@ -2225,14 +2282,14 @@ defCalc('industry_perf', {
         Launch: 'Launch: opened up, closed up 5%+ in the top half of its range on 1.5x+ volume, over the 200 SMA' })[x]).join('\n');
       tr.append(key, ld, gc, ty, pctCell(r.today, 0),
         h('td', 'num' + (r.rv_today >= 1.5 ? ' tgr-up' : ''), r.rv_today === null || r.rv_today === undefined ? '—' : fX(r.rv_today)), h('td', 'c2', r.base_breakout ? '✓' : '—'), thm, grStockCell(r.gr, r.symbol, false),
-        h('td', 'num' + (num(r.rs_now) !== null && r.rs_now >= 97 ? ' tgr-up' : ''), num(r.rs_now) === null ? '—' : (r.rs_now >= 97 ? '★ ' : '') + r.rs_now),
+        h('td', 'num' + (num(r.rs_now) !== null && r.rs_now >= 97 ? ' tgr-up' : ''), num(r.rs_now) === null ? '—' : (r.rs_now >= 97 ? '★ ' : '') + r.rs_now), trendCell(r),
         h('td', 'num ' + tone(r.gain_now), p1(r.gain_now, true)), h('td', 'num c2', p1(r.max_gain_pct, true)), stt,
         h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
         h('td', 'num nw' + (r.turned_up ? ' tgr-up' : ''), r.base_day === null || r.base_day === undefined ? '—' : 'Day ' + r.base_day + (r.turned_up ? ' ↑' : '')),
         h('td', 'nw', r.base_pattern ? r.base_pattern.replace('Base forming (no pattern yet)', 'Forming (no pattern yet)') : '—'), ex, legTd,
         h('td', 'c2' + (r.breakout_today || r.flag_breakout_today || r.base_breakout_today || r.dry_entry_today || r.breakout_reclaim_today ? ' tgr-up' : ''),
           r.breakout_reclaim_today ? 'Breakout undercut & reclaim today' : r.base_breakout_today ? (r.breakout_caution ? 'Base breakout today, with caution (within 0.5%)' : 'Base breakout today (leg ' + r.leg + ')') + (r.double_breakout ? ' · double' : '') : r.ema21_today ? (r.ema21_today === 'undercut' ? '21 EMA undercut & reclaim today (strong)' : '21 EMA retest today') : r.dry_entry_today ? 'Pop out of the consolidation today (in base)' : r.flag_breakout_today ? (r.flag_shape === 'pennant' ? 'Bull pennant breakout today (entry in the base)' : 'Bull flag breakout today (entry in the base)') : r.breakout_today ? r.pattern + ' · breakout today' : num(r.buy_point) !== null && r.pattern ? r.pattern : '—'), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
-        h('td', 'num', p1(r.away, true)), resCell(r, r.px), h('td', 'num c2', r.base_days === null || r.base_days === undefined ? '—' : String(r.base_days)), h('td', 'num c2', p1(r.base_depth_pct)), h('td', 'num c2', r.base_depth_adr === null || r.base_depth_adr === undefined ? '—' : num(r.base_depth_adr).toFixed(1) + '×'),
+        h('td', 'num', p1(r.away, true)), resCell(r, r.px), avwapCell(r), exitCell(r), sizeCell(r, doc), h('td', 'num c2', r.base_days === null || r.base_days === undefined ? '—' : String(r.base_days)), h('td', 'num c2', p1(r.base_depth_pct)), h('td', 'num c2', r.base_depth_adr === null || r.base_depth_adr === undefined ? '—' : num(r.base_depth_adr).toFixed(1) + '×'),
         h('td', 'num c3', String(r.surf10 ?? '—')), h('td', 'num c3', String(r.surf21 ?? '—')), h('td', 'num c3' + (num(r.vol_dryup) !== null && r.vol_dryup < 1 ? ' tgr-up' : ''), r.vol_dryup === null ? '—' : num(r.vol_dryup).toFixed(2) + '×'),
         h('td', 'num c3', p1(r.pct_of_52w_high)), h('td', 'num c3', p1(r.correction_pct)));
       tb.append(tr);

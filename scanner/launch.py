@@ -1403,6 +1403,8 @@ def load(bars_path, stocks_path):
                 b.pop()
     stocks, P = run.build(D, cfg)
     cal = [b[0] for b in D["bars"]["SPY"]]
+    INDEX.clear()
+    INDEX.update({k: D["bars"][k] for k in ("SPY", "QQQ", "IWM") if D["bars"].get(k)})    # the market gauge (Luk)
     S = cfg["standard"]
     LIQ.update({k: v for k, v in cfg.get("launch", {}).items() if not k.startswith("_")})
     # a stock whose bars start after the file's first session listed during it (the file reaches 2 years back)
@@ -1736,6 +1738,173 @@ def launch_day_rank(ghist, sym, k):
     return txt, tier, round(100 * float(p), 1)
 
 
+# ---- Martin Luk's reads (display only: the user's Task 2, Nov 3 2026; plans/martin-luk/PLAN.md on the session branch)
+# They add columns and a market gauge; they change no launch, status, buy point or alert. Sources: Luk's own posts,
+# James Muninn's audit of 461 of his 2026 trades (65.9% pullbacks, 2.3% base breakouts; entries on an AVWAP / VWAP
+# reclaim, a micro-trendline, an opening range, an opening flush & reclaim; the core trailed on the daily close under
+# the 9 EMA for fast leaders or the 21 EMA for steady trends), Brian Shannon's AVWAP anchors.
+INDEX = {}             # SPY / QQQ / IWM daily arrays (load()), for the market gauge
+LUK = dict(zone_days=(3, 7), zone_off_adr=(1.25, 4.0), zone_near_adr=0.5, zone_vol=1.0, fast_n=10, fast_adr=1.0,
+           conf_adr=0.25, lead_pct=40, lag_pct=50, lag_pct_red=60, pillar_mcap=200e9, dist_days=25)
+
+
+def luk_trend(a, i):
+    """Luk's watchlists: Leading = close > 10 > 21 > 50 EMA with the 10 and 21 rising; Lagging = close < 10 < 21 EMA with
+    both falling; Pillar = a $200B+ mega cap (his 4th list); Mediocre = the rest"""
+    st = a.st
+    if i < 2:
+        return None
+    c, e10, e21, e50 = st.c[i], a.e10[i], a.e21[i], a.e50[i]
+    if c > e10 > e21 > e50 and a.e10[i] > a.e10[i - 1] and a.e21[i] > a.e21[i - 1]:
+        t = "Leading"
+    elif c < e10 < e21 and a.e10[i] < a.e10[i - 1] and a.e21[i] < a.e21[i - 1]:
+        t = "Lagging"
+    else:
+        t = "Mediocre"
+    return t + (" · Pillar" if (getattr(st, "mcap", 0) or 0) >= LUK["pillar_mcap"] else "")
+
+
+def avwap(a, k0, i):
+    """the volume-weighted average price from day k0 to day i (daily bars: the typical price (H + L + C) / 3; the bot
+    computes it exactly from minute bars)"""
+    if k0 is None or k0 > i or k0 < 0:
+        return None
+    st = a.st
+    v = st.v[k0:i + 1]
+    tp = (st.h[k0:i + 1] + st.l[k0:i + 1] + st.c[k0:i + 1]) / 3
+    return float((tp * v).sum() / v.sum()) if v.sum() > 0 else None
+
+
+def luk_fields(a, r, earn_day=None):
+    """the Luk columns of one Launches row at the last close: trend, AVWAP levels and confluence, the exit line, the
+    stop / size helper and the pullback zone"""
+    st = a.st
+    i = len(st.dates) - 1
+    i0 = st.pos.get(r.get("date"))
+    c, adr = st.c[i], float(st.adr[i]) if st.adr[i] > 0 else 5.0
+    unit = adr / 100 * c                                     # one ADR in $
+    out = dict(trend=luk_trend(a, i))
+    # AVWAP anchors (Shannon / Luk): the launch (catalyst) day, the last breakout, the latest high (overhead supply),
+    # the pullback low after it (the handoff), the last earnings day
+    w0 = max(0, i - 62)
+    kh = w0 + int(np.argmax(st.h[w0:i + 1]))
+    kl = kh + 1 + int(np.argmin(st.l[kh + 1:i + 1])) if kh < i - 1 else None
+    kb = st.pos.get(r.get("last_breakout_date"))
+    ke = st.pos.get(earn_day)
+    anchors = [("launch", i0), ("breakout", kb), ("high", kh if kh < i else None), ("pullback low", kl), ("earnings", ke)]
+    lv = {}
+    for name, k in anchors:
+        x = avwap(a, k, i)
+        if x is not None and (name != "earnings" or k is None or i - k <= 126):
+            lv[name] = round(x, 2)
+    out["avwap"] = lv
+    under = sorted(((n, x) for n, x in lv.items() if x <= c), key=lambda t: c - t[1])
+    out["avwap_near"] = [under[0][0], under[0][1], round((c - under[0][1]) / unit, 2)] if under else None
+    over = lv.get("high")
+    out["avwap_over"] = [over, round((over - c) / unit, 2)] if over and over > c else None    # basing under it: no long
+    pts = [("10 EMA", float(a.e10[i])), ("21 EMA", float(a.e21[i]))] + ([("AVWAP (" + under[0][0] + ")", under[0][1])] if under else [])
+    near = [n for n, x in pts if abs(c - x) <= 1.0 * unit]
+    best = None
+    for n1, x1 in pts:
+        grp = [n2 for n2, x2 in pts if abs(x1 - x2) <= LUK["conf_adr"] * unit]
+        if len(grp) >= 2 and n1 in near and (best is None or len(grp) > len(best)):
+            best = grp
+    out["confluence"] = " & ".join(best) if best else None
+    # the exit line: a fast leader rides the 10 EMA (average close 1+ ADR over the 21 EMA in the last 10 sessions, at
+    # most 1 close under the 10 EMA), a steady trend the 21 EMA (Luk uses the 9; the Radar's 10 is the same in practice)
+    n = LUK["fast_n"]
+    if i >= n:
+        ks = range(i - n + 1, i + 1)
+        over21 = sum(100 * (st.c[k] / a.e21[k] - 1) / (st.adr[k] if st.adr[k] > 0 else adr) for k in ks) / n
+        under10 = sum(1 for k in ks if st.c[k] < a.e10[k])
+        fast = over21 >= LUK["fast_adr"] and under10 <= 1
+        line = float(a.e10[i] if fast else a.e21[i])
+        out.update(exit_line="10 EMA (fast)" if fast else "21 EMA (steady)", exit_level=round(line, 2), exit_under=bool(c < line))
+    # the stop / size helper: the last session's low as the stop (the user's day-low stop), in % and in ADRs
+    lod = 100 * (c - st.l[i]) / c
+    out.update(day_low=round(float(st.l[i]), 2), lod_pct=round(lod, 2), lod_adr=round(lod / adr, 2))
+    # the pullback zone (Luk: the stock proves itself, then pulls back 3-7 days into the rising 9 / 21 EMA and an
+    # AVWAP; IONQ May 11 -> May 20 2026 at 49.35): its high a new 1-month high, day 3-7 after it, 1.25-4 ADRs off it,
+    # 10 > 21 > 50 EMA with the 21 and 50 rising, the pullback's low within half an ADR of the 10 / 21 EMA or an AVWAP,
+    # volume on the pullback at or under its 20-day average
+    out["luk_zone"] = None
+    days = i - kh
+    lo_d, hi_d = LUK["zone_days"]
+    if lo_d <= days <= hi_d and kh >= 21 and st.h[kh] > st.h[kh - 20:kh].max():
+        off = (st.h[kh] - c) / unit
+        rising = a.e21[i] > a.e21[i - 3] and a.e50[i] > a.e50[i - 3]
+        low = float(st.l[kh + 1:i + 1].min())
+        cands = [("10 EMA", float(a.e10[i])), ("21 EMA", float(a.e21[i]))] + \
+                [("AVWAP (" + nm + ")", x) for nm, x in lv.items() if nm in ("launch", "breakout", "earnings") and x < c]
+        touched = [(nm, x) for nm, x in cands if abs(low - x) <= LUK["zone_near_adr"] * unit or (low < x <= c)]
+        vol = float(np.nanmean(a.rv[kh + 1:i + 1]))
+        if (LUK["zone_off_adr"][0] <= off <= LUK["zone_off_adr"][1] and a.e10[i] > a.e21[i] > a.e50[i] and rising
+                and touched and vol <= LUK["zone_vol"] and c > a.e50[i]):
+            out["luk_zone"] = dict(day=days, off_adr=round(off, 1), high=round(float(st.h[kh]), 2), high_date=st.dates[kh],
+                                   levels=[[nm, round(x, 2)] for nm, x in touched], vol=round(vol, 2),
+                                   text=f"Pullback zone, day {days}: {off:.1f} ADR off the {st.h[kh]:.2f} high on {vol:.2f}x volume, at "
+                                        + " · ".join(f"{nm} {x:.2f}" for nm, x in touched) + ": buy the reclaim, stop under the flush low")
+    return out
+
+
+def index_read(sym):
+    """an index ETF's trend for the market gauge: close vs its 9 / 21 EMA, 10 vs 20-day SMA, distribution days (down
+    0.2%+ on higher volume than the day before) in the last 25 sessions, and whether the last session was one"""
+    b = INDEX.get(sym)
+    if not b or len(b) < 60:
+        return None
+    c = np.array([x[4] for x in b], float)
+    v = np.array([x[5] for x in b], float)
+    e9, e21 = ema(c, 9), ema(c, 21)
+    s10, s20 = c[-10:].mean(), c[-20:].mean()
+    n = LUK["dist_days"]
+    dist = [k for k in range(len(c) - n, len(c)) if c[k] < c[k - 1] * 0.998 and v[k] > v[k - 1]]
+    return dict(close=round(float(c[-1]), 2), ema9=round(float(e9[-1]), 2), ema21=round(float(e21[-1]), 2),
+                over9=bool(c[-1] > e9[-1]), over21=bool(c[-1] > e21[-1]), ema9_over21=bool(e9[-1] > e21[-1]),
+                sma10_over20=bool(s10 > s20), dist_days=len(dist), dist_last=bool(dist and dist[-1] == len(c) - 1))
+
+
+def luk_breadth(A, rows, s3_syms, today):
+    """the market gauge (Luk: "when 90 of 100 momentum names look terrible, flip to the short side"; Qullamaggie's index
+    10 / 20-day filter): over the Radar's momentum names (Launches, laggards, the 50 EMA tab, 3-SETUPS) the share Leading
+    and Lagging now and 5 sessions ago, the breakouts of the last 5 sessions that closed back under their level, gap-downs
+    today, and SPY / QQQ / IWM. GREEN / YELLOW / RED thresholds are placeholders until the regime study (S4) sets them"""
+    syms = sorted({r["symbol"] for r in rows} | set(s3_syms))
+    now, ago, gapd = collections.Counter(), collections.Counter(), 0
+    n = 0
+    for s in syms:
+        a = A.get(s)
+        if a is None or a.st.dates[-1] != today or len(a.st.dates) < 30:
+            continue
+        i = len(a.st.dates) - 1
+        n += 1
+        now[(luk_trend(a, i) or "").split(" ·")[0]] += 1
+        ago[(luk_trend(a, i - 5) or "").split(" ·")[0]] += 1
+        gapd += bool(a.gap[i] <= -2)
+    if not n:
+        return None
+    pct = lambda cnt, k: round(100 * cnt[k] / n)
+    bo = [r for r in rows if r.get("last_breakout_days_ago") is not None and r["last_breakout_days_ago"] <= 5 and r.get("last_breakout_top")]
+    failed = [r["symbol"] for r in bo if (r.get("price") or 0) < r["last_breakout_top"]]
+    idx = {k: index_read(k) for k in ("SPY", "QQQ", "IWM")}
+    idx = {k: v for k, v in idx.items() if v}
+    lead, lag = pct(now, "Leading"), pct(now, "Lagging")
+    spy = idx.get("QQQ") or idx.get("SPY") or {}
+    if lag >= LUK["lag_pct_red"] or (lag >= LUK["lag_pct"] and spy and not spy["over21"] and not spy["ema9_over21"]):
+        mode = "RED"
+    elif lead >= LUK["lead_pct"] and (not spy or spy["ema9_over21"]) and len(failed) * 2 < max(1, len(bo)):
+        mode = "GREEN"
+    else:
+        mode = "YELLOW"
+    return dict(date=today, names=n, leading_pct=lead, lagging_pct=lag, mediocre_pct=pct(now, "Mediocre"),
+                leading_pct_5d_ago=pct(ago, "Leading"), lagging_pct_5d_ago=pct(ago, "Lagging"),
+                breakouts_5d=len(bo), failed_breakouts_5d=len(failed), failed=failed[:12], gap_downs_today=gapd,
+                index=idx, distribution_bounce=bool(spy and spy.get("dist_last")), mode=mode,
+                thresholds=dict(green=f"Leading {LUK['lead_pct']}%+, the index 9 EMA over its 21, under half the recent breakouts failed",
+                                red=f"Lagging {LUK['lag_pct_red']}%+, or {LUK['lag_pct']}%+ with the index under its 21 EMA and its 9 under its 21",
+                                note="placeholders until the regime study sets them"))
+
+
 def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None, s3=None, grank=None, gbest=None, ghist=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
@@ -1947,6 +2116,32 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
             r["group_tier_now"] = b.get("tier", "") if b.get("group") else ""
             r["group_rank_now"] = f"{b['group']} #{b['rank']}/{b['of']}" if b.get("group") else None
             r["rs_now"] = b.get("rs")             # its market rank (RS 1-99) after this close
+    # Martin Luk's reads (display only, the user's Task 2, Nov 3 2026): columns and the market gauge, nothing else changes
+    earn_last = {}
+    for (s_, d_), w_ in NEWS_DAYS.items():
+        if "earnings" in str(w_) and d_ > earn_last.get(s_, ""):
+            earn_last[s_] = d_
+    for r in rows + lag + under50:
+        a_ = A.get(r["symbol"])
+        if a_ is not None and a_.st.dates[-1] == today:
+            try:
+                r.update(luk_fields(a_, r, earn_last.get(r["symbol"])))
+            except Exception as e:                      # never let a display column stop the launch list
+                print("luk fields failed:", r["symbol"], e)
+    s3_rows = s3 if s3 is not None else prev_s3
+    for x in s3_rows or []:
+        a_ = A.get(x["symbol"])
+        if a_ is not None and a_.st.dates[-1] == today:
+            x["trend"] = luk_trend(a_, len(a_.st.dates) - 1)
+    try:
+        breadth = luk_breadth(A, rows + lag + under50, [x["symbol"] for x in s3_rows or []], today)
+    except Exception as e:
+        print("market gauge failed:", e)
+        breadth = None
+    try:
+        risk_cfg = json.load(open(os.path.join(HERE, "settings.json"))).get("risk")
+    except Exception:
+        risk_cfg = None
     G = []
     for g, (ms, stt, sh21, m21) in GS.items():
         hist = [int(x) for x in stt[-20:]]
@@ -1967,7 +2162,9 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                # a Follow-button rebuild doesn't pass the Watchlist
                setups3=s3 if s3 is not None else prev_s3,
                # each theme / industry ranked against the others of its kind after this close (★ Top 3%, Strong 3-10%)
-               group_rank=grank if grank is not None else old_doc.get("group_rank"))
+               group_rank=grank if grank is not None else old_doc.get("group_rank"),
+               # Martin Luk's market gauge and the size helper's settings (display only, Nov 3 2026)
+               breadth=breadth, risk=risk_cfg)
     with open(out_path, "w") as f:
         json.dump(doc, f, separators=(",", ":"))
     n_today = sum(1 for r in rows if r["date"] == today)

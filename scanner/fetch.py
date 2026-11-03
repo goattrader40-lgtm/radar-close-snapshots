@@ -78,7 +78,7 @@ def bars(sym):
 
 def main(path):
     caps, exch = symbols()
-    syms = sorted(caps) + ["SPY"]
+    syms = sorted(caps) + ["SPY", "QQQ", "IWM"]          # QQQ / IWM: the market gauge (Luk), not stocks (no market cap)
     print(f"{len(syms)} symbols")
     data = {}
     with cf.ThreadPoolExecutor(10) as pool:

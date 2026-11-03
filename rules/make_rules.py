@@ -257,6 +257,14 @@ SHEETS["E1 Earnings tab"] = (["Item", "Rule"], [
  ["Columns at the end", "vs 200D, vs 50 EMA (pre-market price vs the last close's SMA / EMA), vs 20D high (vs the highest high of the previous 20 sessions; 'cleared' = above it), over the 52-week low; Group rank and RS as on Launches"],
  ["When", "Weekdays about 7:10-8:55 AM ET (final by 9:00), 4:50 / 6:30 / 8:30 PM ET, Sunday 6 PM ET (earnings.yml -> radar-data earnings.json). No phone alerts"],
 ])
+SHEETS["L9 Luk columns (test)"] = (["Column", "What it shows", "Rule"], [
+ ["Trend", "Martin Luk's lists: Leading / Mediocre / Lagging / Pillar", "Leading = close > 10 > 21 > 50 EMA with the 10 and 21 rising; Lagging = close < 10 < 21 EMA with both falling; Pillar = $200B+ market cap; display only"],
+ ["AVWAP", "The nearest anchored VWAP under the price, in ADRs; confluence; under the AVWAP from the high", "Anchors: the launch day, the last breakout, the 3-month high, the pullback low after it, the last earnings day (daily typical price x volume); confluence = 2+ of the 10 EMA, 21 EMA, an AVWAP within 0.25 ADR, within 1 ADR of the close"],
+ ["Exit line", "Where the core of a position exits: the first daily close under it", "10 EMA (fast) when the last 10 closes averaged 1+ ADR over the 21 EMA with at most 1 close under the 10 EMA; else the 21 EMA (steady). The 21 EMA exit column is unchanged"],
+ ["Stop · size", "The stop at the last session's low (% and ADRs) and the position at your risk %", f"risk {SET.get('risk', {}).get('risk_pct', 0.3)}% / stop %, capped 35% ($100M+ a day) / 25% ($50M+) / 15% ($20M+); red over half an ADR (scanner/settings.json 'risk')"],
+ ["Pullback zone (tag)", "Luk's pullback entry forming", "A new 1-month high, then day 3-7 of a pullback 1.25-4 ADRs deep on volume at or under its 20-day average, 10 > 21 > 50 EMA with the 21 and 50 rising, the pullback's low within 0.5 ADR of the 10 / 21 EMA or an AVWAP; no alert (IONQ May 15-20 2026)"],
+ ["Market gauge (strip)", "GREEN / YELLOW / RED over Launches + 3-SETUPS", "Leading / Lagging shares now and 5 sessions ago, breakouts of the last 5 sessions back under their level, gap-downs, SPY / QQQ / IWM vs 9 / 21 EMA and distribution days; GREEN = Leading 40%+, the index 9 EMA over its 21, under half the breakouts failed; RED = Lagging 60%+, or 50%+ with the index under its 21 and its 9 under its 21. Placeholders until the regime test"],
+])
 SHEETS["X1 Agreed examples"] = (["Ticker", "From", "To", "Launch / pick", "What you agreed"], _examples())
 
 SHEETS = dict(sorted(SHEETS.items(), key=lambda kv: ("LWBPGAEOX".index(kv[0][0]), kv[0])))
