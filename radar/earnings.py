@@ -86,6 +86,26 @@ def week_days(now):
     return [(mon + datetime.timedelta(days=i)).isoformat() for i in range(5)]
 
 
+def trading(d):
+    return d.weekday() < 5 and d.isoformat() not in HOLIDAYS
+
+
+def back(d, n=1):
+    """n trading days before d"""
+    while n:
+        d -= datetime.timedelta(days=1)
+        if trading(d):
+            n -= 1
+    return d
+
+
+def reaction_days(now):
+    """t0 = today (the last trading day on a weekend or holiday), p1 / p2 = the 1 / 2 trading days before it.
+    Today's reactions = t0 before the open + p1 after the close; Day 2 = p1 before the open + p2 after the close."""
+    t0 = now.date() if trading(now.date()) else back(now.date())
+    return t0.isoformat(), back(t0).isoformat(), back(t0, 2).isoformat()
+
+
 def nasdaq(day):
     j = json.loads(retry(lambda: http(f"https://api.nasdaq.com/api/calendar/earnings?date={day}")))
     return ((j.get("data") or {}).get("rows")) or []
@@ -404,6 +424,8 @@ def main():
     now = datetime.datetime.now(NY)
     today = now.date().isoformat()
     days = week_days(now)
+    t0, p1, p2 = reaction_days(now)
+    extra = sorted({p1, p2} - set(days))            # last week's days the reaction views need (on a Monday / Tuesday)
     S = {s["symbol"]: s for s in json.load(open(stocks_p))}
     prev = {}
     if prev_p and os.path.exists(prev_p):
@@ -417,7 +439,7 @@ def main():
 
     # 1. the week's calendar, your rules
     cal = {}
-    for d in days:
+    for d in extra + days:
         try:
             for x in nasdaq(d):
                 sym = (x.get("symbol") or "").upper()
@@ -600,6 +622,7 @@ def main():
         r["read"], r["points"], r["why"] = score(rr) if r.get("reported") else (None, None, None)
 
     out = {"built_at": now.isoformat(timespec="seconds"), "days": days, "today": today, "rules": RULES,
+           "react": {"t0": t0, "p1": p1, "p2": p2}, "extra_days": extra,
            "n_calendar": len(cal), "rows": [rows[s] for s in syms], "errors": errors[:40]}
     json.dump(out, open(out_p, "w"), separators=(",", ":"), default=str)
     print(len(syms), "rows,", sum(1 for s in syms if rows[s].get("reported")), "reported,", len(errors), "errors")

@@ -176,6 +176,10 @@
   .er-read.r1 { background: var(--color-bad); border-color: var(--color-bad); color: var(--color-bg); }
   .er-g { display: inline-block; padding: 0 6px; border-radius: 4px; font-size: .72rem; font-weight: var(--cds-font-weight-medium); border: 1px solid currentColor; white-space: nowrap; }
   .er-table td { white-space: nowrap; }
+  /* the ticker column stays put when the table scrolls right */
+  .er-table th:first-child, .er-table td:first-child { position: sticky; left: 0; z-index: 1; background: var(--color-panel); box-shadow: 1px 0 0 var(--color-border-line); }
+  .er-table th:first-child { z-index: 3; }
+  .er-table tr.er-flash td:first-child { background: color-mix(in srgb, var(--color-warn) 18%, var(--color-panel)); }
   .er-table td.er-guide { white-space: normal; min-width: 10rem; max-width: 15rem; }
   .er-table td .tgr-lbl { display: block; }
   .er-table td .tgr-lbl.er-why { display: -webkit-box; }
@@ -826,7 +830,8 @@
       <div class="er-scroll"><div class="er-week" id="er-week"></div></div>
     </div>
     <div class="tgr-bar">
-      <span class="tgr-seg" data-k="erday" aria-label="Which days"><button data-v="all" aria-pressed="true">All week</button><button data-v="today" aria-pressed="false">Today's reactions</button></span>
+      <span class="tgr-seg" data-k="erday" aria-label="Which days"><button data-v="all" aria-pressed="true">All week</button><button data-v="today" aria-pressed="false">Today's reactions</button><button data-v="day2" aria-pressed="false">Day 2</button></span>
+      <span class="tgr-lbl" id="er-react"></span>
       <span class="tgr-seg" data-k="ershow" aria-label="Which reports"><button data-v="all" aria-pressed="true">All</button><button data-v="rep" aria-pressed="false">Reported</button><button data-v="up" aria-pressed="false">Upcoming</button></span>
       <label class="tgr-f">Find <input class="tgr-num" id="er-q" type="search" style="width:6rem" placeholder="ticker" aria-label="Find a ticker"></label>
     </div>
@@ -843,6 +848,7 @@
     <b>Results</b> come from the company's own press release (the SEC 8-K filed at release time): revenue, and the guidance read from its outlook text by fixed rules (raised / lowered / reaffirmed / given, and when it gives a revenue number, its midpoint vs the analysts' estimate and vs the same period a year ago). EPS is the adjusted figure from Yahoo or Nasdaq, the same basis as the estimate. Estimates are saved before the report; a stock first seen after its report (this first week) has no revenue estimate. When the rules can't tell, the cell says so: open the release (the 📄 link) to check.
     <b>The read</b> adds points: revenue beat +1 (2%+ beat +2) / miss −1 (−2), EPS beat +1 (10%+ +2) / miss −1 (−2), guidance raised +2, guide above the street +1 (+2 without a raise) / below −2, lowered −3, revenue growth 25%+ +1 / shrinking −1, the move after the report +2%: +1, +5%: +2 (−2% −1, −5% −2). 6+ = <span class="er-read r5">Strong bullish</span> 3–5 = <span class="er-read r4">Bullish</span> 0–2 = <span class="er-read r3">Mixed</span> −1 to −3 = <span class="er-read r2">Somewhat bearish</span> −4 or less = <span class="er-read r1">Bearish</span>. Hover a read for its points.
     <b>Columns at the end</b>: vs 200D / vs 50 EMA = the pre-market price vs the 200-day SMA and 50-day EMA as of the last close; vs 20D high = vs the highest high of the previous 20 sessions (green "cleared" = above it: out of its 1-month base); Over 52W low = how far above the 52-week low. Group rank and RS as on Launches.
+    <b>Today's reactions</b> = the reports from the last session's after close and this morning's before open (the stocks reacting today); <b>Day 2</b> = the session before (the after-close reports of 2 sessions ago and yesterday's before-open ones): their second day after the report.
     <b>When</b>: every weekday from about 7:10 to 8:55 AM ET (final by 9:00 AM), after the close (4:50, 6:30 and 8:30 PM ET) for the after-close reports, and Sunday evening for the new week. GitHub can start a run a few minutes late.</p>
     </details>
   </section>
@@ -2639,8 +2645,15 @@ defCalc('industry_perf', {
     });
     /* the tables: reported first (newest report first), then upcoming (soonest first) */
     const q = (S.erq || '').trim().toUpperCase();
-    const reacts = (r) => r.date === today || (r.when === 'amc' && r.react_day === today);
-    let rows = doc.rows.filter((r) => (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && (S.erday === 'all' || reacts(r)));
+    /* Today's reactions = this morning's before-open reports + the last session's after-close ones; Day 2 = the session before */
+    const RX = doc.react || {}, inWeek = new Set(doc.days);
+    const after = (r) => r.when !== 'bmo';
+    const view = (r) => S.erday === 'today' ? (r.date === RX.t0 && r.when === 'bmo') || (r.date === RX.p1 && after(r))
+      : S.erday === 'day2' ? (r.date === RX.p1 && r.when === 'bmo') || (r.date === RX.p2 && after(r)) : inWeek.has(r.date);
+    const lab = (d, w) => d ? erDay(d) + ' ' + w : '';
+    $('#er-react').textContent = S.erday === 'today' ? lab(RX.p1, 'after close') + ' + ' + lab(RX.t0, 'before open')
+      : S.erday === 'day2' ? lab(RX.p2, 'after close') + ' + ' + lab(RX.p1, 'before open') + ' (their 2nd day)' : '';
+    let rows = doc.rows.filter((r) => (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && view(r));
     rows.sort((a, b) => (!!b.reported - !!a.reported) || (a.reported ? (b.report_at > a.report_at ? 1 : -1) : (a.report_at > b.report_at ? 1 : -1)) || erOf(b) - erOf(a));
     [['er-up', (r) => (r.vs200 ?? 0) >= 0 && r.vs200 !== null && r.vs200 !== undefined], ['er-dn', (r) => r.vs200 !== null && r.vs200 !== undefined && r.vs200 < 0]].forEach(([id, f]) => {
       const list = rows.filter(f), tb = $('#' + id + '-table tbody');
