@@ -180,6 +180,8 @@
   .er-table th:first-child, .er-table td:first-child { position: sticky; left: 0; z-index: 1; background: var(--color-panel); box-shadow: 1px 0 0 var(--color-border-line); }
   .er-table th:first-child { z-index: 3; }
   .er-table tr.er-flash td:first-child { background: color-mix(in srgb, var(--color-warn) 18%, var(--color-panel)); }
+  .er-table td.name { min-width: 0; width: 1%; padding-right: 6px; }
+  .er-table td.name a.tgr-tk { font-size: .85rem; }
   .er-table td.er-guide { white-space: normal; min-width: 10rem; max-width: 15rem; }
   .er-table td .tgr-lbl { display: block; }
   .er-table td .tgr-lbl.er-why { display: -webkit-box; }
@@ -849,7 +851,7 @@
     <p class="tgr-note"><b>Who</b>: every stock on Nasdaq's earnings calendar this week (Monday to Friday; on the weekend, next week) that passes your Earnings rules on the last close: market cap $700M+, 20-day average $ volume $30M+ and 600K+ shares a day, price $10+, ADR 3.5%+, 30%+ over the 52-week low (scanner/settings.json "earnings"). Once on the list it stays for the week. The two tables split them by the <b>pre-market price</b> (before the open; the live price during the session) vs the 200-day SMA; nothing is taken off for being under the 50 EMA: the columns show it.
     <b>Results</b> come from the company's own press release (the SEC 8-K filed at release time): revenue, and the guidance read from its outlook text by fixed rules (raised / lowered / reaffirmed / given, and when it gives a revenue number, its midpoint vs the analysts' estimate and vs the same period a year ago). EPS is the adjusted figure from Yahoo or Nasdaq, the same basis as the estimate. Estimates are saved before the report; a stock first seen after its report (this first week) has no revenue estimate. When the rules can't tell, the cell says so: open the release (the 📄 link) to check.
     <b>The read</b> adds points: revenue beat +1 (2%+ beat +2) / miss −1 (−2), EPS beat +1 (10%+ +2) / miss −1 (−2), guidance raised +2, guide above the street +1 (+2 without a raise) / below −2, lowered −3, revenue growth 25%+ +1 / shrinking −1, the move after the report +2%: +1, +5%: +2 (−2% −1, −5% −2). 6+ = <span class="er-read r5">Strong bullish</span> 3–5 = <span class="er-read r4">Bullish</span> 0–2 = <span class="er-read r3">Mixed</span> −1 to −3 = <span class="er-read r2">Somewhat bearish</span> −4 or less = <span class="er-read r1">Bearish</span>. Hover a read for its points.
-    <b>Columns at the end</b>: vs 200D / vs 50 EMA = the pre-market price vs the 200-day SMA and 50-day EMA as of the last close; vs 20D high = vs the highest high of the previous 20 sessions (green "cleared" = above it: out of its 1-month base); Over 52W low = how far above the 52-week low. Group rank and RS as on Launches.
+    <b>Stock</b>: under the ticker, the report day: AM = before the open, PM = after the close (hover or long-press for the date and time). <b>Columns at the end</b>: vs 200D / vs 50 EMA = the pre-market price vs the 200-day SMA and 50-day EMA as of the last close; vs 20D high = vs the highest high of the previous 20 sessions (green "cleared" = above it: out of its 1-month base); Over 52W low = how far above the 52-week low. Group rank and RS as on Launches.
     <b>Today's reactions</b> = the reports from the last session's after close and this morning's before open (the stocks reacting today); <b>Day 2</b> = the session before (the after-close reports of 2 sessions ago and yesterday's before-open ones): their second day after the report.
     <b>When</b>: every weekday from about 7:10 to 8:55 AM ET (final by 9:00 AM), after the close (4:50, 6:30 and 8:30 PM ET) for the after-close reports, and Sunday evening for the new week. GitHub can start a run a few minutes late.</p>
     </details>
@@ -2564,8 +2566,10 @@ defCalc('industry_perf', {
     const tk = h('td', 'name');
     const a = h('a', 'tgr-tk', r.sym); a.href = tv(r.sym); a.target = TVTAB; tk.append(a);
     if (r.rel_url) { const rl = h('a', '', ' 📄'); rl.href = r.rel_url; rl.target = '_blank'; rl.rel = 'noopener'; rl.title = 'The press release (SEC filing ' + (r.rel_filed || '').replace('T', ' ') + ' ET)'; rl.style.textDecoration = 'none'; tk.append(rl); }
-    tk.append(h('span', 'tgr-lbl', erDay(r.date) + ' · ' + (ER_WHEN[r.when] || '') + (r.time && r.when !== 'tns' ? ' ' + r.time : '')));
-    tk.title = (r.name || '') + (r.industry ? ' · ' + r.industry : '') + (r.themes ? '\nThemes: ' + r.themes : '') + (r.fq ? '\nQuarter ending ' + r.fq : '');
+    /* short: "Tue AM" = before the open, "Mon PM" = after the close; the full day and time on hover / long press */
+    const wd = new Date(r.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' });
+    tk.append(h('span', 'tgr-lbl', wd + ' ' + ({ bmo: 'AM', amc: 'PM', dmh: 'day' }[r.when] || '?')));
+    tk.title = erDay(r.date) + ' · ' + (ER_WHEN[r.when] || '') + (r.time && r.when !== 'tns' ? ' ' + r.time : '') + '\n' + (r.name || '') + (r.industry ? ' · ' + r.industry : '') + (r.themes ? '\nThemes: ' + r.themes : '') + (r.fq ? '\nQuarter ending ' + r.fq : '');
     /* the read */
     const rd = h('td');
     if (r.read) { const b = h('span', 'er-read r' + erOf(r), r.read); b.title = (r.points > 0 ? '+' : '') + r.points + ' points: ' + (r.why || ''); rd.append(b); rd.append(h('span', 'tgr-lbl er-why', r.why || '')); }
