@@ -153,6 +153,9 @@ alone.
   2026: base top 100.90 under its 200 SMA 106.63, the alert at 101.19 on 0.9x). Not changed (the user chose a only):
   the 3-SETUPS alert text (it says the section, "Ready", and no "(light)" on the desktop).
 - **Watchlist**: vs 21 EMA and vs 50 EMA columns after Rel vol (live price vs the last close's EMAs; sortable).
+- **Phone alerts: leave them as they are (the user, Nov 3 2026)**: "I don't really use phone alerts; when I decide I'll
+  activate the phone and tell you." Don't restart the Radar day job or change anything for the phone until then. The
+  Nov 3 day job ran on the old code; the new alert rules reach the phone with the next morning's job on their own.
 
 ## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
