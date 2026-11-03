@@ -172,6 +172,22 @@ alone.
   rank_history(full=True) + launch_day_rank()). The lone-wolf tag still uses the old status (the user, Nov 3: keep it;
   a new-rank version needs its own test).
 
+## Martin Luk study (Nov 3 2026, session "Radar: Martin Luk study"; TEST ONLY, waiting for the user's "go live")
+
+- **test/luk** (display only, no rule / status / buy point / alert change; `tools/replay.py --regress`: every agreed
+  example reads the same): Launches + Launch laggards get **Trend** (Leading / Mediocre / Lagging / Pillar), **AVWAP**
+  (nearest anchored VWAP under the price: launch, breakout, 3-month high, pullback low, earnings; confluence; under the
+  AVWAP from the high), **Exit line** (10 EMA fast / 21 EMA steady, Luk's core trail), **Stop · size** (the last day's
+  low as the stop, % and ADRs, the size at settings.json "risk" 0.3%, capped 35/25/15% by $ volume), a green
+  **pullback zone dN** tag (new 1-month high, day 3-7, 1.25-4 ADRs, light volume, rising 10 > 21 > 50 EMA, the low at
+  the 10 / 21 EMA or an AVWAP; IONQ May 15-20 2026 reads as one, Luk bought May 20) and the **market gauge** strip
+  (launch.json "breadth": Leading / Lagging shares now and 5 days ago, failed breakouts, gap-downs, SPY / QQQ / IWM;
+  GREEN / YELLOW / RED placeholders until a regime study). 3-SETUPS rows get a Trend tag. fetch.py also gets QQQ, IWM.
+  Rules sheet L9. Dry build: radar-tools `launchbt` on test/luk -> radar-data launch_dry.json.
+- **Session branch ccr-d58ac612-mlgp5r** (not for main): `plans/martin-luk/PLAN.md` (study, risk math, A-Z plan),
+  `plans/martin-luk/luk_risk_sim.py`, and `bot/lukbot` = Task 1, the IBKR trade-management module (sizing, brake,
+  financed stop, daily-close trail, ib_async adapter; 29 tests). Not connected to any account.
+
 ## Status at the end of the last session (Nov 3 2026, the Earnings session)
 
 - **Live on main** (each after the user's "go live"; `tools/replay.py --regress`: every agreed example reads the same):
