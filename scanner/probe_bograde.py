@@ -66,7 +66,19 @@ def rank_history(A, cal, stocks):
     for pref in ("theme:", "ind:"):
         rows = [gi[g] for g in names if g.startswith(pref)]
         P[rows] = pct_cols(np.nanmean([pct_cols(med[n][rows]) for n in med], axis=0))
-    return P, gi, sg, pos
+    # the market rank (RS, as launch.group_rank): each stock's own 1/3/6-month return vs all the stocks in the groups
+    syms = sorted({s for g in names for s in mem[g]})
+    si = {s: j for j, s in enumerate(syms)}
+    RR = {n: np.full((len(syms), T), np.nan) for n in med}
+    for s in syms:
+        st = A[s].st
+        idx = [pos[d] for d in st.dates]
+        for n in RR:
+            r = np.full(st.c.size, np.nan)
+            r[n:] = 100 * (st.c[n:] / st.c[:-n] - 1)
+            RR[n][si[s], idx] = r
+    MK = pct_cols(np.nanmean([pct_cols(RR[n]) for n in RR], axis=0))
+    return P, gi, sg, pos, {s: MK[si[s]] for s in syms}
 
 
 def summ(ts):
@@ -95,8 +107,16 @@ def main():
         k_ = (t["symbol"], t["date"], t["buy_point"], t["bought"])
         if k_ not in best or t["launch_date"] > best[k_]["launch_date"]:
             best[k_] = t
-    bo = [t for t in best.values() if t["buy_point"] == "base breakout"]
-    P, gi, sg, pos = rank_history(A, cal, json.load(open(a_.stocks)))
+    allbp = list(best.values())
+    bo = [t for t in allbp if t["buy_point"] == "base breakout"]
+    P, gi, sg, pos, MK = rank_history(A, cal, json.load(open(a_.stocks)))
+
+    def rs_of(sym, k):
+        v = MK.get(sym)
+        return None if v is None or np.isnan(v[k]) else float(v[k])
+
+    def band(x):
+        return None if x is None else "1 RS 97+" if x >= 0.97 else "2 RS 90-96" if x >= 0.90 else "3 RS 80-89" if x >= 0.80 else "4 RS 50-79" if x >= 0.50 else "5 RS under 50"
     rows = []
     for t in bo:
         a = A[t["symbol"]]
@@ -110,7 +130,8 @@ def main():
         old_prev = launch.best_group(t["symbol"], k - 1, groups, GS)[0]       # the old status at the close before
         early, build = bool(t["early_breakout"]), (t.get("volume_building_5d") or 0) >= 1.1
         g = lambda lead: "A" if early and lead and build else "B" if early and (lead or build) else "C"
-        rows.append(dict(symbol=t["symbol"], date=t["date"], confirmed=int(t.get("engine_confirmed", 1)),
+        rsv = rs_of(t["symbol"], k - 1)
+        rows.append(dict(symbol=t["symbol"], date=t["date"], confirmed=int(t.get("engine_confirmed", 1)), rs=None if rsv is None else round(100 * rsv), rs_band=band(rsv),
                          ran10=int(hi >= buy * 1.1), ran20=int(hi >= buy * 1.2), R=t["R"], win=t["win"],
                          early=int(early), build=int(build), group_pct=None if p is None else round(100 * float(p), 1),
                          old=t["breakout_grade"], old_prev=g(old_prev == 2), new10=g(p is not None and p >= 0.90), new3=g(p is not None and p >= 0.97),
@@ -124,7 +145,26 @@ def main():
             res["group alone: " + nm] = {"yes": summ([r for r in rs if r[nm]]), "no": summ([r for r in rs if not r[nm]])}
             res["early + group: " + nm] = {"yes": summ([r for r in rs if r[nm] and r["early"]]), "no": summ([r for r in rs if not r[nm] and r["early"]])}
         res["all"] = summ(rs)
+        # RS at the close before the breakout (the user, Nov 3 2026: RS on the Watchlist setups)
+        res["by RS"] = {b_: summ([r for r in rs if r["rs_band"] == b_]) for b_ in sorted({r["rs_band"] for r in rs if r["rs_band"]})}
+        res["RS 97+ x group"] = {"Top/Strong": summ([r for r in rs if r["rs_band"] == "1 RS 97+" and r["lead10"]]),
+                                 "other": summ([r for r in rs if r["rs_band"] == "1 RS 97+" and not r["lead10"]]),
+                                 "RS under 97, Top/Strong": summ([r for r in rs if r["rs_band"] and r["rs_band"] != "1 RS 97+" and r["lead10"]])}
+        res["A grade x RS"] = {"A, RS 97+": summ([r for r in rs if r["new10"] == "A" and r["rs_band"] == "1 RS 97+"]),
+                               "A, RS under 97": summ([r for r in rs if r["new10"] == "A" and r["rs_band"] and r["rs_band"] != "1 RS 97+"])}
         out["results"][scope] = res
+    kinds = collections.defaultdict(list)
+    for t in allbp:
+        st = A[t["symbol"]].st
+        k = pos[t["date"]]
+        j = st.dates.index(t["date"])
+        buy = max(float(t["level"]), float(st.o[j])) if t.get("level") else (float(st.o[j]) if t["bought"] == "open" else float(st.c[j]))
+        hi = float(st.h[j + 1:min(st.c.size, j + 21)].max()) if j + 1 < st.c.size else buy
+        b_ = band(rs_of(t["symbol"], k - 1))
+        if b_:
+            kinds[t["buy_point"]].append(dict(rs_band=b_, ran10=int(hi >= buy * 1.1), ran20=int(hi >= buy * 1.2), R=t["R"], win=t["win"]))
+    out["by buy point x RS"] = {kp: {b2: summ([r for r in v if r["rs_band"] == b2]) for b2 in sorted({r["rs_band"] for r in v})} for kp, v in kinds.items()}
+    out["all buy points x RS"] = {b2: summ([r for v in kinds.values() for r in v if r["rs_band"] == b2]) for b2 in sorted({r["rs_band"] for v in kinds.values() for r in v})}
     out["rows"] = rows
     json.dump(out, open(a_.out, "w"))
     print(json.dumps(out["results"], indent=1)[:4000])
