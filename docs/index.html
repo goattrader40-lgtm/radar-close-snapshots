@@ -513,6 +513,7 @@
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
             <th><button class="tgr-th" data-sort="grade">Grade</button></th>
             <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after yesterday's close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%: in 2 years, 5%+ gap-ups in a Top group ran 20%+ within 20 days 44% of the time, Strong 37%, the rest 28-29%. Not part of the news grade">Group rank</button></th>
+            <th class="num"><button class="tgr-th" data-sort="rs" title="RS = the stock's rank against the whole market after yesterday's close, 1-99 (99 = the best; like IBD's RS rating). Information only: in 2 years of 5%+ gap-ups, RS 97+ ran 20%+ within 20 days more often (42% vs 31%) but averaged worse 20 days later (-3.6% vs -0.4%), and inside a Top or Strong group it added nothing (44.5% vs 44%)">RS</button></th>
             <th class="num"><button class="tgr-th" data-sort="gap_pct">Gap</button></th>
             <th class="num"><button class="tgr-th" data-sort="pm_volume">PM volume</button></th>
             <th class="num"><button class="tgr-th" data-sort="pm_dvol_m">PM $ vol $M</button></th>
@@ -1532,7 +1533,8 @@ defCalc('industry_perf', {
     const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
     $('#pm-stale').hidden = !first || first.scan_date === today;
     const order = { A: 0, B: 1, C: 2, F: 3 };
-    rows.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; });
+    const rsAllPm = ldocRS();
+    rows.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsAllPm[r.symbol] ?? null; });
     const spec = S.sort['pm-table'];
     if (spec) {
       const txt = ['symbol', 'catalyst', 'inflection'].includes(spec.key);
@@ -1541,7 +1543,7 @@ defCalc('industry_perf', {
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
     const tb = table.querySelector('tbody'); tb.replaceChildren();
-    if (ok('premarket') && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', S.pmshow === 'all' ? 'No liquid stock is gapping 5%+ this way in this scan.' : 'No A or B grade this way in this scan. Pick Show all to see the rest.'); td.colSpan = 18; tr.append(td); tb.append(tr); }
+    if (ok('premarket') && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', S.pmshow === 'all' ? 'No liquid stock is gapping 5%+ this way in this scan.' : 'No A or B grade this way in this scan. Pick Show all to see the rest.'); td.colSpan = 19; tr.append(td); tb.append(tr); }
     rows.forEach((r) => {
       const tr = h('tr'); tr.dataset.key = r.symbol;
       const key = h('td', 'key');
@@ -1550,7 +1552,7 @@ defCalc('industry_perf', {
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade, r.grade)); else gd.textContent = '—';
       const sx = h('td', 'c2 tgr-src');
       String(r.sources || '').split(' ').filter(Boolean).forEach((u, i) => { if (i) sx.append(h('span', 'tgr-sep', ' ')); const l = h('a', '', u); l.href = u; l.target = '_blank'; l.rel = 'noopener'; sx.append(l); });
-      tr.append(key, gd, grStockCell(r.gr, r.symbol, true), pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
+      tr.append(key, gd, grStockCell(r.gr, r.symbol, true), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
         h('td', 'num c3', r.pm_vol_pct_adv === null || r.pm_vol_pct_adv === undefined ? '—' : g1.format(num(r.pm_vol_pct_adv)) + '%'),
         h('td', 'num c3', r.gap_x_adr === null || r.gap_x_adr === undefined ? '—' : num(r.gap_x_adr).toFixed(2) + '×'),
         h('td', '', r.catalyst || ''), h('td', '', r.inflection || ''), h('td', 'num', r.inflection_score === null || r.inflection_score === undefined || r.inflection_score === '' ? '—' : String(r.inflection_score)), h('td', 'name', r.reason || ''), h('td', 'c2 tgr-flags', r.flags || ''),
