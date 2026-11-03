@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from live import Yahoo, UA  # noqa: E402
 
 NY = zoneinfo.ZoneInfo("America/New_York")
-SEC_UA = os.environ.get("SEC_UA") or "radar-close-snapshots research"
+SEC_UA = (os.environ.get("SEC_UA") or "").strip() or "radar-close-snapshots research"
 
 
 def http(url, ua, timeout=25):
