@@ -111,6 +111,13 @@ alone.
   1-minute checks (fast.py symbols). radar-tools `launchbt` = the launch build + History test on a branch, published
   to radar-data launch_dry.json / launch_bt_dry.json (not to main).
 
+- **RS on the Watchlist + the RS test on buy points (Nov 3 2026, the user: "yes for both")**: launch.json
+  group_rank.rs = every stock's RS; a plain RS column on the Watchlist (no highlight: information only). Test
+  (scanner/probe_bograde.py on test/bograde, all buy points after launches Aug 2025 - Nov 2026, RS at the close
+  before): no edge after the launch. Base breakouts RS 97+ ran 20%+ 25% (377), +0.19R vs RS 90-96 24%, +0.99R; A-grade
+  breakouts with RS 97+ 29% / -0.2R vs under 97 39% / +1.3R; RS 97+ in a Top/Strong group 23% / -0.11R. All buy points
+  RS 97+ 27% (642), +0.17R vs 21-23%. The RS edge is on the launch day only (History test: 58% vs 32% ran 20%+).
+
 ## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above: the group rank (Groups tab Rank / Tier; Group rank
