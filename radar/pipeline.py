@@ -536,6 +536,55 @@ def ema_last(closes, n=50):
     for c in run[n:]: e += k * (c - e)
     return e
 
+def ema_series(closes, n):
+    """the n-day EMA for each close of the unbroken run at the end (None before it is seeded: 2n closes needed)"""
+    run = []
+    for c in reversed(closes):
+        if c is None: break
+        run.append(c)
+    run.reverse()
+    out = [None] * len(closes)
+    if len(run) < 2 * n: return out
+    off = len(closes) - len(run)
+    e, k = sum(run[:n]) / n, 2 / (n + 1)
+    out[off + n - 1] = e
+    for j, c in enumerate(run[n:], start=n):
+        e += k * (c - e); out[off + j] = e
+    return out
+
+TREND_ORDER = ["Negative", "Reclaim", "Turn up", "Up", "Resting"]
+
+def trend_at(c, e5, e10, e21, e50, i):
+    """your Trend (Nov 3 2026), first match wins: Negative (under the 21 EMA), Reclaim (back over the 21 after a close
+    under it), Turn up (the 5 EMA crosses over the 10), Up (10 > 21 > 50, over the 21 and 50, the 10 and 21 rising),
+    Resting (10 > 21 > 50, the 10 or 21 not rising); the base for the positive ones: the 21 over the 50 and the 50
+    higher than 5 sessions ago, and the 10 over the 21. '' = none of them."""
+    if i < 5 or None in (c[i], c[i - 1], e5[i], e5[i - 1], e10[i], e10[i - 1], e21[i], e21[i - 1], e50[i], e50[i - 5]):
+        return None
+    base = e10[i] > e21[i] > e50[i] and e50[i] > e50[i - 5]      # the 10 over the 21 too (the user, Nov 3 2026)
+    if c[i] < e21[i]: return "Negative"
+    if not base: return ""
+    if c[i - 1] < e21[i - 1]: return "Reclaim"
+    if e5[i] > e10[i] and e5[i - 1] <= e10[i - 1]: return "Turn up"
+    stack = e10[i] > e21[i] > e50[i]
+    if stack and c[i] > e50[i] and e10[i] > e10[i - 1] and e21[i] > e21[i - 1]: return "Up"
+    if stack: return "Resting"
+    return ""
+
+def trend_info(closes):
+    """(the Trend at the last close, sessions in it, [5, 10, 21, 50 EMA at the last close, the 50 EMA 4 sessions before
+    it, the last close]) - the portal moves the EMAs on with the live price during the session"""
+    c = list(closes)
+    if len(c) < 110: return None, None, None
+    e5, e10, e21, e50 = ema_series(c, 5), ema_series(c, 10), ema_series(c, 21), ema_series(c, 50)
+    i = len(c) - 1
+    st = trend_at(c, e5, e10, e21, e50, i)
+    if st is None: return None, None, None
+    d = 1
+    while d < 250 and trend_at(c, e5, e10, e21, e50, i - d) == st: d += 1
+    r4 = lambda x: None if x is None else round(x, 4)
+    return st, d, [r4(e5[i]), r4(e10[i]), r4(e21[i]), r4(e50[i]), r4(e50[i - 4]), r4(c[i])]
+
 def dollar_vol(series, n):
     v = [p * vv for (p, _, vv) in series[-(n + 2):] if p and vv][-n:]
     return sum(v) / len(v) if len(v) >= n - 2 else None
@@ -579,6 +628,7 @@ for s, r in latest.items():
     if sma is None and len(adj) >= SMA_N and None not in adj[-SMA_N:] and not stale: sma = sum(adj[-SMA_N:]) / SMA_N
     above = None if sma is None or stale else price > sma
     e50 = None if stale else ema_last(adj)
+    tr_st, tr_d, tr_e = (None, None, None) if stale else trend_info(adj)
     adr = snap_val(s, "adr_20")
     if adr is None: adr = adr_pct(s)
     dv10 = snap_val(s, "dvol_10") or dollar_vol(ser, 10)
@@ -598,6 +648,8 @@ for s, r in latest.items():
         "adr_20": rd(adr), "dvol_10_m": rd(dv10 / 1e6, 1) if dv10 else None, "dvol_20_m": rd(dv20 / 1e6, 1) if dv20 else None,
         "sma200": rd(sma), "above_200": above, "vs_200": rd((price / sma - 1) * 100, 1) if sma and not stale else None,
         "ema50": rd(e50), "vs_50e": rd((price / e50 - 1) * 100, 1) if e50 else None,
+        # your Trend at this close and the sessions in it; tr = [5, 10, 21, 50 EMA, the 50 EMA 4 sessions back, close]
+        "trend": tr_st, "trend_days": tr_d, "tr": tr_e,
         "sector": sec, "industry": ind, "industry_detail": r["industry"] or "Other",
         "themes": " | ".join(theme_of.get(s, [])), "index": " | ".join(idx), "gainer": g,
         # its business-line group when it moves with it (score 0.6+), else none (it ranks under "<industry> · other")

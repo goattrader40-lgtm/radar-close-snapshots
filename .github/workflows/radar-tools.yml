@@ -130,6 +130,19 @@ jobs:
             python3 scanner/probe_gaps.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --volprofile /tmp/rd/volprofile.json --out /tmp/probe_gaps.json
             python3 radar/publish.py "gap study" /tmp/probe_gaps.json
           fi
+          if [ "${{ inputs.cmd }}" = "trendnow" ]; then
+            # the Trend at the last close for every stock (the nightly build on this branch, run by hand; only its Trend
+            # fields are published, as radar-data trend.json; stocks.json is not touched); the portal uses it until the
+            # nightly build carries the Trend itself
+            python3 -I radar/pipeline.py /tmp/pwork /tmp/pout "$GITHUB_REPOSITORY" | tail -3
+            python3 -c "import json; d=json.load(open('/tmp/pout/stocks.json')); b=json.load(open('/tmp/pout/build.json')); b=b[0] if isinstance(b,list) else b; json.dump({'asof': b.get('asof'), 'rows': {r['symbol']: [r.get('trend'), r.get('trend_days'), r.get('tr')] for r in d if r.get('trend') is not None}}, open('/tmp/trend.json','w'), separators=(',',':'))"
+            python3 radar/publish.py "trend $(TZ=America/New_York date '+%F %H:%M')" /tmp/trend.json
+          fi
+          if [ "${{ inputs.cmd }}" = "pipedry" ]; then
+            # the nightly build on this branch, NOT published as stocks.json: radar-data stocks_dry.json (the Trend check)
+            python3 -I radar/pipeline.py /tmp/pwork /tmp/pout "$GITHUB_REPOSITORY" | tail -5
+            cp /tmp/pout/stocks.json /tmp/stocks_dry.json && python3 radar/publish.py "pipeline dry run" /tmp/stocks_dry.json
+          fi
           if [ "${{ inputs.cmd }}" = "earnings" ]; then
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json

@@ -290,6 +290,19 @@ As of Nov 3, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Columns at the end | vs 200D, vs 50 EMA (pre-market price vs the last close's SMA / EMA), vs 20D high (vs the highest high of the previous 20 sessions; 'cleared' = above it), over the 52-week low; Group rank and RS as on Launches |
 | When | Weekdays about 7:10-8:55 AM ET (final by 9:00), 4:50 / 6:30 / 8:30 PM ET, Sunday 6 PM ET (earnings.yml -> radar-data earnings.json). No phone alerts |
 
+## Trend column
+
+| Trend | Rule (checked in this order, first match wins) |
+|---|---|
+| Base rule (the positive ones) | 10 EMA > 21 EMA > 50 EMA and the 50 EMA higher than 5 sessions ago (the user, Nov 3 2026) |
+| 1 Negative | Price under the 21 EMA |
+| 2 Reclaim | Price back over the 21 EMA after a close under it, with the base rule |
+| 3 Turn up | The 5 EMA crosses over the 10 EMA that day, with the base rule |
+| 4 Up | The base rule, price over the 21 and 50 EMA, the 10 and 21 EMA both higher than the session before |
+| 5 Resting | The base rule, but the 10 or the 21 EMA not higher than the session before |
+| - (none) | None of the above |
+| Where / when | Watchlist, Earnings, Gainers, Launches (and laggards); at the close from the nightly build (stocks.json trend / trend_days / tr), live in the session (today's EMAs moved on with the live price); Nd = sessions in the state; sorts Up > Turn up > Reclaim > Resting > - > Negative |
+
 ## Open items
 
 | Item | Status |
