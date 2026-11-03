@@ -73,6 +73,104 @@ The numbers come from `plans/martin-luk/luk_risk_sim.py` (run it: `python3 plans
 - The article's 2026 statistics are its author's dataset, not audited.
 - The USIC accounts are $20K–$1M, and margin is allowed.
 
+### 1.1 The X accounts in the article, checked (Nov 3 2026)
+
+X can't be opened from this session, so this comes from web search of the posts. Their own posts are quoted;
+"secondary" means someone else's summary.
+
+**@martinlukkt (Luk himself).** What his posts say:
+- Mar 2025: the 0.5% / 1.5–5% / 35% rules, "not hard rules".
+- Jun 2025: "20% drawdown… I should've opened less new positions and trimmed more partials… Thursday's equity curve
+  low is my line of defence".
+- Jan 30 2026: closed his GLD/SLV shorts early: "I can't keep my promise of holding into the 50 EMA".
+- Mar 2026: "Shorted at the first bounce into the declining 9 EMA after the close below it… I'm a chronic overtrader".
+- Jun 2026: "On bounce days after a distribution day, I was often tempted to go long… stopped out. Those losing trades
+  guided me to… the pullback short setup… tricky and deadly".
+- A fan site (martinluk.com) shows his chart: EMAs, ADR, **low-of-day distance**, $ volume; screeners Premarket /
+  Leader / Potent.
+- Comments attributed to him: partials of ~10% once up 3+ ADRs; trails on the 9 or 23 EMA.
+
+What it changes here:
+- (1) The brake caps **new positions while in a drawdown** (his own fix).
+- (2) The bot carries out the exit he couldn't stick to (GLD/SLV).
+- (3) The breadth gauge counts **distribution days** and flags the bounce day after one.
+- (4) The Short watch gets a fast variant: the first close under the 9 EMA, then the first bounce into the falling 9
+  EMA.
+- (5) The size helper shows the **low-of-day distance** in % and ADRs, like his chart.
+- (6) S3 also tests a trim at +3 ADRs.
+
+**@Qullamaggie (Kristjan Kullamägi).** From his own site:
+- Risk 0.25–1% a trade, rarely more. Positions mostly 10–20%, and never more than 30% of the account overnight in one
+  stock.
+- Sell 1/3–1/2 after 3–5 days and move the stop to breakeven. Trail the rest on the 10- or 20-day MA: the first close
+  below.
+- Secondary: index filter = the 10-day over the 20-day MA; daily $ volume about 50× your account.
+
+What Luk took: his "biggest mentor", about 80% of his style. Luk then changed three things: much smaller trims, a 35%
+cap, and pullbacks instead of breakouts.
+
+What it changes here:
+- Your current management is close to Qullamaggie's, so S3 compares all three: his, yours, Luk's.
+- The bot's size check gets the **$ volume ≥ 50× account** rule.
+- The gauge shows both QQQ 10>20 SMA and 9>21 EMA.
+
+**@markminervini.** From his own posts:
+- **Progressive exposure**: "when your trading is going well you press… when not doing well you cut back".
+- Pilot buys first, then "step on the gas" once they work.
+- "never get bold when running cold"; "never let a good size gain turn into a loss"; "define your stop before you
+  enter"; "never average down".
+- Sell half of two laggards to finance a new full position.
+- Gaps: "that's where correct position sizing and progressive exposure come into play".
+- Secondary: risk 1.25–2.5%, stops ≤ 7–8%.
+
+What Luk took: the Stage 2 template, volatility contraction, progressive exposure.
+
+What it changes here:
+- The brake gets a **ramp back**: after a red spell, 0.25× pilots, 0.5× after 2 winners, 1.0× once the month is green,
+  instead of jumping straight back to full.
+- **Rotation when buying power is full**: sell the weakest half-positions to fund an A setup. That was Luk's 315%
+  ceiling in August.
+- Your "30% over the 52-week low" rule is already from his template.
+
+**@alphatrends (Brian Shannon).**
+- AVWAP from earnings / gap days ("gap" appears 270 times in his book), swing highs and lows, and IPOs.
+- The "VWAP handoff": re-anchor where price found support.
+- The 5-day MA is his short-term sentiment line.
+
+What Luk took: AVWAP on 1- and 5-minute charts from catalyst days, swing highs and lows (he uses the AlphaTrends
+AVWAP).
+
+What it changes here: step C uses the anchors Shannon uses: the gap day's first bar, the latest top, the pullback low
+(the handoff), and the **IPO for new listings**. The 5-day line is used for parabolic shorts.
+
+**@jaredtendler.**
+- The inchworm: raise the back of your range (your C-game), not just the peak.
+- An A/B/C-game map.
+- Tilt types: mistake, hating to lose, injustice, revenge, entitlement.
+
+What Luk took: maps his A/B/C game and stops tilt spirals.
+
+What it changes here:
+- The bot becomes the C-game floor: the brake, plus an **override lock**. No manual trades or size-ups while the brake
+  is at 0.25× or off.
+- Every manual override is logged with a C-game tag.
+
+**@JLawStock (J Law).**
+- Two-time USIC $1M+ division winner: 2024 +353.9%, +1,499% over 2 years.
+- "Align strategies with market conditions". Hong Kong-based, so longer, multi-wave swings.
+- Secondary, unconfirmed: aims for 5:1 reward/risk; no trades in the first 15 minutes.
+
+What Luk took: J Law introduced Luk to momentum trading (Feb 2023 seminar) and to the USIC.
+
+What it changes here:
+- A pre-trade check: **room to the next resistance ≥ 3R**. The Radar's Resistance column already has the levels.
+- S5 also tests **no entries before 9:45**, which fits the first-hour spread finding.
+
+**Not found:**
+- The article's 6th mentor (cut off in your screenshots).
+- Any source other than the article that names J Law, Minervini or Tendler as his mentors. A search of his own
+  material names only Qullamaggie and Shannon.
+
 ---
 
 ## 2. Task 1: How good is his risk strategy, and how should your bot manage trades
@@ -191,6 +289,11 @@ close-confirm on the same pullback days, with spreads.
   `ExcessLiquidity` ≥ 10% of net liquidation after the trade.
 - **Market gap budget**: Σ position% × G ≤ 8% of equity.
 - **Earnings**: no new entry with earnings in the next 2 sessions, unless the setup *is* the earnings reaction.
+- **Room**: the next overhead resistance (the Radar's 3/6/9-month and 52-week highs) at least 3R above the entry
+  (J Law aims for 5:1).
+- **Capacity**: the stock's 20-day $ volume at least 50× your account (Qullamaggie's rule of thumb).
+- **Rotation** (Minervini): with buying power full and an A setup triggering, sell half of the 2 weakest positions
+  (closest to their stops in R) instead of skipping the trade.
 
 **The brake** (m = the smallest that applies):
 
@@ -204,9 +307,15 @@ close-confirm on the same pullback days, with spreads.
 | month −8% (loose −10%) | 0.25 · month −12% (loose −15%): 0, paper only until month end |
 | Radar breadth gauge YELLOW / RED | 0.5 / 0 for new longs |
 | optional "cushion" (his A+ rule): month +5% and equity at its high | 1.5 on A-grade setups only |
+| equity 5%+ under its high (his Jun 2025 fix: "opened less new positions") | at most 2 new positions a day |
+| the first bounce day after an index distribution day (his Jun 2026 post) | 0.5 for new longs that day |
+| **ramp back** (Minervini's pilot buys): after any step under 1.0 | 0.25 → 0.5 after 2 winners → 1.0 once the month is green or at a new high |
+| **override lock** (Tendler): while m ≤ 0.25 | no manual trades and no manual size-ups; every override logged |
 
-m returns to 1.0 at a new equity high. This is the mechanical version of "less when my P&L says so" and of Tendler's
-A/B/C-game. **The bot cannot tilt; Luk did in December.**
+m climbs back by the ramp, not in one jump. This is the mechanical version of "less when my P&L says so", Minervini's
+progressive exposure and Tendler's A/B/C-game. **The bot cannot tilt; Luk did in December.**
+(The simulation in 2.1 covers only the drawdown, streak and monthly steps. The ramp, the new-positions cap and the
+distribution-day rule are added from the accounts in 1.1 and are not simulated yet.)
 
 **Order flow (state machine per position).**
 
@@ -333,7 +442,9 @@ approximation; the bot computes it exactly from minute bars. Anchors:
 - the last breakout day;
 - the latest top ("from the high");
 - the momentum-start low (`momentum_start()`);
-- the last earnings day (`earnings_of()`).
+- the last earnings day (`earnings_of()`), from the gap day's first bar (Shannon);
+- the pullback low once it holds (Shannon's "handoff": the core's line of defence);
+- the IPO, for listings under 200 sessions (the engine already treats them separately).
 
 Fields `avwap_launch`, `avwap_bo`, `avwap_high`, `avwap_low`, `avwap_earn`. Portal: an AVWAP column (the nearest level
 under the price, with its anchor), and a **confluence** tag when 2+ of the 10 EMA / 21 EMA / an AVWAP sit within 0.25
@@ -351,7 +462,9 @@ lists):
 - % Leading and % Lagging, and their change vs 5 sessions ago;
 - failed breakouts in the last 5 sessions (closed back under the level within 3) vs all breakouts;
 - gap-downs;
-- QQQ / SPY / IWM against their 9 and 21 EMA.
+- QQQ / SPY / IWM against their 9 and 21 EMA (Luk) and their 10- vs 20-day MA (Qullamaggie);
+- index distribution days in the last 25 sessions (down on higher volume than the day before) and "first bounce after
+  a distribution day" (Luk's Jun 2026 post).
 
 Output: `launch.json` → `"breadth"`, plus `regime.json` on radar-data with one row per day (history for S4 and for the
 bot). Portal: one strip over the tabs: "Market: YELLOW · Leading 37% (−6 in 5 days) · Lagging 43% · failed breakouts 4
@@ -375,7 +488,9 @@ launch anchor or the high anchor the one that matters? (Same runs as H.)
 **J. S3, management.** On the 5,783 buy points (`scanner/mgmt.py` gets `run_luk()`), same entries and stops, compare:
 - Luk: 15% at +4R, then breakeven **or** financed −0.71R; core on the 10 / 21 EMA close (fast/steady rule); the
   same-day cut; the optional sell-into-extension.
+- Luk, the other version attributed to him: ~10% partials once up 3+ ADRs, trail on the 9 / 23 EMA.
 - Yours: 1/3 at +2 ADR, 1/3 at +5 ADR, breakeven, runners on the 10 / 21 EMA close.
+- Qullamaggie: 1/3–1/2 after 3–5 days, breakeven, the rest on the first close under the 10 / 20-day MA.
 
 Reported by trigger type and by half (both halves must agree).
 
@@ -390,6 +505,7 @@ Reported by trigger type and by half (both halves must agree).
 - Alpaca SIP 1-minute bars, as `radar/sipcal.py` already uses, with a spread charge per minute of day.
 - On S1's pullback days: your 5-minute ORH vs the flush & reclaim (stop at the flush low) vs the AVWAP/VWAP reclaim vs
   the 3:50 close-confirm.
+- Each one also run with no entries before 9:45 (J Law's "not in the first 15 minutes").
 - This picks the bot's entry types (2.4 ENTER a/b/c).
 
 **M. S6, shorts (only if you answer yes in section 5).**
@@ -397,6 +513,8 @@ Reported by trigger type and by half (both halves must agree).
 - Breakdown: a close under the 21 EMA on 1.5x+ volume after 10+ closes over it.
 - Weak bounce: 2–4 days up on under-average volume into the falling 10/21 EMA or the AVWAP from the high, no close
   over the 21 EMA.
+- Fast variant (Luk's GLD/SLV short, Mar 2026): the first close under the 9 EMA, then the first bounce into the falling
+  9 EMA.
 - Parabolic: 3+ up days, 4+ ADRs over the 10 EMA, climax volume.
 - Entries: the day's low break / the 15-minute breakdown; stop at the high of day; cover into 2–3 ADRs under the 10
   EMA or on a close over it.
@@ -484,5 +602,13 @@ the bot work doesn't touch the Radar → V/M only if you want shorts.
 - Interviews: [TraderLion podcast, +969% pullback strategy (Jan 31 2026)](https://podcasts.apple.com/us/podcast/969-return-in-1-year-the-winning-pullback-strategy/id1586336923?i=1000747508894), [TraderLion, 283% in 1 year (Apr 2025)](https://podwise.ai/episodes/3678850), [TraderLion thread: $1,300 start, 2021 −50%](https://x.com/TraderLion/status/2018716934406107198)
 - Write-ups: [Kyna Kosling: his study process](https://tradingresourcehub.substack.com/p/martin-luk-study-process), [Decoding the +969%](https://mistakesoninvesting.substack.com/p/decoding-martin-luks-record-969-championship), [Financial Wisdom: pullback strategy](https://www.financialwisdomtv.com/post/martin-luk-s-pullback-trading-strategy-how-the-2025-u-s-investing-champion-finds-low-risk-high-re), [Financial Wisdom: swing strategy](https://www.financialwisdomtv.com/post/martin-luk-s-1358-swing-trading-strategy-from-gamestop-blow-up-to-us-investing-champion), [Forex Club profile](https://en.forexclub.pl/Martin-Luk-969-in-a-year-who-is-the-winner-of-the-US-Investing-Championship-and-how-does-he-trade/), [video summary: winning strategy](https://videohighlight.com/v/-6lPuMFSMG0), [Finetiq: AVWAP-EMA flush](https://ideas.finetiqsystems.com/en/ideas/avwap-ema-flush/)
 - Independent backtest (CRSP + TAQ, 2016–2026): [rootchunhe/martin-luk-backtesting](https://github.com/rootchunhe/martin-luk-backtesting)
+- The X accounts (1.1):
+  - Luk: [distribution-day bounces → pullback short (Jun 2026)](https://x.com/martinlukkt/status/2064365486218060139), [GLD/SLV short at the declining 9 EMA (Mar 2026)](https://x.com/martinlukkt/status/2029074929736384773), [closed GLD/SLV early (Jan 2026)](https://x.com/martinlukkt/status/2017290915820478648), [fan reference: layout & screeners](https://martinluk.com/), [Substack comments (screener values, partials)](https://tradingresourcehub.substack.com/p/martin-luk-283-usic-2024-key-lessons/comments)
+  - Qullamaggie: [his 3 setups (risk, size, sells)](https://qullamaggie.com/my-3-timeless-setups-that-have-made-me-tens-of-millions/), [sell 1/3–1/2 after 3–5 days (quote)](https://x.com/AsymTrading/status/1706716710735085833)
+  - Minervini: [Progressive Exposure](https://x.com/markminervini/status/1293567014720745472), [trade largest when best](https://x.com/markminervini/status/1864122686076801164), [gaps and sizing](https://twitter.com/markminervini/status/970065583382450176), [rotation](https://x.com/markminervini/status/1260379022938251266), [his rules](https://x.com/markminervini/status/1859625009469112773)
+  - Shannon: [gaps in his AVWAP book](https://x.com/alphatrends/status/2017668778545299489), [CMT podcast on AVWAP](https://cmtassociation.org/podcast/fill-the-gap-episode-sixty-one-anchored-vwap-legend-brian-shannon-cmt/), [5-day MA cheat sheet](https://alphatrends.net/archives/podcast/brian-shannon-shares-his-5-day-moving-average-cheat-sheet/)
+  - Tendler: [the inchworm concept (TraderLion)](https://traderlion.com/trading-psychology/the-inchworm-concept/)
+  - J Law: [market conditions thread](https://x.com/JLawStock/status/1883099593627574744), [trading from Hong Kong](https://x.com/JLawStock/status/1872983332327440872), [11 lessons (TraderLion)](https://traderlion.com/profile/j-law/11-lessons-from-j-law/), [two-year record](https://www.prnewswire.com/apac/news-releases/j-law-sets-two-year-record-with-1-499-return-in-us-investing-championship-302698517.html)
+  - Moglen's 4-hour interview (risk, margin, sizing, sell rules): [announcement](https://x.com/RichardMoglen/status/2014030484611977625)
 - IBKR / rules: [IBKR portfolio margin ($110K / $100K)](https://ibkb.interactivebrokers.com/es/node/83), [IBKR MOC orders](https://www1.interactivebrokers.com/en/trading/orders/moc.php), [NYSE closing auction (3:50 PM)](https://www.nyse.com/publicdocs/nyse/NYSE_Auctions_Closing_Process_Fact_Sheet.pdf), [PDT rule change 2026 (E*TRADE)](https://us.etrade.com/knowledge/library/margin/pattern-day-trading-rule-change)
 - The article you sent (screenshots, Nov 3 2026): the 2026 dataset statistics marked ◇.
