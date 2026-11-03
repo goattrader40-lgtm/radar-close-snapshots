@@ -88,6 +88,15 @@ alone.
   Grade). Stocks over $2T stay out (the user: no need; settings.json max_mcap 2e12), so NVDA isn't ranked and AI
   Compute shows no rank.
 
+- **Breakout alert grade uses the group rank (Nov 3 2026, the user: "it should replace with new")**: A = early (1st /
+  2nd breakout within 50 sessions of the launch) + its best group Top or Strong (top 10%) + volume building; B = early +
+  one; C = the rest. launch.py writes `group_tier_now` / `group_rank_now` on every launch and laggard row (best_ranks());
+  radar/alerts.py grade_breakout and the page's desktop alerts read them (no field = the old Leading theme). Test
+  (scanner/probe_bograde.py on test/bograde, radar-tools `bograde`; base breakouts after launches Aug 2025 - Nov 2026,
+  2,743 crosses of the top), ran 10% / 20%+ in 20 sessions: new A 63% / 37% (379), avg +1.02R; old Leading A 59% / 31%
+  (375), +0.48R; closed as a breakout: new A 73% / 43% (157), +2.47R vs old 68% / 37% (136), +1.76R. Top-only: 168 A's,
+  65% / 38%. B 52% / 22%, C 45% / 17%.
+
 ## Status at the end of the last session (Nov 2 2026, late evening)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above, incl. the group rank (Groups tab Rank / Tier; Group
@@ -364,8 +373,9 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    Storage at every month-end Sep 2025 - Jun 2026; DELL #2 in AI Servers Feb 2026 while the group ranked low, #1 Mar
    and May; in the CPUs theme INTC, not AMD, led Mar-Jun 2026. Still open, only if the user asks: (a) the stock's rank
    vs the whole market helped launches (top 3% of all stocks 34% (100) vs 25%; with a Top/Strong group 40% (52), avg
-   +6.1%): could be a tag on Launches, needs the user's go; (b) whether the new rank should replace the old Leading
-   status in the breakout grade (needs its own test); (c) 3-SETUPS triggers on the phone / 1-minute checks.
+   +6.1%): could be a tag on Launches, needs the user's go; (b) DONE Nov 3: the rank replaced Leading in the breakout
+   grade; (c) 3-SETUPS triggers on the phone / 1-minute checks. Emerging: tested and rejected (gap-ups 24% ran 20%+
+   vs bottom half 29%; launches 20%, avg -5.5%).
 8. Older: move the Launches rules box to the top of the tab; picks reading their history from the start; an intraday
    surge alert without a gap; the 3-SETUPS weaker Ready groups (kept as is).
 

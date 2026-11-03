@@ -31,9 +31,9 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               trendline, the smaller or the larger base's top), whatever the volume (a base top: the close has to hold
               more than 0.5% over it to be decisive, within 0.5% is a breakout with caution): the alert shows the volume pace
               for the time of day and says when it is light (ATRC Aug 7 2026 over 41.29 on 0.6x, Oct 29 over 61.70),
-              after closing under it the day before; graded from 2 years of data (grade_breakout): A = an early
-              breakout (1st / 2nd, within 50 sessions of the launch) in a leading theme with volume building before,
-              B = early plus one of those, C = the rest
+              after closing under it the day before; graded from the data (grade_breakout): A = an early
+              breakout (1st / 2nd, within 50 sessions of the launch) in a Top or Strong group (the group rank, top 10%)
+              with volume building before, B = early plus one of those, C = the rest
   gap out of base  a launch being followed closed at or under its base high (the base top or your MSF pattern's pivot;
               not a flag line, not a pop) and opens above it today (your rule, Nov 1 2026; Zanger / Qullamaggie). Only
               stocks with an ADR of 4%+, 600K+ shares and $30M+ a day (20-day averages) and a $700M+ market cap. Four
@@ -89,16 +89,26 @@ def grade(rv, bo, gap, chg, R, under):
 
 
 def grade_breakout(r):
-    """the breakout grade, from what separated the ones that worked (2 years, 906 base breakouts after launches):
-    early = the 1st or 2nd breakout since the launch, within 50 sessions of it; the theme Leading; the volume building
-    the 5 days before (1.1x+ the 50 before). A = all three (62% ran 10%+ in 20 days, 35% ran 20%+); B = early plus
-    one of the others (51% / 24%); C = the rest (40% / 15%). The day's volume and 'turning up' themes didn't help."""
+    """the breakout grade, from what separated the ones that worked: early = the 1st or 2nd breakout since the launch,
+    within 50 sessions of it; its group Top or Strong in the group rank (top 10% of themes or industries after the last
+    close; the user, Nov 3 2026: it replaces the old "theme Leading"); the volume building the 5 days before (1.1x+ the
+    50 before). Base breakouts after launches, Aug 2025 - Nov 2026 (2,743 crosses of the top), ran 10% / 20%+ within
+    20 sessions: A = all three 63% / 37% (379; the old Leading theme: 59% / 31%), B = early plus one of the others
+    52% / 22%, C = the rest 45% / 17%; the ones that closed as a breakout: A 73% / 43% (157). The day's volume didn't help.
+    A launch.json without the rank (group_tier_now missing) falls back to the old Leading theme."""
     early = (r.get("breakouts") or 0) < 2 and (r.get("sessions") or 0) + 1 < 50
-    lead = r.get("group_status_now") == "Leading"
+    if "group_tier_now" in r:
+        tier = r.get("group_tier_now") or ""
+        lead = tier in ("Top", "Strong")
+        gtxt = ("group " + ("★ Top " if tier == "Top" else "Strong " if tier == "Strong" else "not top 10% ")
+                + (r.get("group_rank_now") or "unranked")).strip()
+    else:
+        lead = r.get("group_status_now") == "Leading"
+        gtxt = "theme leading" if lead else f"theme {(r.get('group_status_now') or 'none').lower()}"
     build = (r.get("vol_build") or 0) >= 1.1
     g = "A" if early and lead and build else "B" if early and (lead or build) else "C"
     why = [("1st" if not r.get("breakouts") else "2nd") + " breakout since the launch" if early else "late (3rd+ breakout or 50+ sessions on)",
-           "theme leading" if lead else f"theme {(r.get('group_status_now') or 'none').lower()}"] + (["volume building"] if build else [])
+           gtxt] + (["volume building"] if build else [])
     return g, ", ".join(why)
 
 
@@ -348,7 +358,8 @@ def find(live, doc, now=None):
             out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
                         f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x for the time of day"
                         + (" (light)" if rv < 1 else "") + " · "
-                        + (f"an entry in the base (still leg {nxt}), the base top is next" if flag else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else "")) + f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
+                        + (f"an entry in the base (still leg {nxt}), the base top is next" if flag else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else ""))
+                        + ("" if "group_tier_now" in r else f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})")
                         + since(r), "high" if g == "A" else "default", tvs))
     # the 50 EMA undercut tab: 2 closes in a row under the 50 EMA at the last close; today it has to close back over it
     for r in doc.get("ema50_undercut", []):

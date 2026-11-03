@@ -47,10 +47,11 @@ SHEETS = {
  ["B", "Two of the four ingredients"],
  ["C", "The rest"],
 ]),
-"L4 Breakout grade": (["Grade", "Rule", "2-year history (ran 10%+ / 20%+ in 20 days)"], [
- ["A", "Early breakout (1st or 2nd since the launch, within 50 sessions) in a Leading theme, volume building the 5 days before", "62% / 35%"],
- ["B", "Early plus one of those two", "51% / 24%"],
- ["C", "The rest", "40% / 15%"],
+"L4 Breakout grade": (["Grade", "Rule", "History, Aug 2025 - Nov 2026 (ran 10%+ / 20%+ in 20 days)"], [
+ ["A", "Early breakout (1st or 2nd since the launch, within 50 sessions) in a Top or Strong group (group rank top 10%, G2), volume building the 5 days before (1.1x+ the 50 before)", "63% / 37% (379 crosses of the top); closed as a breakout 73% / 43% (157)"],
+ ["B", "Early plus one of those two", "52% / 22%"],
+ ["C", "The rest", "45% / 17%"],
+ ["Changed Nov 3 2026", "The group rank replaced 'theme Leading' (the user). Same test with the old Leading theme: A 59% / 31% (375), closed as a breakout 68% / 37% (136). Top only (top 3%) gave fewer A's (168) at 65% / 38%", "-"],
 ]),
 "L5 Off the list": (["Reason", "Rule"], [
  ["50 EMA", "3 closes in a row under the 50 EMA (after 2 it waits in the 50 EMA undercut list for the reclaim)"],
@@ -184,8 +185,8 @@ SHEETS.update({
  ["Theme then -> now", "The group's status on the launch day and today; 'since' = the first day from the launch it was trending (Turning up or Leading)"],
  ["Lone wolf", "None of its groups has trended since the launch"],
  ["Theme confirmed (2-year launch test)", "Its theme turned up (Turning up or Leading) after the launch: A+ launches then ran 20%+ 65% of the time vs 52% for other A's"],
- ["Breakout grade", "A Leading theme counts toward an A/B breakout; Turning up did no better than not trending in the 2-year test"],
- ["Group rank (separate)", "See G2: each theme ranked among themes and each industry among industries (Top 3%, Strong 3-10%); shown beside, not used in the Leading / Turning up status above"],
+ ["Breakout grade", "Since Nov 3 2026 the group rank (Top or Strong, G2) counts toward an A/B breakout, not the Leading status above (L4)"],
+ ["Group rank", "See G2: each theme ranked among themes and each industry among industries (Top 3%, Strong 3-10%); the Leading / Turning up status above still shows in 'Theme then -> now'"],
 ]),
 "G2 Group rank": (["Item", "Rule"], [
  ["Groups", "Every theme on the portal and every industry (Broad list), 3+ stocks with data; themes ranked only against themes, industries only against industries"],
@@ -202,7 +203,7 @@ SHEETS.update({
  ["#1 in group tag", "Pre-market graded gappers only: the stock is #1 in its best-ranked group and the group has 5+ stocks"],
  ["Leader test: gap-ups", "In a Top group the #1 ran 20%+ 61% (54) vs #2-3 51% (65) vs the rest 41-42%; but its average 20 days later was no better (+3.1% vs +3.6%) and it faded on the gap day more often (57% vs 49%)"],
  ["Leader test: launches", "No tag: the group's #1 launching ran 20%+ 20% (86) vs 29% for the rest of its group; in Top groups the bottom two-thirds did best (38%)"],
- ["Not in the grades", "Shown beside the news grade and the launch grade, not part of them"],
+ ["In the grades", "Part of the breakout alert grade (Top or Strong counts, L4); beside the news grade and the launch grade, not part of them"],
  ["2-year test: 5%+ gap-ups", "Ran 20%+ within 20 days: Top 44% (739), Strong 37% (457), 10-20% 28%, 20-50% 29%, bottom half 29%. Gap-day fade about the same in every band (52-57%)"],
  ["2-year test: 10%+ gap-ups", "Top 42% (142), Strong 42% (84), the rest 26-30%"],
  ["2-year test: launches", "Top 35% (200, avg +4.4% in 20 days), Strong 31% (186, +1.5%), 10-20% 23%, 20-50% 22%, bottom half 21%"],

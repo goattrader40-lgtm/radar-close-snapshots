@@ -383,6 +383,21 @@ def group_rank(A, cal, stocks_rows, back=5):
     return out
 
 
+def best_ranks(grank, stocks_rows):
+    """{symbol: its best-ranked group (its themes and its industry) from group_rank()}: group, kind, rank, of, pct, tier"""
+    if not grank:
+        return {}
+    by = {(r["kind"], r["group"]): r for r in grank["rows"]}
+    out = {}
+    for r in stocks_rows:
+        c = [by.get(("theme", t)) for t in (r.get("themes") or "").split(" | ") if t] + [by.get(("ind", r.get("industry")))]
+        c = [x for x in c if x]
+        if c:
+            b = max(c, key=lambda x: (x["pct"], -x["rank"]))
+            out[r["symbol"]] = dict(group=b["group"], kind=b["kind"], rank=b["rank"], of=b["of"], pct=b["pct"], tier=b["tier"])
+    return out
+
+
 def best_group(sym, k, groups, GS):
     """(status, name) of the best-trending group the stock belongs to on calendar day k: its themes first,
     then its area ("AI & Semis area"); -1 when it has none"""
@@ -1642,7 +1657,7 @@ def gap_base_fields(a, i, prev=None):
     return out
 
 
-def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None, s3=None, grank=None):
+def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None, s3=None, grank=None, gbest=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
     T = len(cal) - 1
@@ -1827,6 +1842,13 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                     [st.dates[g], fnum(a.hi20[g])] if g >= 0 else None,
                     " ".join(sorted({x for t in groups.get(s, ([], []))[0] for x in leaders.get(t, ()) if x != s})) or None,
                     fnum(st.c[i - 49:i + 1].mean()) if i >= 49 else None, fnum(st.low52[i])]
+    # the breakout alert grade's group (the user, Nov 3 2026: the new group rank replaces "Leading"): the stock's best
+    # group rank after this close; Top or Strong (top 10%) counts
+    for r in rows + lag:
+        b = (gbest or {}).get(r["symbol"])
+        if gbest:
+            r["group_tier_now"] = b["tier"] if b else ""
+            r["group_rank_now"] = f"{b['group']} #{b['rank']}/{b['of']}" if b else None
     G = []
     for g, (ms, stt, sh21, m21) in GS.items():
         hist = [int(x) for x in stt[-20:]]
@@ -1939,15 +1961,17 @@ def main():
         s3 = [dict(symbol=r["symbol"], tv=r.get("tv"), section=r["section"], setup=r["setup"], buy_point=r["buy_point"],
                    away_adr=r["away_adr"], adr_pct=r["adr_pct"], why=r["why"]) for r in rows]
         print("3-SETUPS:", {sec: sum(1 for r in rows if r["section"] == sec) for sec in S3_SECTIONS})
-    grank = None
+    grank, gbest = None, None
     try:
-        grank = group_rank(A, cal, json.load(open(a.stocks)))
+        stocks_rows = json.load(open(a.stocks))
+        grank = group_rank(A, cal, stocks_rows)
+        gbest = best_ranks(grank, stocks_rows)
         print("group rank:", grank["themes"], "themes,", grank["industries"], "industries; Top:",
               ", ".join(r["group"] for r in grank["rows"] if r["tier"] == "Top"))
     except Exception as e:                       # the rank must never stop the launch list
         print("group rank failed:", e)
     daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {},
-          picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3, grank)
+          picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3, grank, gbest)
     if a.backtest:
         backtest(A, groups, GS, cal, S, a.backtest)
 
