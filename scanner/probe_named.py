@@ -59,6 +59,9 @@ def main():
         "yahoo": {s: (prof.get(s) or {}).get("industry") or rows_by[s].get("industry") or "Other" for s in syms},
         "named": {s: subgroups.group_of(s, prof.get(s) or {}, rows_by[s]) for s in syms},
     }
+    versions["named"] = {s: g for s, g in versions["named"].items() if g not in subgroups.EXCLUDE}
+    versions["named + tight only"] = versions["named"]
+    XE = D[:, 1:251]                              # the first year: each group's fit, for the "tight only" tiers
     out = {"stocks": len(syms), "versions": {}, "named_groups": {}}
     X = D[:, T - 250:]
     for vn, gmap in versions.items():
@@ -93,16 +96,31 @@ def main():
             for r in rows:
                 sym_themes[syms[r]].append(t)
 
+        loose = set()
+        if vn == "named + tight only":
+            for g, rows in mem.items():
+                if len(rows) >= 3:
+                    Xg = XE[rows]
+                    ok = [r for r, o in zip(rows, np.isfinite(Xg).sum(axis=1) >= 200) if o]
+                    if len(ok) >= 3:
+                        cm = np.corrcoef(np.nan_to_num(XE[ok]))
+                        np.fill_diagonal(cm, np.nan)
+                        if np.nanmean(cm) < 0.2:
+                            loose.add(g)
+                    else:
+                        loose.add(g)
+            out["loose_groups_first_year"] = sorted(loose)
+
         def best(s, k):
             c = [PT[ti[t], k] for t in sym_themes.get(s, []) if not np.isnan(PT[ti[t], k])]
             g = gmap.get(s)
             if g in gi and not np.isnan(P[gi[g], k]):
-                c.append(P[gi[g], k])
+                c.append(min(P[gi[g], k], 0.89) if g in loose else P[gi[g], k])    # a loose group can't be Top / Strong
             return max(c) if c else None
 
         def band(p):
             return None if p is None else "1 Top 3%" if p >= 0.97 else "2 Strong 3-10%" if p >= 0.90 else "3 10-50%" if p >= 0.5 else "4 bottom half"
-        res = {w: collections.defaultdict(list) for w in ("gaps", "gaps 10%+", "launches")}
+        res = {w: collections.defaultdict(list) for w in ("gaps", "gaps 10%+", "launches", "gaps · 2nd year", "launches · 2nd year")}
         for s in syms:
             a = A[s]
             st = a.st
@@ -118,6 +136,8 @@ def main():
                 bd = band(best(s, k - 1))
                 if bd:
                     res["gaps"][bd].append(r)
+                    if k >= 251:
+                        res["gaps · 2nd year"][bd].append(r)
                     if a.gap[i] >= 10:
                         res["gaps 10%+"][bd].append(r)
         for s, i, k, gs, gn in launch.detect(A, groups, GS, cal, S):
@@ -129,12 +149,17 @@ def main():
             c0 = st.c[i]
             bd = band(best(s, k))
             if bd:
-                res["launches"][bd].append(dict(day=0.0, r5=100 * (st.c[i + 5] / c0 - 1), r20=100 * (st.c[i + 20] / c0 - 1), mx=100 * (st.h[i + 1:i + 21].max() / c0 - 1)))
+                rr = dict(day=0.0, r5=100 * (st.c[i + 5] / c0 - 1), r20=100 * (st.c[i + 20] / c0 - 1), mx=100 * (st.h[i + 1:i + 21].max() / c0 - 1))
+                res["launches"][bd].append(rr)
+                if k >= 251:
+                    res["launches · 2nd year"][bd].append(rr)
         top_now = sorted(((float(P[gi[g], -1]), g) for g in names if not np.isnan(P[gi[g], -1])), reverse=True)[:15]
         out["versions"][vn] = {"groups_3plus": n_groups, "avg_fit": round(float(np.nanmean(fits)), 3), "median_fit": round(float(np.nanmedian(fits)), 3),
                                "bands": {w: {k: summ(v) for k, v in sorted(d.items())} for w, d in res.items()},
                                "top_groups_today": [[g, round(100 * p, 1)] for p, g in top_now]}
-        if vn == "named":
+        if vn == "named + tight only":
+            pass
+        elif vn == "named":
             out["named_groups"] = {g: {"n": v[0], "fit": round(v[1], 3), "weakest": [[s_, round(float(f_), 3)] for f_, s_ in v[2]]} for g, v in sorted(per.items(), key=lambda x: -x[1][1])}
         if vn == "current":
             out["current_groups"] = {g: {"n": v[0], "fit": round(v[1], 3)} for g, v in sorted(per.items(), key=lambda x: -x[1][1])}

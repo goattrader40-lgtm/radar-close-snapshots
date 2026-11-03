@@ -83,7 +83,16 @@ G = {
     "Crypto Platforms": "COIN CRCL BLSH BTGO GEMI CSHR FIGR SECZ CD",
     "Crypto Treasuries": "MSTR BMNR SBET ASST PURR FWDI XXI",
     "Bitcoin Miners": "MARA RIOT CLSK HIVE ABTC BTDR IOND",
+    # ---- fixes after the first co-movement check (Nov 3 2026)
+    "Insurtech": "LMND ROOT HIPO PRCH TRUP",
+    "Insurance: Florida Homeowners": "HCI UVE HRTG ACIC AII SLDE",
+    "Utilities - Latin America & Asia": "CEPU CIG EDN ELPC KEP SBS ENIC",
+    "eVTOL & Air Mobility": "JOBY ACHR BETA",
+    "Solar": "DQ",
+    "Land & Royalty": "TPL LB",
+    "Preferred & Duplicate Shares": "ZIONP CDZIP FRMEP WAFDP",
 }
+EXCLUDE = {"Preferred & Duplicate Shares"}        # not ranked (a second share class of a company already counted)
 HAND = {s: g for g, syms in G.items() for s in syms.split()}
 # Banks - Regional not listed above: mid-size ($3B+) vs community
 REGIONAL_MID = 3.0
