@@ -32,8 +32,9 @@ T = [
  # extra names and the Alt Managers / BDC / Industrial Automation / Agribusiness groups came from etf.net theme ETF holdings
  # AI chips split (Oct 26, 2026, with the SMH move taken out): the big three and the CPU makers each trade as a pack;
  # the old basket only moved with SMH (+0.06 beyond semis)
- ("AI & Semis", "AI Compute (NVDA AVGO TSM)", "SMH SOXX", "NVDA AVGO TSM"),
- ("AI & Semis", "CPUs (AMD INTC ARM)", "SMH SOXX", "AMD INTC ARM"),
+ # Nov 3, 2026 (your OK): merged again: with NVDA (and TSM) out of the scans by the $2T rule, AI Compute had too few names to
+ # rank, and AVGO now trades with AMD / ARM / INTC as one pack (0.62 average pair, 120 sessions to Oct 30)
+ ("AI & Semis", "AI Chips & CPUs", "SMH SOXX", "NVDA AVGO TSM AMD INTC ARM"),
  ("AI & Semis", "Memory & Storage", "DRAM", "MU SNDK WDC STX"),
  # Semi equipment split (tested Oct 24-26, 2026, 120 and 60 sessions, with the shared semi move removed):
  # the big four front-end toolmakers and the subsystem suppliers each trade as their own pack
@@ -348,6 +349,15 @@ AUTO_ANCHORS = [   # names for the groups the test finds; a group takes the firs
 AUTO_FALLBACK = {"Biotechnology": "Small & Mid-cap Biotech"}   # otherwise the industry name
 core = {th: mem.split() for _, th, _, mem in T}
 ext, auto, scores, strength = {}, [], {}, {}   # ext: theme -> [(score, sym)]; auto: [(name, [(score, sym)])]
+# industry groups by business line (the user, Nov 3 2026): radar/industry_groups.json hand lists, else Yahoo's industry
+# (profiles.json in the work dir, from radar/profiles.py); pruned below by the same test as the themes
+IG = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "industry_groups.json")))
+try:
+    PROF = json.load(open(os.path.join(WORK, "profiles.json")))["rows"]
+except Exception:
+    PROF = {}
+IG_HAND = {x: g for g, m in IG["hand"].items() for x in m.split()}
+igroups, grp_of = {}, {}                       # tight group -> [(score, sym)]; sym -> (group, score)
 coh_anchor = None
 try:
     import numpy as np
@@ -438,6 +448,29 @@ try:
         return round(float((C.sum() - n) / (n * (n - 1))), 2)
     for th, m in groups.items(): strength[th] = avg_pair(m + [x for _, x in ext.get(th, [])])
     for label, g in auto: strength[label] = avg_pair([x for _, x in g])
+    # industry groups: every stock its business-line group, then each group pruned like the auto groups (the weakest
+    # out until everyone tracks the rest at COH_FLOOR+, 3 stocks at least); the 2-year test (probe_rolling.py, pruned
+    # month by month): Top / Strong launches ran 20%+ 36% vs 32% with the broad industries
+    def base_group(x):
+        if x in IG_HAND: return IG_HAND[x]
+        ind = (PROF.get(x) or {}).get("industry") or (fd.get(x) or {}).get("industry") or latest[x].get("industry") or "Other"
+        if ind in ("Banks - Regional", "Banks - Diversified"):
+            return "Banks: US Regional" if (num(latest[x]["marketCap"]) or 0) >= IG["regional_mid_b"] * 1e9 else "Banks: US Community"
+        if ind == "Biotechnology": return "Biotech: Other"
+        if ind.startswith("Software"): return "Software: Other"
+        return ind
+    bg = defaultdict(list)
+    for x in univ:
+        g_ = base_group(x)
+        if g_ not in IG["exclude"]: bg[g_].append(x)
+    for g_, names in bg.items():
+        if len(names) < 3: continue
+        kept = prune(names, min_n=3)
+        if len(kept) >= 3:
+            igroups[g_] = kept
+            for sc, x in kept: grp_of[x] = (g_, sc)
+    for g_, kept in igroups.items(): strength["group:" + g_] = avg_pair([x for _, x in kept])
+    print(f"industry groups: {len(igroups)} tight, {len(grp_of)} stocks in them", file=sys.stderr)
     print(f"co-movement: window {win[0]}..{coh_anchor}, {len(univ)} stocks, {len(liquid)} liquid, "
           f"{sum(len(v) for v in ext.values())} auto-added to baskets, {len(auto)} auto groups", file=sys.stderr)
 except Exception as e:   # the portal still works with the core baskets only
@@ -550,6 +583,8 @@ for s, r in latest.items():
         "ema50": rd(e50), "vs_50e": rd((price / e50 - 1) * 100, 1) if e50 else None,
         "sector": sec, "industry": ind, "industry_detail": r["industry"] or "Other",
         "themes": " | ".join(theme_of.get(s, [])), "index": " | ".join(idx), "gainer": g,
+        # its business-line group when it moves with it (score 0.6+), else none (it ranks under "<industry> · other")
+        "group": grp_of[s][0] if s in grp_of else None, "group_score": grp_of[s][1] if s in grp_of else None,
         # a one-day move of 50%+ inside the 3M window is often a split or spin-off: check the chart
         "big_move": any(x[1] is not None and abs(x[1]) >= 50 for x in ser[-M3:]),
         "no_new_price": stale,
@@ -577,6 +612,9 @@ themes += [{"category": "Auto groups", "theme": label, "kind": "auto", "etfs": "
 
 json.dump(out, open(os.path.join(OUT, "stocks.json"), "w"), separators=(",", ":"))
 json.dump(themes, open(os.path.join(OUT, "themes.json"), "w"), separators=(",", ":"))
+json.dump([{"group": g_, "strength": strength.get("group:" + g_), "n": len(k_), "members": " ".join(x for _, x in k_),
+            "scores": " ".join(f"{x}:{sc}" for sc, x in k_)} for g_, k_ in sorted(igroups.items(), key=lambda kv: -(strength.get("group:" + kv[0]) or 0))],
+          open(os.path.join(OUT, "groups.json"), "w"), separators=(",", ":"))
 json.dump([{"asof": str(asof), "sessions": len(sessions), "first_session": str(sessions[0]),
            "stocks": len(out), "gainers": sum(o["gainer"] for o in out),
            "latest_source": kind_of[asof], "chain_breaks": " ".join(breaks),

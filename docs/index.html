@@ -266,7 +266,7 @@
       <span class="tgr-ctl"><span class="tgr-lbl">Group average</span>
         <span class="tgr-seg" data-k="wt"><button data-v="med" aria-pressed="true">Median</button><button data-v="cw" aria-pressed="false">Cap-weighted</button></span></span>
       <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
-        <span class="tgr-seg" data-k="level"><button data-v="industry" aria-pressed="true">Broad</button><button data-v="industry_detail" aria-pressed="false">Detailed</button></span></span>
+        <span class="tgr-seg" data-k="level"><button data-v="grp" aria-pressed="true" title="Business-line groups that move together (Nov 3 2026): ranked, with Strength">Groups</button><button data-v="industry" aria-pressed="false">Broad</button><button data-v="industry_detail" aria-pressed="false">Detailed</button></span></span>
       <span class="tgr-ctl"><span class="tgr-lbl">Layout</span>
         <span class="tgr-seg" data-k="tlay"><button data-v="flat" aria-pressed="true">One ranked list</button><button data-v="area" aria-pressed="false">By area (main ETF on top)</button></span></span>
       <span class="tgr-ctl"><span class="tgr-lbl">Themes</span>
@@ -309,13 +309,14 @@
 
       <div class="tgr-card" id="industries-card">
         <div class="tgr-cardhead"><h2 id="industries-h">Industry groups</h2></div>
-        <p class="tgr-note" id="industries-note">Every US-listed stock over $300M market cap, grouped by industry. Chips show which of your themes live in each industry. ETF = the industry's own ETF; <span class="tgr-etag">sector</span> = no industry ETF exists, so it's the whole sector's fund (XLB for Materials, XLI for Industrials…), and vs ETF compares the group with its sector; <span class="tgr-etag">related</span> = a close but different fund. Rank and Tier: the same as for themes, industries ranked against industries (Broad list only).</p>
+        <p class="tgr-note" id="industries-note">Every US-listed stock over $300M market cap, grouped by industry. Chips show which of your themes live in each industry. ETF = the industry's own ETF; <span class="tgr-etag">sector</span> = no industry ETF exists, so it's the whole sector's fund (XLB for Materials, XLI for Industrials…), and vs ETF compares the group with its sector; <span class="tgr-etag">related</span> = a close but different fund. <b>Groups</b> (the default list) = industry groups by business line (e.g. Memory &amp; Storage Chips, Semi Equipment: Front-End, US Regional Banks, Bitcoin Miners), each stock kept only if it moves with its group (the same weekly co-movement test as the themes: a score of 0.6+ vs the rest of the group); stocks that don't are listed as "&lt;industry&gt; · other" and get a rank but no Top / Strong. Strength = how tightly the group moves together (same scale as the themes' Strength). Rank and Tier: groups ranked against groups (Groups list only). Broad and Detailed are the old industry lists, unranked.</p>
         <div class="tgr-scroll">
           <table class="tgr-table" id="industry-table">
             <thead><tr>
               <th><button class="tgr-th" data-sort="industry">Industry</button></th>
-              <th class="num"><button class="tgr-th" data-sort="grank" title="Group rank after the last close (Broad list only): this industry against all the other industries on its stocks' median 1-, 3- and 6-month moves (Qullamaggie's 1/3/6-month lists). ▲▼ = change vs a week ago">Rank</button></th>
+              <th class="num"><button class="tgr-th" data-sort="grank" title="Group rank after the last close (Groups list only): this group against all the other industry groups on its stocks' median 1-, 3- and 6-month moves (Qullamaggie's 1/3/6-month lists). ▲▼ = change vs a week ago">Rank</button></th>
               <th><button class="tgr-th" data-sort="gtier" title="★ Top = the top 3% of industries, Strong = the top 3-10%. In 2 years of data, gap-ups and launches in these groups ran 20%+ more often; below the top 10% no group did better than the bottom half">Tier</button></th>
+              <th class="num"><button class="tgr-th" data-sort="gstr" title="Strength: how tightly the group's stocks move together, the average correlation between every pair of them (daily moves with the market's move removed, 120 sessions; the same scale as the themes' Strength). Groups list only; '· other' = stocks that don't move with their business group (ranked, no Top / Strong)">Strength</button></th>
               <th class="num c3"><button class="tgr-th" data-sort="n">Stocks</button></th>
               <th class="num" data-p="1d"><button class="tgr-th" data-sort="p1d">1D</button></th>
               <th class="num" data-p="1w"><button class="tgr-th" data-sort="p1w">1W</button></th>
@@ -392,7 +393,7 @@
     <div class="tgr-moves" id="g-moves"><span class="tgr-lbl">Group moves today (3+ tight members pass):</span> <span class="tgr-chips" id="g-moves-list"></span></div>
     <div class="tgr-bar">
       <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
-        <span class="tgr-seg" data-k="level"><button data-v="industry" aria-pressed="true">Broad</button><button data-v="industry_detail" aria-pressed="false">Detailed</button></span></span>
+        <span class="tgr-seg" data-k="level"><button data-v="grp" aria-pressed="true" title="Business-line groups that move together (Nov 3 2026): ranked, with Strength">Groups</button><button data-v="industry" aria-pressed="false">Broad</button><button data-v="industry_detail" aria-pressed="false">Detailed</button></span></span>
     </div>
     <div class="tgr-grid">
       <div class="tgr-card" id="g-themes-card">
@@ -918,6 +919,7 @@ defCalc('theme_perf', {
       row.up_pct = rs.length ? Math.round((100 * rs.filter((r) => v(r.chg_1d) > 0).length) / rs.length) : null;
       row.industries = tally(rs, 'industry');
       row.industries_detail = tally(rs, 'industry_detail');
+      row.industries_grp = tally(rs, 'grp');
       row.strength = v(t.strength);
       row.scores = t.scores || '';
       row.weak = t.weak || '';
@@ -955,7 +957,7 @@ defCalc('industry_perf', {
     const med = (a) => { a = a.filter((x) => x !== null).sort((x, y) => x - y); if (!a.length) return null; const m = a.length >> 1; return r2(a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2); };
     const cw = (rs, k) => { let s = 0, w = 0; rs.forEach((r) => { if (v(r[k]) !== null) { s += v(r[k]) * v(r.mcap_b); w += v(r.mcap_b); } }); return w ? r2(s / w) : null; };
     const out = [];
-    ['industry', 'industry_detail'].forEach((level) => {
+    ['grp', 'industry', 'industry_detail'].forEach((level) => {
       const groups = new Map();
       stocks.forEach((r) => { const k = r[level] || 'Other'; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); });
       groups.forEach((rs, name) => {
@@ -976,7 +978,7 @@ defCalc('industry_perf', {
 <script>
 (() => {
   /* ───────── state ───────── */
-  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', gq: '', lng: 'all', lnst: 'all', lntype: 'all', lnwolf: false, erday: 'all', ershow: 'all', erq: '', sort: {} };
+  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'grp', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', gq: '', lng: 'all', lnst: 'all', lntype: 'all', lnwolf: false, erday: 'all', ershow: 'all', erq: '', sort: {} };
   const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
   const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
   const fitMap = (scores) => {
@@ -1251,8 +1253,9 @@ defCalc('industry_perf', {
     const stocks = BASE ? BASE.stocks : null;
     if (stocks !== GRSsrc) { GRSsrc = stocks; GRS = new Map((stocks || []).map((r) => [r.symbol, r])); }
     const s = GRS.get(sym); if (!s) return null;
-    const c = String(s.themes || '').split(' | ').filter(Boolean).map((t) => grOf('theme', t)).concat([grOf('ind', s.industry)]).filter(Boolean);
-    return c.sort((a, b) => b.pct - a.pct || a.rank - b.rank)[0] || null;
+    const c = String(s.themes || '').split(' | ').filter(Boolean).map((t) => grOf('theme', t)).concat([grOf('ind', s.grp || s.industry)]).filter(Boolean);
+    const eff = (g) => (g.loose ? Math.min(g.pct, 89.9) : g.pct);     /* a loose group can't outrank a Top / Strong one */
+    return c.sort((a, b) => eff(b) - eff(a) || a.rank - b.rank)[0] || null;
   };
   const grTierN = (g) => (!g ? null : g.tier === 'Top' ? 2 : g.tier === 'Strong' ? 1 : 0);
   /* the stock's place inside that group (its own 1-, 3- and 6-month moves vs the group's other stocks) */
@@ -1293,7 +1296,7 @@ defCalc('industry_perf', {
   const drawThemes = (symMap) => {
     const table = $('#theme-table');
     table.querySelectorAll('th[data-p]').forEach((th) => th.setAttribute('data-field', pf(th.dataset.p)));
-    table.querySelector('th[data-lv]').setAttribute('data-field', S.level === 'industry' ? 'industries' : 'industries_detail');
+    table.querySelector('th[data-lv]').setAttribute('data-field', S.level === 'industry' ? 'industries' : S.level === 'grp' ? 'industries_grp' : 'industries_detail');
     $('#th-vs').textContent = 'vs ETF (' + S.period.toUpperCase() + ')';
     setState('theme-table', ['theme_perf']);
     const tb = table.querySelector('tbody'); tb.replaceChildren();
@@ -1320,7 +1323,7 @@ defCalc('industry_perf', {
       tr.append(h('td', 'num c3', r.up_pct === null ? '—' : r.up_pct + '%'));
       const ec = h('td', 'c3'); if (themeEtf(r)) ec.append(etfLink(themeEtf(r)));
       tr.append(ec, maCell(r.e50, 'c3'), maCell(r.e200, 'c3'));
-      tr.append(chipCell(S.level === 'industry' ? r.industries : r.industries_detail, 'industry', 'c2'));
+      tr.append(chipCell(S.level === 'industry' ? r.industries : S.level === 'grp' ? r.industries_grp : r.industries_detail, 'industry', 'c2'));
       return tr;
     };
     const umbTr = (cat, etf) => {
@@ -1350,18 +1353,21 @@ defCalc('industry_perf', {
     const tb = table.querySelector('tbody'); tb.replaceChildren();
     const rows = levelRows().filter((r) => !S.gfind || r.industry === S.gfind.stock[S.level]);      /* Find a ticker: its industry */
     $('#th-ivs').textContent = 'vs ETF (' + S.period.toUpperCase() + ')';
-    rows.forEach((r) => { r.etf = S.level === 'industry' ? indEtf(r.industry) : null; r.vs = vsOf(r, r.etf); const e = r.etf ? etfRow(r.etf) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; r.gr = S.level === 'industry' ? grOf('ind', r.industry) : null; r.grank = r.gr ? r.gr.pct : -1; r.gtier = r.gr ? grTierN(r.gr) : -1; });
-    $('#industries-h').textContent = S.level === 'industry' ? 'Industry groups' : 'Industry groups (detailed)';
+    rows.forEach((r) => { r.etf = S.level === 'industry' ? indEtf(r.industry) : null; r.vs = vsOf(r, r.etf); const e = r.etf ? etfRow(r.etf) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; r.gr = S.level === 'grp' ? grOf('ind', r.industry) : null; r.grank = r.gr ? r.gr.pct : -1; r.gtier = r.gr ? grTierN(r.gr) : -1; r.gstr = S.level === 'grp' && GRPS[r.industry] ? num(GRPS[r.industry].strength) : -1; });
+    $('#industries-h').textContent = S.level === 'grp' ? 'Industry groups (by business line)' : S.level === 'industry' ? 'Industries (broad)' : 'Industries (detailed)';
     const spec = sortSpec(table.id, { key: 'p' + S.period, dir: -1 });
-    const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : ['vs', 'e50', 'e200', 'grank', 'gtier'].includes(spec.key) ? r[spec.key] : spec.key === 'n' || spec.key === 'up_pct' ? num(r[spec.key]) : r[spec.key]);
+    const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : ['vs', 'e50', 'e200', 'grank', 'gtier', 'gstr'].includes(spec.key) ? r[spec.key] : spec.key === 'n' || spec.key === 'up_pct' ? num(r[spec.key]) : r[spec.key]);
     rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
     markSort(table, spec);
     const max = Math.max(1, ...rows.map((r) => Math.abs(num(r[pf(S.period)]) || 0)));
     rows.forEach((r) => {
       const tr = h('tr', 'click'); tr.dataset.key = r.key; tr.dataset.kind = 'industry'; tr.dataset.name = r.industry;
       if (S.sel && S.sel.kind === 'industry' && S.sel.name === r.industry) tr.classList.add('sel');
-      const gcell = grRankCell(r.gr); if (S.level !== 'industry') gcell.title = 'Ranks are for the Broad industry list';
-      tr.append(h('td', 'key', r.industry), gcell, grTierCell(r.gr), h('td', 'num c3', String(r.n)));
+      const gcell = grRankCell(r.gr); if (S.level !== 'grp') gcell.title = 'Ranks are for the Groups list';
+      const sv = r.gstr >= 0 ? r.gstr : null;
+      const scell = h('td', 'num', sv === null ? '—' : ''); if (sv !== null) scell.append(h('span', 'tgr-sdot ' + sband(sv)), h('span', '', sv.toFixed(2)));
+      if (S.level === 'grp' && r.industry.endsWith(' · other')) scell.title = 'Stocks of this industry that do not move with any business-line group: ranked, but no Top / Strong';
+      tr.append(h('td', 'key', r.industry), gcell, grTierCell(r.gr), scell, h('td', 'num c3', String(r.n)));
       ['1d', '1w', '1m', '3m'].forEach((p) => tr.append(pctCell(r[pf(p)], p === S.period ? max : 0)));
       const ec = h('td', 'c3'); if (r.etf) { ec.append(etfLink(r.etf)); const k = indEtfKind(r.industry, r.etf); if (k !== 'Industry ETF') { const tg = h('span', 'tgr-etag', SECTOR_ETFS.has(r.etf) ? 'sector' : 'related'); tg.title = k; ec.append(tg); } }
       tr.append(ec, pctCell(r.vs, 0), maCell(r.e50, 'c3'), maCell(r.e200, 'c3'));
@@ -2822,7 +2828,7 @@ defCalc('industry_perf', {
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
-  let SRV = null, LNBT = null, REV = null, EARN = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
+  let GRPS = {}, SRV = null, LNBT = null, REV = null, EARN = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
   const REVOF = (sym) => (REV && REV.rows ? REV.rows[sym] : null);
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
   const nyNow = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value])); return { wd: p.weekday, m: Number(p.hour) * 60 + Number(p.minute) }; };
@@ -2894,6 +2900,7 @@ defCalc('industry_perf', {
       const [build, live, pm, gl, pml, etfs, rev, setups] = await Promise.all([getJson(sha, 'build.json'), getJson(sha, 'live.json').catch(() => null),
         getJson(sha, 'premarket.json'), getJson(sha, 'gradelog.json'), getJson(sha, 'premarket_live.json').catch(() => null),
         getJson(sha, 'etfs.json').catch(() => null), getJson(sha, 'revenue.json').catch(() => null), getMain('setups/latest.json').catch(() => null)]);
+      getJson(sha, 'groups.json').then((g) => { GRPS = Object.fromEntries((g || []).map((x) => [x.group, x])); }).catch(() => null);
       D.setups = setups ? { status: 'ok', data: setups } : (D.setups && D.setups.status === 'ok' ? D.setups : { status: 'error', data: null });
       lastMain = Date.now();
       const [ln, lnbt] = await Promise.all([getMain('setups/launch.json').catch(() => null), getMain('setups/launch_backtest.json').catch(() => null)]);
@@ -2904,6 +2911,9 @@ defCalc('industry_perf', {
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {
         const [stocks, themes] = await Promise.all([getJson(sha, 'stocks.json'), getJson(sha, 'themes.json')]);
+        /* each stock's industry group (Nov 3 2026): its business-line group when it moves with it, else "<industry> · other" */
+        const hasGroups = stocks.some((r) => r.group);
+        stocks.forEach((r) => { r.grp = hasGroups ? (r.group || (r.industry || 'Other') + ' · other') : r.industry; });
         BASE = { stocks, themes }; lastBuilt = build[0].built_at;
       }
       LIVE = live;

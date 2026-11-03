@@ -82,6 +82,20 @@ jobs:
             python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/launch_dry.json --picks /tmp/picks_dry.json
             python3 radar/publish.py "launch dry run" /tmp/launch_dry.json;;
           esac
+          if [ "${{ inputs.cmd }}" = "groupsdry" ]; then
+            # the portal build (pipeline.py) + the launch build on this branch, not published live: radar-data
+            # stocks_dry.json, themes_dry.json, groups_dry.json, launch_dry.json
+            pip install --quiet numba numpy pandas
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/work /tmp/out /tmp/rd && { git show origin/radar-data:profiles.json > /tmp/work/profiles.json || true; }
+            python3 -I radar/pipeline.py /tmp/work /tmp/out "$GITHUB_REPOSITORY" | tail -c 600
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            { git show origin/radar-data:gradelog.json > /tmp/rd/gradelog.json || true; } && { git show origin/radar-data:live.json > /tmp/rd/live.json || true; }
+            cp setups/launch.json /tmp/launch_dry.json
+            python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/out/stocks.json --out /tmp/launch_dry.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json --picks setups/picks.json
+            cp /tmp/out/stocks.json /tmp/stocks_dry.json && cp /tmp/out/themes.json /tmp/themes_dry.json && cp /tmp/out/groups.json /tmp/groups_dry.json
+            python3 radar/publish.py "groups dry run" /tmp/stocks_dry.json /tmp/themes_dry.json /tmp/groups_dry.json /tmp/launch_dry.json
+          fi
           if [ "${{ inputs.cmd }}" = "launchbt" ]; then
             # the launch build AND the History test on this branch, not saved to main: radar-data launch_dry.json + launch_bt_dry.json
             pip install --quiet numba numpy pandas

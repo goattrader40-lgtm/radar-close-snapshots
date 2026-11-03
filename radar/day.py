@@ -176,6 +176,11 @@ def fast_once():
 
 def daily():
     os.makedirs(OUT, exist_ok=True)
+    os.makedirs(WORK, exist_ok=True)
+    # each stock's Yahoo industry for the industry groups (radar/profiles.py), refreshed weekly (new listings)
+    pf = data_file("profiles.json")
+    if pf:
+        open(os.path.join(WORK, "profiles.json"), "w").write(pf)
     r = sh(sys.executable, "-I", os.path.join(HERE, "pipeline.py"), WORK, OUT, REPO, check=False)
     log("pipeline:", r.stdout.strip()[-600:])
     if r.returncode:
@@ -185,6 +190,17 @@ def daily():
     if len(stocks) < 2000:
         raise RuntimeError(f"only {len(stocks)} stocks, not publishing")
     files = [os.path.join(OUT, f) for f in ("stocks.json", "themes.json", "build.json")]
+    if os.path.exists(os.path.join(OUT, "groups.json")):
+        files.append(os.path.join(OUT, "groups.json"))
+    try:
+        age = (now() - datetime.datetime.fromisoformat(json.loads(pf)["built_at"])).days if pf else 99
+    except Exception:
+        age = 99
+    if age >= 7:                                       # next evening's groups use the refreshed profiles
+        r = sh(sys.executable, os.path.join(HERE, "profiles.py"), os.path.join(OUT, "stocks.json"), os.path.join(OUT, "profiles.json"), check=False)
+        log("profiles:", (r.stdout or r.stderr).strip()[-200:])
+        if r.returncode == 0:
+            files.append(os.path.join(OUT, "profiles.json"))
     r = sh(sys.executable, os.path.join(HERE, "etfs.py"), os.path.join(OUT, "themes.json"), os.path.join(OUT, "etfs.json"), check=False)
     log("etfs:", (r.stdout or r.stderr).strip()[-300:])
     if r.returncode == 0:

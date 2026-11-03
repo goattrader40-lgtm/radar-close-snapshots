@@ -298,6 +298,21 @@ def _pct_rank(v):
     return _pct_rank_need(v, 5)
 
 
+LOOSE = " · other"     # a stock whose business-line group it doesn't move with: ranked under "<broad industry> · other", no tier
+
+
+def ind_key(r, use_groups):
+    """the stock's industry-level group: its tight business-line group (stocks.json "group", radar/pipeline.py, Nov 3
+    2026), else "<broad industry> · other" (loose: a rank but no Top / Strong); the broad industry when no groups exist"""
+    if use_groups:
+        return r["group"] if r.get("group") else (r.get("industry") or "Other") + LOOSE
+    return r.get("industry")
+
+
+def uses_groups(stocks_rows):
+    return any(r.get("group") for r in stocks_rows)
+
+
 def group_rank(A, cal, stocks_rows, back=5):
     """Each theme on the portal and each industry (3+ stocks), ranked against the other groups of its kind (themes
     vs themes, industries vs industries) the Qullamaggie way: the median 1-, 3- and 6-month return of its stocks, each
@@ -305,6 +320,7 @@ def group_rank(A, cal, stocks_rows, back=5):
     Strong, the rest only a rank number (the 2-year test: below the top 10% no group did better than the bottom half).
     Also the rank `back` sessions ago, for the change. Returns {"asof", "themes", "industries", "rows": [...]}"""
     import warnings
+    ug = uses_groups(stocks_rows)
     mem = collections.defaultdict(list)
     for r in stocks_rows:
         s = r["symbol"]
@@ -312,8 +328,9 @@ def group_rank(A, cal, stocks_rows, back=5):
             continue
         for t in [x for x in (r.get("themes") or "").split(" | ") if x]:
             mem["theme:" + t].append(s)
-        if r.get("industry"):
-            mem["ind:" + r["industry"]].append(s)
+        k_ = ind_key(r, ug)
+        if k_:
+            mem["ind:" + k_].append(s)
     names = sorted(g for g, ms in mem.items() if len(ms) >= 3)
     cols = [len(cal) - 1, len(cal) - 1 - back]
     calset = set(cal)
@@ -385,7 +402,8 @@ def group_rank(A, cal, stocks_rows, back=5):
                 continue
             m = med[cols[0]][j]
             out["rows"].append(dict(group=names[j][len(kind):], kind=kind[:-1], rank=rk[cols[0]][j], of=len(rk[cols[0]]),
-                                    pct=round(100 * float(p), 1), tier="Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else "",
+                                    pct=round(100 * float(p), 1), loose=names[j].endswith(LOOSE),
+                                    tier="" if names[j].endswith(LOOSE) else "Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else "",
                                     rank_before=rk[cols[1]].get(j), members=len(mem[names[j]]),
                                     median_1m=fnum(m[0], 1), median_3m=fnum(m[1], 1), median_6m=fnum(m[2], 1),
                                     order=" ".join(order.get(names[j], []))))
@@ -408,6 +426,7 @@ def rank_history(A, cal, stocks_rows, full=False):
     """the group rank and the market rank (as group_rank) on every day of the calendar, for the History test:
     (best group percentile per stock {symbol: array over days}, market percentile {symbol: array over days})"""
     import warnings
+    ug = uses_groups(stocks_rows)
     pos = {d: k for k, d in enumerate(cal)}
     T = len(cal)
     mem, sg = collections.defaultdict(list), collections.defaultdict(list)
@@ -417,8 +436,9 @@ def rank_history(A, cal, stocks_rows, full=False):
             continue
         for t in [x for x in (r.get("themes") or "").split(" | ") if x]:
             mem["theme:" + t].append(s); sg[s].append("theme:" + t)
-        if r.get("industry"):
-            mem["ind:" + r["industry"]].append(s); sg[s].append("ind:" + r["industry"])
+        k_ = ind_key(r, ug)
+        if k_:
+            mem["ind:" + k_].append(s); sg[s].append("ind:" + k_)
     names = [g for g, ms in mem.items() if len(ms) >= 3]
     gi = {g: j for j, g in enumerate(names)}
     syms = sorted({s for g in names for s in mem[g]})
@@ -440,7 +460,11 @@ def rank_history(A, cal, stocks_rows, full=False):
             if rows:
                 P[rows] = _pct_cols(np.nanmean([_pct_cols(med[n][rows]) for n in R], axis=0))
         MK = _pct_cols(np.nanmean([_pct_cols(R[n]) for n in R], axis=0))
-        best = {s: np.nanmax(P[[gi[g] for g in sg[s] if g in gi]], axis=0) for s in syms if any(g in gi for g in sg[s])}
+        Pt = P.copy()                              # a loose group's rank can't make Top / Strong
+        for g, j in gi.items():
+            if g.endswith(LOOSE):
+                Pt[j] = np.minimum(Pt[j], GR_STRONG - 0.001)
+        best = {s: np.nanmax(Pt[[gi[g] for g in sg[s] if g in gi]], axis=0) for s in syms if any(g in gi for g in sg[s])}
     if full:                                  # + every group's percentile per day, for the launch-day group rank
         return best, {s: MK[si[s]] for s in syms}, names, P, dict(sg)
     return best, {s: MK[si[s]] for s in syms}
@@ -451,12 +475,13 @@ def best_ranks(grank, stocks_rows):
     if not grank:
         return {}
     by = {(r["kind"], r["group"]): r for r in grank["rows"]}
+    ug = uses_groups(stocks_rows)
     out = {}
     for r in stocks_rows:
-        c = [by.get(("theme", t)) for t in (r.get("themes") or "").split(" | ") if t] + [by.get(("ind", r.get("industry")))]
+        c = [by.get(("theme", t)) for t in (r.get("themes") or "").split(" | ") if t] + [by.get(("ind", ind_key(r, ug)))]
         c = [x for x in c if x]
         if c:
-            b = max(c, key=lambda x: (x["pct"], -x["rank"]))
+            b = max(c, key=lambda x: (min(x["pct"], 89.9) if x.get("loose") else x["pct"], -x["rank"]))
             out[r["symbol"]] = dict(group=b["group"], kind=b["kind"], rank=b["rank"], of=b["of"], pct=b["pct"], tier=b["tier"])
     return out
 
@@ -1724,14 +1749,15 @@ def launch_day_rank(ghist, sym, k):
     """the stock's best group on calendar day k (at that close): (text "Strong #8/73 Insurance", tier, percentile)"""
     names, P, sg = ghist
     gi = {g: j for j, g in enumerate(names)}
-    c = [(P[gi[g], k], g) for g in sg.get(sym, []) if g in gi and not np.isnan(P[gi[g], k])]
+    c = [(min(P[gi[g], k], GR_STRONG - 0.001) if g.endswith(LOOSE) else P[gi[g], k], g) for g in sg.get(sym, []) if g in gi and not np.isnan(P[gi[g], k])]
     if not c:
         return None, None, None
-    p, g = max(c)
+    _, g = max(c)
+    p = P[gi[g], k]
     kind = g.split(":", 1)[0] + ":"
     same = [P[gi[x], k] for x in names if x.startswith(kind) and not np.isnan(P[gi[x], k])]
     rank = 1 + sum(1 for x in same if x > p)
-    tier = "Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else ""
+    tier = "" if g.endswith(LOOSE) else "Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else ""
     txt = ("★ Top " if tier == "Top" else "Strong " if tier == "Strong" else "") + f"#{rank}/{len(same)} " + g.split(":", 1)[1] + (" (industry)" if kind == "ind:" else "")
     return txt, tier, round(100 * float(p), 1)
 
