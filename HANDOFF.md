@@ -145,6 +145,7 @@ alone.
   morning: Mon after close + Tue before open); earnings.json "react" {t0, p1, p2} and "extra_days" (last week's days
   fetched for Mon / Tue). The ticker column is frozen when a table scrolls right. A listing without a 200 SMA yet
   shows in the top table as "new" (LIFE).
+  Every Earnings column sorts on a header click (live Nov 3; empty values last; default = reported first, newest first).
 
 ## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
