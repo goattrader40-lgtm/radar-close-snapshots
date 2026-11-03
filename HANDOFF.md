@@ -172,7 +172,18 @@ alone.
   rank_history(full=True) + launch_day_rank()). The lone-wolf tag still uses the old status (the user, Nov 3: keep it;
   a new-rank version needs its own test).
 
-## Status: hand-picked theme members (Nov 3 2026), on `test/themeadds`, WAITING ON THE USER'S "GO LIVE"
+## Tech review (Nov 3 2026, study only, branch `test/techreview`, radar-tools `techreview` -> radar-data probe_tech.json)
+
+- 561 tech / growth stocks $2B+; 231 in no tight group and no theme. 116 move on their own (best fit under 0.5, no
+  partner at 0.55+): META, APP, SHOP, RBLX, RDDT, CVNA, SE, TTWO, ... (their RS is what matters); 65 pairs only
+  (CDNS-SNPS 0.77, NFLX-SPOT 0.58, AFRM-XYZ 0.58, JOBY-ACHR 0.69, HPQ-LOGI 0.61; ORCL tracks CRWV 0.60 only); 22 fit an
+  existing theme/group at 0.6+ (GEN Enterprise SaaS, IPGP Semi Test & Packaging, AMBA AI Connectivity, TDC Software
+  Collaboration, ...); new groups found: Network & App Delivery (FFIV AKAM FSLY NTCT ATEN RDWR, 0.54) and Aerospace
+  Components (GE HWM HEI WWD SARO VSEC HXL, 0.52). Spreadsheet sent to the user (tech_review.xlsx); waiting on their
+  choice; nothing built.
+
+## Status: hand-picked theme members (Nov 3 2026): LIVE (merged Nov 3; the after-close refresh rerun on the new code
+## at 4:35 PM ET, Launches rebuilt: 145 groups, 1,293 stocks in them, 48 approved names in their themes)
 
 - 60 stocks that were in no theme but moved with one at 0.6+ (the 304 the group test dropped, checked: 114 already in
   their theme, 84 in none; ~15 of those 84 were coincidence and left out) go in radar/theme_adds.json; pipeline.py adds
