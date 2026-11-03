@@ -1,75 +1,113 @@
 #!/usr/bin/env python3
-"""Named sub-groups by what the companies do (the user, Nov 3 2026: "find really nice groups that move together and
-belong to the same category"). Base: Yahoo's industry (143 of them, e.g. "Banks - Regional", "Oil & Gas Midstream");
-the still-big ones are split by the business description:
-  Biotechnology        gene & cell therapy, RNA medicines, oncology, neuro / psychiatry, immunology & inflammation,
-                       obesity & metabolic / cardio, rare disease, infectious disease & vaccines, eye, other
-  Banks - Regional     super-regional (US, $15B+), US regional & community, international
-  Software - App/Infra cybersecurity, data & analytics / observability, developer & cloud platforms, fintech & payments
-                       software, HR / payroll, vertical software (health, real estate, auto, insurance, government),
-                       marketing & ad tech, design & engineering, crypto & bitcoin mining, AI & quantum
-  Asset Management     alternative / private equity, BDC lenders, crypto treasuries, traditional asset managers
-  python3 scanner/subgroups.py <profiles.json> <stocks.json> <out groups.json>   ->  {symbol: group name}
+"""Named groups by business line (the user, Nov 3 2026: "what moves together, business lines, how they are bonded in
+stock market action"). Every stock gets ONE industry-level group:
+  1. the hand list below, by what the company does (big buckets: biotech, software, banks, asset managers, brokers,
+     crypto, AI hosting), checked later against how the stocks move together;
+  2. otherwise Yahoo's industry (143 of them: "Oil & Gas Midstream", "Gold", "Restaurants", ...).
+Themes on the portal stay as they are; these replace the 73 broad industries.
+
+  python3 scanner/subgroups.py <profiles.json> <stocks.json> <out groups.json>   ->  {symbol: group}
 """
-import json, re, sys
+import json, sys
 
-RULES = {
-    "Biotechnology": [
-        ("Gene & Cell Therapy", r"gene therap|gene edit|crispr|base edit|aav|cell therap|car-t|car t|allogeneic|autologous|genetic medicine"),
-        ("RNA Medicines", r"rnai|sirna|antisense|oligonucleotide|mrna|rna-targeted|rna therap"),
-        ("Obesity & Metabolic", r"obesity|weight|glp-1|metabolic|diabetes|mash|nash|cardiometabolic|lipid|cardiovascular|hypertension"),
-        ("Neuro & Psychiatry", r"neurolog|neuro|psychiatr|cns|alzheimer|parkinson|depress|epilep|schizophren|seizure|pain|sleep|migraine"),
-        ("Oncology", r"cancer|oncolog|tumor|tumour|leukemia|lymphoma|myeloma|carcinoma|solid tumor"),
-        ("Immunology & Inflammation", r"immunolog|inflammat|autoimmun|dermatolog|atopic|psoriasis|lupus|allerg|fibrosis|respiratory|asthma|copd"),
-        ("Rare Disease", r"rare disease|rare genetic|orphan|ultra-rare|muscular dystrophy|duchenne|hemophilia"),
-        ("Infectious Disease & Vaccines", r"vaccin|infectious|antiviral|antibiotic|antibacterial|antifungal|hiv|hepatitis|influenza|covid"),
-        ("Eye Disease", r"ophthalm|retina|retinal|eye disease|glaucoma|macular"),
-    ],
-    "Software - Application": "SOFT", "Software - Infrastructure": "SOFT",
-    "Asset Management": [
-        ("Crypto Treasury & Digital Assets", r"bitcoin|ethereum|digital asset|crypto|blockchain|token"),
-        ("BDC Lenders", r"business development compan|closed-end|middle market|direct lending|private credit|specialty finance"),
-        ("Alternative Asset Managers", r"private equity|alternative asset|alternative investment|infrastructure fund|real asset|credit fund"),
-    ],
+G = {
+    # ---- biotech, by what the stock trades on
+    "Biotech: Large-Cap Commercial": "VRTX REGN ARGX ONC GMAB INCY INSM EXEL ASND BBIO JAZZ",
+    "Biotech: Oncology": "RVMD SMMT CGON COGT ERAS RLAY TNGX CELC ELVN IDYA IMNM RCUS XNCR ZYME LKFT SLS URGN NUVB TYRA NBTX ANL "
+                         "AAPG KURA SNDX VSTM JANX IMTX IMCR CRVS ORIC CADL OLMA BLSM GERN AURA AVBP NVCT CBIO BCAX FTH MNPR PBYI PRLD "
+                         "EIKN CTMX REPL INDP FENC ETRA RLMD IBRX",
+    "Biotech: Radiopharma": "TLX AKTS DRTS",
+    "Biotech: Cell Therapy": "LEGN IOVA ALLO AUTL KYTX SANA IMMX VCEL MESO CAPR PROK OBX",
+    "Biotech: Gene Editing & Gene Therapy": "CRSP NTLA BEAM PRME EDIT SRPT KRYS QURE RGNX TSHA SLDB NGNE FDMT MGTX IRD PGEN",
+    "Biotech: RNA Medicines": "ALNY ARWR IONS WVE SLN ADRX CTY ABUS DYN",
+    "Biotech: Obesity & Cardiometabolic": "VKTX MDGL GPCR MBX KLRA ALT NAMS MLYS KARD BRVE CYTK LXRX SGMT IVA GALT MNKD RZLT VOGX "
+                                         "SEPN CORT MAZE ENTX TECX",
+    "Biotech: Immunology & Inflammation": "ROIV IMVT SYRE ABVX ORKA PTGX DNTH TGTX CLDX VERA AUPH ZBIO TRAX LYCA JBIO ALMS ODTX "
+                                         "ANNX ATTO ACRS CLYM AGMB AVTX ZURA TRXB MLTX MANE ARQT DBVT SPRY VOR CTNM OMER NKTR",
+    "Biotech: Protein Degraders": "KYMR NRIX ARVN CCCC GLUE",
+    "Biotech: Neuro & Psychiatry": "AXSM PRAX XENE ACAD DFTX DNLI GHRS LBRX RAPP SPTX ANRO HELP MPLT OVID LTGO KRSA ALEC PRTA "
+                                  "HRMY APMD BHVN TRVI ACHV",
+    "Biotech: Rare Disease & Hematology": "BMRN RYTM MIRM PTCT TVTX EWTX SRRK PHVS IRON DSGN COAG DMRA RARE ZVRA PHAR XFOR AGIO "
+                                         "PVLA IRLA RIGL AVLN VCRE GYRE DMAC INBX",
+    "Biotech: Vaccines & Infectious Disease": "MRNA BNTX PCVX NVAX VALN VIR ADMA ASMB AVIR ENTA SABS CRMD",
+    "Biotech: Eye Disease": "KOD BLTE TARS OCUL SGP OCS VRDN YDES SRZN",
+    "Biotech: Royalties": "RPRX HALO LGND INVA ANAB",
+    "Biotech: AI & Platform Drug Discovery": "RXRX ABSI GENB IAM ABCL OABI PBLS",
+    "Bio Tools & Services": "TECH MRVI FTRE TWST DNA CAI",
+    # ---- software
+    "Software: Majors": "MSFT SAP CRM NOW ADBE INTU WDAY ADSK TEAM ROP",
+    "AI Cloud & Data-Center Hosting": "ORCL CRWV IREN CIFR WULF CORZ HUT APLD NBIS GLXY",
+    "Software: AI Applications": "PLTR AI SOUN RZLV RZAI BRUN PATH BBAI",
+    "Quantum Computing": "QNT INFQ XNDU HQ IONQ RGTI QBTS QUBT",
+    "Software: Cybersecurity": "PANW CRWD FTNT ZS OKTA CHKP S QLYS TENB RPD VRNS SAIL NTSK CVLT RBRK GEN MITK YOU CGNT CLBT TLS "
+                               "ALLT BB OSPN ATEN RDWR RSKD NTCT",
+    "Software: Cloud, Data & Observability": "SNOW DDOG MDB ESTC NTNX DT FROG GTLB NET FSLY AKAM DOCN TDC PD BLZE RXT TWLO BAND "
+                                             "API FFIV AVPT",
+    "Software: Web Presence & Domains": "GDDY VRSN WIX",
+    "Software: Marketing & Ad Tech": "HUBS BRZE KVYO CXM SPT AMPL SMWB YEXT GTM ZETA RAMP DSP PUBM MNTN APPS IBTA",
+    "Software: Collaboration & Communications": "FRSH ZM DOCU MNDY ASAN BOX DBX RNG FIVN EGHT OOMA NICE PEGA APPN",
+    "Software: HR & Payroll": "ADP PAYX PAYC PCTY",
+    "Software: Finance & Banking": "BILL BL WK VERX DFIN SSNC FICO QTWO NCNO ALKT ACIW",
+    "Payments": "XYZ TOST CPAY WEX FOUR PAY PAYO FLYW DLO EEFT EVTC MQ RELY PAGS NYAX RPAY PSFE PRTH PAYS IIIV LSAK PAYP KSPI "
+                "PYPL AFRM STNE",
+    "Consumer Fintech": "CHYM DAVE PGY KPLT WLTH UPBD SOFI UPST",
+    "Software: Vertical & Industry": "TYL GWRE CCC PCOR APPF MANH DSGX SPSC AGYS TTAN BLKB INTA LAW DCBO EVCM LSPD PAR DOX ALRM "
+                                     "KARO AIOT IOT SABR CCSI VEEV",
+    "Software: Design & Engineering": "CDNS SNPS PTC BSY FIG U PDFS MTLS",
+    "Software: E-commerce Platforms": "SHOP VTEX GCT",
+    "Consumer Apps & Ride-Hailing": "UBER LYFT GRAB DUOL GRND LIF YALA YMM VIA NAVN SRAD BSP YB",
+    "Autonomous Driving & Robotaxi": "WRD ENRD AEVA",
+    "IP Licensing": "IDCC ADEA",
+    "Computer Hardware": "NTAP",
+    # ---- banks
+    "Banks: US Money-Center": "JPM BAC C WFC",
+    "Banks: Custody & Trust": "BNY STT NTRS",
+    "Banks: Canada": "RY TD BMO BNS CM",
+    "Banks: Europe": "HSBC SAN UBS BBVA ING BCS LYG DB NWG",
+    "Banks: Japan & Korea": "MUFG SMFG MFG KB SHG WF",
+    "Banks: India": "HDB IBN",
+    "Banks: Latin America": "ITUB NU BBD BBDO BAP BCH BSAC AVAL IFS GGAL BMA BBAR INTR BLX AGBK",
+    "Banks: US Super-Regional": "USB PNC TFC FITB MTB HBAN CFG FCNCA RF KEY EWBC PNFP",
+    "Banks: Digital & Specialty": "AX TBBK CASH LOB CUBI ESQ",
+    # ---- asset managers, brokers, exchanges
+    "Alternative Asset Managers": "BX KKR APO ARES CG TPG BAM BN OWL HLNE GCMG PAX VINP",
+    "BDC Lenders": "ARCC MAIN OBDC OTF GBDC FSK HTGC TSLX TRIN CSWC OCSL GSBD BBDC KBDC PSEC MFIC CGBD FDUS BCSF PFLT NMFC "
+                   "SLRC GAIN NCDL GLAD TCPC CCAP CION",
+    "Closed-End & CLO Funds": "OXLC CET GAB GAM RVT RMT BKT SOR ASA PS PSUS FSCO BTX",
+    "Traditional Asset Managers": "BLK TROW BEN IVZ AMG FHI CNS APAM VCTR VRTS WT AAMI SEIC NOAH ALTI SII JHG",
+    "Wealth & Retirement": "AMP RJF PFG CRBG EQH SCHW LPLA SF",
+    "Wall Street Banks": "GS MS NMR",
+    "Advisory & Mid-Market Banks": "EVR HLI PJT LAZ MC PIPR PWP LCLN JEF OPY BRBI",
+    "Online Brokers": "HOOD IBKR FUTU TIGR ETOR BULL",
+    "Exchanges & Trading": "CME ICE NDAQ CBOE MKTX TW VIRT BGC MRX SNEX MIAX",
+    "Crypto Platforms": "COIN CRCL BLSH BTGO GEMI CSHR FIGR SECZ CD",
+    "Crypto Treasuries": "MSTR BMNR SBET ASST PURR FWDI XXI",
+    "Bitcoin Miners": "MARA RIOT CLSK HIVE ABTC BTDR IOND",
 }
-SOFT = [
-    ("Crypto & Bitcoin Mining", r"bitcoin|crypto|blockchain|digital asset|mining"),
-    ("AI & Quantum", r"quantum|artificial intelligence|ai-powered|ai platform|generative ai|machine learning|gpu|ai infrastructure|high-performance comput"),
-    ("Cybersecurity", r"security|cyber|identity|threat|zero trust|endpoint|firewall|fraud"),
-    ("Data, Analytics & Observability", r"data|analytics|observability|monitoring|database|search"),
-    ("Developer & Cloud Platforms", r"developer|devops|cloud platform|cloud infrastructure|api|open source|hosting|content delivery|edge"),
-    ("Fintech & Payments Software", r"payment|banking|lending|financial institution|fintech|accounting|tax|spend|billing|invoice|treasury"),
-    ("HR & Payroll Software", r"payroll|human capital|human resources|hr |workforce|employee|talent"),
-    ("Vertical Software", r"healthcare|health care|hospital|pharmac|real estate|property|automotive|dealer|insurance|government|public sector|construction|restaurant|education|school|hospitality|legal"),
-    ("Marketing & Ad Tech", r"marketing|advertis|customer engagement|commerce|e-commerce|sales|crm"),
-    ("Design & Engineering Software", r"design|engineering|simulation|3d|cad|product lifecycle|creative"),
-]
-INTL = r"brazil|argentin|colombi|peru|chile|mexic|india|korea|japan|china|hong kong|spain|united kingdom|canada|puerto rico|bermuda|europe|panama"
+HAND = {s: g for g, syms in G.items() for s in syms.split()}
+# Banks - Regional not listed above: mid-size ($3B+) vs community
+REGIONAL_MID = 3.0
 
 
-def name_of(sym, prof, stock):
+def group_of(sym, prof, stock):
+    if sym in HAND:
+        return HAND[sym]
     ind = prof.get("industry") or stock.get("industry") or "Other"
-    txt = (prof.get("about") or "").lower()
-    if ind == "Banks - Regional":
-        if re.search(INTL, txt[:300]):
-            return "Banks - International"
-        return "Banks - Super-Regional" if (stock.get("mcap_b") or 0) >= 15 else "Banks - US Regional & Community"
-    rules = RULES.get(ind)
-    if rules == "SOFT":
-        rules = SOFT
-    if rules:
-        for nm, rx in rules:
-            if re.search(rx, txt):
-                return f"{ind.split(' - ')[0] if ind.startswith('Software') else ind}: {nm}" if not ind.startswith("Software") else f"Software: {nm}"
-        return f"{ind}: other"
+    if ind in ("Banks - Regional", "Banks - Diversified"):
+        return "Banks: US Regional" if (stock.get("mcap_b") or 0) >= REGIONAL_MID else "Banks: US Community"
+    if ind == "Biotechnology":
+        return "Biotech: Other"
+    if ind.startswith("Software"):
+        return "Software: Other"
     return ind
 
 
 def main():
     P = json.load(open(sys.argv[1]))["rows"]
     S = {r["symbol"]: r for r in json.load(open(sys.argv[2]))}
-    out = {s: name_of(s, P.get(s, {}), S[s]) for s in S}
+    out = {s: group_of(s, P.get(s, {}), S[s]) for s in S}
     json.dump(out, open(sys.argv[3], "w"), indent=0, sort_keys=True)
+    print(json.dumps({"stocks": len(out), "groups": len(set(out.values())), "hand": sum(1 for s in S if s in HAND)}))
 
 
 if __name__ == "__main__":

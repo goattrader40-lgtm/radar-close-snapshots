@@ -97,6 +97,15 @@ jobs:
             python3 scanner/probe_catalyst.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_catalyst.json || true
             python3 radar/publish.py "catalyst launch test" /tmp/probe_catalyst.json
           fi
+          if [ "${{ inputs.cmd }}" = "named" ]; then
+            # named business-line groups vs the broad industries (scanner/probe_named.py) -> radar-data probe_named.json
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json && git show origin/radar-data:profiles.json > /tmp/rd/profiles.json
+            python3 scanner/probe_named.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --profiles /tmp/rd/profiles.json --out /tmp/probe_named.json
+            python3 radar/publish.py "named groups study" /tmp/probe_named.json
+          fi
           if [ "${{ inputs.cmd }}" = "profiles" ]; then
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             git show origin/radar-data:stocks.json > /tmp/stocks.json
