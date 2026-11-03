@@ -97,6 +97,11 @@ jobs:
             python3 scanner/probe_catalyst.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_catalyst.json || true
             python3 radar/publish.py "catalyst launch test" /tmp/probe_catalyst.json
           fi
+          if [ "${{ inputs.cmd }}" = "profiles" ]; then
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            git show origin/radar-data:stocks.json > /tmp/stocks.json
+            python3 radar/profiles.py /tmp/stocks.json /tmp/profiles.json && python3 radar/publish.py "company profiles" /tmp/profiles.json
+          fi
           if [ "${{ inputs.cmd }}" = "split" ]; then
             # the big industries split into sub-groups that move together (scanner/probe_split.py) -> radar-data probe_split.json
             pip install --quiet numba numpy pandas scipy
