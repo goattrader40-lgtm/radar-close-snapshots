@@ -135,6 +135,50 @@
   #ln-table td.ln-stage { min-width: 11em; max-width: 17em; white-space: normal; line-height: 1.3; cursor: pointer; }
   #ln-table td.ln-stage > div { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   #ln-table td.ln-stage.open > div { display: block; }
+  /* Earnings tab: the week grid (like a calendar card) and the results tables */
+  .er-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .er-week { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); gap: 0; min-width: 760px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
+  .er-day { border-left: 1px solid var(--color-border-line); display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+  .er-day:first-child { border-left: 0; }
+  .er-day.today { background: color-mix(in srgb, var(--color-ok) 6%, transparent); }
+  .er-dh { padding: 6px 8px; border-bottom: 1px solid var(--color-border-line); font-weight: var(--cds-font-weight-medium); display: flex; justify-content: space-between; gap: 6px; align-items: baseline; }
+  .er-dh .tgr-lbl { font-weight: 400; }
+  .er-day.today .er-dh { color: var(--color-ok); }
+  .er-slots { display: grid; grid-template-columns: 1fr 1fr; min-width: 0; }
+  .er-slot { padding: 6px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .er-slot + .er-slot { border-left: 1px dashed var(--color-border-line); }
+  .er-slot > .tgr-lbl { text-transform: uppercase; letter-spacing: .04em; font-size: .68rem; }
+  .er-chip { appearance: none; font: inherit; text-align: left; cursor: pointer; display: grid; gap: 1px; padding: 4px 6px; border-radius: var(--cds-radius); border: 1px solid var(--color-border-line); border-left-width: 4px; background: var(--color-panel); color: var(--color-fg); min-width: 0; }
+  .er-chip:hover { border-color: var(--color-fg-muted); }
+  .er-chip:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
+  .er-chip b { font-size: .82rem; letter-spacing: .02em; }
+  .er-chip span { font-size: .68rem; color: var(--color-fg-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .er-chip.r5 { border-left-color: var(--color-ok); background: color-mix(in srgb, var(--color-ok) 14%, var(--color-panel)); }
+  .er-chip.r4 { border-left-color: var(--color-ok); }
+  .er-chip.r3 { border-left-color: var(--color-fg-muted); }
+  .er-chip.r2 { border-left-color: var(--color-warn); }
+  .er-chip.r1 { border-left-color: var(--color-bad); background: color-mix(in srgb, var(--color-bad) 12%, var(--color-panel)); }
+  .er-chip.r0 { border-left-color: var(--color-border-line); }
+  .er-chip.under { opacity: .78; }
+  .er-key { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .er-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; border: 1px solid var(--color-border-line); }
+  .er-sw.r5 { background: var(--color-ok); border-color: var(--color-ok); } .er-sw.r4 { border: 2px solid var(--color-ok); }
+  .er-sw.r3 { background: var(--color-fg-muted); border-color: var(--color-fg-muted); } .er-sw.r2 { border: 2px solid var(--color-warn); }
+  .er-sw.r1 { background: var(--color-bad); border-color: var(--color-bad); }
+  .er-read { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: .75rem; font-weight: var(--cds-font-weight-medium); white-space: nowrap; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); }
+  .er-read.r5 { background: var(--color-ok); border-color: var(--color-ok); color: var(--color-bg); }
+  .er-read.r4 { border-color: var(--color-ok); color: var(--color-ok); }
+  .er-read.r3 { color: var(--color-fg); }
+  .er-read.r2 { border-color: var(--color-warn); color: var(--color-warn); }
+  .er-read.r1 { background: var(--color-bad); border-color: var(--color-bad); color: var(--color-bg); }
+  .er-g { display: inline-block; padding: 0 6px; border-radius: 4px; font-size: .72rem; font-weight: var(--cds-font-weight-medium); border: 1px solid currentColor; white-space: nowrap; }
+  .er-table td { white-space: nowrap; }
+  .er-table td.er-guide { white-space: normal; min-width: 10rem; max-width: 15rem; }
+  .er-table td .tgr-lbl { display: block; }
+  .er-table tr.er-up td { color: var(--color-fg-muted); }
+  .er-table tr.er-up td a.tgr-tk { color: var(--color-fg); }
+  .er-table tr.er-flash td { background: color-mix(in srgb, var(--color-warn) 18%, transparent); transition: background 1.2s; }
+  .er-table th.er-end, .er-table td.er-end { border-left: 1px solid var(--color-border-line); }
   .tgr-legend { margin: 6px 0 10px; font-size: var(--cds-font-size-caption); }
   .tgr-legend summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
   .tgr-legend ul { margin: 6px 0; padding-left: 1.2em; }
@@ -191,6 +235,7 @@
     <button class="tgr-tab" id="tab-watchlist" role="tab" aria-selected="false" aria-controls="watchlist" data-tab="watchlist">Watchlist</button>
     <button class="tgr-tab" id="tab-launches" role="tab" aria-selected="false" aria-controls="launches" data-tab="launches">Launches</button>
     <button class="tgr-tab" id="tab-laggards" role="tab" aria-selected="false" aria-controls="launches" data-tab="laggards">Launch laggards</button>
+    <button class="tgr-tab" id="tab-earnings" role="tab" aria-selected="false" aria-controls="earnings" data-tab="earnings">Earnings</button>
   </nav>
 
   <!-- ───────── Tab 1: groups & themes ───────── -->
@@ -765,6 +810,39 @@
     </details>
   </section>
 
+  <!-- ───────── Earnings: this week's reports for the stocks that pass your rules (radar/earnings.py, no Claude) ───────── -->
+  <section class="tgr-page" id="earnings" role="tabpanel" aria-labelledby="tab-earnings" hidden>
+    <div class="tgr-card" id="er-week-card">
+      <div class="tgr-cardhead">
+        <h2 id="er-h">Earnings this week</h2>
+        <span class="tgr-lbl" id="er-time">—</span>
+      </div>
+      <p class="tgr-rule" id="er-rule">—</p>
+      <div class="er-key" aria-label="Read colors"><span class="er-sw r5"></span>Strong bullish <span class="er-sw r4"></span>Bullish <span class="er-sw r3"></span>Mixed <span class="er-sw r2"></span>Somewhat bearish <span class="er-sw r1"></span>Bearish <span class="er-sw r0"></span>Not reported yet</div>
+      <div class="er-scroll"><div class="er-week" id="er-week"></div></div>
+    </div>
+    <div class="tgr-bar">
+      <span class="tgr-seg" data-k="erday" aria-label="Which days"><button data-v="all" aria-pressed="true">All week</button><button data-v="today" aria-pressed="false">Today's reactions</button></span>
+      <span class="tgr-seg" data-k="ershow" aria-label="Which reports"><button data-v="all" aria-pressed="true">All</button><button data-v="rep" aria-pressed="false">Reported</button><button data-v="up" aria-pressed="false">Upcoming</button></span>
+      <label class="tgr-f">Find <input class="tgr-num" id="er-q" type="search" style="width:6rem" placeholder="ticker" aria-label="Find a ticker"></label>
+    </div>
+    <div class="tgr-card" id="er-up-card">
+      <div class="tgr-cardhead"><h2>Over the 200-day SMA <span class="tgr-lbl" id="er-up-n"></span></h2></div>
+      <div class="tgr-scroll tall"><table class="tgr-table er-table" id="er-up-table"><thead></thead><tbody></tbody></table></div>
+    </div>
+    <div class="tgr-card" id="er-dn-card">
+      <div class="tgr-cardhead"><h2>Under the 200-day SMA <span class="tgr-lbl" id="er-dn-n"></span></h2></div>
+      <div class="tgr-scroll tall"><table class="tgr-table er-table" id="er-dn-table"><thead></thead><tbody></tbody></table></div>
+    </div>
+    <details class="tgr-legend tgr-more" data-key="earnings"><summary>How this tab works (who is on it, sources, the read, timing)</summary>
+    <p class="tgr-note"><b>Who</b>: every stock on Nasdaq's earnings calendar this week (Monday to Friday; on the weekend, next week) that passes your Earnings rules on the last close: market cap $700M+, 20-day average $ volume $30M+ and 600K+ shares a day, price $10+, ADR 3.5%+, 30%+ over the 52-week low (scanner/settings.json "earnings"). Once on the list it stays for the week. The two tables split them by the <b>pre-market price</b> (before the open; the live price during the session) vs the 200-day SMA; nothing is taken off for being under the 50 EMA: the columns show it.
+    <b>Results</b> come from the company's own press release (the SEC 8-K filed at release time): revenue, and the guidance read from its outlook text by fixed rules (raised / lowered / reaffirmed / given, and when it gives a revenue number, its midpoint vs the analysts' estimate and vs the same period a year ago). EPS is the adjusted figure from Yahoo or Nasdaq, the same basis as the estimate. Estimates are saved before the report; a stock first seen after its report (this first week) has no revenue estimate. When the rules can't tell, the cell says so: open the release (the 📄 link) to check.
+    <b>The read</b> adds points: revenue beat +1 (2%+ beat +2) / miss −1 (−2), EPS beat +1 (10%+ +2) / miss −1 (−2), guidance raised +2, guide above the street +1 (+2 without a raise) / below −2, lowered −3, revenue growth 25%+ +1 / shrinking −1, the move after the report +2%: +1, +5%: +2 (−2% −1, −5% −2). 6+ = <span class="er-read r5">Strong bullish</span> 3–5 = <span class="er-read r4">Bullish</span> 0–2 = <span class="er-read r3">Mixed</span> −1 to −3 = <span class="er-read r2">Somewhat bearish</span> −4 or less = <span class="er-read r1">Bearish</span>. Hover a read for its points.
+    <b>Columns at the end</b>: vs 200D / vs 50 EMA = the pre-market price vs the 200-day SMA and 50-day EMA as of the last close; vs 20D high = vs the highest high of the previous 20 sessions (green "cleared" = above it: out of its 1-month base); Over 52W low = how far above the 52-week low. Group rank and RS as on Launches.
+    <b>When</b>: every weekday from about 7:10 to 8:55 AM ET (final by 9:00 AM), after the close (4:50, 6:30 and 8:30 PM ET) for the after-close reports, and Sunday evening for the new week. GitHub can start a run a few minutes late.</p>
+    </details>
+  </section>
+
   <details class="tgr-legend tgr-more" data-key="data"><summary>About the data (update times, sources)</summary>
   <p class="tgr-foot" id="foot">During market hours (9:30 AM–4:10 PM ET) prices update about every 5 minutes from Yahoo quotes (from about 9:55 their volume is corrected against the consolidated tape: Yahoo's live volume runs several % high during the session), and this page checks for new data every 90 seconds on its own. Live 1D is today's change so far; live 1W, 1M and 3M compare today's price with the close 5, 21 and 63 sessions back; Rel vol is relative volume at time: volume from 9:30 to now ÷ the average of the last 20 sessions' volume from 9:30 to the same minute (from 5-minute bars on the consolidated tape via Alpaca, all US exchanges and off-exchange trades), so 2.00× at 11:50 means twice the usual volume by 11:50; it's rough in the first 5 minutes. After the close it's the full day ÷ the previous 20 sessions' average. Everything else (themes and their scores, ADR%, $ volume, 200-day SMA, averages) is rebuilt after each close, around 4:30 PM ET. Newest day comes from: <span id="src">—</span>; earlier days, volume and company details come from Nasdaq's daily list, which runs one session behind. ADR% (20-day average of high ÷ low − 1) comes from: <span id="adr-src">—</span>. $ volume averages price × shares over the last 10 or 20 sessions. Group figures are the median (or market-cap-weighted average) of the group's liquid members. Auto-added names and auto groups come from the co-movement test (daily moves with the market's move removed, 120 sessions, 0.6+ score with the group, market cap ≥ $700M and 700K+ shares a day), recomputed weekly, currently with data through <span id="grp-asof">—</span>. Broad industries come from FinanceDatabase; Detailed uses Nasdaq's own industry labels. Data and code: <a href="https://github.com/goattrader40-lgtm/radar-close-snapshots">your GitHub repo</a> (radar-data branch).</p>
   </details>
@@ -872,7 +950,7 @@ defCalc('industry_perf', {
 <script>
 (() => {
   /* ───────── state ───────── */
-  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', gq: '', lng: 'all', lnst: 'all', lntype: 'all', lnwolf: false, sort: {} };
+  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'industry', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', gq: '', lng: 'all', lnst: 'all', lntype: 'all', lnwolf: false, erday: 'all', ershow: 'all', erq: '', sort: {} };
   const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
   const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
   const fitMap = (scores) => {
@@ -1049,6 +1127,7 @@ defCalc('industry_perf', {
     $('#premarket').hidden = S.tab !== 'premarket';
     $('#watchlist').hidden = S.tab !== 'watchlist';
     $('#launches').hidden = S.tab !== 'launches' && S.tab !== 'laggards';     /* Launch laggards: the same page, its own list */
+    $('#earnings').hidden = S.tab !== 'earnings';
   };
   document.querySelectorAll('.tgr-seg[data-k]').forEach((seg) => seg.addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
@@ -1085,7 +1164,7 @@ defCalc('industry_perf', {
 
   /* selections: rows and chips */
   const select = (kind, name) => {
-    if (S.tab === 'premarket' || S.tab === 'watchlist' || S.tab === 'launches' || S.tab === 'laggards') { S.tab = 'groups'; history.replaceState(null, '', '#groups'); }   /* a theme chip on the pre-market or watchlist tab opens that theme */
+    if (S.tab === 'premarket' || S.tab === 'watchlist' || S.tab === 'launches' || S.tab === 'laggards' || S.tab === 'earnings') { S.tab = 'groups'; history.replaceState(null, '', '#groups'); }   /* a theme chip on the pre-market or watchlist tab opens that theme */
     if (S.tab === 'groups') { S.sel = { kind, name }; S.q = ''; $('#drill-search').value = ''; draw(); $('#drill-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
     else { S.gsel = { kind, name }; draw(); $('#g-list-card').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   };
@@ -2431,6 +2510,143 @@ defCalc('industry_perf', {
   }
 
   /* ───────── draw ───────── */
+  /* ───────── Earnings: the week grid and the two results tables (earnings.json from radar/earnings.py) ───────── */
+  const ER_READ = { 'Strong bullish': 5, 'Bullish': 4, 'Mixed': 3, 'Somewhat bearish': 2, 'Bearish': 1 };
+  const ER_WHEN = { bmo: 'before open', amc: 'after close', dmh: 'during the day', tns: 'time not set' };
+  const erMoney = (v) => { const x = num(v); if (x === null) return '—'; const a = Math.abs(x); return (x < 0 ? '−' : '') + '$' + (a >= 1e9 ? (a / 1e9).toFixed(2) + 'B' : a >= 1e6 ? (a / 1e6).toFixed(1) + 'M' : (a / 1e3).toFixed(0) + 'K'); };
+  const erEps = (v) => { const x = num(v); return x === null ? '—' : (x < 0 ? '−$' : '$') + Math.abs(x).toFixed(2); };
+  const erDay = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const erPct = (x, cls) => { const td = h('td', 'num' + (cls ? ' ' + cls : '')); const v = num(x); td.textContent = p1(v, true); if (v !== null) td.classList.add(v >= 0 ? 'tgr-up' : 'tgr-dn'); return td; };
+  const erOf = (r) => ER_READ[r.read] || 0;
+  const erGuide = (g) => {
+    const td = h('td', 'er-guide');
+    if (!g || !g.dir || g.dir === 'none') { td.append(h('span', 'tgr-lbl', g ? 'no guidance in the release' : '—')); return td; }
+    const c = { raised: 'tgr-up', lowered: 'tgr-dn', mixed: 'tgr-lbl', reaffirmed: '', given: '' }[g.dir] || '';
+    const top = h('div');
+    top.append(h('span', 'er-g ' + c, { raised: '▲ Raised', lowered: '▼ Lowered', mixed: 'Raised & lowered', reaffirmed: 'Reaffirmed', given: 'Given' }[g.dir]));
+    td.append(top);
+    if (g.mid || g.growth !== undefined && g.growth !== null) {
+      const per = g.kind === 'fy' ? 'Full year' : g.kind === 'q' ? 'Next quarter' : '';
+      const line = h('div', 'tgr-lbl');
+      line.textContent = [per, g.mid ? 'rev ' + (g.lo && g.hi && g.lo !== g.hi ? erMoney(g.lo) + '–' + erMoney(g.hi) : erMoney(g.mid)) : '',
+        g.vs_street !== null && g.vs_street !== undefined ? p1(g.vs_street, true) + ' vs street' : ''].filter(Boolean).join(' · ');
+      td.append(line);
+      if (g.vs_street !== null && g.vs_street !== undefined) line.classList.add(g.vs_street >= 1 ? 'tgr-up' : g.vs_street <= -1 ? 'tgr-dn' : 'tgr-lbl');
+    } else td.append(h('div', 'tgr-lbl', 'no revenue number found: check the release'));
+    td.title = [(g.text || ''), (g.said ? '… ' + g.said + ' …' : '')].filter(Boolean).join('\n\n');
+    return td;
+  };
+  function erRow(r, rsAll) {
+    const tr = h('tr', r.reported ? '' : 'er-up'); tr.dataset.sym = r.sym;
+    /* the stock: ticker, name, day and time, the release */
+    const tk = h('td', 'name');
+    const a = h('a', 'tgr-tk', r.sym); a.href = tv(r.sym); a.target = TVTAB; tk.append(a);
+    if (r.rel_url) { const rl = h('a', '', ' 📄'); rl.href = r.rel_url; rl.target = '_blank'; rl.rel = 'noopener'; rl.title = 'The press release (SEC filing ' + (r.rel_filed || '').replace('T', ' ') + ' ET)'; rl.style.textDecoration = 'none'; tk.append(rl); }
+    tk.append(h('span', 'tgr-lbl', erDay(r.date) + ' · ' + (ER_WHEN[r.when] || '') + (r.time && r.when !== 'tns' ? ' ' + r.time : '')));
+    tk.title = (r.name || '') + (r.industry ? ' · ' + r.industry : '') + (r.themes ? '\nThemes: ' + r.themes : '') + (r.fq ? '\nQuarter ending ' + r.fq : '');
+    /* the read */
+    const rd = h('td');
+    if (r.read) { const b = h('span', 'er-read r' + erOf(r), r.read); b.title = (r.points > 0 ? '+' : '') + r.points + ' points: ' + (r.why || ''); rd.append(b); rd.append(h('span', 'tgr-lbl', r.why || '')); rd.lastChild.style.whiteSpace = 'normal'; rd.lastChild.style.maxWidth = '15rem'; }
+    else rd.append(h('span', 'tgr-lbl', r.reported ? 'not enough data' : 'reports ' + erDay(r.date).split(',')[0]));
+    /* EPS */
+    const ep = h('td', 'num');
+    if (r.eps_act !== null && r.eps_act !== undefined) {
+      ep.append(h('div', r.eps_surprise > 0 ? 'tgr-up' : r.eps_surprise < 0 ? 'tgr-dn' : '', erEps(r.eps_act)));
+      ep.append(h('span', 'tgr-lbl', 'est ' + erEps(r.eps_est) + (r.eps_surprise !== null && r.eps_surprise !== undefined ? ' · ' + p1(r.eps_surprise, true) : '')));
+      ep.title = 'EPS ' + erEps(r.eps_act) + ' (' + (r.eps_src || '') + ') vs the estimate ' + erEps(r.eps_est);
+    } else ep.append(h('span', 'tgr-lbl', 'est ' + erEps(r.eps_est ?? r.nasdaq_eps_est)));
+    const eg = h('td', 'num');
+    if (r.eps_turn) { eg.append(h('span', 'tgr-up', 'turned +')); eg.title = 'A year ago ' + erEps(r.eps_yago); }
+    else if (r.eps_growth !== null && r.eps_growth !== undefined) { eg.textContent = p1(r.eps_growth, true); eg.classList.add(r.eps_growth >= 0 ? 'tgr-up' : 'tgr-dn'); eg.title = 'A year ago ' + erEps(r.eps_yago); }
+    else eg.textContent = '—';
+    /* revenue */
+    const rv = h('td', 'num');
+    if (r.rev_act) {
+      rv.append(h('div', r.rev_surprise > 0 ? 'tgr-up' : r.rev_surprise < 0 ? 'tgr-dn' : '', erMoney(r.rev_act)));
+      rv.append(h('span', 'tgr-lbl', r.rev_est ? 'est ' + erMoney(r.rev_est) + ' · ' + p1(r.rev_surprise, true) : 'no estimate saved'));
+      rv.title = 'Revenue from the ' + (r.rev_src || '') + (r.rev_est ? '; estimate ' + erMoney(r.rev_est) + ' (' + (r.est_from || '') + ')' : '');
+    } else rv.append(h('span', 'tgr-lbl', r.rev_est ? 'est ' + erMoney(r.rev_est) : r.reported ? 'not found yet' : '—'));
+    const rg = erPct(r.rev_growth); if (r.rev_yago) rg.title = 'Same quarter a year ago ' + erMoney(r.rev_yago);
+    /* guidance and its growth */
+    const gd = r.reported ? erGuide(r.guide) : h('td', 'er-guide', '');
+    if (!r.reported) gd.append(h('span', 'tgr-lbl', '—'));
+    const gg = erPct(r.guide ? r.guide.growth : null); if (r.guide && r.guide.growth !== null && r.guide.growth !== undefined) gg.title = 'The guided revenue vs the same period a year ago';
+    /* the move: pre-market / after hours / live */
+    const mv = erPct(r.move); if (r.px_kind) mv.append(h('span', 'tgr-lbl', r.px_kind + (r.px_time ? ' ' + r.px_time : '')));
+    if (r.px) mv.title = '$' + r.px + ' (' + r.px_kind + ')';
+    /* group rank, RS */
+    const g = grBest(r.sym); const gc = grStockCell(g, r.sym, false);
+    const rsv = num(rsAll[r.sym]); const rs = h('td', 'num' + (rsv !== null && rsv >= 97 ? ' tgr-up' : ''), rsv === null ? '—' : (rsv >= 97 ? '★ ' : '') + rsv);
+    /* the levels at the end */
+    const v200 = erPct(r.vs200, 'er-end'), v50 = erPct(r.vs50);
+    const v20 = erPct(r.vs20h);
+    if (r.vs20h !== null && r.vs20h !== undefined) { if (r.vs20h >= 0) v20.append(h('span', 'tgr-lbl tgr-up', 'cleared')); v20.title = '20-day high $' + r.high20; }
+    const lo = h('td', 'num', r.over_low52 === null || r.over_low52 === undefined ? '—' : '+' + Math.round(r.over_low52) + '%');
+    tr.append(tk, rd, ep, eg, rv, rg, gd, gg, mv, gc, rs, v200, v50, v20, lo);
+    return tr;
+  }
+  const ER_COLS = [['Stock', ''], ['Read', 'Strong bullish / Bullish / Mixed / Somewhat bearish / Bearish, from fixed points (see How this tab works); hover for the points'],
+    ['EPS', 'Adjusted EPS vs the estimate, and the surprise'], ['EPS growth', 'vs the same quarter a year ago'], ['Revenue', 'Revenue vs the estimate, and the surprise'],
+    ['Rev growth', 'vs the same quarter a year ago'], ['Guidance', 'Read from the press release: raised / lowered / reaffirmed / given; the guided revenue vs the analysts (hover for the words)'],
+    ['Guide growth', 'The guided revenue vs the same period a year ago'], ['Move', 'Pre-market (after hours on the report evening, live in the session) vs the last close'],
+    ['Group rank', 'The stock\'s best-ranked theme or industry after the last close'], ['RS', 'Market rank 1-99 after the last close (green 97+)'],
+    ['vs 200D', 'Pre-market price vs the 200-day SMA'], ['vs 50 EMA', 'Pre-market price vs the 50-day EMA'], ['vs 20D high', 'Pre-market price vs the highest high of the previous 20 sessions'],
+    ['Over 52W low', 'Pre-market price above the 52-week low']];
+  function drawEarnings() {
+    const doc = EARN, week = $('#er-week');
+    ['er-up-table', 'er-dn-table'].forEach((id) => {
+      const th = $('#' + id + ' thead'); if (th.childElementCount) return;
+      const tr = h('tr'); ER_COLS.forEach(([n, t], i) => { const c = h('th', (i >= 2 && i !== 6 ? 'num' : '') + (n === 'vs 200D' ? ' er-end' : ''), n); if (t) c.title = t; tr.append(c); }); th.append(tr);
+    });
+    if (!doc || !doc.rows) { $('#er-time').textContent = 'Not built yet: the first run posts the list'; week.replaceChildren(); return; }
+    const rsAll = ldocRS(), today = todayNY();
+    $('#er-h').textContent = 'Earnings · week of ' + new Date(doc.days[0] + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    $('#er-time').textContent = 'Updated ' + fTime(doc.built_at) + ' ET ' + erDay(doc.built_at.slice(0, 10)) + ' · ' + doc.rows.length + ' of ' + doc.n_calendar + ' reports pass your rules';
+    const R = doc.rules || {};
+    $('#er-rule').textContent = 'Your rules: market cap $' + (R.min_mcap / 1e6) + 'M+, 20-day average $' + R.min_dollar_vol_20d_millions + 'M+ traded and ' + (R.min_avg_vol_20d / 1000) + 'K+ shares a day, $' + R.min_price + '+, ADR ' + R.min_adr + '%+, ' + R.min_pct_above_52w_low + '%+ over the 52-week low. Over / under the 200-day SMA on the pre-market price. Click a stock to find it in the tables.';
+    /* the week grid */
+    week.replaceChildren();
+    const order = (a, b) => (erOf(b) - erOf(a)) || ((num(rsAll[b.sym]) || 0) - (num(rsAll[a.sym]) || 0));
+    doc.days.forEach((d) => {
+      const col = h('div', 'er-day' + (d === today ? ' today' : ''));
+      const dh = h('div', 'er-dh'); dh.append(h('span', '', new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' })), h('span', 'tgr-lbl', new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + (d === today ? ' · today' : '')));
+      const slots = h('div', 'er-slots');
+      [['Before open', (r) => r.when === 'bmo'], ['After close', (r) => r.when !== 'bmo']].forEach(([lab, f]) => {
+        const sl = h('div', 'er-slot'); sl.append(h('span', 'tgr-lbl', lab));
+        const list = doc.rows.filter((r) => r.date === d && f(r)).sort(order);
+        if (!list.length) sl.append(h('span', 'tgr-lbl', '—'));
+        list.forEach((r) => {
+          const c = h('button', 'er-chip r' + erOf(r) + ((r.vs200 ?? 0) < 0 ? ' under' : '')); c.type = 'button';
+          const g = grBest(r.sym), rsv = num(rsAll[r.sym]);
+          c.append(h('b', r.sym), h('span', '', [r.read || (r.when === 'tns' ? 'time not set' : r.when === 'dmh' ? 'during the day' : ''), g && g.tier ? (g.tier === 'Top' ? '★ Top' : 'Strong') : '', rsv !== null ? 'RS ' + rsv : ''].filter(Boolean).join(' · ') || ' '));
+          c.title = r.sym + (r.name ? ' · ' + r.name : '') + (r.read ? '\n' + r.read + ': ' + (r.why || '') : '') + ((r.vs200 ?? 0) < 0 ? '\nUnder the 200-day SMA' : '');
+          c.addEventListener('click', () => {
+            S.erq = r.sym; $('#er-q').value = r.sym; S.erday = 'all'; S.ershow = 'all'; draw();
+            const row = document.querySelector('.er-table tr[data-sym="' + r.sym + '"]');
+            if (row) { row.scrollIntoView({ block: 'center', behavior: 'smooth' }); row.classList.add('er-flash'); setTimeout(() => row.classList.remove('er-flash'), 1600); }
+          });
+          sl.append(c);
+        });
+        slots.append(sl);
+      });
+      col.append(dh, slots); week.append(col);
+    });
+    /* the tables: reported first (newest report first), then upcoming (soonest first) */
+    const q = (S.erq || '').trim().toUpperCase();
+    const reacts = (r) => r.date === today || (r.when === 'amc' && r.react_day === today);
+    let rows = doc.rows.filter((r) => (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && (S.erday === 'all' || reacts(r)));
+    rows.sort((a, b) => (!!b.reported - !!a.reported) || (a.reported ? (b.report_at > a.report_at ? 1 : -1) : (a.report_at > b.report_at ? 1 : -1)) || erOf(b) - erOf(a));
+    [['er-up', (r) => (r.vs200 ?? 0) >= 0 && r.vs200 !== null && r.vs200 !== undefined], ['er-dn', (r) => r.vs200 !== null && r.vs200 !== undefined && r.vs200 < 0]].forEach(([id, f]) => {
+      const list = rows.filter(f), tb = $('#' + id + '-table tbody');
+      tb.replaceChildren(...list.map((r) => erRow(r, rsAll)));
+      if (!list.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', q ? 'No ' + q + ' here' : 'None'); td.colSpan = ER_COLS.length; tr.append(td); tb.append(tr); }
+      $('#' + id + '-n').textContent = '· ' + list.filter((r) => r.reported).length + ' reported, ' + list.filter((r) => !r.reported).length + ' to come';
+    });
+    const none = rows.filter((r) => r.vs200 === null || r.vs200 === undefined);
+    if (none.length) $('#er-dn-n').textContent += ' · not shown (no 200-day SMA yet): ' + none.map((r) => r.sym).join(', ');
+  }
+  $('#er-q').addEventListener('input', (e) => { S.erq = e.target.value; draw(); });
+
   function draw() {
     syncControls();
     const stocks = rowsOf('stocks');
@@ -2443,6 +2659,7 @@ defCalc('industry_perf', {
     else if (S.tab === 'gainers') drawGainers(symMap);
     else if (S.tab === 'premarket') { drawPmLive(symMap); drawPremarket(symMap); drawTrack(); }
     else if (S.tab === 'watchlist') drawWatchlist(symMap);
+    else if (S.tab === 'earnings') drawEarnings();
     else drawLaunches(symMap);
   }
 
@@ -2486,7 +2703,7 @@ defCalc('industry_perf', {
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
-  let SRV = null, LNBT = null, REV = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
+  let SRV = null, LNBT = null, REV = null, EARN = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
   const REVOF = (sym) => (REV && REV.rows ? REV.rows[sym] : null);
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
   const nyNow = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value])); return { wd: p.weekday, m: Number(p.hour) * 60 + Number(p.minute) }; };
@@ -2563,7 +2780,8 @@ defCalc('industry_perf', {
       const [ln, lnbt] = await Promise.all([getMain('setups/launch.json').catch(() => null), getMain('setups/launch_backtest.json').catch(() => null)]);
       D.launch = ln ? { status: 'ok', data: ln } : (D.launch && D.launch.status === 'ok' ? D.launch : { status: 'error', data: null });
       if (lnbt) LNBT = lnbt;
-      SRV = await getJson(sha, 'alerts.json').catch(() => SRV);     /* the job's alerts, incl. its 1-minute gap-up checks */
+      SRV = await getJson(sha, 'alerts.json').catch(() => SRV);
+      EARN = await getJson(sha, 'earnings.json').catch(() => EARN);     /* the Earnings tab (radar/earnings.py) */     /* the job's alerts, incl. its 1-minute gap-up checks */
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {
         const [stocks, themes] = await Promise.all([getJson(sha, 'stocks.json'), getJson(sha, 'themes.json')]);
@@ -2612,7 +2830,7 @@ defCalc('industry_perf', {
     d.addEventListener('toggle', () => { try { localStorage.setItem(k, d.open ? '1' : '0'); } catch (e) { /* private window */ } });
   });
   const named = location.hash.slice(1);
-  if (['gainers', 'groups', 'premarket', 'watchlist', 'launches', 'laggards'].includes(named)) S.tab = named;
+  if (['gainers', 'groups', 'premarket', 'watchlist', 'launches', 'laggards', 'earnings'].includes(named)) S.tab = named;
   draw();
   refresh(true);
 })();

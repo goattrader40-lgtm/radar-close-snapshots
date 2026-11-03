@@ -27,7 +27,7 @@ NY = zoneinfo.ZoneInfo("America/New_York")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RULES = json.load(open(os.path.join(ROOT, "scanner", "settings.json")))["earnings"]
 SEC_UA = (os.environ.get("SEC_UA") or "").strip() or "radar-close-snapshots research"
-GV = 2          # the press-release reader's version: a change re-reads every release of the week
+GV = 3          # the press-release reader's version: a change re-reads every release of the week
 MON = {m: i for i, m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1)}
 
 
@@ -233,6 +233,28 @@ def rev_from(text, est, yago):
                     v *= sc
                     break
         if 0.6 <= v / ref <= (1.7 if est else 4):
+            return v
+    return None
+
+
+def rev_growth_from(text):
+    """'revenue grew 32% year-over-year' in the release's first part (before the outlook): the quarter's growth"""
+    head = text[:8000]
+    cut = re.search(r"\b(outlook|guidance)\b", head[1500:], re.I)
+    if cut:
+        head = head[:1500 + cut.start()]
+    m = re.search(r"\b(?:total )?revenues?\b[^.;$]{0,40}?\b(?:grew|increased|rose|was up|up)\b\s*(?:by\s*)?(\d+(?:\.\d+)?)\s*%", head, re.I)
+    return float(m.group(1)) if m else None
+
+
+def eps_from(text, est):
+    """the adjusted (non-GAAP) EPS in the release, checked against the estimate"""
+    head = text[:15000]
+    for m in re.finditer(r"(?:non-gaap|adjusted)[^.;]{0,120}?(?:\$\s?(\(?-?\d+\.\d{2}\)?)\s+per (?:diluted )?share|(?:eps|earnings per (?:diluted )?share|net income per (?:diluted )?share)\b[^.;$]{0,40}?\(?\$\s?(\(?-?\d+\.\d{2}\)?))", head, re.I):
+        v = num(m.group(1) or m.group(2))
+        if v is None:
+            continue
+        if est is None or abs(v - est) <= max(abs(est) * 1.5, 0.3):
             return v
     return None
 
@@ -513,6 +535,8 @@ def main():
             r["eps_act"], r["eps_src"] = h["act"], "Yahoo"
             if h.get("est") is not None and r.get("eps_est") is None:
                 r["eps_est"] = h["est"]
+        elif r.get("rel_eps") is not None:
+            r["eps_act"], r["eps_src"] = r["rel_eps"], "press release"
         elif r.get("nasdaq_eps") is not None and now.isoformat() >= r["report_at"]:
             r["eps_act"], r["eps_src"] = r["nasdaq_eps"], "Nasdaq"
         if (r.get("reported") or r.get("eps_act") is not None) and r.get("rev_act") is None and qe:
@@ -543,6 +567,15 @@ def main():
         rv = rev_from(rel["text"], r.get("rev_est"), r.get("rev_yago"))
         if rv:
             r["rev_act"], r["rev_src"] = rv, "press release"
+        elif r.get("rev_yago") and r.get("rev_src") != "Yahoo":
+            gr = rev_growth_from(rel["text"])
+            if gr is not None:
+                r["rev_act"], r["rev_src"] = r["rev_yago"] * (1 + gr / 100), f"press release (≈ from its {gr:g}% growth)"
+        ep = eps_from(rel["text"], r.get("eps_est"))
+        if ep is not None:
+            r["rel_eps"] = ep
+        if r.get("eps_src") != "Yahoo" and r.get("rel_eps") is not None:
+            r["eps_act"], r["eps_src"] = r["rel_eps"], "press release"
         r["guide"] = guidance(rel["text"], r.get("nq"), r.get("fy"))
         r["headline"] = rel["text"][:400]
     for sym in syms:
