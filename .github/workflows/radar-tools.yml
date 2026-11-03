@@ -82,6 +82,16 @@ jobs:
             python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/launch_dry.json --picks /tmp/picks_dry.json
             python3 radar/publish.py "launch dry run" /tmp/launch_dry.json;;
           esac
+          if [ "${{ inputs.cmd }}" = "techreview" ]; then
+            # study only: tech / growth names in no tight group or theme, their best fits and new tech groups
+            # (scanner/probe_tech.py) -> radar-data probe_tech.json
+            pip install --quiet numba numpy pandas
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && for f in stocks themes groups; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            python3 scanner/probe_tech.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --themes /tmp/rd/themes.json --groups /tmp/rd/groups.json --out /tmp/probe_tech.json
+            python3 radar/publish.py "tech review study" /tmp/probe_tech.json
+          fi
           if [ "${{ inputs.cmd }}" = "groupsdry" ]; then
             # the portal build (pipeline.py) + the launch build on this branch, not published live: radar-data
             # stocks_dry.json, themes_dry.json, groups_dry.json, launch_dry.json
