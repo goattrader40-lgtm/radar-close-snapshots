@@ -140,6 +140,11 @@ alone.
   GV in earnings.py = the release reader's version: bump it to re-read the week's releases after a reader fix.
   Checked by hand Nov 3 against the releases: PLTR, HNGE, LIFE, LSCC, AEHR, ON, XMTR, TEM, SHOP (low-thirties = 32%).
   radar-tools `earnings` / `earnprobe SYM ...` run it / the source check on any branch. No phone alerts (the user).
+  Views (live Nov 3, the user's "go live"): All week / **Today's reactions** = the last trading day's after-close +
+  today's before-open reports / **Day 2** = the session before (Mon morning: Thu after close + Fri before open; Wed
+  morning: Mon after close + Tue before open); earnings.json "react" {t0, p1, p2} and "extra_days" (last week's days
+  fetched for Mon / Tue). The ticker column is frozen when a table scrolls right. A listing without a 200 SMA yet
+  shows in the top table as "new" (LIFE).
 
 ## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
