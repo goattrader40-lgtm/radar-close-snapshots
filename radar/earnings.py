@@ -580,6 +580,9 @@ def main():
         r["headline"] = rel["text"][:400]
     for sym in syms:
         r = rows[sym]
+        ne, ye = r.get("nasdaq_eps_est"), r.get("eps_est")
+        if ne is not None and ye is not None and ne != 0 and (abs(ye) > 3 * abs(ne) or abs(ne) > 3 * abs(ye)):
+            r["eps_est"], r["eps_est_src"] = ne, "Nasdaq (Yahoo's was far off)"    # MPC Nov 3 2026: Yahoo 26.00 vs 3.01
         if r.get("eps_act") is not None and now.isoformat() >= r["report_at"]:
             r["reported"], r["est_frozen"] = True, True
         r["eps_surprise"] = (round((r["eps_act"] - r["eps_est"]) / abs(r["eps_est"]) * 100, 1)

@@ -122,6 +122,21 @@ alone.
   breakouts with RS 97+ 29% / -0.2R vs under 97 39% / +1.3R; RS 97+ in a Top/Strong group 23% / -0.11R. All buy points
   RS 97+ 27% (642), +0.17R vs 21-23%. The RS edge is on the launch day only (History test: 58% vs 32% ran 20%+).
 
+- **Earnings tab (went live Nov 3 2026, the user's "build it go live"; no Claude)**: radar/earnings.py -> radar-data
+  earnings.json, earnings.yml (weekdays ~7:10-8:55 AM ET, final by 9:00; 4:50 / 6:30 / 8:30 PM ET; Sunday 6 PM ET).
+  Who: Nasdaq's calendar Mon-Fri of the week, passing scanner/settings.json "earnings" on the last close ($700M+ cap,
+  $30M+ and 600K+ shares 20-day averages, $10+, ADR 3.5%+, 30%+ over the 52-week low); stays for the week. Two tables
+  by the PRE-MARKET price vs the 200 SMA; NOT filtered on the 50 EMA (the user: show it, don't eliminate). Columns:
+  Read (Strong bullish / Bullish / Mixed / Somewhat bearish / Bearish from fixed points, see rules E1), EPS (actual vs
+  estimate), EPS growth, Revenue, Rev growth, Guidance (raised / lowered / reaffirmed / given, guided revenue vs the
+  street), Guide growth, Move (pre-market / after hours), Group rank, RS, then vs 200D, vs 50 EMA, vs 20D high
+  ("cleared"), over the 52-week low. Results from the SEC press release (8-K 2.02, ex-99; the SEC_UA secret holds the
+  contact, the user's email, trimmed in code), EPS Yahoo > release > Nasdaq (Nasdaq's post-report EPS was off: PLTR
+  0.32 vs 0.44). Estimates saved before the report (this first week many were first seen after: no revenue estimate).
+  GV in earnings.py = the release reader's version: bump it to re-read the week's releases after a reader fix.
+  Checked by hand Nov 3 against the releases: PLTR, HNGE, LIFE, LSCC, AEHR, ON, XMTR, TEM, SHOP (low-thirties = 32%).
+  radar-tools `earnings` / `earnprobe SYM ...` run it / the source check on any branch. No phone alerts (the user).
+
 ## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above: the group rank (Groups tab Rank / Tier; Group rank
@@ -369,6 +384,10 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 (26% / 50%); all 2,985 buy points (22% / 41%).
 
 ## Open items: the to-do list for the next session (each needs the user's go)
+
+0. **Earnings tab, first live week**: check the reads with the user (Wed-Fri reports get estimates saved before
+   the report); the guidance reader's misses go in as fixes with a GV bump. Not done: revenue from the release's
+   tables (SHOP-style releases give only growth up front: ≈ from growth), the prior quarter's growth (acceleration).
 
 1. **The momentum cutoff** (the user will say which rule): no buy points once the stock has run too far from its
    momentum's start (the low of its last rest of 40+ sessions without a new 6-month high; AEHR: Nov 21 2025, 18.70).
