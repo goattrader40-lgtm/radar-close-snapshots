@@ -181,7 +181,7 @@ alone.
   Collaboration, ...); new groups found: Network & App Delivery (FFIV AKAM FSLY NTCT ATEN RDWR, 0.54) and Aerospace
   Components (GE HWM HEI WWD SARO VSEC HXL, 0.52). Spreadsheet sent to the user (tech_review.xlsx).
 - The user chose (on my recommendation) the two new groups + GEN / IPGP / AMBA / TDC, NOT pair groups (CDNS-SNPS,
-  JOBY-ACHR: use RS). Built on `test/techgroups`, WAITING ON "GO LIVE": industry_groups.json (FFIV AKAM FSLY out of
+  JOBY-ACHR: use RS). LIVE (merged to main Nov 3 evening; data from the Nov 4 after-close refresh): industry_groups.json (FFIV AKAM FSLY out of
   Cloud & Observability, NTCT ATEN RDWR out of Cybersecurity, TDC to Collaboration, AMBA to AI Connectivity), theme_adds
   (GEN Enterprise SaaS, IPGP Semi Test & Packaging). Dry run 41727414113: 147 tight groups (1,309 stocks); Network & App
   Delivery 0.52 (6), Aerospace Components 0.51 (6, HXL out); TDC in; AMBA, GEN, IPGP under 0.6 this week (they join
