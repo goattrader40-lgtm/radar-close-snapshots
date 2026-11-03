@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Study (Nov 3 2026, the user: "combine group rank, RS and Trend with our buy points: which combination works best"):
 tags every trade already tested (radar-data probe_buypoints.json = 5,783 buy points after launches, probe_launch_orh.json
-= 1,441 launch days, Aug 2025 - Oct 2026, both with the user's management) with what the portal would have shown:
+= 1,441 launch days, probe_launch_live.json = 5,578 days bought live as the launch alert fires, Aug 2025 - Oct 2026, both with the user's management) with what the portal would have shown:
 
   group   the stock's best group percentile (launch.rank_history: themes vs themes, groups vs groups, 1/3/6-month;
           Top = 97+, Strong = 90-96.9; a loose "· other" group capped under Strong)
@@ -39,13 +39,14 @@ def main():
     ap = argparse.ArgumentParser()
     for k in ("bars", "stocks", "bp", "orh", "out"):
         ap.add_argument("--" + k, required=True)
+    ap.add_argument("--live", default="")
     a_ = ap.parse_args()
     A, groups, GS, cal, S = launch.load(a_.bars, a_.stocks)
     rows = json.load(open(a_.stocks))
     best, MK = launch.rank_history(A, cal, rows)
     pos = {d: k for k, d in enumerate(cal)}
     want = set()
-    for f in (a_.bp, a_.orh):
+    for f in [x for x in (a_.bp, a_.orh, a_.live) if x]:
         for t in json.load(open(f)).get("trades", []):
             want.add((t["symbol"], t["date"]))
     r2 = lambda x: None if x is None or np.isnan(x) else round(float(x), 3)
