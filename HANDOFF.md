@@ -172,7 +172,17 @@ alone.
   rank_history(full=True) + launch_day_rank()). The lone-wolf tag still uses the old status (the user, Nov 3: keep it;
   a new-rank version needs its own test).
 
-## Status: industry groups by business line (Nov 3 2026, the group-rank session), WAITING ON THE USER'S "GO LIVE"
+## Status: hand-picked theme members (Nov 3 2026), on `test/themeadds`, WAITING ON THE USER'S "GO LIVE"
+
+- 60 stocks that were in no theme but moved with one at 0.6+ (the 304 the group test dropped, checked: 114 already in
+  their theme, 84 in none; ~15 of those 84 were coincidence and left out) go in radar/theme_adds.json; pipeline.py adds
+  each to its theme (core: ext; auto group: its members) only in weeks it tracks the theme at 0.6+, without the sector
+  / liquidity filters of the automatic adds. Dry run 41714934810: 49 joined (12 under 0.6 this week, e.g. LNG, OKE,
+  RDWR, VCYT); theme strengths about the same (Steel 0.69 -> 0.63 the largest). Regress: same. Browser: no errors.
+- The 99 that fit another industry group are NOT moved (cross-business coincidence, e.g. DPZ / Insurance Brokers).
+- Go live = merge test/themeadds into main (rules workbook updated in the branch).
+
+## Status: industry groups by business line (Nov 3 2026, the group-rank session): LIVE (merged to main Nov 3, 3:27 PM ET)
 
 - **Built on `test/groups`, not on main.** radar/industry_groups.json (90 hand groups, finest in tech; else the Yahoo
   industry from profiles.json; US banks split Regional $3B+ / Community); radar/pipeline.py prunes each group with the
