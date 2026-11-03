@@ -609,6 +609,8 @@
             <th class="num"><button class="tgr-th" data-sort="price">Price</button></th>
             <th class="num"><button class="tgr-th" data-sort="chg_1d">Chg</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="rel_vol">Rel vol</button></th>
+            <th class="num"><button class="tgr-th" data-sort="vs21e" title="Price (live during the session) vs the 21-day EMA as of the last close">vs 21 EMA</button></th>
+            <th class="num"><button class="tgr-th" data-sort="vs50e" title="Price (live during the session) vs the 50-day EMA as of the last close">vs 50 EMA</button></th>
             <th class="c2"><button class="tgr-th" data-sort="other">Other entries</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="adr_pct">ADR%</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="perf_1m_pct">1M</button></th>
@@ -1870,7 +1872,11 @@ defCalc('industry_perf', {
       (LIVE_ON ? 'live at ' + fTime(LIVE.saved_at) + ' ET' : b ? 'the ' + fDate(b.asof) + ' close' : '—') + '.';
     const gord = { 'A+': 0, A: 1, B: 2, C: 3, F: 4 };
     const rsAll = ldocRS();
-    rows.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsAll[r.symbol] ?? null; });
+    rows.forEach((r) => {
+      r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsAll[r.symbol] ?? null;
+      const px = num(r.price), e21 = num(r.ema21), e50 = num(r.ema50);
+      r.vs21e = px && e21 ? r2((px / e21 - 1) * 100) : null; r.vs50e = px && e50 ? r2((px / e50 - 1) * 100) : null;
+    });
     const spec = S.sort['wl-table'];
     if (spec) {
       const txt = ['symbol', 'section', 'pattern', 'added', 'other'].includes(spec.key);
@@ -1879,7 +1885,7 @@ defCalc('industry_perf', {
       rows.sort((a, c) => (blank(val(a)) - blank(val(c))) || (spec.dir > 0 ? cmp(val(a), val(c)) : cmp(val(c), val(a))));
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
-    if (doc && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'No names in this list' + (S.wlsec || q ? ' match.' : ' right now.')); td.colSpan = 21; tr.append(td); tb.append(tr); }
+    if (doc && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'No names in this list' + (S.wlsec || q ? ' match.' : ' right now.')); td.colSpan = 23; tr.append(td); tb.append(tr); }
     const picked = pickedNow(), ldoc = st('launch').status === 'ok' ? st('launch').data : null;
     const launchedSet = new Set(ldoc ? ldoc.launches.filter((r) => r.grade !== 'You').map((r) => r.symbol) : []);
     rows.forEach((r) => {
@@ -1907,6 +1913,7 @@ defCalc('industry_perf', {
       const sec = (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
       tr.append(key, h('td', 'nw', sec), gd, grStockCell(r.gr, r.symbol, false), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), resCell(r, num(r.price)), h('td', 'num', fPrice(r.price)), pctCell(r.chg_1d, 0), h('td', 'num c2', fX(r.rel_vol)),
+        h('td', 'num ' + tone(r.vs21e), p1(r.vs21e, true)), h('td', 'num ' + tone(r.vs50e), p1(r.vs50e, true)),
         h('td', 'c2', r.other), h('td', 'num c3', p1(r.adr_pct)), h('td', 'num c3 ' + tone(r.perf_1m_pct), p1(r.perf_1m_pct, true)),
         h('td', 'num c3 ' + tone(r.perf_3m_pct), p1(r.perf_3m_pct, true)), h('td', 'num c3', p1(r.off_52w_high_pct)), h('td', 'num c3', fDv(r.dollar_vol_30d_m)),
         h('td', 'c2 nw', r.added ? fDate(r.added).replace(/, \d{4}$/, '') : '—'), chipCell(r.themes, 'theme', 'c2'));
@@ -2377,7 +2384,10 @@ defCalc('industry_perf', {
   function runAlerts() {
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
     if (alertsOn && marketOpen()) {
-      const found = liveAlerts(), symOf = (k) => k.split(':')[0];
+      /* your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low when it fires */
+      const lowOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.low_52w]));
+      const over52 = (k) => { const sym = k.split(':')[0], lo = num(lowOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !lo || !q || !q[0] || q[0] >= lo * 1.3; };
+      const found = liveAlerts().filter(([k]) => over52(k)), symOf = (k) => k.split(':')[0];
       const catBefore = new Set([...sent].filter((k) => k.endsWith(':catalyst')).map(symOf));
       const catNow = new Set(found.map(([k]) => k).filter((k) => k.endsWith(':catalyst') && !sent.has(k)).map(symOf));
       found.forEach(([key, title, body, tvs]) => {

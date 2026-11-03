@@ -536,6 +536,35 @@ def chart_low_today(sym):
         return None
 
 
+MIN_OVER_LOW52 = 30          # % over the 52-week low every alert needs (scanner/settings.json standard)
+_LOW52 = None
+
+
+def low52_of(launch_p):
+    """{symbol: 52-week low} from the stocks file the live job keeps next to launch.json (base_stocks.json)"""
+    global _LOW52
+    if _LOW52 is None:
+        _LOW52 = {}
+        d = os.path.dirname(os.path.abspath(launch_p))
+        for name in ("base_stocks.json", "stocks.json"):
+            p = os.path.join(d, name)
+            if os.path.exists(p):
+                try:
+                    _LOW52 = {s["symbol"]: s.get("low_52w") for s in json.load(open(p))}
+                    break
+                except Exception:
+                    pass
+    return _LOW52
+
+
+def over_low52(sym, live, low):
+    """True when the stock trades 30%+ over its 52-week low (or there is no low to check: a new listing, a summary)"""
+    lo, q = low.get(sym), (live.get("rows") or {}).get(sym)
+    if not lo or not q or not q[0]:
+        return True
+    return q[0] >= lo * (1 + MIN_OVER_LOW52 / 100)
+
+
 def send(topic, title, msg, prio, tvs):
     req = urllib.request.Request(f"https://ntfy.sh/{topic}", data=msg.encode(), method="POST", headers={
         "Title": title.encode("ascii", "replace").decode(), "Priority": prio, "Tags": "chart_with_upwards_trend",
@@ -570,6 +599,8 @@ def main():
         return
     sent = set(state["sent"])
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
+    # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
+    found = [a for a in found if over_low52(a[0].split(":")[0], live, low52_of(launch_p))]
     gbars = {}
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
     cat_now = {a[0].split(":")[0] for a in found if a[0].endswith(":catalyst") and a[0] not in sent}
