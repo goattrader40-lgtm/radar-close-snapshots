@@ -533,6 +533,13 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    +6.1%): DONE Nov 3 as the RS column on Launches (and plain on the Watchlist); (b) DONE Nov 3: the rank replaced Leading in the breakout
    grade; (c) DONE Nov 3: 3-SETUPS triggers on the phone and in the 1-minute checks. Emerging: tested and rejected (gap-ups 24% ran 20%+
    vs bottom half 29%; launches 20%, avg -5.5%).
+9. **Industry groups / themes (live Nov 3, the group-rank session)**: first check Wed Nov 4 after the close that the
+   portal's Industry list shows "Groups" with Strength, Network & App Delivery and Aerospace Components appear, and
+   Launches rows show the new group names. The weekly profiles.json refresh (day.py, when 7+ days old) is untested live:
+   check it ran by Nov 10. Waiting names (join when 0.6+): AMBA (AI Connectivity group), GEN, IPGP and the 11 theme adds
+   under 0.6 (LNG, OKE, RDWR, VCYT, ...). The user may still send moves from proposed_groups_v3.xlsx / tech_review.xlsx
+   (edits go in radar/industry_groups.json or radar/theme_adds.json, test branch first). Decided: no pair groups
+   (CDNS-SNPS, NFLX-SPOT, JOBY-ACHR: use RS); big loners (META, APP, SHOP, ORCL, RBLX, RDDT) stay "· other" with RS.
 8. Older: move the Launches rules box to the top of the tab; picks reading their history from the start; an intraday
    surge alert without a gap; the 3-SETUPS weaker Ready groups (kept as is).
 
