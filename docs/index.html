@@ -589,7 +589,7 @@
         <span class="tgr-lbl" id="wl-time">—</span>
       </div>
       <div class="tgr-bar">
-        <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button></span>
+        <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button><button data-v="TREND" aria-pressed="false" title="Every name on the four lists and on Launches in a trend now: Up, Turn up, Reclaim or Resting (live in the session)">TREND</button></span>
         <label class="tgr-f"><span class="tgr-lbl">Section</span> <select class="tgr-search" id="wl-sec" aria-label="Section"></select></label>
         <input class="tgr-search" id="wl-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
         <button class="tgr-lite" id="wl-dl" type="button">Download for TradingView</button>
@@ -1744,7 +1744,25 @@ defCalc('industry_perf', {
 
   /* watchlist: the setup scanner's lists, with today's live price on top */
   const WL_LISTS = ['3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'];
-  const WL_ORDER = { '3-SETUPS': ['Triggered today', 'Ready', 'Setting up'], '2-POOL': ['Momentum', '50 EMA reclaim', 'Growth'] };
+  const WL_ORDER = { '3-SETUPS': ['Triggered today', 'Ready', 'Setting up'], '2-POOL': ['Momentum', '50 EMA reclaim', 'Growth'], TREND: ['Launches', '3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'] };
+  /* TREND (your list, Nov 3 2026): every name on 3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP and Launches whose Trend is Up, Turn up,
+     Reclaim or Resting now (live in the session); it leaves when it turns Negative or loses its label and is still on the
+     list it came from (its Section = where it came from: Launches first, then 3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP) */
+  const TREND_ON = new Set(['Up', 'Turn up', 'Reclaim', 'Resting']);
+  const trendSrc = (doc) => {
+    const ldoc = st('launch').status === 'ok' ? st('launch').data : null, seen = new Map();
+    ((ldoc && ldoc.launches) || []).forEach((r) => {
+      if (seen.has(r.symbol)) return;
+      seen.set(r.symbol, { symbol: r.symbol, tv: r.tv || r.tv_symbol, close: r.price, chg_pct: r.chg_today_pct, rel_vol: r.rel_vol_today,
+        grade: r.grade === 'You' ? '' : r.grade, pattern: r.pattern, buy_point: r.buy_point, adr_pct: r.adr_pct, ema21: r.ema21, ema50: r.ema50,
+        resistance: r.resistance, added: r.date, section: 'Launches', why: (r.grade === 'You' ? 'Your pick' : 'Launch ' + fDate(r.date).replace(/, \d{4}$/, '')) + (r.status ? ': ' + r.status : ''), stage: r.stage || '' });
+    });
+    ['3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'].forEach((n) => ((doc && doc.lists && doc.lists[n]) || []).forEach((r) => {
+      if (seen.has(r.symbol)) return;
+      seen.set(r.symbol, Object.assign({}, r, { section: n, why: (n === '3-SETUPS' && r.section ? r.section + ': ' : '') + (r.why || '') }));
+    }));
+    return [...seen.values()].filter((r) => { const t = trendOf(r.symbol); return t && TREND_ON.has(t.st); });
+  };
   /* your picks: the Follow button saves the stock to setups/picks.json in your repo (with a GitHub key kept in this
      browser, made once per device); a GitHub job (Follow picks) then rebuilds the Launches list with it in a few
      minutes, and from then on it is followed like a launch. ✕ on the Launches tab removes it the same way. */
@@ -1850,7 +1868,7 @@ defCalc('industry_perf', {
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
     if (!doc || !doc.lists) return [];
     const gone3 = S.wl === '3-SETUPS' ? s3Gone() : {};
-    return (doc.lists[S.wl] || []).filter((r) => !(gone3[r.symbol] && (r.added || '') <= gone3[r.symbol])).map((r, i) => {
+    return (S.wl === 'TREND' ? trendSrc(doc) : (doc.lists[S.wl] || [])).filter((r) => !(gone3[r.symbol] && (r.added || '') <= gone3[r.symbol])).map((r, i) => {
       const m = symMap.get(r.symbol);
       const price = m && num(m.price) !== null ? num(m.price) : num(r.close);
       const ent = r.entries || {};
@@ -1887,11 +1905,14 @@ defCalc('industry_perf', {
         'Triggered today = a base breakout, bull flag or bull pennant breakout, breakout undercut & reclaim, pop, 21 EMA retest or undercut & reclaim, retest held or push today. Ready = its trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it: tomorrow\'s buys (LIFE Oct 30, 2026: 44.81, 0.5 ADR away, tight 4 days). ' +
         'Setting up = a flag forming (its line further away), a pullback set up for the 21 EMA, or a pullback near the retest zone of its last breakout. Liquid with an ADR of 4%+ and a close over the 200-day SMA to come on (a new listing without one is not held back). Alerts: desktop notifications for every trigger during the day; the phone gets the Ready list once after the close, as a text file.',
         '2 closes in a row under the 50 EMA, 2 closes in a row under the 200-day SMA (your rule, Nov 3 2026), 62 sessions from its highest point without a new high, its ADR under 3.2%, or your ✕ (it comes back only when it comes on a feeder list again).'],
+      TREND: ['any name on 3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP or Launches whose Trend is Up, Turn up, Reclaim or Resting now (live in the session): the base 10 EMA > 21 EMA > 50 EMA with the 50 EMA higher than 5 sessions ago; ' +
+        'Up = over the 21 and 50 EMA with the 10 and 21 rising, Resting = the 10 or 21 flat, Turn up = the 5 EMA crossed over the 10 today, Reclaim = back over the 21 after a close under it. Section = the list it came from (Launches first). Sorted by the Trend, the most days first.',
+        'when it closes or trades under the 21 EMA (Negative) or the stack breaks; it stays on the list it came from and shows here again when its Trend turns positive.'],
     }[list];
     if (!R) return null;
     const every = 'price $' + S0.min_price + '+, market cap $' + Math.round(S0.min_mcap / 1e6) + 'M+, 20-day average volume ' + Math.round(S0.min_avg_vol_20d / 1000) + 'k+ shares and $' +
       S0.min_dollar_vol_20d_millions + 'M+ a day (20-day), ADR ' + S0.min_adr + '%+' + (S0.above_ema50 ? ', a close above the 50 EMA' : '') + (S0.min_pct_above_52w_low ? ', at least ' + S0.min_pct_above_52w_low + '% above the 52-week low' : '') + '.';
-    return [['Gets on: ', R[0]], ['It leaves on: ', R[1]], ['Every list also needs: ', every], ['Grade: ', 'the trend and the last pullback, the same on every list (How the grade works, below).']];
+    return [['Gets on: ', R[0]], ['It leaves on: ', R[1]], ['Every list also needs: ', list === 'TREND' ? 'the rules of the list each name came from (Launches or the Watchlist lists)' : every], ['Grade: ', 'the trend and the last pullback, the same on every list (How the grade works, below).']];
   };
   /* the list's rules and the "About these lists" note open or stay closed the way you left them (this browser only) */
   [['wl-rules-box', 'radar-wl-rules'], ['wl-about-box', 'radar-wl-about'], ['ln-rules-box', 'radar-ln-rules']].forEach(([id, key]) => {
@@ -1905,7 +1926,7 @@ defCalc('industry_perf', {
     setState('wl-table', ['setups']);
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
     const all = wlRows(symMap);
-    document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
+    document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = b.dataset.v === 'TREND' ? (doc ? (S.wl === 'TREND' ? all.length : trendSrc(doc).length) : null) : doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
     $('#wl-time').textContent = doc ? 'Scan of the ' + fDate(doc.date) + ' close' : st('setups').status === 'error' ? 'Could not load the lists' : '—';
     const rules = wlRules(S.wl, doc && doc.settings), rbox = $('#wl-rules');
     $('#wl-rules-sum').textContent = 'The rules of ' + S.wl;
@@ -1944,7 +1965,7 @@ defCalc('industry_perf', {
       r.vs21e = px && e21 ? r2((px / e21 - 1) * 100) : null; r.vs50e = px && e50 ? r2((px / e50 - 1) * 100) : null;
       r.trend_n = trendN(r.symbol);
     });
-    const spec = S.sort['wl-table'];
+    const spec = S.sort['wl-table'] || (S.wl === 'TREND' ? { key: 'trend_n', dir: -1 } : null);
     if (spec) {
       const txt = ['symbol', 'section', 'pattern', 'added', 'other'].includes(spec.key);
       const val = (r) => (spec.key === 'grade' ? (gord[r.grade] ?? 9) : txt ? String(r[spec.key] || '') : num(r[spec.key]));

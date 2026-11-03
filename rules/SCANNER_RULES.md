@@ -302,6 +302,7 @@ As of Nov 3, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | 4 Up | The base rule, price over the 21 and 50 EMA, the 10 and 21 EMA both higher than the session before |
 | 5 Resting | The base rule, but the 10 or the 21 EMA not higher than the session before |
 | - (none) | None of the above |
+| TREND list (Watchlist) | Every name on 3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP and Launches whose Trend is Up, Turn up, Reclaim or Resting now (live); leaves when it turns Negative or loses its label (still on the list it came from); Section = where it came from (Launches first); sorted by the Trend, most days first (the user, Nov 3 2026) |
 | Where / when | Watchlist, Earnings, Gainers, Launches (and laggards); at the close from the nightly build (stocks.json trend / trend_days / tr), live in the session (today's EMAs moved on with the live price); Nd = sessions in the state; sorts Up > Turn up > Reclaim > Resting > - > Negative |
 
 ## Open items
