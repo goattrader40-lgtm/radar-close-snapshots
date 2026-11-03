@@ -146,6 +146,7 @@ alone.
   fetched for Mon / Tue). The ticker column is frozen when a table scrolls right. A listing without a 200 SMA yet
   shows in the top table as "new" (LIFE).
   Every Earnings column sorts on a header click (live Nov 3; empty values last; default = reported first, newest first).
+  The Stock column is narrow (live Nov 3, the user: "too big"): "Tue AM" = before the open, "Mon PM" = after the close; the date and time in the cell's tooltip.
 
 - **Alert rules (live Nov 3 2026, the user's "go live, a")**: every alert, phone (radar/alerts.py main, from
   base_stocks.json) and desktop (the portal's runAlerts, from stocks.json), fires only when the price is 30%+ over the
@@ -167,7 +168,26 @@ alone.
   rank_history(full=True) + launch_day_rank()). The lone-wolf tag still uses the old status (the user, Nov 3: keep it;
   a new-rank version needs its own test).
 
-## Status at the end of the last session (Nov 2 - early Nov 3 2026)
+## Status at the end of the last session (Nov 3 2026, the Earnings session)
+
+- **Live on main** (each after the user's "go live"; `tools/replay.py --regress`: every agreed example reads the same):
+  the **Earnings tab** (radar/earnings.py, earnings.yml, no Claude: Nasdaq calendar + Yahoo + SEC press releases;
+  the views All week / Today's reactions / Day 2; sortable columns; frozen narrow Stock column); **every alert needs
+  the price 30%+ over the 52-week low** when it fires, and **3-SETUPS alerts only over the 200 SMA** (ECHO Nov 3);
+  **Watchlist vs 21 EMA / vs 50 EMA** columns. Details under "Changes on Nov 2 2026" (the Nov 3 entries).
+- **Test branches**: `test/earnings` and `test/alerts52` are the same as main (nothing waiting). `test/pmrs` was merged
+  by another session (not this one).
+- **The SEC_UA secret** (the user's contact for the SEC) is set by the user; earnings.py trims its line break.
+- **Phone alerts: left alone** at the user's wish (they don't use them yet); the Nov 3 day job ran on the old code.
+- **No new agreed reads** this session (tools/examples.txt unchanged).
+- **First thing to check next session**: the Earnings tab after the 7:10-8:55 AM runs (estimates saved before the
+  report from Wed Nov 4 on, so the revenue surprise fills in); Day 2 moves forward each morning (Wed Nov 4: Mon after
+  close + Tue before open).
+- **Open from this session**: the Earnings reader's misses (fix + bump GV); revenue from the release's tables (SHOP:
+  ≈ from growth); the 3-SETUPS alert text ("Ready" in a trigger alert, no "(light)" on the desktop): offered as (b),
+  the user chose (a) only.
+
+## Status at the session before (Nov 2 - early Nov 3 2026)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above: the group rank (Groups tab Rank / Tier; Group rank
   column with the place in the group on Pre-market graded gappers, Watchlist, Launches, Launch laggards; "#1 in
