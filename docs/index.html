@@ -2589,6 +2589,7 @@ defCalc('industry_perf', {
     const rsv = num(rsAll[r.sym]); const rs = h('td', 'num' + (rsv !== null && rsv >= 97 ? ' tgr-up' : ''), rsv === null ? '—' : (rsv >= 97 ? '★ ' : '') + rsv);
     /* the levels at the end */
     const v200 = erPct(r.vs200, 'er-end'), v50 = erPct(r.vs50);
+    if (r.vs200 === null || r.vs200 === undefined) { v200.textContent = 'new'; v200.classList.add('tgr-lbl'); v200.title = 'A recent listing: no 200-day SMA yet'; }
     const v20 = erPct(r.vs20h);
     if (r.vs20h !== null && r.vs20h !== undefined) { if (r.vs20h >= 0) v20.append(h('span', 'tgr-lbl tgr-up', 'cleared')); v20.title = '20-day high $' + r.high20; }
     const lo = h('td', 'num', r.over_low52 === null || r.over_low52 === undefined ? '—' : '+' + Math.round(r.over_low52) + '%');
@@ -2655,14 +2656,13 @@ defCalc('industry_perf', {
       : S.erday === 'day2' ? lab(RX.p2, 'after close') + ' + ' + lab(RX.p1, 'before open') + ' (their 2nd day)' : '';
     let rows = doc.rows.filter((r) => (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && view(r));
     rows.sort((a, b) => (!!b.reported - !!a.reported) || (a.reported ? (b.report_at > a.report_at ? 1 : -1) : (a.report_at > b.report_at ? 1 : -1)) || erOf(b) - erOf(a));
-    [['er-up', (r) => (r.vs200 ?? 0) >= 0 && r.vs200 !== null && r.vs200 !== undefined], ['er-dn', (r) => r.vs200 !== null && r.vs200 !== undefined && r.vs200 < 0]].forEach(([id, f]) => {
+    /* a recent listing without a 200-day SMA yet goes in the top table, marked "new" (LIFE Nov 2026) */
+    [['er-up', (r) => r.vs200 === null || r.vs200 === undefined || r.vs200 >= 0], ['er-dn', (r) => r.vs200 !== null && r.vs200 !== undefined && r.vs200 < 0]].forEach(([id, f]) => {
       const list = rows.filter(f), tb = $('#' + id + '-table tbody');
       tb.replaceChildren(...list.map((r) => erRow(r, rsAll)));
       if (!list.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', q ? 'No ' + q + ' here' : 'None'); td.colSpan = ER_COLS.length; tr.append(td); tb.append(tr); }
       $('#' + id + '-n').textContent = '· ' + list.filter((r) => r.reported).length + ' reported, ' + list.filter((r) => !r.reported).length + ' to come';
     });
-    const none = rows.filter((r) => r.vs200 === null || r.vs200 === undefined);
-    if (none.length) $('#er-dn-n').textContent += ' · not shown (no 200-day SMA yet): ' + none.map((r) => r.sym).join(', ');
   }
   $('#er-q').addEventListener('input', (e) => { S.erq = e.target.value; draw(); });
 
