@@ -1903,6 +1903,18 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                     [st.dates[g], fnum(a.hi20[g])] if g >= 0 else None,
                     " ".join(sorted({x for t in groups.get(s, ([], []))[0] for x in leaders.get(t, ()) if x != s})) or None,
                     fnum(st.c[i - 49:i + 1].mean()) if i >= 49 else None, fnum(st.low52[i])]
+    # the watch list's group rank and RS for the live launch alerts (the user, Nov 3 2026: the phone said "theme ...
+    # (turning up)" from the old status): [15] "★ Top <group> #r/N · #p of n in it", [16] RS
+    if gbest:
+        order = {(g_["kind"], g_["group"]): (g_.get("order") or "").split() for g_ in (grank or {}).get("rows", [])}
+        for s_, w_ in watch.items():
+            b = gbest.get(s_) or {}
+            txt = None
+            if b.get("group"):
+                o_ = order.get((b["kind"], b["group"]), [])
+                txt = (("★ Top " if b["tier"] == "Top" else "Strong " if b["tier"] == "Strong" else "") + f"{b['group']} #{b['rank']}/{b['of']}"
+                       + (f" · #{o_.index(s_) + 1} of {len(o_)} in it" if s_ in o_ else ""))
+            w_ += [txt, b.get("rs")]
     # the breakout alert grade's group (the user, Nov 3 2026: the new group rank replaces "Leading"): the stock's best
     # group rank after this close; Top or Strong (top 10%) counts
     for r in rows + lag:
@@ -1923,7 +1935,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     doc = dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
-                             "sma50", "low_52w"],
+                             "sma50", "low_52w", "group rank now (★ Top / Strong, place in it)", "RS now"],
                launches=rows, ema50_undercut=under50, laggards=lag, watch=watch, groups=[g for g in G if g["status"] != "Not trending"],
                catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()),
                news_days=sorted([s, d, w] for (s, d), w in NEWS_DAYS.items()),

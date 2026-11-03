@@ -688,7 +688,8 @@
             <th class="num"><button class="tgr-th" data-sort="rv" title="Volume so far ÷ the 20-day average volume by this time of day">Rel vol</button></th>
             <th class="num"><button class="tgr-th" data-sort="price">Price</button></th>
             <th class="num"><button class="tgr-th" data-sort="pivot" title="Highest high of the previous 20 days: above it = base breakout">Base high</button></th>
-            <th><button class="tgr-th" data-sort="group">Theme</button></th>
+            <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after the last close (its themes and its industry). ★ Top = top 3%, Strong = top 3-10%; under it the group and the stock's place in it">Group rank</button></th>
+            <th class="num"><button class="tgr-th" data-sort="rs" title="RS = the stock's rank against the whole market after the last close, 1-99. Green with a star = RS 97+: in the test, launches with RS 97+ ran 20%+ 58% of the time vs 32% (72% in a ★ Top or Strong group)">RS</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="corr">Correction</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="days">Days since high</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="h52">% of 52W high</button></th>
@@ -2068,11 +2069,12 @@ defCalc('industry_perf', {
     $('#ln-live-time').textContent = LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : marketOpen() ? 'Waiting for the first live update' : 'Live during market hours';
     $('#ln-live-note').textContent = !doc ? '' : (doc.watch ? Object.keys(doc.watch).length : 0) + ' stocks on watch from the ' + fDate(doc.date) + ' close. ' +
       (LIVE_ON ? live.length + ' of them are launching right now. "Grade so far" uses the volume pace and price so far; the close still has to hold the top half of the day. After the close (about 4:30 PM ET) this list clears, and the ones that held move to the Launches table below, dated today.' : 'They are checked every 5 minutes from 9:30 AM ET. After the close this list clears: the day\'s launches that held at the close are in the Launches table below, dated that day (the evening scan, about 4:40 PM ET).');
+    const rsLive = ldocRS();
+    live.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsLive[r.symbol] ?? null; });
     sortRows(lt, live, { key: 'grade', dir: 1 }, ['symbol', 'group'], 'grade');
-    if (doc && LIVE_ON && !live.length) noRows(ltb, 11, 'Nothing on the watch list is launching right now.');
+    if (doc && LIVE_ON && !live.length) noRows(ltb, 12, 'Nothing on the watch list is launching right now.');
     live.forEach((r) => {
       const tr = h('tr');
-      const th = h('td', ''); th.textContent = r.group ? r.group + ' · ' + (GSTAT[r.gstat] || '') : '—';
       const k0 = tkCell(r.symbol, r.tv_symbol);
       if (r.mem) { const t = h('span', 'tgr-gm', 'delayed'); t.title = 'Faded high-volume gap on ' + fDate(r.mem[0]) + ', base held since'; k0.append(t); }
       if (r.follows) { const t = h('span', 'tgr-gm', 'follows ' + r.follows); t.title = 'Breaking out within 10 sessions of a launch by ' + r.follows + ' in its theme'; k0.append(t); }
@@ -2082,7 +2084,8 @@ defCalc('industry_perf', {
       if (r.vs200 !== undefined) { const t = h('span', 'tgr-flag', p1(r.vs200, true) + ' vs 200 SMA'); t.style.marginLeft = '6px'; t.title = 'Under its 200-day SMA: a laggard launch'; k0.append(t); }
       if (r.ep) { const t = h('span', 'tgr-gm', 'catalyst gap'); t.title = 'Was under its ' + r.under.join(' & ') + ' at the last close; gapped ' + p1(r.gap, true) + ' on ' + (r.earnings ? 'earnings' : 'news? (no earnings: check the headline)') + ' and trades above the 50 EMA & 200 SMA'; k0.append(t); }
       tr.append(k0, gradeCell(r.grade), pctCell(r.chg, 0), h('td', 'num', r.gap === null ? '—' : p1(r.gap, true)), h('td', 'num' + (r.rv >= 3 ? ' tgr-up' : ''), fX(r.rv)),
-        h('td', 'num', fPrice(r.price)), h('td', 'num' + (r.bo ? ' tgr-up' : ''), fPrice(r.pivot) + (r.bo ? ' ✓' : '')), th,
+        h('td', 'num', fPrice(r.price)), h('td', 'num' + (r.bo ? ' tgr-up' : ''), fPrice(r.pivot) + (r.bo ? ' ✓' : '')), grStockCell(r.gr, r.symbol, false),
+        h('td', 'num' + (num(r.rs) !== null && r.rs >= 97 ? ' tgr-up' : ''), num(r.rs) === null ? '—' : (r.rs >= 97 ? '★ ' : '') + r.rs),
         h('td', 'num c2', p1(r.corr)), h('td', 'num c2', r.days === null ? '—' : String(r.days)), h('td', 'num c3', p1(r.h52)));
       ltb.append(tr);
     });

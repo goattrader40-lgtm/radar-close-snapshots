@@ -145,7 +145,7 @@ def find_early(live, doc, now=None):
         ern = q[6] if len(q) > 6 else None
         earn = bool(ern and after_close <= ern <= now.timestamp() + 3600)
         group, gstat = w[8], w[9]
-        theme = f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
+        theme = gtext(w)
         what, need = ("power-day gap", "4x+ and up 15%+") if power else ("catalyst gap", "3x+") if catalyst else ("launch gap", "3x+")
         out.append((f"{sym}:early", f"{sym} EARLY: {what} " + ("on earnings" if earn else "(news? no earnings)"),
                     f"gap {gap:+.1f}% · ${price:.2f} ({chg:+.1f}%)"
@@ -154,6 +154,14 @@ def find_early(live, doc, now=None):
                     + (f" · vol {rv:.1f}x so far (rough: the opening auction)" if rv else "")
                     + f" · the full alert from 9:35 if the volume confirms ({need}) · theme {theme}", "default", w[10]))
     return out
+
+
+def gtext(w):
+    """the group line in a launch alert: the group rank and RS (watch fields 15-16, Nov 3 2026), else the old status"""
+    if len(w) > 16 and (w[15] or w[16] is not None):
+        return (w[15] or "no ranked group") + (f" · RS {w[16]}" + (" ★" if w[16] >= 97 else "") if w[16] is not None else "")
+    group, gstat = w[8], w[9]
+    return f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
 
 
 def find(live, doc, now=None):
@@ -195,7 +203,7 @@ def find(live, doc, now=None):
                  and price > pivot)                                # over its 1-month high (your rule, Nov 2 2026)
         if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not power):
             continue
-        theme = f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
+        theme = gtext(w)
         facts = f"{chg:+.1f}% · gap {gap:+.1f}% · vol {rv:.1f}x for the time of day" if gap is not None else f"{chg:+.1f}% · vol {rv:.1f}x"
         under = [n for n, m in (("50 EMA", s50), ("200 SMA", s200)) if m and close0 < m]
         over = bool(s50) and price > s50 and price > s200
