@@ -2596,6 +2596,22 @@ defCalc('industry_perf', {
     tr.append(tk, rd, ep, eg, rv, rg, gd, gg, mv, gc, rs, v200, v50, v20, lo);
     return tr;
   }
+  /* each column's sort key and value (empty values always sort last) */
+  const ER_GDIR = { raised: 4, given: 2, reaffirmed: 2, mixed: 1, lowered: 0 };
+  const ER_KEYS = ['symbol', 'read', 'eps_surprise', 'eps_growth', 'rev_surprise', 'rev_growth', 'guide', 'guide_growth', 'move', 'grank', 'rs', 'vs200', 'vs50', 'vs20h', 'over_low52'];
+  const erVal = (r, k, rsAll) => {
+    const n = (x) => (x === null || x === undefined || x === '' || isNaN(Number(x)) ? null : Number(x));
+    switch (k) {
+      case 'symbol': return r.sym;
+      case 'read': return r.read ? erOf(r) * 100 + (n(r.points) || 0) : null;
+      case 'eps_growth': return r.eps_turn ? 9999 : n(r.eps_growth);
+      case 'guide': { const g = r.guide; if (!g || !g.dir || g.dir === 'none') return null; return (ER_GDIR[g.dir] ?? 1) * 1000 + (n(g.vs_street) || 0); }
+      case 'guide_growth': return r.guide ? n(r.guide.growth) : null;
+      case 'grank': { const g = grBest(r.sym); return g ? g.pct : null; }
+      case 'rs': return n(rsAll[r.sym]);
+      default: return n(r[k]);
+    }
+  };
   const ER_COLS = [['Stock', ''], ['Read', 'Strong bullish / Bullish / Mixed / Somewhat bearish / Bearish, from fixed points (see How this tab works); hover for the points'],
     ['EPS', 'Adjusted EPS vs the estimate, and the surprise'], ['EPS growth', 'vs the same quarter a year ago'], ['Revenue', 'Revenue vs the estimate, and the surprise'],
     ['Rev growth', 'vs the same quarter a year ago'], ['Guidance', 'Read from the press release: raised / lowered / reaffirmed / given; the guided revenue vs the analysts (hover for the words)'],
@@ -2607,7 +2623,13 @@ defCalc('industry_perf', {
     const doc = EARN, week = $('#er-week');
     ['er-up-table', 'er-dn-table'].forEach((id) => {
       const th = $('#' + id + ' thead'); if (th.childElementCount) return;
-      const tr = h('tr'); ER_COLS.forEach(([n, t], i) => { const c = h('th', (i >= 2 && i !== 6 ? 'num' : '') + (n === 'vs 200D' ? ' er-end' : ''), n); if (t) c.title = t; tr.append(c); }); th.append(tr);
+      const tr = h('tr');
+      ER_COLS.forEach(([n, t], i) => {
+        const c = h('th', (i >= 2 && i !== 6 ? 'num' : '') + (n === 'vs 200D' ? ' er-end' : ''));
+        const b = h('button', 'tgr-th', n); b.type = 'button'; b.dataset.sort = ER_KEYS[i]; if (t) b.title = t + ' (click to sort)';
+        c.append(b); tr.append(c);
+      });
+      th.append(tr);
     });
     if (!doc || !doc.rows) { $('#er-time').textContent = 'Not built yet: the first run posts the list'; week.replaceChildren(); return; }
     const rsAll = ldocRS(), today = todayNY();
@@ -2658,7 +2680,18 @@ defCalc('industry_perf', {
     rows.sort((a, b) => (!!b.reported - !!a.reported) || (a.reported ? (b.report_at > a.report_at ? 1 : -1) : (a.report_at > b.report_at ? 1 : -1)) || erOf(b) - erOf(a));
     /* a recent listing without a 200-day SMA yet goes in the top table, marked "new" (LIFE Nov 2026) */
     [['er-up', (r) => r.vs200 === null || r.vs200 === undefined || r.vs200 >= 0], ['er-dn', (r) => r.vs200 !== null && r.vs200 !== undefined && r.vs200 < 0]].forEach(([id, f]) => {
-      const list = rows.filter(f), tb = $('#' + id + '-table tbody');
+      const list = rows.filter(f), tb = $('#' + id + '-table tbody'), table = $('#' + id + '-table');
+      const spec = S.sort[table.id];
+      if (spec) {
+        list.sort((a, b) => {
+          const x = erVal(a, spec.key, rsAll), y = erVal(b, spec.key, rsAll);
+          if (x === null && y === null) return 0;
+          if (x === null) return 1;
+          if (y === null) return -1;
+          return (typeof x === 'string' ? x.localeCompare(y) : x - y) * spec.dir;
+        });
+      }
+      markSort(table, spec || { key: '', dir: -1 });
       tb.replaceChildren(...list.map((r) => erRow(r, rsAll)));
       if (!list.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', q ? 'No ' + q + ' here' : 'None'); td.colSpan = ER_COLS.length; tr.append(td); tb.append(tr); }
       $('#' + id + '-n').textContent = '· ' + list.filter((r) => r.reported).length + ' reported, ' + list.filter((r) => !r.reported).length + ' to come';
