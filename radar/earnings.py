@@ -27,6 +27,7 @@ NY = zoneinfo.ZoneInfo("America/New_York")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RULES = json.load(open(os.path.join(ROOT, "scanner", "settings.json")))["earnings"]
 SEC_UA = (os.environ.get("SEC_UA") or "").strip() or "radar-close-snapshots research"
+GV = 2          # the press-release reader's version: a change re-reads every release of the week
 MON = {m: i for i, m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1)}
 
 
@@ -245,8 +246,13 @@ def guidance(text, nq, fy):
     """the outlook: direction (raised / lowered / reaffirmed / given / none) and, when a revenue number is there, its
     midpoint vs the street and vs the same period a year ago. nq / fy = the saved estimates {rev, rev_yago, end}."""
     head = text[:2500]
-    m0 = (re.search(r"\b(business outlook|financial outlook|outlook|guidance)\b(?![^.]{0,120}forward-looking)", text[1500:], re.I)
-          or re.search(r"\b(we expect|the company expects|company expects)\b", text[1500:], re.I))
+    # the outlook section: the first 'outlook' / 'guidance' (or 'we expect') with an expectation about revenue right after it
+    m0 = None
+    for m in re.finditer(r"\b(business outlook|financial outlook|outlook|guidance|we expect|the company expects|company expects)\b", text[1500:], re.I):
+        nxt = text[1500 + m.start(): 1500 + m.start() + 900]
+        if re.search(r"\bexpect|\banticipat|\bguid|\bproject|\bforecast", nxt, re.I) and re.search(r"revenue|sales", nxt, re.I):
+            m0 = m
+            break
     body = text[1500 + m0.start(): 1500 + m0.start() + 3500] if m0 else ""
     scan = head + " " + body
     g = {"dir": "none"}
@@ -279,6 +285,10 @@ def guidance(text, nq, fy):
             ub = (m.group(4) or ua).lower()
             if a is None or not (ua or ub):
                 continue
+            ctx = body[max(0, m.start() - 160): m.end()].lower()
+            if re.search(r"\b(was|were|totaled|grew|increased|decreased|declined|reported|achieved)\b", m.group(0).lower()) \
+                    or not re.search(r"expect|anticipat|guid|outlook|forecast|project|to be|will be|range|between|approximately", ctx):
+                continue                                  # a result or a company profile, not a forecast
             lo, hi = a * UNIT.get(ua or ub, 1), (b * UNIT.get(ub, 1) if b else a * UNIT.get(ua or ub, 1))
             mid = (lo + hi) / 2
             near = []
@@ -292,8 +302,15 @@ def guidance(text, nq, fy):
                         "said": body[max(0, m.start() - 40): m.end() + 10].strip()}
                 break
         if not best:
-            m = re.search(r"\b(?:revenues?|sales)\b[^.;]{0,60}?\bgrow\w*\b[^.;]{0,50}?(?:(\d+(?:\.\d+)?)\s*%(?:\s*(?:to|-|–)\s*(\d+(?:\.\d+)?)\s*%)?"
-                          r"|\b(low|mid|high)[- ](single[- ]digit|teens|twenties|thirties|forties|fifties|sixties|seventies)\b)", body, re.I)
+            m = None
+            for mm in re.finditer(r"\b(?:total )?(?:revenues?|sales)\b[^.;]{0,30}?\b(?:to )?grow\w*\b[^.;]{0,50}?(?:(\d+(?:\.\d+)?)\s*%(?:\s*(?:to|-|–)\s*(\d+(?:\.\d+)?)\s*%)?"
+                                  r"|\b(low|mid|high)[- ](single[- ]digit|teens|twenties|thirties|forties|fifties|sixties|seventies)\b)", body, re.I):
+                pre = body[max(0, mm.start() - 200): mm.start()].lower()
+                if re.search(r"from (new )?products|segment|new product", body[mm.start(): mm.start() + 40].lower()):
+                    continue                              # a product line's growth, not the company's
+                if re.search(r"expect|anticipat|guid|outlook|forecast|project", pre + mm.group(0).lower()) and not re.search(r"\bgrew\b", mm.group(0).lower()):
+                    m = mm
+                    break
             if m:
                 if m.group(1):
                     gr = (float(m.group(1)) + float(m.group(2) or m.group(1))) / 2
@@ -398,6 +415,7 @@ def main():
         r.update(sym=sym, name=s.get("name") or x.get("name"), date=d, fq=x.get("fiscalQuarterEnding"),
                  nasdaq_when={"time-pre-market": "bmo", "time-after-hours": "amc"}.get(x.get("time")),
                  nasdaq_eps_est=num(x.get("epsForecast")), nasdaq_eps=num(x.get("eps")), industry=s.get("industry"),
+                 nasdaq_eps_yago=num(x.get("lastYearEPS")) if x.get("lastYearEPS") else (prev.get(sym) or {}).get("nasdaq_eps_yago"),
                  themes=s.get("themes") or "", mcap_b=s.get("mcap_b"), adr=s.get("adr_20"), dvol_20_m=s.get("dvol_20_m"),
                  avg_vol_20=s.get("avg_vol_20"), close=s.get("price"), sma200=s.get("sma200"), ema50=s.get("ema50"),
                  low_52w=s.get("low_52w"), high_52w=s.get("high_52w"))
@@ -511,7 +529,7 @@ def main():
     sec = SEC()
     for sym in syms:
         r = rows[sym]
-        if now.isoformat() < r["report_at"][:10] + "T00:00" or r.get("rel_url"):
+        if now.isoformat() < r["report_at"][:10] + "T00:00" or (r.get("rel_url") and r.get("gv") == GV):
             continue
         since = (datetime.date.fromisoformat(r["date"]) - datetime.timedelta(days=1)).isoformat()
         try:
@@ -521,7 +539,7 @@ def main():
         time.sleep(0.15)
         if not rel:
             continue
-        r.update(rel_url=rel["url"], rel_filed=rel["filed"], reported=True, est_frozen=True)
+        r.update(rel_url=rel["url"], rel_filed=rel["filed"], reported=True, est_frozen=True, gv=GV)
         rv = rev_from(rel["text"], r.get("rev_est"), r.get("rev_yago"))
         if rv:
             r["rev_act"], r["rev_src"] = rv, "press release"
@@ -533,6 +551,8 @@ def main():
             r["reported"], r["est_frozen"] = True, True
         r["eps_surprise"] = (round((r["eps_act"] - r["eps_est"]) / abs(r["eps_est"]) * 100, 1)
                              if r.get("eps_act") is not None and r.get("eps_est") not in (None, 0) else None)
+        if r.get("eps_yago") is None and r.get("nasdaq_eps_yago") is not None:
+            r["eps_yago"] = r["nasdaq_eps_yago"]
         r["eps_growth"] = pct(r.get("eps_act"), r.get("eps_yago")) if r.get("eps_act") is not None else None
         r["eps_turn"] = bool(r.get("eps_act") is not None and r.get("eps_yago") is not None and r["eps_yago"] <= 0 < r["eps_act"])
         r["rev_surprise"] = pct(r.get("rev_act"), r.get("rev_est"))
