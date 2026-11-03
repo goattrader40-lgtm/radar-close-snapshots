@@ -404,7 +404,7 @@ def _pct_cols(X, need=5):
     return np.where(ok & (k >= need)[None, :], P, np.nan)
 
 
-def rank_history(A, cal, stocks_rows):
+def rank_history(A, cal, stocks_rows, full=False):
     """the group rank and the market rank (as group_rank) on every day of the calendar, for the History test:
     (best group percentile per stock {symbol: array over days}, market percentile {symbol: array over days})"""
     import warnings
@@ -441,6 +441,8 @@ def rank_history(A, cal, stocks_rows):
                 P[rows] = _pct_cols(np.nanmean([_pct_cols(med[n][rows]) for n in R], axis=0))
         MK = _pct_cols(np.nanmean([_pct_cols(R[n]) for n in R], axis=0))
         best = {s: np.nanmax(P[[gi[g] for g in sg[s] if g in gi]], axis=0) for s in syms if any(g in gi for g in sg[s])}
+    if full:                                  # + every group's percentile per day, for the launch-day group rank
+        return best, {s: MK[si[s]] for s in syms}, names, P, dict(sg)
     return best, {s: MK[si[s]] for s in syms}
 
 
@@ -1718,7 +1720,23 @@ def gap_base_fields(a, i, prev=None):
     return out
 
 
-def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None, s3=None, grank=None, gbest=None):
+def launch_day_rank(ghist, sym, k):
+    """the stock's best group on calendar day k (at that close): (text "Strong #8/73 Insurance", tier, percentile)"""
+    names, P, sg = ghist
+    gi = {g: j for j, g in enumerate(names)}
+    c = [(P[gi[g], k], g) for g in sg.get(sym, []) if g in gi and not np.isnan(P[gi[g], k])]
+    if not c:
+        return None, None, None
+    p, g = max(c)
+    kind = g.split(":", 1)[0] + ":"
+    same = [P[gi[x], k] for x in names if x.startswith(kind) and not np.isnan(P[gi[x], k])]
+    rank = 1 + sum(1 for x in same if x > p)
+    tier = "Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else ""
+    txt = ("★ Top " if tier == "Top" else "Strong " if tier == "Strong" else "") + f"#{rank}/{len(same)} " + g.split(":", 1)[1] + (" (industry)" if kind == "ind:" else "")
+    return txt, tier, round(100 * float(p), 1)
+
+
+def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None, removed=None, s3=None, grank=None, gbest=None, ghist=None):
     pos = {d: k for k, d in enumerate(cal)}
     today = cal[-1]
     T = len(cal) - 1
@@ -1915,6 +1933,12 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                 txt = (("★ Top " if b["tier"] == "Top" else "Strong " if b["tier"] == "Strong" else "") + f"{b['group']} #{b['rank']}/{b['of']}"
                        + (f" · #{o_.index(s_) + 1} of {len(o_)} in it" if s_ in o_ else ""))
             w_ += [txt, b.get("rs")]
+    # the group rank on the launch day (the user, Nov 3 2026: replaces "Theme then -> now"; the History test's tiers)
+    if ghist:
+        for r in rows + lag:
+            k_ = pos.get(r["date"])
+            if k_ is not None:
+                r["group_rank_launch"], r["group_tier_launch"], r["group_pct_launch"] = launch_day_rank(ghist, r["symbol"], k_)
     # the breakout alert grade's group (the user, Nov 3 2026: the new group rank replaces "Leading"): the stock's best
     # group rank after this close; Top or Strong (top 10%) counts
     for r in rows + lag:
@@ -2050,9 +2074,10 @@ def main():
         s3 = [dict(symbol=r["symbol"], tv=r.get("tv"), section=r["section"], setup=r["setup"], buy_point=r["buy_point"],
                    away_adr=r["away_adr"], adr_pct=r["adr_pct"], why=r["why"]) for r in rows]
         print("3-SETUPS:", {sec: sum(1 for r in rows if r["section"] == sec) for sec in S3_SECTIONS})
-    grank, gbest = None, None
+    grank, gbest, ghist = None, None, None
     try:
         stocks_rows = json.load(open(a.stocks))
+        ghist = rank_history(A, cal, stocks_rows, full=True)[2:]
         grank = group_rank(A, cal, stocks_rows)
         rsmap = grank.pop("_rs", {})
         grank["rs"] = rsmap                       # every stock's RS, for the Watchlist column (the user, Nov 3 2026)
@@ -2064,7 +2089,7 @@ def main():
     except Exception as e:                       # the rank must never stop the launch list
         print("group rank failed:", e)
     daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {},
-          picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3, grank, gbest)
+          picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3, grank, gbest, ghist)
     if a.backtest:
         try:
             srows = json.load(open(a.stocks)) if a.stocks else None

@@ -737,7 +737,7 @@
             <th class="num"><button class="tgr-th" data-sort="today" title="Today's % change: live during market hours, the day's final after the close">Today</button></th>
             <th class="num"><button class="tgr-th" data-sort="rv_today" title="Today's relative volume: live during market hours (volume so far ÷ the usual by this time of day), the full day after the close">Rel vol</button></th>
             <th class="c2">Base BO</th>
-            <th><button class="tgr-th" data-sort="group">Theme then → now</button></th>
+            <th><button class="tgr-th" data-sort="grank_launch" title="Its best group's rank on the launch day, at that day's close (its themes and its industry): ★ Top = top 3%, Strong = top 3-10%. Group rank (next column) is now. In the History test, launches in a ★ Top group ran 20%+ 44% of the time, Strong 41%, the rest 30%; with RS 97+ in a Top or Strong group 72%">Group on launch day</button></th>
             <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after the last close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%: in 2 years, launches in a Top group ran 20%+ within 20 days 35% of the time, Strong 31%, the rest 21-23%">Group rank</button></th>
             <th class="num"><button class="tgr-th" data-sort="rs_now" title="RS = the stock's rank against the whole market after the last close, 1-99 (99 = the best): its own 1-, 3- and 6-month moves, each ranked among all the stocks the scanner follows, averaged and ranked again (like IBD's RS rating). Green = RS 97+, the top 3%: in the test, launches with RS 97+ on the launch day ran 20%+ within 20 days 34% of the time vs 25% for the rest; in a ★ Top or Strong group 40%">RS</button></th>
             <th class="num"><button class="tgr-th" data-sort="gain_now" title="LD = launch day: % from the launch day's close to now">LD → now</button></th>
@@ -2107,7 +2107,7 @@ defCalc('industry_perf', {
       const px = m && num(m.price) !== null ? num(m.price) : r.price;
       /* today: the live (or the latest close's) change and relative volume, not the launch day's */
       const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct), rvToday = m && num(m.rel_vol) !== null ? num(m.rel_vol) : num(r.rel_vol_today);
-      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px), types: lnTypes(r, LAG), ltype: lnTypes(r, LAG)[0], gr: grBest(r.symbol), grank: (grBest(r.symbol) || {}).pct ?? null });
+      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px), types: lnTypes(r, LAG), ltype: lnTypes(r, LAG)[0], gr: grBest(r.symbol), grank: (grBest(r.symbol) || {}).pct ?? null, grank_launch: r.group_pct_launch ?? null });
     }) : [];
     /* a ticker search shows that stock whatever the other filters */
     const lq = S.lnq.toUpperCase();
@@ -2169,9 +2169,12 @@ defCalc('industry_perf', {
         t.title = 'Pulled back to its breakout level ' + lv + (r.retest_from ? ' (broken ' + fDate(r.retest_from).replace(/, \d{4}$/, '') + ')' : '') + ' today and closed above it' + ((r.retest_ema || []).length ? ', with the ' + r.retest_ema.join(' & ') + ' there too' : '') + ': another entry';
         key.append(t);
       }
-      const thm = h('td', '');
-      thm.textContent = (r.group || '—') + ' · ' + r.group_status + (r.group_now && (r.group_now !== r.group || r.group_status_now !== r.group_status) ? ' → ' + (r.group_now !== r.group ? r.group_now + ' · ' : '') + r.group_status_now : '') +
-        (r.theme_up_since && r.theme_up_since !== r.date ? ' (since ' + fDate(r.theme_up_since).replace(/, \d{4}$/, '') + ')' : '');
+      /* the group rank on the launch day (replaced "Theme then -> now", Nov 3 2026); the old status only for launch.json without it */
+      const thm = h('td', 'nw' + (r.group_tier_launch ? ' tgr-up' : ''));
+      if (r.group_rank_launch !== undefined) {
+        const t0 = r.group_rank_launch || '—', i = t0.indexOf(' ', t0.indexOf('#'));
+        thm.append(h('div', '', i > 0 ? t0.slice(0, i) : t0), h('div', 'tgr-lbl', i > 0 ? t0.slice(i + 1) : ''));
+      } else thm.textContent = (r.group || '—') + ' · ' + r.group_status;
       /* the stock's stage after the close (dry-up / consolidation, tight under the buy point, breakout, running, ...) */
       const sttText = r.stage ? r.stage + (r.stage_since ? ' since ' + fDate(r.stage_since).replace(/, \d{4}$/, '') : '') : r.status === 'Riding' ? 'Above 21 EMA' : 'Below 21 EMA';
       const stt = h('td', 'ln-stage ' + (r.status === 'Riding' ? 'tgr-up' : 'tgr-dn'));
