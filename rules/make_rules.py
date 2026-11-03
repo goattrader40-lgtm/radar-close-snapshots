@@ -192,7 +192,11 @@ SHEETS.update({
  ["Group rank", "See G2: each theme ranked among themes and each industry among industries (Top 3%, Strong 3-10%); the Leading / Turning up status above still shows in 'Theme then -> now'"],
 ]),
 "G2 Group rank": (["Item", "Rule"], [
- ["Groups", "Every theme on the portal and every industry (Broad list), 3+ stocks with data; themes ranked only against themes, industries only against industries"],
+ ["Groups", "Every theme on the portal and every industry group, 3+ stocks with data; themes ranked only against themes, industry groups only against industry groups"],
+ ["Industry groups", "By business line (radar/industry_groups.json: hand lists, finest in tech; else the Yahoo industry; US banks split Regional $3B+ / Community). Each week the same co-movement test as the themes (120 sessions, market removed) drops the weakest member until every stock scores 0.6+ with the rest; a group needs 3+ tight stocks"],
+ ["Loose stocks", "A stock that fits no tight group sits in '<industry> · other': ranked for information, never Top or Strong (when it is a stock's best group it counts at most as just under Strong)"],
+ ["Strength", "Average pairwise co-movement of the members, the same scale for themes and industry groups (Groups & themes tab)"],
+ ["Group test (rolling, no look-ahead)", "Groups re-pruned each month on past data only: launches in a Top or Strong group ran 20%+ 36.3% (193) vs 32.2% (376) with the Yahoo industries; 2nd year 32.5% vs 30.7%; Top launches avg 20-day +8.5% vs +4.9%"],
  ["Score", "Median 1-month, 3-month and 6-month return of the group's stocks; each ranked as a percentile among the groups of its kind; the three averaged and ranked again (Qullamaggie's 1/3/6-month lists)"],
  ["Rank", "#1 = best, shown as #2/99 (2nd of 99 themes); change vs 5 sessions earlier shown as up/down arrows"],
  ["Top group (star)", "Top 3% of its kind (about 3 themes and 3 industries)"],
@@ -279,7 +283,7 @@ for name, (cols, rows) in SHEETS.items():
         ws.column_dimensions[get_column_letter(j)].width = min(max(14, longest * 0.9), 60)
     ws.freeze_panes = "A2"; ws.row_dimensions[1].height = 30
 info = wb.create_sheet("About", 0)
-for line in ["Theme & Group Radar: scanner rules", "As of Nov 2, 2026. Source of truth: scanner/launch.py, scanner/settings.json, radar/ and the morning grading instructions.",
+for line in ["Theme & Group Radar: scanner rules", "As of Nov 3, 2026. Source of truth: scanner/launch.py, scanner/settings.json, radar/ and the morning grading instructions.",
              "L = Launches (L1-L9) · W = Watchlist (W1-W2) · B = Buy points, legs & status (B1-B2) · P = Pre-market (P1-P3) · G = Gainers (G1), Group rank (G2) · A = Alerts (A1) · O = Open items · X = Agreed examples",
              "Regenerate with: python3 rules/make_rules.py (any rule change updates it in the same commit)"]:
     info.append([line])
@@ -291,7 +295,7 @@ MD = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, 'SCANNER_RULES.md'
 wb.save(XLSX)
 
 # the same tables as Markdown
-md = ["# Scanner rules", "", "As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`, `radar/` and the morning grading instructions. Spreadsheet version: `rules/scanner_rules.xlsx`.", ""]
+md = ["# Scanner rules", "", "As of Nov 3, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`, `radar/` and the morning grading instructions. Spreadsheet version: `rules/scanner_rules.xlsx`.", ""]
 for name, (cols, rows) in SHEETS.items():
     md += ["## " + name.split(" ", 1)[1], "", "| " + " | ".join(cols) + " |", "|" + "---|" * len(cols)]
     md += ["| " + " | ".join(str(x).replace("|", "/") for x in r) + " |" for r in rows] + [""]

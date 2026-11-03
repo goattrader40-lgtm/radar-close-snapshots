@@ -172,6 +172,23 @@ alone.
   rank_history(full=True) + launch_day_rank()). The lone-wolf tag still uses the old status (the user, Nov 3: keep it;
   a new-rank version needs its own test).
 
+## Status: industry groups by business line (Nov 3 2026, the group-rank session), WAITING ON THE USER'S "GO LIVE"
+
+- **Built on `test/groups`, not on main.** radar/industry_groups.json (90 hand groups, finest in tech; else the Yahoo
+  industry from profiles.json; US banks split Regional $3B+ / Community); radar/pipeline.py prunes each group with the
+  themes' co-movement test (0.6 floor, 3+ tight stocks) and writes groups.json + stocks.json `group`; scanner/launch.py
+  ranks the tight groups with tiers and the loose stocks as "<industry> · other" (rank, no tier, capped just under
+  Strong as a stock's best group); radar/day.py refreshes profiles.json weekly and publishes groups.json; the portal's
+  Industry list defaults to **Groups** with a Strength column (Broad / Detailed unranked). Theme fix: "AI Compute"
+  merged into **AI Chips & CPUs**.
+- **Tests**: rolling (monthly re-prune, no look-ahead) launches in Top+Strong ran 20%+ 36.3% (193) vs 32.2% (376) now;
+  2nd year 32.5% vs 30.7%; Top avg 20-day +8.5% vs +4.9%. Dry run (radar-tools `groupsdry`, run 41707525654): 145
+  tight groups, 1,296 stocks, avg strength 0.64; 213 industry rows ranked (69 loose); radar-data *_dry.json. Browser:
+  no errors. `tools/replay.py --regress`: every agreed example reads the same.
+- **Go live** = merge test/groups into main (rules workbook already updated in the branch), then rebuild Launches
+  (picks.yml) and run the day job so stocks.json / groups.json are written. Named groups have no ETF column yet.
+- The user has `proposed_groups_v3.xlsx` to review; stock/group moves go into radar/industry_groups.json.
+
 ## Status at the end of the last session (Nov 3 2026, the Earnings session)
 
 - **Live on main** (each after the user's "go live"; `tools/replay.py --regress`: every agreed example reads the same):

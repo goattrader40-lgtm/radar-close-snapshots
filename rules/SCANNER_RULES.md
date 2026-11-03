@@ -1,6 +1,6 @@
 # Scanner rules
 
-As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`, `radar/` and the morning grading instructions. Spreadsheet version: `rules/scanner_rules.xlsx`.
+As of Nov 3, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`, `radar/` and the morning grading instructions. Spreadsheet version: `rules/scanner_rules.xlsx`.
 
 ## Launch must-pass
 
@@ -223,7 +223,11 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 
 | Item | Rule |
 |---|---|
-| Groups | Every theme on the portal and every industry (Broad list), 3+ stocks with data; themes ranked only against themes, industries only against industries |
+| Groups | Every theme on the portal and every industry group, 3+ stocks with data; themes ranked only against themes, industry groups only against industry groups |
+| Industry groups | By business line (radar/industry_groups.json: hand lists, finest in tech; else the Yahoo industry; US banks split Regional $3B+ / Community). Each week the same co-movement test as the themes (120 sessions, market removed) drops the weakest member until every stock scores 0.6+ with the rest; a group needs 3+ tight stocks |
+| Loose stocks | A stock that fits no tight group sits in '<industry> · other': ranked for information, never Top or Strong (when it is a stock's best group it counts at most as just under Strong) |
+| Strength | Average pairwise co-movement of the members, the same scale for themes and industry groups (Groups & themes tab) |
+| Group test (rolling, no look-ahead) | Groups re-pruned each month on past data only: launches in a Top or Strong group ran 20%+ 36.3% (193) vs 32.2% (376) with the Yahoo industries; 2nd year 32.5% vs 30.7%; Top launches avg 20-day +8.5% vs +4.9% |
 | Score | Median 1-month, 3-month and 6-month return of the group's stocks; each ranked as a percentile among the groups of its kind; the three averaged and ranked again (Qullamaggie's 1/3/6-month lists) |
 | Rank | #1 = best, shown as #2/99 (2nd of 99 themes); change vs 5 sessions earlier shown as up/down arrows |
 | Top group (star) | Top 3% of its kind (about 3 themes and 3 industries) |
