@@ -224,10 +224,16 @@ alone.
   carries it (from Wed Nov 4's build, the first on the new code), the portal reads radar-data trend.json of the same
   close (radar-tools `trendnow`, run by hand Nov 3 evening: 3,198 stocks). Rules sheet T1. radar-tools `pipedry` =
   the nightly build on a branch -> radar-data stocks_dry.json.
-- **200 SMA rule (agreed A + B Nov 3, on test/sma200, NOT live)**: 3-SETUPS comes on only over the 200 SMA, off after
-  2 closes in a row under it (10 names would leave: ECHO BLDR QDEL STOK TEX RH TNDM SHAK BEAM LEGN); Launches off after
-  2 closes in a row under it. Waiting on the user: count closes "from now on" (only BEAM leaves) or "since the launch"
-  (ACN SNPS THC TLN MAZE BEAM leave: old dips); and use the raw 200 SMA (a new listing like MWH not held back).
+- **200 SMA rule (live Nov 3 2026, the user's go; takes effect with the Nov 4 4:40 PM scan)**: 3-SETUPS comes on only
+  with a close over the 200 SMA and leaves after 2 closes in a row under it (scanner/launch.py s3_read; the dry run
+  Nov 3: 63 -> 53, off ECHO BLDR QDEL STOK TEX RH TNDM SHAK BEAM LEGN); Launches: off **only while** its last 2 closes
+  are under the 200 SMA, back the first close over it (the user chose this, "option 3": ACN Oct 2026 dipped under it
+  right after its launch and then ran +33%; only BEAM off on Nov 3); laggards exempt (a laggard moved to the launch
+  list follows it). The real 200 SMA only (st.sma200): a new listing without one is not held back (MWH). L["off_200"]=2.
+- **TREND list (live Nov 3 2026)**: a 5th list on the Watchlist tab, built in the portal: every name on 3-SETUPS,
+  2-POOL, 1-UPDAY, 1-EP/GAP and Launches whose Trend is Up / Turn up / Reclaim / Resting now (live); Section = where it
+  came from (Launches first); sorted by the Trend, most days first; it leaves when the Trend turns Negative or loses
+  its label (still on its own list). 137 names on Nov 3. Rules T1.
 
 ## Status at the end of the last session (Nov 3 2026, the Earnings session)
 
