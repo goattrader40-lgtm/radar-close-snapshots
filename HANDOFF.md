@@ -97,6 +97,11 @@ alone.
   (375), +0.48R; closed as a breakout: new A 73% / 43% (157), +2.47R vs old 68% / 37% (136), +1.76R. Top-only: 168 A's,
   65% / 38%. B 52% / 22%, C 45% / 17%.
 
+- **Long explanations fold away (Nov 3 2026, the user: "too much on a portal")**: six long notes are closed
+  `<details class="tgr-legend tgr-more">` boxes, one line each until tapped (Themes table, the drill-down list,
+  pre-market scanner, pre-market grades, the big Launches note, the data footer); each remembers open / closed in
+  that browser (localStorage `radar-more-<key>`). Keep new long notes inside such a box.
+
 ## Status at the end of the last session (Nov 2 2026, late evening)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above, incl. the group rank (Groups tab Rank / Tier; Group
