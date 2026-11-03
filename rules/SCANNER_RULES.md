@@ -237,6 +237,9 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | #1 in group tag | Pre-market graded gappers only: the stock is #1 in its best-ranked group and the group has 5+ stocks |
 | Leader test: gap-ups | In a Top group the #1 ran 20%+ 61% (54) vs #2-3 51% (65) vs the rest 41-42%; but its average 20 days later was no better (+3.1% vs +3.6%) and it faded on the gap day more often (57% vs 49%) |
 | Leader test: launches | No tag: the group's #1 launching ran 20%+ 20% (86) vs 29% for the rest of its group; in Top groups the bottom two-thirds did best (38%) |
+| RS (market rank) | Each stock vs all the stocks the scanner follows: its own 1-, 3- and 6-month return, each a percentile, averaged and ranked again; RS 1-99 (99 = best), like IBD's RS rating. RS column on Launches / Launch laggards, green with a star at 97+ (top 3%) |
+| RS test: launches | RS 97+ on the launch day ran 20%+ in 20 days 34% (100) vs 25% for the rest; RS 97+ in a Top or Strong group 40% (52, avg +6.1%) |
+| History test table | Launches tab: by the group rank on the launch day (Top / Strong / other) and by RS (97+ or under), and launch grade x group tier; replaced 'theme confirmed / lone wolf' (a theme trending within 10 sessions after the launch: hindsight) |
 | In the grades | Part of the breakout alert grade (Top or Strong counts, L4); beside the news grade and the launch grade, not part of them |
 | 2-year test: 5%+ gap-ups | Ran 20%+ within 20 days: Top 44% (739), Strong 37% (457), 10-20% 28%, 20-50% 29%, bottom half 29%. Gap-day fade about the same in every band (52-57%) |
 | 2-year test: 10%+ gap-ups | Top 42% (142), Strong 42% (84), the rest 26-30% |
@@ -258,6 +261,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Touched & back under | Traded over the buy point since the last check but is back under it | Every check |
 | Confirmation | In the 3 sessions after a base breakout, opens and trades above the base top on 2x+ pace | Every check |
 | Pop / gap out of base | The pop out of the consolidation; an open over last night's base high | From the open |
+| 3-SETUPS trigger | A 3-SETUPS name (any section, not also on Launches) trades over its buy point (which was at or over the last close); phone and desktop since Nov 3 2026 | 1-minute in the morning and last hour, else 5-minute |
 | Retest zone / hold | Pulls into the retest zone of its last breakout; from 3:45 PM, holding into the close | Every check |
 | After the close | Tight closes under a buy point, a retest of a broken base top that held; 3-SETUPS Ready list to the phone | After the 4:40 PM scan |
 | Rules | Each stock and kind once a day; phone via ntfy, desktop pop-ups while the portal page is open | - |

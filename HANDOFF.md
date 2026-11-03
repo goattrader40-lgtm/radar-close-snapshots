@@ -102,6 +102,15 @@ alone.
   pre-market scanner, pre-market grades, the big Launches note, the data footer); each remembers open / closed in
   that browser (localStorage `radar-more-<key>`). Keep new long notes inside such a box.
 
+- **(Nov 3 2026, the user's "do all three")** (a) **History test table** on the Launches tab: by the group rank on the
+  launch day (Top / Strong / other), by RS (97+ / under) and launch grade x tier; replaced "theme confirmed / lone
+  wolf" (hindsight). backtest() uses rank_history() (the group and market rank on every day; matches group_rank() on
+  the last day). (b) **RS column on Launches / Launch laggards**: market rank 1-99 (group_rank() "_rs", launch rows
+  `rs_now`), green with a star at 97+. (c) **3-SETUPS triggers on the phone** (alerts.py find(): a setups3 name not on
+  Launches / laggards, its buy point at or over the last close, trading over it; key SYM:s3, once a day) and in the
+  1-minute checks (fast.py symbols). radar-tools `launchbt` = the launch build + History test on a branch, published
+  to radar-data launch_dry.json / launch_bt_dry.json (not to main).
+
 ## Status at the end of the last session (Nov 2 - early Nov 3 2026)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above: the group rank (Groups tab Rank / Tier; Group rank
@@ -118,8 +127,8 @@ alone.
   (Top and Strong count the same: no A+ split, the data didn't support one).
 - **First thing to check next session**: a breakout alert's text reads "group ★ Top <group> #n/N" or "group Strong
   ..." or "group not top 10% ..."; the pre-market graded gappers show the Group rank column; the folded boxes.
-- **Nothing is waiting on the user's go from this session.** Open ideas: Open items 7 (a) a market-wide rank tag on
-  Launches, (c) 3-SETUPS triggers on the phone; and the older items.
+- **Nothing is waiting on the user's go from this session** (a market-wide RS and 3-SETUPS phone triggers were
+  built Nov 3, see above). Older open items below.
 
 ## Status at the end of the session before (Nov 1 2026, evening)
 
