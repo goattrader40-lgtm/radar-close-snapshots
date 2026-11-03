@@ -2385,9 +2385,11 @@ defCalc('industry_perf', {
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
     if (alertsOn && marketOpen()) {
       /* your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low when it fires */
-      const lowOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.low_52w]));
+      const lowOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.low_52w])), smaOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.sma200]));
+      /* 3-SETUPS triggers only over the 200 SMA (the user, Nov 3 2026: ECHO under its 200 SMA 106.63) */
+      const over200 = (k) => { if (!k.endsWith(':s3')) return true; const sym = k.split(':')[0], sma = num(smaOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !sma || !q || !q[0] || q[0] > sma; };
       const over52 = (k) => { const sym = k.split(':')[0], lo = num(lowOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !lo || !q || !q[0] || q[0] >= lo * 1.3; };
-      const found = liveAlerts().filter(([k]) => over52(k)), symOf = (k) => k.split(':')[0];
+      const found = liveAlerts().filter(([k]) => over52(k) && over200(k)), symOf = (k) => k.split(':')[0];
       const catBefore = new Set([...sent].filter((k) => k.endsWith(':catalyst')).map(symOf));
       const catNow = new Set(found.map(([k]) => k).filter((k) => k.endsWith(':catalyst') && !sent.has(k)).map(symOf));
       found.forEach(([key, title, body, tvs]) => {

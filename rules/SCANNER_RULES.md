@@ -251,6 +251,7 @@ As of Nov 2, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 
 | Alert | When it fires | Checked |
 |---|---|---|
+| 3-SETUPS triggers | Only while the price is over the 200-day SMA (the last close's); under it, no alert (the user, Nov 3 2026: ECHO's base top 100.90 under its 200 SMA 106.63) | Each live run |
 | Every alert (phone and desktop) | Only when the price is at least 30% over the 52-week low at that moment (the user, Nov 3 2026); a stock without a 52-week low yet is not held back | Each live run (radar/alerts.py, the portal) |
 | Pre-market grades | The morning's graded gappers | About 9:05 AM ET |
 | Early heads-up | A 5%+ gap with a catalyst-gap / power-day / launch shape, before the volume can be read | 9:31-9:34, every minute |

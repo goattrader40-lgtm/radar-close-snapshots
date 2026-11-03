@@ -538,6 +538,13 @@ def chart_low_today(sym):
 
 MIN_OVER_LOW52 = 30          # % over the 52-week low every alert needs (scanner/settings.json standard)
 _LOW52 = None
+_SMA200 = {}
+
+
+def over_sma200(sym, live):
+    """True when the live price is over the 200 SMA (the last close's); no SMA yet = not held back"""
+    sma, q = _SMA200.get(sym), (live.get("rows") or {}).get(sym)
+    return not sma or not q or not q[0] or q[0] > sma
 
 
 def low52_of(launch_p):
@@ -550,7 +557,9 @@ def low52_of(launch_p):
             p = os.path.join(d, name)
             if os.path.exists(p):
                 try:
-                    _LOW52 = {s["symbol"]: s.get("low_52w") for s in json.load(open(p))}
+                    st = json.load(open(p))
+                    _LOW52 = {s["symbol"]: s.get("low_52w") for s in st}
+                    _SMA200.update({s["symbol"]: s.get("sma200") for s in st})
                     break
                 except Exception:
                     pass
@@ -601,6 +610,8 @@ def main():
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
     # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
     found = [a for a in found if over_low52(a[0].split(":")[0], live, low52_of(launch_p))]
+    # 3-SETUPS triggers only over the 200 SMA (the user, Nov 3 2026: ECHO's base top 100.90 under its 200 SMA 106.63)
+    found = [a for a in found if not a[0].endswith(":s3") or over_sma200(a[0].split(":")[0], live)]
     gbars = {}
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
     cat_now = {a[0].split(":")[0] for a in found if a[0].endswith(":catalyst") and a[0] not in sent}
