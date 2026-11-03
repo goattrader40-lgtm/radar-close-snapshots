@@ -357,6 +357,7 @@ try:
 except Exception:
     PROF = {}
 IG_HAND = {x: g for g, m in IG["hand"].items() for x in m.split()}
+THEME_ADDS = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "theme_adds.json")))["adds"]
 igroups, grp_of = {}, {}                       # tight group -> [(score, sym)]; sym -> (group, score)
 coh_anchor = None
 try:
@@ -441,6 +442,22 @@ try:
             while label in used_names: label, k = f"{base} {k}", k + 1
             used_names.add(label); auto.append((label, g))
             rest = [x for x in rest if x not in mem]
+    # names the user approved for a theme (radar/theme_adds.json, Nov 3 2026): each joins only while it tracks the
+    # theme at COH_FLOOR+ (vs the theme's average; an auto group's label must exist that week); no sector / liquidity
+    # filter; AI & semis themes keep the SEMI_FLOOR rule
+    in_theme = incore | {x for v in ext.values() for _, x in v} | {x for _, g in auto for _, x in g}
+    autod = dict(auto)
+    for th, syms in THEME_ADDS.items():
+        for x in syms.split():
+            if x not in col or x in in_theme: continue
+            if th in groups:
+                sc = gcorr(x, th)
+                if cat_of.get(th) == "AI & Semis" and semi_f is not None and beyond_fit(x, th) < SEMI_FLOOR: continue
+                if sc >= COH_FLOOR: ext.setdefault(th, []).append((round(sc, 2), x)); in_theme.add(x)
+            elif th in autod:
+                m = [y for _, y in autod[th]]
+                sc = corr(Z[:, col[x]], Z[:, [col[y] for y in m]].mean(1))
+                if sc >= COH_FLOOR: autod[th].append((round(sc, 2), x)); autod[th].sort(reverse=True); in_theme.add(x)
     def avg_pair(names):          # group strength: average correlation between every pair of members
         names = [x for x in names if x in col]
         if len(names) < 2: return None
