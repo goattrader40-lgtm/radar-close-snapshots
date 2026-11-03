@@ -210,6 +210,20 @@ alone.
   (picks.yml) and run the day job so stocks.json / groups.json are written. Named groups have no ETF column yet.
 - The user has `proposed_groups_v3.xlsx` to review; stock/group moves go into radar/industry_groups.json.
 
+- **Trend column (live Nov 3 2026, after the user's read was confirmed)**: Watchlist, Earnings, Gainers, Launches (+
+  laggards). Base: 10 EMA > 21 > 50 and the 50 higher than 5 sessions ago (the user added 10 > 21). First match wins:
+  Negative (under the 21) / Reclaim (back over the 21 after a close under) / Turn up (5 EMA crosses over the 10, that
+  day) / Up (base, over the 21 & 50, 10 & 21 rising) / Resting (base, 10 or 21 flat) / "-". Nd = sessions in it. Built
+  in radar/pipeline.py (trend_at / trend_info -> stocks.json trend, trend_days, tr = [e5, e10, e21, e50, e50 4
+  back, close]); live in the portal (today's EMA = last close's + 2/(n+1) x (price - it)). Until the nightly build
+  carries it (from Wed Nov 4's build, the first on the new code), the portal reads radar-data trend.json of the same
+  close (radar-tools `trendnow`, run by hand Nov 3 evening: 3,198 stocks). Rules sheet T1. radar-tools `pipedry` =
+  the nightly build on a branch -> radar-data stocks_dry.json.
+- **200 SMA rule (agreed A + B Nov 3, on test/sma200, NOT live)**: 3-SETUPS comes on only over the 200 SMA, off after
+  2 closes in a row under it (10 names would leave: ECHO BLDR QDEL STOK TEX RH TNDM SHAK BEAM LEGN); Launches off after
+  2 closes in a row under it. Waiting on the user: count closes "from now on" (only BEAM leaves) or "since the launch"
+  (ACN SNPS THC TLN MAZE BEAM leave: old dips); and use the raw 200 SMA (a new listing like MWH not held back).
+
 ## Status at the end of the last session (Nov 3 2026, the Earnings session)
 
 - **Live on main** (each after the user's "go live"; `tools/replay.py --regress`: every agreed example reads the same):
