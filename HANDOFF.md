@@ -80,8 +80,32 @@ alone.
   are unchanged. Test (scanner/probe_grouprank.py bands, radar-tools `grouprank` on test/gapstudy), 2 years, ran 20%+
   in 20 days: gap-ups Top 44% (739) / Strong 37% (457) / 10-20% 28% / 20-50% 29% / bottom half 29%; launches 35% / 31%
   / 23% / 22% / 21%. The gap-day fade barely changes (52% vs 53-57%).
+- **Leader inside the group (went live Nov 2 late evening, after test, the user's "go live")**: each group_rank row
+  carries `order` = its stocks best first (each stock's own 1/3/6-month return ranked among the group's stocks,
+  averaged). Under every Group rank cell: the group and the stock's place in it ("#2 of 14 in it"). A green **"#1 in
+  group"** tag on Pre-market graded gappers only (#1 of its best-ranked group, 5+ stocks). Not on Launches on purpose
+  (leaders launching did worse, see Open item 7). **Group rank column added to the Watchlist** (all four lists, after
+  Grade). Stocks over $2T stay out (the user: no need; settings.json max_mcap 2e12), so NVDA isn't ranked and AI
+  Compute shows no rank.
 
-## Status at the end of the last session (Nov 1 2026, evening)
+## Status at the end of the last session (Nov 2 2026, late evening)
+
+- **Live on main**: everything in "Changes on Nov 2 2026" above, incl. the group rank (Groups tab Rank / Tier; Group
+  rank column on Pre-market graded gappers, Watchlist, Launches, Launch laggards; "#1 in group" tag on pre-market
+  gappers). Launches rebuilt after go live (picks.yml): 115 launches, 1 laggard; the ranks come from the Nov 2 close
+  and refresh with every evening scan / Launches rebuild. Tonight's Top groups: themes IT Services & Consulting,
+  Biotech, Enterprise SaaS; industries Health Care Technology, Hotel REITs, IT Services. `tools/replay.py --regress`:
+  every agreed example reads the same.
+- **Test branches**: `test/grouprank` and `test/groupleader` are merged (nothing left on them). `test/gapstudy` holds
+  the studies only (not for main): scanner/probe_gapgroups.py, probe_grouprank.py, probe_leaders.py and the radar-tools
+  commands `gapgroups`, `grouprank`, `leaders` (results on radar-data: probe_gapgroups.json, probe_grouprank.json,
+  probe_leaders.json). `test/pb1h` as before.
+- **First thing to check next session (Tue Nov 3)**: the morning's pre-market graded gappers show the Group rank
+  column (and the tag when a gapper leads its group); the Watchlist / Launches columns fill after the evening scan.
+  The 8:45 AM grading session itself is unchanged (the rank is display only, beside the news grade).
+- **Nothing is waiting on the user's go from this session.** Open ideas are in Open items 7.
+
+## Status at the end of the session before (Nov 1 2026, evening)
 
 - **Live on main** (Launches rebuilt from the Oct 30 close, 119 launches): everything under "What the user agreed"
   below. New tonight: **gap out of base** (alerts + portal), the **bull flag** redefined, the **bull pennant**, the
@@ -317,7 +341,7 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    140%+ over the 200 SMA at once (keeps LIFE, 85-98% over it; but that LIFE-like group lost -0.65 to -0.75R). The time
    since the start added nothing. Code: `L["max_run_pct"]` in scanner/launch.py (0 = off); the status then reads
    "EXTENDED: +X% from its momentum start (date), no buy points" and the stock's alerts stay quiet.
-2. Monday Nov 2: CDW, SHOP, RBRK, RGEN, TEAM: a 2nd close under their breakout level (holding over the 50 EMA) makes
+2. (From Nov 1, not checked in the Nov 2 group-rank session) CDW, SHOP, RBRK, RGEN, TEAM: a 2nd close under their breakout level (holding over the 50 EMA) makes
    them breakout undercut & reclaim setups, alerting from Tuesday; check the reads and alerts with the user.
 3. **The spreadsheet** (tools/test-results.xlsx on test/pb1h, sent to the user Nov 1 evening): the live engine's
    5,783 buy points; each trigger sheet = only the days the engine read as that breakout (engine_read), failed crosses
@@ -328,25 +352,20 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
    through it with the user if they ask.
 4. **"No reset yet" tag** (AEHR's Mar 5-19 2026 buy points, 1R losers before the momentum reset at the 50 EMA): the
    user's momentum rule (1) may replace it; ask if they still want a tag.
-5. Monday Nov 2: check the first live gap-out-of-base and breakout-reclaim alerts, the 50 EMA tab, and the evening
+5. (From Nov 1, not checked in the Nov 2 group-rank session) check the first live gap-out-of-base and breakout-reclaim alerts, the 50 EMA tab, and the evening
    Ready file (after the user subscribes ntfy).
 6. Offered, never decided: require the 10 / 21 EMA at the level for a retest; a fairer breakout stop test (0.7 ADR
    under the buy, then the day's low); trigger a bull flag on the higher of the line and the day before's high.
-7. Group rank: DONE and live (Nov 2, see Changes). Emerging / Lagging dropped by the test. Open: (a) the user's
-   "leader inside the group" idea (AMD over NVDA, SNDK over MU, DELL in AI servers): study scanner/probe_leaders.py,
-   radar-tools `leaders` on test/gapstudy -> radar-data probe_leaders.json (groups of 5+ stocks). Gap-ups in a Top
-   group: the group's #1 ran 20%+ 61% (54) vs #2-3 51% (65) vs the rest 41-42%, but the average 20-day result was no
-   better (+3.1% vs +3.6%) and the leaders faded more on the gap day (57% vs 49%). Launches: the opposite (the group's
-   #1 launching 20% (86) vs the rest of its group 29% (570); in Top groups the best were the bottom two-thirds, 38%).
-   Market-wide rank (the stock vs all stocks) helped launches: top 3% 34% (100) vs 25%; with a Top/Strong group 40%
-   (52, +6.1%). Examples: SNDK #1 in Memory & Storage at every month-end Sep 2025 - Jun 2026; DELL #2 in AI Servers
-   Feb 2026 while the group ranked low, #1 Mar and May; in the CPUs theme INTC, not AMD, led Mar-Jun 2026. NVDA is not
-   in the scans: settings.json max_mcap = $2T leaves out stocks over $2T (so AI Compute has no rank). Waiting for the
-   user: none (Nov 2: the user does NOT want $2T+ stocks in the ranks or scans; keep max_mcap 2e12). The "#1 in group" tag on pre-market gappers (display only) and a
-   Group rank column on the Watchlist: the user's go Nov 2 (each group's leader order = group_rank rows "order").
-   (b) whether the
-   new rank should replace the old Leading status in the breakout grade (needs its own test); (c) 3-SETUPS triggers
-   on the phone / 1-minute checks.
+7. Group rank and leaders: DONE and live (Nov 2, see Changes). Decided: no Emerging / Lagging tags, no breadth rule,
+   no $2T+ stocks, no "#1 in group" tag on Launches. Study results for reference (scanner/probe_leaders.py on
+   test/gapstudy, groups of 5+ stocks, ran 20%+ in 20 days): gap-ups in a Top group: the group's #1 61% (54) vs #2-3
+   51% (65) vs the rest 41-42%, but the average 20 days later no better (+3.1% vs +3.6%) and more faded on the gap day
+   (57% vs 49%). Launches: the group's #1 20% (86) vs the rest of its group 29% (570). Examples: SNDK #1 in Memory &
+   Storage at every month-end Sep 2025 - Jun 2026; DELL #2 in AI Servers Feb 2026 while the group ranked low, #1 Mar
+   and May; in the CPUs theme INTC, not AMD, led Mar-Jun 2026. Still open, only if the user asks: (a) the stock's rank
+   vs the whole market helped launches (top 3% of all stocks 34% (100) vs 25%; with a Top/Strong group 40% (52), avg
+   +6.1%): could be a tag on Launches, needs the user's go; (b) whether the new rank should replace the old Leading
+   status in the breakout grade (needs its own test); (c) 3-SETUPS triggers on the phone / 1-minute checks.
 8. Older: move the Launches rules box to the top of the tab; picks reading their history from the start; an intraday
    surge alert without a gap; the 3-SETUPS weaker Ready groups (kept as is).
 
