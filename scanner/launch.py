@@ -1658,7 +1658,8 @@ def setups3(A, today, wl, prev=(), removed=None):
       Ready            a trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it: tomorrow's buys
       Setting up       a flag forming (its line more than 0.7 ADR away), a pullback set up for the 21 EMA, or a pullback
                        near the retest zone of its last breakout
-    In: liquid with an ADR of 4%+ (3.2%+ once on the list). Off: 2 closes in a row under the 50 EMA, 62 sessions from its
+    In: liquid with an ADR of 4%+ (3.2%+ once on the list) and a close over the 200 SMA (Nov 3 2026). Off: 2 closes in a
+    row under the 50 EMA, 2 closes in a row under the 200 SMA, 62 sessions from its
     highest point without a new high, its ADR under 3.2%, or your ✕ (until it comes on a feeder list again)."""
     seen, rows = {}, []
     for name in S3_FEEDERS:

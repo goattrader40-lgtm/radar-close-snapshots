@@ -49,6 +49,7 @@ As of Nov 3, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Reason | Rule |
 |---|---|
 | 50 EMA | 3 closes in a row under the 50 EMA (after 2 it waits in the 50 EMA undercut list for the reclaim) |
+| 200 SMA | 2 closes in a row under the 200-day SMA after the launch day (the user, Nov 3 2026); not laggards (under it by design); a laggard moved to the launch list follows it from that day |
 | Stale | 62 sessions from its highest point without a new high |
 | ADR | ADR (20 days) drops under 3.2% |
 | Removed | You removed it with the X button |
@@ -115,7 +116,7 @@ As of Nov 3, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | 1-EP/GAP | Gap up of more than 5% at the open with relative volume 2.5x+ (no 200 SMA rule) | 2 closes in a row below the 50 EMA, or 15 trading days without reaching 3-SETUPS | The gap day (a new gap moves it to the newer section) |
 | 1-UPDAY | Up 4%+ on the day with relative volume 1x+ (no 200 SMA rule) | 2 closes in a row below the 50 EMA, a close below the up day's low, or 15 trading days without reaching 3-SETUPS | The up day |
 | 2-POOL | First close back above the 50 EMA after 2+ closes below it; or, refreshed every Friday, momentum leaders: +10% in 1 week, +25% in 1 month, +50% in 3 months, or +50% in 6 months (that one also above the 200 SMA and 50%+ over its 52-week low) | 2 closes in a row below the 50 EMA; at the Friday refresh, a close below the 200 SMA or no longer liquid | 50 EMA reclaim / Momentum |
-| 3-SETUPS | A name from 1-EP/GAP, 1-UPDAY or 2-POOL that the Launches engine reads as a setup; ADR 4%+ to come on | 2 closes in a row under the 50 EMA, 62 sessions without a new high, ADR under 3.2%, or your X | Triggered today / Ready (trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it) / Setting up (flag forming, 21 EMA pullback set up, near a retest) |
+| 3-SETUPS | A name from 1-EP/GAP, 1-UPDAY or 2-POOL that the Launches engine reads as a setup; ADR 4%+ and a close over the 200-day SMA to come on (no 200 SMA yet: not held back) | 2 closes in a row under the 50 EMA, 2 closes in a row under the 200-day SMA (Nov 3 2026), 62 sessions without a new high, ADR under 3.2%, or your X | Triggered today / Ready (trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it) / Setting up (flag forming, 21 EMA pullback set up, near a retest) |
 | Other screens (settings) | Daily tightness: 40%+ over the 52-week low, within 30% of the 52-week high, volume 20%+ under its 30-day average, range at most 0.8x the 10-day average, 3 tight days in the last 5. Pullback to 21 EMA / 50 EMA: within 3% over that EMA, above the 200 SMA, 21 EMA over 50 EMA | - | - |
 
 ## Watchlist grade
