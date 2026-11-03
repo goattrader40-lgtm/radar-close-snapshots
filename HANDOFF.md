@@ -3,6 +3,10 @@
 New session: work in this repo (goattrader40-lgtm/radar-close-snapshots) with push access. Start the session with
 the repo selected; if it is missing or read-only, tell the user at once (claude.ai/connect-github, or a new session
 with the repo selected) before any other work.
+Keep the sessions tidy (the user, Nov 3 2026): every session for this portal carries the tag `project:radar` and a
+title starting "Radar: " (e.g. "Radar: work session (Nov 4)"). At the start, set them on your own session with the
+claude-code-remote tools set_session_tags and set_session_title (get_session with no id gives your session id).
+Other projects live in their own repo with their own HANDOFF.md, tag and title prefix.
 
 Read this first in every new session. It is what earlier sessions agreed with the user; the code comments carry the
 same rules with the user's examples (scanner/launch.py, scanner/run.py, radar/alerts.py), and the portal legend
