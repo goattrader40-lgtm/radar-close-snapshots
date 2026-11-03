@@ -146,6 +146,10 @@ alone.
   fetched for Mon / Tue). The ticker column is frozen when a table scrolls right. A listing without a 200 SMA yet
   shows in the top table as "new" (LIFE).
   Every Earnings column sorts on a header click (live Nov 3; empty values last; default = reported first, newest first).
+  The week grid is ordered like the Earnings Whispers card (live Nov 3, the user): most liquid first (20-day $ volume),
+  grouped by area (the stock's first core theme's category; no theme: its industry's usual area, SWKS -> AI & Semis;
+  an auto group by its own name), the area with the biggest name first, then theme, then $ volume; $1B+ a day = a big
+  chip (AMD, SMCI, ALAB, ANET together Tue Nov 3 after close).
   The Stock column is narrow (live Nov 3, the user: "too big"): "Tue AM" = before the open, "Mon PM" = after the close; the date and time in the cell's tooltip.
 
 - **Alert rules (live Nov 3 2026, the user's "go live, a")**: every alert, phone (radar/alerts.py main, from
