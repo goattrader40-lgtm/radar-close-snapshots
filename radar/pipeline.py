@@ -508,10 +508,10 @@ def trend_at(c, e5, e10, e21, e50, i):
     """your Trend (Nov 3 2026), first match wins: Negative (under the 21 EMA), Reclaim (back over the 21 after a close
     under it), Turn up (the 5 EMA crosses over the 10), Up (10 > 21 > 50, over the 21 and 50, the 10 and 21 rising),
     Resting (10 > 21 > 50, the 10 or 21 not rising); the base for the positive ones: the 21 over the 50 and the 50
-    higher than 5 sessions ago. '' = none of them."""
+    higher than 5 sessions ago, and the 10 over the 21. '' = none of them."""
     if i < 5 or None in (c[i], c[i - 1], e5[i], e5[i - 1], e10[i], e10[i - 1], e21[i], e21[i - 1], e50[i], e50[i - 5]):
         return None
-    base = e21[i] > e50[i] and e50[i] > e50[i - 5]
+    base = e10[i] > e21[i] > e50[i] and e50[i] > e50[i - 5]      # the 10 over the 21 too (the user, Nov 3 2026)
     if c[i] < e21[i]: return "Negative"
     if not base: return ""
     if c[i - 1] < e21[i - 1]: return "Reclaim"
