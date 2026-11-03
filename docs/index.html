@@ -2953,6 +2953,11 @@ defCalc('industry_perf', {
       if (!BASE || build[0].built_at !== lastBuilt) {
         const [stocks, themes] = await Promise.all([getJson(sha, 'stocks.json'), getJson(sha, 'themes.json')]);
         BASE = { stocks, themes }; lastBuilt = build[0].built_at;
+        /* the Trend: from stocks.json; until the nightly build carries it, from trend.json (radar-tools trendnow) of the same close */
+        if (!stocks.some((x) => x.tr)) {
+          const tj = await getJson(sha, 'trend.json').catch(() => null);
+          if (tj && tj.rows && tj.asof === build[0].asof) stocks.forEach((x) => { const t = tj.rows[x.symbol]; if (t) { x.trend = t[0]; x.trend_days = t[1]; x.tr = t[2]; } });
+        }
       }
       LIVE = live;
       D.build = { status: 'ok', data: build };
