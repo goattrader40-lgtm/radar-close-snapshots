@@ -49,7 +49,7 @@ As of Nov 3, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Reason | Rule |
 |---|---|
 | 50 EMA | 3 closes in a row under the 50 EMA (after 2 it waits in the 50 EMA undercut list for the reclaim) |
-| 200 SMA | 2 closes in a row under the 200-day SMA after the launch day (the user, Nov 3 2026); not laggards (under it by design); a laggard moved to the launch list follows it from that day |
+| 200 SMA | Off while its last 2 closes are under the 200-day SMA; back the first close over it (the user, Nov 3 2026: only while under); not laggards (under it by design); the real 200 SMA (a new listing without one is not held back) |
 | Stale | 62 sessions from its highest point without a new high |
 | ADR | ADR (20 days) drops under 3.2% |
 | Removed | You removed it with the X button |

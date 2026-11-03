@@ -1590,9 +1590,9 @@ S3_SECTIONS = ("Triggered today", "Ready", "Setting up")
 
 def under200(a, start, last, n=None):
     """n closes in a row under the 200 SMA after bar `start`, up to `last` (your rule, Nov 3 2026: off Launches and
-    3-SETUPS after 2); a new listing's stand-in average counts, no average at all never does"""
+    3-SETUPS after 2); the real 200 SMA only: a new listing without one is not held back (MWH Nov 2026)"""
     n = n or L["off_200"]
-    c, s = a.st.c, a.s200
+    c, s = a.st.c, a.st.sma200
     if last - start < n:
         return False
     run = 0
@@ -1611,7 +1611,7 @@ def s3_read(a, i0, last, was_in=False):
         return None
     # the 200 SMA (your rule, Nov 3 2026: ECHO on 3-SETUPS at 98.23 under its 200 SMA 106.63): to come on, the close
     # over it; once on, off after 2 closes in a row under it (no 200 SMA yet: a new listing, not held back)
-    s200 = a.s200[last]
+    s200 = st.sma200[last]
     if not np.isnan(s200):
         if not was_in and not st.c[last] > s200:
             return None
@@ -1841,9 +1841,10 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         if (np.any((c_[i + 3:last + 1] < e50_[i + 3:last + 1]) & (c_[i + 2:last] < e50_[i + 2:last]) & (c_[i + 1:last - 1] < e50_[i + 1:last - 1]))
                 or stale(a, i, last) or a.st.adr[last] < L["off_adr"]):
             return None
-        # 2 closes in a row under the 200 SMA after the launch day: off (your rule, Nov 3 2026); not for a laggard
-        # (under it by design: it is checked from the day it moved to the launch list)
-        if not lagg and under200(a, i, last):
+        # off while its last 2 closes are under the 200 SMA (your rule, Nov 3 2026, "only while under": back on the
+        # list the first close it is over it again, ACN-type dips don't throw a launch out for good); not for a
+        # laggard (under it by design: it is checked once it moved to the launch list)
+        if not lagg and under200(a, max(i, last - L["off_200"]), last):
             return None
         f = follow(a, i, last)
         if f["off_50ema"]:
@@ -1898,7 +1899,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         above = a.st.c > a.s200
         j = next((m for m in range(i + 5, len(a.st.dates)) if above[m - 4:m + 1].all()), None)
         r["promoted"] = a.st.dates[j] if j is not None else None
-        if j is not None and under200(a, j, len(a.st.dates) - 1):     # on the launch list it follows the 200 SMA rule
+        if j is not None and under200(a, max(j, len(a.st.dates) - 1 - L["off_200"]), len(a.st.dates) - 1):   # the 200 SMA rule
             continue
         (promoted if j is not None else lag).append(r)
     on_list = {r["symbol"] for r in rows} | {r["symbol"] for r in under50}
