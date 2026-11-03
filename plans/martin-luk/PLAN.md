@@ -82,6 +82,11 @@ X can't be opened from this session, so this comes from web search of the posts.
 - Mar 2025: the 0.5% / 1.5–5% / 35% rules, "not hard rules".
 - Jun 2025: "20% drawdown… I should've opened less new positions and trimmed more partials… Thursday's equity curve
   low is my line of defence".
+- Mar 2025: "The best lesson I've learned over the past 3 months is determining the market conditions by my own
+  trades. Everything else is just noise."
+- Aug 2025: "Down 8.5% on Friday… Sizing too aggressively on shorts. I held massive short positions going into
+  Jackson Hole. I only sold 15% of the original exposure into strength." He was strongly short-biased and missed
+  strength in small caps and non-tech; if conditions aren't fully favourable, stand aside.
 - Jan 30 2026: closed his GLD/SLV shorts early: "I can't keep my promise of holding into the 50 EMA".
 - Mar 2026: "Shorted at the first bounce into the declining 9 EMA after the close below it… I'm a chronic overtrader".
 - Jun 2026: "On bounce days after a distribution day, I was often tempted to go long… stopped out. Those losing trades
@@ -98,6 +103,9 @@ What it changes here:
   EMA.
 - (5) The size helper shows the **low-of-day distance** in % and ADRs, like his chart.
 - (6) S3 also tests a trim at +3 ADRs.
+- (7) A **scheduled-event rule** (his Jackson Hole lesson): the day before FOMC, CPI, payrolls or Jackson Hole, cut
+  positions that aren't financed yet to half, and add nothing new on the event day before the release.
+- (8) His own trades as the first regime signal: that is the streak brake and the 3-stops-a-day rule.
 
 **@Qullamaggie (Kristjan Kullamägi).** From his own site:
 - Risk 0.25–1% a trade, rarely more. Positions mostly 10–20%, and never more than 30% of the account overnight in one
@@ -294,6 +302,8 @@ close-confirm on the same pullback days, with spreads.
 - **Capacity**: the stock's 20-day $ volume at least 50× your account (Qullamaggie's rule of thumb).
 - **Rotation** (Minervini): with buying power full and an A setup triggering, sell half of the 2 weakest positions
   (closest to their stops in R) instead of skipping the trade.
+- **Scheduled events** (Luk, Jackson Hole Aug 2025, −8.5% in a day): the day before FOMC / CPI / payrolls / Jackson
+  Hole, cut positions that aren't financed yet to half; no new entries on the event day before the release.
 
 **The brake** (m = the smallest that applies):
 
@@ -603,7 +613,7 @@ the bot work doesn't touch the Radar → V/M only if you want shorts.
 - Write-ups: [Kyna Kosling: his study process](https://tradingresourcehub.substack.com/p/martin-luk-study-process), [Decoding the +969%](https://mistakesoninvesting.substack.com/p/decoding-martin-luks-record-969-championship), [Financial Wisdom: pullback strategy](https://www.financialwisdomtv.com/post/martin-luk-s-pullback-trading-strategy-how-the-2025-u-s-investing-champion-finds-low-risk-high-re), [Financial Wisdom: swing strategy](https://www.financialwisdomtv.com/post/martin-luk-s-1358-swing-trading-strategy-from-gamestop-blow-up-to-us-investing-champion), [Forex Club profile](https://en.forexclub.pl/Martin-Luk-969-in-a-year-who-is-the-winner-of-the-US-Investing-Championship-and-how-does-he-trade/), [video summary: winning strategy](https://videohighlight.com/v/-6lPuMFSMG0), [Finetiq: AVWAP-EMA flush](https://ideas.finetiqsystems.com/en/ideas/avwap-ema-flush/)
 - Independent backtest (CRSP + TAQ, 2016–2026): [rootchunhe/martin-luk-backtesting](https://github.com/rootchunhe/martin-luk-backtesting)
 - The X accounts (1.1):
-  - Luk: [distribution-day bounces → pullback short (Jun 2026)](https://x.com/martinlukkt/status/2064365486218060139), [GLD/SLV short at the declining 9 EMA (Mar 2026)](https://x.com/martinlukkt/status/2029074929736384773), [closed GLD/SLV early (Jan 2026)](https://x.com/martinlukkt/status/2017290915820478648), [fan reference: layout & screeners](https://martinluk.com/), [Substack comments (screener values, partials)](https://tradingresourcehub.substack.com/p/martin-luk-283-usic-2024-key-lessons/comments)
+  - Luk: [Jackson Hole −8.5% lessons (Aug 2025)](https://x.com/martinlukkt/status/1959493436366897399), [market conditions from his own trades (Mar 2025)](https://twitter.com/martinlukkt/status/1905647784021393509), [distribution-day bounces → pullback short (Jun 2026)](https://x.com/martinlukkt/status/2064365486218060139), [GLD/SLV short at the declining 9 EMA (Mar 2026)](https://x.com/martinlukkt/status/2029074929736384773), [closed GLD/SLV early (Jan 2026)](https://x.com/martinlukkt/status/2017290915820478648), [fan reference: layout & screeners](https://martinluk.com/), [Substack comments (screener values, partials)](https://tradingresourcehub.substack.com/p/martin-luk-283-usic-2024-key-lessons/comments)
   - Qullamaggie: [his 3 setups (risk, size, sells)](https://qullamaggie.com/my-3-timeless-setups-that-have-made-me-tens-of-millions/), [sell 1/3–1/2 after 3–5 days (quote)](https://x.com/AsymTrading/status/1706716710735085833)
   - Minervini: [Progressive Exposure](https://x.com/markminervini/status/1293567014720745472), [trade largest when best](https://x.com/markminervini/status/1864122686076801164), [gaps and sizing](https://twitter.com/markminervini/status/970065583382450176), [rotation](https://x.com/markminervini/status/1260379022938251266), [his rules](https://x.com/markminervini/status/1859625009469112773)
   - Shannon: [gaps in his AVWAP book](https://x.com/alphatrends/status/2017668778545299489), [CMT podcast on AVWAP](https://cmtassociation.org/podcast/fill-the-gap-episode-sixty-one-anchored-vwap-legend-brian-shannon-cmt/), [5-day MA cheat sheet](https://alphatrends.net/archives/podcast/brian-shannon-shares-his-5-day-moving-average-cheat-sheet/)
