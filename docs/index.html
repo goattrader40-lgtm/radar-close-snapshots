@@ -489,9 +489,9 @@
         <span class="tgr-lbl" id="pms-time">—</span>
       </div>
       <p class="tgr-note" id="pms-note"></p>
-      <div class="tgr-copybar"><button class="tgr-lite" id="pms-copy2" type="button">Copy ★★ tickers</button><button class="tgr-lite" id="pms-copy1" type="button">Copy ★ tickers</button><button class="tgr-lite" id="pms-copyall" type="button">Copy all starred</button><span class="tgr-lbl" id="pms-copied" aria-live="polite"></span></div>
+      <div class="tgr-copybar"><button class="tgr-lite" id="pms-copy2" type="button">Copy ★★ tickers</button><button class="tgr-lite" id="pms-copy1" type="button">Copy ★ tickers</button><button class="tgr-lite" id="pms-copyall" type="button">Copy all shown</button><span class="tgr-seg" id="pms-show" aria-label="Which starred names"><button data-v="up" aria-pressed="true">Gapping up</button><button data-v="all" aria-pressed="false">All starred</button></span><span class="tgr-lbl" id="pms-copied" aria-live="polite"></span></div>
       <details class="tgr-legend tgr-more" data-key="pmstars"><summary>How the stars work (what was tested, how to buy)</summary>
-      <p class="tgr-note">The stars come from the combination test (Nov 4 2026: every launch alert Aug 2025 – Oct 2026, bought live over the 5-minute opening range high the moment it qualified, stop its low, your management: 1/3 at +2 ADR, 1/3 at +5 ADR, runners out on a 21 EMA close). Only what yesterday's close knew: <span class="tgr-star s2">★★</span> = its best group is ★ Top or Strong (top 10%) and it closed under its 21 EMA: a launch out of a pullback, +0.55R a trade (222 launch alerts); <span class="tgr-star s1">★</span> = Trend Up at the last close: +0.33R (1,203); <span class="tgr-star skip">⚠ skip</span> = no Trend label: −0.05R (822); all launch alerts +0.16R. Both stars held in both halves of the test. These names are not launches yet. <b>The tested buy: only when one launches today</b> (Launching today and its ★ desktop alert: up 5%+, opened up, 1.5×+ volume pace, over the 200 SMA), over the 5-minute opening range high, stop its low. Buying every opening-range breakout of this list was not tested. A star means better odds, not a sure trade: even ★★ wins 42% of the time; the winners pay. RS 97+ is no star before the open (it comes with the launch day's jump: 6 launches in 2 years had it the day before). <span class="tgr-star s3">★★★</span> (Launches tab, 3:45–4:00 PM) is the other entry: a pullback on a launch already made.</p>
+      <p class="tgr-note">Only names gapping up before the open show (Gapping up): a launch has to open up, and any gap up counts: in the test the stars did best on gaps of 0-5% (★★ +0.54R on 0-2%, +0.85R on 2-5%; ★ +0.44R on 0-2%), so most launches are not on the 5%+ graded gappers below. The stars come from the combination test (Nov 4 2026: every launch alert Aug 2025 – Oct 2026, bought live over the 5-minute opening range high the moment it qualified, stop its low, your management: 1/3 at +2 ADR, 1/3 at +5 ADR, runners out on a 21 EMA close). Only what yesterday's close knew: <span class="tgr-star s2">★★</span> = its best group is ★ Top or Strong (top 10%) and it closed under its 21 EMA: a launch out of a pullback, +0.55R a trade (222 launch alerts); <span class="tgr-star s1">★</span> = Trend Up at the last close: +0.33R (1,203); <span class="tgr-star skip">⚠ skip</span> = no Trend label: −0.05R (822); all launch alerts +0.16R. Both stars held in both halves of the test. These names are not launches yet. <b>The tested buy: only when one launches today</b> (Launching today and its ★ desktop alert: up 5%+, opened up, 1.5×+ volume pace, over the 200 SMA), over the 5-minute opening range high, stop its low. Buying every opening-range breakout of this list was not tested. A star means better odds, not a sure trade: even ★★ wins 42% of the time; the winners pay. RS 97+ is no star before the open (it comes with the launch day's jump: 6 launches in 2 years had it the day before). <span class="tgr-star s3">★★★</span> (Launches tab, 3:45–4:00 PM) is the other entry: a pullback on a launch already made.</p>
       </details>
       <div class="tgr-scroll">
         <table class="tgr-table" id="pms-table">
@@ -1385,13 +1385,14 @@ defCalc('industry_perf', {
     }
   };
   /* the Pre-market tab's starred launch watch: the evening scan's watch list (stocks set up to launch), starred */
-  const PMS = { rows: [] };
+  const PMS = { rows: [], show: 'up' };
   const drawStars = () => {
     const doc = st('launch').status === 'ok' ? st('launch').data : null;
     const table = $('#pms-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
     if (!doc || !doc.watch) { $('#pms-note').textContent = 'Waiting for the evening scan.'; PMS.rows = []; return; }
     const R = doc.rules || {}, rs = ldocRS(), today = todayNY();
-    const pm = PML && PML.date === today && PML.rows ? PML.rows : null;
+    /* the pre-market scan after the watch list's close (tonight: none yet, this morning's scan was before it) */
+    const pm = PML && PML.date === today && PML.date > doc.date && PML.rows ? PML.rows : null;
     const er = new Map(((EARN && EARN.rows) || []).map((x) => [x.sym, x]));
     const rows = [];
     Object.entries(doc.watch).forEach(([sym, w]) => {
@@ -1409,11 +1410,18 @@ defCalc('industry_perf', {
       rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
       markSort(table, spec);
     } else { rows.sort((a, b) => (b.stars - a.stars) || ((a.power_only ? 1 : 0) - (b.power_only ? 1 : 0)) || ((b.rs ?? -1) - (a.rs ?? -1))); markSort(table, { key: '', dir: -1 }); }
+    /* only the ones gapping up before the open can launch today (a launch opens up: 5,492 of the 5,493 tested launch alerts
+       did; the user, Nov 4 2026); any gap up counts: the stars did best on 0-5% gaps. Before the pre-market scan (7:00 AM)
+       every starred name shows */
+    const all = rows.length, upOnly = PMS.show === 'up' && !!pm;
+    if (upOnly) rows.splice(0, rows.length, ...rows.filter((r) => r.pm_chg !== null && r.pm_chg > 0));
+    document.querySelectorAll('#pms-show button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === (pm ? PMS.show : 'all'))));
     PMS.rows = rows;
     const n2 = rows.filter((r) => r.stars === 2).length, n1 = rows.filter((r) => r.stars === 1).length;
     $('#pms-time').textContent = 'From the ' + fDate(doc.date) + ' close' + (pm ? ' · pre-market ' + fTime(PML.saved_at) + ' ET' : '');
-    $('#pms-note').textContent = n2 + ' ★★ and ' + n1 + ' ★ of the ' + Object.keys(doc.watch).length + ' stocks on the launch watch list. Not launches yet: buy one only when it launches today (it shows in Launching today on the Launches tab and its ★ desktop alert pops up), over the 5-minute opening range high, stop its low. "power day only" = more than ' + (R.max_ext200 || 28) + '% over its 200 SMA: only a power day (8%+ gap, 10%+ day, 4×+ volume) counts.';
-    if (!rows.length) noRows(tb, 11, 'No starred name on tonight\'s watch list.');
+    $('#pms-note').textContent = (upOnly ? n2 + ' ★★ and ' + n1 + ' ★ gapping up now (of ' + all + ' starred on the ' + Object.keys(doc.watch).length + '-stock launch watch list): a launch has to open up; any gap up counts (in the test the stars did best on 0-5% gaps; ★★ on 5%+ gaps was weak, only 28 trades). '
+      : n2 + ' ★★ and ' + n1 + ' ★ of the ' + Object.keys(doc.watch).length + ' stocks on the launch watch list' + (pm ? ' (all of them; pick Gapping up to keep only those gapping up now). ' : ' (the pre-market prices come from 7:00 AM ET: then only the ones gapping up show). ')) + 'Not launches yet: buy one only when it launches today (it shows in Launching today on the Launches tab and its ★ desktop alert pops up), over the 5-minute opening range high, stop its low. "power day only" = more than ' + (R.max_ext200 || 28) + '% over its 200 SMA: only a power day (8%+ gap, 10%+ day, 4×+ volume) counts.';
+    if (!rows.length) noRows(tb, 11, upOnly ? 'No starred name is gapping up right now.' : 'No starred name on tonight\'s watch list.');
     rows.forEach((r) => {
       const tr = h('tr'), k0 = tkCell(r.symbol, r.tv);
       if (r.power_only) { const t = h('span', 'tgr-flag', 'power day only'); t.style.marginLeft = '6px'; t.title = r.vs200 + '% over its 200 SMA at the last close: a regular launch allows 28%; a power day (volume 4×+, an 8%+ gap, a 10%+ day, over its 1-month high) up to 50%'; k0.append(t); }
@@ -1425,6 +1433,7 @@ defCalc('industry_perf', {
       tb.append(tr);
     });
   };
+  $('#pms-show').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { PMS.show = b.dataset.v; drawStars(); } });
   [['#pms-copy2', (r) => r.stars === 2, '★★'], ['#pms-copy1', (r) => r.stars === 1, '★'], ['#pms-copyall', () => true, 'starred']].forEach(([id, f, lab]) => {
     $(id).addEventListener('click', async () => {
       const list = PMS.rows.filter(f).map((r) => r.symbol);
