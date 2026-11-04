@@ -211,10 +211,11 @@ class Arr:
 
     def laggard(self, i):
         """a launch day under the 200 SMA, on 2x+ volume and a catalyst (earnings or graded company news), closing over its
-        1-month high (the previous 20 sessions' highest high: your rule, Nov 2 2026)"""
+        1-month high (the previous 20 sessions' highest high: your rule, Nov 2 2026) and over its 50 EMA (under both the
+        50 and the 200 qualifies for nothing: your rule, Nov 4 2026)"""
         st = self.st
         return bool(i >= self.start and self.liquid[i] and self.gap[i] > 0 and self.chg[i] >= L["min_chg"] and self.held(i)
-                    and self.rv[i] >= L["lag_rv"] and st.c[i] <= self.s200[i] and st.c[i] > self.hi20[i]
+                    and self.rv[i] >= L["lag_rv"] and st.c[i] <= self.s200[i] and st.c[i] > self.hi20[i] and st.c[i] > self.e50[i]
                     and st.c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100) and (self.sym, st.dates[i]) in NEWS_DAYS)
 
     def power(self, i):
