@@ -1,0 +1,46 @@
+# The code grader (radar/codegrade.py): the pre-market gappers graded from SEC filings and the 50 / 200 chart, no
+# Claude, shown next to Claude's grade on the Pre-market tab for 1-2 weeks (the user's plan, Nov 4 2026).
+# Runs about 8:52, 9:05 and 9:18 AM ET on weekdays (each run re-grades with fresher pre-market prices; the
+# filings counted are those accepted from the last close up to the run, so nothing after the open).
+name: Code grader
+
+on:
+  schedule:
+    - cron: "52 12,13 * * 1-5"     # 8:52 AM ET (EDT / EST)
+    - cron: "5,18 13,14 * * 1-5"   # 9:05 / 9:18 AM ET
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: codegrade
+  cancel-in-progress: false
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Grade
+        env:
+          SEC_UA: ${{ secrets.SEC_UA }}
+        run: |
+          H=$(TZ=America/New_York date +%H); M=$(TZ=America/New_York date +%M); T=$((10#$H * 60 + 10#$M))
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] && { [ $T -lt 525 ] || [ $T -gt 569 ]; }; then echo "outside 8:45-9:29 ET: nothing to do"; exit 0; fi
+          git config user.name "radar-bot"; git config user.email "radar-bot@users.noreply.github.com"
+          git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+          mkdir -p /tmp/rd /tmp/pm
+          for f in stocks earnings; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
+          git show origin/radar-data:premarket_live.json > /tmp/rd/pmlive.json 2>/dev/null || true
+          git show origin/radar-data:premarket.json > /tmp/pm/claude_premarket.json 2>/dev/null || echo '[]' > /tmp/pm/claude_premarket.json
+          git show origin/radar-data:codegrade_log.json > /tmp/rd/codegrade_log.json 2>/dev/null || echo '[]' > /tmp/rd/codegrade_log.json
+          python3 radar/premarket_build.py prepare premarket/latest.json /tmp/rd/stocks.json /tmp/pm 8 4 --live=/tmp/rd/pmlive.json
+          python3 radar/codegrade.py live /tmp/pm/to_grade.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/codegrade.json
+          python3 radar/codegrade.py log /tmp/codegrade.json /tmp/rd/codegrade_log.json
+          cp /tmp/rd/codegrade_log.json /tmp/codegrade_log.json
+          python3 radar/publish.py "code grades $(TZ=America/New_York date +%F' '%H:%M)" /tmp/codegrade.json /tmp/codegrade_log.json

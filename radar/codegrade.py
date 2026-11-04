@@ -28,8 +28,10 @@ Two layers, then one combined grade:
         trending  21 EMA > 50 EMA > 200 SMA at the last close and the price over all three
         mixed     over the 200, not stacked or under the 50
         downtrend the price under the 200 SMA
-  GRADE (gap-ups) news A: turnup A+, trending A, mixed B, downtrend C; news B: turnup A, trending B, mixed C,
-        downtrend C; news C stays C (a turnup without news is flagged); F stays F. Gap-downs: the news grade, one
+  GRADE (gap-ups) news A: turnup A+, trending A, mixed B, downtrend W; news B: turnup A, trending B, mixed C,
+        downtrend W (W = laggard watch: real news, still under the 200); news C stays C (a turnup without news is
+        flagged); F stays F; under 30% over the 52-week low (pre-market price) qualifies for nothing ("—"; the pre-market
+        list drops these before grading). Gap-downs: the news grade, one
         grade more serious (B -> A) when a trending stock gaps under its 50 and 200.
 """
 import datetime, html, json, os, re, sys, time, urllib.request, zoneinfo
@@ -303,16 +305,21 @@ def chart_state(px, prev_c, e21, e50, s200, hi21):
     return "mixed"
 
 
-COMBINE = {"A": {"turnup": "A+", "trending": "A", "mixed": "B", "downtrend": "C"},
-           "B": {"turnup": "A", "trending": "B", "mixed": "C", "downtrend": "C"}}
+# W = laggard watch (the user, Nov 4 2026): real news but still under the 200 SMA after the gap, so shorts are in
+# control; lower importance, but it isn't dropped: the news grade (A / B) still feeds the Launch laggards rule, and the
+# day it gets over its 50 and 200 it is a turn-up
+COMBINE = {"A": {"turnup": "A+", "trending": "A", "mixed": "B", "downtrend": "W"},
+           "B": {"turnup": "A", "trending": "B", "mixed": "C", "downtrend": "W"}}
+LOW52_MIN = 30                                      # the user's main rule: 30%+ over the 52-week low (pre-market price)
 
 
-def combine(news, chart, direction, broke_trend=False):
+def combine(news, chart, direction, broke_trend=False, over_low52=None):
     if direction == "down":
         return "A" if news == "B" and broke_trend else news
-    if news in COMBINE:
-        return COMBINE[news].get(chart, news)
-    return news
+    g = COMBINE[news].get(chart, news) if news in COMBINE else news
+    if over_low52 is not None and over_low52 < LOW52_MIN:
+        g = "—"                                     # under 30% over the 52-week low qualifies for nothing (the user, Nov 4 2026;
+    return g                                        # the pre-market list drops these before grading)
 
 
 # ───────── live: the pre-market list ─────────
@@ -373,6 +380,13 @@ def last_close_time(day):
 
 def live(pm_path, stocks_path, earn_path, out_path, asof=None):
     rows = [r for r in json.load(open(pm_path)) if not r.get("placeholder") and r.get("direction") in ("up", "down")]
+    try:                                                # Claude's grade for the same stock, when it's posted
+        cl = {x["symbol"]: x.get("grade") for x in json.load(open(os.path.join(os.path.dirname(pm_path), "claude_premarket.json")))
+              if x.get("scan_date") == (rows[0].get("scan_date") if rows else None)}
+        for r in rows:
+            r.setdefault("grade", cl.get(r["symbol"]))
+    except Exception:
+        pass
     rows = [r for r in rows if r.get("graded")] or rows[:16]
     S = {s["symbol"]: s for s in json.load(open(stocks_path))}
     E = {}
@@ -421,17 +435,40 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
         except Exception as ex:
             ch, broke, lv = "unknown", False, {}
             print("bars", sym, repr(ex)[:120])
-        fin = combine(nw["news"], ch, d, broke)
+        lo52 = st.get("low_52w")
+        ol = round((r.get("pm_last") / lo52 - 1) * 100, 1) if lo52 and r.get("pm_last") else None
+        fin = combine(nw["news"], ch, d, broke, ol)
+        if ol is not None and ol < LOW52_MIN and d == "up":
+            nw["flags"] = "; ".join(x for x in (nw["flags"], f"only {ol:.0f}% over the 52-week low (rule: 30%+)") if x)
         if d == "up" and nw["news"] == "C" and ch == "turnup":
             nw["flags"] = "; ".join(x for x in (nw["flags"], "chart turn-up without company news") if x)
-        out[sym] = dict(nw, direction=d, chart=ch, grade=fin, levels=lv, claude=r.get("grade"), pm_last=r.get("pm_last"))
+        out[sym] = dict(nw, direction=d, chart=ch, grade=fin, levels=lv, claude=r.get("grade"), pm_last=r.get("pm_last"), over_low52=ol)
         print(f"{sym:6} {d:4} news {nw['news']} chart {ch:9} -> {fin:2} | Claude {r.get('grade')} | {nw['catalyst']}: {nw['reason'][:90]}")
-    json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "window": [t_from.isoformat(), t_to.isoformat()],
-               "rows": out}, open(out_path, "w"), indent=0)
+    json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "day": day,
+               "window": [t_from.isoformat(), t_to.isoformat()], "rows": out}, open(out_path, "w"), indent=0)
+
+
+def log(cg_path, log_path):
+    """the day's code grades into codegrade_log.json (one entry per day and stock, the last run of the morning wins),
+    for the 1-2 week comparison with Claude's grades (outcomes come from the bars when it's evaluated)"""
+    cg = json.load(open(cg_path))
+    try:
+        lg = json.load(open(log_path))
+    except Exception:
+        lg = []
+    keep = {e["key"]: e for e in lg if isinstance(e, dict) and e.get("key")}
+    for sym, r in cg.get("rows", {}).items():
+        k = f"{cg['day']} {sym}"
+        keep[k] = {"key": k, "date": cg["day"], "symbol": sym, "direction": r["direction"], "grade": r["grade"], "news": r["news"],
+                   "chart": r["chart"], "catalyst": r["catalyst"], "pm_last": r.get("pm_last"), "claude": r.get("claude"), "built_at": cg["built_at"]}
+    json.dump(sorted(keep.values(), key=lambda e: e["key"]), open(log_path, "w"), separators=(",", ":"))
+    print(len(keep), "log entries")
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "live":
+    if sys.argv[1] == "log":
+        log(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == "live":
         a = [x for x in sys.argv[2:] if not x.startswith("--asof=")]
         asof = next((x.split("=", 1)[1] for x in sys.argv if x.startswith("--asof=")), None)
         live(a[0], a[1], a[2], a[3], asof)

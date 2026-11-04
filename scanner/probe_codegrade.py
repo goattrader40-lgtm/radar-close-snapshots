@@ -122,7 +122,7 @@ def main():
         for s in ms:
             best_g.setdefault(s, []).append(stt)
     # 1. the events
-    ev = []
+    ev, skipped52 = [], 0
     for s, ar in A.items():
         st = ar.st
         c, o, h, l = st.c, st.o, st.h, st.l
@@ -138,7 +138,9 @@ def main():
             e21, e50, s200, pc = float(ar.e21[i - 1]), float(ar.e50[i - 1]), float(ar.s200[i - 1]), float(c[i - 1])
             k = pos.get(st.dates[i - 1])
             grp = max((int(x[k]) for x in best_g.get(s, []) if k is not None and k < len(x)), default=0)
+            lo52 = float(l[max(0, i - 252):i].min())
             r = dict(sym=s, date=st.dates[i], up=up, gap=round(float(gp), 1), mcap=mcap.get(s, 0) * c[i] / last,
+                     over_low52=round(100 * (px / lo52 - 1), 1) if lo52 > 0 else None,
                      chart=G.chart_state(px, pc, e21, e50, s200, hi21), chart30=G.chart_state(px, pc, e21, e50, s200, hi30),
                      chartS50=G.chart_state(px, pc, e21, s50, s200, hi21) if s50 == s50 else "unknown", group=grp,
                      broke_trend=bool(not up and e21 > e50 > s200 and px < e50 and px < s200))
@@ -158,6 +160,17 @@ def main():
                 r["held"] = bool(c[i] <= o[i])
                 r["broke5"] = None
             r["r20"] = round(100 * (c[i + 20] / c[i] - 1), 1) if i + 20 < n else None
+            if up and px < s200:                        # still under the 200: did it cross later, and how did it do from there?
+                j = next((j for j in range(i + 1, min(i + 61, n)) if c[j] > ar.s200[j]), None)
+                r["crossed200"] = j is not None if i + 60 < n else (True if j is not None else None)
+                if j is not None:
+                    r["days_to_200"] = j - i
+                    r["after_cross_r20"] = round(100 * (c[j + 20] / c[j] - 1), 1) if j + 20 < n else None
+                    r["after_cross_ran20"] = bool(h[j + 1:j + 21].max() >= 1.2 * c[j]) if j + 20 < n else None
+                    r["after_cross_held5"] = bool(all(c[k] > ar.s200[k] for k in range(j, min(j + 5, n))))
+            if r["over_low52"] is not None and r["over_low52"] < G.LOW52_MIN:
+                skipped52 += 1                          # qualifies for nothing (the user, Nov 4 2026)
+                continue
             ev.append(r)
     ev.sort(key=lambda r: r["date"], reverse=True)          # newest first: if time runs out, the recent months are in
     print(len(ev), "gap events")
@@ -185,14 +198,16 @@ def main():
             e = hist_earnings(r["sym"], r["date"], texts.get(er[0]["acc"], ("", ""))[1])
         nw = G.classify(fs, texts, "up" if r["up"] else "down", r["mcap"], e)
         r.update(news=nw["news"], catalyst=nw["catalyst"], why=nw["reason"][:140], earn=bool(er),
-                 grade=G.combine(nw["news"], r["chart"], "up" if r["up"] else "down", r["broke_trend"]),
-                 grade30=G.combine(nw["news"], r["chart30"], "up" if r["up"] else "down", r["broke_trend"]),
-                 gradeS50=G.combine(nw["news"], r["chartS50"], "up" if r["up"] else "down", r["broke_trend"]))
+                 grade=G.combine(nw["news"], r["chart"], "up" if r["up"] else "down", r["broke_trend"], r["over_low52"]),
+                 grade_no52=G.combine(nw["news"], r["chart"], "up" if r["up"] else "down", r["broke_trend"]),
+                 grade30=G.combine(nw["news"], r["chart30"], "up" if r["up"] else "down", r["broke_trend"], r["over_low52"]),
+                 gradeS50=G.combine(nw["news"], r["chartS50"], "up" if r["up"] else "down", r["broke_trend"], r["over_low52"]))
         done += 1
     graded = [r for r in ev if r.get("news")]
     print(done, "graded")
     # 3. the tables
     out = {"made_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "events": len(ev), "graded": len(graded),
+           "left_out_under_30pct_over_52w_low": skipped52,
            "first": min((r["date"] for r in graded), default=None), "last": max((r["date"] for r in graded), default=None)}
     for side, flag in (("up", True), ("down", False)):
         rs = [r for r in graded if r["up"] == flag]
@@ -202,15 +217,25 @@ def main():
         T["by_chart"] = {c: stats([r for r in rs if r["chart"] == c]) for c in ("turnup", "trending", "mixed", "downtrend")}
         T["news_x_chart"] = {f"{g} / {c}": stats([r for r in rs if r["news"] == g and r["chart"] == c])
                              for g in "ABCF" for c in ("turnup", "trending", "mixed", "downtrend")}
-        T["by_grade"] = {g: stats([r for r in rs if r["grade"] == g]) for g in ("A+", "A", "B", "C", "F")}
-        T["by_grade_30day_high"] = {g: stats([r for r in rs if r["grade30"] == g]) for g in ("A+", "A", "B", "C", "F")}
-        T["by_grade_50sma"] = {g: stats([r for r in rs if r["gradeS50"] == g]) for g in ("A+", "A", "B", "C", "F")}
+        GR = ("A+", "A", "B", "W", "C", "F")
+        T["by_grade"] = {g: stats([r for r in rs if r["grade"] == g]) for g in GR}
+        T["by_grade_30day_high"] = {g: stats([r for r in rs if r["grade30"] == g]) for g in GR}
+        T["by_grade_50sma"] = {g: stats([r for r in rs if r["gradeS50"] == g]) for g in GR}
+        ws = [r for r in rs if r["grade_no52"] == "W"]
+        cr = [r for r in ws if r.get("crossed200")]
+        T["W_laggard_watch"] = {"n": len(ws), "crossed_200_within_60%": round(100 * len(cr) / len([r for r in ws if r.get("crossed200") is not None])) if ws else None,
+                                "median_days_to_cross": float(np.median([r["days_to_200"] for r in cr])) if cr else None,
+                                "after_cross": {"held_over_200_5d%": round(100 * np.mean([r["after_cross_held5"] for r in cr])) if cr else None,
+                                                "ran20%": round(100 * np.mean([r["after_cross_ran20"] for r in cr if r.get("after_cross_ran20") is not None])) if cr else None,
+                                                "r20_avg": round(float(np.mean([r["after_cross_r20"] for r in cr if r.get("after_cross_r20") is not None])), 1) if cr else None},
+                                "C_under200_for_comparison": {"n": len([r for r in rs if r["news"] == "C" and r["chart"] == "downtrend"]),
+                                                              "crossed_200_within_60%": round(100 * np.mean([bool(r.get("crossed200")) for r in rs if r["news"] == "C" and r["chart"] == "downtrend" and r.get("crossed200") is not None])) if rs else None}}
         T["turnup_by_group"] = {f"group {k}": stats([r for r in rs if r["chart"] == "turnup" and r["group"] == k]) for k in (2, 1, 0)}
         T["AB_news_by_group"] = {f"group {k}": stats([r for r in rs if r["news"] in ("A", "B") and r["group"] == k]) for k in (2, 1, 0)}
         T["by_catalyst"] = {k: stats([r for r in rs if r["catalyst"] == k]) for k in sorted({r["catalyst"] for r in rs})}
         T["earnings_only_by_news"] = {g: stats([r for r in rs if r["earn"] and r["news"] == g]) for g in "ABC"}
         T["examples"] = {g: [(r["sym"], r["date"], r["gap"], r["news"], r["chart"], r["catalyst"], r["why"][:90], r.get("r20"))
-                             for r in rs if r["grade"] == g][:12] for g in ("A+", "A", "B", "F")}
+                             for r in rs if r["grade"] == g][:12] for g in ("A+", "A", "B", "W", "F")}
     json.dump(out, open(a.out, "w"), indent=1, default=str)
     print(json.dumps(out["up"]["by_grade"], indent=1))
 
