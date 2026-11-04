@@ -173,6 +173,11 @@ jobs:
             python3 radar/codegrade.py live /tmp/pm/rows.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/codegrade_test.json ${A:+--asof=$A}
             python3 radar/publish.py "code grader test" /tmp/codegrade_test.json;;
           esac
+          if [ "${{ inputs.cmd }}" = "runners" ]; then   # today's runners vs their 21-day closing high (test/codegrade) -> probe_runners.json
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
+            python3 scanner/probe_runners.py /tmp/rd/stocks.json /tmp/probe_runners.json 8 && python3 radar/publish.py "runners vs the 21-day high" /tmp/probe_runners.json
+          fi
           case "$CMD" in reltext*) git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && git show origin/radar-data:earnings.json > /tmp/earn_now.json && python3 radar/probe_reltext.py /tmp/earn_now.json /tmp/probe_reltext.json ${CMD#reltext} && python3 radar/publish.py "earnings release texts" /tmp/probe_reltext.json;; esac
           case "$CMD" in earnprobe\ *) python3 radar/probe_earnings.py /tmp/probe_earnings.json ${CMD#earnprobe } && python3 radar/publish.py "earnings source check" /tmp/probe_earnings.json;; esac
           case "$CMD" in long\ *) python3 radar/probe_long.py /tmp/long_bars.json ${CMD#long } && python3 radar/publish.py "long history" /tmp/long_bars.json;; esac
