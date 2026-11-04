@@ -45,6 +45,23 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Phone alerts crashed after 9:34 on Nov 4: fixed (LIVE Nov 4 2026 evening, the user's "go live"; test/alertfix)
+
+- radar/alerts.py find() raised KeyError 'base_days' on 3-SETUPS rows (2-POOL / 1-UPDAY: AMLX, XMTR, TARS ...; added to the
+  live checks on Nov 3) once one traded over its base top, so every 5-minute / 1-minute check from 9:35 failed: no phone
+  alert and nothing in alerts.json after the 9:31-9:34 heads-ups (desktop alerts, computed in the browser, kept working).
+  KD's POWER DAY at 9:35 ($15.30, +18.3%, vol 6.7x) is what the minute-by-minute replay fires (radar-tools `replay KD
+  --every-minute` on test/kdreplay = last night's watch list). Fixed (base_days optional) and each followed row is now
+  checked inside its own try (one bad row skips that stock only). Check after the Nov 5 open: alerts.json has items
+  after 9:35.
+- **Star logging live (test/starlog)**: the code grader logs each gapper's ★ star (★★ / ★ / ⚠, as the Stars column),
+  Trend label and best group tier into codegrade.json / codegrade_log.json, for the stars x code grade comparison
+  (check-ins scheduled Nov 11 and Nov 18, 5:40 PM ET, in session_01PkbDakDe1EUNP5wQZf4wMH). KD was ★★ on Nov 3.
+- **Open: "W crossed the 200"**: the Watchlist and Launches take nothing under the 200 SMA; a W (laggard watch: real
+  news, over the 50 and the 21-day closing high, under the 200) is where the backtest edge is once it crosses (77% within
+  60 sessions, +6.5% the 20 after). Proposal: keep W names 60 sessions and alert on the first close over the 200, so
+  they enter the over-200 world (Watchlist / Launches) on that day instead of after Launch laggards' 5 closes.
+
 ## Code grade next to Claude's (LIVE Nov 4 2026 ~6:15 PM, the user's "go live"; branches test/codegrade, test/lag50)
 
 - **What**: radar/codegrade.py grades every gapper on the pre-market list (not only Claude's top 12), no Claude, at
