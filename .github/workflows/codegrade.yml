@@ -35,7 +35,7 @@ jobs:
           git config user.name "radar-bot"; git config user.email "radar-bot@users.noreply.github.com"
           git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
           mkdir -p /tmp/rd /tmp/pm
-          for f in stocks earnings; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
+          for f in stocks earnings themes trend; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
           git show origin/radar-data:premarket_live.json > /tmp/rd/pmlive.json 2>/dev/null || true
           git show origin/radar-data:premarket.json > /tmp/pm/claude_premarket.json 2>/dev/null || echo '[]' > /tmp/pm/claude_premarket.json
           git show origin/radar-data:codegrade_log.json > /tmp/rd/codegrade_log.json 2>/dev/null || echo '[]' > /tmp/rd/codegrade_log.json

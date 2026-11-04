@@ -165,7 +165,7 @@ jobs:
           fi
           case "$CMD" in codelive*)   # the code grader on today's whole pre-market list as of a time ("codelive 2026-11-04T08:57") -> codegrade_test.json
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
-            mkdir -p /tmp/rd /tmp/pm && for f in stocks earnings; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
+            mkdir -p /tmp/rd /tmp/pm && for f in stocks earnings themes trend; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
             git show origin/radar-data:premarket_live.json > /tmp/rd/pmlive.json 2>/dev/null || true
             git show origin/radar-data:premarket.json > /tmp/pm/claude_premarket.json 2>/dev/null || echo '[]' > /tmp/pm/claude_premarket.json
             python3 radar/premarket_build.py prepare premarket/latest.json /tmp/rd/stocks.json /tmp/pm 8 4 --live=/tmp/rd/pmlive.json

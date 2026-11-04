@@ -26,8 +26,9 @@ Two layers, then one combined grade:
         50 still under it, or under the 200 without 4; 4 downtrend = under the 200, the 21 under the 50, both falling
   ELIGIBLE (gap-ups at the pre-market price): 30%+ over the 52-week low, ADR 3.5%+, over the 50 EMA, at most 20% under
         the 200 SMA, over the highest close of the last 21 sessions (else it gaps into chop); else "—". No cap over the
-        200; extension = the ATR multiple from the 50 SMA: 10x+ flagged "extended", 15x+ at most C. A+ / A / B only on
-        8%+ gaps (5-8% gaps: at most C).
+        200; extension = the ATR multiple from the 50 SMA: 10x+ flagged "extended", 15x+ at most C. A 5-8% gap one grade lower;
+        A+ only in a leading or turning-up group. The reversal is shown as "⤴ reversal" (not the ★ stars, not the
+        Trend column's "Turn up").
   GRADE (gap-ups) stage 2 / 3: A / B news -> A / B; stage 1 / 4 now over the 200 (★ turn-up, shorts caught off guard):
         A news A+, B news A; stage 1 / 4 still under the 200: W (laggard watch) on A / B news or an earnings report, else
         "—"; C and F as they are. Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200.
@@ -361,14 +362,64 @@ def event(stg, px, s200):
     return "turnup" if px > s200 else "laggard"
 
 
-def combine(news, ev, direction, ok=True, earn=False, broke_trend=False, gap=None, mult=None):
+LOWER = {"A+": "A", "A": "B", "B": "C"}
+
+
+def combine(news, ev, direction, ok=True, earn=False, broke_trend=False, gap=None, mult=None, group=None):
+    """the final grade (the user's choices, Nov 4 2026): 15+ ATRs over the 50 SMA at most C; a 5-8% gap one grade lower
+    (YOU Nov 4: an A+ reversal on a 6.3% gap closed +23.8%); A+ only in a leading or turning-up group (backtest:
+    reversals in a leading group r20 +16%, in a group that isn't trending -3.5%)"""
     g = _combine(news, ev, direction, ok, earn, broke_trend)
     if direction == "up" and g in ("A+", "A", "B"):
-        if gap is not None and gap < MIN_GAP_AB:
-            g = "C"                                     # a 5-8% gap: at most C
-        elif mult is not None and mult >= TOO_EXTENDED:
-            g = "C"                                     # 15+ ATRs over the 50 SMA: at most C
+        if mult is not None and mult >= TOO_EXTENDED:
+            g = "C"
+        elif gap is not None and gap < MIN_GAP_AB:
+            g = LOWER[g]
+        if g == "A+" and group is not None and group < 1:
+            g = "A"
     return g
+
+
+def group_status(stocks, themes, trend):
+    """{symbol: 2 leading / 1 turning up / 0} at the last close, the backtest's rule (scanner/launch.py group_status): a
+    group of 3+ stocks is leading when 60%+ are over their 50 EMA and the median 1-month move is 8%+, turning up when
+    half are over their 21 EMA and the median 1-week move is up; a stock takes its best group (themes, else industry,
+    and their areas)"""
+    import statistics
+    area = {t["theme"]: t.get("category") for t in themes if t.get("category") != "Auto groups"}
+    tr = (trend or {}).get("rows", trend or {})
+    members = {}
+    for r in stocks:
+        th = [t for t in (r.get("themes") or "").split(" | ") if t]
+        gs = th or ([r["industry"]] if r.get("industry") else [])
+        ars = sorted({area[t] for t in th if t in area}) if th else ([r["sector"]] if r.get("sector") else [])
+        for g in gs + ["area:" + a for a in ars]:
+            members.setdefault(g, []).append(r)
+    st = {}
+    for g, ms in members.items():
+        if len(ms) < 3:
+            continue
+        o50 = [(m.get("vs_50e") or 0) > 0 for m in ms if m.get("vs_50e") is not None]
+        o21 = []
+        for m in ms:
+            t = tr.get(m["symbol"])
+            if t and len(t) > 2 and t[2] and len(t[2]) >= 6:
+                o21.append(t[2][5] > t[2][2])           # the price over the 21 EMA
+        m1 = [m["chg_1m"] for m in ms if m.get("chg_1m") is not None]
+        m5 = [m["chg_1w"] for m in ms if m.get("chg_1w") is not None]
+        sh50 = sum(o50) / len(o50) if o50 else 0
+        sh21 = sum(o21) / len(o21) if o21 else 0
+        if sh50 >= 0.6 and m1 and statistics.median(m1) >= 8:
+            st[g] = 2
+        elif sh21 >= 0.5 and m5 and statistics.median(m5) > 0:
+            st[g] = 1
+        else:
+            st[g] = 0
+    out = {}
+    for g, ms in members.items():
+        for m in ms:
+            out[m["symbol"]] = max(out.get(m["symbol"], 0), st.get(g, 0))
+    return out
 
 
 def _combine(news, ev, direction, ok=True, earn=False, broke_trend=False):
@@ -455,7 +506,14 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
     except Exception:
         pass
     # every gapper on the list (rows.json: all that pass the list's rules), not only the top 12 Claude researches
-    S = {s["symbol"]: s for s in json.load(open(stocks_path))}
+    SL = json.load(open(stocks_path))
+    S = {s["symbol"]: s for s in SL}
+    try:
+        d0 = os.path.dirname(stocks_path)
+        GRP = group_status(SL, json.load(open(os.path.join(d0, "themes.json"))), json.load(open(os.path.join(d0, "trend.json"))))
+    except Exception as ex:
+        GRP = {}
+        print("group status:", repr(ex)[:120])
     E = {}
     try:
         ej = json.load(open(earn_path))
@@ -511,13 +569,16 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
             stg, ok, why, ev, broke, lv, mult = None, False, "no daily bars", None, False, {}, None
             print("bars", sym, repr(ex)[:120])
         earn = bool(er or E.get(sym))
-        fin = combine(nw["news"], ev, d, ok, earn, broke, r.get("gap_pct"), mult)
+        grp = GRP.get(sym) if GRP else None
+        fin = combine(nw["news"], ev, d, ok, earn, broke, r.get("gap_pct"), mult, grp)
         if d == "up" and mult is not None and mult >= EXTENDED:
             nw["flags"] = "; ".join(x for x in (nw["flags"], f"extended: {mult:.0f}x ATR over the 50 SMA" + (" (15x+: at most C)" if mult >= TOO_EXTENDED else "")) if x)
         if d == "up" and ok and nw["news"] in ("A", "B") and (r.get("gap_pct") or 0) < MIN_GAP_AB:
-            nw["flags"] = "; ".join(x for x in (nw["flags"], f"gap {r.get('gap_pct'):.1f}%: A / B need 8%+") if x)
+            nw["flags"] = "; ".join(x for x in (nw["flags"], f"gap {r.get('gap_pct'):.1f}% (under 8%): one grade lower") if x)
+        if d == "up" and ok and ev == "turnup" and nw["news"] == "A" and grp == 0:
+            nw["flags"] = "; ".join(x for x in (nw["flags"], "its group isn't trending: A, not A+") if x)
         ch = {2: "uptrend", 3: "pullback", 1: "basing", 4: "downtrend"}.get(stg, "unknown")
-        out[sym] = dict(nw, direction=d, stage=stg, chart=ch, event=ev if ok else None, eligible=ok, not_eligible=why, grade=fin,
+        out[sym] = dict(nw, direction=d, stage=stg, chart=ch, event=ev if ok else None, eligible=ok, not_eligible=why, grade=fin, group=grp,
                         levels=lv, claude=r.get("grade"), pm_last=px, over_low52=ol)
         print(f"{sym:6} {d:4} stage {stg} {('event ' + str(ev)) if ok else 'not eligible: ' + why:40} news {nw['news']} -> {fin:2} | Claude {r.get('grade')} | {nw['catalyst']}")
     json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "day": day,
