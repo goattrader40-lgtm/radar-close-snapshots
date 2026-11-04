@@ -1,6 +1,6 @@
 # Scanner rules
 
-As of Nov 3, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`, `radar/` and the morning grading instructions. Spreadsheet version: `rules/scanner_rules.xlsx`.
+As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`, `radar/` and the morning grading instructions. Spreadsheet version: `rules/scanner_rules.xlsx`.
 
 ## Launch must-pass
 
@@ -275,6 +275,18 @@ As of Nov 3, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Retest zone / hold | Pulls into the retest zone of its last breakout; from 3:45 PM, holding into the close | Every check |
 | After the close | Tight closes under a buy point, a retest of a broken base top that held; 3-SETUPS Ready list to the phone | After the 4:40 PM scan |
 | Rules | Each stock and kind once a day; phone via ntfy, desktop pop-ups while the portal page is open | - |
+
+## Conviction stars
+
+| Star | Rule | Tested (Aug 2025 - Oct 2026, your management) | Buy |
+|---|---|---|---|
+| ★★ Strong launch | From yesterday's close: its best group ★ Top or Strong (top 10%) and closed under its 21 EMA (Trend Negative): a launch out of a pullback | +0.55R a trade on 222 live launch alerts, 42% won, both halves positive (all launch alerts +0.16R) | When it launches (Launching today, the ★★ desktop alert): over the 5-minute opening range high, stop its low |
+| ★ Launch, trend up | From yesterday's close: Trend Up | +0.33R a trade on 1,203 live launch alerts, both halves positive | Same as ★★ |
+| ⚠ skip | From yesterday's close: no Trend label | -0.05R a trade on 822 live launch alerts | Don't take it |
+| ★★★ High conviction | A pullback entry (retest held, push out of the 21 EMA, 21 EMA retest or undercut & reclaim, breakout undercut & reclaim) on a launch in a ★ Top / Strong group, RS 80+, Trend Up; the 'on a pullback' tag only once it ran 1.25+ ADRs over its launch / breakout level (GDDY Nov 2026: no advance, no retest) | +0.68R a trade on 169, 36% won, 40% ran 20%+, both halves positive; the only combination that beat the luck test | Near the close (3:45-4:00 PM), stop under the day's low |
+| Not starred (tested) | RS 97+ before the open (6 launches in 2 years had it the day before); breakouts on the 5-minute entry (2nd half negative in every combination); buying Launching today at the close (+0.04R); earnings (only 3 months of dates) |  |  |
+| Gapping up | The Pre-market list shows only starred names gapping up in the pre-market scan (after the watch list's close; all of them before 7:00 AM): a launch opens up (5,492 of the 5,493 tested launch alerts). Any gap up counts: ★★ +0.54R on 0-2% gaps, +0.85R on 2-5%, -0.51R on 5%+ (28 trades); ★ +0.44R / +0.10R / +0.36R |  |  |
+| Where | Pre-market tab: '★ Launch watch' (the evening scan's watch list, starred, Copy tickers) and a Stars column on the graded gappers; Launches tab: Stars and Trend (yesterday) on Launching today, ★★★ tags on Launches; desktop alerts with the stars stay on screen until clicked, with a tone. Phone alerts unchanged |  |  |
 
 ## Earnings tab
 
