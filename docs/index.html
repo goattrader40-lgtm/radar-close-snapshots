@@ -832,14 +832,14 @@
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
             <th><button class="tgr-th" data-sort="res_away" title="Resistance: the highs overhead it still has to clear after the buy point: the 3-, 6-, 9-month and 52-week highs, nearest first, with how far each is from the price">Resistance</button></th>
-            <th class="num c2"><button class="tgr-th" data-sort="base_days" title="How long the trigger's base is: for a base top, the sessions since anything traded above it">Base length</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="blen" title="The current base: sessions since its top was set (day 1 = the high, like Base day). Hover a cell: how long nothing traded above that level (ACN Nov 3 2026: 9 sessions since its Oct 22 top 259.39; nothing above 259.39 since Feb 2)">Base length</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_pct">Depth</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_adr" title="The base's depth in the stock's own ADRs: each ticker has its own character">Depth in ADRs</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="surf10" title="Closes in a row above the 10 EMA">Surf 10</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="surf21" title="Closes in a row above the 21 EMA">Surf 21</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="vol_dryup" title="Last 5 days' volume ÷ the 50-day average: under 1 = drying up">Vol dry-up</button></th>
-            <th class="num c3"><button class="tgr-th" data-sort="pct_of_52w_high">% of 52W high</button></th>
-            <th class="num c3"><button class="tgr-th" data-sort="correction_pct">Correction</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="off_high" title="How far the price is under its 52-week high now (live in the session; 0% = at the high). Hover a cell for the high and its date">Off 52W high</button></th>
+            <th class="num c3"><button class="tgr-th" data-sort="corr" title="The deepest drop after the 52-week high, to now: from the high to the lowest low since (ACN: Jan 14 291.09 to Jun 22 118.15 = 59%). Hover a cell for the dates">Correction</button></th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -2365,6 +2365,24 @@ defCalc('industry_perf', {
     td.title = 'Overhead highs to clear (3M = 3-month high, 52W = 52-week high; % = how far over the price): ' + lv.map((x) => x[0] + ' ' + fPrice(x[1])).join(', ');
     return td;
   };
+  /* Launches: Base length (the current base; the level's reach in the tooltip), Off 52W high (now), Correction (now) */
+  const blenCell = (r) => {
+    const td = h('td', 'num c2', r.blen === null || r.blen === undefined ? '—' : String(r.blen));
+    if (r.trig_base_len !== undefined && r.pattern === 'Base top' && num(r.base_days) !== null)
+      td.title = r.trig_base_len + ' sessions since its top ' + fPrice(r.buy_point) + (r.buy_point_top_date ? ' was set (' + fDate(r.buy_point_top_date) + ')' : ' was set') + '; nothing traded above ' + fPrice(r.buy_point) + ' for ' + r.base_days + ' sessions';
+    return td;
+  };
+  const offHighCell = (r) => {
+    const td = h('td', 'num c3' + (r.off_high !== null && r.off_high <= 0.05 ? ' tgr-up' : ''), r.off_high === null ? '—' : r.off_high <= 0.05 ? 'at high' : p1(r.off_high));
+    if (r.h52) td.title = '52-week high ' + fPrice(r.h52) + (r.high_52w_date ? ' (' + fDate(r.high_52w_date) + ')' : '') + '; price ' + fPrice(r.px);
+    return td;
+  };
+  const corrCell = (r) => {
+    const td = h('td', 'num c3', p1(r.corr));
+    if (r.correction_now_pct !== undefined && r.high_52w) td.title = 'From the 52-week high ' + fPrice(r.high_52w) + ' (' + fDate(r.high_52w_date) + ') to the low ' + fPrice(r.correction_low) + ' (' + fDate(r.correction_low_date) + ')';
+    else td.title = 'The launch day\'s correction (the evening scan after this change gives it as of now)';
+    return td;
+  };
   const noRows = (tb, n, text) => { const tr = h('tr'); const td = h('td', 'tgr-lbl', text); td.colSpan = n; tr.append(td); tb.append(tr); };
   const drawLaunches = (symMap) => {
     const doc = st('launch').status === 'ok' ? st('launch').data : null;
@@ -2411,7 +2429,11 @@ defCalc('industry_perf', {
       const px = m && num(m.price) !== null ? num(m.price) : r.price;
       /* today: the live (or the latest close's) change and relative volume, not the launch day's */
       const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct), rvToday = m && num(m.rel_vol) !== null ? num(m.rel_vol) : num(r.rel_vol_today);
-      return Object.assign({}, r, { gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px), types: lnTypes(r, LAG), ltype: lnTypes(r, LAG)[0], gr: grBest(r.symbol), grank: (grBest(r.symbol) || {}).pct ?? null, grank_launch: r.group_pct_launch ?? null });
+      /* now, not the launch day's (the user, Nov 4 2026): off the 52-week high from the live price; the base length and
+         the correction from the evening build (trig_base_len / correction_now_pct; older builds: the old fields) */
+      const h52 = num(r.high_52w) || (m && num(m.high_52w)) || null;
+      const offHigh = h52 && px ? r2(100 * (1 - px / Math.max(h52, px))) : null;
+      return Object.assign({}, r, { off_high: offHigh, h52, blen: r.trig_base_len ?? r.base_days ?? null, corr: r.correction_now_pct ?? r.correction_pct ?? null, gain_now: px && r.close ? r2((px / r.close - 1) * 100) : r.gain_pct, away: num(r.buy_point) && px ? r2((r.buy_point / px - 1) * 100) : null, today, rv_today: rvToday, px, res_away: resAway(r, px), types: lnTypes(r, LAG), ltype: lnTypes(r, LAG)[0], gr: grBest(r.symbol), grank: (grBest(r.symbol) || {}).pct ?? null, grank_launch: r.group_pct_launch ?? null });
     }) : [];
     /* a ticker search shows that stock whatever the other filters */
     const lq = S.lnq.toUpperCase();
@@ -2470,7 +2492,7 @@ defCalc('industry_perf', {
         }
       }
       if (r.cleared) { const t = h('span', 'tgr-gm', 'cleared ' + r.cleared.replace('-month', '-mo') + ' base'); t.title = 'The launch day closed over the top of its ' + r.cleared + ' base, by the candle bodies'; key.append(t); }
-      if (r.neglected) { const n = h('span', 'tgr-gm', 'neglected'); n.title = r.days_since_high + ' days since its high, ' + r.correction_pct + '% correction'; key.append(n); }
+      if (r.neglected) { const n = h('span', 'tgr-gm', 'neglected'); n.title = 'On the launch day: ' + r.days_since_high + ' days since its high, a ' + r.correction_pct + '% correction'; key.append(n); }
       if (r.tight_days >= 2) { const t = h('span', 'tgr-gm', 'tight ×' + r.tight_days); t.title = r.tight_days + ' tight days in a row just under the buy point (tight bodies of half an ADR or less, whatever the wicks, within an ADR of it): a breakout may come next'; key.append(t); }
       if (r.retest_today) {
         const lv = r.retest_level != null ? fPrice(r.retest_level) + (r.retest_level_wick > r.retest_level * 1.001 ? '–' + fPrice(r.retest_level_wick) + ' (bodies–wicks)' : '') : fPrice(r.last_breakout_top);
@@ -2525,9 +2547,9 @@ defCalc('industry_perf', {
         h('td', 'nw', r.base_pattern ? r.base_pattern.replace('Base forming (no pattern yet)', 'Forming (no pattern yet)') : '—'), ex, legTd,
         h('td', 'c2' + (r.breakout_today || r.flag_breakout_today || r.base_breakout_today || r.dry_entry_today || r.breakout_reclaim_today ? ' tgr-up' : ''),
           r.breakout_reclaim_today ? 'Breakout undercut & reclaim today' : r.base_breakout_today ? (r.breakout_caution ? 'Base breakout today, with caution (within 0.5%)' : 'Base breakout today (leg ' + r.leg + ')') + (r.double_breakout ? ' · double' : '') : r.ema21_today ? (r.ema21_today === 'undercut' ? '21 EMA undercut & reclaim today (strong)' : '21 EMA retest today') : r.dry_entry_today ? 'Pop out of the consolidation today (in base)' : r.flag_breakout_today ? (r.flag_shape === 'pennant' ? 'Bull pennant breakout today (entry in the base)' : 'Bull flag breakout today (entry in the base)') : r.breakout_today ? r.pattern + ' · breakout today' : num(r.buy_point) !== null && r.pattern ? r.pattern : '—'), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
-        h('td', 'num', p1(r.away, true)), resCell(r, r.px), h('td', 'num c2', r.base_days === null || r.base_days === undefined ? '—' : String(r.base_days)), h('td', 'num c2', p1(r.base_depth_pct)), h('td', 'num c2', r.base_depth_adr === null || r.base_depth_adr === undefined ? '—' : num(r.base_depth_adr).toFixed(1) + '×'),
+        h('td', 'num', p1(r.away, true)), resCell(r, r.px), blenCell(r), h('td', 'num c2', p1(r.base_depth_pct)), h('td', 'num c2', r.base_depth_adr === null || r.base_depth_adr === undefined ? '—' : num(r.base_depth_adr).toFixed(1) + '×'),
         h('td', 'num c3', String(r.surf10 ?? '—')), h('td', 'num c3', String(r.surf21 ?? '—')), h('td', 'num c3' + (num(r.vol_dryup) !== null && r.vol_dryup < 1 ? ' tgr-up' : ''), r.vol_dryup === null ? '—' : num(r.vol_dryup).toFixed(2) + '×'),
-        h('td', 'num c3', p1(r.pct_of_52w_high)), h('td', 'num c3', p1(r.correction_pct)));
+        offHighCell(r), corrCell(r));
       tb.append(tr);
     });
     /* the 50 EMA undercut tab (your rule, Nov 1 2026): launches that closed under their 50 EMA 2 days in a row; the next
