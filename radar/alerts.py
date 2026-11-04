@@ -70,13 +70,106 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               half of the day: the 21 EMA retest holding into the close (after a controlled pullback, the closes held
               over it: TTAN Oct 29 2026, ARM May 18) or the undercut & reclaim (after 2 closes under it, strong: SMCI Jun
               27 2023). The buy is the close; the scan after the close confirms it
+              The retest alone is a heads-up; holding over the breakout level too (today's low within 1 ADR over
+              it) it is a trigger, "RETEST + BREAKOUT LEVEL" (the user's RPD Nov 3 2026: 2 confluences)
+Triggers (the buys, TRIGGERS) always get their own push, up to MAX_TRIGGERS a run, after today's 1-minute chart checks;
+heads-ups fill the rest of MAX_PER_RUN and the others are grouped into one push naming each. Every alert's full text
+is saved in alerts.json items (kind trigger / heads-up / summary, grouped) for the portal's log.
 Nothing but the early heads-ups is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
 """
 import datetime, json, os, sys, urllib.request, zoneinfo
 
 NY = zoneinfo.ZoneInfo("America/New_York")
-MAX_PER_RUN = 8
+MAX_PER_RUN = 8               # pushes a run: the triggers first, then heads-ups; the rest grouped into one
+MAX_TRIGGERS = 15             # triggers a run that always get their own push (a market-wide gap day: the rest grouped)
+# the buys (the user, Nov 3 2026: "so it gets my attention"); everything else is a heads-up. The 21 EMA retest alone is a
+# heads-up (the user: "21 ema retest is not a strong sign by itself"); with the breakout level under it (ema21bl) a trigger
+TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "breakout", "retest", "reclaimbo2",
+            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl"}
+
+
+def is_trigger(key, title=""):
+    if key.startswith("grp:"):                          # a group move (2+ stocks of a theme / group alerting today)
+        return True
+    kind = key.split(":", 1)[1] if ":" in key else ""
+    if kind == "ema21":                                  # the 21 EMA undercut & reclaim (2 closes under: strong) is one
+        return "UNDERCUT" in (title or "")
+    return kind in TRIGGERS
+
+
+def short(a):
+    """a grouped alert in a few words: the ticker, its kind and the price (RPD at its 21 EMA $14.60)"""
+    key, title, msg = a[0], a[1] or "", a[2] or ""
+    sym = key.split(":")[0]
+    import re
+    m = re.search(r"\$(\d[\d,]*\.\d+)", msg)
+    what = title[len(sym):].strip() if title.startswith(sym) else title
+    what = re.split(r" \+ | \(|: ", what)[0]
+    return f"{sym} {what}" + (f" ${m.group(1)}" if m else "")
+
+
+# a few words for each kind, for the group-move lines (RPD 21 EMA + breakout level 3:46)
+KIND_WORDS = {"retest": "retest holding", "zone": "in the retest zone", "ema21": "21 EMA retest", "ema21bl": "21 EMA + breakout level",
+              "ema21zone": "at the 21 EMA", "breakout": "breakout", "touch": "touched the buy point", "confirm": "breakout confirmed",
+              "power": "power day", "catalyst": "catalyst gap", "basebreak": "base high cleared", "launch": "launch",
+              "reversal": "reversal launch", "laggard": "laggard launch", "reclaimbo": "back over its breakout level",
+              "reclaimbo2": "breakout undercut & reclaim", "ema50back": "back over the 50 EMA", "ema50": "50 EMA undercut & reclaim",
+              "push": "push", "pop": "pop", "gapbase": "gap out of base", "gob1": "gap out of base", "gob5": "gap out of base",
+              "s3": "3-SETUPS trigger", "early": "early gap", "near": "gapping to the buy point"}
+
+
+def kind_words(key, title=""):
+    kind = key.split(":", 1)[1] if ":" in key else ""
+    if kind == "ema21" and "UNDERCUT" in (title or ""):
+        return "21 EMA undercut & reclaim"
+    return KIND_WORDS.get(kind, kind)
+
+
+def group_moves(doc, state, alerts_now, now):
+    """the user (Nov 3 2026, RPD and QLYS both in Cybersecurity at 3:46 PM): 2+ stocks of the same theme or tight
+    industry group alerting the same day is a group move. Returns {group: [(sym, words, time), ...]} for the groups with
+    2+ stocks, from today's alerts so far plus this run's; the loose "· other" industries don't count"""
+    loose = {r["group"] for r in (doc.get("group_rank") or {}).get("rows", []) if r.get("loose")}
+    seen = {}
+    past = [(it["key"], it.get("title"), it.get("time")) for it in state.get("items", [])
+            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:"))]
+    for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now]:
+        sym = key.split(":")[0]
+        for g in _GROUPS.get(sym, []):
+            if g in loose or "· other" in g:
+                continue
+            lst = seen.setdefault(g, [])
+            if not any(x[0] == sym for x in lst):
+                lst.append((sym, kind_words(key, title), t))
+    pct = {r["group"]: r.get("pct") or 0 for r in (doc.get("group_rank") or {}).get("rows", [])}
+    best = {}
+    # a theme and an industry group with the same stocks alerting (Cybersecurity / Software: Cybersecurity) are one
+    # move: the better-ranked one names it
+    for g, v in seen.items():
+        if len(v) < 2:
+            continue
+        ss = frozenset(x[0] for x in v)
+        if ss not in best or pct.get(g, 0) > pct.get(best[ss], 0):
+            best[ss] = g
+    return {g: seen[g] for g in best.values()}
+
+
+def group_label(doc, g):
+    r = next((x for x in (doc.get("group_rank") or {}).get("rows", []) if x["group"] == g), None)
+    if not r:
+        return g
+    tier = ("★ Top " if r.get("tier") == "Top" else "Strong " if r.get("tier") == "Strong" else "")
+    return f"{g} ({tier}#{r['rank']}/{r['of']}, {r.get('members')} stocks)"
+
+
+def confluence_level(r, price, low):
+    """the breakout level under a 21 EMA retest: the price over it and today's low within 1 ADR over it (or under it)"""
+    lv = r.get("retest_level") or r.get("last_breakout_top")
+    adr = (r.get("adr_pct") or 5.0) / 100
+    if not (lv and price and low and price > lv and low <= lv * (1 + adr)):
+        return None
+    return lv
 
 
 def grade(rv, bo, gap, chg, R, under):
@@ -547,6 +640,7 @@ def chart_low_today(sym):
 MIN_OVER_LOW52 = 30          # % over the 52-week low every alert needs (scanner/settings.json standard)
 _LOW52 = None
 _SMA200 = {}
+_GROUPS = {}                 # symbol -> its themes and its tight industry group (stocks.json themes " | ", group)
 
 
 def over_sma200(sym, live):
@@ -568,6 +662,8 @@ def low52_of(launch_p):
                     st = json.load(open(p))
                     _LOW52 = {s["symbol"]: s.get("low_52w") for s in st}
                     _SMA200.update({s["symbol"]: s.get("sma200") for s in st})
+                    _GROUPS.update({s["symbol"]: [t for t in str(s.get("themes") or "").split(" | ") if t]
+                                    + ([s["group"]] if s.get("group") else []) for s in st})
                     break
                 except Exception:
                     pass
@@ -639,11 +735,10 @@ def main():
             continue
         new.append(a)
     topic = os.environ.get("NTFY_TOPIC", "").strip()
-    if len(new) > MAX_PER_RUN:          # a flood (a market-wide gap): one summary instead of a stack of pushes
-        new = new[:MAX_PER_RUN - 1] + [(f"summary:{now:%H%M}", f"{len(new) - MAX_PER_RUN + 1} more alerts",
-                                        ", ".join(a[0].split(":")[0] for a in new[MAX_PER_RUN - 1:]), "default", "SPY")] \
-            + [(a[0], None, None, None, None) for a in new[MAX_PER_RUN - 1:]]
+    # the cap on pushes comes AFTER today's 1-minute chart checks (below), so only alerts that passed them take a slot
+    # (Nov 3 2026: 28 alerts at 3:46 PM, 6 of the first 8 failed their check and RPD's 21 EMA retest was folded unchecked)
     new += quiet
+    passed = []
     for key, title, msg, prio, tvs in new:
         if title is not None and key.endswith((":gapbase", ":gob1", ":gob5", ":gob950")):
             # gap out of base: the opening ranges from today's 1-minute chart; the 9:50 check only after a gap alert
@@ -734,21 +829,82 @@ def main():
             orh, q = opening_range_high(key.split(":")[0]), live["rows"].get(key.split(":")[0])
             if orh and q:
                 msg += f" · 5-min opening range high ${orh:.2f}: " + (f"{100 * (q[0] / orh - 1):.1f}% above it" if q[0] > orh else "not cleared yet")
-        if title is not None:
-            line = f"{now:%H:%M} {title}: {msg}"
-            state.setdefault("items", []).append({"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs})
-            if topic:
-                try:
-                    send(topic, title, msg, prio, tvs)
-                except Exception as e:
-                    print("alert not sent:", e, file=sys.stderr)
-                    continue
-            print(line)
-            state.setdefault("log", []).append(line)
+        if title is not None and key.endswith(":ema21") and "RETEST" in title:
+            # your read (RPD Nov 3 2026): the 21 EMA retest alone is no strong buy; holding over the breakout level too, with
+            # today's low within 1 ADR over it, is two confluences: it says so and counts as a trigger
+            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
+            q_, lo_ = live["rows"].get(key.split(":")[0]), chart_low_today(key.split(":")[0])
+            if confluence_level(r_, q_[0] if q_ else None, lo_):
+                lvl_ = confluence_level(r_, q_[0], lo_)
+                title = title.replace("RETEST holding", f"RETEST + BREAKOUT LEVEL ${lvl_:.2f} holding")
+                msg += f" · also holding over its breakout level ${lvl_:.2f} (broken {r_.get('last_breakout_date')}): 2 confluences"
+                key = key + "bl"
+        if title is None:
+            state["sent"].append(key)
+            continue
+        passed.append((key, title, msg, prio, tvs))
+    # triggers (the buys) always get their own alert, up to MAX_TRIGGERS a run; the heads-ups fill what is left of
+    # MAX_PER_RUN and the rest are grouped into one alert that still names each one, its kind and price. Every alert's
+    # full text is saved in alerts.json either way, so the portal's log shows each one (grouped ones without a pop-up)
+    # one alert per move: a stock whose breakout-level retest holds doesn't also get its 21 EMA retest
+    rt = {a[0].split(":")[0] for a in passed if a[0].endswith(":retest")}
+    for a in [a for a in passed if a[0].split(":")[0] in rt and a[0].endswith((":ema21", ":ema21bl"))]:
+        passed.remove(a)
+        state["sent"] += [a[0]] + ([a[0][:-2]] if a[0].endswith("bl") else [])
+    trig = [a for a in passed if is_trigger(a[0], a[1])]
+    heads = [a for a in passed if not is_trigger(a[0], a[1])]
+    solo = trig[:MAX_TRIGGERS] + heads[:max(0, MAX_PER_RUN - len(trig[:MAX_TRIGGERS]))]
+    grouped = trig[MAX_TRIGGERS:] + heads[max(0, MAX_PER_RUN - len(trig[:MAX_TRIGGERS])):]
+    if len(grouped) == 1:
+        solo, grouped = solo + grouped, []
+    out_ = [(a, False) for a in solo] + [(a, True) for a in grouped]
+    # group moves: each alert of a stock whose theme / group has 2+ stocks alerting today says so, and the group gets its
+    # own alert once a day (a trigger: own push, a loud pop-up on the desktop)
+    low52_of(launch_p)
+    gm = group_moves(doc, state, solo + grouped, now)
+    if gm:
+        tagged = []
+        for (key, title, msg, prio, tvs), g_ in out_:
+            sym = key.split(":")[0]
+            mine = [g for g in gm if any(x[0] == sym for x in gm[g])]
+            for g in mine:
+                others = ", ".join(f"{x[0]} {x[1]} {x[2]}" for x in gm[g] if x[0] != sym)
+                msg += f" · {g.upper()} MOVE: also {others}"
+            tagged.append(((key, title, msg, prio, tvs), g_))
+        out_ = tagged
+        for g, lst in gm.items():
+            gk = f"grp:{g}"
+            if gk in state["sent"]:
+                continue
+            out_.append(((gk, f"GROUP MOVE: {group_label(doc, g)}: " + ", ".join(x[0] for x in lst),
+                          " · ".join(f"{x[0]} {x[1]} {x[2]}" for x in lst) + f" · {len(lst)} stocks of {g} alerting today",
+                          "high", ""), False))
+    if grouped:
+        names = " · ".join(short(a) for a in grouped)
+        out_.append(((f"summary:{now:%H%M}", f"{len(grouped)} more heads-ups (in the portal's alert log)", names, "default", ""), False))
+    for (key, title, msg, prio, tvs), is_grouped in out_:
+        line = f"{now:%H:%M} {title}: {msg}"
+        it = {"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs,
+              "kind": "summary" if key.startswith("summary:") else "trigger" if is_trigger(key, title) else "heads-up",
+              "groups": _GROUPS.get(key.split(":")[0], [])}
+        if is_grouped:
+            it["grouped"] = True
+        state.setdefault("items", []).append(it)
+        if topic and not is_grouped:
+            try:
+                send(topic, title, msg, prio, tvs)
+            except Exception as e:
+                print("alert not sent:", e, file=sys.stderr)
+                state["items"].pop()
+                continue
+        print(line)
+        state.setdefault("log", []).append(line)
         state["sent"].append(key)
+        if key.endswith(":ema21bl"):
+            state["sent"].append(key[:-2])
     state["sent"] = sorted(set(state["sent"]))
     json.dump(state, open(state_p, "w"), indent=1)
-    print(f"alerts: {sum(1 for a in new if a[1])} new, {len(state['sent'])} today" + ("" if topic else " (no NTFY_TOPIC: logged, not sent)"))
+    print(f"alerts: {len(out_)} new, {len(state['sent'])} today" + ("" if topic else " (no NTFY_TOPIC: logged, not sent)"))
 
 
 if __name__ == "__main__":
