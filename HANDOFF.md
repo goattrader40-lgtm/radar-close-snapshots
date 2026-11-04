@@ -89,6 +89,26 @@ alone.
   rewrites the day's bar in the evening) -> a Nov 2 list; launch.json restored from 707ac36 (690f248). Don't run
   picks.yml in the evening without checking launch.json "date" afterwards.
 
+## Status at the end of the session "Radar: work session (Nov 4)" (Nov 3 evening - early Nov 4 2026)
+
+- **Live on main** (each after the user's "go live"; regress: every agreed example reads the same): the RS / Trend
+  filters on the Watchlist and Launches, the narrower Group rank / Group on launch day / 21 EMA exit / Resistance cells,
+  Download for TradingView on Launches (test/filters); Off 52W high, Correction (now) and Base length (the current base)
+  on Launches (test/accurate; Base length / Correction show with the first Launches build on the new code, the Nov 4 4:40
+  PM scan); the Follow picks guard (test/guard). Details in the entries below.
+- **Only on a test branch**: `test/grfilter` = the Group tick-box filter on Launches / Launch laggards (★ Top / Strong /
+  Rest / No rank, the Group rank column's tier; Nov 3 close: Top + Strong = 24 of 113). The user saw it but never said
+  "go live". It now CONFLICTS with main in docs/index.html (another session added a Watchlist Group rank dropdown in the
+  same .tgr-flt builder): rebuild it on top of main (reuse that session's style for Launches) before asking for the go.
+- **Data fix**: setups/launch.json restored by hand to the Nov 3 build minus SLN (ea5222b) after the 9:10 PM rebuild.
+- **No new agreed reads** (tools/examples.txt unchanged). Phone alerts, Alpaca, fetch.py untouched.
+- **Open**: Launches Group filter (above); Base day still follows the Status (MRNA: top Oct 21 = Base length 10, Base day
+  17): ask if it should count from the base's high; whether the user's "135 off the 52W high" for ACN came from another
+  source (the portal: 12.6% under 291.09 at 254.56).
+- **First thing to check next session**: after the Nov 4 4:40 PM scan, Launches rows carry trig_base_len /
+  off_52w_high_pct / correction_now_pct (ACN-like rows: Base length = Base day); any Follow picks run in the evening logs
+  "GUARD" if Yahoo serves an older close.
+
 ## Launches: accurate Base length, Off 52W high, Correction (live Nov 4 2026, the user's "go live"; branch test/accurate)
 
 - **Off 52W high** replaces "% of 52W high" (that was the launch day's: ACN 73% = the Oct 1 close 212.30 / the Jan 14
