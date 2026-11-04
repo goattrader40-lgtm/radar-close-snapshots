@@ -45,6 +45,15 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Launch watch: ADR column, earnings Read and grade (live Nov 4 2026 morning, the user's "go live"; branch test/lwcols)
+
+- Pre-market tab, ★ Launch watch card only (display): an **ADR** column (adr_20 at the last close, base_stocks.json;
+  red under 3.5%) after To base high; the **Earnings** cell adds the Earnings tab's **Read** badge (earnings.json read,
+  points / why in the tooltip) once reported, and **Claude's 8:45 AM grade** (premarket.json, graded today) with the
+  catalyst / reason in the tooltip. Nov 4: IT / TRI Mixed, BRKR / KD Bullish, PCOR Strong bullish, SWKS / QDEL Somewhat
+  bearish; no starred name was graded that morning (RIOT DUOL NVTS ARRY FSLR OSCR HCA PLUG), the badge checked with a
+  fake row in the browser. Not a rule: no rules workbook change, no regress needed.
+
 ## 3-SETUPS: every buy point alerts live; Watchlist alert log; Group rank filter (live Nov 3 2026 late evening, the user's "go live")
 
 - **Why** (AMPL Nov 3 2026): "Triggered today: Retest held" (its breakout level 15.93-16.18 with the 21 EMA) after the
