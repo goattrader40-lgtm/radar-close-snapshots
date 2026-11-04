@@ -5,7 +5,7 @@
   "1-EP/GAP": 24,
   "1-UPDAY": 111,
   "2-POOL": 166,
-  "3-SETUPS": 63
+  "3-SETUPS": 53
  },
  "changes_today": [
   {
@@ -1604,7 +1604,7 @@
     "resistance": [
      [
       "3m",
-      50.96
+      51.1
      ],
      [
       "6m",
@@ -1653,7 +1653,7 @@
     "resistance": [
      [
       "3m",
-      14.1
+      14.11
      ],
      [
       "9m",
@@ -2162,7 +2162,7 @@
     "resistance": [
      [
       "3m",
-      116.55
+      117.5
      ]
     ]
    },
@@ -2428,7 +2428,7 @@
     "resistance": [
      [
       "3m",
-      24.42
+      24.5
      ],
      [
       "52w",
@@ -7104,7 +7104,7 @@
     "resistance": [
      [
       "3m",
-      116.55
+      117.5
      ]
     ]
    },
@@ -12330,6 +12330,16 @@
     "twenty_day_high": 12.24,
     "days_since_20d_high": 5,
     "added": "2026-10-23",
+    "resistance": [
+     [
+      "3m",
+      12.24
+     ],
+     [
+      "52w",
+      15.28
+     ]
+    ],
     "section": "Triggered today",
     "setup": "21 EMA retest",
     "setups": [],
@@ -12343,16 +12353,45 @@
     "tight_days": 0,
     "vol_dryup": 0.7,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      12.24
+    "live": {
+     "adr_pct": 5.53,
+     "buy_point": 11.36,
+     "buy_point_top_date": null,
+     "day_open": 10.8,
+     "price": 11.15,
+     "ema10": 11.19,
+     "ema21": 10.76,
+     "ema50": 10.0,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": false,
+     "retest_level": 11.5,
+     "retest_level_wick": 11.64,
+     "retest_need_low": 11.23,
+     "retest_zone": [
+      10.55,
+      11.66
      ],
-     [
-      "52w",
-      15.28
-     ]
-    ]
+     "retest_from": "2026-10-23",
+     "retest_tried": null,
+     "retest_low": 10.51,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 7,
+     "vol_build": 0.71,
+     "gap_base_level": 12.24,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 8.9
+    }
    },
    {
     "symbol": "AMLX",
@@ -12383,6 +12422,12 @@
     "twenty_day_high": 30.0,
     "days_since_20d_high": 8,
     "added": "2026-10-27",
+    "resistance": [
+     [
+      "3m",
+      41.14
+     ]
+    ],
     "section": "Triggered today",
     "setup": "21 EMA retest",
     "setups": [],
@@ -12396,12 +12441,42 @@
     "tight_days": 0,
     "vol_dryup": 0.7,
     "leg": 0,
-    "resistance": [
-     [
-      "3m",
-      41.14
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.86,
+     "buy_point": 30.0,
+     "buy_point_top_date": "2026-10-22",
+     "day_open": 28.52,
+     "price": 29.2,
+     "ema10": 28.35,
+     "ema21": 28.42,
+     "ema50": 28.3,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 0,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 5,
+     "vol_build": 0.45,
+     "gap_base_level": 30.0,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 1.0
+    }
    },
    {
     "symbol": "RPD",
@@ -12433,6 +12508,16 @@
     "days_since_20d_high": 4,
     "flag_top": 18.56,
     "added": "2026-10-05",
+    "resistance": [
+     [
+      "3m",
+      18.56
+     ],
+     [
+      "52w",
+      18.7
+     ]
+    ],
     "section": "Triggered today",
     "setup": "21 EMA retest",
     "setups": [],
@@ -12446,16 +12531,45 @@
     "tight_days": 0,
     "vol_dryup": 1.06,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      18.56
+    "live": {
+     "adr_pct": 8.02,
+     "buy_point": 15.66,
+     "buy_point_top_date": null,
+     "day_open": 14.55,
+     "price": 14.84,
+     "ema10": 15.55,
+     "ema21": 14.71,
+     "ema50": 13.35,
+     "ema21_watch": null,
+     "last_breakout_days_ago": 8,
+     "last_breakout_top": 13.87,
+     "last_breakout_date": "2026-10-22",
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 13.84,
+     "retest_level_wick": 13.87,
+     "retest_need_low": 16.33,
+     "retest_zone": [
+      12.17,
+      14.12
      ],
-     [
-      "52w",
-      18.7
-     ]
-    ]
+     "retest_from": "2026-10-22",
+     "retest_tried": null,
+     "retest_low": 14.41,
+     "retest_testing": false,
+     "breakouts": 1,
+     "sessions": 21,
+     "vol_build": 1.09,
+     "gap_base_level": 18.56,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 20.0
+    }
    },
    {
     "symbol": "CAI",
@@ -12487,6 +12601,12 @@
     "twenty_day_high": 36.5,
     "days_since_20d_high": 4,
     "added": "2026-10-05",
+    "resistance": [
+     [
+      "3m",
+      36.5
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -12500,12 +12620,45 @@
     "tight_days": 0,
     "vol_dryup": 0.77,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      36.5
-     ]
-    ]
+    "live": {
+     "adr_pct": 6.36,
+     "buy_point": 35.2,
+     "buy_point_top_date": null,
+     "day_open": 32.27,
+     "price": 32.85,
+     "ema10": 33.05,
+     "ema21": 31.95,
+     "ema50": 29.22,
+     "ema21_watch": null,
+     "last_breakout_days_ago": 5,
+     "last_breakout_top": 32.89,
+     "last_breakout_date": "2026-10-27",
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": 33.05,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 32.65,
+     "retest_level_wick": 32.89,
+     "retest_need_low": 33.02,
+     "retest_zone": [
+      29.54,
+      33.17
+     ],
+     "retest_from": "2026-10-27",
+     "retest_tried": "2026-11-02",
+     "retest_low": 32.03,
+     "retest_testing": true,
+     "breakouts": 1,
+     "sessions": 21,
+     "vol_build": 0.75,
+     "gap_base_level": 36.5,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 10.0
+    }
    },
    {
     "symbol": "AMPL",
@@ -12535,6 +12688,7 @@
     "days_since_20d_high": 4,
     "added": "2026-10-21",
     "support_low": 15.655,
+    "resistance": [],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -12548,7 +12702,45 @@
     "tight_days": 0,
     "vol_dryup": 1.11,
     "leg": 1,
-    "resistance": []
+    "live": {
+     "adr_pct": 4.59,
+     "buy_point": 17.84,
+     "buy_point_top_date": "2026-10-28",
+     "day_open": 16.51,
+     "price": 16.84,
+     "ema10": 16.8,
+     "ema21": 16.17,
+     "ema50": 14.68,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": 16.84,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 15.93,
+     "retest_level_wick": 16.18,
+     "retest_need_low": 16.61,
+     "retest_zone": [
+      14.83,
+      16.18
+     ],
+     "retest_from": "2026-10-21",
+     "retest_tried": "2026-11-03",
+     "retest_low": 16.16,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 9,
+     "vol_build": 1.11,
+     "gap_base_level": 17.84,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 5.6
+    }
    },
    {
     "symbol": "WAY",
@@ -12578,6 +12770,12 @@
     "days_since_20d_high": 8,
     "added": "2026-10-15",
     "support_low": 26.88,
+    "resistance": [
+     [
+      "52w",
+      37.71
+     ]
+    ],
     "section": "Triggered today",
     "setup": "21 EMA retest",
     "setups": [],
@@ -12589,14 +12787,47 @@
     "base_day": 13,
     "base_depth_adr": 3.9,
     "tight_days": 0,
-    "vol_dryup": 1.03,
+    "vol_dryup": 1.05,
     "leg": 1,
-    "resistance": [
-     [
-      "52w",
-      37.71
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.46,
+     "buy_point": 29.25,
+     "buy_point_top_date": "2026-10-22",
+     "day_open": 25.43,
+     "price": 27.66,
+     "ema10": 28.1,
+     "ema21": 27.65,
+     "ema50": 26.44,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 26.97,
+     "retest_level_wick": 27.69,
+     "retest_need_low": 27.29,
+     "retest_zone": [
+      25.17,
+      27.69
+     ],
+     "retest_from": "2026-10-15",
+     "retest_tried": null,
+     "retest_low": 24.1,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 13,
+     "vol_build": 1.05,
+     "gap_base_level": 29.25,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 5.5
+    }
    },
    {
     "symbol": "CART",
@@ -12629,20 +12860,59 @@
     "days_since_20d_high": 6,
     "added": "2026-10-26",
     "support_low": 52.61,
+    "resistance": [],
     "section": "Triggered today",
     "setup": "Push out of the 21 EMA",
     "setups": [],
     "source": "1-UPDAY",
     "last_hit": null,
     "why": "Push out of the 21 EMA (from 1-UPDAY 2026-10-26)",
-    "stage": "Push out of the 21 EMA with a gap, after the retest of 56.44-57.98, on light volume (0.91x)",
+    "stage": "Push out of the 21 EMA with a gap, after the retest of 56.44-57.98, on light volume (0.94x)",
     "away_adr": 1.49,
     "base_day": 6,
     "base_depth_adr": 3.6,
     "tight_days": 0,
-    "vol_dryup": 2.25,
+    "vol_dryup": 2.26,
     "leg": 1,
-    "resistance": []
+    "live": {
+     "adr_pct": 4.26,
+     "buy_point": 62.0,
+     "buy_point_top_date": "2026-10-26",
+     "day_open": 57.7,
+     "price": 58.31,
+     "ema10": 56.3,
+     "ema21": 53.53,
+     "ema50": 50.39,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 56.44,
+     "retest_level_wick": 57.98,
+     "retest_need_low": 58.03,
+     "retest_zone": [
+      52.83,
+      57.98
+     ],
+     "retest_from": "2026-10-26",
+     "retest_tried": "2026-10-29",
+     "retest_low": 56.18,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 6,
+     "vol_build": 2.58,
+     "gap_base_level": 62.0,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 6.0
+    }
    },
    {
     "symbol": "QLYS",
@@ -12672,6 +12942,12 @@
     "days_since_20d_high": 2,
     "added": "2026-10-23",
     "support_low": 206.49,
+    "resistance": [
+     [
+      "3m",
+      235.55
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -12685,12 +12961,45 @@
     "tight_days": 0,
     "vol_dryup": 1.03,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      235.55
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.74,
+     "buy_point": 231.09,
+     "buy_point_top_date": "2026-10-28",
+     "day_open": 204.9,
+     "price": 210.57,
+     "ema10": 213.86,
+     "ema21": 206.42,
+     "ema50": 192.02,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": 213.86,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 208.2,
+     "retest_level_wick": 210.1,
+     "retest_need_low": 215.26,
+     "retest_zone": [
+      190.26,
+      211.19
+     ],
+     "retest_from": "2026-10-23",
+     "retest_tried": "2026-10-29",
+     "retest_low": 202.79,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 7,
+     "vol_build": 1.06,
+     "gap_base_level": 231.09,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 10.6
+    }
    },
    {
     "symbol": "DOCS",
@@ -12706,7 +13015,7 @@
     "base_bars": null,
     "base_depth_pct": null,
     "msf_score": 0,
-    "adr_pct": 3.92,
+    "adr_pct": 3.93,
     "rel_vol": 0.9,
     "dollar_vol_30d_m": 94.0,
     "perf_1m_pct": 14.0,
@@ -12720,6 +13029,16 @@
     "days_since_20d_high": 3,
     "added": "2026-10-20",
     "support_low": 31.82,
+    "resistance": [
+     [
+      "3m",
+      40.0
+     ],
+     [
+      "52w",
+      67.1
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -12733,16 +13052,45 @@
     "tight_days": 0,
     "vol_dryup": 0.77,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      40.0
+    "live": {
+     "adr_pct": 3.93,
+     "buy_point": 34.8,
+     "buy_point_top_date": null,
+     "day_open": 32.38,
+     "price": 32.6,
+     "ema10": 32.82,
+     "ema21": 31.73,
+     "ema50": 29.25,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": 32.82,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 31.97,
+     "retest_level_wick": 32.11,
+     "retest_need_low": 32.75,
+     "retest_zone": [
+      30.08,
+      32.28
      ],
-     [
-      "52w",
-      67.1
-     ]
-    ]
+     "retest_from": "2026-10-20",
+     "retest_tried": "2026-11-03",
+     "retest_low": 31.93,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 10,
+     "vol_build": 0.75,
+     "gap_base_level": 34.8,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 6.3
+    }
    },
    {
     "symbol": "ARLO",
@@ -12772,19 +13120,6 @@
     "days_since_20d_high": 1,
     "added": "2026-10-29",
     "support_low": 13.59,
-    "section": "Triggered today",
-    "setup": "Retest held",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "Retest held (from 1-UPDAY 2026-10-29)",
-    "stage": "Retest of the breakout level 13.64 held + confluence: 10 EMA",
-    "away_adr": 1.77,
-    "base_day": 3,
-    "base_depth_adr": 1.8,
-    "tight_days": 0,
-    "vol_dryup": 1.44,
-    "leg": 1,
     "resistance": [
      [
       "3m",
@@ -12798,7 +13133,59 @@
       "52w",
       19.35
      ]
-    ]
+    ],
+    "section": "Triggered today",
+    "setup": "Retest held",
+    "setups": [],
+    "source": "1-UPDAY",
+    "last_hit": null,
+    "why": "Retest held (from 1-UPDAY 2026-10-29)",
+    "stage": "Retest of the breakout level 13.64 held + confluence: 10 EMA",
+    "away_adr": 1.77,
+    "base_day": 3,
+    "base_depth_adr": 1.8,
+    "tight_days": 0,
+    "vol_dryup": 1.44,
+    "leg": 1,
+    "live": {
+     "adr_pct": 5.28,
+     "buy_point": 14.99,
+     "buy_point_top_date": null,
+     "day_open": 14.19,
+     "price": 13.71,
+     "ema10": 13.54,
+     "ema21": 13.17,
+     "ema50": 13.1,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": 14.19,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 13.64,
+     "retest_level_wick": 13.65,
+     "retest_need_low": 13.8,
+     "retest_zone": [
+      12.56,
+      13.82
+     ],
+     "retest_from": "2026-10-29",
+     "retest_tried": "2026-11-03",
+     "retest_low": 13.57,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 3,
+     "vol_build": 1.52,
+     "gap_base_level": 14.99,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 8.5
+    }
    },
    {
     "symbol": "EAT",
@@ -12828,6 +13215,12 @@
     "days_since_20d_high": 4,
     "added": "2026-10-28",
     "support_low": 201.83,
+    "resistance": [
+     [
+      "3m",
+      254.99
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -12841,64 +13234,45 @@
     "tight_days": 0,
     "vol_dryup": 1.29,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      254.99
-     ]
-    ]
-   },
-   {
-    "symbol": "ECHO",
-    "tv": "NASDAQ:ECHO",
-    "close": 101.94,
-    "chg_pct": 3.8,
-    "grade": "",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 3.7,
-    "pattern": "",
-    "buy_point": null,
-    "to_buy_point_pct": null,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 4.3,
-    "rel_vol": 1.0,
-    "dollar_vol_30d_m": 424.0,
-    "perf_1m_pct": 4.0,
-    "perf_3m_pct": 16.0,
-    "off_52w_high_pct": 30.8,
-    "ema21": 93.19,
-    "ema50": 92.75,
-    "sma200": 106.52,
-    "entries": {},
-    "twenty_day_high": 102.46,
-    "days_since_20d_high": 0,
-    "added": "2026-10-28",
-    "support_low": 87.5608,
-    "section": "Triggered today",
-    "setup": "Base breakout",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "Base breakout (from 1-UPDAY 2026-10-28)",
-    "stage": "Base breakout (leg 1), closed 1.0% (0.2 ADR) over the base high 100.90 (a 3-month high)",
-    "away_adr": null,
-    "base_day": 0,
-    "base_depth_adr": null,
-    "tight_days": 0,
-    "vol_dryup": 1.57,
-    "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      102.46
+    "live": {
+     "adr_pct": 5.07,
+     "buy_point": 231.74,
+     "buy_point_top_date": "2026-10-28",
+     "day_open": 212.22,
+     "price": 207.41,
+     "ema10": 205.73,
+     "ema21": 203.03,
+     "ema50": 203.6,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": 212.23,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 206.43,
+     "retest_level_wick": 212.23,
+     "retest_need_low": 214.12,
+     "retest_zone": [
+      190.74,
+      212.23
      ],
-     [
-      "6m",
-      147.25
-     ]
-    ]
+     "retest_from": "2026-10-28",
+     "retest_tried": "2026-11-02",
+     "retest_low": 205.19,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 4,
+     "vol_build": 1.39,
+     "gap_base_level": 231.74,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 10.5
+    }
    },
    {
     "symbol": "HTFL",
@@ -12928,6 +13302,12 @@
     "days_since_20d_high": 3,
     "added": "2026-10-20",
     "support_low": 51.0,
+    "resistance": [
+     [
+      "3m",
+      60.56
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -12941,12 +13321,45 @@
     "tight_days": 0,
     "vol_dryup": 0.91,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      60.56
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.86,
+     "buy_point": null,
+     "buy_point_top_date": null,
+     "day_open": 54.3,
+     "price": 54.4,
+     "ema10": 56.06,
+     "ema21": 54.29,
+     "ema50": 49.85,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base forming (no pattern yet)",
+     "flag_shape": null,
+     "push_level": 56.06,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 54.0,
+     "retest_level_wick": 54.32,
+     "retest_need_low": 55.24,
+     "retest_zone": [
+      49.25,
+      54.79
+     ],
+     "retest_from": "2026-10-20",
+     "retest_tried": "2026-11-02",
+     "retest_low": 54.0,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 10,
+     "vol_build": 0.87,
+     "gap_base_level": null,
+     "gap_base_pattern": null,
+     "gap_base_ok": null,
+     "off_high_pct": 10.2
+    }
    },
    {
     "symbol": "KNSA",
@@ -12976,6 +13389,12 @@
     "days_since_20d_high": 2,
     "added": "2026-10-28",
     "support_low": 87.54,
+    "resistance": [
+     [
+      "3m",
+      98.48
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -12989,12 +13408,45 @@
     "tight_days": 0,
     "vol_dryup": 1.89,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      98.48
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.07,
+     "buy_point": null,
+     "buy_point_top_date": null,
+     "day_open": 90.44,
+     "price": 93.29,
+     "ema10": 88.53,
+     "ema21": 84.59,
+     "ema50": 79.95,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 89.2,
+     "retest_level_wick": 90.8,
+     "retest_need_low": 90.99,
+     "retest_zone": [
+      82.41,
+      90.8
+     ],
+     "retest_from": "2026-10-28",
+     "retest_tried": "2026-11-02",
+     "retest_low": 90.44,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 4,
+     "vol_build": 2.09,
+     "gap_base_level": null,
+     "gap_base_pattern": null,
+     "gap_base_ok": null,
+     "off_high_pct": 5.3
+    }
    },
    {
     "symbol": "GLOB",
@@ -13024,19 +13476,6 @@
     "days_since_20d_high": 1,
     "added": "2026-10-30",
     "support_low": 43.91,
-    "section": "Ready",
-    "setup": "Base top",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "Base top 45.85, 0.0 ADR away (from 1-UPDAY 2026-10-30)",
-    "stage": "In the base, day 7, 0% under the top 45.85 (set 2026-10-26) \u00b7 back under its breakout level 45.78: the breakout didn't advance, the base is still valid",
-    "away_adr": 0.03,
-    "base_day": 7,
-    "base_depth_adr": 1.6,
-    "tight_days": 0,
-    "vol_dryup": 1.09,
-    "leg": 1,
     "resistance": [
      [
       "3m",
@@ -13050,7 +13489,59 @@
       "52w",
       72.1
      ]
-    ]
+    ],
+    "section": "Ready",
+    "setup": "Base top",
+    "setups": [],
+    "source": "1-UPDAY",
+    "last_hit": null,
+    "why": "Base top 45.85, 0.0 ADR away (from 1-UPDAY 2026-10-30)",
+    "stage": "In the base, day 7, 0% under the top 45.85 (set 2026-10-26) \u00b7 back under its breakout level 45.78: the breakout didn't advance, the base is still valid",
+    "away_adr": 0.03,
+    "base_day": 7,
+    "base_depth_adr": 1.6,
+    "tight_days": 0,
+    "vol_dryup": 1.09,
+    "leg": 1,
+    "live": {
+     "adr_pct": 5.0,
+     "buy_point": 45.85,
+     "buy_point_top_date": "2026-10-26",
+     "day_open": 46.5,
+     "price": 45.77,
+     "ema10": 44.46,
+     "ema21": 42.22,
+     "ema50": 39.75,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": false,
+     "retest_level": 45.78,
+     "retest_level_wick": 45.85,
+     "retest_need_low": 45.0,
+     "retest_zone": [
+      42.34,
+      46.35
+     ],
+     "retest_from": "2026-10-30",
+     "retest_tried": null,
+     "retest_low": 44.55,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 2,
+     "vol_build": 1.02,
+     "gap_base_level": 45.85,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 5.9
+    }
    },
    {
     "symbol": "KYMR",
@@ -13080,6 +13571,12 @@
     "days_since_20d_high": 0,
     "added": "2026-10-28",
     "support_low": 115.46,
+    "resistance": [
+     [
+      "3m",
+      133.88
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -13093,12 +13590,45 @@
     "tight_days": 0,
     "vol_dryup": 1.52,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      133.88
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.12,
+     "buy_point": 127.85,
+     "buy_point_top_date": "2026-08-25",
+     "day_open": 128.79,
+     "price": 127.09,
+     "ema10": 120.83,
+     "ema21": 116.95,
+     "ema50": 114.25,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 117.57,
+     "retest_level_wick": 119.68,
+     "retest_need_low": 123.59,
+     "retest_zone": [
+      108.54,
+      119.68
+     ],
+     "retest_from": "2026-10-28",
+     "retest_tried": null,
+     "retest_low": 117.31,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 4,
+     "vol_build": 1.61,
+     "gap_base_level": 127.85,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 5.1
+    }
    },
    {
     "symbol": "EPAM",
@@ -13128,19 +13658,6 @@
     "days_since_20d_high": 1,
     "added": "2026-10-30",
     "support_low": 136.54,
-    "section": "Ready",
-    "setup": "Base top",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "Base top 139.17, 0.2 ADR away (from 1-UPDAY 2026-10-30)",
-    "stage": "In the base, day 9, 1% under the top 139.17 (set 2026-10-22) \u00b7 back under its breakout level 138.67: the breakout didn't advance, the base is still valid",
-    "away_adr": 0.17,
-    "base_day": 9,
-    "base_depth_adr": 1.4,
-    "tight_days": 0,
-    "vol_dryup": 1.08,
-    "leg": 1,
     "resistance": [
      [
       "3m",
@@ -13154,64 +13671,59 @@
       "52w",
       222.53
      ]
-    ]
-   },
-   {
-    "symbol": "STOK",
-    "tv": "NASDAQ:STOK",
-    "close": 26.99,
-    "chg_pct": 1.9,
-    "grade": "",
-    "higher_high_low": true,
-    "pullback_from_20d_high_pct": 3.2,
-    "pattern": "Base top",
-    "buy_point": 27.22,
-    "to_buy_point_pct": 0.9,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 4.71,
-    "rel_vol": 1.0,
-    "dollar_vol_30d_m": 35.0,
-    "perf_1m_pct": 7.0,
-    "perf_3m_pct": -15.0,
-    "off_52w_high_pct": 32.9,
-    "ema21": 25.91,
-    "ema50": 26.93,
-    "sma200": 30.89,
-    "entries": {
-     "flat_top": 27.52
-    },
-    "twenty_day_high": 27.52,
-    "days_since_20d_high": 0,
-    "added": "2026-11-03",
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
-    "source": "2-POOL",
+    "source": "1-UPDAY",
     "last_hit": null,
-    "why": "Base top 27.22, 0.2 ADR away (from 2-POOL 2026-11-03)",
-    "stage": "In the base, day 11, 1% under the top 27.22 (set 2026-10-20)",
-    "away_adr": 0.18,
-    "base_day": 11,
-    "base_depth_adr": 2.1,
+    "why": "Base top 139.17, 0.2 ADR away (from 1-UPDAY 2026-10-30)",
+    "stage": "In the base, day 9, 1% under the top 139.17 (set 2026-10-22) \u00b7 back under its breakout level 138.67: the breakout didn't advance, the base is still valid",
+    "away_adr": 0.17,
+    "base_day": 9,
+    "base_depth_adr": 1.4,
     "tight_days": 0,
-    "vol_dryup": 1.45,
+    "vol_dryup": 1.09,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      33.94
+    "live": {
+     "adr_pct": 4.3,
+     "buy_point": 139.17,
+     "buy_point_top_date": "2026-10-22",
+     "day_open": 138.62,
+     "price": 138.17,
+     "ema10": 135.83,
+     "ema21": 129.56,
+     "ema50": 120.46,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": false,
+     "retest_level": 138.67,
+     "retest_level_wick": 139.17,
+     "retest_need_low": 136.48,
+     "retest_zone": [
+      129.73,
+      140.16
      ],
-     [
-      "6m",
-      34.35
-     ],
-     [
-      "9m",
-      40.22
-     ]
-    ]
+     "retest_from": "2026-10-30",
+     "retest_tried": null,
+     "retest_low": 133.99,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 2,
+     "vol_build": 1.03,
+     "gap_base_level": 139.17,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 5.3
+    }
    },
    {
     "symbol": "XMTR",
@@ -13227,7 +13739,7 @@
     "base_bars": null,
     "base_depth_pct": null,
     "msf_score": 0,
-    "adr_pct": 8.02,
+    "adr_pct": 8.08,
     "rel_vol": 3.5,
     "dollar_vol_30d_m": 94.0,
     "perf_1m_pct": 3.0,
@@ -13241,6 +13753,12 @@
     "days_since_20d_high": 0,
     "added": "2026-11-03",
     "support_low": 87.0,
+    "resistance": [
+     [
+      "3m",
+      117.5
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -13254,12 +13772,42 @@
     "tight_days": 0,
     "vol_dryup": 1.58,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      116.55
-     ]
-    ]
+    "live": {
+     "adr_pct": 8.08,
+     "buy_point": 112.94,
+     "buy_point_top_date": "2026-10-06",
+     "day_open": 87.8,
+     "price": 111.29,
+     "ema10": 98.51,
+     "ema21": 97.99,
+     "ema50": 96.52,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 0,
+     "vol_build": 1.66,
+     "gap_base_level": 112.94,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 5.3
+    }
    },
    {
     "symbol": "MWH",
@@ -13289,6 +13837,16 @@
     "days_since_20d_high": 0,
     "added": "2026-11-03",
     "support_low": 24.52,
+    "resistance": [
+     [
+      "3m",
+      33.36
+     ],
+     [
+      "6m",
+      48.4
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -13302,16 +13860,42 @@
     "tight_days": 0,
     "vol_dryup": 0.96,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      33.36
-     ],
-     [
-      "6m",
-      48.4
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.71,
+     "buy_point": 27.11,
+     "buy_point_top_date": "2026-10-06",
+     "day_open": 24.72,
+     "price": 26.81,
+     "ema10": 24.03,
+     "ema21": 24.11,
+     "ema50": 25.28,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 0,
+     "vol_build": 0.87,
+     "gap_base_level": 27.11,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 1.5
+    }
    },
    {
     "symbol": "SYRE",
@@ -13340,6 +13924,12 @@
     "twenty_day_high": 100.42,
     "days_since_20d_high": 3,
     "added": "2026-10-20",
+    "resistance": [
+     [
+      "3m",
+      110.17
+     ]
+    ],
     "section": "Ready",
     "setup": "Inner base (last 20 days)",
     "setups": [],
@@ -13351,14 +13941,44 @@
     "base_day": 54,
     "base_depth_adr": 1.3,
     "tight_days": 0,
-    "vol_dryup": 0.54,
+    "vol_dryup": 0.55,
     "leg": 0,
-    "resistance": [
-     [
-      "3m",
-      110.17
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.94,
+     "buy_point": 100.42,
+     "buy_point_top_date": null,
+     "day_open": 97.04,
+     "price": 99.27,
+     "ema10": 95.18,
+     "ema21": 92.23,
+     "ema50": 91.1,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 0,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 10,
+     "vol_build": 0.54,
+     "gap_base_level": 100.42,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 1.1
+    }
    },
    {
     "symbol": "TRAX",
@@ -13389,6 +14009,12 @@
     "twenty_day_high": 47.55,
     "days_since_20d_high": 3,
     "added": "2026-10-30",
+    "resistance": [
+     [
+      "3m",
+      49.91
+     ]
+    ],
     "section": "Ready",
     "setup": "Inner base (last 20 days)",
     "setups": [],
@@ -13402,12 +14028,42 @@
     "tight_days": 0,
     "vol_dryup": 0.54,
     "leg": 0,
-    "resistance": [
-     [
-      "3m",
-      49.91
-     ]
-    ]
+    "live": {
+     "adr_pct": 8.5,
+     "buy_point": 47.55,
+     "buy_point_top_date": null,
+     "day_open": 45.54,
+     "price": 46.34,
+     "ema10": 43.84,
+     "ema21": 41.3,
+     "ema50": 39.1,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 0,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 2,
+     "vol_build": 0.53,
+     "gap_base_level": 47.55,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 0.8
+    }
    },
    {
     "symbol": "MNDY",
@@ -13423,7 +14079,7 @@
     "base_bars": 9.0,
     "base_depth_pct": 20.2,
     "msf_score": 40,
-    "adr_pct": 5.61,
+    "adr_pct": 5.62,
     "rel_vol": 1.2,
     "dollar_vol_30d_m": 98.0,
     "perf_1m_pct": 13.0,
@@ -13439,6 +14095,16 @@
     "twenty_day_high": 110.77,
     "days_since_20d_high": 8,
     "added": "2026-10-14",
+    "resistance": [
+     [
+      "3m",
+      110.77
+     ],
+     [
+      "52w",
+      210.49
+     ]
+    ],
     "section": "Ready",
     "setup": "Bull flag (trendline)",
     "setups": [],
@@ -13452,70 +14118,42 @@
     "tight_days": 0,
     "vol_dryup": 0.91,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      110.77
-     ],
-     [
-      "52w",
-      210.49
-     ]
-    ]
-   },
-   {
-    "symbol": "TEX",
-    "tv": "NYSE:TEX",
-    "close": 57.52,
-    "chg_pct": -0.3,
-    "grade": "",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 5.0,
-    "pattern": "Base top",
-    "buy_point": 58.41,
-    "to_buy_point_pct": 1.5,
-    "base_bars": 92.0,
-    "base_depth_pct": 34.5,
-    "msf_score": 40,
-    "adr_pct": 4.55,
-    "rel_vol": 0.6,
-    "dollar_vol_30d_m": 106.0,
-    "perf_1m_pct": 1.0,
-    "perf_3m_pct": -13.0,
-    "off_52w_high_pct": 23.0,
-    "ema21": 54.38,
-    "ema50": 56.58,
-    "sma200": 61.82,
-    "entries": {
-     "flat_top": 59.44
-    },
-    "twenty_day_high": 59.44,
-    "days_since_20d_high": 1,
-    "added": "2026-10-29",
-    "support_low": 51.42,
-    "section": "Ready",
-    "setup": "Base top",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "Base top 58.41, 0.3 ADR away (from 1-UPDAY 2026-10-29)",
-    "stage": "In the base, day 21, 2% under the top 58.41 (set 2026-10-06)",
-    "away_adr": 0.34,
-    "base_day": 21,
-    "base_depth_adr": 3.6,
-    "tight_days": 0,
-    "vol_dryup": 1.74,
-    "leg": 0,
-    "resistance": [
-     [
-      "3m",
-      68.94
-     ],
-     [
-      "6m",
-      74.69
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.62,
+     "buy_point": 95.28,
+     "buy_point_top_date": null,
+     "day_open": 91.05,
+     "price": 93.59,
+     "ema10": 96.39,
+     "ema21": 94.53,
+     "ema50": 91.14,
+     "ema21_watch": null,
+     "last_breakout_days_ago": 8,
+     "last_breakout_top": 102.0,
+     "last_breakout_date": "2026-10-22",
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": 101.14,
+     "retest_level_wick": 102.0,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": "2026-10-22",
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 1,
+     "sessions": 14,
+     "vol_build": 0.92,
+     "gap_base_level": 110.77,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 15.5
+    }
    },
    {
     "symbol": "APPN",
@@ -13548,6 +14186,12 @@
     "days_since_20d_high": 7,
     "added": "2026-10-22",
     "support_low": 48.59,
+    "resistance": [
+     [
+      "3m",
+      54.12
+     ]
+    ],
     "section": "Ready",
     "setup": "Bull flag (trendline)",
     "setups": [],
@@ -13561,12 +14205,45 @@
     "tight_days": 0,
     "vol_dryup": 0.92,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      54.12
-     ]
-    ]
+    "live": {
+     "adr_pct": 6.51,
+     "buy_point": 49.75,
+     "buy_point_top_date": null,
+     "day_open": 47.91,
+     "price": 48.64,
+     "ema10": 48.63,
+     "ema21": 45.96,
+     "ema50": 41.27,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": false,
+     "retest_level": 48.73,
+     "retest_level_wick": 49.31,
+     "retest_need_low": 48.84,
+     "retest_zone": [
+      43.97,
+      49.52
+     ],
+     "retest_from": "2026-10-22",
+     "retest_tried": null,
+     "retest_low": 46.63,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 8,
+     "vol_build": 0.96,
+     "gap_base_level": 54.12,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 10.1
+    }
    },
    {
     "symbol": "VSXY",
@@ -13598,6 +14275,7 @@
     "days_since_20d_high": 0,
     "added": "2026-10-26",
     "support_low": 91.67,
+    "resistance": [],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -13611,7 +14289,45 @@
     "tight_days": 0,
     "vol_dryup": 0.85,
     "leg": 1,
-    "resistance": []
+    "live": {
+     "adr_pct": 5.08,
+     "buy_point": 102.46,
+     "buy_point_top_date": "2026-08-10",
+     "day_open": 100.84,
+     "price": 100.53,
+     "ema10": 95.46,
+     "ema21": 92.18,
+     "ema50": 88.07,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 92.44,
+     "retest_level_wick": 93.39,
+     "retest_need_low": 93.68,
+     "retest_zone": [
+      85.4,
+      93.61
+     ],
+     "retest_from": "2026-10-26",
+     "retest_tried": "2026-10-30",
+     "retest_low": 91.36,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 6,
+     "vol_build": 0.86,
+     "gap_base_level": 102.46,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 0.9
+    }
    },
    {
     "symbol": "ACN",
@@ -13644,6 +14360,16 @@
     "days_since_20d_high": 1,
     "added": "2026-10-30",
     "support_low": 250.85,
+    "resistance": [
+     [
+      "3m",
+      263.66
+     ],
+     [
+      "52w",
+      291.09
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -13657,78 +14383,42 @@
     "tight_days": 0,
     "vol_dryup": 1.0,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      263.66
-     ],
-     [
-      "52w",
-      291.09
-     ]
-    ]
-   },
-   {
-    "symbol": "QDEL",
-    "tv": "NASDAQ:QDEL",
-    "close": 14.09,
-    "chg_pct": 0.4,
-    "grade": "",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 15.0,
-    "pattern": "Base top",
-    "buy_point": 14.65,
-    "to_buy_point_pct": 4.0,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 8.18,
-    "rel_vol": 1.7,
-    "dollar_vol_30d_m": 30.0,
-    "perf_1m_pct": 16.0,
-    "perf_3m_pct": -19.0,
-    "off_52w_high_pct": 60.4,
-    "ema21": 13.38,
-    "ema50": 13.27,
-    "sma200": 16.06,
-    "entries": {
-     "flat_top": 14.65
-    },
-    "twenty_day_high": 14.65,
-    "days_since_20d_high": 9,
-    "added": "2026-11-02",
-    "support_low": 13.09,
-    "section": "Ready",
-    "setup": "Base top",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "Base top 14.65, 0.5 ADR away (from 1-UPDAY 2026-11-02)",
-    "stage": "In the base, day 15, 4% under the top 14.65 (set 2026-10-14)",
-    "away_adr": 0.49,
-    "base_day": 15,
-    "base_depth_adr": 1.8,
-    "tight_days": 0,
-    "vol_dryup": 1.27,
-    "leg": 0,
-    "resistance": [
-     [
-      "3m",
-      17.34
-     ],
-     [
-      "6m",
-      19.8
-     ],
-     [
-      "9m",
-      30.5
-     ],
-     [
-      "52w",
-      35.58
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.21,
+     "buy_point": 259.39,
+     "buy_point_top_date": "2026-10-22",
+     "day_open": 254.56,
+     "price": 254.56,
+     "ema10": 247.6,
+     "ema21": 234.42,
+     "ema50": 212.26,
+     "ema21_watch": null,
+     "last_breakout_days_ago": 1,
+     "last_breakout_top": 259.39,
+     "last_breakout_date": "2026-11-02",
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": 258.74,
+     "retest_level_wick": 259.39,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": "2026-11-02",
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 1,
+     "sessions": 2,
+     "vol_build": 1.02,
+     "gap_base_level": 259.39,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 3.5
+    }
    },
    {
     "symbol": "PRGO",
@@ -13744,7 +14434,7 @@
     "base_bars": 14.0,
     "base_depth_pct": 8.2,
     "msf_score": 60,
-    "adr_pct": 3.95,
+    "adr_pct": 3.96,
     "rel_vol": 1.0,
     "dollar_vol_30d_m": 41.0,
     "perf_1m_pct": 9.0,
@@ -13759,6 +14449,16 @@
     "twenty_day_high": 16.79,
     "days_since_20d_high": 11,
     "added": "2026-10-16",
+    "resistance": [
+     [
+      "3m",
+      16.79
+     ],
+     [
+      "52w",
+      20.65
+     ]
+    ],
     "section": "Ready",
     "setup": "Bull flag (trendline)",
     "setups": [],
@@ -13772,16 +14472,42 @@
     "tight_days": 0,
     "vol_dryup": 0.87,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      16.79
-     ],
-     [
-      "52w",
-      20.65
-     ]
-    ]
+    "live": {
+     "adr_pct": 3.96,
+     "buy_point": 16.01,
+     "buy_point_top_date": null,
+     "day_open": 15.53,
+     "price": 15.7,
+     "ema10": 15.83,
+     "ema21": 15.61,
+     "ema50": 14.79,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 12,
+     "vol_build": 0.87,
+     "gap_base_level": 16.79,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 6.5
+    }
    },
    {
     "symbol": "CLF",
@@ -13797,7 +14523,7 @@
     "base_bars": 12.0,
     "base_depth_pct": 16.0,
     "msf_score": 50,
-    "adr_pct": 6.04,
+    "adr_pct": 6.03,
     "rel_vol": 0.9,
     "dollar_vol_30d_m": 322.0,
     "perf_1m_pct": 16.0,
@@ -13814,6 +14540,16 @@
     "days_since_20d_high": 1,
     "added": "2026-10-19",
     "support_low": 12.94,
+    "resistance": [
+     [
+      "3m",
+      15.03
+     ],
+     [
+      "52w",
+      15.35
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -13827,16 +14563,45 @@
     "tight_days": 0,
     "vol_dryup": 0.99,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      15.03
+    "live": {
+     "adr_pct": 6.03,
+     "buy_point": 14.58,
+     "buy_point_top_date": "2026-10-19",
+     "day_open": 14.25,
+     "price": 14.14,
+     "ema10": 13.88,
+     "ema21": 13.4,
+     "ema50": 12.7,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 12.98,
+     "retest_level_wick": 13.22,
+     "retest_need_low": 13.67,
+     "retest_zone": [
+      11.81,
+      13.22
      ],
-     [
-      "52w",
-      15.35
-     ]
-    ]
+     "retest_from": "2026-10-19",
+     "retest_tried": "2026-10-22",
+     "retest_low": 12.63,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 11,
+     "vol_build": 0.98,
+     "gap_base_level": 14.58,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 5.9
+    }
    },
    {
     "symbol": "MAZE",
@@ -13869,6 +14634,16 @@
     "days_since_20d_high": 9,
     "added": "2026-10-20",
     "support_low": 29.581,
+    "resistance": [
+     [
+      "6m",
+      33.5
+     ],
+     [
+      "9m",
+      53.65
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -13882,16 +14657,45 @@
     "tight_days": 0,
     "vol_dryup": 0.53,
     "leg": 1,
-    "resistance": [
-     [
-      "6m",
-      33.5
+    "live": {
+     "adr_pct": 5.57,
+     "buy_point": 33.19,
+     "buy_point_top_date": "2026-10-21",
+     "day_open": 30.8,
+     "price": 32.25,
+     "ema10": 31.12,
+     "ema21": 29.97,
+     "ema50": 28.6,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": 32.25,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 29.7,
+     "retest_level_wick": 30.57,
+     "retest_need_low": 30.41,
+     "retest_zone": [
+      27.22,
+      30.57
      ],
-     [
-      "9m",
-      53.65
-     ]
-    ]
+     "retest_from": "2026-10-20",
+     "retest_tried": "2026-11-02",
+     "retest_low": 29.75,
+     "retest_testing": true,
+     "breakouts": 0,
+     "sessions": 10,
+     "vol_build": 0.53,
+     "gap_base_level": 33.19,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 2.8
+    }
    },
    {
     "symbol": "HRI",
@@ -13923,6 +14727,12 @@
     "days_since_20d_high": 3,
     "added": "2026-10-27",
     "support_low": 135.2101,
+    "resistance": [
+     [
+      "9m",
+      188.35
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -13936,12 +14746,45 @@
     "tight_days": 0,
     "vol_dryup": 1.12,
     "leg": 1,
-    "resistance": [
-     [
-      "9m",
-      188.35
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.89,
+     "buy_point": 176.0,
+     "buy_point_top_date": "2026-08-17",
+     "day_open": 170.12,
+     "price": 170.01,
+     "ema10": 155.74,
+     "ema21": 146.05,
+     "ema50": 142.71,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 140.05,
+     "retest_level_wick": 141.29,
+     "retest_need_low": 159.01,
+     "retest_zone": [
+      127.68,
+      142.11
+     ],
+     "retest_from": "2026-10-27",
+     "retest_tried": null,
+     "retest_low": 160.96,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 5,
+     "vol_build": 1.2,
+     "gap_base_level": 176.0,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 2.5
+    }
    },
    {
     "symbol": "KOD",
@@ -13973,6 +14816,7 @@
     "twenty_day_high": 103.73,
     "days_since_20d_high": 3,
     "added": "2026-10-05",
+    "resistance": [],
     "section": "Ready",
     "setup": "Inner base (last 20 days)",
     "setups": [],
@@ -13986,7 +14830,42 @@
     "tight_days": 1,
     "vol_dryup": 0.41,
     "leg": 1,
-    "resistance": []
+    "live": {
+     "adr_pct": 7.03,
+     "buy_point": 103.73,
+     "buy_point_top_date": null,
+     "day_open": 98.76,
+     "price": 98.89,
+     "ema10": 95.09,
+     "ema21": 89.22,
+     "ema50": 73.88,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 21,
+     "vol_build": 0.41,
+     "gap_base_level": 103.73,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 4.7
+    }
    },
    {
     "symbol": "XERS",
@@ -14018,6 +14897,12 @@
     "twenty_day_high": 11.42,
     "days_since_20d_high": 11,
     "added": "2026-10-05",
+    "resistance": [
+     [
+      "3m",
+      11.42
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull pennant forming",
     "setups": [],
@@ -14029,14 +14914,44 @@
     "base_day": 12,
     "base_depth_adr": 2.7,
     "tight_days": 0,
-    "vol_dryup": 0.82,
+    "vol_dryup": 0.84,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      11.42
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.48,
+     "buy_point": 10.71,
+     "buy_point_top_date": null,
+     "day_open": 10.17,
+     "price": 10.35,
+     "ema10": 10.46,
+     "ema21": 10.26,
+     "ema50": 9.62,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull pennant (trendline)",
+     "flag_shape": "pennant",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 21,
+     "vol_build": 0.83,
+     "gap_base_level": 11.42,
+     "gap_base_pattern": "Ascending triangle",
+     "gap_base_ok": null,
+     "off_high_pct": 9.4
+    }
    },
    {
     "symbol": "WK",
@@ -14052,7 +14967,7 @@
     "base_bars": 9.0,
     "base_depth_pct": 7.3,
     "msf_score": 65,
-    "adr_pct": 3.94,
+    "adr_pct": 3.95,
     "rel_vol": 1.4,
     "dollar_vol_30d_m": 107.0,
     "perf_1m_pct": 17.0,
@@ -14068,6 +14983,12 @@
     "days_since_20d_high": 6,
     "flag_top": 86.56,
     "added": "2026-10-23",
+    "resistance": [
+     [
+      "52w",
+      97.09
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -14081,12 +15002,45 @@
     "tight_days": 1,
     "vol_dryup": 0.61,
     "leg": 1,
-    "resistance": [
-     [
-      "52w",
-      97.09
-     ]
-    ]
+    "live": {
+     "adr_pct": 3.95,
+     "buy_point": 86.5,
+     "buy_point_top_date": null,
+     "day_open": 82.89,
+     "price": 83.88,
+     "ema10": 82.86,
+     "ema21": 79.99,
+     "ema50": 75.14,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": false,
+     "retest_level": 85.04,
+     "retest_level_wick": 85.09,
+     "retest_need_low": 81.44,
+     "retest_zone": [
+      80.01,
+      85.88
+     ],
+     "retest_from": "2026-10-23",
+     "retest_tried": null,
+     "retest_low": 81.0,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 7,
+     "vol_build": 0.6,
+     "gap_base_level": 86.56,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 3.1
+    }
    },
    {
     "symbol": "ARQT",
@@ -14119,6 +15073,7 @@
     "days_since_20d_high": 10,
     "added": "2026-10-19",
     "support_low": 28.99,
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14132,7 +15087,45 @@
     "tight_days": 1,
     "vol_dryup": 0.63,
     "leg": 1,
-    "resistance": []
+    "live": {
+     "adr_pct": 4.81,
+     "buy_point": 33.3,
+     "buy_point_top_date": "2026-10-20",
+     "day_open": 31.32,
+     "price": 32.0,
+     "ema10": 31.34,
+     "ema21": 30.03,
+     "ema50": 28.11,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": "pennant",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 29.18,
+     "retest_level_wick": 29.46,
+     "retest_need_low": 30.9,
+     "retest_zone": [
+      27.07,
+      29.53
+     ],
+     "retest_from": "2026-10-19",
+     "retest_tried": null,
+     "retest_low": 30.91,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 11,
+     "vol_build": 0.63,
+     "gap_base_level": 33.3,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 3.9
+    }
    },
    {
     "symbol": "VCYT",
@@ -14162,6 +15155,12 @@
     "days_since_20d_high": 3,
     "added": "2026-10-27",
     "support_low": 47.33,
+    "resistance": [
+     [
+      "6m",
+      60.91
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14175,68 +15174,45 @@
     "tight_days": 0,
     "vol_dryup": 0.88,
     "leg": 1,
-    "resistance": [
-     [
-      "6m",
-      60.91
-     ]
-    ]
-   },
-   {
-    "symbol": "SHAK",
-    "tv": "NYSE:SHAK",
-    "close": 70.14,
-    "chg_pct": -3.2,
-    "grade": "",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 4.8,
-    "pattern": "Base top",
-    "buy_point": 72.89,
-    "to_buy_point_pct": 3.9,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 4.15,
-    "rel_vol": 0.8,
-    "dollar_vol_30d_m": 98.0,
-    "perf_1m_pct": 12.0,
-    "perf_3m_pct": -6.0,
-    "off_52w_high_pct": 34.7,
-    "ema21": 67.68,
-    "ema50": 66.21,
-    "sma200": 74.76,
-    "entries": {},
-    "twenty_day_high": 73.08,
-    "days_since_20d_high": 1,
-    "added": "2026-10-29",
-    "support_low": 68.02,
-    "section": "Setting up",
-    "setup": "21 EMA retest setup",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "21 EMA retest setup: the 21 EMA 67.68, the close 0.9 ADR over it (from 1-UPDAY 2026-10-29)",
-    "stage": "In the base, day 11, 4% under the top 72.89 (set 2026-10-20)",
-    "away_adr": 0.94,
-    "base_day": 11,
-    "base_depth_adr": 3.1,
-    "tight_days": 0,
-    "vol_dryup": 0.97,
-    "leg": 0,
-    "resistance": [
-     [
-      "3m",
-      76.41
+    "live": {
+     "adr_pct": 4.87,
+     "buy_point": 52.39,
+     "buy_point_top_date": null,
+     "day_open": 49.95,
+     "price": 50.29,
+     "ema10": 48.93,
+     "ema21": 47.36,
+     "ema50": 46.24,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 48.24,
+     "retest_level_wick": 48.96,
+     "retest_need_low": 48.56,
+     "retest_zone": [
+      44.71,
+      48.96
      ],
-     [
-      "6m",
-      99.57
-     ],
-     [
-      "9m",
-      107.46
-     ]
-    ]
+     "retest_from": "2026-10-27",
+     "retest_tried": null,
+     "retest_low": 48.9,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 5,
+     "vol_build": 0.88,
+     "gap_base_level": 52.39,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 4.0
+    }
    },
    {
     "symbol": "IOT",
@@ -14265,6 +15241,16 @@
     "twenty_day_high": 45.32,
     "days_since_20d_high": 6,
     "added": "2026-10-05",
+    "resistance": [
+     [
+      "3m",
+      45.32
+     ],
+     [
+      "52w",
+      47.47
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -14278,16 +15264,42 @@
     "tight_days": 0,
     "vol_dryup": 0.71,
     "leg": 0,
-    "resistance": [
-     [
-      "3m",
-      45.32
-     ],
-     [
-      "52w",
-      47.47
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.54,
+     "buy_point": 43.08,
+     "buy_point_top_date": null,
+     "day_open": 41.16,
+     "price": 41.11,
+     "ema10": 42.23,
+     "ema21": 41.91,
+     "ema50": 40.68,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 0,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 21,
+     "vol_build": 0.71,
+     "gap_base_level": 45.32,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 9.3
+    }
    },
    {
     "symbol": "TARS",
@@ -14303,7 +15315,7 @@
     "base_bars": 42.0,
     "base_depth_pct": 26.1,
     "msf_score": 60,
-    "adr_pct": 4.69,
+    "adr_pct": 4.7,
     "rel_vol": 1.1,
     "dollar_vol_30d_m": 66.0,
     "perf_1m_pct": -2.0,
@@ -14320,6 +15332,12 @@
     "twenty_day_high": 76.64,
     "days_since_20d_high": 16,
     "added": "2026-10-29",
+    "resistance": [
+     [
+      "3m",
+      91.53
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14333,64 +15351,42 @@
     "tight_days": 0,
     "vol_dryup": 0.62,
     "leg": 0,
-    "resistance": [
-     [
-      "3m",
-      91.53
-     ]
-    ]
-   },
-   {
-    "symbol": "LEGN",
-    "tv": "NASDAQ:LEGN",
-    "close": 21.48,
-    "chg_pct": 1.8,
-    "grade": "",
-    "higher_high_low": true,
-    "pullback_from_20d_high_pct": 9.0,
-    "pattern": "Bull flag (trendline)",
-    "buy_point": 22.85,
-    "to_buy_point_pct": 6.4,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 5.38,
-    "rel_vol": 0.9,
-    "dollar_vol_30d_m": 42.0,
-    "perf_1m_pct": 14.0,
-    "perf_3m_pct": 13.0,
-    "off_52w_high_pct": 42.7,
-    "ema21": 20.2,
-    "ema50": 20.19,
-    "sma200": 22.13,
-    "entries": {},
-    "twenty_day_high": 22.98,
-    "days_since_20d_high": 4,
-    "added": "2026-10-28",
-    "support_low": 20.911,
-    "section": "Setting up",
-    "setup": "Bull flag forming",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "Bull flag forming 22.85, 1.2 ADR away (from 1-UPDAY 2026-10-28)",
-    "stage": "In the base, day 53, 8% under the top 23.24 (set 2026-08-20) \u00b7 back under its breakout level 21.56: the breakout didn't advance, the base is still valid",
-    "away_adr": 1.19,
-    "base_day": 53,
-    "base_depth_adr": 1.6,
-    "tight_days": 0,
-    "vol_dryup": 0.96,
-    "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      23.24
-     ],
-     [
-      "6m",
-      37.5
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.7,
+     "buy_point": 76.64,
+     "buy_point_top_date": "2026-10-12",
+     "day_open": 74.3,
+     "price": 72.64,
+     "ema10": 72.42,
+     "ema21": 72.56,
+     "ema50": 72.55,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 0,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 3,
+     "vol_build": 0.61,
+     "gap_base_level": 76.64,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 4.8
+    }
    },
    {
     "symbol": "KSS",
@@ -14406,7 +15402,7 @@
     "base_bars": 9.0,
     "base_depth_pct": 10.0,
     "msf_score": 75,
-    "adr_pct": 5.17,
+    "adr_pct": 5.18,
     "rel_vol": 0.7,
     "dollar_vol_30d_m": 101.0,
     "perf_1m_pct": 21.0,
@@ -14422,6 +15418,7 @@
     "days_since_20d_high": 8,
     "added": "2026-10-22",
     "support_low": 22.6,
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14435,7 +15432,45 @@
     "tight_days": 0,
     "vol_dryup": 0.78,
     "leg": 1,
-    "resistance": []
+    "live": {
+     "adr_pct": 5.18,
+     "buy_point": 25.1,
+     "buy_point_top_date": "2026-10-22",
+     "day_open": 23.83,
+     "price": 23.62,
+     "ema10": 23.55,
+     "ema21": 22.45,
+     "ema50": 20.65,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": "pennant",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 22.62,
+     "retest_level_wick": 22.9,
+     "retest_need_low": 23.15,
+     "retest_zone": [
+      20.86,
+      22.91
+     ],
+     "retest_from": "2026-10-22",
+     "retest_tried": null,
+     "retest_low": 23.17,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 8,
+     "vol_build": 0.77,
+     "gap_base_level": 25.1,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 5.9
+    }
    },
    {
     "symbol": "VSAT",
@@ -14465,6 +15500,16 @@
     "days_since_20d_high": 3,
     "added": "2026-10-28",
     "support_low": 69.86,
+    "resistance": [
+     [
+      "3m",
+      88.4
+     ],
+     [
+      "6m",
+      93.03
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14478,16 +15523,45 @@
     "tight_days": 0,
     "vol_dryup": 1.45,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      88.4
+    "live": {
+     "adr_pct": 6.58,
+     "buy_point": 81.3,
+     "buy_point_top_date": null,
+     "day_open": 75.25,
+     "price": 75.24,
+     "ema10": 71.88,
+     "ema21": 69.96,
+     "ema50": 70.44,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": false,
+     "retest_level": 74.38,
+     "retest_level_wick": 75.93,
+     "retest_need_low": 73.28,
+     "retest_zone": [
+      67.04,
+      75.93
      ],
-     [
-      "6m",
-      93.03
-     ]
-    ]
+     "retest_from": "2026-10-28",
+     "retest_tried": null,
+     "retest_low": 71.5,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 4,
+     "vol_build": 1.53,
+     "gap_base_level": 81.3,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 7.5
+    }
    },
    {
     "symbol": "LION",
@@ -14516,6 +15590,16 @@
     "twenty_day_high": 13.17,
     "days_since_20d_high": 3,
     "added": "2026-10-20",
+    "resistance": [
+     [
+      "3m",
+      13.4
+     ],
+     [
+      "6m",
+      16.7
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14529,16 +15613,45 @@
     "tight_days": 0,
     "vol_dryup": 1.08,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      13.4
+    "live": {
+     "adr_pct": 4.36,
+     "buy_point": 13.17,
+     "buy_point_top_date": null,
+     "day_open": 12.14,
+     "price": 12.45,
+     "ema10": 12.24,
+     "ema21": 11.94,
+     "ema50": 11.81,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 11.59,
+     "retest_level_wick": 11.67,
+     "retest_need_low": 12.31,
+     "retest_zone": [
+      10.83,
+      11.72
      ],
-     [
-      "6m",
-      16.7
-     ]
-    ]
+     "retest_from": "2026-10-20",
+     "retest_tried": null,
+     "retest_low": 12.02,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 10,
+     "vol_build": 1.13,
+     "gap_base_level": 13.17,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 5.5
+    }
    },
    {
     "symbol": "CERT",
@@ -14567,6 +15680,12 @@
     "twenty_day_high": 11.73,
     "days_since_20d_high": 4,
     "added": "2026-10-23",
+    "resistance": [
+     [
+      "52w",
+      11.88
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14580,12 +15699,45 @@
     "tight_days": 0,
     "vol_dryup": 0.87,
     "leg": 1,
-    "resistance": [
-     [
-      "52w",
-      11.88
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.32,
+     "buy_point": 11.73,
+     "buy_point_top_date": "2026-10-28",
+     "day_open": 10.58,
+     "price": 10.87,
+     "ema10": 10.67,
+     "ema21": 10.19,
+     "ema50": 9.34,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 10.18,
+     "retest_level_wick": 10.31,
+     "retest_need_low": 10.79,
+     "retest_zone": [
+      9.37,
+      10.32
+     ],
+     "retest_from": "2026-10-23",
+     "retest_tried": null,
+     "retest_low": 10.08,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 7,
+     "vol_build": 0.87,
+     "gap_base_level": 11.73,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 7.3
+    }
    },
    {
     "symbol": "OWL",
@@ -14615,19 +15767,6 @@
     "days_since_20d_high": 1,
     "added": "2026-10-29",
     "support_low": 9.8,
-    "section": "Setting up",
-    "setup": "21 EMA retest setup",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "21 EMA retest setup: the 21 EMA 9.71, the close 1.5 ADR over it (from 1-UPDAY 2026-10-29)",
-    "stage": "In the base, day 58, 19% under the top 12.77 (set 2026-08-13)",
-    "away_adr": 1.53,
-    "base_day": 58,
-    "base_depth_adr": 1.6,
-    "tight_days": 0,
-    "vol_dryup": 1.47,
-    "leg": 1,
     "resistance": [
      [
       "3m",
@@ -14641,7 +15780,59 @@
       "52w",
       17.0
      ]
-    ]
+    ],
+    "section": "Setting up",
+    "setup": "21 EMA retest setup",
+    "setups": [],
+    "source": "1-UPDAY",
+    "last_hit": null,
+    "why": "21 EMA retest setup: the 21 EMA 9.71, the close 1.5 ADR over it (from 1-UPDAY 2026-10-29)",
+    "stage": "In the base, day 58, 19% under the top 12.77 (set 2026-08-13)",
+    "away_adr": 1.53,
+    "base_day": 58,
+    "base_depth_adr": 1.6,
+    "tight_days": 0,
+    "vol_dryup": 1.47,
+    "leg": 1,
+    "live": {
+     "adr_pct": 4.29,
+     "buy_point": 11.01,
+     "buy_point_top_date": null,
+     "day_open": 10.69,
+     "price": 10.33,
+     "ema10": 9.94,
+     "ema21": 9.71,
+     "ema50": 9.86,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 9.71,
+     "retest_level_wick": 9.75,
+     "retest_need_low": 10.3,
+     "retest_zone": [
+      9.08,
+      9.81
+     ],
+     "retest_from": "2026-10-29",
+     "retest_tried": null,
+     "retest_low": 10.12,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 3,
+     "vol_build": 1.57,
+     "gap_base_level": 11.01,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 6.2
+    }
    },
    {
     "symbol": "NRIX",
@@ -14657,7 +15848,7 @@
     "base_bars": 54.0,
     "base_depth_pct": 24.8,
     "msf_score": 65,
-    "adr_pct": 5.29,
+    "adr_pct": 5.3,
     "rel_vol": 1.0,
     "dollar_vol_30d_m": 61.0,
     "perf_1m_pct": 13.0,
@@ -14673,6 +15864,12 @@
     "days_since_20d_high": 3,
     "added": "2026-10-20",
     "support_low": 24.71,
+    "resistance": [
+     [
+      "3m",
+      28.23
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14684,73 +15881,47 @@
     "base_day": 54,
     "base_depth_adr": 1.7,
     "tight_days": 0,
-    "vol_dryup": 1.19,
+    "vol_dryup": 1.36,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      28.23
-     ]
-    ]
-   },
-   {
-    "symbol": "BLDR",
-    "tv": "NYSE:BLDR",
-    "close": 63.61,
-    "chg_pct": -6.2,
-    "grade": "",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 8.6,
-    "pattern": "Inner base (last 20 days)",
-    "buy_point": 68.67,
-    "to_buy_point_pct": 8.0,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 4.63,
-    "rel_vol": 1.0,
-    "dollar_vol_30d_m": 165.0,
-    "perf_1m_pct": 14.0,
-    "perf_3m_pct": -16.0,
-    "off_52w_high_pct": 51.6,
-    "ema21": 58.66,
-    "ema50": 60.35,
-    "sma200": 79.58,
-    "entries": {},
-    "twenty_day_high": 68.67,
-    "days_since_20d_high": 1,
-    "added": "2026-10-30",
-    "section": "Setting up",
-    "setup": "Near the retest zone",
-    "setups": [],
-    "source": "2-POOL",
-    "last_hit": null,
-    "why": "Near the retest zone 58.68-63.79, the close -0.1 ADR over it (from 2-POOL 2026-10-30)",
-    "stage": "In the base, day 62, 17% under the top 76.80 (set 2026-08-07)",
-    "away_adr": 1.72,
-    "base_day": 62,
-    "base_depth_adr": 1.9,
-    "tight_days": 0,
-    "vol_dryup": 1.3,
-    "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      76.8
+    "live": {
+     "adr_pct": 5.3,
+     "buy_point": 27.99,
+     "buy_point_top_date": null,
+     "day_open": 25.72,
+     "price": 25.82,
+     "ema10": 25.96,
+     "ema21": 25.37,
+     "ema50": 24.79,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": false,
+     "retest_level": 25.67,
+     "retest_level_wick": 25.96,
+     "retest_need_low": 25.77,
+     "retest_zone": [
+      23.63,
+      26.01
      ],
-     [
-      "6m",
-      90.96
-     ],
-     [
-      "9m",
-      129.75
-     ],
-     [
-      "52w",
-      131.5
-     ]
-    ]
+     "retest_from": "2026-10-20",
+     "retest_tried": null,
+     "retest_low": 24.77,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 10,
+     "vol_build": 1.41,
+     "gap_base_level": 27.99,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 7.8
+    }
    },
    {
     "symbol": "NAVN",
@@ -14783,6 +15954,12 @@
     "days_since_20d_high": 4,
     "added": "2026-10-15",
     "support_low": 23.6,
+    "resistance": [
+     [
+      "3m",
+      30.88
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -14796,12 +15973,45 @@
     "tight_days": 0,
     "vol_dryup": 0.51,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      30.88
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.08,
+     "buy_point": 26.56,
+     "buy_point_top_date": null,
+     "day_open": 25.24,
+     "price": 24.8,
+     "ema10": 25.84,
+     "ema21": 25.24,
+     "ema50": 24.69,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 24.0,
+     "retest_level_wick": 24.25,
+     "retest_need_low": 25.92,
+     "retest_zone": [
+      22.53,
+      24.25
+     ],
+     "retest_from": "2026-10-15",
+     "retest_tried": null,
+     "retest_low": 24.64,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 13,
+     "vol_build": 0.51,
+     "gap_base_level": 27.61,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 10.2
+    }
    },
    {
     "symbol": "ENTG",
@@ -14817,7 +16027,7 @@
     "base_bars": 23.0,
     "base_depth_pct": 25.3,
     "msf_score": 65,
-    "adr_pct": 5.73,
+    "adr_pct": 5.74,
     "rel_vol": 0.9,
     "dollar_vol_30d_m": 412.0,
     "perf_1m_pct": -8.0,
@@ -14833,6 +16043,12 @@
     "days_since_20d_high": 3,
     "added": "2026-10-28",
     "support_low": 151.51,
+    "resistance": [
+     [
+      "6m",
+      186.94
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14840,18 +16056,48 @@
     "last_hit": null,
     "why": "21 EMA retest setup: the 21 EMA 150.34, the close 0.3 ADR over it (from 1-UPDAY 2026-10-28)",
     "stage": "In the base, day 5, 18% under the top 186.94",
-    "away_adr": 1.98,
+    "away_adr": 1.97,
     "base_day": 5,
     "base_depth_adr": 2.1,
     "tight_days": 0,
     "vol_dryup": 1.86,
     "leg": 0,
-    "resistance": [
-     [
-      "6m",
-      186.94
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.74,
+     "buy_point": 170.06,
+     "buy_point_top_date": null,
+     "day_open": 157.01,
+     "price": 152.76,
+     "ema10": 151.0,
+     "ema21": 150.34,
+     "ema50": 148.47,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 0,
+     "pattern": "Inner base (last 20 days)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 4,
+     "vol_build": 2.04,
+     "gap_base_level": 170.06,
+     "gap_base_pattern": "Inner base (last 20 days)",
+     "gap_base_ok": null,
+     "off_high_pct": 10.2
+    }
    },
    {
     "symbol": "AMN",
@@ -14884,6 +16130,7 @@
     "days_since_20d_high": 5,
     "added": "2026-10-22",
     "support_low": 43.04,
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14897,7 +16144,45 @@
     "tight_days": 0,
     "vol_dryup": 1.08,
     "leg": 1,
-    "resistance": []
+    "live": {
+     "adr_pct": 4.68,
+     "buy_point": 49.62,
+     "buy_point_top_date": "2026-10-27",
+     "day_open": 45.63,
+     "price": 45.3,
+     "ema10": 45.41,
+     "ema21": 42.97,
+     "ema50": 39.17,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 43.01,
+     "retest_level_wick": 43.41,
+     "retest_need_low": 46.14,
+     "retest_zone": [
+      39.99,
+      43.51
+     ],
+     "retest_from": "2026-10-22",
+     "retest_tried": null,
+     "retest_low": 44.91,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 8,
+     "vol_build": 1.11,
+     "gap_base_level": 49.62,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 8.7
+    }
    },
    {
     "symbol": "OMER",
@@ -14927,6 +16212,12 @@
     "days_since_20d_high": 16,
     "added": "2026-10-29",
     "support_low": 17.69,
+    "resistance": [
+     [
+      "3m",
+      21.24
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -14940,64 +16231,42 @@
     "tight_days": 0,
     "vol_dryup": 1.04,
     "leg": 0,
-    "resistance": [
-     [
-      "3m",
-      21.24
-     ]
-    ]
-   },
-   {
-    "symbol": "BEAM",
-    "tv": "NASDAQ:BEAM",
-    "close": 26.33,
-    "chg_pct": 1.8,
-    "grade": "",
-    "higher_high_low": true,
-    "pullback_from_20d_high_pct": 13.3,
-    "pattern": "Inner base (last 20 days)",
-    "buy_point": 29.76,
-    "to_buy_point_pct": 13.0,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 5.74,
-    "rel_vol": 0.7,
-    "dollar_vol_30d_m": 48.0,
-    "perf_1m_pct": 3.0,
-    "perf_3m_pct": -3.0,
-    "off_52w_high_pct": 31.2,
-    "ema21": 25.64,
-    "ema50": 25.93,
-    "sma200": 28.08,
-    "entries": {},
-    "twenty_day_high": 29.76,
-    "days_since_20d_high": 3,
-    "added": "2026-10-28",
-    "support_low": 24.5,
-    "section": "Setting up",
-    "setup": "21 EMA retest setup",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "21 EMA retest setup: the 21 EMA 25.64, the close 0.5 ADR over it (from 1-UPDAY 2026-10-28)",
-    "stage": "In the base, day 50, 16% under the top 31.48 (set 2026-08-25)",
-    "away_adr": 2.27,
-    "base_day": 50,
-    "base_depth_adr": 2.3,
-    "tight_days": 0,
-    "vol_dryup": 1.22,
-    "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      31.48
-     ],
-     [
-      "6m",
-      38.26
-     ]
-    ]
+    "live": {
+     "adr_pct": 5.03,
+     "buy_point": 20.24,
+     "buy_point_top_date": "2026-10-12",
+     "day_open": 18.08,
+     "price": 18.27,
+     "ema10": 17.85,
+     "ema21": 17.9,
+     "ema50": 17.53,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 0,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 3,
+     "vol_build": 1.0,
+     "gap_base_level": 20.24,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 5.2
+    }
    },
    {
     "symbol": "ZS",
@@ -15029,6 +16298,16 @@
     "twenty_day_high": 267.87,
     "days_since_20d_high": 5,
     "added": "2026-10-09",
+    "resistance": [
+     [
+      "3m",
+      267.87
+     ],
+     [
+      "52w",
+      336.99
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -15042,16 +16321,45 @@
     "tight_days": 0,
     "vol_dryup": 0.69,
     "leg": 2,
-    "resistance": [
-     [
-      "3m",
-      267.87
+    "live": {
+     "adr_pct": 5.6,
+     "buy_point": 256.62,
+     "buy_point_top_date": null,
+     "day_open": 220.79,
+     "price": 225.09,
+     "ema10": 236.14,
+     "ema21": 229.46,
+     "ema50": 210.66,
+     "ema21_watch": null,
+     "last_breakout_days_ago": 8,
+     "last_breakout_top": 237.22,
+     "last_breakout_date": "2026-10-22",
+     "late": false,
+     "leg": 2,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": 236.11,
+     "retest_away": true,
+     "retest_level": 236.11,
+     "retest_level_wick": 237.22,
+     "retest_need_low": 245.36,
+     "retest_zone": [
+      216.27,
+      239.42
      ],
-     [
-      "52w",
-      336.99
-     ]
-    ]
+     "retest_from": "2026-10-22",
+     "retest_tried": "2026-10-29",
+     "retest_low": 220.07,
+     "retest_testing": false,
+     "breakouts": 1,
+     "sessions": 17,
+     "vol_build": 0.7,
+     "gap_base_level": 267.87,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 16.0
+    }
    },
    {
     "symbol": "DXC",
@@ -15084,6 +16392,12 @@
     "days_since_20d_high": 6,
     "added": "2026-10-19",
     "support_low": 13.58,
+    "resistance": [
+     [
+      "3m",
+      16.38
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -15097,124 +16411,45 @@
     "tight_days": 0,
     "vol_dryup": 1.43,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      16.38
-     ]
-    ]
-   },
-   {
-    "symbol": "TNDM",
-    "tv": "NASDAQ:TNDM",
-    "close": 17.65,
-    "chg_pct": -5.5,
-    "grade": "",
-    "higher_high_low": true,
-    "pullback_from_20d_high_pct": 13.0,
-    "pattern": "Inner base (last 20 days)",
-    "buy_point": 20.25,
-    "to_buy_point_pct": 14.7,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 5.52,
-    "rel_vol": 1.1,
-    "dollar_vol_30d_m": 41.0,
-    "perf_1m_pct": 7.0,
-    "perf_3m_pct": -10.0,
-    "off_52w_high_pct": 40.5,
-    "ema21": 17.8,
-    "ema50": 17.84,
-    "sma200": 18.91,
-    "entries": {},
-    "twenty_day_high": 20.25,
-    "days_since_20d_high": 3,
-    "added": "2026-10-26",
-    "support_low": 17.21,
-    "section": "Setting up",
-    "setup": "Near the retest zone",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "Near the retest zone 15.99-17.67, the close -0.0 ADR over it (from 1-UPDAY 2026-10-26)",
-    "stage": "Below the 21 EMA",
-    "away_adr": 2.67,
-    "base_day": 6,
-    "base_depth_adr": 2.4,
-    "tight_days": 0,
-    "vol_dryup": 1.25,
-    "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      24.81
+    "live": {
+     "adr_pct": 5.65,
+     "buy_point": 15.79,
+     "buy_point_top_date": null,
+     "day_open": 14.62,
+     "price": 13.78,
+     "ema10": 14.85,
+     "ema21": 14.21,
+     "ema50": 12.9,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 13.97,
+     "retest_level_wick": 14.15,
+     "retest_need_low": 14.99,
+     "retest_zone": [
+      12.79,
+      14.17
      ],
-     [
-      "9m",
-      29.65
-     ]
-    ]
-   },
-   {
-    "symbol": "RH",
-    "tv": "NYSE:RH",
-    "close": 134.13,
-    "chg_pct": -8.5,
-    "grade": "",
-    "higher_high_low": true,
-    "pullback_from_20d_high_pct": 13.7,
-    "pattern": "Inner base (last 20 days)",
-    "buy_point": 155.0,
-    "to_buy_point_pct": 15.6,
-    "base_bars": null,
-    "base_depth_pct": null,
-    "msf_score": 0,
-    "adr_pct": 5.56,
-    "rel_vol": 1.1,
-    "dollar_vol_30d_m": 111.0,
-    "perf_1m_pct": 14.0,
-    "perf_3m_pct": -31.0,
-    "off_52w_high_pct": 44.0,
-    "ema21": 133.22,
-    "ema50": 135.24,
-    "sma200": 152.36,
-    "entries": {},
-    "twenty_day_high": 155.0,
-    "days_since_20d_high": 1,
-    "added": "2026-10-22",
-    "support_low": 124.88,
-    "section": "Setting up",
-    "setup": "Near the retest zone",
-    "setups": [],
-    "source": "1-UPDAY",
-    "last_hit": null,
-    "why": "Near the retest zone 117.34-129.79, the close 0.6 ADR over it (from 1-UPDAY 2026-10-22)",
-    "stage": "In the base, day 62, 32% under the top 197.22 (set 2026-08-07)",
-    "away_adr": 2.8,
-    "base_day": 62,
-    "base_depth_adr": 2.5,
-    "tight_days": 0,
-    "vol_dryup": 0.96,
-    "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      197.22
-     ],
-     [
-      "6m",
-      200.99
-     ],
-     [
-      "9m",
-      226.86
-     ],
-     [
-      "52w",
-      239.4
-     ]
-    ]
+     "retest_from": "2026-10-19",
+     "retest_tried": "2026-10-30",
+     "retest_low": 13.35,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 11,
+     "vol_build": 1.54,
+     "gap_base_level": 16.38,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 15.9
+    }
    },
    {
     "symbol": "NTSK",
@@ -15247,6 +16482,12 @@
     "flag_top": 26.71,
     "added": "2026-10-23",
     "support_low": 21.83,
+    "resistance": [
+     [
+      "3m",
+      26.71
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -15260,12 +16501,45 @@
     "tight_days": 0,
     "vol_dryup": 0.77,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      26.71
-     ]
-    ]
+    "live": {
+     "adr_pct": 6.92,
+     "buy_point": 26.41,
+     "buy_point_top_date": null,
+     "day_open": 21.98,
+     "price": 21.84,
+     "ema10": 23.28,
+     "ema21": 22.06,
+     "ema50": 19.43,
+     "ema21_watch": "undercut",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": 23.28,
+     "reclaim_level": 22.2,
+     "retest_away": true,
+     "retest_level": 22.2,
+     "retest_level_wick": 22.64,
+     "retest_need_low": 23.94,
+     "retest_zone": [
+      19.9,
+      22.64
+     ],
+     "retest_from": "2026-10-23",
+     "retest_tried": "2026-11-02",
+     "retest_low": 21.42,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 7,
+     "vol_build": 0.79,
+     "gap_base_level": 26.71,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 18.2
+    }
    },
    {
     "symbol": "BSP",
@@ -15295,6 +16569,7 @@
     "days_since_20d_high": 13,
     "added": "2026-10-14",
     "support_low": 49.21,
+    "resistance": [],
     "section": "Setting up",
     "setup": "Near the retest zone",
     "setups": [],
@@ -15308,7 +16583,45 @@
     "tight_days": 0,
     "vol_dryup": 0.53,
     "leg": 1,
-    "resistance": []
+    "live": {
+     "adr_pct": 10.39,
+     "buy_point": 59.5,
+     "buy_point_top_date": "2026-10-15",
+     "day_open": 45.66,
+     "price": 43.75,
+     "ema10": 45.29,
+     "ema21": 43.9,
+     "ema50": 41.34,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base top",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 41.07,
+     "retest_level_wick": 42.27,
+     "retest_need_low": 50.23,
+     "retest_zone": [
+      34.67,
+      42.27
+     ],
+     "retest_from": "2026-10-14",
+     "retest_tried": null,
+     "retest_low": 42.6,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 14,
+     "vol_build": 0.53,
+     "gap_base_level": 59.5,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 26.5
+    }
    },
    {
     "symbol": "GME",
@@ -15339,6 +16652,7 @@
     "twenty_day_high": 28.3,
     "days_since_20d_high": 13,
     "added": "2026-10-29",
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA undercut & reclaim setup",
     "setups": [],
@@ -15352,7 +16666,42 @@
     "tight_days": 0,
     "vol_dryup": 0.63,
     "leg": 0,
-    "resistance": []
+    "live": {
+     "adr_pct": 4.46,
+     "buy_point": 28.3,
+     "buy_point_top_date": "2026-10-15",
+     "day_open": 24.15,
+     "price": 24.27,
+     "ema10": 24.48,
+     "ema21": 24.66,
+     "ema50": 23.7,
+     "ema21_watch": "undercut",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 0,
+     "pattern": "Base breakout",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": null,
+     "retest_level_wick": null,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": null,
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 3,
+     "vol_build": 0.63,
+     "gap_base_level": 28.3,
+     "gap_base_pattern": "Base breakout",
+     "gap_base_ok": null,
+     "off_high_pct": 1.3
+    }
    },
    {
     "symbol": "CRL",
@@ -15368,7 +16717,7 @@
     "base_bars": 5.0,
     "base_depth_pct": 11.1,
     "msf_score": 65,
-    "adr_pct": 4.51,
+    "adr_pct": 4.52,
     "rel_vol": 1.0,
     "dollar_vol_30d_m": 410.0,
     "perf_1m_pct": 13.0,
@@ -15382,6 +16731,12 @@
     "days_since_20d_high": 3,
     "added": "2026-10-21",
     "support_low": 313.83,
+    "resistance": [
+     [
+      "3m",
+      379.63
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -15393,14 +16748,47 @@
     "base_day": 4,
     "base_depth_adr": 2.5,
     "tight_days": 0,
-    "vol_dryup": 1.3,
+    "vol_dryup": 1.31,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      379.63
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.52,
+     "buy_point": null,
+     "buy_point_top_date": null,
+     "day_open": 339.88,
+     "price": 351.87,
+     "ema10": 348.27,
+     "ema21": 333.17,
+     "ema50": 307.31,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Base forming (no pattern yet)",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 319.8,
+     "retest_level_wick": 333.3,
+     "retest_need_low": 353.88,
+     "retest_zone": [
+      298.11,
+      333.3
+     ],
+     "retest_from": "2026-10-21",
+     "retest_tried": null,
+     "retest_low": 332.17,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 9,
+     "vol_build": 1.36,
+     "gap_base_level": null,
+     "gap_base_pattern": null,
+     "gap_base_ok": null,
+     "off_high_pct": 7.3
+    }
    },
    {
     "symbol": "ECO",
@@ -15429,6 +16817,12 @@
     "twenty_day_high": 102.56,
     "days_since_20d_high": 3,
     "added": "2026-10-05",
+    "resistance": [
+     [
+      "3m",
+      102.56
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -15440,14 +16834,44 @@
     "base_day": 4,
     "base_depth_adr": null,
     "tight_days": 0,
-    "vol_dryup": 1.09,
+    "vol_dryup": 1.11,
     "leg": 2,
-    "resistance": [
-     [
-      "3m",
-      102.56
-     ]
-    ]
+    "live": {
+     "adr_pct": 4.69,
+     "buy_point": null,
+     "buy_point_top_date": null,
+     "day_open": 92.19,
+     "price": 93.26,
+     "ema10": 94.92,
+     "ema21": 92.4,
+     "ema50": 84.47,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": 3,
+     "last_breakout_top": 100.68,
+     "last_breakout_date": "2026-10-29",
+     "late": false,
+     "leg": 2,
+     "pattern": "",
+     "flag_shape": null,
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": null,
+     "retest_level": 99.71,
+     "retest_level_wick": 100.68,
+     "retest_need_low": null,
+     "retest_zone": null,
+     "retest_from": "2026-10-29",
+     "retest_tried": null,
+     "retest_low": null,
+     "retest_testing": false,
+     "breakouts": 1,
+     "sessions": 21,
+     "vol_build": 1.16,
+     "gap_base_level": null,
+     "gap_base_pattern": null,
+     "gap_base_ok": null,
+     "off_high_pct": 9.1
+    }
    },
    {
     "symbol": "MANE",
@@ -15463,7 +16887,7 @@
     "base_bars": 5.0,
     "base_depth_pct": 12.0,
     "msf_score": 60,
-    "adr_pct": 7.32,
+    "adr_pct": 7.33,
     "rel_vol": 0.9,
     "dollar_vol_30d_m": 103.0,
     "perf_1m_pct": 12.0,
@@ -15477,6 +16901,12 @@
     "days_since_20d_high": 3,
     "added": "2026-10-19",
     "support_low": 113.0,
+    "resistance": [
+     [
+      "3m",
+      146.58
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -15490,12 +16920,45 @@
     "tight_days": 0,
     "vol_dryup": 0.67,
     "leg": 1,
-    "resistance": [
-     [
-      "3m",
-      146.58
-     ]
-    ]
+    "live": {
+     "adr_pct": 7.33,
+     "buy_point": null,
+     "buy_point_top_date": null,
+     "day_open": 131.02,
+     "price": 133.61,
+     "ema10": 134.8,
+     "ema21": 129.64,
+     "ema50": 120.78,
+     "ema21_watch": "retest",
+     "last_breakout_days_ago": 8,
+     "last_breakout_top": 136.72,
+     "last_breakout_date": "2026-10-22",
+     "late": false,
+     "leg": 1,
+     "pattern": "Base forming (no pattern yet)",
+     "flag_shape": null,
+     "push_level": 136.72,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 130.9,
+     "retest_level_wick": 136.72,
+     "retest_need_low": 130.45,
+     "retest_zone": [
+      116.5,
+      136.72
+     ],
+     "retest_from": "2026-10-22",
+     "retest_tried": "2026-11-02",
+     "retest_low": 128.94,
+     "retest_testing": true,
+     "breakouts": 1,
+     "sessions": 11,
+     "vol_build": 0.66,
+     "gap_base_level": null,
+     "gap_base_pattern": null,
+     "gap_base_ok": null,
+     "off_high_pct": 8.8
+    }
    }
   ]
  },
