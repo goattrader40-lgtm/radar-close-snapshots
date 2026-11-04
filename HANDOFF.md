@@ -103,8 +103,10 @@ alone.
 - Launch rows only get the new fields with the next Launches build (4:40 PM scan); dry build 41762168151 (Nov 3 close)
   checked: ACN 9 / 12.5% / 59.4%. Regress: same.
 - **Evening rebuild pitfall again (Nov 3, 9:10 PM)**: the user's ✕ on SLN ran Follow picks on Yahoo bars without the Nov 3
-  candle -> a Nov 2 list; restored by hand (ea5222b: 690f248's list minus SLN). Open: a guard in picks.yml / launch.py so a
-  build never replaces a newer list with an older date (needs the user's go; offered Nov 4).
+  candle -> a Nov 2 list; restored by hand (ea5222b: 690f248's list minus SLN). **Guard live (Nov 4, the user's go)**:
+  picks.yml keeps the live setups/launch.json when the rebuild's "date" is older (log line "GUARD: ... not saved"); the
+  picks / removals stay in picks.json for the next build. Only picks.yml (the scanner.yml 4:40 PM scan is unchanged).
+  Not done (the user: no): Alpaca daily bars instead of Yahoo; Alpaca stays the intraday / pre-market volume source only.
 
 ## Portal filters and narrow columns (live Nov 4 2026, the user's "go live"; branch test/filters, display only)
 
