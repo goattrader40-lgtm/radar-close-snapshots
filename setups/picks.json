@@ -20,5 +20,11 @@
    "added": "2026-10-30T16:30:00",
    "from": "Launches tab (by hand)"
   }
+ },
+ "removed": {
+  "SLN": {
+   "launch": "2026-10-19",
+   "at": "2026-11-03T21:08:17"
+  }
  }
 }
