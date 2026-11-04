@@ -41,6 +41,30 @@
   .tgr-table tr.umb td.key a { font-weight: 700; }
   .tgr-table tr.inarea td.key { padding-left: 1.4rem; }
   .tgr-etag { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 4px; border: 1px solid var(--color-border-line); font-size: .75em; color: var(--color-fg-muted); font-weight: 400; }
+  .tgr-table .col-off { display: none !important; }
+  .tgr-table th[draggable="true"] { cursor: grab; }
+  .tgr-table th .col-x { position: absolute; top: 0; right: 0; display: none; border: 0; background: var(--color-panel); color: var(--color-fg-muted); font-size: 10px; line-height: 1; padding: 2px 3px; cursor: pointer; border-radius: 3px; }
+  .tgr-table th:hover .col-x { display: block; }
+  .tgr-table th .col-x:hover { color: var(--color-bad); }
+  .tgr-table th.col-drag { opacity: .45; }
+  .tgr-table th.col-drop-l { box-shadow: inset 3px 0 0 var(--color-fg); }
+  .tgr-table th.col-drop-r { box-shadow: inset -3px 0 0 var(--color-fg); }
+  .tgr-table .col-gear { border: 0; background: none; color: var(--color-fg-muted); cursor: pointer; padding: 0 2px; margin-left: 4px; font-size: 13px; line-height: 1; }
+  .tgr-table .col-gear:hover { color: var(--color-fg); }
+  .col-menu { font-family: var(--font-anthropic-sans); position: fixed; z-index: 50; background: var(--color-panel); color: var(--color-fg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); box-shadow: 0 8px 24px rgb(0 0 0 / 18%); padding: var(--cds-pad-sm) var(--cds-pad-md); overflow: auto; font-size: var(--cds-font-size-caption); display: grid; gap: 6px; align-content: start; }
+  .col-menu .tgr-search { width: 100%; box-sizing: border-box; }
+  .col-mh { display: flex; gap: 8px; align-items: baseline; }
+  .col-mh .col-mb { margin-left: auto; }
+  .col-res { display: flex; flex-wrap: wrap; gap: 4px; max-height: 14rem; overflow: auto; }
+  .col-grp { flex-basis: 100%; color: var(--color-fg-muted); margin-top: 4px; }
+  .col-item { border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 1px 8px; cursor: pointer; font: inherit; }
+  .col-item.on { border-color: var(--color-ok); color: var(--color-ok); }
+  .col-list { display: grid; gap: 2px; max-height: 16rem; overflow: auto; }
+  .col-row { display: flex; gap: 4px; align-items: center; }
+  .col-row .n { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .col-row.off .n { color: var(--color-fg-muted); text-decoration: line-through; }
+  .col-mb { border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 4px; padding: 0 6px; cursor: pointer; font: inherit; line-height: 1.6; }
+  .col-mb:disabled { opacity: .35; cursor: default; }
   .tgr-cols { position: relative; font-size: var(--cds-font-size-caption); }
   .tgr-cols summary { list-style: none; cursor: pointer; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 var(--cds-pad-sm); line-height: 1.8; background: var(--color-bg); }
   .tgr-cols summary::-webkit-details-marker { display: none; }
@@ -3217,43 +3241,270 @@ defCalc('industry_perf', {
     else drawLaunches(symMap);
   }
 
-  /* ───────── column chooser: tick columns off to hide them (remembered in this browser) ───────── */
-  const colStyle = document.head.appendChild(document.createElement('style'));
-  const HIDDEN = {};
-  const applyCols = () => {
-    colStyle.textContent = Object.entries(HIDDEN).map(([id, set]) => [...set].map((i) => `#${id} th:nth-child(${i + 1}), #${id} td:nth-child(${i + 1}) { display: none !important; }`).join('\n')).join('\n');
+  /* ───────── your table layouts (the user, Nov 4 2026): on every table, drag a column header to move the column, ✕ on a
+     header deletes it, ⚙ in the first header opens the list (move ↑ ↓, delete, bring back, Reset) and + Add a column from
+     the catalog below (any table with a ticker in its rows). The tables build exactly as before; this layer only
+     reorders, hides and adds cells after each draw. Per table and per tab, kept in this browser (localStorage
+     radar-layout); what the old Columns tick boxes hid (radar-cols-<table>) carries over as deleted. The first column
+     (ticker / name) stays first. ───────── */
+  const LAYK = 'radar-layout';
+  let LAY = {}; try { LAY = JSON.parse(localStorage.getItem(LAYK) || '{}') || {}; } catch (e) { LAY = {}; }
+  const laySave = () => { try { localStorage.setItem(LAYK, JSON.stringify(LAY)); } catch (e) { /* private window */ } };
+  const DEFK = {}, DEFN = {};        /* table id -> its columns' keys / names in the order the code builds them */
+  const lid = (t) => S.tab + ':' + t.id;
+  /* the catalog: every stock column, filled from the data the page already loads, looked up by the row's ticker */
+  const byC = {};
+  const by = (k, src, f) => { if (!src) return new Map(); if (!byC[k] || byC[k].src !== src) byC[k] = { src, m: f(src) }; return byC[k].m; };
+  const SK = (s) => by('s', rowsOf('stocks'), (a) => new Map(a.map((r) => [r.symbol, r]))).get(s) || null;
+  const LDOC = () => (st('launch').status === 'ok' ? st('launch').data : null);
+  const LK = (s) => by('l', LDOC(), (d) => { const m = new Map(); (d.laggards || []).forEach((r) => m.set(r.symbol, Object.assign({ _lag: true }, r))); (d.launches || []).forEach((r) => m.set(r.symbol, r)); return m; }).get(s) || null;
+  const WK = (s) => by('w', st('setups').status === 'ok' ? st('setups').data : null, (d) => { const m = new Map(); Object.entries(d.lists || {}).forEach(([ln, rows]) => (rows || []).forEach((r) => { const x = m.get(r.symbol) || { lists: [], row: null, s3: null }; x.lists.push(ln); if (!x.row || ln === '3-SETUPS') x.row = r; if (ln === '3-SETUPS') x.s3 = r; m.set(r.symbol, x); })); return m; }).get(s) || null;
+  const EK = (s) => by('e', EARN, (d) => new Map((d.rows || []).map((r) => [r.sym, r]))).get(s) || null;
+  const PGK = (s) => by('g', rowsOf('premarket'), (a) => { const t0 = todayNY(); return new Map(a.filter((x) => (x.graded === true || x.graded === 'true') && x.scan_date === t0 && x.grade).map((x) => [x.symbol, x])); }).get(s) || null;
+  const PMK = (s) => (PML && PML.rows && PML.date === todayNY() ? PML.rows[s] || null : null);
+  const pxOf = (s) => { const r = SK(s); return r ? num(r.price) : null; };
+  const cell = (v, txt, cls, title) => { const td = h('td', cls || '', txt); if (title) td.title = title; return [v, td]; };
+  const cNum = (v, txt, cls, title) => cell(v, txt, 'num' + (cls ? ' ' + cls : ''), title);
+  const cPct = (v, sign) => { const x = num(v); return cNum(x, p1(x, sign), sign ? tone(x) : ''); };
+  const vsPct = (px, ref) => (px !== null && num(ref) ? Math.round((px / num(ref) - 1) * 1000) / 10 : null);
+  const cTxt = (v, title) => cell(v === null || v === undefined || v === '' ? null : String(v), v === null || v === undefined || v === '' ? '—' : String(v), '', title);
+  const cNode = (v, td) => [v, td];
+  const ER_R = { 'Strong bullish': 5, 'Bullish': 4, 'Mixed': 3, 'Somewhat bearish': 2, 'Bearish': 1 };
+  const CATL = [
+    /* [id, name, group, what it is, the same column's keys in the tables (marks "already here"), (ticker) -> [sort value, cell]] */
+    ['price', 'Price', 'Price', 'Latest price (live in the session)', ['price', 'px'], (s) => { const v = pxOf(s); return cNum(v, fPrice(v)); }],
+    ['chg_1d', '1D', 'Price', 'Change today (live in the session)', ['chg_1d', 'chg'], (s) => cPct((SK(s) || {}).chg_1d, true)],
+    ['chg_1w', '1W', 'Price', 'Change over 1 week', ['chg_1w'], (s) => cPct((SK(s) || {}).chg_1w, true)],
+    ['chg_1m', '1M', 'Price', 'Change over 1 month', ['chg_1m', 'perf_1m_pct'], (s) => cPct((SK(s) || {}).chg_1m, true)],
+    ['chg_3m', '3M', 'Price', 'Change over 3 months', ['chg_3m', 'perf_3m_pct'], (s) => cPct((SK(s) || {}).chg_3m, true)],
+    ['off52h', 'Off 52W high', 'Price', 'How far under its 52-week high now', ['off_high', 'off_52w_high_pct'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.high_52w) : null; return cNum(v, p1(v, true), tone(v), r && r.high_52w ? '52-week high ' + fPrice(r.high_52w) : ''); }],
+    ['over52l', 'Over 52W low', 'Price', 'How far over its 52-week low now', ['over_low52', 'below_low52'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.low_52w) : null; return cNum(v, p1(v, true), '', r && r.low_52w ? '52-week low ' + fPrice(r.low_52w) : ''); }],
+    ['rel_vol', 'Rel vol', 'Volume', 'Relative volume at the time of day (live in the session)', ['rel_vol', 'rv', 'rv_today'], (s) => { const v = num((SK(s) || {}).rel_vol); return cNum(v, fX(v)); }],
+    ['adr', 'ADR%', 'Volume', 'Average daily range of the last 20 sessions (red under 3.5%: a launch day needs 3.5%+)', ['adr', 'adr_20', 'adr_pct'], (s) => { const v = num((SK(s) || {}).adr_20); return cNum(v, fAdr(v), v !== null && v < 3.5 ? 'tgr-dn' : ''); }],
+    ['dvol', '$ vol 20D $M', 'Volume', '20-day average $ volume, millions', ['dvol', 'dollar_vol_30d_m'], (s) => { const v = num((SK(s) || {}).dvol_20_m); return cNum(v, fDv(v)); }],
+    ['avgvol', 'Avg vol 20D', 'Volume', '20-day average volume, shares', ['avg_vol_30d'], (s) => { const v = num((SK(s) || {}).avg_vol_20); return cNum(v, fVol(v)); }],
+    ['mcap', 'Mkt cap $B', 'Company', 'Market cap, $ billions', ['mcap_b'], (s) => { const v = num((SK(s) || {}).mcap_b); return cNum(v, fCap(v)); }],
+    ['vs200', 'vs 200D', 'Moving averages', 'Price vs the 200-day SMA (live)', ['vs_200', 'vs200'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.sma200) ?? num(r.vs_200) : null; return cNum(v, p1(v, true), tone(v)); }],
+    ['vs50e', 'vs 50 EMA', 'Moving averages', 'Price vs the 50-day EMA at the last close (live)', ['vs_50e', 'vs50e', 'vs50'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.ema50) ?? num(r.vs_50e) : null; return cNum(v, p1(v, true), tone(v)); }],
+    ['vs21e', 'vs 21 EMA', 'Moving averages', 'Price vs the 21-day EMA at the last close (live; stocks on Launches, the Watchlist or the launch watch list)', ['vs21e'], (s) => { const d = LDOC(), w = d && d.watch ? d.watch[s] : null, e21 = num((LK(s) || {}).ema21) ?? num(((WK(s) || {}).row || {}).ema21) ?? (w ? num(w[3]) : null), v = e21 ? vsPct(pxOf(s), e21) : null; return cNum(v, p1(v, true), tone(v)); }],
+    ['name', 'Company', 'Company', 'Company name', ['name'], (s) => { const r = SK(s); return cell(r ? r.name : null, r ? r.name : '—', 'name'); }],
+    ['sector', 'Sector', 'Company', 'Sector', [], (s) => cTxt((SK(s) || {}).sector)],
+    ['industry', 'Industry', 'Company', 'Industry (detailed)', ['ind'], (s) => { const r = SK(s) || {}; return cTxt(r.industry_detail || r.industry); }],
+    ['themes', 'Themes', 'Company', 'Its themes', ['themes'], (s) => { const r = SK(s); return cNode(r ? r.themes || null : null, chipCell(r ? r.themes : '', 'theme', '')); }],
+    ['index', 'Index', 'Company', 'Index membership', ['index'], (s) => cTxt((SK(s) || {}).index)],
+    ['q_rev', 'Last Q rev $M', 'Company', 'Last quarter revenue, $ millions', ['q_rev_m'], (s) => { const v = num((REVOF(s) || {}).q_rev_m); return cNum(v, v === null ? '—' : g1.format(v)); }],
+    ['rev_growth', 'Rev growth YoY', 'Company', 'Revenue growth vs a year ago', ['rev_growth'], (s) => cPct((REVOF(s) || {}).growth, true)],
+    ['next_q', 'Next Q est. growth', 'Company', 'Next quarter estimated revenue growth', ['next_q_growth'], (s) => cPct((REVOF(s) || {}).next_q_growth, true)],
+    ['trend', 'Trend (live)', 'Rank & trend', 'Up / Turn up / Reclaim / Resting / Negative, live with today\'s price', ['trend', 'trend_n'], (s) => cNode(trendN(s), trendCell(s))],
+    ['trend_y', 'Trend (last close)', 'Rank & trend', 'The Trend at the last close (what the stars read)', ['trend_y'], (s) => { const x = trendLast(s); return cNode(x ? TR_N[x.st] * 1000 + Math.min(x.d || 0, 999) : null, trendLastCell(s)); }],
+    ['grank', 'Group rank', 'Rank & trend', 'Its best group\'s rank (★ Top = top 3%, Strong = 3-10%) and its place in the group', ['grank'], (s) => { const g = grBest(s); return cNode(g ? g.pct : null, grStockCell(g, s, false)); }],
+    ['rs', 'RS', 'Rank & trend', 'Market rank 1-99 after the last close', ['rs', 'rs_now'], (s) => { const v = num(ldocRS()[s]); return cNum(v, v === null ? '—' : String(v)); }],
+    ['stars', 'Stars (launch)', 'Rank & trend', '★★ / ★ / ⚠ skip for a launch today, from the last close', ['stars'], (s) => { const x = launchStars(s); return cNode(x ? x.n : null, starCell(x)); }],
+    ['earn', 'Earnings date', 'Earnings', 'When it reports this week (the Earnings tab)', ['earn'], (s) => { const e = EK(s); if (!e) return cTxt(null); const t = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }) + ' ' + ({ bmo: 'AM', amc: 'PM', dmh: 'day' }[e.when] || '?'); return cell(e.date + (e.when === 'amc' ? 'b' : 'a'), t, 'nw', 'Reports ' + fDate(e.date) + ' ' + (ER_WHEN[e.when] || '')); }],
+    ['er_look', 'ER look', 'Earnings', 'The Earnings tab\'s Read: Strong bullish / Bullish / Mixed / Somewhat bearish / Bearish', ['er_look', 'read'], (s) => { const e = EK(s); const td = h('td', 'nw', e && e.read ? '' : '—'); if (e && e.read) { const b = h('span', 'er-read r' + (ER_R[e.read] || 0), e.read); b.title = (e.points > 0 ? '+' : '') + e.points + ' points: ' + (e.why || ''); td.append(b); } return cNode(e && e.read ? (ER_R[e.read] || 0) * 100 + (num(e.points) || 0) : null, td); }],
+    ['er_move', 'Earnings move', 'Earnings', 'The move after the report (pre-market / after hours, then the reaction day)', ['move'], (s) => { const e = EK(s); const v = e ? num(e.react_move ?? e.move) : null; return cNum(v, p1(v, true), tone(v), e && e.react_kind ? e.react_kind : ''); }],
+    ['pm_grade', 'Pre-mkt grade', 'Pre-market', 'Today\'s 8:45 AM grade (A / B / C / F) of the news behind the gap', [], (s) => { const g = PGK(s); const td = h('td', 'nw', g ? '' : '—'); if (g) { const b = h('span', 'tgr-grade g' + g.grade, g.grade); b.title = ((g.direction || 'up') === 'down' ? 'Gap down: ' : '') + (g.catalyst ? g.catalyst + ': ' : '') + (g.reason || ''); td.append(b); } return cNode(g ? ({ A: 4, B: 3, C: 2, F: 1 }[g.grade] || 0) : null, td); }],
+    ['pm_chg', 'Pre-mkt chg', 'Pre-market', 'The latest pre-market price vs yesterday\'s close (7:00-9:29 AM ET)', ['pm_chg'], (s) => cPct((PMK(s) || [])[1], true)],
+    ['pm_gap', 'Pre-mkt gap', 'Pre-market', 'The first pre-market trade vs yesterday\'s close', ['pm_gap'], (s) => cPct((PMK(s) || [])[2], true)],
+    ['pm_dvol', 'PM $ vol $M', 'Pre-market', 'Pre-market $ volume so far, millions', ['pm_dvol_m'], (s) => { const v = num((PMK(s) || [])[4]); return cNum(v, fDv(v)); }],
+    ['l_date', 'Launched', 'Launches', 'Its launch day (stocks on Launches / Launch laggards)', ['date'], (s) => { const r = LK(s); return cell(r ? r.date : null, r ? fDate(r.date).replace(/, \d{4}$/, '') + (r._lag ? ' (laggard)' : '') : '—', 'nw'); }],
+    ['l_grade', 'Launch grade', 'Launches', 'The launch grade', ['grade'], (s) => { const r = LK(s); const td = h('td', 'nw', r && r.grade ? '' : '—'); if (r && r.grade) td.append(h('span', 'tgr-grade g' + String(r.grade).replace('+', ''), r.grade)); return cNode(r && r.grade ? ({ 'A+': 5, A: 4, B: 3, C: 2 }[r.grade] || 1) : null, td); }],
+    ['l_status', 'Launch status', 'Launches', 'Its Launches status (hover for the full read)', ['stage'], (s) => { const r = LK(s); return cell(r ? r.status || null : null, r ? r.status || '—' : '—', 'nw', r ? r.stage || '' : ''); }],
+    ['l_trigger', 'Trigger', 'Launches', 'Its next trigger on Launches', ['pattern'], (s) => cTxt((LK(s) || {}).pattern)],
+    ['l_bp', 'Buy point', 'Launches', 'Its Launches buy point', ['buy_point'], (s) => { const v = num((LK(s) || {}).buy_point); return cNum(v, fPrice(v)); }],
+    ['l_away', 'Away (buy point)', 'Launches', 'How far the buy point is over the price', ['away'], (s) => { const r = LK(s), v = r ? (r.buy_point && pxOf(s) ? vsPct(num(r.buy_point), pxOf(s)) : num(r.to_buy_point_pct)) : null; return cNum(v, p1(v, true)); }],
+    ['l_base_day', 'Base day', 'Launches', 'Sessions in the base (Launches)', ['base_day'], (s) => { const v = num((LK(s) || {}).base_day); return cNum(v, v === null ? '—' : String(v)); }],
+    ['l_blen', 'Base length', 'Launches', 'Sessions since the current base\'s top was set', ['blen'], (s) => { const v = num((LK(s) || {}).trig_base_len); return cNum(v, v === null ? '—' : String(v)); }],
+    ['l_depth', 'Base depth', 'Launches', 'Depth of the base', ['base_depth_pct'], (s) => cPct((LK(s) || {}).base_depth_pct, false)],
+    ['l_gain', 'LD → now', 'Launches', 'Gain from the launch day\'s close to now', ['gain_now'], (s) => cPct((LK(s) || {}).gain_pct, true)],
+    ['l_max', 'Max gain', 'Launches', 'Best gain since the launch day', ['max_gain_pct'], (s) => cPct((LK(s) || {}).max_gain_pct, true)],
+    ['l_corr', 'Correction', 'Launches', 'The deepest drop after the 52-week high, to now', ['corr'], (s) => cPct((LK(s) || {}).correction_now_pct, false)],
+    ['w_list', 'Watchlist list', 'Watchlist', 'Which Watchlist lists it is on', [], (s) => { const w = WK(s); return cTxt(w ? w.lists.join(', ') : null); }],
+    ['w_section', 'Watchlist section', 'Watchlist', 'Its section on the Watchlist (3-SETUPS: Triggered today / Ready / Setting up)', [], (s) => { const w = WK(s); return cTxt(w && w.row ? w.row.section || null : null); }],
+    ['w_bp', 'Watchlist buy point', 'Watchlist', 'Its buy point on the Watchlist', [], (s) => { const w = WK(s), v = w && w.row ? num(w.row.buy_point) : null; return cNum(v, fPrice(v)); }],
+    ['w_why', 'Watchlist why', 'Watchlist', 'Why it is on the Watchlist', [], (s) => { const w = WK(s), v = w && w.row ? w.row.why || null : null; const r = cTxt(v); r[1].className = 'name'; return r; }],
+  ];
+  const CGRP = ['Price', 'Volume', 'Moving averages', 'Rank & trend', 'Earnings', 'Pre-market', 'Launches', 'Watchlist', 'Company'];
+  CATL.sort((x, y) => CGRP.indexOf(x[2]) - CGRP.indexOf(y[2]));     /* the list shows group by group */
+  const CAT = new Map(CATL.map((c) => [c[0], c]));
+  const isStock = (t) => { const r = t.querySelector('tbody tr'); return !!(r && r.firstElementChild && r.firstElementChild.querySelector('.tgr-tk')); };
+  const thKey = (th, i, seen) => {
+    const b = th.querySelector('.tgr-th');
+    let k = b && b.dataset.sort ? b.dataset.sort : 'h:' + (th.textContent.split(/[:(]/)[0].trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || String(i));
+    while (seen.has(k)) k += '+';
+    seen.add(k); return k;
   };
-  const setupCols = (tableId, host) => {
-    const table = $('#' + tableId); if (!table || !host) return;
-    let saved = [];
-    try { saved = JSON.parse(localStorage.getItem('radar-cols-' + tableId) || '[]'); } catch (e) { saved = []; }
-    const ths = [...table.querySelectorAll('thead th')];
-    const names = ths.map((th) => th.textContent.trim());
-    HIDDEN[tableId] = new Set(saved.map((n) => names.indexOf(n)).filter((i) => i > 0));
-    const d = h('details', 'tgr-cols'); d.append(h('summary', '', 'Columns'));
-    const box = h('div', 'box');
-    names.forEach((n, i) => {
-      if (i === 0) return;   /* the ticker / name column always shows */
-      const lab = h('label'); const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !HIDDEN[tableId].has(i);
-      cb.addEventListener('change', () => {
-        if (cb.checked) HIDDEN[tableId].delete(i); else HIDDEN[tableId].add(i);
-        try { localStorage.setItem('radar-cols-' + tableId, JSON.stringify([...HIDDEN[tableId]].map((k) => names[k]))); } catch (e) { /* private window */ }
-        applyCols();
-      });
-      lab.append(cb, h('span', '', n)); box.append(lab);
+  const layOf = (t) => {
+    const def = DEFK[t.id], id = lid(t);
+    let L = LAY[id];
+    if (!L) {
+      L = { order: def.slice(), off: [] };
+      try { const old = JSON.parse(localStorage.getItem('radar-cols-' + t.id) || '[]'); L.off = old.map((n) => def[DEFN[t.id].indexOf(n)]).filter(Boolean); } catch (e) { /* none */ }
+    }
+    const known = new Set(def);
+    const order = (L.order || []).filter((k) => known.has(k) || (k.startsWith('x:') && CAT.has(k.slice(2))));
+    def.forEach((k, i) => { if (!order.includes(k)) order.splice(i ? order.indexOf(def[i - 1]) + 1 : 0, 0, k); });   /* a column added to the code later lands where the code puts it */
+    return { order: [def[0]].concat(order.filter((k) => k !== def[0])), off: (L.off || []).filter((k) => known.has(k) && k !== def[0]) };
+  };
+  const laySet = (t, L) => { LAY[lid(t)] = L; laySave(); applyLay(t); };
+  const colName = (t, k) => (k.startsWith('x:') ? (CAT.get(k.slice(2)) || [])[1] || k : (DEFN[t.id] || [])[(DEFK[t.id] || []).indexOf(k)] || k);
+  const delCol = (t, k) => { const L = layOf(t); if (k.startsWith('x:')) L.order = L.order.filter((x) => x !== k); else if (!L.off.includes(k)) L.off.push(k); laySet(t, L); };
+  const moveCol = (t, k, to, after) => {     /* put column k next to column to */
+    const L = layOf(t); if (k === to || k === L.order[0]) return;
+    const o = L.order.filter((x) => x !== k); let i = o.indexOf(to); if (i < 0) return;
+    if (after || i === 0) i += 1;
+    o.splice(i, 0, k); L.order = o; laySet(t, L);
+  };
+  /* header controls: drag to move, ✕ to delete, ⚙ (first header) for the list */
+  let dragK = null, dragT = null;
+  const xBtn = (t, th) => {
+    const x = h('button', 'col-x', '✕'); x.type = 'button'; x.title = 'Delete this column (bring it back with ⚙ in the first column\'s header)';
+    x.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); delCol(t, th._ck); });
+    th.append(x); th.draggable = true;
+    th.addEventListener('dragstart', (e) => { dragK = th._ck; dragT = t; th.classList.add('col-drag'); try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', th._ck); } catch (e2) { /* old browser */ } });
+    th.addEventListener('dragend', () => { dragK = null; dragT = null; t.querySelectorAll('th').forEach((x2) => x2.classList.remove('col-drag', 'col-drop-l', 'col-drop-r')); });
+  };
+  const hookDrag = (t) => {
+    const thead = t.querySelector('thead'); if (!thead || thead._dnd) return; thead._dnd = true;
+    const side = (th, e) => { const r = th.getBoundingClientRect(); return e.clientX > r.left + r.width / 2; };
+    thead.addEventListener('dragover', (e) => {
+      const th = e.target.closest('th'); if (!th || dragT !== t || !dragK) return;
+      e.preventDefault();
+      t.querySelectorAll('th').forEach((x) => x.classList.remove('col-drop-l', 'col-drop-r'));
+      if (th._ck !== dragK) th.classList.add(side(th, e) || th === th.parentElement.firstElementChild ? 'col-drop-r' : 'col-drop-l');
     });
-    d.append(box); host.append(d);
-    document.addEventListener('click', (e) => { if (!d.contains(e.target)) d.open = false; });
+    thead.addEventListener('drop', (e) => {
+      const th = e.target.closest('th'); if (!th || dragT !== t || !dragK) return;
+      e.preventDefault(); const k = dragK; dragK = null;
+      moveCol(t, k, th._ck, side(th, e) || th === th.parentElement.firstElementChild);
+    });
   };
-  setupCols('drill-table', $('#drill-card .tgr-cardhead .tgr-ctl'));
-  setupCols('g-table', $('#g-list-card .tgr-cardhead'));
-  setupCols('pml-table', $('#pml-card .tgr-cardhead'));
-  setupCols('pm-table', $('#pm-card') && (() => { const x = h('div', 'tgr-cardhead'); x.style.justifyContent = 'flex-end'; $('#pm-card').prepend(x); return x; })());
-  setupCols('theme-table', $('#themes-card .tgr-cardhead'));
-  setupCols('industry-table', $('#industries-card .tgr-cardhead'));
-  setupCols('wl-table', $('#wl-card .tgr-cardhead'));
-  setupCols('ln-table', $('#ln-card .tgr-cardhead'));
-  applyCols();
+  const gearBtn = (t, th) => {
+    const g = h('button', 'col-gear', '⚙'); g.type = 'button'; g.title = 'Columns: move, delete, bring back, add a column';
+    g.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); colMenu(t, g); });
+    th.append(g);
+  };
+  const catTh = (t, k) => {
+    const c = CAT.get(k.slice(2)); const th = h('th', 'col-add');
+    const b = h('button', 'tgr-th', c[1]); b.dataset.sort = k; b.title = c[3] + ' (a column you added: ' + c[2] + ')';
+    th.append(b); th._ck = k; xBtn(t, th); return th;
+  };
+  const catTd = (k, sym) => {
+    const c = CAT.get(k.slice(2)); let r;
+    try { r = sym ? c[5](sym) : [null, h('td', '', '—')]; } catch (e) { r = [null, h('td', '', '—')]; }
+    const td = r[1]; td._ck = k; td._v = r[0]; return td;
+  };
+  const sameKids = (el, list) => el.children.length === list.length && list.every((x, i) => el.children[i] === x);
+  const applyLay = (t) => {
+    const thr = t.querySelector('thead tr'); if (!thr || !thr.firstElementChild) return;
+    if (thr.firstElementChild._ck === undefined) {      /* a header the code just built: its keys in build order */
+      const ths = [...thr.children], seen = new Set();
+      DEFN[t.id] = ths.map((th) => th.textContent.trim());
+      DEFK[t.id] = ths.map((th, i) => (th._ck = thKey(th, i, seen)));
+      ths.forEach((th, i) => (i ? xBtn(t, th) : gearBtn(t, th)));
+      hookDrag(t);
+    }
+    const def = DEFK[t.id], L = layOf(t), off = new Set(L.off), stock = isStock(t);
+    const want = L.order.filter((k) => !k.startsWith('x:') || stock);
+    const hk = new Map([...thr.children].map((th) => [th._ck, th]));
+    hk.forEach((th, k) => { if (!want.includes(k)) th.remove(); });
+    const hs = want.map((k) => hk.get(k) || catTh(t, k));
+    hs.forEach((th) => th.classList.toggle('col-off', off.has(th._ck)));
+    if (!sameKids(thr, hs)) thr.append(...hs);
+    const vis = want.filter((k) => !off.has(k)).length, tb = t.querySelector('tbody');
+    [...tb.children].forEach((tr) => {
+      const kids = [...tr.children];
+      if (!tr._ck) {      /* a row the code just built */
+        if (kids.length !== def.length) { if (kids.length === 1 && kids[0].colSpan > 1) kids[0].colSpan = vis; return; }
+        kids.forEach((td, i) => { td._ck = def[i]; });
+        tr._ck = def; const a = kids[0].querySelector('.tgr-tk'); tr._sym = a ? a.textContent.trim() : null;
+      }
+      const m = new Map(kids.map((td) => [td._ck, td]));
+      m.forEach((td, k) => { if (!want.includes(k)) td.remove(); });
+      const out = want.map((k) => m.get(k) || catTd(k, tr._sym));
+      out.forEach((td) => td.classList.toggle('col-off', off.has(td._ck)));
+      if (!sameKids(tr, out)) tr.append(...out);
+    });
+    /* sorting on a column you added: the rows sort here (the table's own sort doesn't know it) */
+    const spec = S.sort[t.id];
+    if (spec && String(spec.key).startsWith('x:') && want.includes(spec.key)) {
+      const rows = [...tb.children].filter((tr) => tr._sym);
+      const val = (tr) => { const td = [...tr.children].find((x) => x._ck === spec.key); return td ? td._v : null; };
+      const sorted = rows.slice().sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
+      if (sorted.some((r, i) => r !== rows[i])) tb.append(...sorted);
+      markSort(t, spec);
+    }
+  };
+  /* the ⚙ list */
+  let menuEl = null;
+  const closeMenu = () => { if (menuEl) { menuEl.remove(); menuEl = null; } };
+  document.addEventListener('click', (e) => { if (menuEl && !menuEl.contains(e.target) && !e.target.closest('.col-gear')) closeMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+  const colMenu = (t, anchor) => {
+    const reopen = menuEl && menuEl._t === t; const q0 = reopen ? menuEl.querySelector('input').value : '';
+    closeMenu();
+    const m = h('div', 'col-menu'); m._t = t; menuEl = m;
+    const L = layOf(t), stock = isStock(t), def = DEFK[t.id] || [];
+    const head = h('div', 'col-mh'); head.append(h('strong', '', 'Columns'), h('span', 'tgr-lbl', 'drag a header to move it, ✕ to delete'));
+    const cx = h('button', 'col-mb', '✕'); cx.type = 'button'; cx.title = 'Close'; cx.addEventListener('click', closeMenu); head.append(cx); m.append(head);
+    const re = () => colMenu(t, anchor);
+    if (stock) {
+      const inp = h('input', 'tgr-search'); inp.type = 'search'; inp.placeholder = '+ Add a column: type ADR, RS, Trend, ER look…'; inp.value = q0;
+      const res = h('div', 'col-res');
+      const fill = () => {
+        const q = inp.value.trim().toLowerCase(); res.replaceChildren();
+        const have = new Set(L.order);
+        const rank = (c) => { const n = c[1].toLowerCase(); return n === q ? 0 : n.startsWith(q) ? 1 : n.includes(q) ? 2 : 3; };   /* the column's own name first, then its group / description */
+        const list = CATL.filter((c) => !q || (c[1] + ' ' + c[2] + ' ' + c[3]).toLowerCase().includes(q)).sort((x, y) => (q ? rank(x) - rank(y) : 0)).slice(0, q ? 40 : 60);
+        let grp = '';
+        list.forEach((c) => {
+          if (!q && c[2] !== grp) { grp = c[2]; res.append(h('div', 'col-grp', grp)); }
+          const added = have.has('x:' + c[0]), here = !added && c[4].some((a) => def.includes(a) && !L.off.includes(a));
+          const b = h('button', 'col-item' + (added ? ' on' : ''), c[1]); b.type = 'button'; b.title = c[3];
+          b.append(h('span', 'tgr-lbl', added ? ' added' : here ? ' (already in this table)' : (q ? ' · ' + c[2] : '')));
+          b.addEventListener('click', (e) => { e.stopPropagation(); const L2 = layOf(t); if (!L2.order.includes('x:' + c[0])) { L2.order.splice(1, 0, 'x:' + c[0]); laySet(t, L2); } re(); });
+          res.append(b);
+        });
+        if (!list.length) res.append(h('div', 'tgr-lbl', 'No column matches "' + inp.value + '".'));
+      };
+      inp.addEventListener('input', fill); fill();
+      m.append(inp, res);
+    } else m.append(h('p', 'tgr-lbl', 'A table of groups, not stocks: move and delete its columns here (the stock columns can be added on tables with a ticker in each row).'));
+    m.append(h('div', 'col-grp', 'In this table (left to right)'));
+    const lst = h('div', 'col-list');
+    L.order.filter((k) => !k.startsWith('x:') || stock).forEach((k, i, arr) => {
+      const row = h('div', 'col-row' + (L.off.includes(k) ? ' off' : '')); row.append(h('span', 'n', colName(t, k) || '(no name)'));
+      if (i === 0) row.append(h('span', 'tgr-lbl', 'stays first'));
+      else if (L.off.includes(k)) { const b = h('button', 'col-mb', '+ bring back'); b.type = 'button'; b.addEventListener('click', (e) => { e.stopPropagation(); const L2 = layOf(t); L2.off = L2.off.filter((x) => x !== k); laySet(t, L2); re(); }); row.append(b); }
+      else {
+        const up = h('button', 'col-mb', '↑'); up.type = 'button'; up.title = 'Move left'; up.disabled = i <= 1;
+        up.addEventListener('click', (e) => { e.stopPropagation(); moveCol(t, k, arr[i - 1], false); re(); });
+        const dn = h('button', 'col-mb', '↓'); dn.type = 'button'; dn.title = 'Move right'; dn.disabled = i >= arr.length - 1;
+        dn.addEventListener('click', (e) => { e.stopPropagation(); moveCol(t, k, arr[i + 1], true); re(); });
+        const del = h('button', 'col-mb', '✕'); del.type = 'button'; del.title = 'Delete this column';
+        del.addEventListener('click', (e) => { e.stopPropagation(); delCol(t, k); re(); });
+        row.append(up, dn, del);
+      }
+      lst.append(row);
+    });
+    m.append(lst);
+    const rs = h('button', 'tgr-lite', 'Reset this table'); rs.type = 'button'; rs.title = 'Back to the table as the portal builds it';
+    rs.addEventListener('click', (e) => { e.stopPropagation(); delete LAY[lid(t)]; try { localStorage.removeItem('radar-cols-' + t.id); } catch (e2) { /* private window */ } laySave(); if (S.sort[t.id] && String(S.sort[t.id].key).startsWith('x:')) delete S.sort[t.id]; applyLay(t); draw(); re(); });
+    m.append(rs);
+    m.addEventListener('click', (e) => e.stopPropagation());
+    document.body.append(m);
+    const r = anchor.getBoundingClientRect(), w = Math.min(340, window.innerWidth - 16);
+    m.style.width = w + 'px'; m.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px';
+    m.style.top = Math.min(r.bottom + 4, window.innerHeight - 120) + 'px'; m.style.maxHeight = (window.innerHeight - Math.min(r.bottom + 4, window.innerHeight - 120) - 8) + 'px';
+    if (!reopen && stock) { /* keep the page where it is */ } else if (reopen) { const i2 = m.querySelector('input'); if (i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); } }
+  };
+  document.querySelectorAll('.tgr-table').forEach((t) => {
+    const tb = t.querySelector('tbody'); if (!tb || !t.id) return;
+    const o = new MutationObserver(() => { applyLay(t); o.takeRecords(); });
+    o.observe(tb, { childList: true });
+    try { applyLay(t); } catch (e) { /* the data isn't loaded yet: the first draw applies it */ }
+    o.takeRecords();
+  });
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
