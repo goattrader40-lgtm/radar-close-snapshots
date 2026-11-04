@@ -45,19 +45,46 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Next (agreed with the user Nov 4 2026, plan 2-3): a code grader at 8:45 next to Claude's, then a backtest
+## Code grade next to Claude's (LIVE Nov 4 2026 ~6:15 PM, the user's "go live"; branches test/codegrade, test/lag50)
 
-- A GitHub job grades every gapper from SEC filings since the last close (form / item codes, the release), the Earnings
-  tab numbers and Yahoo's quarterly history: the user's A/B/C/F definitions as measurable rules (F = offering / ATM /
-  reverse split / going concern; A = beat + raise + growth 20%+ or 3+ pts faster, signed takeover, FDA approval, contract
-  25%+ of market cap; B = modest beat-and-raise, contract 5-25%, turnaround; C = no filing since the close / mixed).
-- **The user's chart layer (Nov 4)**: we are market players: a stock under its 200 SMA (and a weak group) gets shorted;
-  the gap that matters is the pre-market price going above the 50 and the 200 and over the 21-day (30-day?) high:
-  shorts caught off guard, a possible new trend. Trending = 21 EMA over 50 over 200; Mixed = anything else above the
-  200; Downtrend = under the 200.
-- Shown as a second column on the Pre-market tab for 1-2 weeks (Claude's grade stays the official one: alerts, Launch
-  laggards and the A/B news rules keep reading it), then the user decides. The backtest on the gap study's ~14 months
-  (held the gap / ran 20%+ / broke the gap-day low in 5 days) per rule and per news x chart combination.
+- **What**: radar/codegrade.py grades every gapper on the pre-market list (not only Claude's top 12), no Claude, at
+  ~8:52 / 9:05 / 9:18 AM ET (.github/workflows/codegrade.yml -> radar-data codegrade.json + codegrade_log.json). The
+  Pre-market tab's graded gappers show a **Code grade** column after Claude's Grade (≠ = they differ; hover for why).
+  **Claude's grade stays the official one** (alerts, Launch laggards, the A/B news rules) for 1-2 weeks; then the user
+  decides (codegrade_log.json holds each day's code and Claude grades; outcomes from the bars).
+- **Stage** at the last close ("rising" = vs 5 sessions ago; one day only repeats the price test: NVDA May 5 2026):
+  2 uptrend = 21 EMA > 50 EMA > 200 SMA, the 21 and 50 rising; 3 pullback = over the 200, the 50 over it, not 2;
+  1 basing = over the 200 with the 50 under it, or under the 200 without 4; 4 downtrend = under the 200, the 21 under
+  the 50, both falling (ALAB Nov 4: a breakdown though its 50 is still over its 200). Not the Trend column (10/21/50,
+  day to day) and not the ★ stars: separate jobs.
+- **Eligible** gap-ups at the pre-market price: 30%+ over the 52-week low, ADR 3.5%+, over the 50 EMA, over the
+  highest **close** of the last 21 sessions (the user's #3; KD Nov 4 was 0.7% under it: "—", but the 9:32 EARLY alert
+  caught it), a laggard at most 20% under the 200; **no cap over the 200** (leaders run 200-300% over it).
+- **News** from the SEC filings since the last close (classify): F offering / ATM / delisting / reverse split / going
+  concern (debt offerings aren't dilution: HCA); earnings from the Earnings tab, else the release (earn_fields);
+  takeover / FDA / trial / contract vs market cap / executive change from the release.
+- **Grade**: stage 2 / 3 A / B news = A / B; stage 1 / 4 now over the 200 = **⤴ reversal** A+ (A news) / A (B news);
+  still under the 200 = **W** laggard watch (A / B news or earnings, the Launch laggards rule); else "—"; C / F as they
+  are. A 5-8% gap one grade lower (YOU Nov 4: an A reversal on a 6.3% gap, +23.8%); 15x+ ATR over the 50 SMA at most C,
+  10x+ flagged "extended" (the user's setting); A+ only in a leading / turning-up group (group_status, the backtest's
+  rule). Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200.
+- **Backtest** (scanner/probe_codegrade.py, radar-tools `codegrade` -> radar-data probe_codegrade.json, every event saved
+  with its levels for re-scoring; 4,727 gap-ups Apr 2025 - Nov 2026): A+ 14: held 64%, ran 20%+ 62%, r20 +16%, trade
+  +18%; A / B didn't beat C (no estimates in history: the live side-by-side will tell); W crossed the 200 within 60
+  sessions 77%, +6.5% the 20 sessions after; excluded groups worst (28%+ over the 200 -> later replaced by the ATR rule;
+  under the 50; under the 21-day high); 15x+ ATR trade -7.2%; reversals in a leading group r20 +16% vs -3.5%.
+- **(a) live**: the pre-market list (premarket_build.py prepare, used by Claude and the code) drops stocks under 30% over
+  the 52-week low and gap-ups under the 50 EMA (Nov 4: 102 -> 59; FSLR, PLUG, CRWV, IREN, SPCX, RIOT, NVTS out).
+- **(b) live**: a laggard launch must close over its 50 EMA (launch.py laggard, alerts.py laggard alert). Backtest:
+  laggard-type gaps under the 50: 16, all broke the low, trade -5.2%; over it: 151, trade +2.5%, 72% crossed the 200.
+  Regress: every example the same; Launches rebuilt (RRX, NCLH stay).
+- Tools: radar-tools `codelive <asof>` (today's list -> codegrade_test.json), `runners` (today's 8%+ gainers vs the
+  21-day closing high), `reltext`, `earntest`.
+- **Open**: (1) after 1-2 weeks: compare the log (code vs Claude, by outcome) and decide; (2) a "W crossed the 200"
+  alert (where the laggard edge is); (3) a double beat (revenue and EPS) may deserve B (KD Nov 4 read C); (4) no
+  follow-up alert when KD cleared its base high after the 9:32 EARLY heads-up: check why; (5) stars x code grade, once
+  there's live history; (6) HELE missed the 700K average volume by 3%: the user's call; (7) Nov 4's codegrade.json /
+  log entry was made after the close (the first test run).
 
 ## Earnings tab, second round (live Nov 4 2026 ~1:15 PM, the user's "go live"; branches test/earnfix2, test/earnfix3; GV 8)
 
