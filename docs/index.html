@@ -226,6 +226,10 @@
   .tgr-alog { margin: 0; padding: 0; list-style: none; font-size: var(--cds-font-size-caption); max-height: 12rem; overflow: auto; }
   .tgr-alog li { padding: 3px 0; border-top: 1px solid var(--color-border-line); }
   .tgr-alog li:first-child { border-top: 0; }
+  .tgr-alog li.al-click { cursor: pointer; }
+  .tgr-alog li.al-click:hover { text-decoration: underline; }
+  .tgr-alog li.al-trig { font-weight: 600; }
+  .tgr-alog li.al-trig::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-fg-danger, #d1242f); margin-right: 6px; vertical-align: middle; }
   .tgr-auto { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; }
   .tgr-gdot { display: inline-block; width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-ok); margin-left: 5px; vertical-align: middle; }
   .tgr-pill { appearance: none; border: 1px solid var(--color-fg); background: var(--color-fg); color: var(--color-bg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
@@ -2472,9 +2476,48 @@ defCalc('industry_perf', {
     });
     return out;
   };
-  const notify = (title, body, tvs, key) => {
-    try { const n = new Notification(title, { body, tag: key }); n.onclick = () => { openTV(tv(tvs || '')); n.close(); }; } catch (e) { /* blocked */ }
+  /* the buys (the user, Nov 3 2026: "so it gets my attention"); the rest are heads-ups. Same list as radar/alerts.py
+     TRIGGERS: the 21 EMA retest alone is a heads-up ("not a strong sign by itself"), with the breakout level under it
+     (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
+  const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
+    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'ema21bl']);
+  const isTrigger = (key, title) => { const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
+  /* a short two-tone chime for a trigger (the browser lets the page play it once you clicked on it today) */
+  let actx = null;
+  const chime = () => {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      [[880, 0], [1320, 0.18]].forEach(([f, t]) => {
+        const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + t;
+        o.frequency.value = f; o.connect(g); g.connect(actx.destination);
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.25, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.35);
+        o.start(t0); o.stop(t0 + 0.4);
+      });
+    } catch (e) { /* no sound */ }
   };
+  /* the tab's title flashes the trigger's ticker until you look at the page */
+  const baseTitle = document.title;
+  let flashT = null, flashSyms = [];
+  const flash = (sym) => {
+    if (!document.hidden) return;
+    if (!flashSyms.includes(sym)) flashSyms.push(sym);
+    if (flashT) return;
+    let on = false;
+    flashT = setInterval(() => { on = !on; document.title = on ? '🔔 ' + flashSyms.join(' ') : baseTitle; }, 900);
+  };
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && flashT) { clearInterval(flashT); flashT = null; flashSyms = []; document.title = baseTitle; } });
+  const showLog = () => { window.focus(); const c = document.getElementById('ln-alert-card'); if (c) c.scrollIntoView({ block: 'center' }); };
+  const notify = (title, body, tvs, key) => {
+    const trig = isTrigger(key, title), sum = String(key).startsWith('summary:');
+    try {
+      /* a trigger stays on the screen until you close it; a heads-up fades as before */
+      const n = new Notification(trig ? '🔔 ' + title : title, { body, tag: key, requireInteraction: trig });
+      n.onclick = () => { if (sum || !tvs) showLog(); else openTV(tv(tvs)); n.close(); };
+    } catch (e) { /* blocked */ }
+    if (trig) { chime(); flash(String(key).split(':')[0]); }
+  };
+  /* one line of the alert log: a trigger starts with the bell (bold, a red dot in the log) */
+  const logLine = (when, title, body, key) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body;
   function runAlerts() {
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
     if (alertsOn && marketOpen()) {
@@ -2495,16 +2538,19 @@ defCalc('industry_perf', {
         if (key.endsWith(':launch') && (catBefore.has(sym) || catNow.has(sym))) { sent.add(key); return; }
         sent.add(key);
         notify(title, body, tvs, key);
-        log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · ' + title + ' — ' + body);
+        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key));
       });
-      /* the job's own alerts (it checks the big gap-ups every minute): a pop-up for the last 10 minutes' ones */
+      /* the job's own alerts (it checks the big gap-ups every minute): a pop-up for the last 10 minutes' ones. In a flood
+         the job groups the heads-ups into one alert that names them; each still comes with its full text: a line in the
+         log, no pop-up of its own */
       const nm = nyNow().m;
       ((SRV && SRV.date === todayNY() && SRV.items) || []).forEach((it) => {
         if (sent.has(it.key)) return;
         sent.add(it.key);
         const [H, M] = it.time.split(':').map(Number);
-        if (nm - (H * 60 + M) <= 10) notify(it.title, it.msg, it.tv, it.key);
-        log.unshift(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM') + ' · ' + it.title + ' — ' + it.msg);
+        if (nm - (H * 60 + M) <= 10 && !it.grouped) notify(it.title, it.msg, it.tv, it.key);
+        if (String(it.key).startsWith('summary:') && it.kind === 'summary') return;      /* its names are in the log line by line */
+        log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key));
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100));
     }
@@ -2532,7 +2578,7 @@ defCalc('industry_perf', {
               ', now ' + fPrice(r.price) + ': watch for the breakout' + tail] : null;
         if (!it || sent.has(it[0])) return;
         sent.add(it[0]); notify(it[1], it[2], r.tv, it[0]);
-        log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · ' + it[1] + ' — ' + it[2]);
+        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), it[1], it[2], it[0]));
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100));
     }
@@ -2540,7 +2586,7 @@ defCalc('industry_perf', {
     $('#ln-alert-btn').textContent = alertsOn ? 'Turn off' : 'Turn on';
     $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
       : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
-      : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day. ' + (log.length ? 'Today:' : 'None yet today.')
+      : alertsOn ? 'On: while this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day. Triggers (the buys) stay on the screen until you close them, chime, flash this tab and show bold with a red dot below; heads-ups fade, and in a flood they are grouped into one pop-up. Every alert has its own line below: click it for the chart. ' + (log.length ? 'Today:' : 'None yet today.')
       : 'Off. Turn on to get desktop pop-ups while this page is open.';
   }
   /* today's alert log, or only one ticker's alerts (each line: "3:12 PM · LION C breakout: ... — ...") */
@@ -2554,7 +2600,13 @@ defCalc('industry_perf', {
     $('#ln-alert-card h2').textContent = LAG ? 'Desktop alerts · laggards' : 'Desktop alerts';
     const mine = log.filter((x) => isLag(x) === LAG);
     const shown = q ? mine.filter((x) => new RegExp('· ' + q.replace(/[^A-Z0-9.\-]/g, '') + '\\b').test(x)) : mine;
-    shown.forEach((x) => ul.append(h('li', '', x)));
+    /* each line opens its stock's chart; a trigger (the bell) is bold with a red dot */
+    shown.forEach((x) => {
+      const trig = x.startsWith('🔔 '), sym = (/· ([A-Z][A-Z0-9.\-]*) /.exec(x) || [])[1];
+      const li = h('li', (trig ? 'al-trig' : '') + (sym ? ' al-click' : ''), trig ? x.slice(3) : x);
+      if (sym) { li.title = 'Open ' + sym + ' on TradingView'; li.addEventListener('click', () => openTV(tv(sym))); }
+      ul.append(li);
+    });
     if (q && !shown.length) ul.append(h('li', 'tgr-lbl', 'No alerts for ' + q + ' today' + (LAG ? ' on this tab.' : '.')));
     else if (!shown.length && log.length) ul.append(h('li', 'tgr-lbl', 'No ' + (LAG ? 'laggard' : 'launch') + ' alerts yet today.'));
   }
