@@ -3037,7 +3037,10 @@ defCalc('industry_perf', {
     const eg = h('td', 'num');
     if (r.eps_turn) { eg.append(h('span', 'tgr-up', 'turned +')); eg.title = 'A year ago ' + erEps(r.eps_yago); }
     else if (r.eps_growth !== null && r.eps_growth !== undefined) { eg.textContent = p1(r.eps_growth, true); eg.classList.add(r.eps_growth >= 0 ? 'tgr-up' : 'tgr-dn'); eg.title = 'A year ago ' + erEps(r.eps_yago); }
+    else if (r.eps_nm) { eg.append(h('span', 'tgr-lbl', 'n/m')); eg.title = 'A year ago ' + erEps(r.eps_yago) + ': too small for a % change'; }
     else eg.textContent = '—';
+    /* q/q: vs last quarter (Yahoo, the same basis as the actual) */
+    if (r.eps_qoq !== null && r.eps_qoq !== undefined) { eg.append(h('div', 'tgr-lbl', 'q/q ' + p1(r.eps_qoq, true))); eg.title = (eg.title ? eg.title + '\n' : '') + 'Last quarter ' + erEps(r.eps_prev); }
     /* revenue */
     const rv = h('td', 'num');
     if (r.rev_act) {
@@ -3046,6 +3049,13 @@ defCalc('industry_perf', {
       rv.title = 'Revenue from the ' + (r.rev_src || '') + (r.rev_est ? '; estimate ' + erMoney(r.rev_est) + ' (' + (r.est_from || '') + ')' : '');
     } else rv.append(h('span', 'tgr-lbl', r.rev_est ? 'est ' + erMoney(r.rev_est) : r.reported ? 'not found yet' : '—'));
     const rg = erPct(r.rev_growth); if (r.rev_yago) rg.title = 'Same quarter a year ago ' + erMoney(r.rev_yago);
+    /* q/q vs last quarter, and last quarter's own y/y (speeding up or slowing down) */
+    if (r.rev_qoq !== null && r.rev_qoq !== undefined) rg.append(h('div', 'tgr-lbl', 'q/q ' + p1(r.rev_qoq, true)));
+    if (r.rev_prev_growth !== null && r.rev_prev_growth !== undefined && r.rev_growth !== null && r.rev_growth !== undefined) {
+      const acc = r.rev_growth - r.rev_prev_growth;
+      rg.append(h('div', 'tgr-lbl ' + (acc >= 1 ? 'tgr-up' : acc <= -1 ? 'tgr-dn' : ''), (acc >= 1 ? '▲ ' : acc <= -1 ? '▼ ' : '') + 'last q ' + p1(r.rev_prev_growth, true) + ' y/y'));
+    }
+    if (r.rev_prev) rg.title = (rg.title ? rg.title + '\n' : '') + 'Last quarter ' + erMoney(r.rev_prev) + (r.rev_prev_growth !== null && r.rev_prev_growth !== undefined ? ' (' + p1(r.rev_prev_growth, true) + ' y/y): ▲ = growth speeding up, ▼ = slowing' : '');
     /* guidance and its growth */
     const gd = r.reported ? erGuide(r.guide) : h('td', 'er-guide', '');
     if (!r.reported) gd.append(h('span', 'tgr-lbl', '—'));
@@ -3083,8 +3093,8 @@ defCalc('industry_perf', {
     }
   };
   const ER_COLS = [['Stock', ''], ['Read', 'Strong bullish / Bullish / Mixed / Somewhat bearish / Bearish, from fixed points (see How this tab works); hover for the points'],
-    ['EPS', 'Adjusted EPS vs the estimate, and the surprise'], ['EPS growth', 'vs the same quarter a year ago'], ['Revenue', 'Revenue vs the estimate, and the surprise'],
-    ['Rev growth', 'vs the same quarter a year ago'], ['Guidance', 'Read from the press release: raised / lowered / reaffirmed / given; the guided revenue vs the analysts (hover for the words)'],
+    ['EPS', 'Adjusted EPS vs the estimate, and the surprise'], ['EPS growth', 'vs the same quarter a year ago (q/q = vs last quarter; n/m = a year-ago EPS under 5 cents)'], ['Revenue', 'Revenue vs the estimate, and the surprise'],
+    ['Rev growth', 'vs the same quarter a year ago; q/q = vs last quarter; last q = last quarter\'s own y/y (▲ growth speeding up, ▼ slowing)'], ['Guidance', 'Read from the press release: raised / lowered / reaffirmed / given; the guided revenue vs the analysts (hover for the words)'],
     ['Guide growth', 'The guided revenue vs the same period a year ago'], ['Move', 'Pre-market (after hours on the report evening, live in the session) vs the last close'],
     ['Group rank', 'The stock\'s best-ranked theme or industry after the last close'], ['RS', 'Market rank 1-99 after the last close (green 97+)'], ['Trend', 'Up / Turn up / Reclaim / Resting / Negative from the 5, 10, 21 and 50 EMA (live in the session); Nd = sessions in it'],
     ['vs 200D', 'Pre-market price vs the 200-day SMA'], ['vs 50 EMA', 'Pre-market price vs the 50-day EMA'], ['vs 20D high', 'Pre-market price vs the highest high of the previous 20 sessions'],
