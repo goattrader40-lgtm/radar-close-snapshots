@@ -149,6 +149,7 @@ jobs:
             git show origin/radar-data:earnings.json > /tmp/rd/earnings_prev.json 2>/dev/null || echo '{}' > /tmp/rd/earnings_prev.json
             python3 radar/earnings.py /tmp/rd/stocks.json /tmp/rd/earnings_prev.json /tmp/earnings.json && python3 radar/publish.py "earnings (by hand)" /tmp/earnings.json
           fi
+          case "$CMD" in reltext*) git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && git show origin/radar-data:earnings.json > /tmp/earn_now.json && python3 radar/probe_reltext.py /tmp/earn_now.json /tmp/probe_reltext.json ${CMD#reltext} && python3 radar/publish.py "earnings release texts" /tmp/probe_reltext.json;; esac
           case "$CMD" in earnprobe\ *) python3 radar/probe_earnings.py /tmp/probe_earnings.json ${CMD#earnprobe } && python3 radar/publish.py "earnings source check" /tmp/probe_earnings.json;; esac
           case "$CMD" in long\ *) python3 radar/probe_long.py /tmp/long_bars.json ${CMD#long } && python3 radar/publish.py "long history" /tmp/long_bars.json;; esac
           case "$CMD" in replay\ *) python3 radar/probe_replay.py /tmp/probe_replay.json ${CMD#replay } && python3 radar/publish.py "alert replay" /tmp/probe_replay.json;; esac
