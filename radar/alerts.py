@@ -337,7 +337,7 @@ def find(live, doc, now=None):
         if g in ("A+", "A"):
             out.append((f"{sym}:launch", f"{sym} {g} launch", f"{facts}{cat} · ${price:.2f} through its base high ${pivot:.2f}"
                         + (" (delayed: faded gap " + mem[0] + ")" if mem else "") + f"{crossed} · theme {theme}", "high" if g == "A+" else "default", tvs))
-    for r in doc.get("launches", []) + doc.get("laggards", []):
+    for r in doc.get("launches", []) + doc.get("laggards", []) + s3_rows(doc):
         q = rows.get(r["symbol"])
         if not q or len(q) < 5 or q[4] is None:
             continue
@@ -489,7 +489,7 @@ def find(live, doc, now=None):
     followed = {r["symbol"] for r in doc.get("launches", []) + doc.get("laggards", [])}
     for r in doc.get("setups3") or []:
         sym, bp = r.get("symbol"), r.get("buy_point")
-        if not sym or not bp or sym in followed or (r.get("away_adr") is not None and r["away_adr"] < 0):
+        if not sym or not bp or sym in followed or r.get("live") or (r.get("away_adr") is not None and r["away_adr"] < 0):
             continue                                    # no trigger, or the close was already over it
         q = rows.get(sym)
         if not q or len(q) < 5 or q[4] is None or not q[0] > bp:
@@ -521,7 +521,7 @@ def find_gob(live, doc, now=None):
     m = now.hour * 60 + now.minute - 570                # minutes since 9:30
     if m < 1:
         return out
-    for r in doc.get("launches", []):
+    for r in doc.get("launches", []) + s3_rows(doc):
         sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
         q = rows.get(sym)
         if not q or len(q) < 6 or q[4] is None:
@@ -585,8 +585,38 @@ def gob_range(bars, n):
     return hi, lo, any(b[1] > hi for b in after)
 
 
+def s3_rows(doc):
+    """3-SETUPS names not on Launches / Launch laggards, as launch-like rows for their live entries (setups3 "live",
+    scanner/launch.py S3_LIVE): every buy point, as on Launches (the user, Nov 3 2026: AMPL's retest of its breakout
+    level with the 21 EMA had no alert; Nov 1: desktop alerts for every 3-SETUPS trigger). The best group's tier from
+    the group rank (the stock's themes and tight group)"""
+    if "_s3rows" in doc:
+        return doc["_s3rows"]
+    followed = {r["symbol"] for r in doc.get("launches", []) + doc.get("laggards", [])}
+    ranks = {r["group"]: r for r in (doc.get("group_rank") or {}).get("rows", []) if not r.get("loose")}
+    out = []
+    for r in doc.get("setups3") or []:
+        if not r.get("live") or r.get("symbol") in followed:
+            continue
+        x = dict(r["live"], symbol=r["symbol"], tv=r.get("tv") or r["symbol"], s3=True, section=r.get("section"),
+                 source=r.get("source"), added=r.get("added"))
+        best = max((ranks[g] for g in _GROUPS.get(r["symbol"], []) if g in ranks), key=lambda g: g.get("pct") or 0, default=None)
+        x["group_tier_now"] = (best or {}).get("tier") or ""
+        x["group_rank_now"] = f"{best['group']} #{best['rank']}/{best['of']}" if best else None
+        out.append(x)
+    doc["_s3rows"] = out
+    return out
+
+
+def row_of(doc, sym):
+    """a followed stock's row: Launches, Launch laggards, then 3-SETUPS"""
+    return next((x for x in doc.get("launches", []) + doc.get("laggards", []) + s3_rows(doc) if x["symbol"] == sym), {})
+
+
 def since(r):
-    """how the stock came to be followed: its launch, or your Follow button"""
+    """how the stock came to be followed: its launch, your Follow button, or the 3-SETUPS list"""
+    if r.get("s3"):
+        return f" · 3-SETUPS {r.get('section') or ''} (from {r.get('source') or 'the watchlist'} {r.get('added') or ''})"
     return f" · your pick since {r['pick'][:10]}" if r.get("grade") == "You" else f" · launched {r['date']} ({r['grade']})"
 
 
@@ -711,11 +741,14 @@ def main():
         print("alerts: not in today's session yet")
         return
     sent = set(state["sent"])
+    low52_of(launch_p)                  # the stocks file: 52-week lows, 200 SMAs and each stock's groups (3-SETUPS tiers)
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
     # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
     found = [a for a in found if over_low52(a[0].split(":")[0], live, low52_of(launch_p))]
     # 3-SETUPS triggers only over the 200 SMA (the user, Nov 3 2026: ECHO's base top 100.90 under its 200 SMA 106.63)
-    found = [a for a in found if not a[0].endswith(":s3") or over_sma200(a[0].split(":")[0], live)]
+    low52_of(launch_p)
+    s3syms = {x["symbol"] for x in s3_rows(doc)}
+    found = [a for a in found if not (a[0].endswith(":s3") or a[0].split(":")[0] in s3syms) or over_sma200(a[0].split(":")[0], live)]
     gbars = {}
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
     cat_now = {a[0].split(":")[0] for a in found if a[0].endswith(":catalyst") and a[0] not in sent}
@@ -751,7 +784,7 @@ def main():
             else:
                 if sym_ not in gbars:
                     gbars[sym_] = gob_bars(sym_)
-                r_ = next((x for x in doc.get("launches", []) if x["symbol"] == sym_), {})
+                r_ = row_of(doc, sym_)
                 adr_ = r_.get("adr_pct") or 5.0
                 q_ = live["rows"].get(sym_)
                 if key.endswith(":gapbase"):
@@ -771,7 +804,7 @@ def main():
         if title is not None and key.endswith(":retest"):
             # today's low (1-minute chart) came into the zone, after a real pullback; with the EMA, the low at it
             sym_ = key.split(":")[0]
-            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == sym_), {})
+            r_ = row_of(doc, sym_)
             lo_ = chart_low_today(sym_)
             # the pullback's new low (undercut and reclaim), or any low in the zone while it tests the level with every close
             # since the first touch over the 21 EMA (ACN Oct 7 2026)
@@ -784,7 +817,7 @@ def main():
         if title is not None and key.endswith(":retest"):
             # and over the 10 EMA, unless today's low tested the 21 EMA (ARM Mar 30 2026 closed under its 10 EMA with the
             # 21 EMA far under: no retest; Apr 7 down under the 21 EMA and back: the retest + 21 EMA)
-            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
+            r_ = row_of(doc, key.split(":")[0])
             q_, lo_ = live["rows"].get(key.split(":")[0]), chart_low_today(key.split(":")[0])
             e10_, e21_, adr_ = r_.get("ema10") or 0, r_.get("ema21") or 0, r_.get("adr_pct") or 5.0
             if not (q_ and (q_[0] > e10_ or (lo_ and lo_ <= e21_ * (1 + adr_ / 400)))):
@@ -792,7 +825,7 @@ def main():
                 continue
         if title is not None and key.endswith(":ema21"):
             # today's low under the 21 EMA and under the open, the price in the upper half of today's range
-            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
+            r_ = row_of(doc, key.split(":")[0])
             q_, lo_, hi_ = live["rows"].get(key.split(":")[0]), chart_low_today(key.split(":")[0]), chart_high_today(key.split(":")[0])
             e21_ = r_.get("ema21") or 0
             op_ = q_[5] if q_ and len(q_) > 5 else None
@@ -819,7 +852,7 @@ def main():
             msg += f" · today's range ${lo_:.2f}-${hi_:.2f}"
         if title is not None and key.endswith(":touch"):
             # only when today's 1-minute chart shows the trade over the buy point (the quote's day high can be yesterday's)
-            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
+            r_ = row_of(doc, key.split(":")[0])
             ch = chart_high_today(key.split(":")[0])
             if not (ch and r_.get("buy_point") and ch > r_["buy_point"]):
                 print(f"{key}: not confirmed by today's chart (high {ch}), not sent")
@@ -832,7 +865,7 @@ def main():
         if title is not None and key.endswith(":ema21") and "RETEST" in title:
             # your read (RPD Nov 3 2026): the 21 EMA retest alone is no strong buy; holding over the breakout level too, with
             # today's low within 1 ADR over it, is two confluences: it says so and counts as a trigger
-            r_ = next((x for x in doc.get("launches", []) if x["symbol"] == key.split(":")[0]), {})
+            r_ = row_of(doc, key.split(":")[0])
             q_, lo_ = live["rows"].get(key.split(":")[0]), chart_low_today(key.split(":")[0])
             if confluence_level(r_, q_[0] if q_ else None, lo_):
                 lvl_ = confluence_level(r_, q_[0], lo_)

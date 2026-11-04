@@ -1664,6 +1664,14 @@ def s3_read(a, i0, last, was_in=False):
     return sec, setup, f, bp, away_adr, c, adr, tight, z
 
 
+# the follow() fields radar/alerts.py and the portal's desktop alerts read for a name's live entries (setups3 rows "live")
+S3_LIVE = ("adr_pct", "buy_point", "buy_point_top_date", "day_open", "price", "ema10", "ema21", "ema50", "ema21_watch",
+           "last_breakout_days_ago", "last_breakout_top", "last_breakout_date", "late", "leg", "pattern", "flag_shape",
+           "push_level", "reclaim_level", "retest_away", "retest_level", "retest_level_wick", "retest_need_low", "retest_zone",
+           "retest_from", "retest_tried", "retest_low", "retest_testing", "breakouts", "sessions", "vol_build",
+           "gap_base_level", "gap_base_pattern", "gap_base_ok", "off_high_pct")
+
+
 def setups3(A, today, wl, prev=(), removed=None):
     """3-SETUPS (your design, Nov 1 2026): every stock on 1-EP/GAP, 1-UPDAY and 2-POOL read by the Launches engine, like a
     pick from the day it came on its list (the gap or up day; the day it entered 2-POOL), with its buy points and
@@ -1711,6 +1719,9 @@ def setups3(A, today, wl, prev=(), removed=None):
                    to_buy_point_pct=fnum(100 * (bp / c - 1), 1) if bp else None, away_adr=fnum(away_adr, 2) if away_adr is not None else None,
                    base_day=f.get("base_day"), base_depth_adr=f.get("base_depth_adr"), tight_days=tight, vol_dryup=f.get("vol_dryup"),
                    adr_pct=fnum(adr, 2), leg=f.get("leg"))
+        # every buy point of the name for the live alerts, as on Launches (the user, Nov 3 2026: AMPL's retest of its
+        # breakout level with the 21 EMA was "Triggered today" after the close, with no alert during the day)
+        row["live"] = {k: f.get(k) for k in S3_LIVE}
         rows.append(row)
     rows.sort(key=lambda r: (S3_SECTIONS.index(r["section"]), r["away_adr"] if r["away_adr"] is not None else 99, r["symbol"]))
     return rows
@@ -2143,7 +2154,7 @@ def main():
         rows = setups3(A, cal[-1], wl, prev, removed_setups_of(a.picks) if a.picks else {})
         write_watchlist(rows, a.watchlist, wl)
         s3 = [dict(symbol=r["symbol"], tv=r.get("tv"), section=r["section"], setup=r["setup"], buy_point=r["buy_point"],
-                   away_adr=r["away_adr"], adr_pct=r["adr_pct"], why=r["why"]) for r in rows]
+                   away_adr=r["away_adr"], adr_pct=r["adr_pct"], why=r["why"], source=r.get("source"), added=r.get("added"), live=r.get("live")) for r in rows]
         print("3-SETUPS:", {sec: sum(1 for r in rows if r["section"] == sec) for sec in S3_SECTIONS})
     grank, gbest, ghist = None, None, None
     try:
