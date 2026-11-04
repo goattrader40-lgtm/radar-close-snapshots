@@ -45,6 +45,33 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Alerts: triggers first, full log, group moves (live Nov 3 2026 evening, the user's "go live"; branch test/alertlog)
+
+- **Why** (RPD Nov 3 2026, 3:46 PM): 28 alerts came due when the 3:45 "holding into the close" checks opened; the cap
+  of 8 a run was applied BEFORE today's 1-minute chart checks (6 of the 8 slots failed them, only MAZE went out) and the
+  other 21 became "21 more alerts: ... RPD, RPD ..." (tickers only, unchecked, marked sent, never retried, SPY chart on click).
+- **Now** (radar/alerts.py main): the chart checks run first; **triggers** (TRIGGERS: power, catalyst, basebreak, launch,
+  reversal, laggard, breakout, retest, reclaimbo2, ema50, push, pop, gapbase/gob1/gob5, confirm, s3, ema21bl, the 21 EMA
+  undercut & reclaim, grp:) always get their own alert (MAX_TRIGGERS 15 a run); heads-ups fill the rest of 8, the others
+  grouped in one alert naming each (ticker, kind, price). Every alert's full text is in alerts.json items (kind,
+  grouped, groups) -> the portal's log shows each, click = its chart.
+- **21 EMA retest alone = heads-up** (the user: "not a strong sign by itself"); holding over the breakout level too,
+  today's low within 1 ADR over it = trigger "21 EMA RETEST + BREAKOUT LEVEL $x" (key SYM:ema21bl; RPD: low 14.41,
+  level 13.84). One alert per move (a stock whose breakout-level retest holds doesn't also get the 21 EMA one).
+- **Group moves** (the user: RPD and QLYS both Cybersecurity at 3:46): 2+ stocks of the same theme or tight industry
+  group alerting the same day (any alert; loose "· other" industries don't count; a theme and a group with the same
+  stocks = one move, the better-ranked names it): each alert adds "CYBERSECURITY MOVE: also QLYS retest holding 15:46",
+  and one "GROUP MOVE: Cybersecurity (#18/99, 14 stocks): RPD, QLYS" alert a day per group (key grp:<group>, a trigger).
+  Same tag on the portal's own pop-ups (gm in localStorage).
+- **Desktop**: triggers and starred (★) alerts share one notify(): stay until closed, chime, flash the tab; log lines
+  bold with a red dot, clickable. Merged with the Nov 4 stars work (★★★ also on ema21bl).
+- **Not changed**: the scan's retest zone (RPD's low 0.45 ADR over the level still reads "21 EMA retest" after the
+  close; widening the zone = its own "explain first"). Open: the 1 ADR for the confluence is my pick (ask); big themes
+  (Enterprise SaaS 45 stocks) may give many GROUP MOVEs at 3:45: a 3-stock rule for 20+ stock themes if noisy.
+- **Watch out**: the Follow picks run at 8:56 PM ET Nov 3 built from Yahoo bars without the Nov 3 candle (Yahoo
+  rewrites the day's bar in the evening) -> a Nov 2 list; launch.json restored from 707ac36 (690f248). Don't run
+  picks.yml in the evening without checking launch.json "date" afterwards.
+
 ## Portal filters and narrow columns (live Nov 4 2026, the user's "go live"; branch test/filters, display only)
 
 - **RS and Trend filters** on the Watchlist (all five lists, TREND too) and on Launches / Launch laggards: an RS
