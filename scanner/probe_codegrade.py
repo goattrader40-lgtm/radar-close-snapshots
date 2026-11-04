@@ -139,8 +139,11 @@ def main():
             k = pos.get(st.dates[i - 1])
             grp = max((int(x[k]) for x in best_g.get(s, []) if k is not None and k < len(x)), default=0)
             lo52 = float(l[max(0, i - 252):i].min())
+            lv = dict(px=round(float(px), 4), pc=round(float(c[i - 1]), 4), e21=round(float(ar.e21[i - 1]), 4), e50=round(float(ar.e50[i - 1]), 4),
+                      s200=round(float(ar.s200[i - 1]), 4), hi21=round(float(h[i - 21:i].max()), 4), hi30=round(float(h[i - 30:i].max()), 4),
+                      s50=round(float(c[i - 50:i].mean()), 4) if i >= 50 else None)
             r = dict(sym=s, date=st.dates[i], up=up, gap=round(float(gp), 1), mcap=mcap.get(s, 0) * c[i] / last,
-                     over_low52=round(100 * (px / lo52 - 1), 1) if lo52 > 0 else None,
+                     over_low52=round(100 * (px / lo52 - 1), 1) if lo52 > 0 else None, lv=lv,
                      chart=G.chart_state(px, pc, e21, e50, s200, hi21), chart30=G.chart_state(px, pc, e21, e50, s200, hi30),
                      chartS50=G.chart_state(px, pc, e21, s50, s200, hi21) if s50 == s50 else "unknown", group=grp,
                      broke_trend=bool(not up and e21 > e50 > s200 and px < e50 and px < s200))
@@ -198,11 +201,11 @@ def main():
         if er:
             e = hist_earnings(r["sym"], r["date"], texts.get(er[0]["acc"], ("", ""))[1])
         nw = G.classify(fs, texts, "up" if r["up"] else "down", r["mcap"], e)
+        dn = "up" if r["up"] else "down"
         r.update(news=nw["news"], catalyst=nw["catalyst"], why=nw["reason"][:140], earn=bool(er),
-                 grade=G.combine(nw["news"], r["chart"], "up" if r["up"] else "down", r["broke_trend"], r["over_low52"]),
-                 grade_no52=G.combine(nw["news"], r["chart"], "up" if r["up"] else "down", r["broke_trend"]),
-                 grade30=G.combine(nw["news"], r["chart30"], "up" if r["up"] else "down", r["broke_trend"], r["over_low52"]),
-                 gradeS50=G.combine(nw["news"], r["chartS50"], "up" if r["up"] else "down", r["broke_trend"], r["over_low52"]))
+                 grade=G.combine(nw["news"], r["chart"], dn, r["broke_trend"], r["over_low52"], bool(er)),
+                 grade30=G.combine(nw["news"], r["chart30"], dn, r["broke_trend"], r["over_low52"], bool(er)),
+                 gradeS50=G.combine(nw["news"], r["chartS50"], dn, r["broke_trend"], r["over_low52"], bool(er)))
         done += 1
     graded = [r for r in ev if r.get("news")]
     print(done, "graded")
@@ -215,14 +218,14 @@ def main():
         T = out[side] = {}
         T["all"] = stats(rs)
         T["by_news"] = {g: stats([r for r in rs if r["news"] == g]) for g in "ABCF"}
-        T["by_chart"] = {c: stats([r for r in rs if r["chart"] == c]) for c in ("turnup", "trending", "mixed", "laggard", "downtrend", "under50_200")}
+        T["by_chart"] = {c: stats([r for r in rs if r["chart"] == c]) for c in ("turnup", "trending", "mixed", "laggard", "downtrend", "under50")}
         T["news_x_chart"] = {f"{g} / {c}": stats([r for r in rs if r["news"] == g and r["chart"] == c])
-                             for g in "ABCF" for c in ("turnup", "trending", "mixed", "laggard", "downtrend", "under50_200")}
+                             for g in "ABCF" for c in ("turnup", "trending", "mixed", "laggard", "downtrend", "under50")}
         GR = ("A+", "A", "B", "W", "C", "F", "—")
         T["by_grade"] = {g: stats([r for r in rs if r["grade"] == g]) for g in GR}
         T["by_grade_30day_high"] = {g: stats([r for r in rs if r["grade30"] == g]) for g in GR}
         T["by_grade_50sma"] = {g: stats([r for r in rs if r["gradeS50"] == g]) for g in GR}
-        ws = [r for r in rs if r["grade_no52"] == "W"]
+        ws = [r for r in rs if r["grade"] == "W"]
         cr = [r for r in ws if r.get("crossed200")]
         T["W_laggard_watch"] = {"n": len(ws), "crossed_200_within_60%": round(100 * len(cr) / len([r for r in ws if r.get("crossed200") is not None])) if ws else None,
                                 "median_days_to_cross": float(np.median([r["days_to_200"] for r in cr])) if cr else None,
@@ -240,7 +243,8 @@ def main():
                              for r in rs if r["grade"] == g][:12] for g in ("A+", "A", "B", "W", "F")}
     # every graded event, compact, so a rule change can be re-scored without re-running the SEC part
     K = ("sym", "date", "up", "gap", "over_low52", "news", "catalyst", "chart", "chart30", "chartS50", "group", "held", "ran20",
-         "broke5", "r20", "trade", "crossed200", "days_to_200", "after_cross_r20", "after_cross_ran20", "after_cross_held5", "earn")
+         "broke5", "r20", "trade", "crossed200", "days_to_200", "after_cross_r20", "after_cross_ran20", "after_cross_held5", "earn", "lv",
+         "broke_trend")
     out["rows_keys"] = K
     out["rows"] = [[r.get(k) for k in K] for r in graded]
     json.dump(out, open(a.out, "w"), separators=(",", ":"), default=str)

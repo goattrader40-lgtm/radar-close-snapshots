@@ -23,16 +23,16 @@ Two layers, then one combined grade:
                   C  no filing, a good report sold off
   CHART (the user, Nov 4 2026: "we are market players": a stock under its 200 SMA gets shorted; the gap that matters
         takes the pre-market price over the 50 and the 200 and over the 21-day high: shorts caught off guard)
+        under50   the pre-market price under the 50 EMA: not eligible for anything ("—")
+        laggard   over the 50 EMA, under the 200 SMA, over the 21-day high (the Launch laggards case: all but the 200)
+        downtrend over the 50 EMA, under the 200 SMA and the 21-day high: nothing ("—")
         turnup    was under the 50 EMA or the 200 SMA at the last close, the pre-market price over both and over the
                   21-day high
-        trending  21 EMA > 50 EMA > 200 SMA at the last close and the price over all three
-        mixed     over the 200, not stacked or under the 50
-        laggard   over the 50 EMA, under the 200 SMA, over the 21-day high (the Launch laggards case: all but the 200)
-        downtrend over the 50 EMA, under the 200 SMA and the 21-day high
-        under50_200  under both the 50 EMA and the 200 SMA: a gap-up qualifies for nothing ("—"; the user, Nov 4 2026)
-  GRADE (gap-ups) over the 200: news A: turnup A+, trending A, mixed B; news B: turnup A, trending B, mixed C;
-        news C stays C; F stays F. Under the 200 the trend isn't confirmed (the user, Nov 4 2026): only W (laggard watch:
-        A / B news, over the 50 and the 21-day high), everything else "—", not qualified. (a turnup without news is
+        trending  21 EMA > 50 EMA > 200 SMA at the last close (the averages, not the price)
+        mixed     over the 50 and the 200, not stacked
+  GRADE (gap-ups) eligible only over the 50 EMA and 30%+ over the 52-week low. Over the 200: news A: turnup A+,
+        trending A, mixed B; news B: turnup A, trending B, mixed C; C and F as they are. Under the 200 (the trend isn't
+        confirmed): only W = laggard chart + A / B news or an earnings report (the Launch laggards rule); else "—". (a turnup without news is
         flagged); F stays F; under 30% over the 52-week low (pre-market price) qualifies for nothing ("—"; the pre-market
         list drops these before grading). Gap-downs: the news grade, one
         grade more serious (B -> A) when a trending stock gaps under its 50 and 200.
@@ -296,38 +296,38 @@ def classify(fs, texts, direction, mcap, e=None):
 
 # ───────── the chart ─────────
 def chart_state(px, prev_c, e21, e50, s200, hi21):
-    """where the pre-market price puts the stock vs the last close's averages (the user's turn-up idea)"""
-    if None in (px, s200) or s200 != s200:
+    """where the pre-market price puts the stock vs the last close's averages (the user's rules, Nov 4 2026)"""
+    if None in (px, s200, e50) or s200 != s200:
         return "unknown"
-    if px < s200 and px < e50:                      # under both the 50 and the 200: qualifies for nothing (the user,
-        return "under50_200"                        # Nov 4 2026: NVTS $9.60 under its 50 EMA 10.65 and 200 SMA 13.30)
-    if px < s200:                                   # over the 50, under the 200: a laggard only if it clears the 21-day
-        return "laggard" if hi21 is not None and px > hi21 else "downtrend"   # high (every Launch laggards rule but the 200)
-    if (prev_c < e50 or prev_c < s200) and px > e50 and hi21 is not None and px > hi21:
-        return "turnup"
-    if e21 > e50 > s200 and px > e21:
-        return "trending"
-    return "mixed"
+    if px < e50:
+        return "under50"                            # under the 50 EMA in pre-market: not eligible for anything
+    if px < s200:                                   # over the 50, under the 200: a laggard only over the 21-day high
+        return "laggard" if hi21 is not None and px > hi21 else "downtrend"
+    if (prev_c < e50 or prev_c < s200) and hi21 is not None and px > hi21:
+        return "turnup"                             # was under the 50 or the 200, now over both and the 21-day high
+    if e21 > e50 > s200:
+        return "trending"                           # the averages stacked: about the averages, not the price (21 EMA
+    return "mixed"                                  # under the 50 = the trend already broke = mixed)
 
 
-# W = laggard watch (the user, Nov 4 2026): real news, over the 21-day high, but still under the 200 SMA after the gap
-# (every Launch laggards rule but the 200), so shorts are in control; lower importance, but it isn't dropped: the news grade (A / B) still feeds the Launch laggards rule, and the
-# day it gets over its 50 and 200 it is a turn-up
-COMBINE = {"A": {"turnup": "A+", "trending": "A", "mixed": "B", "laggard": "W"},
-           "B": {"turnup": "A", "trending": "B", "mixed": "C", "laggard": "W"}}
+# W = laggard watch (the user, Nov 4 2026): over the 50 and the 21-day high but still under the 200 SMA, on A / B news
+# or an earnings report (the Launch laggards rule), so shorts are in control; lower importance, but kept: the day it
+# gets over its 200 it is a turn-up. Under the 200 nothing else is graded (the trend isn't confirmed).
+COMBINE = {"A": {"turnup": "A+", "trending": "A", "mixed": "B"},
+           "B": {"turnup": "A", "trending": "B", "mixed": "C"}}
 LOW52_MIN = 30                                      # the user's main rule: 30%+ over the 52-week low (pre-market price)
 
 
-def combine(news, chart, direction, broke_trend=False, over_low52=None):
+def combine(news, chart, direction, broke_trend=False, over_low52=None, earn=False):
     if direction == "down":
         return "A" if news == "B" and broke_trend else news
-    if chart in ("under50_200", "downtrend") or (chart == "laggard" and news not in ("A", "B")):
-        return "—"                                  # under the 200 the trend isn't confirmed: no grade at all (the user,
-                                                    # Nov 4 2026), except W: A / B news + every laggard rule but the 200
-    g = COMBINE[news].get(chart, news) if news in COMBINE else news
     if over_low52 is not None and over_low52 < LOW52_MIN:
-        g = "—"                                     # under 30% over the 52-week low qualifies for nothing (the user, Nov 4 2026;
-    return g                                        # the pre-market list drops these before grading)
+        return "—"                                  # under 30% over the 52-week low: qualifies for nothing
+    if chart in ("under50", "downtrend", "unknown"):
+        return "—"                                  # under the 50, or under the 200 without the 21-day high: nothing
+    if chart == "laggard":
+        return "W" if news in ("A", "B") or (earn and news != "F") else "—"
+    return COMBINE[news].get(chart, news) if news in COMBINE else news
 
 
 # ───────── live: the pre-market list ─────────
@@ -445,7 +445,7 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
             print("bars", sym, repr(ex)[:120])
         lo52 = st.get("low_52w")
         ol = round((r.get("pm_last") / lo52 - 1) * 100, 1) if lo52 and r.get("pm_last") else None
-        fin = combine(nw["news"], ch, d, broke, ol)
+        fin = combine(nw["news"], ch, d, broke, ol, earn=bool(er or E.get(sym)))
         if ol is not None and ol < LOW52_MIN and d == "up":
             nw["flags"] = "; ".join(x for x in (nw["flags"], f"only {ol:.0f}% over the 52-week low (rule: 30%+)") if x)
         if d == "up" and nw["news"] == "C" and ch == "turnup":
