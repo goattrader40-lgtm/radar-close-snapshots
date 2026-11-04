@@ -27,7 +27,7 @@ NY = zoneinfo.ZoneInfo("America/New_York")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RULES = json.load(open(os.path.join(ROOT, "scanner", "settings.json")))["earnings"]
 SEC_UA = (os.environ.get("SEC_UA") or "").strip() or "radar-close-snapshots research"
-GV = 5          # the press-release reader's version: a change re-reads every release of the week
+GV = 6          # the press-release reader's version: a change re-reads every release of the week
 MON = {m: i for i, m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1)}
 
 
@@ -265,11 +265,18 @@ def rev_from(text, est, yago):
     if cut:
         head = head[:1500 + cut.start()]
     ref = est or yago
-    for m in re.finditer(r"\b(?:total |net |quarterly |record |third[- ]quarter |fourth[- ]quarter |first[- ]quarter |second[- ]quarter |q[1-4] )*"
-                         r"revenues?\b(?: and other income)?[^$.;]{0,70}?" + MONEY, head, re.I):
+    total = r"\btotal (?:net )?revenues?\b[^$.;]{0,70}?" + MONEY
+    anyrev = (r"\b(?:total |net |quarterly |record |third[- ]quarter |fourth[- ]quarter |first[- ]quarter |second[- ]quarter |q[1-4] )*"
+              r"revenues?\b(?: and other income)?[^$.;]{0,70}?" + MONEY)
+    for m in [*re.finditer(total, head, re.I), *re.finditer(anyrev, head, re.I)]:
+        # the company's 'Total revenue' first: the first revenue figure can be one product's (URGN Nov 4 2026:
+        # 'ZUSDURI net product revenue of $68.0 million'; total revenue $89.0 million)
         pre = head[max(0, m.start() - 80): m.start()].lower()
         if re.search(r"expect|outlook|guidance|between|range|forecast", pre + m.group(0)[:60].lower()):
             continue
+        if re.search(r"\b(?:nine|six|twelve) months\b|year[- ]to[- ]date|\bytd\b|for the (?:full )?(?:fiscal )?year\b|full[- ]year|trailing",
+                     pre[-40:] + m.group(0).lower()):
+            continue                                    # not the quarter ('Third Quarter Fiscal Year 2026' is: LIFE / LITE)
         if not ref:
             continue
         v = scaled(num(m.group(1)), m.group(2), ref)
@@ -353,7 +360,7 @@ def guidance(text, nq, fy):
         g["text"] = s.strip()
     # a revenue number in the outlook: a $ range, a single $ figure, or a growth rate
     if body:
-        best = None
+        best = best_prod = None
         for unitless in (False, True):                  # sentences with units first; then tables under '(in millions)'
             for m in re.finditer(r"\b(?:revenues?|sales|net sales)\b[^.;$%]{0,80}?" + MONEY + RANGE2, body, re.I):
                 a = num(m.group(1))
@@ -387,14 +394,22 @@ def guidance(text, nq, fy):
                 for kind, e in (("q", nq), ("fy", fy)):
                     if e and e.get("rev") and 0.7 <= mid / e["rev"] <= 1.45:
                         near.append((abs(mid / e["rev"] - 1), kind, e))
+                prior = prior_mid(body, m, a, b, ua or ub, prev_first=bool(p_old and p_new and p_old.start() < p_new.start()))
+                prod = product_of(body[max(0, m.start() - 120): m.end() + 20])
+                if prod:                                # one product's guide (URGN: JELMYTO ~$90M): shown, not vs the street
+                    if not best_prod:
+                        best_prod = {"kind": "product", "product": prod, "lo": lo, "hi": hi, "mid": mid, "prior_mid": prior,
+                                     "said": body[max(0, m.start() - 40): m.end() + 10].strip()}
+                    continue
                 if near:
                     _, kind, e = min(near)
                     best = {"kind": kind, "lo": lo, "hi": hi, "mid": mid, "vs_street": pct(mid, e["rev"]),
-                            "growth": pct(mid, e.get("rev_yago")), "period_end": e.get("end"),
+                            "growth": pct(mid, e.get("rev_yago")), "period_end": e.get("end"), "prior_mid": prior,
                             "said": body[max(0, m.start() - 40): m.end() + 10].strip()}
                     break
             if best:
                 break
+        best = best or best_prod
         if not best:
             m = None
             for mm in re.finditer(r"\b(?:total )?(?:revenues?|sales)\b[^.;]{0,30}?\b(?:to )?grow\w*\b[^.;]{0,50}?(?:(\d+(?:\.\d+)?)\s*%(?:\s*(?:to|-|–)\s*(\d+(?:\.\d+)?)\s*%)?"
@@ -420,7 +435,55 @@ def guidance(text, nq, fy):
             g.update(best)
             if g["dir"] == "none":
                 g["dir"] = "given"
+            pm = best.get("prior_mid")
+            if pm and best.get("mid"):
+                by = "raised" if best["mid"] > pm * 1.002 else "lowered" if best["mid"] < pm * 0.998 else "reaffirmed"
+                g["by_numbers"] = by            # the new vs the prior range beats the words (ADEA Nov 2 2026: $375-415M
+                words = g["dir"]                # vs $395-435M read 'reaffirmed' from 'reiterate ... long-term outlook')
+                if best.get("product") or words in ("given", "reaffirmed", "none") or words == by:
+                    g["dir"] = by
+                elif by != "reaffirmed":        # the words say raised and the revenue numbers lowered, or the reverse
+                    g["dir"] = "mixed"
     return g
+
+
+def prior_mid(body, m, a, b, unit, prev_first=False):
+    """the prior guidance for the same line, when the release shows it: the other column of an 'Updated | Prior'
+    table (ADEA), the first column of a 'Previous | Raised' table (SOLS), or '... compared with its prior guidance
+    (range) of $97 million to $101 million' (URGN)"""
+    sc = UNIT.get(unit, 1)
+    fig = r"\$?\s?(\d[\d,]*(?:\.\d+)?)\s*(?:million|billion|bn|mm|m|b)?\b"
+    rng = fig + r"(?:\s*(?:to|-|–|—|−)\s*" + fig + ")?"
+    if prev_first:                                  # the first figure of the row is the previous guide
+        m1 = re.compile(r"\$\s?(\d[\d,]*(?:\.\d+)?)" + RANGE2).search(body, m.start())
+        if m1:
+            x, y = num(m1.group(1)), num(m1.group(2)) if m1.group(2) else None
+            return (x + (y or x)) / 2 * sc if x else None
+        return None
+    hdr = body[max(0, m.start() - 300): m.start()]
+    if re.search(r"\b(updated|revised|new|current|raised|lowered)\b[^$]{0,60}\b(prior|previous)\b", hdr, re.I):
+        m2 = re.compile(r"\s*\$\s?" + rng).match(body, m.end())       # the next column of the row
+        if m2:
+            x, y = num(m2.group(1)), num(m2.group(2)) if m2.group(2) else None
+            if x and 0.5 <= x / a <= 2:
+                return (x + (y or x)) / 2 * sc
+    m3 = re.compile(r"[^.;]{0,80}?\b(?:prior|previous|previously)\b[^$.;]{0,60}?\$\s?" + rng, re.I).match(body, m.end())
+    if m3:
+        x, y = num(m3.group(1)), num(m3.group(2)) if m3.group(2) else None
+        u = re.search(r"\b(million|billion)\b", m3.group(0), re.I)
+        s2 = UNIT.get(u.group(1).lower(), sc) if u else sc
+        if x and 0.5 <= x * s2 / (a * sc) <= 2:
+            return (x + (y or x)) / 2 * s2
+    return None
+
+
+NOT_PRODUCT = {"GAAP", "NYSE", "NASDAQ", "EBITDA", "FY", "USD", "ARR", "SAAS"}
+
+
+def product_of(s):
+    """'net product revenue guidance for JELMYTO' -> 'JELMYTO': a guide for one product (a brand in capitals)"""
+    m = re.search(r"\b(?:revenues?|sales)\b[^.;$]{0,40}?\b(?:for|of)\s+([A-Z][A-Z0-9]{3,})\b", s)
+    return m.group(1) if m and m.group(1) not in NOT_PRODUCT else None
 
 
 # ───────── the read ─────────
@@ -429,7 +492,7 @@ READS = [(6, "Strong bullish"), (3, "Bullish"), (0, "Mixed"), (-3, "Somewhat bea
 
 def score(r):
     """points: revenue surprise ±1/2, EPS surprise ±1/2, guidance (raised +2, above the street +1 more / +2 alone,
-    lowered -3, below the street -2), revenue growth 25%+ +1 / shrinking -1, the move after the report ±1/2.
+    lowered -3, below the street -2; one product's guide raised +1 / lowered -1), revenue growth 25%+ +1 / shrinking -1, the move after the report ±1/2.
     6+ Strong bullish, 3-5 Bullish, 0-2 Mixed, -1 to -3 Somewhat bearish, -4 or less Bearish."""
     pts, why = 0, []
     rs = r.get("rev_surprise")
@@ -442,7 +505,10 @@ def score(r):
         pts += p; why.append(f"EPS {'beat' if es > 0 else 'miss' if es < 0 else 'in line'} {es:+.1f}%")
     g = r.get("guide") or {}
     d, vs = g.get("dir"), g.get("vs_street")
-    if d == "raised":
+    if g.get("kind") == "product":               # one product's guide (URGN Nov 4 2026, JELMYTO): +1 / -1
+        if d in ("raised", "lowered"):
+            pts += 1 if d == "raised" else -1; why.append(f"{g.get('product')} guide {d}")
+    elif d == "raised":
         pts += 2; why.append("guidance raised")
     elif d == "lowered":
         pts -= 3; why.append("guidance lowered")
