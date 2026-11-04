@@ -380,6 +380,31 @@ def combine(news, ev, direction, ok=True, earn=False, broke_trend=False, gap=Non
     return g
 
 
+def stars(stocks, trend, launch_doc):
+    """{symbol: (star, trend label, group tier)} as the portal's Stars column shows them (docs/index.html launchStars, the
+    conviction stars, live Nov 4 2026), from the last close: ★★ = its best group ★ Top / Strong (not a loose group) and
+    Trend Negative (under the 21 EMA: a launch out of a pullback); ★ = Trend Up; ⚠ = no Trend label; "" = the rest.
+    Logged next to the code grade, so the two can be compared (the user, Nov 4 2026)"""
+    gr = (launch_doc or {}).get("group_rank") or {}
+    by = {(g["kind"], g["group"]): g for g in gr.get("rows", [])}
+    ug = any(r.get("group") for r in stocks)
+    tr = (trend or {}).get("rows", trend or {})
+    out = {}
+    for r in stocks:
+        ind = (r["group"] if r.get("group") else (r.get("industry") or "Other") + " · other") if ug else r.get("industry")
+        c = [by.get(("theme", t)) for t in (r.get("themes") or "").split(" | ") if t] + [by.get(("ind", ind))]
+        c = [x for x in c if x]
+        b = max(c, key=lambda x: (min(x["pct"], 89.9) if x.get("loose") else x["pct"], -x["rank"])) if c else None
+        tier = b["tier"] if b and not b.get("loose") else None
+        t = tr.get(r["symbol"])
+        lab = t[0] if t else None
+        if lab is None:
+            continue
+        star = "★★" if tier in ("Top", "Strong") and lab == "Negative" else "★" if lab == "Up" else "⚠" if lab == "" else ""
+        out[r["symbol"]] = (star, lab, tier)
+    return out
+
+
 def group_status(stocks, themes, trend):
     """{symbol: 2 leading / 1 turning up / 0} at the last close, the backtest's rule (scanner/launch.py group_status): a
     group of 3+ stocks is leading when 60%+ are over their 50 EMA and the median 1-month move is 8%+, turning up when
@@ -514,6 +539,12 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
     except Exception as ex:
         GRP = {}
         print("group status:", repr(ex)[:120])
+    try:                                                # the ★ stars of the Stars column, for the comparison
+        STR = stars(SL, json.load(open(os.path.join(os.path.dirname(stocks_path), "trend.json"))),
+                    json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "setups", "launch.json"))))
+    except Exception as ex:
+        STR = {}
+        print("stars:", repr(ex)[:120])
     E = {}
     try:
         ej = json.load(open(earn_path))
@@ -578,7 +609,9 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
         if d == "up" and ok and ev == "turnup" and nw["news"] == "A" and grp == 0:
             nw["flags"] = "; ".join(x for x in (nw["flags"], "its group isn't trending: A, not A+") if x)
         ch = {2: "uptrend", 3: "pullback", 1: "basing", 4: "downtrend"}.get(stg, "unknown")
+        sx = STR.get(sym) or ("", None, None)
         out[sym] = dict(nw, direction=d, stage=stg, chart=ch, event=ev if ok else None, eligible=ok, not_eligible=why, grade=fin, group=grp,
+                        star=sx[0], trend=sx[1], group_tier=sx[2],
                         levels=lv, claude=r.get("grade"), pm_last=px, over_low52=ol)
         print(f"{sym:6} {d:4} stage {stg} {('event ' + str(ev)) if ok else 'not eligible: ' + why:40} news {nw['news']} -> {fin:2} | Claude {r.get('grade')} | {nw['catalyst']}")
     json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "day": day,
@@ -597,7 +630,9 @@ def log(cg_path, log_path):
     for sym, r in cg.get("rows", {}).items():
         k = f"{cg['day']} {sym}"
         keep[k] = {"key": k, "date": cg["day"], "symbol": sym, "direction": r["direction"], "grade": r["grade"], "news": r["news"],
-                   "chart": r["chart"], "catalyst": r["catalyst"], "pm_last": r.get("pm_last"), "claude": r.get("claude"), "built_at": cg["built_at"]}
+                   "chart": r["chart"], "catalyst": r["catalyst"], "pm_last": r.get("pm_last"), "claude": r.get("claude"), "built_at": cg["built_at"],
+                   "star": r.get("star"), "trend": r.get("trend"), "group_tier": r.get("group_tier"), "stage": r.get("stage"),
+                   "event": r.get("event"), "eligible": r.get("eligible")}
     json.dump(sorted(keep.values(), key=lambda e: e["key"]), open(log_path, "w"), separators=(",", ":"))
     print(len(keep), "log entries")
 
