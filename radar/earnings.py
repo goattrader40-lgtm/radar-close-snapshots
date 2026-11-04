@@ -27,7 +27,7 @@ NY = zoneinfo.ZoneInfo("America/New_York")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RULES = json.load(open(os.path.join(ROOT, "scanner", "settings.json")))["earnings"]
 SEC_UA = (os.environ.get("SEC_UA") or "").strip() or "radar-close-snapshots research"
-GV = 4          # the press-release reader's version: a change re-reads every release of the week
+GV = 5          # the press-release reader's version: a change re-reads every release of the week
 MON = {m: i for i, m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1)}
 
 
@@ -228,10 +228,38 @@ class SEC:
 
 UNIT = {"million": 1e6, "billion": 1e9, "m": 1e6, "b": 1e9, "mm": 1e6, "bn": 1e9, "thousand": 1e3}
 MONEY = r"\$\s?(\d[\d,]*(?:\.\d+)?)\s*(million|billion|bn|mm|m|b)?\b"
+RANGE2 = r"(?:\s*(?:to|-|–|—|−|and)\s*\$?\s?(\d[\d,]*(?:\.\d+)?)\s*(million|billion|bn|mm|m|b)?\b)?"   # '$375.0 − 415.0' (ADEA)
+
+
+NEXT = re.compile(r"\s*(?:\(\d\)\s*)?(?:to\s+)?\$\s?(\d[\d,]*(?:\.\d+)?)\s*(million|billion|bn|mm|m|b)?\b", re.I)
+YEARS = re.compile(r"\b(?:Q[1-4]|fiscal|FY|(?:three|six|nine|twelve) months ended[^0-9]{0,30}\d{1,2},?)?\s*(20\d\d)\b[^$%]{0,40}?\b(20\d\d)\b", re.I)
+
+
+def scaled(v, u, ref):
+    """a $ figure in dollars: its own unit, else the table scale that fits the reference (thousands / millions)"""
+    if u:
+        return v * UNIT.get(u.lower(), 1)
+    for sc in (1, 1e3, 1e6, 1e9):
+        if 0.6 <= v * sc / ref <= 1.7:
+            return v * sc
+    return v
+
+
+def same(v, raw, u, b):
+    """v (read from the printed figure raw, e.g. '271.7') is last year's b, to the figure's own rounding
+    ('$271.7M' = 271,713,000; but '$594 million' is not 595,700,000: VAL Nov 2 2026 was flat y/y)"""
+    if not (v and b and raw and num(raw)):
+        return False
+    dec = len(raw.split(".")[1]) if "." in raw else 0
+    half = 0.5 * 10 ** -dec * (v / num(raw)) + 1
+    return half <= v * 0.002 and abs(v - b) <= half     # too rounded to tell ('$1.5 billion', IT / KD): not last year's
 
 
 def rev_from(text, est, yago):
-    """the quarter's revenue from the release's first part (before the outlook); checked against the estimate"""
+    """the quarter's revenue from the release's first part (before the outlook); checked against the estimate.
+    Two figures in a row (a table: 'Revenues $271.7M $309.0M', or 'from $271.7 million to $309.0 million') = last
+    year's and this year's: the one that is not last year's quarter (Yahoo's year-ago revenue), else the column of the
+    later year in the table's header (DUOL Nov 3 2026: Q3 2025 $271.7M | Q3 2026 $309.0M; the reader took $271.7M)."""
     head = text[:12000]
     cut = re.search(r"\b(outlook|guidance)\b", head[1500:], re.I)
     if cut:
@@ -242,16 +270,22 @@ def rev_from(text, est, yago):
         pre = head[max(0, m.start() - 80): m.start()].lower()
         if re.search(r"expect|outlook|guidance|between|range|forecast", pre + m.group(0)[:60].lower()):
             continue
-        v = num(m.group(1))
-        u = (m.group(2) or "").lower()
-        v = v * UNIT.get(u, 1) if u else v
         if not ref:
             continue
-        if not u:                                   # tables in thousands / millions: try the scale that fits
-            for sc in (1, 1e3, 1e6, 1e9):
-                if 0.6 <= v * sc / ref <= 1.7:
-                    v *= sc
-                    break
+        v = scaled(num(m.group(1)), m.group(2), ref)
+        old1 = same(v, m.group(1), m.group(2), yago)
+        n2 = NEXT.match(head, m.end())
+        v2 = scaled(num(n2.group(1)), n2.group(2) or m.group(2), ref) if n2 else None
+        if v2 is not None and 0.6 <= v2 / ref <= (1.7 if est else 4):
+            old2 = same(v2, n2.group(1), n2.group(2) or m.group(2), yago)
+            if old1 and not old2:
+                v = v2                                  # the first figure is last year's quarter
+            elif not old1 and not old2:
+                hd = [y for y in YEARS.finditer(head[max(0, m.start() - 1500): m.start()])]
+                if hd and int(hd[-1].group(2)) > int(hd[-1].group(1)):
+                    v = v2                              # the header puts last year first
+        elif old1:
+            continue                                    # last year's figure alone ('compared to $271.7 million')
         if 0.6 <= v / ref <= (1.7 if est else 4):
             return v
     return None
@@ -320,28 +354,46 @@ def guidance(text, nq, fy):
     # a revenue number in the outlook: a $ range, a single $ figure, or a growth rate
     if body:
         best = None
-        for m in re.finditer(r"\b(?:revenues?|sales|net sales)\b[^.;$%]{0,80}?" + MONEY + r"(?:\s*(?:to|-|–|—|and)\s*" + MONEY + ")?", body, re.I):
-            a = num(m.group(1))
-            ua = (m.group(2) or m.group(4) or "").lower()
-            b = num(m.group(3)) if m.group(3) else None
-            ub = (m.group(4) or ua).lower()
-            if a is None or not (ua or ub):
-                continue
-            ctx = body[max(0, m.start() - 160): m.end()].lower()
-            if re.search(r"\b(was|were|totaled|grew|increased|decreased|declined|reported|achieved)\b", m.group(0).lower()) \
-                    or not re.search(r"expect|anticipat|guid|outlook|forecast|project|to be|will be|range|between|approximately", ctx):
-                continue                                  # a result or a company profile, not a forecast
-            lo, hi = a * UNIT.get(ua or ub, 1), (b * UNIT.get(ub, 1) if b else a * UNIT.get(ua or ub, 1))
-            mid = (lo + hi) / 2
-            near = []
-            for kind, e in (("q", nq), ("fy", fy)):
-                if e and e.get("rev") and 0.7 <= mid / e["rev"] <= 1.45:
-                    near.append((abs(mid / e["rev"] - 1), kind, e))
-            if near:
-                _, kind, e = min(near)
-                best = {"kind": kind, "lo": lo, "hi": hi, "mid": mid, "vs_street": pct(mid, e["rev"]),
-                        "growth": pct(mid, e.get("rev_yago")), "period_end": e.get("end"),
-                        "said": body[max(0, m.start() - 40): m.end() + 10].strip()}
+        for unitless in (False, True):                  # sentences with units first; then tables under '(in millions)'
+            for m in re.finditer(r"\b(?:revenues?|sales|net sales)\b[^.;$%]{0,80}?" + MONEY + RANGE2, body, re.I):
+                a = num(m.group(1))
+                ua = (m.group(2) or m.group(4) or "").lower()
+                b = num(m.group(3)) if m.group(3) else None
+                ub = (m.group(4) or ua).lower()
+                if a is None or bool(ua or ub) == unitless:
+                    continue
+                hdr = body[max(0, m.start() - 300): m.start()]
+                p_old = re.search(r"\b(previous|prior)\b", hdr, re.I)
+                p_new = re.search(r"\b(raised|updated|revised|new|current|lowered|reduced)\b", hdr, re.I)
+                if p_old and p_new and p_old.start() < p_new.start():
+                    n2 = re.compile(r"\s*\$\s?(\d[\d,]*(?:\.\d+)?)" + RANGE2).match(body, m.end())
+                    if not n2:                          # 'Previous | Raised' columns: the second one (SOLS Nov 4 2026)
+                        continue
+                    a, b = num(n2.group(1)), num(n2.group(2)) if n2.group(2) else None
+                if b is not None and not (a and 0.5 <= b / a <= 2):
+                    b = None                            # not a range ('$300 million to 2027')
+                if unitless:                            # a table without units: its '(in millions)' marker (DUOL Nov 3 2026)
+                    mk = list(re.finditer(r"\bin (thousands|millions|billions)\b", body[:m.start()], re.I))
+                    if not mk or m.start() - mk[-1].end() > 600:
+                        continue
+                    ua = ub = {"thousands": "thousand", "millions": "million", "billions": "billion"}[mk[-1].group(1).lower()]
+                ctx = body[max(0, m.start() - 160): m.end()].lower()
+                if re.search(r"\b(was|were|totaled|grew|increased|decreased|declined|reported|achieved)\b", m.group(0).lower()) \
+                        or not re.search(r"expect|anticipat|guid|outlook|forecast|project|to be|will be|range|between|approximately", ctx):
+                    continue                              # a result or a company profile, not a forecast
+                lo, hi = a * UNIT.get(ua or ub, 1), (b * UNIT.get(ub, 1) if b else a * UNIT.get(ua or ub, 1))
+                mid = (lo + hi) / 2
+                near = []
+                for kind, e in (("q", nq), ("fy", fy)):
+                    if e and e.get("rev") and 0.7 <= mid / e["rev"] <= 1.45:
+                        near.append((abs(mid / e["rev"] - 1), kind, e))
+                if near:
+                    _, kind, e = min(near)
+                    best = {"kind": kind, "lo": lo, "hi": hi, "mid": mid, "vs_street": pct(mid, e["rev"]),
+                            "growth": pct(mid, e.get("rev_yago")), "period_end": e.get("end"),
+                            "said": body[max(0, m.start() - 40): m.end() + 10].strip()}
+                    break
+            if best:
                 break
         if not best:
             m = None
