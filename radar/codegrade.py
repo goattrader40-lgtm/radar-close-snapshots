@@ -329,7 +329,7 @@ def eligible(px, prev_c, e50, s200, hi, adr, gap, over_low52, max_ext=MAX_EXT200
     if over_low52 is not None and over_low52 < LOW52_MIN:
         return False, f"only {over_low52:.0f}% over the 52-week low (30%+)"
     if adr is not None and adr < LAUNCH["min_adr"]:
-        return False, f"ADR {adr:.1f}% (3.5%+)"
+        return False, f"ADR {adr:.2f}% (3.5%+)"
     ext = 100 * (prev_c / s200 - 1) if s200 else None
     if ext is not None and max_ext is not None and ext > max_ext:
         return False, f"{ext:.0f}% over the 200 SMA yesterday (at most {max_ext}%: parabolic)"
@@ -429,7 +429,8 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
         cl = {x["symbol"]: x.get("grade") for x in json.load(open(os.path.join(os.path.dirname(pm_path), "claude_premarket.json")))
               if x.get("scan_date") == (rows[0].get("scan_date") if rows else None)}
         for r in rows:
-            r.setdefault("grade", cl.get(r["symbol"]))
+            if not r.get("grade"):                      # the list's rows carry an empty grade
+                r["grade"] = cl.get(r["symbol"])
     except Exception:
         pass
     # every gapper on the list (rows.json: all that pass the list's rules), not only the top 12 Claude researches
