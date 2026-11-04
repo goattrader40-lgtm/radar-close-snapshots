@@ -90,6 +90,8 @@ TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "
 
 
 def is_trigger(key, title=""):
+    if key.startswith("grp:"):                          # a group move (2+ stocks of a theme / group alerting today)
+        return True
     kind = key.split(":", 1)[1] if ":" in key else ""
     if kind == "ema21":                                  # the 21 EMA undercut & reclaim (2 closes under: strong) is one
         return "UNDERCUT" in (title or "")
@@ -105,6 +107,60 @@ def short(a):
     what = title[len(sym):].strip() if title.startswith(sym) else title
     what = re.split(r" \+ | \(|: ", what)[0]
     return f"{sym} {what}" + (f" ${m.group(1)}" if m else "")
+
+
+# a few words for each kind, for the group-move lines (RPD 21 EMA + breakout level 3:46)
+KIND_WORDS = {"retest": "retest holding", "zone": "in the retest zone", "ema21": "21 EMA retest", "ema21bl": "21 EMA + breakout level",
+              "ema21zone": "at the 21 EMA", "breakout": "breakout", "touch": "touched the buy point", "confirm": "breakout confirmed",
+              "power": "power day", "catalyst": "catalyst gap", "basebreak": "base high cleared", "launch": "launch",
+              "reversal": "reversal launch", "laggard": "laggard launch", "reclaimbo": "back over its breakout level",
+              "reclaimbo2": "breakout undercut & reclaim", "ema50back": "back over the 50 EMA", "ema50": "50 EMA undercut & reclaim",
+              "push": "push", "pop": "pop", "gapbase": "gap out of base", "gob1": "gap out of base", "gob5": "gap out of base",
+              "s3": "3-SETUPS trigger", "early": "early gap", "near": "gapping to the buy point"}
+
+
+def kind_words(key, title=""):
+    kind = key.split(":", 1)[1] if ":" in key else ""
+    if kind == "ema21" and "UNDERCUT" in (title or ""):
+        return "21 EMA undercut & reclaim"
+    return KIND_WORDS.get(kind, kind)
+
+
+def group_moves(doc, state, alerts_now, now):
+    """the user (Nov 3 2026, RPD and QLYS both in Cybersecurity at 3:46 PM): 2+ stocks of the same theme or tight
+    industry group alerting the same day is a group move. Returns {group: [(sym, words, time), ...]} for the groups with
+    2+ stocks, from today's alerts so far plus this run's; the loose "· other" industries don't count"""
+    loose = {r["group"] for r in (doc.get("group_rank") or {}).get("rows", []) if r.get("loose")}
+    seen = {}
+    past = [(it["key"], it.get("title"), it.get("time")) for it in state.get("items", [])
+            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:"))]
+    for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now]:
+        sym = key.split(":")[0]
+        for g in _GROUPS.get(sym, []):
+            if g in loose or "· other" in g:
+                continue
+            lst = seen.setdefault(g, [])
+            if not any(x[0] == sym for x in lst):
+                lst.append((sym, kind_words(key, title), t))
+    pct = {r["group"]: r.get("pct") or 0 for r in (doc.get("group_rank") or {}).get("rows", [])}
+    best = {}
+    # a theme and an industry group with the same stocks alerting (Cybersecurity / Software: Cybersecurity) are one
+    # move: the better-ranked one names it
+    for g, v in seen.items():
+        if len(v) < 2:
+            continue
+        ss = frozenset(x[0] for x in v)
+        if ss not in best or pct.get(g, 0) > pct.get(best[ss], 0):
+            best[ss] = g
+    return {g: seen[g] for g in best.values()}
+
+
+def group_label(doc, g):
+    r = next((x for x in (doc.get("group_rank") or {}).get("rows", []) if x["group"] == g), None)
+    if not r:
+        return g
+    tier = ("★ Top " if r.get("tier") == "Top" else "Strong " if r.get("tier") == "Strong" else "")
+    return f"{g} ({tier}#{r['rank']}/{r['of']}, {r.get('members')} stocks)"
 
 
 def confluence_level(r, price, low):
@@ -584,6 +640,7 @@ def chart_low_today(sym):
 MIN_OVER_LOW52 = 30          # % over the 52-week low every alert needs (scanner/settings.json standard)
 _LOW52 = None
 _SMA200 = {}
+_GROUPS = {}                 # symbol -> its themes and its tight industry group (stocks.json themes " | ", group)
 
 
 def over_sma200(sym, live):
@@ -605,6 +662,8 @@ def low52_of(launch_p):
                     st = json.load(open(p))
                     _LOW52 = {s["symbol"]: s.get("low_52w") for s in st}
                     _SMA200.update({s["symbol"]: s.get("sma200") for s in st})
+                    _GROUPS.update({s["symbol"]: [t for t in str(s.get("themes") or "").split(" | ") if t]
+                                    + ([s["group"]] if s.get("group") else []) for s in st})
                     break
                 except Exception:
                     pass
@@ -799,13 +858,35 @@ def main():
     if len(grouped) == 1:
         solo, grouped = solo + grouped, []
     out_ = [(a, False) for a in solo] + [(a, True) for a in grouped]
+    # group moves: each alert of a stock whose theme / group has 2+ stocks alerting today says so, and the group gets its
+    # own alert once a day (a trigger: own push, a loud pop-up on the desktop)
+    low52_of(launch_p)
+    gm = group_moves(doc, state, solo + grouped, now)
+    if gm:
+        tagged = []
+        for (key, title, msg, prio, tvs), g_ in out_:
+            sym = key.split(":")[0]
+            mine = [g for g in gm if any(x[0] == sym for x in gm[g])]
+            for g in mine:
+                others = ", ".join(f"{x[0]} {x[1]} {x[2]}" for x in gm[g] if x[0] != sym)
+                msg += f" · {g.upper()} MOVE: also {others}"
+            tagged.append(((key, title, msg, prio, tvs), g_))
+        out_ = tagged
+        for g, lst in gm.items():
+            gk = f"grp:{g}"
+            if gk in state["sent"]:
+                continue
+            out_.append(((gk, f"GROUP MOVE: {group_label(doc, g)}: " + ", ".join(x[0] for x in lst),
+                          " · ".join(f"{x[0]} {x[1]} {x[2]}" for x in lst) + f" · {len(lst)} stocks of {g} alerting today",
+                          "high", ""), False))
     if grouped:
         names = " · ".join(short(a) for a in grouped)
         out_.append(((f"summary:{now:%H%M}", f"{len(grouped)} more heads-ups (in the portal's alert log)", names, "default", ""), False))
     for (key, title, msg, prio, tvs), is_grouped in out_:
         line = f"{now:%H:%M} {title}: {msg}"
         it = {"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs,
-              "kind": "summary" if key.startswith("summary:") else "trigger" if is_trigger(key, title) else "heads-up"}
+              "kind": "summary" if key.startswith("summary:") else "trigger" if is_trigger(key, title) else "heads-up",
+              "groups": _GROUPS.get(key.split(":")[0], [])}
         if is_grouped:
             it["grouped"] = True
         state.setdefault("items", []).append(it)

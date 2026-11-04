@@ -2481,7 +2481,14 @@ defCalc('industry_perf', {
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
     'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'ema21bl']);
-  const isTrigger = (key, title) => { const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
+  const isTrigger = (key, title) => { if (String(key).startsWith('grp:')) return true; const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
+  /* a few words per kind for the group-move lines (radar/alerts.py KIND_WORDS) */
+  const KIND_WORDS = { retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
+    breakout: 'breakout', touch: 'touched the buy point', confirm: 'breakout confirmed', power: 'power day', catalyst: 'catalyst gap', basebreak: 'base high cleared',
+    launch: 'launch', reversal: 'reversal launch', laggard: 'laggard launch', reclaimbo: 'back over its breakout level', reclaimbo2: 'breakout undercut & reclaim',
+    ema50back: 'back over the 50 EMA', ema50: '50 EMA undercut & reclaim', push: 'push', pop: 'pop', gapbase: 'gap out of base', gob1: 'gap out of base',
+    gob5: 'gap out of base', s3: '3-SETUPS trigger', early: 'early gap', near: 'gapping to the buy point' };
+  const kindWords = (key, title) => { const k = String(key).split(':')[1] || ''; return k === 'ema21' && /UNDERCUT/.test(title || '') ? '21 EMA undercut & reclaim' : (KIND_WORDS[k] || k); };
   /* a short two-tone chime for a trigger (the browser lets the page play it once you clicked on it today) */
   let actx = null;
   const chime = () => {
@@ -2520,6 +2527,7 @@ defCalc('industry_perf', {
   const logLine = (when, title, body, key) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body;
   function runAlerts() {
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
+    const ldocA = st('launch').status === 'ok' ? st('launch').data : null;
     if (alertsOn && marketOpen()) {
       /* your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low when it fires */
       const lowOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.low_52w])), smaOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.sma200]));
@@ -2527,6 +2535,19 @@ defCalc('industry_perf', {
       const over200 = (k) => { if (!k.endsWith(':s3')) return true; const sym = k.split(':')[0], sma = num(smaOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !sma || !q || !q[0] || q[0] > sma; };
       const over52 = (k) => { const sym = k.split(':')[0], lo = num(lowOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !lo || !q || !q[0] || q[0] >= lo * 1.3; };
       const found = liveAlerts().filter(([k]) => over52(k) && over200(k)), symOf = (k) => k.split(':')[0];
+      /* group moves (the user, Nov 3 2026: RPD and QLYS both in Cybersecurity): 2+ stocks of the same theme or tight
+         industry group alerting today; each alert of such a stock names the others (the job sends the GROUP MOVE alert) */
+      const looseG = new Set(((ldocA && ldocA.group_rank && ldocA.group_rank.rows) || []).filter((r) => r.loose).map((r) => r.group));
+      const grpOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, String(x.themes || '').split(' | ').filter(Boolean).concat(x.group ? [x.group] : []).filter((g) => !looseG.has(g) && !/· other/.test(g))]));
+      const gm = loadDay('gm', '{}');
+      const hm = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' });
+      const addGm = (key, title, t) => { const sym = symOf(key); (grpOf.get(sym) || []).forEach((g) => { gm[g] = gm[g] || []; if (!gm[g].some((x) => x[0] === sym)) gm[g].push([sym, kindWords(key, title), t]); }); };
+      ((SRV && SRV.date === todayNY() && SRV.items) || []).forEach((it) => { if (!/^(summary|grp):/.test(it.key)) addGm(it.key, it.title, it.time); });
+      /* a theme and a group with the same stocks alerting are one move: the better-ranked one names it */
+      const pctG = new Map(((ldocA && ldocA.group_rank && ldocA.group_rank.rows) || []).map((r) => [r.group, r.pct || 0]));
+      const oneMove = (g) => { const ss = (gm[g] || []).map((x) => x[0]).sort().join(','); return !Object.keys(gm).some((h) => h !== g && (gm[h] || []).map((x) => x[0]).sort().join(',') === ss && ((pctG.get(h) || 0) > (pctG.get(g) || 0) || ((pctG.get(h) || 0) === (pctG.get(g) || 0) && h < g))); };
+      const gmTag = (key) => { const sym = symOf(key); return (grpOf.get(sym) || []).filter((g) => (gm[g] || []).length >= 2 && oneMove(g))
+        .map((g) => ' · ' + g.toUpperCase() + ' MOVE: also ' + gm[g].filter((x) => x[0] !== sym).map((x) => x.join(' ')).join(', ')).join(''); };
       const catBefore = new Set([...sent].filter((k) => k.endsWith(':catalyst')).map(symOf));
       const catNow = new Set(found.map(([k]) => k).filter((k) => k.endsWith(':catalyst') && !sent.has(k)).map(symOf));
       found.forEach(([key, title, body, tvs]) => {
@@ -2537,6 +2558,8 @@ defCalc('industry_perf', {
         if (key.endsWith(':basebreak') && !catBefore.has(sym)) { if (catNow.has(sym)) sent.add(key); return; }
         if (key.endsWith(':launch') && (catBefore.has(sym) || catNow.has(sym))) { sent.add(key); return; }
         sent.add(key);
+        addGm(key, title, hm());
+        if (!/ MOVE: also /.test(body)) body += gmTag(key);
         notify(title, body, tvs, key);
         log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key));
       });
@@ -2552,7 +2575,7 @@ defCalc('industry_perf', {
         if (String(it.key).startsWith('summary:') && it.kind === 'summary') return;      /* its names are in the log line by line */
         log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key));
       });
-      saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100));
+      saveDay('sent', [...sent]); saveDay('log', log.slice(0, 100)); saveDay('gm', gm);
     }
     /* the morning's pre-market grades (the 8:47 grading posts them by about 9:10): one pop-up with the A and B names */
     const pmRows = rowsOf('premarket').filter((r) => !r.placeholder && (r.graded === true || r.graded === 'true'));
@@ -2602,7 +2625,7 @@ defCalc('industry_perf', {
     const shown = q ? mine.filter((x) => new RegExp('· ' + q.replace(/[^A-Z0-9.\-]/g, '') + '\\b').test(x)) : mine;
     /* each line opens its stock's chart; a trigger (the bell) is bold with a red dot */
     shown.forEach((x) => {
-      const trig = x.startsWith('🔔 '), sym = (/· ([A-Z][A-Z0-9.\-]*) /.exec(x) || [])[1];
+      const trig = x.startsWith('🔔 '), sym = / · GROUP MOVE: /.test(x) ? null : (/· ([A-Z][A-Z0-9.\-]*) /.exec(x) || [])[1];
       const li = h('li', (trig ? 'al-trig' : '') + (sym ? ' al-click' : ''), trig ? x.slice(3) : x);
       if (sym) { li.title = 'Open ' + sym + ' on TradingView'; li.addEventListener('click', () => openTV(tv(sym))); }
       ul.append(li);
