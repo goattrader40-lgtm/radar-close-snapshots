@@ -48,8 +48,8 @@ alone.
 ## Launch watch: ADR column, earnings Read and grade (live Nov 4 2026 morning, the user's "go live"; branch test/lwcols)
 
 - Pre-market tab, ★ Launch watch card only (display): an **ADR** column (adr_20 at the last close, base_stocks.json;
-  red under 3.5%) after To base high; the **Earnings** cell adds the Earnings tab's **Read** badge (earnings.json read,
-  points / why in the tooltip) once reported, and **Claude's 8:45 AM grade** (premarket.json, graded today) with the
+  red under 3.5%) after To base high; an **ER look** column after Earnings = the Earnings tab's **Read** (earnings.json
+  read, points / why in the tooltip, sortable; the user: its own column, not inside Earnings); the **Earnings** cell adds **Claude's 8:45 AM grade** (premarket.json, graded today) with the
   catalyst / reason in the tooltip. Nov 4: IT / TRI Mixed, BRKR / KD Bullish, PCOR Strong bullish, SWKS / QDEL Somewhat
   bearish; no starred name was graded that morning (RIOT DUOL NVTS ARRY FSLR OSCR HCA PLUG), the badge checked with a
   fake row in the browser. Not a rule: no rules workbook change, no regress needed.
