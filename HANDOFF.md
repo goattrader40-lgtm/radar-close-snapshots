@@ -353,6 +353,31 @@ alone.
   came from (Launches first); sorted by the Trend, most days first; it leaves when the Trend turns Negative or loses
   its label (still on its own list). 137 names on Nov 3. Rules T1.
 
+## Status at the end of the alerts session (Nov 3 evening 2026, session "Radar: work session (Nov 4)")
+
+- **Live on main** (each after the user's "go live"; `tools/replay.py --regress`: every agreed example reads the same;
+  details in the two sections at the top): (1) **alerts: triggers first, every alert in full, loud desktop triggers**
+  (the 3:46 PM flood that swallowed RPD), the **21 EMA retest + breakout level** confluence as a trigger, **group
+  moves** (2+ stocks of a theme / tight group alerting the same day: tag + one GROUP MOVE alert); (2) the **Watchlist
+  Group rank filter** (all / ★ Top / Top + Strong); (3) **every 3-SETUPS buy point alerts live as on Launches** (AMPL)
+  and the **Watchlist tab's own alert log**. Evening scan re-run by hand after (3): Nov 3 close, 53 on 3-SETUPS with
+  their live fields, so the new alerts work from Wed Nov 4's session.
+- **Test only, waiting for the user's "go live"**: `test/wllog` = the Watchlist alert log shows ONLY 3-SETUPS and TREND
+  tickers not on Launches / laggards (the user: "only trend and setups trigger"); the Launches log keeps the rest
+  (the 50 EMA undercut tab, pre-market grades; both leaked into the Watchlist log on main); GROUP MOVE on both.
+  Browser-tested, no errors. Go live = merge test/wllog (docs/index.html only).
+- **Agreed with the user** (no new agreed reads; tools/examples.txt unchanged): one pop-up per alert, a stock on both
+  lists alerts from Launches; a 21 EMA retest alone is a heads-up, with the breakout level under it a trigger; group
+  moves count at 2 stocks, themes and tight groups both; every 3-SETUPS buy point is an alert (not only the cross of
+  the Buy point column).
+- **Open (each needs the user's go)**: (a) test/wllog go live; (b) the 1 ADR distance for the breakout-level
+  confluence (my pick); (c) the scan's retest zone (0.2 ADR over the level: RPD Nov 3, low 0.45 ADR over it, reads
+  "21 EMA retest", not "retest held") = an "explain first"; (d) if GROUP MOVEs are noisy at 3:45, 3 stocks for themes
+  of 20+ stocks.
+- **First thing to check Wed Nov 4**: the 3:45 PM run (each trigger its own pop-up, grouped heads-ups name each one,
+  no "N more alerts" lines); 3-SETUPS entries alerting (Watchlist log); GROUP MOVE lines; the 4:40 PM scan keeps the
+  setups3 "live" fields (scanner.yml uses the same launch.py --watchlist path).
+
 ## Status at the end of the last session (Nov 3 evening - Nov 4 2026: the combination study and the conviction stars)
 
 - **Live on main** (the user's "go live", merged f4bc7ad; portal deploy checked, no browser errors; `tools/replay.py
