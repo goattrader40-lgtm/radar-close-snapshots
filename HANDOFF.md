@@ -45,6 +45,35 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Earnings tab, second round (live Nov 4 2026 ~1:15 PM, the user's "go live"; branches test/earnfix2, test/earnfix3; GV 8)
+
+- **Revenue found 56 -> 79 of 89 reports**: "Net sales" / "Sales" too (SKY, SN, CE), "Total revenue" / "Net sales" rows in
+  the tables further down (TVTX $224.6M, EL, CVI, PARR $3.05B where live had ~$2.06B from a growth %), the company's
+  total before one product's sales (URGN $89.0M, not ZUSDURI's $68.0M), the exact table figure over a rounded headline
+  (FBIN $1,113.7M, not "$1.1 billion" = a false -2.1% miss), 3-column tables (AMD this q | last q | last year).
+- **EPS on one basis**: the old swap to Nasdaq's estimate when Yahoo's was 3x off (the MPC rule) is gone; Yahoo's
+  estimate vs Yahoo's actual (FRSH +1000% -> +21.6%, LIFE +390% -> +25.1%, PCOR +264% -> +13.0%); Nasdaq's actual vs
+  Nasdaq's estimate. EPS growth "n/m" under 5 cents a year ago (AEHR), "n/m (one-off)" when last year's quarter was
+  2.5x+ and the release names a one-time gain (DUOL's $222.7M tax benefit).
+- **Guidance**: every outlook section searched for the number (ALAB $730-750M +12.9%, RAL, BETA, VGNT); new vs prior
+  numbers set raised / lowered / reaffirmed (ADEA, QDEL lowered; INSP narrowed = reaffirmed; "As of date | As of date"
+  columns); one product's guide shown as "JELMYTO only", +1 / -1 (URGN); long-term targets ignored; results rows skipped.
+- **New q/q**: EPS growth and Rev growth cells show "q/q" (vs last quarter, Yahoo) and "last q y/y" with ▲ speeding up /
+  ▼ slowing (DUOL: +13.7% y/y, q/q +3.5%, ▼ last q +18.3%).
+- Tested on all 86 releases (radar-tools `reltext`) and a full build (radar-tools `earntest` -> radar-data
+  earnings_test.json, the portal doesn't read it); 22 reads changed by the fixes (AVT, Q, SOLS ... up; FBIN, PRGO,
+  QDEL, OUST down); the Nov 3 hand-checked names unchanged except AEHR "n/m". Rules workbook updated.
+- **Open**: Monday-Tuesday reports of the first week have no saved estimates (fixes itself next week); VRDN (one
+  product), LQDA / PCVX / TNGX (no SEC release) have no revenue.
+
+## Pre-market safety lock (on test/pmlock, waiting for the user's "go live")
+
+- radar/premarket_build.py finish, before the grades are saved: an A / B whose reason or flags hedge ("not confirmed",
+  "unverified", "could not open") -> C; without a primary source (SEC, the company's site, a newswire with its release)
+  -> C; an earnings gapper whose Earnings tab read points the other way -> one grade lower; every earnings gapper's
+  flags carry the Earnings tab read. On Nov 4's grades: DUOL A -> C; RIOT A, NVTS B, ARRY B unchanged. No change to
+  the 8:45 task's prompt is needed (finish() reads earnings.json from the checkout's radar-data).
+
 ## Earnings reader fix: this year's revenue, outlook tables (live Nov 4 2026 ~9:25 AM, the user's "fix it go live"; branch test/earnfix)
 
 - **Why** (DUOL Nov 3 2026 after close, +20% pre-market): the Earnings tab read "Somewhat bearish, revenue miss -10.3%".
