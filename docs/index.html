@@ -1461,11 +1461,14 @@ defCalc('industry_perf', {
   /* RS and Trend filters (the user, Nov 4 2026): one set for the Watchlist (all five lists), one for Launches and Launch
      laggards; kept in this browser. RS = at least that rank; Trend = any of the ticked ones ("—" = no trend label). */
   const TR_OPTS = ['Up', 'Turn up', 'Reclaim', 'Resting', 'Negative', '—'], FKEY = 'radar-filters';
-  const FLT = (() => { const d = () => ({ rs: 0, tr: [] }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); return { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln) }; } catch (e) { return { wl: d(), ln: d() }; } })();
+  /* Group (Launches / Launch laggards only, the user Nov 4 2026): the Group rank column's tier now (its best group) */
+  const GR_OPTS = ['★ Top', 'Strong', 'Rest', 'No rank'];
+  const grLabel = (sym) => { const g = grBest(sym); return !g ? 'No rank' : g.tier === 'Top' ? '★ Top' : g.tier === 'Strong' ? 'Strong' : 'Rest'; };
+  const FLT = (() => { const d = () => ({ rs: 0, tr: [], gr: [] }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); return { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln) }; } catch (e) { return { wl: d(), ln: d() }; } })();
   const saveFlt = () => { try { localStorage.setItem(FKEY, JSON.stringify(FLT)); } catch (e) { /* private window: not kept */ } };
   const trLabel = (sym) => { const x = trendOf(sym); return x && x.st ? x.st : '—'; };
-  const fltPass = (k, sym, rs) => { const f = FLT[k], v = num(rs); return (!f.rs || (v !== null && v >= f.rs)) && (!f.tr.length || f.tr.includes(trLabel(sym))); };
-  const fltText = (k) => { const f = FLT[k], t = []; if (f.rs) t.push('RS ' + f.rs + '+'); if (f.tr.length) t.push('Trend ' + f.tr.join(' / ')); return t.length ? ' Filtered: ' + t.join(', ') + '.' : ''; };
+  const fltPass = (k, sym, rs) => { const f = FLT[k], v = num(rs); return (!f.rs || (v !== null && v >= f.rs)) && (!f.tr.length || f.tr.includes(trLabel(sym))) && (k !== 'ln' || !f.gr.length || f.gr.includes(grLabel(sym))); };
+  const fltText = (k) => { const f = FLT[k], t = []; if (f.rs) t.push('RS ' + f.rs + '+'); if (f.tr.length) t.push('Trend ' + f.tr.join(' / ')); if (k === 'ln' && f.gr.length) t.push('Group ' + f.gr.join(' / ')); return t.length ? ' Filtered: ' + t.join(', ') + '.' : ''; };
   const grTierN = (g) => (!g ? null : g.tier === 'Top' ? 2 : g.tier === 'Strong' ? 1 : 0);
   /* the stock's place inside that group (its own 1-, 3- and 6-month moves vs the group's other stocks) */
   const grPlace = (g, sym) => { if (!g || !g.order) return null; const o = g.order.split(' '); const i = o.indexOf(sym); return i < 0 ? null : { place: i + 1, of: o.length }; };
@@ -2215,17 +2218,23 @@ defCalc('industry_perf', {
     [['0', 'RS: all'], ['97', 'RS 97+'], ['90', 'RS 90+'], ['80', 'RS 80+']].forEach(([v, t]) => { const o = h('option', '', t); o.value = v; sel.append(o); });
     sel.value = String(f.rs || 0); sel.classList.toggle('on', !!f.rs);
     sel.addEventListener('change', () => { f.rs = +sel.value; sel.classList.toggle('on', !!f.rs); saveFlt(); draw(); });
-    const dd = h('details', 'tgr-dd'), sm = h('summary', 'tgr-search'), pan = h('div', 'tgr-dd-pan');
-    sm.title = 'Show only the ticked trends (live in the session); none ticked = all';
-    const sumTxt = () => { sm.textContent = 'Trend: ' + (f.tr.length ? f.tr.join(', ') : 'all') + ' ▾'; sm.classList.toggle('on', !!f.tr.length); };
-    TR_OPTS.forEach((o) => {
-      const lb = h('label', 'tgr-f'), cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = f.tr.includes(o);
-      cb.addEventListener('change', () => { f.tr = TR_OPTS.filter((x) => (x === o ? cb.checked : f.tr.includes(x))); saveFlt(); sumTxt(); draw(); });
-      lb.append(cb, document.createTextNode(o === '—' ? 'No trend (—)' : o)); pan.append(lb);
-    });
-    const clr = h('button', 'tgr-lite', 'Clear'); clr.type = 'button';
-    clr.addEventListener('click', () => { f.tr = []; pan.querySelectorAll('input').forEach((c) => { c.checked = false; }); saveFlt(); sumTxt(); draw(); });
-    pan.append(clr); dd.append(sm, pan); sumTxt(); box.append(sel, dd);
+    /* a dropdown of tick boxes: none ticked = all */
+    const ticks = (key, name, opts, label, tip) => {
+      const dd = h('details', 'tgr-dd'), sm = h('summary', 'tgr-search'), pan = h('div', 'tgr-dd-pan');
+      sm.title = tip;
+      const sumTxt = () => { sm.textContent = name + ': ' + (f[key].length ? f[key].join(', ') : 'all') + ' ▾'; sm.classList.toggle('on', !!f[key].length); };
+      opts.forEach((o) => {
+        const lb = h('label', 'tgr-f'), cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = f[key].includes(o);
+        cb.addEventListener('change', () => { f[key] = opts.filter((x) => (x === o ? cb.checked : f[key].includes(x))); saveFlt(); sumTxt(); draw(); });
+        lb.append(cb, document.createTextNode(label(o))); pan.append(lb);
+      });
+      const clr = h('button', 'tgr-lite', 'Clear'); clr.type = 'button';
+      clr.addEventListener('click', () => { f[key] = []; pan.querySelectorAll('input').forEach((c) => { c.checked = false; }); saveFlt(); sumTxt(); draw(); });
+      pan.append(clr); dd.append(sm, pan); sumTxt(); return dd;
+    };
+    box.append(sel, ticks('tr', 'Trend', TR_OPTS, (o) => (o === '—' ? 'No trend (—)' : o), 'Show only the ticked trends (live in the session); none ticked = all'));
+    if (k === 'ln') box.append(ticks('gr', 'Group', GR_OPTS, (o) => ({ '★ Top': '★ Top (top 3%)', Strong: 'Strong (top 3-10%)', Rest: 'Rest (ranked, not top 10%)', 'No rank': 'No rank' })[o],
+      'Show only launches whose best group (the Group rank column, after the last close) is in the ticked tiers; none ticked = all'));
   });
   document.addEventListener('click', (e) => document.querySelectorAll('.tgr-dd[open]').forEach((d) => { if (!d.contains(e.target)) d.open = false; }));
   /* Launches / Launch laggards as a TradingView import file: the rows on screen, in their order */
