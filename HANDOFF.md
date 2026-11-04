@@ -172,6 +172,27 @@ alone.
   rank_history(full=True) + launch_day_rank()). The lone-wolf tag still uses the old status (the user, Nov 3: keep it;
   a new-rank version needs its own test).
 
+- **Conviction stars (LIVE Nov 4 2026, the user's "go live"; test branch test/stars, study on test/combo)**: the
+  combination study (tools/combo_study.py, tools/combo_results.xlsx on test/combo; radar-tools `combotags` tags the
+  tested trades with group / RS / Trend -> radar-data probe_combo_tags.json): group rank x RS x Trend on 5,493 live
+  launch alerts and 5,783 Launches buy points, Aug 2025 - Oct 2026, the user's management, kept only when both halves
+  are positive, plus a luck line (shuffled labels). Stars, from yesterday's close for a launch today: **★★** = best
+  group Top/Strong and under the 21 EMA (+0.55R, 222); **★** = Trend Up (+0.33R, 1,203); **⚠ skip** = no Trend label
+  (-0.05R, 822); all alerts +0.16R. **★★★** = a pullback entry (retest, push, 21 EMA retest / U&R, breakout U&R) on a
+  launch with Top/Strong group, RS 80+, Trend Up, bought at the close, stop the day's low (+0.68R, 169; the only one
+  that beat the luck line); the "★★★ on a pullback" tag on Launches only once retest_away (ran 1.25+ ADRs over the
+  level: GDDY Nov 2026 didn't advance, no tag). Gap size checked: any gap up counts (0-4% ★★ +0.61R vs 4%+ +0.25R on
+  36; ★ +0.33 vs +0.32): a regular launch needs only gap > 0 and a 5%+ day (69% of regular launches gapped under 4%).
+  Not starred (tested): RS 97+ before the open (6 launches had it the day before), breakouts on the 5-min entry (2nd
+  half negative everywhere), Launching today bought at the close (+0.04R), earnings (3 months of dates only).
+  Portal: Pre-market tab "★ Launch watch" (the evening watch list, starred; from the pre-market scan after the list's
+  close only names gapping up; Copy ★★ / ★ / all shown), Stars column on the graded gappers, ★ tag in the live scanner,
+  Stars + Trend (yesterday) on Launching today, ★★★ tags on Launches; desktop alerts: ★★ / ★ in the launch alerts' titles
+  and a ':stars' alert for a starred stock launching, ★★★ added on the desktop to the job's retest / push / ema21 /
+  reclaimbo2 alerts; starred alerts stay until clicked, with a tone. Phone alerts unchanged (alerts.py untouched).
+  Rules sheet A2. `tools/replay.py --regress`: same. The History test table's Top/Strong rows change with the Nov 4 4:40
+  PM scan (today's groups; the 4:24 PM Nov 3 table still had the old industries: Top 198 -> 69).
+
 ## Tech review (Nov 3 2026, study only, branch `test/techreview`, radar-tools `techreview` -> radar-data probe_tech.json)
 
 - 561 tech / growth stocks $2B+; 231 in no tight group and no theme. 116 move on their own (best fit under 0.5, no
