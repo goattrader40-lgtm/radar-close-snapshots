@@ -45,6 +45,28 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## KD "missing" from the desktop alert log: the log, not the alert (TEST ONLY Nov 4 2026 night, branch test/livelog)
+
+- **What happened** (reproduced in Chromium at 9:45 AM Nov 4 on the Nov 3 lists and Trend labels, alerts on, empty log):
+  the desktop **did** fire `★★ KD CATALYST GAP` and filed it on the Launches log; the job's 9:32 `KD EARLY` went to the
+  **Watchlist** log (KD was on 2-POOL and, up 15%+, its live Trend label turned Reclaim: the Nov 3 rule files a TREND-list
+  ticker's alerts there). The search "KD" on Launches could not find the starred line: the log read the first word after
+  the time as the ticker ("★★"), so search missed it and a click on it opened **IT** (from "· IT Services & Consulting").
+  The log kept only the newest **100** lines (71 by the first check): by the afternoon the 9:32-9:35 lines were gone,
+  hence "No alerts for KD today on this tab" with nothing at all.
+- **Not the volume**: every one of the 662 alerting stocks has its own volume curve and a pace in live.json; on the exact
+  SIP minutes KD was 6.7x at 9:35 (POWER DAY needs 4x); the Alpaca correction (radar/sipcal.py) can't act before ~9:51
+  (first snapshot 9:34 + 16.5 min) and never takes the volume under the SIP volume of 16 min before. The typical-curve
+  fallback drafted for rvol_at was dropped (never needed).
+- **Test branch**: docs/index.html log: the ticker read past the stars (search + chart link only; the tab a line is filed
+  under is unchanged), a search looks through every tab's alerts and names the tab ("· on the Watchlist tab"), the log
+  keeps 400 lines. radar/livelog.py + radar/day.py: the **morning record** live_history.json on radar-data (9:30-11:00,
+  each watch-list stock gapping or up 5%+: time, price, chg, gap, volume, rel vol, the Alpaca correction in effect,
+  the alerts the rules fire then; missing quotes), restored from radar-data after a job handover.
+- **Open (the user's call)**: launch-type alerts (power day, catalyst gap, A+/A launch, ★ launches, EARLY, 2nd trigger) of
+  a TREND-list stock go to the Watchlist log under the Nov 3 rule, and the TREND list moves with the live price, so a big
+  gap-up can file there mid-morning. Proposal: those always on Launches; the Watchlist log keeps 3-SETUPS triggers.
+
 ## Phone alerts crashed after 9:34 on Nov 4: fixed (LIVE Nov 4 2026 evening, the user's "go live"; test/alertfix)
 
 - radar/alerts.py find() raised KeyError 'base_days' on 3-SETUPS rows (2-POOL / 1-UPDAY: AMLX, XMTR, TARS ...; added to the
@@ -99,7 +121,8 @@ alone.
   21-day closing high), `reltext`, `earntest`.
 - **Open**: (1) after 1-2 weeks: compare the log (code vs Claude, by outcome) and decide; (2) a "W crossed the 200"
   alert (where the laggard edge is); (3) a double beat (revenue and EPS) may deserve B (KD Nov 4 read C); (4) no
-  follow-up alert when KD cleared its base high after the 9:32 EARLY heads-up: check why; (5) stars x code grade, once
+  follow-up alert when KD cleared its base high after the 9:32 EARLY heads-up: answered Nov 4 night (it fired; the log
+  hid it: see "KD missing from the desktop alert log"); (5) stars x code grade, once
   there's live history; (6) HELE missed the 700K average volume by 3%: the user's call; (7) Nov 4's codegrade.json /
   log entry was made after the close (the first test run).
 

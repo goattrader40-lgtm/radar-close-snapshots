@@ -118,6 +118,12 @@ def live_once():
     lj = main_file("setups/launch.json")
     if lj:
         open(os.path.join(OUT, "launch.json"), "w").write(lj)
+        # the morning record (9:30-11:00): what the live data showed for the watch list's movers (radar/livelog.py)
+        hp = load_history()
+        sh(sys.executable, os.path.join(HERE, "livelog.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "launch.json"), hp,
+           os.path.join(OUT, "sipcal.json"), check=False)
+        if os.path.exists(hp):
+            files.append(hp)
         load_alert_state()
         r = sh(sys.executable, os.path.join(HERE, "alerts.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "launch.json"),
                os.path.join(OUT, "alerts.json"), *premarket_args(), check=False)
@@ -139,6 +145,21 @@ def load_alert_state():
     st = data_file("alerts.json")
     if st:
         open(p, "w").write(st)
+
+
+def load_history():
+    """the morning record's file (radar/livelog.py): this job's own copy, else the radar-data branch's (a fresh job after a handover)"""
+    p = os.path.join(OUT, "live_history.json")
+    try:
+        if json.load(open(p)).get("date") == now().date().isoformat():
+            return p
+    except Exception:
+        pass
+    if (now().hour, now().minute) < (11, 0):
+        st = data_file("live_history.json")
+        if st:
+            open(p, "w").write(st)
+    return p
 
 
 def premarket_args():
@@ -166,6 +187,7 @@ def fast_once():
     if r.returncode:
         log("fast:", (r.stderr or r.stdout).strip()[-300:])
         return
+    sh(sys.executable, os.path.join(HERE, "livelog.py"), out, need[0], load_history(), os.path.join(OUT, "sipcal.json"), check=False)   # the morning record
     load_alert_state()
     r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", *premarket_args(), check=False)
     txt = (r.stdout or r.stderr).strip()
