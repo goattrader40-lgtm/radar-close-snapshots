@@ -46,7 +46,17 @@ jobs:
           git show origin/radar-data:themes.json > /tmp/rd/themes.json
           git show origin/radar-data:gradelog.json > /tmp/rd/gradelog.json || true
           git show origin/radar-data:live.json > /tmp/rd/live.json || true
+          # the guard (the user, Nov 4 2026): never replace the list with an older close. In the evening Yahoo rewrites
+          # the day's bar and can serve bars without it (Nov 3 2026, 8:56 and 9:10 PM: a Nov 2 list replaced the Nov 3 one)
+          OLD_DATE=$(python3 -c "import json; print(json.load(open('setups/launch.json')).get('date', ''))" 2>/dev/null || echo "")
           python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out setups/launch.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json --picks setups/picks.json
+          NEW_DATE=$(python3 -c "import json; print(json.load(open('setups/launch.json')).get('date', ''))")
+          if [ -n "$OLD_DATE" ] && [[ "$NEW_DATE" < "$OLD_DATE" ]]; then
+            echo "GUARD: the rebuild is of the $NEW_DATE close, older than the list on the portal ($OLD_DATE): not saved."
+            echo "Your picks / removals are in setups/picks.json; the next evening scan (or a later Follow picks run) includes them."
+            git checkout -- setups/launch.json
+            exit 0
+          fi
           python3 -c "import json; d = json.load(open('setups/launch.json')); print('picks on the list:', ' '.join(r['symbol'] for r in d['launches'] if r.get('pick')) or '-')"
           git add setups/launch.json
           git diff --cached --quiet && exit 0
