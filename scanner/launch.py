@@ -1031,6 +1031,17 @@ def follow(a, i0, i, pick=False):
         cands.append((ib[0], "Inner base (last 20 days)", i + 1 - ib[1], 100 * (1 - st.l[ib[1]:i + 1].min() / ib[0])))
     bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)
     top_date = next((st.dates[k] for t, k in tops if bp is not None and t == bp), None)
+    # the base's own length (the user, Nov 4 2026, ACN: Base day 9 but Base length 190): for a base top, the sessions since
+    # that top was set (its day = day 1, in step with Base day); bdays (base_days) stays the level's reach, the sessions
+    # since anything traded above it (ACN 259.39, Oct 22 2026: last exceeded Feb 2), which the breakout alert text uses
+    top_k = next((k for t, k in tops if bp is not None and t == bp), None)
+    cur_len = (i - top_k + 1) if top_k is not None else bdays
+    # the 52-week high and the correction NOW, at bar i (launch_row's pct_of_52w_high / correction_pct are the launch
+    # day's: ACN launched Oct 1 2026 at 212.30 = 73% of its Jan 14 high 291.09); correction = the deepest drop after
+    # the 52-week high (ACN: Jan 14 291.09 -> Jun 22 118.15, 59%)
+    w52 = max(0, i - 251)
+    k52 = w52 + int(np.argmax(st.h[w52:i + 1]))
+    klo = k52 + int(np.argmin(st.l[k52:i + 1]))
     # gap out of base (your rule, Nov 1 2026; Zanger / Qullamaggie): the nearest base high over the close, the base top or a
     # pattern's pivot, not a flag line or a pop; an open above it tomorrow is a gap out of the base (radar/alerts.py)
     gb = min((x for x in cands if not x[1].startswith(("Flag", "Bull flag", "Bull pennant", "Pennant", "Pop"))), default=None)
@@ -1395,7 +1406,10 @@ def follow(a, i0, i, pick=False):
         last_breakout_date=st.dates[bo[0]] if bo else None, last_breakout_top=fnum(bo[1]) if bo else None,
         last_breakout_top_date=st.dates[bo[2]] if bo else None, last_breakout_days_ago=i - bo[0] if bo else None,
         last_breakout_base_days=below_since(a, bo[0], bo[1], bo[2]) if bo else None,
-        base_days=fnum(bdays, 0) if bdays is not None else None, base_depth_pct=fnum(bdep, 1) if bdep is not None else None,
+        base_days=fnum(bdays, 0) if bdays is not None else None, trig_base_len=fnum(cur_len, 0) if cur_len is not None else None,
+        high_52w=fnum(st.h[k52]), high_52w_date=st.dates[k52], off_52w_high_pct=fnum(100 * (1 - c[i] / st.h[k52]), 1),
+        correction_now_pct=fnum(100 * (1 - st.l[klo] / st.h[k52]), 1), correction_low=fnum(st.l[klo]), correction_low_date=st.dates[klo],
+        base_depth_pct=fnum(bdep, 1) if bdep is not None else None,
         flag_breakout_today=flag_bo, dry_entry_today=dry_day == i,
         flag_shape=fshape if flag_bo else (fl[4] if fl else None),
         base_depth_adr=fnum((bdep if bdep is not None else np.nan) / (st.adr[i] if st.adr[i] > 0 else np.nan), 1), surf10=surf(a.e10), surf21=surf(a.e21),

@@ -72,6 +72,9 @@ SHEETS = {
  ["gap out of base", "Opened over last night's base high"],
  ["from laggards", "Launched under the 200 SMA, then 5 closes in a row over it: moved to Launches"],
  ["Resistance column", "Overhead 3/6/9-month and 52-week highs past the buy point, nearest first, with % away"],
+ ["Base length column", "The current base: sessions since its top was set (day 1 = the high, like Base day); the tooltip gives how long nothing traded above that level"],
+ ["Off 52W high column", "How far the price is under its 52-week high now (live in the session), not on the launch day"],
+ ["Correction column", "The deepest drop after the 52-week high, to now (from the high to the lowest low since)"],
 ]),
 "L7 Live lists": (["What", "When", "Rule"], [
  ["Launching today", "Every 5 min, 9:30 AM-4:00 PM ET", "Watch list stocks meeting the launch rules on live prices (volume = pace for the time of day)"],
