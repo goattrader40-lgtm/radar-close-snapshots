@@ -214,9 +214,9 @@ def main():
         T = out[side] = {}
         T["all"] = stats(rs)
         T["by_news"] = {g: stats([r for r in rs if r["news"] == g]) for g in "ABCF"}
-        T["by_chart"] = {c: stats([r for r in rs if r["chart"] == c]) for c in ("turnup", "trending", "mixed", "downtrend")}
+        T["by_chart"] = {c: stats([r for r in rs if r["chart"] == c]) for c in ("turnup", "trending", "mixed", "laggard", "downtrend")}
         T["news_x_chart"] = {f"{g} / {c}": stats([r for r in rs if r["news"] == g and r["chart"] == c])
-                             for g in "ABCF" for c in ("turnup", "trending", "mixed", "downtrend")}
+                             for g in "ABCF" for c in ("turnup", "trending", "mixed", "laggard", "downtrend")}
         GR = ("A+", "A", "B", "W", "C", "F")
         T["by_grade"] = {g: stats([r for r in rs if r["grade"] == g]) for g in GR}
         T["by_grade_30day_high"] = {g: stats([r for r in rs if r["grade30"] == g]) for g in GR}
@@ -228,8 +228,9 @@ def main():
                                 "after_cross": {"held_over_200_5d%": round(100 * np.mean([r["after_cross_held5"] for r in cr])) if cr else None,
                                                 "ran20%": round(100 * np.mean([r["after_cross_ran20"] for r in cr if r.get("after_cross_ran20") is not None])) if cr else None,
                                                 "r20_avg": round(float(np.mean([r["after_cross_r20"] for r in cr if r.get("after_cross_r20") is not None])), 1) if cr else None},
-                                "C_under200_for_comparison": {"n": len([r for r in rs if r["news"] == "C" and r["chart"] == "downtrend"]),
-                                                              "crossed_200_within_60%": round(100 * np.mean([bool(r.get("crossed200")) for r in rs if r["news"] == "C" and r["chart"] == "downtrend" and r.get("crossed200") is not None])) if rs else None}}
+                                "C_laggard_for_comparison": {"n": len([r for r in rs if r["news"] == "C" and r["chart"] == "laggard"]),
+                                                              "crossed_200_within_60%": round(100 * np.mean([bool(r.get("crossed200")) for r in rs if r["news"] == "C" and r["chart"] == "laggard" and r.get("crossed200") is not None])) if any(r["news"] == "C" and r["chart"] == "laggard" for r in rs) else None},
+                                "AB_under200_under21d_high": stats([r for r in rs if r["news"] in ("A", "B") and r["chart"] == "downtrend"])}
         T["turnup_by_group"] = {f"group {k}": stats([r for r in rs if r["chart"] == "turnup" and r["group"] == k]) for k in (2, 1, 0)}
         T["AB_news_by_group"] = {f"group {k}": stats([r for r in rs if r["news"] in ("A", "B") and r["group"] == k]) for k in (2, 1, 0)}
         T["by_catalyst"] = {k: stats([r for r in rs if r["catalyst"] == k]) for k in sorted({r["catalyst"] for r in rs})}

@@ -27,9 +27,11 @@ Two layers, then one combined grade:
                   21-day high
         trending  21 EMA > 50 EMA > 200 SMA at the last close and the price over all three
         mixed     over the 200, not stacked or under the 50
-        downtrend the price under the 200 SMA
-  GRADE (gap-ups) news A: turnup A+, trending A, mixed B, downtrend W; news B: turnup A, trending B, mixed C,
-        downtrend W (W = laggard watch: real news, still under the 200); news C stays C (a turnup without news is
+        laggard   under the 200 SMA but over the 21-day high (the Launch laggards case: everything but the 200)
+        downtrend under the 200 SMA and under the 21-day high
+  GRADE (gap-ups) news A: turnup A+, trending A, mixed B, laggard W, downtrend C; news B: turnup A, trending B,
+        mixed C, laggard W, downtrend C (W = laggard watch: real news, over the 21-day high, still under the 200);
+        news C stays C (a turnup without news is
         flagged); F stays F; under 30% over the 52-week low (pre-market price) qualifies for nothing ("—"; the pre-market
         list drops these before grading). Gap-downs: the news grade, one
         grade more serious (B -> A) when a trending stock gaps under its 50 and 200.
@@ -296,8 +298,8 @@ def chart_state(px, prev_c, e21, e50, s200, hi21):
     """where the pre-market price puts the stock vs the last close's averages (the user's turn-up idea)"""
     if None in (px, s200) or s200 != s200:
         return "unknown"
-    if px < s200:
-        return "downtrend"
+    if px < s200:                                   # under the 200: a laggard only if it clears the 21-day high (the
+        return "laggard" if hi21 is not None and px > hi21 else "downtrend"   # Launch laggards rule; NVTS Nov 4: no)
     if (prev_c < e50 or prev_c < s200) and px > e50 and hi21 is not None and px > hi21:
         return "turnup"
     if e21 > e50 > s200 and px > e21:
@@ -305,11 +307,11 @@ def chart_state(px, prev_c, e21, e50, s200, hi21):
     return "mixed"
 
 
-# W = laggard watch (the user, Nov 4 2026): real news but still under the 200 SMA after the gap, so shorts are in
-# control; lower importance, but it isn't dropped: the news grade (A / B) still feeds the Launch laggards rule, and the
+# W = laggard watch (the user, Nov 4 2026): real news, over the 21-day high, but still under the 200 SMA after the gap
+# (every Launch laggards rule but the 200), so shorts are in control; lower importance, but it isn't dropped: the news grade (A / B) still feeds the Launch laggards rule, and the
 # day it gets over its 50 and 200 it is a turn-up
-COMBINE = {"A": {"turnup": "A+", "trending": "A", "mixed": "B", "downtrend": "W"},
-           "B": {"turnup": "A", "trending": "B", "mixed": "C", "downtrend": "W"}}
+COMBINE = {"A": {"turnup": "A+", "trending": "A", "mixed": "B", "laggard": "W", "downtrend": "C"},
+           "B": {"turnup": "A", "trending": "B", "mixed": "C", "laggard": "W", "downtrend": "C"}}
 LOW52_MIN = 30                                      # the user's main rule: 30%+ over the 52-week low (pre-market price)
 
 
