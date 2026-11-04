@@ -45,6 +45,23 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## 3-SETUPS: every buy point alerts live; Watchlist alert log; Group rank filter (live Nov 3 2026 late evening, the user's "go live")
+
+- **Why** (AMPL Nov 3 2026): "Triggered today: Retest held" (its breakout level 15.93-16.18 with the 21 EMA) after the
+  close, no alert in the day: 3-SETUPS names only alerted on a cross of the Buy point column (17.84, the next top).
+  Agreed Nov 1 was "desktop alerts for every 3-SETUPS trigger".
+- **Now**: scanner/launch.py saves each 3-SETUPS row's follow() fields (setups3 "live", S3_LIVE; also source / added);
+  radar/alerts.py s3_rows() runs them through the Launches entry loop (breakout, flag line, pop, push, retest zone /
+  holding, 21 EMA, breakout undercut & reclaim, gap out of base; tier from the stock's best group), row_of() for the
+  chart checks; only over the 200 SMA; a name on Launches / laggards alerts from there only. fast.py watches them.
+  The portal does the same (s3Live). Tested: AMPL at 3:46 -> "AMPL RETEST HOLDING into the close + 10 EMA & 21 EMA".
+- **Watchlist tab: its own desktop alert log** (the card moves to the tab you are on): the alerts of stocks not on
+  Launches / laggards; Launches shows its own; group moves on both. One pop-up per alert.
+- **Group rank filter on the Watchlist** (all / ★ Top / Top + Strong, the stock's best group; with RS / Trend, kept in
+  the browser; not on Launches). Nov 3: 3-SETUPS 63 -> 7 Top / 11 Top+Strong; TREND 137 -> 14 / 28.
+- The evening scan was re-run by hand after go live (Nov 3 close, date checked): 53 on 3-SETUPS, all with live
+  fields; the 200 SMA rule already took ECHO BLDR QDEL STOK TEX RH TNDM SHAK BEAM LEGN off.
+
 ## Alerts: triggers first, full log, group moves (live Nov 3 2026 evening, the user's "go live"; branch test/alertlog)
 
 - **Why** (RPD Nov 3 2026, 3:46 PM): 28 alerts came due when the 3:45 "holding into the close" checks opened; the cap
