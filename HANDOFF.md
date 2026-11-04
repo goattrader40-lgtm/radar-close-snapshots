@@ -72,6 +72,23 @@ alone.
   rewrites the day's bar in the evening) -> a Nov 2 list; launch.json restored from 707ac36 (690f248). Don't run
   picks.yml in the evening without checking launch.json "date" afterwards.
 
+## Launches: accurate Base length, Off 52W high, Correction (live Nov 4 2026, the user's "go live"; branch test/accurate)
+
+- **Off 52W high** replaces "% of 52W high" (that was the launch day's: ACN 73% = the Oct 1 close 212.30 / the Jan 14
+  high 291.09): how far under the 52-week high now, live in the session (from stocks.json high_52w until the evening
+  build writes launch rows' high_52w / off_52w_high_pct). ACN Nov 3: 12.6% under 291.09.
+- **Correction** = the deepest drop after the 52-week high, to now (correction_now_pct / correction_low(_date); ACN 59.4%,
+  Jan 14 291.09 -> Jun 22 118.15). The "neglected" tag still uses the launch day's (its tooltip says so).
+- **Base length** = the current base: sessions since the trigger's base top was set (trig_base_len, day 1 = its high;
+  ACN 9 = Base day 9, was 190). base_days is unchanged (the level's reach: nothing above 259.39 since Feb 2, 190
+  sessions): in the tooltip and in the breakout alert text. Base day still follows the Status (some count from the leg's
+  breakout: MRNA top Oct 21 = length 10, Base day 17): not changed, ask the user if they want it from the high.
+- Launch rows only get the new fields with the next Launches build (4:40 PM scan); dry build 41762168151 (Nov 3 close)
+  checked: ACN 9 / 12.5% / 59.4%. Regress: same.
+- **Evening rebuild pitfall again (Nov 3, 9:10 PM)**: the user's ✕ on SLN ran Follow picks on Yahoo bars without the Nov 3
+  candle -> a Nov 2 list; restored by hand (ea5222b: 690f248's list minus SLN). Open: a guard in picks.yml / launch.py so a
+  build never replaces a newer list with an older date (needs the user's go; offered Nov 4).
+
 ## Portal filters and narrow columns (live Nov 4 2026, the user's "go live"; branch test/filters, display only)
 
 - **RS and Trend filters** on the Watchlist (all five lists, TREND too) and on Launches / Launch laggards: an RS
