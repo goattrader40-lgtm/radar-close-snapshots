@@ -27,8 +27,9 @@ Two layers, then one combined grade:
                   21-day high
         trending  21 EMA > 50 EMA > 200 SMA at the last close and the price over all three
         mixed     over the 200, not stacked or under the 50
-        laggard   under the 200 SMA but over the 21-day high (the Launch laggards case: everything but the 200)
-        downtrend under the 200 SMA and under the 21-day high
+        laggard   over the 50 EMA, under the 200 SMA, over the 21-day high (the Launch laggards case: all but the 200)
+        downtrend over the 50 EMA, under the 200 SMA and the 21-day high
+        under50_200  under both the 50 EMA and the 200 SMA: a gap-up qualifies for nothing ("—"; the user, Nov 4 2026)
   GRADE (gap-ups) news A: turnup A+, trending A, mixed B, laggard W, downtrend C; news B: turnup A, trending B,
         mixed C, laggard W, downtrend C (W = laggard watch: real news, over the 21-day high, still under the 200);
         news C stays C (a turnup without news is
@@ -298,8 +299,10 @@ def chart_state(px, prev_c, e21, e50, s200, hi21):
     """where the pre-market price puts the stock vs the last close's averages (the user's turn-up idea)"""
     if None in (px, s200) or s200 != s200:
         return "unknown"
-    if px < s200:                                   # under the 200: a laggard only if it clears the 21-day high (the
-        return "laggard" if hi21 is not None and px > hi21 else "downtrend"   # Launch laggards rule; NVTS Nov 4: no)
+    if px < s200 and px < e50:                      # under both the 50 and the 200: qualifies for nothing (the user,
+        return "under50_200"                        # Nov 4 2026: NVTS $9.60 under its 50 EMA 10.65 and 200 SMA 13.30)
+    if px < s200:                                   # over the 50, under the 200: a laggard only if it clears the 21-day
+        return "laggard" if hi21 is not None and px > hi21 else "downtrend"   # high (every Launch laggards rule but the 200)
     if (prev_c < e50 or prev_c < s200) and px > e50 and hi21 is not None and px > hi21:
         return "turnup"
     if e21 > e50 > s200 and px > e21:
@@ -318,6 +321,8 @@ LOW52_MIN = 30                                      # the user's main rule: 30%+
 def combine(news, chart, direction, broke_trend=False, over_low52=None):
     if direction == "down":
         return "A" if news == "B" and broke_trend else news
+    if chart == "under50_200":
+        return "—"                                  # not qualified (whatever the news)
     g = COMBINE[news].get(chart, news) if news in COMBINE else news
     if over_low52 is not None and over_low52 < LOW52_MIN:
         g = "—"                                     # under 30% over the 52-week low qualifies for nothing (the user, Nov 4 2026;

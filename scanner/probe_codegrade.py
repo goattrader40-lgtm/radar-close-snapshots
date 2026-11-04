@@ -161,6 +161,7 @@ def main():
                 r["broke5"] = None
             r["r20"] = round(100 * (c[i + 20] / c[i] - 1), 1) if i + 20 < n else None
             if up and px < s200:                        # still under the 200: did it cross later, and how did it do from there?
+                r["under50"] = bool(px < e50)
                 j = next((j for j in range(i + 1, min(i + 61, n)) if c[j] > ar.s200[j]), None)
                 r["crossed200"] = j is not None if i + 60 < n else (True if j is not None else None)
                 if j is not None:
@@ -214,10 +215,10 @@ def main():
         T = out[side] = {}
         T["all"] = stats(rs)
         T["by_news"] = {g: stats([r for r in rs if r["news"] == g]) for g in "ABCF"}
-        T["by_chart"] = {c: stats([r for r in rs if r["chart"] == c]) for c in ("turnup", "trending", "mixed", "laggard", "downtrend")}
+        T["by_chart"] = {c: stats([r for r in rs if r["chart"] == c]) for c in ("turnup", "trending", "mixed", "laggard", "downtrend", "under50_200")}
         T["news_x_chart"] = {f"{g} / {c}": stats([r for r in rs if r["news"] == g and r["chart"] == c])
-                             for g in "ABCF" for c in ("turnup", "trending", "mixed", "laggard", "downtrend")}
-        GR = ("A+", "A", "B", "W", "C", "F")
+                             for g in "ABCF" for c in ("turnup", "trending", "mixed", "laggard", "downtrend", "under50_200")}
+        GR = ("A+", "A", "B", "W", "C", "F", "—")
         T["by_grade"] = {g: stats([r for r in rs if r["grade"] == g]) for g in GR}
         T["by_grade_30day_high"] = {g: stats([r for r in rs if r["grade30"] == g]) for g in GR}
         T["by_grade_50sma"] = {g: stats([r for r in rs if r["gradeS50"] == g]) for g in GR}
