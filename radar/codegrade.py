@@ -470,7 +470,7 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
             hi21 = max(hi[-21:]) if len(hi) >= 21 else None
             stg = stage(cl[-1], e21, e50, s200, E21[-1 - SLOPE], E50[-1 - SLOPE])
             ok, why = eligible(px, cl[-1], e50, s200, hi21, st.get("adr_20"), r.get("gap_pct") or 0, ol) if d == "up" else (True, "")
-            ev = event(stg, px, s200)
+            ev = event(stg, px, s200) if d == "up" else None      # the events are a gap-up idea
             broke = bool(d == "down" and stg == 2 and px < e50 and px < s200)
             lv = dict(e21=round(e21, 2), e50=round(e50, 2), s200=round(s200, 2) if s200 else None, hi21=round(hi21, 2) if hi21 else None,
                       e21_rising=E21[-1] > E21[-1 - SLOPE], e50_rising=E50[-1] > E50[-1 - SLOPE], ext200=round(100 * (cl[-1] / s200 - 1), 1) if s200 else None)
