@@ -45,6 +45,20 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Portal filters and narrow columns (live Nov 4 2026, the user's "go live"; branch test/filters, display only)
+
+- **RS and Trend filters** on the Watchlist (all five lists, TREND too) and on Launches / Launch laggards: an RS
+  dropdown (All / 97+ / 90+ / 80+ = at least that RS) and a "Trend: ▾" dropdown of tick boxes (Up, Turn up, Reclaim,
+  Resting, Negative, No trend "—"; any of the ticked, live Trend). One set for the Watchlist, one for Launches, kept in
+  the browser (localStorage `radar-filters`). A Launches ticker search still ignores every filter. The table note says
+  what is filtered. Nov 3 close: TREND + RS 97+ + Resting / Reclaim = 6 of 137; Launches RS 90+ + Up = 40 of 113.
+- **Narrower cells**: Group rank (everywhere: "Strong #22/213" over "Financial Tech… #1/5", the name cut at ~8.5em, all
+  of it in the tooltip), Group on launch day (the same, "(industry)" dropped), 21 EMA exit (date over the %), Resistance
+  ("3M $101.32 +3.4%"); the long headers wrap on two lines.
+- **Download for TradingView on Launches / Launch laggards**: the rows on screen (filters applied) in their order, one
+  ###Launches (or ###Launch laggards) section, for TradingView's Watchlist menu → Import list.
+- Merged with the conviction-stars work of the same day (a conflict in docs/index.html: both kept). Regress: same.
+
 ## Changes on Nov 2 2026 (made in the grading session, pushed straight to main at the user's request each time,
 ## WITHOUT the test-branch step; `tools/replay.py --regress` afterwards: every agreed example reads the same)
 
