@@ -339,130 +339,136 @@ def find(live, doc, now=None):
             out.append((f"{sym}:launch", f"{sym} {g} launch", f"{facts}{cat} · ${price:.2f} through its base high ${pivot:.2f}"
                         + (" (delayed: faded gap " + mem[0] + ")" if mem else "") + f"{crossed} · theme {theme}", "high" if g == "A+" else "default", tvs))
     for r in doc.get("launches", []) + doc.get("laggards", []) + s3_rows(doc):
-        q = rows.get(r["symbol"])
-        if not q or len(q) < 5 or q[4] is None:
-            continue
-        if gob_of(r, q):
-            continue                    # gapping out of its base: the gap-out-of-base alerts (find_gob) have it today
-        price, chg, rv = q[0], q[1], q[4]
-        op = q[5] if len(q) > 5 else None
-        sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
-        late = bool(r.get("late"))
-        ago = r.get("last_breakout_days_ago")
-        # a breakout a few sessions after the last one is the same push (RPD Oct 22 / Oct 23): the same leg
-        nxt = (r.get("leg") or 0) + (0 if ago is not None and ago < doc["rules"].get("leg_pause", 5) else 1)
-        # the pop out of a consolidation is an entry inside the base, not a new leg (ANF Oct 5 2026); so is the break of
-        # a bull flag's falling line: the leg comes with the close over the base top (TTAN Oct 30 2026)
-        inside = (r.get("pattern") or "").startswith("Pop out of the consolidation")
-        flag = (r.get("pattern") or "").startswith(("Flag", "Bull flag", "Bull pennant", "Pennant"))
-        if inside or flag:
-            nxt = r.get("leg") or 0
-        # confirmation: in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
-        # (RPD Oct 26 2026, after breaking its Aug high on Oct 23)
-        top = r.get("last_breakout_top")
-        confirm = (f"{sym}:confirm", f"{sym} breakout confirmed",
-                   f"opened ${op:.2f} and trades ${price:.2f} above the base top ${top:.2f} (broken {r['last_breakout_date']})"
-                   f" · {chg:+.1f}% · vol {rv:.1f}x for the time of day", "high", tvs) \
-            if top and ago is not None and ago <= 2 and op and op > top and price > top and rv >= 2 else None
-        # the 21 EMA entries in the base, set up at the last close (scanner/launch.py follow, ema21_watch)
-        w21, e21, adr21 = r.get("ema21_watch"), r.get("ema21"), r.get("adr_pct") or 5.0
-        if w21 and e21 and (now.hour, now.minute) >= (9, 35):
-            kind = ("undercut & reclaim (2 closes under it: strong)" if w21 == "undercut" else "retest (a controlled pullback into it)")
-            tail21 = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
-            if price <= e21 * (1 + adr21 / 400) and price > (r.get("ema50") or 0):
-                out.append((f"{sym}:ema21zone", f"{sym} at its 21 EMA in the base",
-                            f"${price:.2f} at the 21 EMA ${e21:.2f} (the last close's) · a 21 EMA {kind} setup: the buy is the close back"
-                            f" over it, in the upper half of the day" + tail21, "default", tvs))
-            if (now.hour, now.minute) >= (15, 45) and e21 < price <= e21 * (1 + 1.5 * adr21 / 100):
-                # today's low under the 21 EMA and the open, the price in the upper half of the day: checked on today's
-                # 1-minute chart before it goes out (main)
-                out.append((f"{sym}:ema21", f"{sym} 21 EMA {'UNDERCUT & RECLAIM' if w21 == 'undercut' else 'RETEST'} holding into the close",
-                            f"back over the 21 EMA ${e21:.2f} (the last close's) at ${price:.2f}"
-                            f" · the buy: at the close, if it holds over it" + tail21, "high" if w21 == "undercut" else "default", tvs))
-        # the breakout undercut & reclaim (the user's CAI Oct 9 2026): 2+ closes back under the breakout level, holding over the
-        # 50 EMA; today back over it: a heads-up as it crosses, from 3:45 PM holding into the close (the buy: the close)
-        rl = r.get("reclaim_level")
-        if rl and (now.hour, now.minute) >= (9, 35) and price > rl:
-            tail_ = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
-            out.append((f"{sym}:reclaimbo", f"{sym} back over its breakout level", f"${price:.2f} over the breakout level ${rl:.2f} after closing under it"
-                        f" · the buy: the close back over it (the breakout undercut & reclaim)" + tail_, "default", tvs))
-            if (now.hour, now.minute) >= (15, 45):
-                out.append((f"{sym}:reclaimbo2", f"{sym} BREAKOUT UNDERCUT & RECLAIM holding into the close", f"${price:.2f} back over the breakout"
-                            f" level ${rl:.2f} after closing under it, holding over the 50 EMA · the buy: at the close, if it holds" + tail_, "high", tvs))
-        # the retest of the last breakout: the zone for today was set at the last close (scanner/launch.py follow)
-        z, lvb = r.get("retest_zone"), r.get("retest_level")
-        if z and lvb and r.get("retest_away") and (now.hour, now.minute) >= (9, 35):
-            lvw, adr = r.get("retest_level_wick") or lvb, r.get("adr_pct") or 5.0
-            lv = f"${lvb:.2f}" + (f"-${lvw:.2f} (bodies-wicks)" if lvw > lvb * 1.001 else "")
-            emas = [(n, e) for n, e in (("10 EMA", r.get("ema10")), ("21 EMA", r.get("ema21")), ("50 EMA", r.get("ema50")))
-                    if e and lvb * (1 - adr / 100) <= e <= lvw * (1 + adr / 100)]
-            conf = (" · at the " + " & ".join(f"{n} (${e:.2f} at the last close)" for n, e in emas)) if emas else ""
-            tail = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
-            if z[0] <= price <= min(z[1], r.get("retest_need_low") or z[1]):
-                out.append((f"{sym}:zone", f"{sym} pulling back to its breakout level" + (" + " + " & ".join(n for n, e in emas) if emas else ""),
-                            f"${price:.2f} in the retest zone ${z[0]:.2f}-${z[1]:.2f} · level {lv} (broken {r['retest_from']}){conf}"
-                            f" · a heads-up: the buy is the close holding over ${lvb:.2f}" + tail, "default", tvs))
-            if (now.hour, now.minute) >= (15, 45) and lvb < price <= lvb * (1 + 1.5 * adr / 100) and price > (r.get("ema21") or 0):
-                # the low is checked on today's 1-minute chart before it goes out (main); an EMA counts when it trades over it
-                held = [(n, e) for n, e in emas if price > e]
-                conf = (" · over the " + " & ".join(f"{n} (${e:.2f} at the last close)" for n, e in held)) if held else ""
-                out.append((f"{sym}:retest", f"{sym} RETEST HOLDING into the close" + (" + " + " & ".join(n for n, e in held) if held else ""),
-                            f"came back to its breakout level {lv} (broken {r['retest_from']}) and trades ${price:.2f} over it{conf}"
-                            f" · the buy: at the close, if it holds over ${lvb:.2f}" + tail, "high" if held else "default", tvs))
-        # the push out of the 21 EMA with a gap after the retest's touch (push_level = what the open has to clear)
-        pl = r.get("push_level")
-        if pl and op and r.get("day_open") and op > max(r["day_open"], r["price"]) and price > pl:     # whatever the volume
-            gap_ = (op / (price / (1 + chg / 100)) - 1) * 100
-            out.append((f"{sym}:push", f"{sym} entry: push out of the 10 / 21 EMA with a gap",
-                        f"opened ${op:.2f} ({gap_:+.1f}%) over yesterday's candle, now ${price:.2f} over the trigger ${pl:.2f}"
-                        f" (yesterday's candle, its 10 & 21 EMA and the breakout level, all reclaimed)"
-                        f" · after the retest of its breakout level ${r.get('retest_level'):.2f} (touched {r.get('retest_tried')})"
-                        f" · {chg:+.1f}% · vol {rv:.1f}x for the time of day" + (" (light)" if rv < 1 else "") + f" · leg {r.get('leg')}" + since(r), "high", tvs))
-        bp = r.get("buy_point")
-        if bp and inside and (r.get("price") or 0) < bp:
-            # the pop out of a consolidation: after a tight candle, it opens above that candle's open and close and above
-            # the rising 10 and 21 EMA (bp = the level the open has to clear), still holding it; no volume needed (ANF Oct 5 2026)
-            if op and op > bp and price >= bp:
+        try:
+            q = rows.get(r["symbol"])
+            if not q or len(q) < 5 or q[4] is None:
+                continue
+            if gob_of(r, q):
+                continue                    # gapping out of its base: the gap-out-of-base alerts (find_gob) have it today
+            price, chg, rv = q[0], q[1], q[4]
+            op = q[5] if len(q) > 5 else None
+            sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
+            late = bool(r.get("late"))
+            ago = r.get("last_breakout_days_ago")
+            # a breakout a few sessions after the last one is the same push (RPD Oct 22 / Oct 23): the same leg
+            nxt = (r.get("leg") or 0) + (0 if ago is not None and ago < doc["rules"].get("leg_pause", 5) else 1)
+            # the pop out of a consolidation is an entry inside the base, not a new leg (ANF Oct 5 2026); so is the break of
+            # a bull flag's falling line: the leg comes with the close over the base top (TTAN Oct 30 2026)
+            inside = (r.get("pattern") or "").startswith("Pop out of the consolidation")
+            flag = (r.get("pattern") or "").startswith(("Flag", "Bull flag", "Bull pennant", "Pennant"))
+            if inside or flag:
+                nxt = r.get("leg") or 0
+            # confirmation: in the 3 sessions after a base breakout, it opens and trades above the base top on 2x+ volume
+            # (RPD Oct 26 2026, after breaking its Aug high on Oct 23)
+            top = r.get("last_breakout_top")
+            confirm = (f"{sym}:confirm", f"{sym} breakout confirmed",
+                       f"opened ${op:.2f} and trades ${price:.2f} above the base top ${top:.2f} (broken {r['last_breakout_date']})"
+                       f" · {chg:+.1f}% · vol {rv:.1f}x for the time of day", "high", tvs) \
+                if top and ago is not None and ago <= 2 and op and op > top and price > top and rv >= 2 else None
+            # the 21 EMA entries in the base, set up at the last close (scanner/launch.py follow, ema21_watch)
+            w21, e21, adr21 = r.get("ema21_watch"), r.get("ema21"), r.get("adr_pct") or 5.0
+            if w21 and e21 and (now.hour, now.minute) >= (9, 35):
+                kind = ("undercut & reclaim (2 closes under it: strong)" if w21 == "undercut" else "retest (a controlled pullback into it)")
+                tail21 = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
+                if price <= e21 * (1 + adr21 / 400) and price > (r.get("ema50") or 0):
+                    out.append((f"{sym}:ema21zone", f"{sym} at its 21 EMA in the base",
+                                f"${price:.2f} at the 21 EMA ${e21:.2f} (the last close's) · a 21 EMA {kind} setup: the buy is the close back"
+                                f" over it, in the upper half of the day" + tail21, "default", tvs))
+                if (now.hour, now.minute) >= (15, 45) and e21 < price <= e21 * (1 + 1.5 * adr21 / 100):
+                    # today's low under the 21 EMA and the open, the price in the upper half of the day: checked on today's
+                    # 1-minute chart before it goes out (main)
+                    out.append((f"{sym}:ema21", f"{sym} 21 EMA {'UNDERCUT & RECLAIM' if w21 == 'undercut' else 'RETEST'} holding into the close",
+                                f"back over the 21 EMA ${e21:.2f} (the last close's) at ${price:.2f}"
+                                f" · the buy: at the close, if it holds over it" + tail21, "high" if w21 == "undercut" else "default", tvs))
+            # the breakout undercut & reclaim (the user's CAI Oct 9 2026): 2+ closes back under the breakout level, holding over the
+            # 50 EMA; today back over it: a heads-up as it crosses, from 3:45 PM holding into the close (the buy: the close)
+            rl = r.get("reclaim_level")
+            if rl and (now.hour, now.minute) >= (9, 35) and price > rl:
+                tail_ = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
+                out.append((f"{sym}:reclaimbo", f"{sym} back over its breakout level", f"${price:.2f} over the breakout level ${rl:.2f} after closing under it"
+                            f" · the buy: the close back over it (the breakout undercut & reclaim)" + tail_, "default", tvs))
+                if (now.hour, now.minute) >= (15, 45):
+                    out.append((f"{sym}:reclaimbo2", f"{sym} BREAKOUT UNDERCUT & RECLAIM holding into the close", f"${price:.2f} back over the breakout"
+                                f" level ${rl:.2f} after closing under it, holding over the 50 EMA · the buy: at the close, if it holds" + tail_, "high", tvs))
+            # the retest of the last breakout: the zone for today was set at the last close (scanner/launch.py follow)
+            z, lvb = r.get("retest_zone"), r.get("retest_level")
+            if z and lvb and r.get("retest_away") and (now.hour, now.minute) >= (9, 35):
+                lvw, adr = r.get("retest_level_wick") or lvb, r.get("adr_pct") or 5.0
+                lv = f"${lvb:.2f}" + (f"-${lvw:.2f} (bodies-wicks)" if lvw > lvb * 1.001 else "")
+                emas = [(n, e) for n, e in (("10 EMA", r.get("ema10")), ("21 EMA", r.get("ema21")), ("50 EMA", r.get("ema50")))
+                        if e and lvb * (1 - adr / 100) <= e <= lvw * (1 + adr / 100)]
+                conf = (" · at the " + " & ".join(f"{n} (${e:.2f} at the last close)" for n, e in emas)) if emas else ""
+                tail = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
+                if z[0] <= price <= min(z[1], r.get("retest_need_low") or z[1]):
+                    out.append((f"{sym}:zone", f"{sym} pulling back to its breakout level" + (" + " + " & ".join(n for n, e in emas) if emas else ""),
+                                f"${price:.2f} in the retest zone ${z[0]:.2f}-${z[1]:.2f} · level {lv} (broken {r['retest_from']}){conf}"
+                                f" · a heads-up: the buy is the close holding over ${lvb:.2f}" + tail, "default", tvs))
+                if (now.hour, now.minute) >= (15, 45) and lvb < price <= lvb * (1 + 1.5 * adr / 100) and price > (r.get("ema21") or 0):
+                    # the low is checked on today's 1-minute chart before it goes out (main); an EMA counts when it trades over it
+                    held = [(n, e) for n, e in emas if price > e]
+                    conf = (" · over the " + " & ".join(f"{n} (${e:.2f} at the last close)" for n, e in held)) if held else ""
+                    out.append((f"{sym}:retest", f"{sym} RETEST HOLDING into the close" + (" + " + " & ".join(n for n, e in held) if held else ""),
+                                f"came back to its breakout level {lv} (broken {r['retest_from']}) and trades ${price:.2f} over it{conf}"
+                                f" · the buy: at the close, if it holds over ${lvb:.2f}" + tail, "high" if held else "default", tvs))
+            # the push out of the 21 EMA with a gap after the retest's touch (push_level = what the open has to clear)
+            pl = r.get("push_level")
+            if pl and op and r.get("day_open") and op > max(r["day_open"], r["price"]) and price > pl:     # whatever the volume
                 gap_ = (op / (price / (1 + chg / 100)) - 1) * 100
-                out.append((f"{sym}:pop", f"{sym} entry in base: the pop out of the consolidation",
-                            f"opened ${op:.2f} ({gap_:+.1f}%) above yesterday's tight candle and the rising 10 & 21 EMA, now ${price:.2f}"
-                            f" · {chg:+.1f}% · vol {rv:.1f}x · after its resting time (volume dried up, surfing the 10 & 21 EMA) · an entry inside"
-                            f" the base (still leg {nxt}) · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
+                out.append((f"{sym}:push", f"{sym} entry: push out of the 10 / 21 EMA with a gap",
+                            f"opened ${op:.2f} ({gap_:+.1f}%) over yesterday's candle, now ${price:.2f} over the trigger ${pl:.2f}"
+                            f" (yesterday's candle, its 10 & 21 EMA and the breakout level, all reclaimed)"
+                            f" · after the retest of its breakout level ${r.get('retest_level'):.2f} (touched {r.get('retest_tried')})"
+                            f" · {chg:+.1f}% · vol {rv:.1f}x for the time of day" + (" (light)" if rv < 1 else "") + f" · leg {r.get('leg')}" + since(r), "high", tvs))
+            bp = r.get("buy_point")
+            if bp and inside and (r.get("price") or 0) < bp:
+                # the pop out of a consolidation: after a tight candle, it opens above that candle's open and close and above
+                # the rising 10 and 21 EMA (bp = the level the open has to clear), still holding it; no volume needed (ANF Oct 5 2026)
+                if op and op > bp and price >= bp:
+                    gap_ = (op / (price / (1 + chg / 100)) - 1) * 100
+                    out.append((f"{sym}:pop", f"{sym} entry in base: the pop out of the consolidation",
+                                f"opened ${op:.2f} ({gap_:+.1f}%) above yesterday's tight candle and the rising 10 & 21 EMA, now ${price:.2f}"
+                                f" · {chg:+.1f}% · vol {rv:.1f}x · after its resting time (volume dried up, surfing the 10 & 21 EMA) · an entry inside"
+                                f" the base (still leg {nxt}) · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
+                                + since(r), "default", tvs))
+                elif confirm:
+                    out.append(confirm)
+                continue
+            # from 9:45 only: until a stock's first trades show, Yahoo's day high is yesterday's (ENTG Oct 30 2026: $170.01,
+            # yesterday's high, at 9:30; its real high was $159.00); and only a high at or above the open and the price
+            hi = q[7] if len(q) > 7 else None
+            if (now.hour, now.minute) >= (9, 45) and bp and (r.get("price") or 0) <= bp and hi and hi > bp and price <= bp \
+                    and hi >= price and (not op or hi >= op):
+                out.append((f"{sym}:touch", f"{sym} touched its buy point, back under",
+                            f"traded up to ${hi:.2f} today, over the buy point ${bp:.2f}, now ${price:.2f} ({100 * (price / bp - 1):+.1f}%)"
+                            f" · not a breakout yet: that alert comes when it trades over ${bp:.2f} at a check · {chg:+.1f}% · vol {rv:.1f}x"
                             + since(r), "default", tvs))
-            elif confirm:
-                out.append(confirm)
-            continue
-        # from 9:45 only: until a stock's first trades show, Yahoo's day high is yesterday's (ENTG Oct 30 2026: $170.01,
-        # yesterday's high, at 9:30; its real high was $159.00); and only a high at or above the open and the price
-        hi = q[7] if len(q) > 7 else None
-        if (now.hour, now.minute) >= (9, 45) and bp and (r.get("price") or 0) <= bp and hi and hi > bp and price <= bp \
-                and hi >= price and (not op or hi >= op):
-            out.append((f"{sym}:touch", f"{sym} touched its buy point, back under",
-                        f"traded up to ${hi:.2f} today, over the buy point ${bp:.2f}, now ${price:.2f} ({100 * (price / bp - 1):+.1f}%)"
-                        f" · not a breakout yet: that alert comes when it trades over ${bp:.2f} at a check · {chg:+.1f}% · vol {rv:.1f}x"
-                        + since(r), "default", tvs))
-        if not bp or (r.get("price") or 0) > bp or not price > bp:
-            if confirm:
-                out.append(confirm)                   # a new breakout the same day says more than the confirmation
-            continue
-        if True:
-            g, why = grade_breakout(r)
-            pat = r.get("pattern") or ""
-            pat = "base" if not pat or pat.startswith("Base forming") else pat
-            what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}; nothing traded above it for {int(r['base_days'])} sessions;"
-                    f" decisive with a close more than 0.5% over it, ${bp * 1.005:.2f}: within 0.5% a breakout with caution)"
-                    if pat == "Base top" and r.get("buy_point_top_date") else f"buy point ${bp:.2f}")
-            # the breakout that also pushed out of the 10 & 21 EMA with a gap: opened over yesterday's candle (its open and
-            # close) and both EMAs, a double confluence (GMAB Oct 5 2026)
-            push = bool(op and r.get("day_open") and r.get("ema10") and r.get("ema21")
-                        and op > max(r["day_open"], r["price"], r["ema10"], r["ema21"]))
-            why += " · also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle)" if push else ""
-            out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
-                        f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x for the time of day"
-                        + (" (light)" if rv < 1 else "") + " · "
-                        + (f"an entry in the base (still leg {nxt}), the base top is next" if flag else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else ""))
-                        + ("" if "group_tier_now" in r else f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})")
-                        + since(r), "high" if g == "A" else "default", tvs))
+            if not bp or (r.get("price") or 0) > bp or not price > bp:
+                if confirm:
+                    out.append(confirm)                   # a new breakout the same day says more than the confirmation
+                continue
+            if True:
+                g, why = grade_breakout(r)
+                pat = r.get("pattern") or ""
+                pat = "base" if not pat or pat.startswith("Base forming") else pat
+                # 3-SETUPS rows carry no base_days (Nov 4 2026: int(r['base_days']) raised on AMLX / XMTR ... and every check from
+                # 9:35 crashed: no alert all day after the 9:31-9:34 heads-ups)
+                bd = r.get("base_days")
+                what = (f"base top ${bp:.2f} (set {r['buy_point_top_date']}" + (f"; nothing traded above it for {int(bd)} sessions" if bd else "")
+                        + f"; decisive with a close more than 0.5% over it, ${bp * 1.005:.2f}: within 0.5% a breakout with caution)"
+                        if pat == "Base top" and r.get("buy_point_top_date") else f"buy point ${bp:.2f}")
+                # the breakout that also pushed out of the 10 & 21 EMA with a gap: opened over yesterday's candle (its open and
+                # close) and both EMAs, a double confluence (GMAB Oct 5 2026)
+                push = bool(op and r.get("day_open") and r.get("ema10") and r.get("ema21")
+                            and op > max(r["day_open"], r["price"], r["ema10"], r["ema21"]))
+                why += " · also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle)" if push else ""
+                out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
+                            f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x for the time of day"
+                            + (" (light)" if rv < 1 else "") + " · "
+                            + (f"an entry in the base (still leg {nxt}), the base top is next" if flag else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else ""))
+                            + ("" if "group_tier_now" in r else f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})")
+                            + since(r), "high" if g == "A" else "default", tvs))
+        except Exception as ex:                     # one bad row skips that stock, not every alert (Nov 4 2026)
+            print(f"alerts: {r.get('symbol')} skipped: {ex!r}", file=sys.stderr)
     # the 50 EMA undercut tab: 2 closes in a row under the 50 EMA at the last close; today it has to close back over it
     for r in doc.get("ema50_undercut", []):
         q = rows.get(r["symbol"])
