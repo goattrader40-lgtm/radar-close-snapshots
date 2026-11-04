@@ -362,15 +362,15 @@ alone.
   Group rank filter** (all / ★ Top / Top + Strong); (3) **every 3-SETUPS buy point alerts live as on Launches** (AMPL)
   and the **Watchlist tab's own alert log**. Evening scan re-run by hand after (3): Nov 3 close, 53 on 3-SETUPS with
   their live fields, so the new alerts work from Wed Nov 4's session.
-- **Test only, waiting for the user's "go live"**: `test/wllog` = the Watchlist alert log shows ONLY 3-SETUPS and TREND
+- **LIVE (the user's go at the wrap-up)**: `test/wllog` merged = the Watchlist alert log shows ONLY 3-SETUPS and TREND
   tickers not on Launches / laggards (the user: "only trend and setups trigger"); the Launches log keeps the rest
   (the 50 EMA undercut tab, pre-market grades; both leaked into the Watchlist log on main); GROUP MOVE on both.
-  Browser-tested, no errors. Go live = merge test/wllog (docs/index.html only).
+  Browser-tested on main after the merge, no errors.
 - **Agreed with the user** (no new agreed reads; tools/examples.txt unchanged): one pop-up per alert, a stock on both
   lists alerts from Launches; a 21 EMA retest alone is a heads-up, with the breakout level under it a trigger; group
   moves count at 2 stocks, themes and tight groups both; every 3-SETUPS buy point is an alert (not only the cross of
   the Buy point column).
-- **Open (each needs the user's go)**: (a) test/wllog go live; (b) the 1 ADR distance for the breakout-level
+- **Open (each needs the user's go)**: (b) the 1 ADR distance for the breakout-level
   confluence (my pick); (c) the scan's retest zone (0.2 ADR over the level: RPD Nov 3, low 0.45 ADR over it, reads
   "21 EMA retest", not "retest held") = an "explain first"; (d) if GROUP MOVEs are noisy at 3:45, 3 stocks for themes
   of 20+ stocks.
