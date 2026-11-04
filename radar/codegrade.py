@@ -128,6 +128,30 @@ def release_text(f):
         return f["base"] + pick, ""
 
 
+_ok = {}
+
+
+def offer_kind(f):
+    """a prospectus / registration: 'equity' (shares, ATM, convertible = dilution), 'debt' (notes), or 'shelf' (S-3 / F-3
+    with no takedown); HCA Nov 4 2026: a 424B5 for senior notes is not dilution"""
+    if f["acc"] in _ok:
+        return _ok[f["acc"]]
+    try:
+        t = clean(sec_get(f["base"] + f["primary"], raw=True)[:60000].decode("utf-8", "replace"))[:8000].lower()
+    except Exception:
+        t = ""
+    if re.search(r"convertible|common stock|ordinary shares|american depositary|pre-funded warrants|at[- ]the[- ]market|units consisting", t[:5000]):
+        k = "equity"
+    elif re.search(r"\bnotes? due\b|senior notes|debentures|% notes|bonds due", t[:5000]):
+        k = "debt"
+    else:
+        k = "equity"
+    if f["form"] in ("S-3", "F-3") and k == "equity" and not re.search(r"at[- ]the[- ]market|sales agreement|underwrit", t):
+        k = "shelf"
+    _ok[f["acc"]] = k
+    return k
+
+
 # ───────── the news ─────────
 MONEY = r"\$\s?(\d[\d,]*(?:\.\d+)?)\s*(million|billion|thousand|[mbk])\b"
 UNIT = {"million": 1e6, "billion": 1e9, "thousand": 1e3, "m": 1e6, "b": 1e9, "k": 1e3}
@@ -201,7 +225,8 @@ def classify(fs, texts, direction, mcap, e=None):
         return out
     items = lambda f: f.get("items") or ""
     flags = []
-    offer = [f for f in fs if f["form"] in OFFER_FORMS or (f["form"] in ("8-K", "6-K") and "3.02" in items(f))]
+    offer = [f for f in fs if (f["form"] in OFFER_FORMS and offer_kind(f) == "equity") or (f["form"] in ("8-K", "6-K") and "3.02" in items(f))]
+    shelf = [f for f in fs if f["form"] in OFFER_FORMS and offer_kind(f) == "shelf"]
     deli = [f for f in fs if f["form"] == "8-K" and "3.01" in items(f)]
     erel = [f for f in fs if (f["form"] == "8-K" and "2.02" in items(f)) or (f["form"] == "6-K" and re.search(r"results|earnings|quarter", texts.get(f["acc"], ("", ""))[1][:600], re.I))]
     alltxt = " ".join(t[1][:4000] for t in texts.values())
@@ -217,7 +242,10 @@ def classify(fs, texts, direction, mcap, e=None):
         flags.append("going concern")
     if deli:
         flags.append("delisting notice (8-K 3.01)")
-    out["flags"] = "; ".join(flags)
+    debt = [f for f in fs if f["form"] in OFFER_FORMS and offer_kind(f) == "debt"]
+    note = ([f"debt offering ({', '.join(sorted({f['form'] for f in debt}))}: not dilution)"] if debt else []) + \
+           ([f"new shelf registration ({', '.join(sorted({f['form'] for f in shelf}))}): possible future dilution"] if shelf else [])
+    out["flags"] = "; ".join(flags + note)
     if flags and direction == "up":
         out.update(news="F", catalyst="Dilution / warning", reason="F by rule: " + out["flags"])
         return out
@@ -311,6 +339,30 @@ def ema_last(xs, n):
     return e
 
 
+def earn_fields(sym, text, day):
+    """a release the Earnings tab didn't cover (outside its filters): its revenue, growth, last quarter's growth and the
+    guidance, read the same way (radar/earnings.py), with Yahoo's history; no saved estimate, so no beat / miss"""
+    from earnings import Y, rev_from, rev_growth_from, guidance, pick, ym
+    if not _y:
+        _y.append(Y())
+    y = _y[0]
+    hist, trend = y.summary(sym.replace(".", "-"))
+    qs = sorted((q for q, h in hist.items() if h.get("act") is not None), reverse=True)
+    if not qs:
+        return {"guide": guidance(text, None, None)}
+    qe = qs[0]
+    sh = lambda q, n: (lambda k: (k // 12, k % 12 + 1))(q[0] * 12 + q[1] - 1 + 3 * n)
+    ts = y.revenue_ts(sym.replace(".", "-"))
+    yago, prev, prev_yago = pick(ts, sh(qe, -4)), pick(ts, sh(qe, -1)), pick(ts, sh(qe, -5))
+    act = rev_from(text, None, yago) or pick(ts, qe)
+    if act is None and yago:
+        gr0 = rev_growth_from(text)
+        act = yago * (1 + gr0 / 100) if gr0 is not None else None
+    pct = lambda a, b: round((a / b - 1) * 100, 1) if a and b and b > 0 else None
+    return {"rev_act": act, "rev_growth": pct(act, yago), "rev_prev_growth": pct(prev, prev_yago),
+            "guide": guidance(text, trend.get("0q"), trend.get("0y")), "rev_surprise": None}
+
+
 def last_close_time(day):
     """the last session's close (4 PM ET) before `day` (ISO)"""
     from earnings import back, HOLIDAYS  # noqa
@@ -349,6 +401,12 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
         e = E.get(sym)
         if e and not (e.get("date") >= t_from.date().isoformat()):
             e = None
+        er = [f for f in (fs or []) if f["form"] in ("8-K", "6-K") and ("2.02" in (f.get("items") or "") or f["form"] == "6-K")]
+        if er and not e:
+            try:
+                e = earn_fields(sym, texts.get(er[0]["acc"], ("", ""))[1], day)
+            except Exception as ex:
+                print("earnings", sym, repr(ex)[:120])
         nw = classify(fs, texts, d, mcap, e)
         # the chart at the pre-market price
         try:
