@@ -111,6 +111,16 @@ alone.
   re-checks earnings.json at 8:57 for 8:30 reporters. (4) The user to decide: correct DUOL's Nov 4 A in gradelog
   or keep it as the record.
 
+## Gainers & losers: Gap filter (live Nov 4 2026 evening, the user's "go live"; branch test/gapfilter)
+
+- "Gap up ≥ __ %" next to "Up at least" (Losers: "Gap down ≥", keeps gap-downs of at least that size); off by default
+  (PDEF g_gap null; Reset clears it; like the other Gainers filters it is not kept over a reload). Gap = today's open
+  (live.json rows[sym][5]) vs yesterday's close (price / (1 + chg_1d)); applyLive writes stocks rows' open / gap_pct, and
+  after the evening build (live.session == build asof) takes the open from the day's last live snapshot. While the box
+  is set a stock without an open yet is left out (Yahoo's NYSE opens are empty the first ~10 minutes). Also a "Gap"
+  column in the column catalog. Rules sheet G1 updated. Checked Nov 4 5 PM: Gap up ≥ 3 = 61 of 142 (KD +15.2% =
+  14.91 on 12.94, DUOL +26.4%, PCOR +6.0%, against live.json / stocks.json); Losers Gap down ≥ 2 = 19 of 45.
+
 ## Your table layouts: move / delete / add columns on every table (live Nov 4 2026, the user's "go live"; branch test/columns)
 
 - **What**: on all 20 tables (every tab) the user drags a header to move a column, hovers a header and clicks ✕ to
