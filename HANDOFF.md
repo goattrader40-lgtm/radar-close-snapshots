@@ -270,7 +270,40 @@ alone.
   came from (Launches first); sorted by the Trend, most days first; it leaves when the Trend turns Negative or loses
   its label (still on its own list). 137 names on Nov 3. Rules T1.
 
-## Status at the end of the last session (Nov 3 2026: Earnings, Trend, 200 SMA rule)
+## Status at the end of the last session (Nov 3 evening - Nov 4 2026: the combination study and the conviction stars)
+
+- **Live on main** (the user's "go live", merged f4bc7ad; portal deploy checked, no browser errors; `tools/replay.py
+  --regress`: every agreed example reads the same): the **conviction stars** (details in "Changes on Nov 2 2026" ->
+  "Conviction stars"): Pre-market "★ Launch watch" (gapping up only, Copy buttons), Stars on graded gappers and
+  Launching today, Trend (yesterday), ★★★ tags on Launches, starred desktop alerts. Phone alerts untouched.
+- **Test / study branches**: test/stars = main (merged). test/combo = the study only (tools/combo_study.py,
+  combo_xlsx.py, combo_results.xlsx, combo_cells.json, combo_luck.json; radar-tools `combotags`): not for main.
+  The History test was re-run on today's groups (radar-tools `launchbt` on test/combo -> radar-data
+  launch_bt_dry.json): Top 198 -> 69, Strong 188 -> 164 (+11.6% avg, 45% ran 20%+), RS 97+ in Top/Strong 53 -> 34
+  (59% ran 20%+, median +2.5%); the portal's own table switches with the Nov 4 4:40 PM scan.
+- **Agreed with the user (no new agreed reads; tools/examples.txt unchanged)**: the stars come from yesterday's
+  close; buy only when a starred name actually launches (Launching today / its ★ alert), over the 5-minute opening
+  range high, stop its low (buying every opening-range breakout of the list was NOT tested); any gap up counts (the
+  user asked about 4%+ gaps: a regular launch needs only gap > 0 and a 5%+ day; 0-4% ★★ +0.61R (186) vs 4%+ +0.25R
+  (36); ★ +0.33 vs +0.32; no gap filter); ★★★ = buy near the close, stop the day's low; a retest needs the stock to
+  have advanced after the breakout (retest_away; GDDY Oct 30 - Nov 3 2026 didn't: no ★★★ tag). Buying Launching
+  today at the close is NOT a star trade (+0.04R).
+- **How strong each star is** (told to the user Nov 4): ★★★ proven (the only one over the luck line); ★ reliable,
+  small edge (1,203 trades, the user's own Trend idea, p about 0.003 as one planned check); ★★ promising, not proven
+  (found by the search, under the luck line: lift +0.39R vs luck 95% +0.44R). The ranking is by avg R.
+- **Open (each needs the user's go)**: (1) rename / caveat ★★ on the portal ("promising, not proven"): offered,
+  no answer yet; (2) 2 years of earnings dates to test an earnings star (only Aug-Oct 2026 dates exist: 26 of 321
+  launches on earnings, 73% won but the same avg R); (3) the 3-SETUPS alert text (from Nov 3); (4) the Earnings
+  reader's misses (from Nov 3).
+- **First thing to check next session**: the ★ Launch watch from 7:00 AM (only gapping-up names), the first ★★ / ★
+  desktop alerts with Launching today, any ★★★ alert at 3:45 PM (the 9 tagged: GPN BAH ICLR RHI GLOB APPN CRL MANH
+  SLDE), the History test table on the new groups after the 4:40 PM scan, and the Nov 3 checks below (Trend in
+  stocks.json, the 200 SMA rule, the Earnings tab).
+- **Watch out**: this cloud session cannot reach github.io, Yahoo or Nasdaq (proxy 403); data work goes through
+  radar-tools jobs and the GitHub tools; the portal's code can be checked locally with Playwright (it loads radar-data
+  from raw.githubusercontent.com).
+
+## Status at the session before (Nov 3 2026: Earnings, Trend, 200 SMA rule)
 
 - **Live on main** (each after the user's "go live"; `tools/replay.py --regress`: every agreed example reads the same):
   the **Earnings tab** (no Claude; All week / Today's reactions / Day 2; week grid most liquid first, grouped by area;
@@ -294,7 +327,7 @@ alone.
   setupsdry dispatch cancelled the waiting trendnow; other sessions use radar-tools too). Dispatch the next only once
   the previous is running.
 
-## Status at the session before (Nov 2 - early Nov 3 2026)
+## Status two sessions before (Nov 2 - early Nov 3 2026)
 
 - **Live on main**: everything in "Changes on Nov 2 2026" above: the group rank (Groups tab Rank / Tier; Group rank
   column with the place in the group on Pre-market graded gappers, Watchlist, Launches, Launch laggards; "#1 in
