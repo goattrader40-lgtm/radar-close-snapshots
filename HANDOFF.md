@@ -45,6 +45,29 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Earnings reader fix: this year's revenue, outlook tables (live Nov 4 2026 ~9:25 AM, the user's "fix it go live"; branch test/earnfix)
+
+- **Why** (DUOL Nov 3 2026 after close, +20% pre-market): the Earnings tab read "Somewhat bearish, revenue miss -10.3%".
+  The reader took last year's Q3 revenue ($271.7M, the first column of the release's table; actual $309.0M, +14%, a
+  2% beat) and applied Q4's 14% growth to the full year (guide -2.1% vs street; the release's table: Q4 $322M, +2.4%).
+  Now "Bullish". The 8:45 grader gave DUOL an A that morning without opening the release (its reason: "figures were
+  not confirmed"): see Open below.
+- radar/earnings.py (GV 5, the week re-read at 9:24): rev_from takes the figure that isn't last year's quarter when two
+  come in a row (to the figure's own rounding; "$1.5 billion" is too rounded to tell: IT / KD), else the later year's
+  column; guidance reads outlook tables under "(in millions)" after sentences with units, ranges with a minus sign or
+  no second $ (ADEA 375-415), and the raised column of "Previous | Raised" tables (SOLS). Rules workbook updated.
+- Checked on all 84 releases of the week (radar-tools `reltext` -> radar-data probe_reltext.json, the release texts
+  for testing a reader fix offline): changed DUOL, DT, FRSH, SOLS, ADEA, each matching its release; PLTR HNGE LIFE
+  LSCC AEHR ON XMTR TEM SHOP and VAL unchanged.
+- **Open**: (1) URGN Nov 4 reads one product's revenue ($68.0M ZUSDURI) and one product's FY guide (JELMYTO ~$90M) as
+  the company's (pre-existing, not from this fix); ADEA's cut outlook (395-435 -> 375-415) reads "reaffirmed".
+  (2) DUOL EPS: Yahoo 1.32 vs 1.585 (-16.8%) while Nasdaq has 0.54 vs 0.55: different bases, not checked.
+  (3) Pre-market grading (proposed, waiting for the user's go): a code gate in premarket_build.py finish (an A/B
+  without a downloaded SEC filing / company release, or a reason saying "not confirmed", drops to C); then the
+  grader gets the filings since the last close 4 PM (Friday 4 PM on Mondays) and the Earnings tab's numbers, and
+  re-checks earnings.json at 8:57 for 8:30 reporters. (4) The user to decide: correct DUOL's Nov 4 A in gradelog
+  or keep it as the record.
+
 ## Launch watch: ADR column, earnings Read and grade (live Nov 4 2026 morning, the user's "go live"; branch test/lwcols)
 
 - Pre-market tab, ★ Launch watch card only (display): an **ADR** column (adr_20 at the last close, base_stocks.json;
