@@ -30,9 +30,9 @@ Two layers, then one combined grade:
         laggard   over the 50 EMA, under the 200 SMA, over the 21-day high (the Launch laggards case: all but the 200)
         downtrend over the 50 EMA, under the 200 SMA and the 21-day high
         under50_200  under both the 50 EMA and the 200 SMA: a gap-up qualifies for nothing ("—"; the user, Nov 4 2026)
-  GRADE (gap-ups) news A: turnup A+, trending A, mixed B, laggard W, downtrend C; news B: turnup A, trending B,
-        mixed C, laggard W, downtrend C (W = laggard watch: real news, over the 21-day high, still under the 200);
-        news C stays C (a turnup without news is
+  GRADE (gap-ups) over the 200: news A: turnup A+, trending A, mixed B; news B: turnup A, trending B, mixed C;
+        news C stays C; F stays F. Under the 200 the trend isn't confirmed (the user, Nov 4 2026): only W (laggard watch:
+        A / B news, over the 50 and the 21-day high), everything else "—", not qualified. (a turnup without news is
         flagged); F stays F; under 30% over the 52-week low (pre-market price) qualifies for nothing ("—"; the pre-market
         list drops these before grading). Gap-downs: the news grade, one
         grade more serious (B -> A) when a trending stock gaps under its 50 and 200.
@@ -313,16 +313,17 @@ def chart_state(px, prev_c, e21, e50, s200, hi21):
 # W = laggard watch (the user, Nov 4 2026): real news, over the 21-day high, but still under the 200 SMA after the gap
 # (every Launch laggards rule but the 200), so shorts are in control; lower importance, but it isn't dropped: the news grade (A / B) still feeds the Launch laggards rule, and the
 # day it gets over its 50 and 200 it is a turn-up
-COMBINE = {"A": {"turnup": "A+", "trending": "A", "mixed": "B", "laggard": "W", "downtrend": "C"},
-           "B": {"turnup": "A", "trending": "B", "mixed": "C", "laggard": "W", "downtrend": "C"}}
+COMBINE = {"A": {"turnup": "A+", "trending": "A", "mixed": "B", "laggard": "W"},
+           "B": {"turnup": "A", "trending": "B", "mixed": "C", "laggard": "W"}}
 LOW52_MIN = 30                                      # the user's main rule: 30%+ over the 52-week low (pre-market price)
 
 
 def combine(news, chart, direction, broke_trend=False, over_low52=None):
     if direction == "down":
         return "A" if news == "B" and broke_trend else news
-    if chart == "under50_200":
-        return "—"                                  # not qualified (whatever the news)
+    if chart in ("under50_200", "downtrend") or (chart == "laggard" and news not in ("A", "B")):
+        return "—"                                  # under the 200 the trend isn't confirmed: no grade at all (the user,
+                                                    # Nov 4 2026), except W: A / B news + every laggard rule but the 200
     g = COMBINE[news].get(chart, news) if news in COMBINE else news
     if over_low52 is not None and over_low52 < LOW52_MIN:
         g = "—"                                     # under 30% over the 52-week low qualifies for nothing (the user, Nov 4 2026;

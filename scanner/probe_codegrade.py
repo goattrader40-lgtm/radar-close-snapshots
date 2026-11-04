@@ -238,7 +238,12 @@ def main():
         T["earnings_only_by_news"] = {g: stats([r for r in rs if r["earn"] and r["news"] == g]) for g in "ABC"}
         T["examples"] = {g: [(r["sym"], r["date"], r["gap"], r["news"], r["chart"], r["catalyst"], r["why"][:90], r.get("r20"))
                              for r in rs if r["grade"] == g][:12] for g in ("A+", "A", "B", "W", "F")}
-    json.dump(out, open(a.out, "w"), indent=1, default=str)
+    # every graded event, compact, so a rule change can be re-scored without re-running the SEC part
+    K = ("sym", "date", "up", "gap", "over_low52", "news", "catalyst", "chart", "chart30", "chartS50", "group", "held", "ran20",
+         "broke5", "r20", "trade", "crossed200", "days_to_200", "after_cross_r20", "after_cross_ran20", "after_cross_held5", "earn")
+    out["rows_keys"] = K
+    out["rows"] = [[r.get(k) for k in K] for r in graded]
+    json.dump(out, open(a.out, "w"), separators=(",", ":"), default=str)
     print(json.dumps(out["up"]["by_grade"], indent=1))
 
 
