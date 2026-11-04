@@ -45,6 +45,20 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Next (agreed with the user Nov 4 2026, plan 2-3): a code grader at 8:45 next to Claude's, then a backtest
+
+- A GitHub job grades every gapper from SEC filings since the last close (form / item codes, the release), the Earnings
+  tab numbers and Yahoo's quarterly history: the user's A/B/C/F definitions as measurable rules (F = offering / ATM /
+  reverse split / going concern; A = beat + raise + growth 20%+ or 3+ pts faster, signed takeover, FDA approval, contract
+  25%+ of market cap; B = modest beat-and-raise, contract 5-25%, turnaround; C = no filing since the close / mixed).
+- **The user's chart layer (Nov 4)**: we are market players: a stock under its 200 SMA (and a weak group) gets shorted;
+  the gap that matters is the pre-market price going above the 50 and the 200 and over the 21-day (30-day?) high:
+  shorts caught off guard, a possible new trend. Trending = 21 EMA over 50 over 200; Mixed = anything else above the
+  200; Downtrend = under the 200.
+- Shown as a second column on the Pre-market tab for 1-2 weeks (Claude's grade stays the official one: alerts, Launch
+  laggards and the A/B news rules keep reading it), then the user decides. The backtest on the gap study's ~14 months
+  (held the gap / ran 20%+ / broke the gap-day low in 5 days) per rule and per news x chart combination.
+
 ## Earnings tab, second round (live Nov 4 2026 ~1:15 PM, the user's "go live"; branches test/earnfix2, test/earnfix3; GV 8)
 
 - **Revenue found 56 -> 79 of 89 reports**: "Net sales" / "Sales" too (SKY, SN, CE), "Total revenue" / "Net sales" rows in
@@ -66,7 +80,7 @@ alone.
 - **Open**: Monday-Tuesday reports of the first week have no saved estimates (fixes itself next week); VRDN (one
   product), LQDA / PCVX / TNGX (no SEC release) have no revenue.
 
-## Pre-market safety lock (on test/pmlock, waiting for the user's "go live")
+## Pre-market safety lock (live Nov 4 2026 ~2 PM, the user's go; branch test/pmlock; first used at the Nov 5 8:45 grading)
 
 - radar/premarket_build.py finish, before the grades are saved: an A / B whose reason or flags hedge ("not confirmed",
   "unverified", "could not open") -> C; without a primary source (SEC, the company's site, a newswire with its release)
