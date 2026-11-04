@@ -27,7 +27,7 @@ NY = zoneinfo.ZoneInfo("America/New_York")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RULES = json.load(open(os.path.join(ROOT, "scanner", "settings.json")))["earnings"]
 SEC_UA = (os.environ.get("SEC_UA") or "").strip() or "radar-close-snapshots research"
-GV = 5          # the press-release reader's version: a change re-reads every release of the week
+GV = 8          # the press-release reader's version: a change re-reads every release of the week
 MON = {m: i for i, m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1)}
 
 
@@ -117,6 +117,12 @@ def q_end(fq):
     return (int(m.group(2)), MON.get(m.group(1).title())) if m else None
 
 
+def qshift(q, n):
+    """(2026, 9) shifted by n quarters: qshift((2026, 9), -1) = (2026, 6)"""
+    k = q[0] * 12 + (q[1] - 1) + 3 * n
+    return (k // 12, k % 12 + 1)
+
+
 def ym(iso):
     return (int(iso[:4]), int(iso[5:7])) if iso and len(iso) >= 7 else None
 
@@ -159,7 +165,7 @@ class Y:
     def revenue_ts(self, s):
         now = int(time.time())
         res = self.get(f"https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{urllib.parse.quote(s)}"
-                       f"?type=quarterlyTotalRevenue&period1={now - 86400 * 500}&period2={now}")["timeseries"]["result"]
+                       f"?type=quarterlyTotalRevenue&period1={now - 86400 * 800}&period2={now}")["timeseries"]["result"]
         out = {}
         for t in res:
             for v in t.get("quarterlyTotalRevenue") or []:
@@ -232,6 +238,7 @@ RANGE2 = r"(?:\s*(?:to|-|–|—|−|and)\s*\$?\s?(\d[\d,]*(?:\.\d+)?)\s*(millio
 
 
 NEXT = re.compile(r"\s*(?:\(\d\)\s*)?(?:to\s+)?\$\s?(\d[\d,]*(?:\.\d+)?)\s*(million|billion|bn|mm|m|b)?\b", re.I)
+ROWNUM = re.compile(r"\s*(?:\(\d\)\s*)?\$?\s?(\d[\d,]*(?:\.\d+)?)\s*(million|billion|bn|mm|m|b)?\b(?!\s*%)", re.I)
 YEARS = re.compile(r"\b(?:Q[1-4]|fiscal|FY|(?:three|six|nine|twelve) months ended[^0-9]{0,30}\d{1,2},?)?\s*(20\d\d)\b[^$%]{0,40}?\b(20\d\d)\b", re.I)
 
 
@@ -265,30 +272,70 @@ def rev_from(text, est, yago):
     if cut:
         head = head[:1500 + cut.start()]
     ref = est or yago
-    for m in re.finditer(r"\b(?:total |net |quarterly |record |third[- ]quarter |fourth[- ]quarter |first[- ]quarter |second[- ]quarter |q[1-4] )*"
-                         r"revenues?\b(?: and other income)?[^$.;]{0,70}?" + MONEY, head, re.I):
-        pre = head[max(0, m.start() - 80): m.start()].lower()
-        if re.search(r"expect|outlook|guidance|between|range|forecast", pre + m.group(0)[:60].lower()):
+    gap = r"(?:[^$.;]|\.(?=\d)){0,70}?"              # '... increased 6.2% to $727.0 million' (SKY / SN)
+    total = r"\btotal (?:net |operating )?(?:revenues?|sales)\b" + gap + MONEY
+    anyrev = (r"\b(?:total |net |quarterly |record |third[- ]quarter |fourth[- ]quarter |first[- ]quarter |second[- ]quarter |q[1-4] )*"
+              r"(?:revenues?|sales)\b(?: and other income)?" + gap + MONEY)
+    # positions are in `text` (head is its start): the head's figures first, then 'Total revenue' in the tables further
+    # down (TVTX Nov 2 2026: the table's Total revenue $224.6M; the text only had product sales)
+    tbl = (r"\btotal (?:net |operating )?revenues?(?: and other income)?\s*(?:\(\d\)\s*)?:?\s*\$?\s?(\d[\d,]*(?:\.\d+)?)"   # a table row:
+           r"\s*(million|billion)?\b(?!\s*%)")      # 'Total revenue 224,563 164,859' (not 'total revenue, grew 214%': DOCN)
+    row1 = r"\b(?:reported )?(?:net )?(?:revenues?|sales)\s*(?:\(\d\)\s*)?:?\s*\$\s?(\d[\d,]*(?:\.\d+)?)\s*(million|billion)?\b(?!\s*%)"
+    ms = [*re.compile(total, re.I).finditer(text, 0, len(head)), *re.compile(tbl, re.I).finditer(text, len(head), 40000),
+          *re.compile(anyrev, re.I).finditer(text, 0, len(head)),
+          *re.compile(row1, re.I).finditer(text, len(head), 40000)]   # 'Net Sales $ 3,715 $ 3,481' further down (EL, PRGO, CVI, ERO)
+    rough = None
+    for m in ms:
+        if re.search(r"\b(?:for|of)\s+(?!the\b|our\b|its\b|\$|Q[1-4]\b|(?:Fiscal|First|Second|Third|Fourth|Quarter|Full|Year|"
+                     r"Three|Six|Nine|Twelve|Total|Net|Fiscal|The|Our)\b)[A-Z][A-Za-z0-9]+|[®™]", m.group(0)):
+            continue                                    # one product's sales ('sales of FILSPARI®', 'revenue for Lumvoa')
+        if re.search(r"\b(?!GAAP\b|NYSE\b|EBITDA\b)[A-Z]{4,}[®™]?\s+(?:net\s+)?(?:product\s+)?$", text[max(0, m.start() - 40): m.start()]):
+            continue                                    # 'FILSPARI net product sales of $200 million' (TVTX)
+        # the company's 'Total revenue' first: the first revenue figure can be one product's (URGN Nov 4 2026:
+        # 'ZUSDURI net product revenue of $68.0 million'; total revenue $89.0 million)
+        pre = text[max(0, m.start() - 80): m.start()].lower()
+        if re.search(r"expect|outlook|guidance|between|range|forecast", pre + m.group(0)[:60].lower()) \
+                and not re.search(r"\bq[1-4] 20\d\d\s*$", pre):   # 'Q3 2026 Revenue of $321 million' after an outlook line (DOCN)
             continue
+        if re.search(r"\b(?:nine|six|twelve) months\b|year[- ]to[- ]date|\bytd\b|for the (?:full )?(?:fiscal )?year\b|full[- ]year|trailing",
+                     pre[-40:] + m.group(0).lower()):
+            continue                                    # not the quarter ('Third Quarter Fiscal Year 2026' is: LIFE / LITE)
         if not ref:
             continue
         v = scaled(num(m.group(1)), m.group(2), ref)
+        raw = m.group(1)
         old1 = same(v, m.group(1), m.group(2), yago)
-        n2 = NEXT.match(head, m.end())
+        n2 = NEXT.match(text, m.end())
         v2 = scaled(num(n2.group(1)), n2.group(2) or m.group(2), ref) if n2 else None
+        row, p = [], m.end()                            # the row's next figures ('$ 13,377 $ 11,536 $ 9,246 $ 35,166')
+        for _ in range(4):
+            nx = ROWNUM.match(text, p)
+            if not nx:
+                break
+            row.append(nx); p = nx.end()
+        later_old = any(same(scaled(num(x.group(1)), x.group(2) or m.group(2), ref), x.group(1), x.group(2) or m.group(2), yago)
+                        for x in row)
         if v2 is not None and 0.6 <= v2 / ref <= (1.7 if est else 4):
             old2 = same(v2, n2.group(1), n2.group(2) or m.group(2), yago)
             if old1 and not old2:
-                v = v2                                  # the first figure is last year's quarter
+                v, raw = v2, n2.group(1)                # the first figure is last year's quarter
+            elif not old1 and later_old:
+                pass                                    # last year's is further along the row: the first is this quarter
+                                                        # (AMD: Q3'26 $13,377 | Q2'26 $11,536 | Q3'25 $9,246)
             elif not old1 and not old2:
-                hd = [y for y in YEARS.finditer(head[max(0, m.start() - 1500): m.start()])]
+                hd = [y for y in YEARS.finditer(text[max(0, m.start() - 1500): m.start()])]
                 if hd and int(hd[-1].group(2)) > int(hd[-1].group(1)):
-                    v = v2                              # the header puts last year first
+                    v, raw = v2, n2.group(1)            # the header puts last year first
         elif old1:
             continue                                    # last year's figure alone ('compared to $271.7 million')
         if 0.6 <= v / ref <= (1.7 if est else 4):
-            return v
-    return None
+            dec = len(raw.split(".")[1]) if "." in raw else 0
+            if 0.5 * 10 ** -dec * (v / num(raw)) > v * 0.005:
+                rough = rough or v                      # '$1.1 billion': look on for the exact figure in the tables
+                continue                                # (FBIN Nov 3 2026: $1,113.7M; '$1.1B' read as a -2.1% miss)
+            if rough is None or abs(v / rough - 1) <= 0.06:
+                return v
+    return rough
 
 
 def rev_growth_from(text):
@@ -323,13 +370,25 @@ def guidance(text, nq, fy):
     midpoint vs the street and vs the same period a year ago. nq / fy = the saved estimates {rev, rev_yago, end}."""
     head = text[:2500]
     # the outlook section: the first 'outlook' / 'guidance' (or 'we expect') with an expectation about revenue right after it
-    m0 = None
+    anchors = []
+    for m in re.finditer(r"\b(business outlook|financial outlook|outlook|guidance|we expect|the company expects|company expects|"
+                         r"estimates the following|for the (?:fourth|first|second|third) quarter of 20\d\d)\b", text[1500:], re.I):
+        nxt = text[1500 + m.start(): 1500 + m.start() + 900]
+        if re.search(r"\bexpect|\banticipat|\bguid|\bproject|\bforecast|\bestimat|\boutlook", nxt, re.I) and re.search(r"revenue|sales", nxt, re.I):
+            if not anchors or m.start() - anchors[-1].start() > 600:
+                anchors.append(m)
+        if len(anchors) >= 6:
+            break
+    m0 = None                                       # the words (raised / lowered ...): the first outlook section, as before
     for m in re.finditer(r"\b(business outlook|financial outlook|outlook|guidance|we expect|the company expects|company expects)\b", text[1500:], re.I):
         nxt = text[1500 + m.start(): 1500 + m.start() + 900]
         if re.search(r"\bexpect|\banticipat|\bguid|\bproject|\bforecast", nxt, re.I) and re.search(r"revenue|sales", nxt, re.I):
             m0 = m
             break
     body = text[1500 + m0.start(): 1500 + m0.start() + 3500] if m0 else ""
+    # the number: that section first, then the later ones (ALAB / RAL Nov 2026: '$730 million to $750 million' further down)
+    bodies = ([body] if body else []) + [text[1500 + a.start(): 1500 + a.start() + 3500] for a in anchors
+                                         if not m0 or abs(a.start() - m0.start()) > 600]
     scan = head + " " + body
     g = {"dir": "none"}
     up = re.search(r"\b(rais(?:e|es|ed|ing)|increas(?:e|es|ed|ing)|boost(?:s|ed)?|lift(?:s|ed)?|upgrad\w*)\b[^.;]{0,90}?\b(guidance|outlook|forecast|expectations)\b"
@@ -337,6 +396,8 @@ def guidance(text, nq, fy):
     dn = re.search(r"\b(lower(?:s|ed|ing)?|reduc(?:e|es|ed|ing)|cut(?:s|ting)?|downgrad\w*|withdr[ae]w\w*)\b[^.;]{0,90}?\b(guidance|outlook|forecast)\b"
                    r"|\b(guidance|outlook)\b[^.;]{0,25}\b(lowered|reduced|cut|withdrawn)\b", scan, re.I)
     keep = re.search(r"\b(reaffirm\w*|reiterat\w*|maintain\w*|confirm\w*)\b[^.;]{0,90}?\b(guidance|outlook|forecast)\b", scan, re.I)
+    lt = lambda x: x if x and not re.search(r"long[- ]term|multi[- ]year", x.group(0), re.I) else None
+    up, dn, keep = lt(up), lt(dn), lt(keep)          # a long-term target isn't this year's guide (ADEA Nov 2 2026)
     if up and dn:
         g["dir"] = "mixed"
     elif up:
@@ -352,9 +413,10 @@ def guidance(text, nq, fy):
         s = scan[max(0, hit.start() - 60): hit.end() + 140]
         g["text"] = s.strip()
     # a revenue number in the outlook: a $ range, a single $ figure, or a growth rate
-    if body:
-        best = None
-        for unitless in (False, True):                  # sentences with units first; then tables under '(in millions)'
+    best = best_prod = None
+    # a $ figure in any outlook section first, then a growth rate (ALAB: the $730-750 million is in the second section)
+    for phase, body in [("$", b) for b in bodies] + [("%", b) for b in bodies]:
+        for unitless in ((False, True) if phase == "$" else ()):   # sentences with units first; then tables under '(in millions)'
             for m in re.finditer(r"\b(?:revenues?|sales|net sales)\b[^.;$%]{0,80}?" + MONEY + RANGE2, body, re.I):
                 a = num(m.group(1))
                 ua = (m.group(2) or m.group(4) or "").lower()
@@ -378,24 +440,37 @@ def guidance(text, nq, fy):
                         continue
                     ua = ub = {"thousands": "thousand", "millions": "million", "billions": "billion"}[mk[-1].group(1).lower()]
                 ctx = body[max(0, m.start() - 160): m.end()].lower()
-                if re.search(r"\b(was|were|totaled|grew|increased|decreased|declined|reported|achieved)\b", m.group(0).lower()) \
+                if re.search(r"\b(was|were|totaled|grew|increased|decreased|declined|reported|achieved)\b",
+                             m.group(0).lower().replace("(reported)", "")) \
                         or not re.search(r"expect|anticipat|guid|outlook|forecast|project|to be|will be|range|between|approximately", ctx):
                     continue                              # a result or a company profile, not a forecast
+                if not b and re.match(r"\s*\$?\s?\d[\d,]*(?:\.\d+)?\s*\(?-?\d+(?:\.\d+)?\s*\)?\s*%", body[m.end():m.end() + 30]):
+                    continue                              # a results row: this year, last year, change % (EL Nov 2026)
                 lo, hi = a * UNIT.get(ua or ub, 1), (b * UNIT.get(ub, 1) if b else a * UNIT.get(ua or ub, 1))
                 mid = (lo + hi) / 2
                 near = []
                 for kind, e in (("q", nq), ("fy", fy)):
                     if e and e.get("rev") and 0.7 <= mid / e["rev"] <= 1.45:
                         near.append((abs(mid / e["rev"] - 1), kind, e))
+                prior = prior_mid(body, m, a, b, ua or ub, prev_first=bool(p_old and p_new and p_old.start() < p_new.start()))
+                prod = product_of(body[max(0, m.start() - 120): m.end() + 20])
+                if prod:                                # one product's guide (URGN: JELMYTO ~$90M): shown, not vs the street
+                    if not best_prod:
+                        best_prod = {"kind": "product", "product": prod, "lo": lo, "hi": hi, "mid": mid, "prior_mid": prior,
+                                     "said": body[max(0, m.start() - 40): m.end() + 10].strip()}
+                    continue
                 if near:
                     _, kind, e = min(near)
                     best = {"kind": kind, "lo": lo, "hi": hi, "mid": mid, "vs_street": pct(mid, e["rev"]),
-                            "growth": pct(mid, e.get("rev_yago")), "period_end": e.get("end"),
-                            "said": body[max(0, m.start() - 40): m.end() + 10].strip()}
+                            "growth": pct(mid, e.get("rev_yago")), "period_end": e.get("end"), "prior_mid": prior,
+                            "said": body[max(0, m.start() - 40): m.end() + 10].strip(),
+                            "near_words": body[max(0, m.start() - 200): m.start() + 20]}
                     break
             if best:
                 break
-        if not best:
+        if phase == "%" and not best:
+            best = best_prod
+        if not best and phase == "%":
             m = None
             for mm in re.finditer(r"\b(?:total )?(?:revenues?|sales)\b[^.;]{0,30}?\b(?:to )?grow\w*\b[^.;]{0,50}?(?:(\d+(?:\.\d+)?)\s*%(?:\s*(?:to|-|–)\s*(\d+(?:\.\d+)?)\s*%)?"
                                   r"|\b(low|mid|high)[- ](single[- ]digit|teens|twenties|thirties|forties|fifties|sixties|seventies)\b)", body, re.I):
@@ -417,10 +492,67 @@ def guidance(text, nq, fy):
                 best = {"kind": kind, "growth": round(gr, 1), "mid": mid, "vs_street": pct(mid, e.get("rev")) if e and mid else None,
                         "period_end": e.get("end") if e else None, "said": body[max(0, m.start() - 40): m.end() + 10].strip()}
         if best:
-            g.update(best)
-            if g["dir"] == "none":
-                g["dir"] = "given"
+            break
+    if best:
+        nw = best.pop("near_words", "") if isinstance(best, dict) else ""
+        g.update(best)
+        if g["dir"] in ("none", "given") and nw:
+            if re.search(r"\b(rais(?:e|es|ed|ing)|increas(?:e|es|ed|ing))\b[^.;]{0,60}?\b(guidance|outlook)\b", nw, re.I):
+                g["dir"] = "raised"
+            elif re.search(r"\b(lower(?:s|ed|ing)?|reduc(?:e|es|ed|ing)|cut(?:s)?)\b[^.;]{0,60}?\b(guidance|outlook)\b", nw, re.I):
+                g["dir"] = "lowered"
+        if g["dir"] == "none":
+            g["dir"] = "given"
+        pm = best.get("prior_mid")
+        if pm and best.get("mid"):
+            by = "raised" if best["mid"] > pm * 1.002 else "lowered" if best["mid"] < pm * 0.998 else "reaffirmed"
+            g["by_numbers"] = by            # the new vs the prior range beats the words (ADEA Nov 2 2026: $375-415M
+            words = g["dir"]                # vs $395-435M read 'reaffirmed' from 'reiterate ... long-term outlook')
+            if best.get("product") or words in ("given", "reaffirmed", "none") or words == by:
+                g["dir"] = by
+            elif by != "reaffirmed":        # the words say raised and the revenue numbers lowered, or the reverse
+                g["dir"] = "mixed"
     return g
+
+
+def prior_mid(body, m, a, b, unit, prev_first=False):
+    """the prior guidance for the same line, when the release shows it: the other column of an 'Updated | Prior'
+    table (ADEA), the first column of a 'Previous | Raised' table (SOLS), or '... compared with its prior guidance
+    (range) of $97 million to $101 million' (URGN)"""
+    sc = UNIT.get(unit, 1)
+    fig = r"\$?\s?(\d[\d,]*(?:\.\d+)?)\s*(?:million|billion|bn|mm|m|b)?\b"
+    rng = fig + r"(?:\s*(?:to|-|–|—|−)\s*" + fig + ")?"
+    if prev_first:                                  # the first figure of the row is the previous guide
+        m1 = re.compile(r"\$\s?(\d[\d,]*(?:\.\d+)?)" + RANGE2).search(body, m.start())
+        if m1:
+            x, y = num(m1.group(1)), num(m1.group(2)) if m1.group(2) else None
+            return (x + (y or x)) / 2 * sc if x else None
+        return None
+    hdr = body[max(0, m.start() - 300): m.start()]
+    if re.search(r"\b(updated|revised|new|current|raised|lowered)\b[^$]{0,60}\b(prior|previous)\b", hdr, re.I) \
+            or re.search(r"\bas of \d{1,2}/\d{1,2}/\d{2,4}\s+as of \d{1,2}/\d{1,2}/\d{2,4}", hdr, re.I):   # 'As of 11/3 | As of 8/6' (QDEL)
+        m2 = re.compile(r"\s*\$\s?" + rng).match(body, m.end())       # the next column of the row
+        if m2:
+            x, y = num(m2.group(1)), num(m2.group(2)) if m2.group(2) else None
+            if x and 0.5 <= x / a <= 2:
+                return (x + (y or x)) / 2 * sc
+    m3 = re.compile(r"[^.;]{0,80}?\b(?:prior|previous|previously)\b[^$.;]{0,60}?\$\s?" + rng, re.I).match(body, m.end())
+    if m3:
+        x, y = num(m3.group(1)), num(m3.group(2)) if m3.group(2) else None
+        u = re.search(r"\b(million|billion)\b", m3.group(0), re.I)
+        s2 = UNIT.get(u.group(1).lower(), sc) if u else sc
+        if x and 0.5 <= x * s2 / (a * sc) <= 2:
+            return (x + (y or x)) / 2 * s2
+    return None
+
+
+NOT_PRODUCT = {"GAAP", "NYSE", "NASDAQ", "EBITDA", "FY", "USD", "ARR", "SAAS"}
+
+
+def product_of(s):
+    """'net product revenue guidance for JELMYTO' -> 'JELMYTO': a guide for one product (a brand in capitals)"""
+    m = re.search(r"\b(?:revenues?|sales)\b[^.;$]{0,40}?\b(?:for|of)\s+([A-Z][A-Z0-9]{3,})\b", s)
+    return m.group(1) if m and m.group(1) not in NOT_PRODUCT else None
 
 
 # ───────── the read ─────────
@@ -429,7 +561,7 @@ READS = [(6, "Strong bullish"), (3, "Bullish"), (0, "Mixed"), (-3, "Somewhat bea
 
 def score(r):
     """points: revenue surprise ±1/2, EPS surprise ±1/2, guidance (raised +2, above the street +1 more / +2 alone,
-    lowered -3, below the street -2), revenue growth 25%+ +1 / shrinking -1, the move after the report ±1/2.
+    lowered -3, below the street -2; one product's guide raised +1 / lowered -1), revenue growth 25%+ +1 / shrinking -1, the move after the report ±1/2.
     6+ Strong bullish, 3-5 Bullish, 0-2 Mixed, -1 to -3 Somewhat bearish, -4 or less Bearish."""
     pts, why = 0, []
     rs = r.get("rev_surprise")
@@ -442,7 +574,10 @@ def score(r):
         pts += p; why.append(f"EPS {'beat' if es > 0 else 'miss' if es < 0 else 'in line'} {es:+.1f}%")
     g = r.get("guide") or {}
     d, vs = g.get("dir"), g.get("vs_street")
-    if d == "raised":
+    if g.get("kind") == "product":               # one product's guide (URGN Nov 4 2026, JELMYTO): +1 / -1
+        if d in ("raised", "lowered"):
+            pts += 1 if d == "raised" else -1; why.append(f"{g.get('product')} guide {d}")
+    elif d == "raised":
         pts += 2; why.append("guidance raised")
     elif d == "lowered":
         pts -= 3; why.append("guidance lowered")
@@ -605,6 +740,19 @@ def main():
                     except Exception:
                         pass
         h = pick(hist, qe)
+        if h and h.get("est") is not None and (r.get("eps_est_src") or "").startswith("Nasdaq"):
+            r["eps_est"] = h["est"]; r.pop("eps_est_src", None)     # undo the old swap: Yahoo's estimate back
+        # last quarter (q/q): Yahoo's EPS (the same basis as the actual) and revenue, and last quarter's own y/y
+        pq = qshift(qe, -1) if qe else None
+        hp = pick(hist, pq) if pq else None
+        if hp and hp.get("act") is not None:
+            r["eps_prev"] = hp["act"]
+        if pq and r.get("rev_prev") is None:
+            try:
+                ts = y.revenue_ts(ysym)
+                r["rev_prev"], r["rev_prev_yago"] = pick(ts, pq), pick(ts, qshift(qe, -5))
+            except Exception as e:
+                errors.append(f"revenue history {sym}: {e!r}"[:160])
         if h and h.get("act") is not None and now.isoformat() >= r["report_at"]:
             r["eps_act"], r["eps_src"] = h["act"], "Yahoo"
             if h.get("est") is not None and r.get("eps_est") is None:
@@ -651,22 +799,37 @@ def main():
         if r.get("eps_src") != "Yahoo" and r.get("rel_eps") is not None:
             r["eps_act"], r["eps_src"] = r["rel_eps"], "press release"
         r["guide"] = guidance(rel["text"], r.get("nq"), r.get("fy"))
+        r["eps_oneoff"] = bool(re.search(r"one-time (?:income[- ])?tax benefit|valuation allowance|one-time gain|non-recurring gain|"
+                                         r"gain on (?:the )?sale of", rel["text"][:20000], re.I))
         r["headline"] = rel["text"][:400]
     for sym in syms:
         r = rows[sym]
-        ne, ye = r.get("nasdaq_eps_est"), r.get("eps_est")
-        if ne is not None and ye is not None and ne != 0 and (abs(ye) > 3 * abs(ne) or abs(ne) > 3 * abs(ye)):
-            r["eps_est"], r["eps_est_src"] = ne, "Nasdaq (Yahoo's was far off)"    # MPC Nov 3 2026: Yahoo 26.00 vs 3.01
+        # Yahoo's estimate stays paired with Yahoo's actual (the same adjusted basis). The old swap to Nasdaq's estimate
+        # when the two were 3x apart (MPC Nov 3 2026: Yahoo 26.00 vs Nasdaq 3.01; MPC reported 26.93: Yahoo was right)
+        # set Nasdaq's estimate against Yahoo's actual: FRSH +1000%, PCOR +264%, LIFE +390% (Nov 2026).
         if r.get("eps_act") is not None and now.isoformat() >= r["report_at"]:
             r["reported"], r["est_frozen"] = True, True
-        r["eps_surprise"] = (round((r["eps_act"] - r["eps_est"]) / abs(r["eps_est"]) * 100, 1)
-                             if r.get("eps_act") is not None and r.get("eps_est") not in (None, 0) else None)
+        est = r.get("eps_est")
+        if r.get("eps_src") == "Nasdaq" and r.get("nasdaq_eps_est") is not None:
+            est = r["eps_est"] = r["nasdaq_eps_est"]            # Nasdaq's actual vs Nasdaq's estimate (LQDA / TNGX Nov 2026)
+            r["eps_est_src"] = "Nasdaq (with Nasdaq's actual)"
+        r["eps_surprise"] = (round((r["eps_act"] - est) / abs(est) * 100, 1)
+                             if r.get("eps_act") is not None and est not in (None, 0) else None)
         if r["eps_surprise"] is not None and r["eps_act"] and (abs(r["eps_est"]) > 3 * abs(r["eps_act"]) or abs(r["eps_act"]) > 3 * abs(r["eps_est"])) \
                 and abs(r["eps_act"] - r["eps_est"]) > 0.5:
             r["eps_surprise"], r["eps_est_odd"] = None, True      # 3x+ apart: a bad estimate or a one-off, no surprise scored (MPC)
         if r.get("eps_yago") is None and r.get("nasdaq_eps_yago") is not None:
             r["eps_yago"] = r["nasdaq_eps_yago"]
         r["eps_growth"] = pct(r.get("eps_act"), r.get("eps_yago")) if r.get("eps_act") is not None else None
+        if r["eps_growth"] is not None and abs(r["eps_yago"]) < 0.05:
+            r["eps_growth"], r["eps_nm"] = None, True        # a year-ago EPS under 5 cents: % is meaningless (AEHR 0.01 -> 0.28)
+        elif r["eps_growth"] is not None and r.get("eps_oneoff") and r["eps_yago"] > 0 and r["eps_yago"] > 2.5 * abs(r["eps_act"]):
+            r["eps_growth"], r["eps_nm"] = None, "one-off"    # last year's quarter had a one-time gain (DUOL: -80.6% on a tax benefit)
+        r["eps_qoq"] = pct(r.get("eps_act"), r.get("eps_prev")) if r.get("eps_src") in ("Yahoo", "press release") else None
+        if r["eps_qoq"] is not None and abs(r["eps_prev"]) < 0.05:
+            r["eps_qoq"] = None
+        r["rev_qoq"] = pct(r.get("rev_act"), r.get("rev_prev"))
+        r["rev_prev_growth"] = pct(r.get("rev_prev"), r.get("rev_prev_yago"))   # last quarter's y/y: speeding up or slowing
         r["eps_turn"] = bool(r.get("eps_act") is not None and r.get("eps_yago") is not None and r["eps_yago"] <= 0 < r["eps_act"])
         r["rev_surprise"] = pct(r.get("rev_act"), r.get("rev_est"))
         r["rev_growth"] = pct(r.get("rev_act"), r.get("rev_yago"))
