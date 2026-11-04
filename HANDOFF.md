@@ -114,6 +114,11 @@ alone.
   (Launches and Launch laggards share ln-table but keep separate layouts), in localStorage `radar-layout` (per
   browser: desktop and phone keep their own). The old "Columns" tick boxes are gone; what they hid (radar-cols-<id>)
   carries over as deleted. Ticker stays first. A column added to a table's code later lands where the code puts it.
+- **Column widths + Columns button (live Nov 4 2026, the user's "go live"; branch test/colwidth)**: drag a header's right
+  edge to narrow / widen a column (every row follows; narrowed text wraps or is cut with …), double-click the edge =
+  normal width, "Normal widths" in the list resets all widths (keeps the order). Saved in the same layout (`w`). A
+  visible "⚙ Columns: move · resize · delete · + add" button sits above every table (the user didn't see the ⚙ in the
+  first header at first).
 - **New table columns in code**: give the header a data-sort key (stable layout key). New stock data worth adding by
   hand: add a line to CATL.
 - Checked: no saved layout = every table identical to main; delete / drag / add / sort / reload / bring back / Reset,
