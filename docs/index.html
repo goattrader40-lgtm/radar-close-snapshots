@@ -519,8 +519,9 @@
             <th class="num"><button class="tgr-th" data-sort="close">Close</button></th>
             <th class="num"><button class="tgr-th" data-sort="pivot" title="Highest high of the previous 20 days: a launch over it is a base breakout">Base high</button></th>
             <th class="num"><button class="tgr-th" data-sort="to_pivot">To base high</button></th>
+            <th class="num"><button class="tgr-th" data-sort="adr" title="ADR: the stock's average daily range of the last 20 sessions, in %, at the last close. A launch day needs 3.5%+ (red under it)">ADR</button></th>
             <th class="num"><button class="tgr-th" data-sort="vs200" title="Last close vs the 200-day SMA. A regular launch needs it at most 28% over (more: a power day only)">vs 200 SMA</button></th>
-            <th><button class="tgr-th" data-sort="earn">Earnings</button></th>
+            <th><button class="tgr-th" data-sort="earn" title="When it reports (the Earnings tab), then the Earnings tab's Read once it reported (Strong bullish ... Bearish) and the 8:45 AM pre-market grade (A / B / C / F) when it was graded today">Earnings</button></th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -1411,6 +1412,9 @@ defCalc('industry_perf', {
     /* the pre-market scan after the watch list's close (tonight: none yet, this morning's scan was before it) */
     const pm = PML && PML.date === today && PML.date > doc.date && PML.rows ? PML.rows : null;
     const er = new Map(((EARN && EARN.rows) || []).map((x) => [x.sym, x]));
+    /* the ADR at the last close (the nightly build) and today's 8:45 AM pre-market grade (the user, Nov 4 2026) */
+    const adrOf = new Map((BASE ? BASE.stocks : rowsOf('stocks')).map((x) => [x.symbol, num(x.adr_20)]));
+    const pg = new Map(rowsOf('premarket').filter((x) => (x.graded === true || x.graded === 'true') && x.scan_date === today && x.grade).map((x) => [x.symbol, x]));
     const rows = [];
     Object.entries(doc.watch).forEach(([sym, w]) => {
       const x = launchStars(sym); if (!x || x.n < 1) return;
@@ -1418,7 +1422,8 @@ defCalc('industry_perf', {
       const vs200 = s200 ? r2((close0 / s200 - 1) * 100) : null;
       const eTxt = e ? new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }) + ' ' + ({ bmo: 'AM', amc: 'PM', dmh: 'day' }[e.when] || '?') : '';
       rows.push({ symbol: sym, tv: w[10], stx: x, stars: x.n, trend_y: ty ? TR_N[ty.st] * 1000 + Math.min(ty.d || 0, 999) : null, gr: g, grank: g ? g.pct : null, rs: rs[sym] ?? null,
-        pm_chg: pm && pm[sym] ? pm[sym][1] : null, close: close0, pivot, to_pivot: close0 && pivot ? r2((pivot / close0 - 1) * 100) : null, vs200,
+        pm_chg: pm && pm[sym] ? pm[sym][1] : null, close: close0, pivot, to_pivot: close0 && pivot ? r2((pivot / close0 - 1) * 100) : null, vs200, adr: adrOf.get(sym) ?? null,
+        eRead: e && e.read ? e : null, pgr: pg.get(sym) || null,
         power_only: vs200 !== null && vs200 > (R.max_ext200 || 28), earn: e ? (e.date + (e.when === 'amc' ? 'b' : 'a')) : '', eTxt, eDate: e ? e.date : null, eWhen: e ? e.when : null });
     });
     const spec = S.sort['pms-table'] || null;
@@ -1438,15 +1443,17 @@ defCalc('industry_perf', {
     $('#pms-time').textContent = 'From the ' + fDate(doc.date) + ' close' + (pm ? ' · pre-market ' + fTime(PML.saved_at) + ' ET' : '');
     $('#pms-note').textContent = (upOnly ? n2 + ' ★★ and ' + n1 + ' ★ gapping up now (of ' + all + ' starred on the ' + Object.keys(doc.watch).length + '-stock launch watch list): a launch has to open up; any gap up counts (in the test the stars did best on 0-5% gaps; ★★ on 5%+ gaps was weak, only 28 trades). '
       : n2 + ' ★★ and ' + n1 + ' ★ of the ' + Object.keys(doc.watch).length + ' stocks on the launch watch list' + (pm ? ' (all of them; pick Gapping up to keep only those gapping up now). ' : ' (the pre-market prices come from 7:00 AM ET: then only the ones gapping up show). ')) + 'Not launches yet: buy one only when it launches today (it shows in Launching today on the Launches tab and its ★ desktop alert pops up), over the 5-minute opening range high, stop its low. "power day only" = more than ' + (R.max_ext200 || 28) + '% over its 200 SMA: only a power day (8%+ gap, 10%+ day, 4×+ volume) counts.';
-    if (!rows.length) noRows(tb, 11, upOnly ? 'No starred name is gapping up right now.' : 'No starred name on tonight\'s watch list.');
+    if (!rows.length) noRows(tb, 12, upOnly ? 'No starred name is gapping up right now.' : 'No starred name on tonight\'s watch list.');
     rows.forEach((r) => {
       const tr = h('tr'), k0 = tkCell(r.symbol, r.tv);
       if (r.power_only) { const t = h('span', 'tgr-flag', 'power day only'); t.style.marginLeft = '6px'; t.title = r.vs200 + '% over its 200 SMA at the last close: a regular launch allows 28%; a power day (volume 4×+, an 8%+ gap, a 10%+ day, over its 1-month high) up to 50%'; k0.append(t); }
-      const et = h('td', 'nw' + (r.eDate && (r.eDate === today || (r.eWhen === 'amc' && r.eDate < today)) ? ' tgr-up' : ''), r.eTxt || '—');
+      const et = h('td', 'nw' + (r.eDate && (r.eDate === today || (r.eWhen === 'amc' && r.eDate < today)) ? ' tgr-up' : ''), r.eTxt || (r.pgr ? '' : '—'));
       if (r.eTxt) et.title = 'Reports ' + new Date(r.eDate + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }) + ' ' + (ER_WHEN[r.eWhen] || '') + ' (the Earnings tab)';
+      if (r.eRead) { const b = h('span', 'er-read r' + ({ 'Strong bullish': 5, 'Bullish': 4, 'Mixed': 3, 'Somewhat bearish': 2, 'Bearish': 1 }[r.eRead.read] || 0), r.eRead.read); b.style.marginLeft = '6px'; b.title = 'The Earnings tab\'s Read: ' + (r.eRead.points > 0 ? '+' : '') + r.eRead.points + ' points: ' + (r.eRead.why || ''); et.append(b); }
+      if (r.pgr) { const gb = h('span', 'tgr-grade g' + r.pgr.grade, r.pgr.grade); gb.style.marginLeft = '6px'; gb.title = 'Pre-market grade today' + ((r.pgr.direction || 'up') === 'down' ? ' (gap down: how real the bad news is)' : '') + ': ' + (r.pgr.catalyst ? r.pgr.catalyst + ': ' : '') + (r.pgr.reason || ''); et.append(gb); }
       tr.append(k0, starCell(r.stx), trendLastCell(r.symbol), grStockCell(r.gr, r.symbol, false), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)),
         h('td', 'num ' + tone(r.pm_chg), r.pm_chg === null ? '—' : p1(r.pm_chg, true)), h('td', 'num', fPrice(r.close)), h('td', 'num', fPrice(r.pivot)),
-        h('td', 'num', p1(r.to_pivot, true)), h('td', 'num ' + tone(r.vs200), p1(r.vs200, true)), et);
+        h('td', 'num', p1(r.to_pivot, true)), h('td', 'num' + (r.adr !== null && r.adr < 3.5 ? ' tgr-dn' : ''), r.adr === null ? '—' : r.adr.toFixed(1) + '%'), h('td', 'num ' + tone(r.vs200), p1(r.vs200, true)), et);
       tb.append(tr);
     });
   };
