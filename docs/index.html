@@ -3037,7 +3037,7 @@ defCalc('industry_perf', {
     const eg = h('td', 'num');
     if (r.eps_turn) { eg.append(h('span', 'tgr-up', 'turned +')); eg.title = 'A year ago ' + erEps(r.eps_yago); }
     else if (r.eps_growth !== null && r.eps_growth !== undefined) { eg.textContent = p1(r.eps_growth, true); eg.classList.add(r.eps_growth >= 0 ? 'tgr-up' : 'tgr-dn'); eg.title = 'A year ago ' + erEps(r.eps_yago); }
-    else if (r.eps_nm) { eg.append(h('span', 'tgr-lbl', 'n/m')); eg.title = 'A year ago ' + erEps(r.eps_yago) + ': too small for a % change'; }
+    else if (r.eps_nm) { eg.append(h('span', 'tgr-lbl', r.eps_nm === 'one-off' ? 'n/m (one-off)' : 'n/m')); eg.title = 'A year ago ' + erEps(r.eps_yago) + (r.eps_nm === 'one-off' ? ': last year\'s quarter had a one-time gain (see the release), so no % change' : ': too small for a % change'); }
     else eg.textContent = '—';
     /* q/q: vs last quarter (Yahoo, the same basis as the actual) */
     if (r.eps_qoq !== null && r.eps_qoq !== undefined) { eg.append(h('div', 'tgr-lbl', 'q/q ' + p1(r.eps_qoq, true))); eg.title = (eg.title ? eg.title + '\n' : '') + 'Last quarter ' + erEps(r.eps_prev); }
