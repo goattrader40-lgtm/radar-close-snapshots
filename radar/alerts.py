@@ -282,6 +282,7 @@ def find(live, doc, now=None):
             # up 5%+ from an up open on 2x+ volume
             news, lo52 = doc.get("_news_today", {}).get(sym), (w[14] if len(w) > 14 else None)
             if ((earn or news) and gap is not None and gap > 0 and chg >= R["min_chg"] and rv >= R.get("lag_rv", 2) and price > pivot
+                    and (not s50 or price > s50)                         # over the 50 EMA (the user, Nov 4 2026)
                     and (not lo52 or price >= lo52 * (1 + R["min_above_low52"] / 100))):
                 g = grade(rv, price > pivot, gap, chg, R, False)
                 out.append((f"{sym}:laggard", f"{sym} {g} LAGGARD launch on " + ("earnings" if earn else "news (" + news + ")"),

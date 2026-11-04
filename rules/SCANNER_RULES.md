@@ -22,7 +22,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | 4. Reversal | Opened DOWN | +8%+, closes in the top half | 2x+ | YES | - | Type: Reversal |
 | 5. Delayed | - | A regular launch | - | No | Within 10 sessions after a faded 3%+ gap on 3x+ volume that held its base; graded with that gap day | Type: Delayed |
 | 6. Follower | - | +2%+, closes in the top half | 2x+ | YES (20-day high) | Within 10 sessions of an A/B launch by another stock in its theme | Type: Follower (follows XYZ) |
-| 7. Laggard | Opened up | +5%+, closes in the top half | 2x+ | YES (since Nov 2, 2026) | Closes UNDER the 200 SMA; MUST have earnings or an A/B news grade that day; moves to Launches after 5 closes in a row over the 200 SMA | Launch laggards tab; then 'from laggards' on Launches |
+| 7. Laggard | Opened up | +5%+, closes in the top half | 2x+ | YES (since Nov 2, 2026) | Closes UNDER the 200 SMA but OVER the 50 EMA (Nov 4 2026: under both qualifies for nothing); MUST have earnings or an A/B news grade that day; moves to Launches after 5 closes in a row over the 200 SMA | Launch laggards tab; then 'from laggards' on Launches |
 | Your pick | - | - | - | - | Added with the Follow button; followed like a launch, no launch day to grade | Type: Your pick |
 
 ## Launch grade
@@ -271,7 +271,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Catalyst gap | A neglected stock (under its 50 EMA or 200 SMA at the last close) gaps 5%+ on earnings or news with pace 3x+ and trades above both | 1-minute and 5-minute checks |
 | Catalyst 2nd trigger | After a catalyst gap that hadn't cleared its base high: the base high cleared | Same |
 | A+/A launch | Off the watch list, graded like Launching today | Same |
-| Laggard launch | Under the 200 SMA, earnings or A/B news today, opened up, up 5%+, pace 2x+, over its 1-month high | Same |
+| Laggard launch | Under the 200 SMA but over the 50 EMA, earnings or A/B news today, opened up, up 5%+, pace 2x+, over its 1-month high | Same |
 | Gapping to buy point | A followed launch gaps 2%+ on 1.2x+ pace to within 2% under its buy point | Every check |
 | Breakout (A/B/C) | A followed launch trades over its buy point on 1x+ pace after closing under it | 1-minute in the morning and last hour, else 5-minute |
 | Touched & back under | Traded over the buy point since the last check but is back under it | Every check |
