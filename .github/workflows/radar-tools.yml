@@ -160,7 +160,7 @@ jobs:
             python3 scanner/fetch.py /tmp/bars.json.gz
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json
-            python3 scanner/probe_codegrade.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_codegrade.json --minutes 38
+            python3 scanner/probe_codegrade.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_codegrade.json --minutes 42
             python3 radar/publish.py "code grader backtest" /tmp/probe_codegrade.json
           fi
           case "$CMD" in codelive*)   # the code grader on today's pre-market list as of a time ("codelive 2026-11-04T08:57") -> codegrade_test.json

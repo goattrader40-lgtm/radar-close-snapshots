@@ -21,21 +21,14 @@ Two layers, then one combined grade:
                      effective immediately
                   B  a modest miss, a guide under the street, shrinking revenue, an offering
                   C  no filing, a good report sold off
-  CHART (the user, Nov 4 2026: "we are market players": a stock under its 200 SMA gets shorted; the gap that matters
-        takes the pre-market price over the 50 and the 200 and over the 21-day high: shorts caught off guard)
-        under50   the pre-market price under the 50 EMA: not eligible for anything ("—")
-        laggard   over the 50 EMA, under the 200 SMA, over the 21-day high (the Launch laggards case: all but the 200)
-        downtrend over the 50 EMA, under the 200 SMA and the 21-day high: nothing ("—")
-        turnup    was under the 50 EMA or the 200 SMA at the last close, the pre-market price over both and over the
-                  21-day high
-        trending  21 EMA > 50 EMA > 200 SMA at the last close (the averages, not the price)
-        mixed     over the 50 and the 200, not stacked
-  GRADE (gap-ups) eligible only over the 50 EMA and 30%+ over the 52-week low. Over the 200: news A: turnup A+,
-        trending A, mixed B; news B: turnup A, trending B, mixed C; C and F as they are. Under the 200 (the trend isn't
-        confirmed): only W = laggard chart + A / B news or an earnings report (the Launch laggards rule); else "—". (a turnup without news is
-        flagged); F stays F; under 30% over the 52-week low (pre-market price) qualifies for nothing ("—"; the pre-market
-        list drops these before grading). Gap-downs: the news grade, one
-        grade more serious (B -> A) when a trending stock gaps under its 50 and 200.
+  STAGE (the last close; "rising" = higher than 5 sessions ago): 2 uptrend = 21 EMA > 50 EMA > 200 SMA, the 21 and
+        the 50 rising; 3 pullback / chop = over the 200, the 50 over it, not 2; 1 basing / turning = over the 200 with the
+        50 still under it, or under the 200 without 4; 4 downtrend = under the 200, the 21 under the 50, both falling
+  ELIGIBLE (gap-ups, the launch rules at the pre-market price): 30%+ over the 52-week low, ADR 3.5%+, at most 28% over
+        the 200 SMA yesterday (50% on an 8%+ gap), over the 50 EMA, over the 21-day high (else it gaps into chop): "—"
+  GRADE (gap-ups) stage 2 / 3: A / B news -> A / B; stage 1 / 4 now over the 200 (★ turn-up, shorts caught off guard):
+        A news A+, B news A; stage 1 / 4 still under the 200: W (laggard watch) on A / B news or an earnings report, else
+        "—"; C and F as they are. Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200.
 """
 import datetime, html, json, os, re, sys, time, urllib.request, zoneinfo
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -79,6 +72,15 @@ def cik_of(sym):
 
 
 _subs = {}
+FILINGS_SINCE = "9999"      # the live grader never needs older pages; the backtest sets its first date
+ROUTINE = {"5.07", "5.03", "5.08", "9.01", "3.03"}   # votes, bylaws, exhibits only: no news in them
+
+
+def worth_reading(f):
+    if f["form"] == "6-K":
+        return True
+    items = {x.strip() for x in (f.get("items") or "").split(",") if x.strip()}
+    return f["form"] in ("8-K", "8-K/A") and bool(items - ROUTINE)
 
 
 def filings(sym, t_from, t_to):
@@ -95,8 +97,8 @@ def filings(sym, t_from, t_to):
                 rows.append({"form": form, "items": f.get("items", [""] * len(f["form"]))[i] or "",
                              "at": f["acceptanceDateTime"][i], "acc": f["accessionNumber"][i], "primary": f["primaryDocument"][i]})
         add(sub["filings"]["recent"])
-        for extra in sub["filings"].get("files", []):          # older pages, for the backtest's early months
-            if extra.get("filingTo", "9999") >= "2024-06-01":
+        for extra in sub["filings"].get("files", []):          # older pages, only as far back as the backtest needs
+            if extra.get("filingTo", "9999") >= FILINGS_SINCE:
                 try:
                     add(sec_get("https://data.sec.gov/submissions/" + extra["name"]))
                 except Exception:
@@ -295,39 +297,67 @@ def classify(fs, texts, direction, mcap, e=None):
 
 
 # ───────── the chart ─────────
-def chart_state(px, prev_c, e21, e50, s200, hi21):
-    """where the pre-market price puts the stock vs the last close's averages (the user's rules, Nov 4 2026)"""
-    if None in (px, s200, e50) or s200 != s200:
-        return "unknown"
+SLOPE = 5          # "rising" = higher than 5 sessions ago (an EMA's one-day change only repeats the price test: NVDA
+                   # May 5 2026 closed under its 21 EMA in an uptrend and would flip to chop for a day)
+LAUNCH = dict(min_adr=3.5, max_ext200=28, power_ext200=50, power_gap=8)   # the launch list's rules (scanner/launch.py)
+LOW52_MIN = 30     # 30%+ over the 52-week low, like every list (the user, Nov 4 2026)
+
+
+def stage(c, e21, e50, s200, e21_ago, e50_ago, both=True):
+    """the trend stage at the last close (the user, Nov 4 2026): 2 uptrend = 21 > 50 > 200 with the 21 and the 50 rising
+    (both, so no chop); 3 pullback / chop = over the 200 with the 50 over it, not 2; 1 basing / turning = over the 200
+    with the 50 still under it, or under the 200 without 4; 4 downtrend = under the 200, the 21 under the 50, both
+    falling (ALAB Nov 4 2026: a breakdown, not a pullback, though its 50 is still over its 200)"""
+    r21, r50 = e21 > e21_ago, e50 > e50_ago
+    if c < s200:
+        return 4 if (e21 < e50 and not r21 and not r50) else 1
+    if e50 < s200:
+        return 1
+    if e21 > e50 > s200 and r21 and (r50 or not both):
+        return 2
+    return 3
+
+
+def eligible(px, prev_c, e50, s200, hi, adr, gap, over_low52):
+    """a gap-up the launch rules allow at the pre-market price: (True, "") or (False, why)"""
+    if over_low52 is not None and over_low52 < LOW52_MIN:
+        return False, f"only {over_low52:.0f}% over the 52-week low (30%+)"
+    if adr is not None and adr < LAUNCH["min_adr"]:
+        return False, f"ADR {adr:.1f}% (launches: 3.5%+)"
+    ext = 100 * (prev_c / s200 - 1) if s200 else None
+    cap = LAUNCH["power_ext200"] if gap >= LAUNCH["power_gap"] else LAUNCH["max_ext200"]
+    if ext is not None and ext > cap:
+        return False, f"{ext:.0f}% over the 200 SMA yesterday (launches: at most {cap}%)"
     if px < e50:
-        return "under50"                            # under the 50 EMA in pre-market: not eligible for anything
-    if px < s200:                                   # over the 50, under the 200: a laggard only over the 21-day high
-        return "laggard" if hi21 is not None and px > hi21 else "downtrend"
-    if (prev_c < e50 or prev_c < s200) and hi21 is not None and px > hi21:
-        return "turnup"                             # was under the 50 or the 200, now over both and the 21-day high
-    if e21 > e50 > s200:
-        return "trending"                           # the averages stacked: about the averages, not the price (21 EMA
-    return "mixed"                                  # under the 50 = the trend already broke = mixed)
+        return False, "under the 50 EMA"
+    if hi is not None and px <= hi:
+        return False, "under the 21-day high (gapping into last month's range = chop)"
+    return True, ""
 
 
-# W = laggard watch (the user, Nov 4 2026): over the 50 and the 21-day high but still under the 200 SMA, on A / B news
-# or an earnings report (the Launch laggards rule), so shorts are in control; lower importance, but kept: the day it
-# gets over its 200 it is a turn-up. Under the 200 nothing else is graded (the trend isn't confirmed).
-COMBINE = {"A": {"turnup": "A+", "trending": "A", "mixed": "B"},
-           "B": {"turnup": "A", "trending": "B", "mixed": "C"}}
-LOW52_MIN = 30                                      # the user's main rule: 30%+ over the 52-week low (pre-market price)
+def event(stg, px, s200):
+    """what the gap does: 'trend' (stage 2 / 3 over the 21-day high: the trend goes on, chop cleared), 'turnup' (stage 1 / 4
+    now over the 200: shorts caught off guard), 'laggard' (stage 1 / 4 still under the 200)"""
+    if stg in (2, 3):
+        return "trend"
+    return "turnup" if px > s200 else "laggard"
 
 
-def combine(news, chart, direction, broke_trend=False, over_low52=None, earn=False):
+def combine(news, ev, direction, ok=True, earn=False, broke_trend=False):
+    """the grade: gap-ups eligible only by the launch rules; over the 200 A / B news -> A / B (turn-up A+ / A); under the
+    200 only W (laggard watch: A / B news or an earnings report, the Launch laggards rule); C and F as they are; the rest
+    "—". Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200."""
     if direction == "down":
         return "A" if news == "B" and broke_trend else news
-    if over_low52 is not None and over_low52 < LOW52_MIN:
-        return "—"                                  # under 30% over the 52-week low: qualifies for nothing
-    if chart in ("under50", "downtrend", "unknown"):
-        return "—"                                  # under the 50, or under the 200 without the 21-day high: nothing
-    if chart == "laggard":
+    if not ok:
+        return "—"
+    if ev == "laggard":
         return "W" if news in ("A", "B") or (earn and news != "F") else "—"
-    return COMBINE[news].get(chart, news) if news in COMBINE else news
+    if news == "A":
+        return "A+" if ev == "turnup" else "A"
+    if news == "B":
+        return "A" if ev == "turnup" else "B"
+    return news
 
 
 # ───────── live: the pre-market list ─────────
@@ -347,11 +377,11 @@ def yahoo_bars(sym, before):
     return [x[1] for x in rows], [x[2] for x in rows]
 
 
-def ema_last(xs, n):
-    a, e = 2 / (n + 1), xs[0]
+def ema_series(xs, n):
+    a, out = 2 / (n + 1), [xs[0]]
     for x in xs[1:]:
-        e = a * x + (1 - a) * e
-    return e
+        out.append(a * x + (1 - a) * out[-1])
+    return out
 
 
 def earn_fields(sym, text, day):
@@ -417,9 +447,8 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
             fs = None
             print("sec", sym, repr(ex)[:120])
         texts = {}
-        for f in (fs or [])[:8]:
-            if f["form"] in ("8-K", "6-K", "8-K/A"):
-                texts[f["acc"]] = release_text(f)
+        for f in [f for f in (fs or []) if worth_reading(f)][:6]:
+            texts[f["acc"]] = release_text(f)
         e = E.get(sym)
         if e and not (e.get("date") >= t_from.date().isoformat()):
             e = None
@@ -430,28 +459,30 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
             except Exception as ex:
                 print("earnings", sym, repr(ex)[:120])
         nw = classify(fs, texts, d, mcap, e)
-        # the chart at the pre-market price
+        # the chart: the stage at the last close, then the gap at the pre-market price
+        px, lo52 = r.get("pm_last"), st.get("low_52w")
+        ol = round((px / lo52 - 1) * 100, 1) if lo52 and px else None
         try:
             cl, hi = yahoo_bars(sym, day)
-            e21, e50 = ema_last(cl[-120:], 21), ema_last(cl[-200:], 50)
+            E21, E50 = ema_series(cl, 21), ema_series(cl, 50)
+            e21, e50 = E21[-1], E50[-1]
             s200 = sum(cl[-200:]) / 200 if len(cl) >= 200 else st.get("sma200")
             hi21 = max(hi[-21:]) if len(hi) >= 21 else None
-            px = r.get("pm_last")
-            ch = chart_state(px, cl[-1], e21, e50, s200, hi21)
-            broke = bool(d == "down" and e21 > e50 > s200 and px < e50 and px < s200)
-            lv = dict(e21=round(e21, 2), e50=round(e50, 2), s200=round(s200, 2) if s200 else None, hi21=round(hi21, 2) if hi21 else None)
+            stg = stage(cl[-1], e21, e50, s200, E21[-1 - SLOPE], E50[-1 - SLOPE])
+            ok, why = eligible(px, cl[-1], e50, s200, hi21, st.get("adr_20"), r.get("gap_pct") or 0, ol) if d == "up" else (True, "")
+            ev = event(stg, px, s200)
+            broke = bool(d == "down" and stg == 2 and px < e50 and px < s200)
+            lv = dict(e21=round(e21, 2), e50=round(e50, 2), s200=round(s200, 2) if s200 else None, hi21=round(hi21, 2) if hi21 else None,
+                      e21_rising=E21[-1] > E21[-1 - SLOPE], e50_rising=E50[-1] > E50[-1 - SLOPE], ext200=round(100 * (cl[-1] / s200 - 1), 1) if s200 else None)
         except Exception as ex:
-            ch, broke, lv = "unknown", False, {}
+            stg, ok, why, ev, broke, lv = None, False, "no daily bars", None, False, {}
             print("bars", sym, repr(ex)[:120])
-        lo52 = st.get("low_52w")
-        ol = round((r.get("pm_last") / lo52 - 1) * 100, 1) if lo52 and r.get("pm_last") else None
-        fin = combine(nw["news"], ch, d, broke, ol, earn=bool(er or E.get(sym)))
-        if ol is not None and ol < LOW52_MIN and d == "up":
-            nw["flags"] = "; ".join(x for x in (nw["flags"], f"only {ol:.0f}% over the 52-week low (rule: 30%+)") if x)
-        if d == "up" and nw["news"] == "C" and ch == "turnup":
-            nw["flags"] = "; ".join(x for x in (nw["flags"], "chart turn-up without company news") if x)
-        out[sym] = dict(nw, direction=d, chart=ch, grade=fin, levels=lv, claude=r.get("grade"), pm_last=r.get("pm_last"), over_low52=ol)
-        print(f"{sym:6} {d:4} news {nw['news']} chart {ch:9} -> {fin:2} | Claude {r.get('grade')} | {nw['catalyst']}: {nw['reason'][:90]}")
+        earn = bool(er or E.get(sym))
+        fin = combine(nw["news"], ev, d, ok, earn, broke)
+        ch = {2: "uptrend", 3: "pullback", 1: "basing", 4: "downtrend"}.get(stg, "unknown")
+        out[sym] = dict(nw, direction=d, stage=stg, chart=ch, event=ev if ok else None, eligible=ok, not_eligible=why, grade=fin,
+                        levels=lv, claude=r.get("grade"), pm_last=px, over_low52=ol)
+        print(f"{sym:6} {d:4} stage {stg} {('event ' + str(ev)) if ok else 'not eligible: ' + why:40} news {nw['news']} -> {fin:2} | Claude {r.get('grade')} | {nw['catalyst']}")
     json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "day": day,
                "window": [t_from.isoformat(), t_to.isoformat()], "rows": out}, open(out_path, "w"), indent=0)
 

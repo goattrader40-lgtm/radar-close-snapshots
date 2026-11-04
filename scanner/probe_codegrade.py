@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
-"""Backtest of the code grader (radar/codegrade.py) on every past gap of 5%+ (test/codegrade, Nov 4 2026).
+"""Backtest of the code grader (radar/codegrade.py) on every past gap-up of 5%+ (test/codegrade, Nov 4 2026).
 
-  python3 scanner/probe_codegrade.py --bars BARS.json.gz --stocks stocks.json --out OUT.json [--minutes 40]
+  python3 scanner/probe_codegrade.py --bars BARS.json.gz --stocks stocks.json --out OUT.json [--minutes 42]
 
-Each gap day of the last ~14 months (2 years of bars, the first 200 sessions for the averages) in the pre-market
-list's universe (market cap $700M+ then, price $10+, 20-day $20M+ and 600K+ shares, ADR 3%+) is graded as of that
-morning, with no hindsight:
-  news   the SEC filings accepted from the last close (4 PM ET) to 9:30 AM that day, classified by codegrade.classify;
-         an earnings release gets its revenue growth and last quarter's growth from the SEC's XBRL data (the numbers
-         the release reported) and the guidance words from the release (radar/earnings.py guidance); no estimates
-         exist this far back, so no beat / miss
-  chart  the open stands in for the pre-market price, against the last close's 21 EMA, 50 EMA, 200 SMA and the
-         21-day high (variants: the 30-day high, the 50-day SMA)
-  group  the stock's best group status at the last close (launch.group_status: 2 leading, 1 turning up, 0 not)
-Then what happened (gap-ups): held = closed at or over the open (the pre-market price proxy), ran 20%+ = a high 20%+
-over the open within 20 sessions, broke the low = under the gap day's low within 5 sessions, r20 = the close 20
-sessions on vs the gap-day close, trade = bought at the open, out under the day's low or the first close under the
-21 EMA (the launch backtest's rule). Gap-downs: held = closed at or under the open, r20 the same.
+Each gap-up of the last ~14 months (2 years of bars; the first 200 sessions build the averages) in the launch universe
+(price $10+, 20-day $20M+ and 700K+ shares, market cap $700M+ then, under $2T) is judged as of that morning, the open
+standing in for the pre-market price, with the grader's own functions:
+  stage     at the last close (codegrade.stage; variants: one-day slopes, only the 21 rising)
+  eligible  the launch rules at the open (codegrade.eligible; variants: the 30-day high, no 21-day high in stage 2 / 3)
+  news      SEC filings accepted from the last close (4 PM) to 9:30 AM (codegrade.classify); an earnings release gets its
+            revenue growth and last quarter's from the SEC's XBRL facts and the guidance words from the release (no
+            estimates exist this far back, so no beat / miss). Only gaps that can get a grade in some variant are
+            looked up (the SEC's 10-a-second limit); the rest are "—" whatever the news, and are scored without it.
+Then what happened: held = closed at or over the open; ran 20%+ = a high 20%+ over the open within 20 sessions; broke
+the low = under the gap day's low within 5 sessions; r20 = the close 20 sessions on vs the gap-day close; trade = bought
+at the open, out under the day's low or on the first close under the 21 EMA (the launch backtest's rule). W laggards:
+crossed the 200 within 60 sessions, and how they did from that close.
 """
-import argparse, collections, datetime, json, os, sys, time, zoneinfo
+import argparse, datetime, json, os, sys, time, zoneinfo
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -31,13 +30,12 @@ from earnings import guidance  # noqa: E402
 NY = zoneinfo.ZoneInfo("America/New_York")
 CONCEPTS = ("RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues", "SalesRevenueNet",
             "RevenueFromContractWithCustomerIncludingAssessedTax", "RevenuesNetOfInterestExpense")
-
-
+GR = ("A+", "A", "B", "W", "C", "F", "—")
 _xq = {}
 
 
 def xbrl_quarters(sym):
-    """{quarter end (date): revenue} from the SEC's XBRL facts; Q4 = the year minus its three quarters"""
+    """{quarter end: revenue} from the SEC's XBRL facts; Q4 = the year minus its three quarters"""
     c = G.cik_of(sym)
     if not c:
         return {}
@@ -66,6 +64,8 @@ def xbrl_quarters(sym):
                     q[e] = v - sum(q[x] for x in inside)
         if q and (not best or max(q) > max(best)):
             best = q
+        if best and max(best) >= datetime.date(2026, 3, 1):
+            break
     _xq[c] = best
     return best
 
@@ -76,7 +76,6 @@ def near(q, d, tol=12):
 
 
 def hist_earnings(sym, day, text):
-    """the Earnings fields for a past release: revenue growth y/y, last quarter's, the guidance words"""
     q = xbrl_quarters(sym)
     e = {"guide": guidance(text, None, None) if text else {"dir": "none"}}
     if not q:
@@ -90,20 +89,27 @@ def hist_earnings(sym, day, text):
     pq = qe - datetime.timedelta(days=91)
     v, vy, vp, vpy = q.get(qe), near(q, yr(qe)), near(q, pq), near(q, yr(pq))
     pct = lambda a, b: round((a / b - 1) * 100, 1) if a and b and b > 0 else None
-    e.update(rev_growth=pct(v, vy), rev_prev_growth=pct(vp, vpy), q_end=qe.isoformat())
+    e.update(rev_growth=pct(v, vy), rev_prev_growth=pct(vp, vpy))
     return e
 
 
-def stats(rs, up=True):
-    n = len(rs)
-    if not n:
+def mean(xs):
+    xs = [x for x in xs if x is not None]
+    return round(float(np.mean(xs)), 1) if xs else None
+
+
+def pc(xs):
+    xs = [bool(x) for x in xs if x is not None]
+    return round(100 * sum(xs) / len(xs)) if xs else None
+
+
+def stats(rs):
+    if not rs:
         return {"n": 0}
-    f = lambda k: [r[k] for r in rs if r.get(k) is not None]
-    held, ran, broke, r20, tr = f("held"), f("ran20"), f("broke5"), f("r20"), f("trade")
-    pc = lambda xs: round(100 * sum(xs) / len(xs)) if xs else None
-    return {"n": n, "held%": pc(held), "ran20%": pc(ran), "broke_low5%": pc(broke),
-            "r20_avg": round(float(np.mean(r20)), 1) if r20 else None, "r20_med": round(float(np.median(r20)), 1) if r20 else None,
-            "trade_avg": round(float(np.mean(tr)), 1) if tr else None, "trade_win%": pc([x > 0 for x in tr])}
+    r20 = [r["r20"] for r in rs if r.get("r20") is not None]
+    return {"n": len(rs), "held%": pc([r["held"] for r in rs]), "ran20%": pc([r.get("ran20") for r in rs]),
+            "broke_low5%": pc([r["broke5"] for r in rs]), "r20_avg": mean(r20), "r20_med": round(float(np.median(r20)), 1) if r20 else None,
+            "trade_avg": mean([r.get("trade") for r in rs]), "trade_win%": pc([(r["trade"] > 0) if r.get("trade") is not None else None for r in rs])}
 
 
 def main():
@@ -111,144 +117,129 @@ def main():
     ap.add_argument("--bars", required=True)
     ap.add_argument("--stocks", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--minutes", type=float, default=40)
+    ap.add_argument("--minutes", type=float, default=42)
     a = ap.parse_args()
     t_end = time.time() + 60 * a.minutes
     A, groups, GS, cal, S = launch.load(a.bars, a.stocks)
     mcap = {s["symbol"]: s.get("mcap_b") or 0 for s in json.load(open(a.stocks))}
     pos = {d: k for k, d in enumerate(cal)}
-    best_g = {}
+    gstat = {}
     for g, (ms, stt, _, _) in GS.items():
         for s in ms:
-            best_g.setdefault(s, []).append(stt)
-    # 1. the events
-    ev, skipped52 = [], 0
+            gstat.setdefault(s, []).append(stt)
+    # 1. every liquid gap-up of 5%+, its levels at the last close, and what happened after
+    ev = []
     for s, ar in A.items():
         st = ar.st
         c, o, h, l = st.c, st.o, st.h, st.l
         n, last = c.size, c[-1]
         for i in range(max(ar.start, 31), n):
             gp = ar.gap[i]
-            if not (abs(gp) >= 5) or not ar.liq_noadr[i] or st.adr[i] < 3 or mcap.get(s, 0) * c[i] / last < 0.7:
+            if not (gp >= 5) or not ar.liq_noadr[i] or not (0.7 <= mcap.get(s, 0) * c[i] / last < 2000):
                 continue
-            up = gp > 0
-            px = o[i]
-            hi21, hi30 = float(h[i - 21:i].max()), float(h[i - 30:i].max())
-            s50 = float(c[i - 50:i].mean()) if i >= 50 else float("nan")
-            e21, e50, s200, pc = float(ar.e21[i - 1]), float(ar.e50[i - 1]), float(ar.s200[i - 1]), float(c[i - 1])
-            k = pos.get(st.dates[i - 1])
-            grp = max((int(x[k]) for x in best_g.get(s, []) if k is not None and k < len(x)), default=0)
-            lo52 = float(l[max(0, i - 252):i].min())
-            lv = dict(px=round(float(px), 4), pc=round(float(c[i - 1]), 4), e21=round(float(ar.e21[i - 1]), 4), e50=round(float(ar.e50[i - 1]), 4),
-                      s200=round(float(ar.s200[i - 1]), 4), hi21=round(float(h[i - 21:i].max()), 4), hi30=round(float(h[i - 30:i].max()), 4),
-                      s50=round(float(c[i - 50:i].mean()), 4) if i >= 50 else None)
-            r = dict(sym=s, date=st.dates[i], up=up, gap=round(float(gp), 1), mcap=mcap.get(s, 0) * c[i] / last,
-                     over_low52=round(100 * (px / lo52 - 1), 1) if lo52 > 0 else None, lv=lv,
-                     chart=G.chart_state(px, pc, e21, e50, s200, hi21), chart30=G.chart_state(px, pc, e21, e50, s200, hi30),
-                     chartS50=G.chart_state(px, pc, e21, s50, s200, hi21) if s50 == s50 else "unknown", group=grp,
-                     broke_trend=bool(not up and e21 > e50 > s200 and px < e50 and px < s200))
-            if up:
-                r["held"] = bool(c[i] >= o[i])
-                r["ran20"] = bool(h[i:i + 21].max() >= 1.2 * o[i]) if i + 20 < n else None
-                r["broke5"] = bool(any(l[j] < l[i] for j in range(i + 1, min(i + 6, n))))
-                k2 = None
-                for j in range(i + 1, n):
-                    if l[j] <= l[i] or c[j] < ar.e21[j]:
-                        k2 = j
-                        break
-                if k2 is not None:
-                    exit_px = min(l[i], o[k2]) if l[k2] <= l[i] else c[k2]
-                    r["trade"] = round(100 * (exit_px / o[i] - 1), 1)
-            else:
-                r["held"] = bool(c[i] <= o[i])
-                r["broke5"] = None
+            p = i - 1
+            px, pcl = float(o[i]), float(c[p])
+            lv = dict(px=px, pc=pcl, e21=float(ar.e21[p]), e50=float(ar.e50[p]), s200=float(ar.s200[p]),
+                      e21_5=float(ar.e21[p - 5]), e50_5=float(ar.e50[p - 5]), e21_1=float(ar.e21[p - 1]), e50_1=float(ar.e50[p - 1]),
+                      hi21=float(h[i - 21:i].max()), hi30=float(h[i - 30:i].max()), adr=float(st.adr[p]), gap=round(float(gp), 1),
+                      lo52=float(l[max(0, i - 252):i].min()))
+            if not all(x == x for x in lv.values()):
+                continue
+            ol = 100 * (px / lv["lo52"] - 1) if lv["lo52"] > 0 else None
+            k = pos.get(st.dates[p])
+            grp = max((int(x[k]) for x in gstat.get(s, []) if k is not None and k < len(x)), default=0)
+            r = dict(sym=s, date=st.dates[i], lv=lv, over_low52=ol, group=grp, mcap=mcap.get(s, 0) * c[i] / last)
+            r["held"] = bool(c[i] >= o[i])
+            r["ran20"] = bool(h[i:i + 21].max() >= 1.2 * o[i]) if i + 20 < n else None
+            r["broke5"] = bool(any(l[j] < l[i] for j in range(i + 1, min(i + 6, n))))
             r["r20"] = round(100 * (c[i + 20] / c[i] - 1), 1) if i + 20 < n else None
-            if up and px < s200:                        # still under the 200: did it cross later, and how did it do from there?
-                r["under50"] = bool(px < e50)
+            for j in range(i + 1, n):
+                if l[j] <= l[i] or c[j] < ar.e21[j]:
+                    r["trade"] = round(100 * ((min(l[i], o[j]) if l[j] <= l[i] else c[j]) / o[i] - 1), 1)
+                    break
+            if px < lv["s200"]:
                 j = next((j for j in range(i + 1, min(i + 61, n)) if c[j] > ar.s200[j]), None)
-                r["crossed200"] = j is not None if i + 60 < n else (True if j is not None else None)
+                r["crossed200"] = (j is not None) if (i + 60 < n or j is not None) else None
                 if j is not None:
-                    r["days_to_200"] = j - i
-                    r["after_cross_r20"] = round(100 * (c[j + 20] / c[j] - 1), 1) if j + 20 < n else None
-                    r["after_cross_ran20"] = bool(h[j + 1:j + 21].max() >= 1.2 * c[j]) if j + 20 < n else None
-                    r["after_cross_held5"] = bool(all(c[k] > ar.s200[k] for k in range(j, min(j + 5, n))))
-            if r["over_low52"] is not None and r["over_low52"] < G.LOW52_MIN:
-                skipped52 += 1                          # qualifies for nothing (the user, Nov 4 2026)
-                continue
+                    r["after_cross"] = dict(r20=round(100 * (c[j + 20] / c[j] - 1), 1) if j + 20 < n else None,
+                                            ran20=bool(h[j + 1:j + 21].max() >= 1.2 * c[j]) if j + 20 < n else None,
+                                            held5=bool(all(c[m] > ar.s200[m] for m in range(j, min(j + 5, n)))))
             ev.append(r)
-    ev.sort(key=lambda r: r["date"], reverse=True)          # newest first: if time runs out, the recent months are in
-    print(len(ev), "gap events")
-    # 2. the news at the SEC, as of 9:30 that morning
-    done = 0
+    print(len(ev), "gap-ups")
+    # 2. the stage and the eligibility, by variant
+    V = {"rules": dict(slope="5", both=True, hi="hi21", hi_in_trend=True),
+         "slope_1day": dict(slope="1", both=True, hi="hi21", hi_in_trend=True),
+         "only_21_rising": dict(slope="5", both=False, hi="hi21", hi_in_trend=True),
+         "30day_high": dict(slope="5", both=True, hi="hi30", hi_in_trend=True),
+         "no_high_in_stage2_3": dict(slope="5", both=True, hi="hi21", hi_in_trend=False)}
     for r in ev:
+        L = r["lv"]
+        r["v"] = {}
+        for name, v in V.items():
+            stg = G.stage(L["pc"], L["e21"], L["e50"], L["s200"], L["e21_" + v["slope"]], L["e50_" + v["slope"]], v["both"])
+            hi = L[v["hi"]] if (v["hi_in_trend"] or stg not in (2, 3)) else None
+            ok, why = G.eligible(L["px"], L["pc"], L["e50"], L["s200"], hi, L["adr"], L["gap"], r["over_low52"])
+            cat = ("" if ok else "too far over the 200" if "over the 200" in why else "ADR under 3.5%" if why.startswith("ADR") else
+                   "under 30% over the 52-week low" if "52-week" in why else "under the 50 EMA" if "50 EMA" in why else
+                   "under the 21/30-day high" if "high" in why else why)
+            r["v"][name] = dict(stage=stg, ok=ok, why=cat, ev=G.event(stg, L["px"], L["s200"]))
+    need = [r for r in ev if any(x["ok"] for x in r["v"].values())]
+    need.sort(key=lambda r: r["date"], reverse=True)              # newest first, if the time runs out
+    G.FILINGS_SINCE = min((r["date"] for r in need), default="9999")
+    print(len(need), "can get a grade in some variant: looking up their news")
+    # 3. the news at the SEC, as of 9:30 that morning
+    done = 0
+    for r in need:
         if time.time() > t_end:
             break
         d = datetime.date.fromisoformat(r["date"])
-        p = datetime.date.fromisoformat(cal[pos[r["date"]] - 1]) if r["date"] in pos and pos[r["date"]] > 0 else d - datetime.timedelta(days=1)
-        t_from = datetime.datetime(p.year, p.month, p.day, 16, 0, tzinfo=NY)
-        t_to = datetime.datetime(d.year, d.month, d.day, 9, 30, tzinfo=NY)
+        p = datetime.date.fromisoformat(cal[pos[r["date"]] - 1]) if pos.get(r["date"], 0) > 0 else d - datetime.timedelta(days=1)
         try:
-            fs = G.filings(r["sym"], t_from, t_to)
+            fs = G.filings(r["sym"], datetime.datetime(p.year, p.month, p.day, 16, 0, tzinfo=NY), datetime.datetime(d.year, d.month, d.day, 9, 30, tzinfo=NY))
         except Exception as ex:
-            r["news"] = None; r["err"] = repr(ex)[:80]
+            r["err"] = repr(ex)[:80]
             continue
-        texts = {}
-        for f in (fs or [])[:6]:
-            if f["form"] in ("8-K", "6-K"):
-                texts[f["acc"]] = G.release_text(f)
-        e = None
+        texts = {f["acc"]: G.release_text(f) for f in [f for f in (fs or []) if G.worth_reading(f)][:4]}
         er = [f for f in (fs or []) if f["form"] == "8-K" and "2.02" in (f.get("items") or "")]
-        if er:
-            e = hist_earnings(r["sym"], r["date"], texts.get(er[0]["acc"], ("", ""))[1])
-        nw = G.classify(fs, texts, "up" if r["up"] else "down", r["mcap"], e)
-        dn = "up" if r["up"] else "down"
-        r.update(news=nw["news"], catalyst=nw["catalyst"], why=nw["reason"][:140], earn=bool(er),
-                 grade=G.combine(nw["news"], r["chart"], dn, r["broke_trend"], r["over_low52"], bool(er)),
-                 grade30=G.combine(nw["news"], r["chart30"], dn, r["broke_trend"], r["over_low52"], bool(er)),
-                 gradeS50=G.combine(nw["news"], r["chartS50"], dn, r["broke_trend"], r["over_low52"], bool(er)))
+        e = hist_earnings(r["sym"], r["date"], texts.get(er[0]["acc"], ("", ""))[1]) if er else None
+        nw = G.classify(fs, texts, "up", r["mcap"], e)
+        r.update(news=nw["news"], catalyst=nw["catalyst"], why=nw["reason"][:120], earn=bool(er))
         done += 1
-    graded = [r for r in ev if r.get("news")]
-    print(done, "graded")
-    # 3. the tables
-    out = {"made_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "events": len(ev), "graded": len(graded),
-           "left_out_under_30pct_over_52w_low": skipped52,
-           "first": min((r["date"] for r in graded), default=None), "last": max((r["date"] for r in graded), default=None)}
-    for side, flag in (("up", True), ("down", False)):
-        rs = [r for r in graded if r["up"] == flag]
-        T = out[side] = {}
-        T["all"] = stats(rs)
-        T["by_news"] = {g: stats([r for r in rs if r["news"] == g]) for g in "ABCF"}
-        T["by_chart"] = {c: stats([r for r in rs if r["chart"] == c]) for c in ("turnup", "trending", "mixed", "laggard", "downtrend", "under50")}
-        T["news_x_chart"] = {f"{g} / {c}": stats([r for r in rs if r["news"] == g and r["chart"] == c])
-                             for g in "ABCF" for c in ("turnup", "trending", "mixed", "laggard", "downtrend", "under50")}
-        GR = ("A+", "A", "B", "W", "C", "F", "—")
-        T["by_grade"] = {g: stats([r for r in rs if r["grade"] == g]) for g in GR}
-        T["by_grade_30day_high"] = {g: stats([r for r in rs if r["grade30"] == g]) for g in GR}
-        T["by_grade_50sma"] = {g: stats([r for r in rs if r["gradeS50"] == g]) for g in GR}
-        ws = [r for r in rs if r["grade"] == "W"]
-        cr = [r for r in ws if r.get("crossed200")]
-        T["W_laggard_watch"] = {"n": len(ws), "crossed_200_within_60%": round(100 * len(cr) / len([r for r in ws if r.get("crossed200") is not None])) if ws else None,
-                                "median_days_to_cross": float(np.median([r["days_to_200"] for r in cr])) if cr else None,
-                                "after_cross": {"held_over_200_5d%": round(100 * np.mean([r["after_cross_held5"] for r in cr])) if cr else None,
-                                                "ran20%": round(100 * np.mean([r["after_cross_ran20"] for r in cr if r.get("after_cross_ran20") is not None])) if cr else None,
-                                                "r20_avg": round(float(np.mean([r["after_cross_r20"] for r in cr if r.get("after_cross_r20") is not None])), 1) if cr else None},
-                                "C_laggard_for_comparison": {"n": len([r for r in rs if r["news"] == "C" and r["chart"] == "laggard"]),
-                                                              "crossed_200_within_60%": round(100 * np.mean([bool(r.get("crossed200")) for r in rs if r["news"] == "C" and r["chart"] == "laggard" and r.get("crossed200") is not None])) if any(r["news"] == "C" and r["chart"] == "laggard" for r in rs) else None},
-                                "AB_under200_under21d_high": stats([r for r in rs if r["news"] in ("A", "B") and r["chart"] == "downtrend"])}
-        T["turnup_by_group"] = {f"group {k}": stats([r for r in rs if r["chart"] == "turnup" and r["group"] == k]) for k in (2, 1, 0)}
-        T["AB_news_by_group"] = {f"group {k}": stats([r for r in rs if r["news"] in ("A", "B") and r["group"] == k]) for k in (2, 1, 0)}
-        T["by_catalyst"] = {k: stats([r for r in rs if r["catalyst"] == k]) for k in sorted({r["catalyst"] for r in rs})}
-        T["earnings_only_by_news"] = {g: stats([r for r in rs if r["earn"] and r["news"] == g]) for g in "ABC"}
-        T["examples"] = {g: [(r["sym"], r["date"], r["gap"], r["news"], r["chart"], r["catalyst"], r["why"][:90], r.get("r20"))
-                             for r in rs if r["grade"] == g][:12] for g in ("A+", "A", "B", "W", "F")}
-    # every graded event, compact, so a rule change can be re-scored without re-running the SEC part
-    K = ("sym", "date", "up", "gap", "over_low52", "news", "catalyst", "chart", "chart30", "chartS50", "group", "held", "ran20",
-         "broke5", "r20", "trade", "crossed200", "days_to_200", "after_cross_r20", "after_cross_ran20", "after_cross_held5", "earn", "lv",
-         "broke_trend")
-    out["rows_keys"] = K
-    out["rows"] = [[r.get(k) for k in K] for r in graded]
+    print(done, "looked up")
+    # 4. the grades and the tables
+    for r in ev:
+        for name, x in r["v"].items():
+            x["grade"] = "—" if not x["ok"] else (G.combine(r["news"], x["ev"], "up", True, r.get("earn", False)) if r.get("news") else None)
+    out = {"made_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "gap_ups": len(ev), "needed_news": len(need),
+           "news_looked_up": done, "first": min((r["date"] for r in ev), default=None), "last": max((r["date"] for r in ev), default=None)}
+    ok_rows = [r for r in ev if all(x.get("grade") is not None for x in r["v"].values())]
+    out["scored"] = len(ok_rows)
+    out["all_gap_ups"] = stats(ok_rows)
+    for name in V:
+        T = out[name] = {}
+        T["by_grade"] = {g: stats([r for r in ok_rows if r["v"][name]["grade"] == g]) for g in GR}
+        T["eligible_by_stage"] = {f"stage {k}": stats([r for r in ok_rows if r["v"][name]["ok"] and r["v"][name]["stage"] == k]) for k in (2, 3, 1, 4)}
+        T["not_eligible_by_reason"] = {w: stats([r for r in ok_rows if not r["v"][name]["ok"] and r["v"][name]["why"] == w])
+                                       for w in sorted({r["v"][name]["why"] for r in ok_rows if not r["v"][name]["ok"]})}
+    R = out["rules"]
+    R["turnup_by_group"] = {f"group {k}": stats([r for r in ok_rows if r["v"]["rules"]["grade"] in ("A+", "A") and r["v"]["rules"]["ev"] == "turnup" and r["group"] == k]) for k in (2, 1, 0)}
+    R["AB_news_eligible_by_group"] = {f"group {k}": stats([r for r in ok_rows if r["v"]["rules"]["ok"] and r.get("news") in ("A", "B") and r["group"] == k]) for k in (2, 1, 0)}
+    R["eligible_by_news"] = {g: stats([r for r in ok_rows if r["v"]["rules"]["ok"] and r.get("news") == g]) for g in "ABCF"}
+    R["eligible_by_catalyst"] = {k: stats([r for r in ok_rows if r["v"]["rules"]["ok"] and r.get("catalyst") == k])
+                                 for k in sorted({r.get("catalyst") for r in ok_rows if r["v"]["rules"]["ok"] and r.get("catalyst")})}
+    ws = [r for r in ok_rows if r["v"]["rules"]["grade"] == "W"]
+    cr = [r for r in ws if r.get("crossed200")]
+    R["W_laggards"] = {"n": len(ws), "crossed_200_within_60%": pc([r.get("crossed200") for r in ws]),
+                       "median_days_to_cross": None, "after_cross_held_5d%": pc([r["after_cross"]["held5"] for r in cr]),
+                       "after_cross_ran20%": pc([r["after_cross"]["ran20"] for r in cr]), "after_cross_r20_avg": mean([r["after_cross"]["r20"] for r in cr])}
+    R["examples"] = {g: [(r["sym"], r["date"], r["lv"]["gap"], r["v"]["rules"]["stage"], r.get("news"), r.get("catalyst"), (r.get("why") or "")[:80], r.get("r20"))
+                         for r in ok_rows if r["v"]["rules"]["grade"] == g][:10] for g in ("A+", "A", "B", "W")}
+    K = ("sym", "date", "over_low52", "group", "held", "ran20", "broke5", "r20", "trade", "crossed200", "news", "catalyst", "earn")
+    out["rows_keys"] = list(K) + ["lv", "v"]
+    out["rows"] = [[r.get(k) for k in K] + [{k2: round(v2, 3) if isinstance(v2, float) else v2 for k2, v2 in r["lv"].items()},
+                                             {n2: {k3: x[k3] for k3 in ("stage", "ok", "grade")} for n2, x in r["v"].items()}] for r in ev]
     json.dump(out, open(a.out, "w"), separators=(",", ":"), default=str)
-    print(json.dumps(out["up"]["by_grade"], indent=1))
+    print(json.dumps(out["rules"]["by_grade"], indent=0)[:1500])
 
 
 if __name__ == "__main__":
