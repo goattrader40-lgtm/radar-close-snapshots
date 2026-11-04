@@ -1461,11 +1461,13 @@ defCalc('industry_perf', {
   /* RS and Trend filters (the user, Nov 4 2026): one set for the Watchlist (all five lists), one for Launches and Launch
      laggards; kept in this browser. RS = at least that rank; Trend = any of the ticked ones ("—" = no trend label). */
   const TR_OPTS = ['Up', 'Turn up', 'Reclaim', 'Resting', 'Negative', '—'], FKEY = 'radar-filters';
-  const FLT = (() => { const d = () => ({ rs: 0, tr: [] }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); return { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln) }; } catch (e) { return { wl: d(), ln: d() }; } })();
+  const FLT = (() => { const d = () => ({ rs: 0, tr: [], gt: '' }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); return { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln) }; } catch (e) { return { wl: d(), ln: d() }; } })();
   const saveFlt = () => { try { localStorage.setItem(FKEY, JSON.stringify(FLT)); } catch (e) { /* private window: not kept */ } };
   const trLabel = (sym) => { const x = trendOf(sym); return x && x.st ? x.st : '—'; };
-  const fltPass = (k, sym, rs) => { const f = FLT[k], v = num(rs); return (!f.rs || (v !== null && v >= f.rs)) && (!f.tr.length || f.tr.includes(trLabel(sym))); };
-  const fltText = (k) => { const f = FLT[k], t = []; if (f.rs) t.push('RS ' + f.rs + '+'); if (f.tr.length) t.push('Trend ' + f.tr.join(' / ')); return t.length ? ' Filtered: ' + t.join(', ') + '.' : ''; };
+  /* the group rank filter (Watchlist only, the user Nov 4 2026): '' all, 'top' = ★ Top only, 'ts' = Top or Strong (the stock's best group, as in the Group rank column) */
+  const gtPass = (gt, sym) => { if (!gt) return true; const t = (grBest(sym) || {}).tier || ''; return gt === 'top' ? t === 'Top' : t === 'Top' || t === 'Strong'; };
+  const fltPass = (k, sym, rs) => { const f = FLT[k], v = num(rs); return (!f.rs || (v !== null && v >= f.rs)) && (!f.tr.length || f.tr.includes(trLabel(sym))) && gtPass(f.gt, sym); };
+  const fltText = (k) => { const f = FLT[k], t = []; if (f.gt) t.push(f.gt === 'top' ? 'group ★ Top' : 'group Top / Strong'); if (f.rs) t.push('RS ' + f.rs + '+'); if (f.tr.length) t.push('Trend ' + f.tr.join(' / ')); return t.length ? ' Filtered: ' + t.join(', ') + '.' : ''; };
   const grTierN = (g) => (!g ? null : g.tier === 'Top' ? 2 : g.tier === 'Strong' ? 1 : 0);
   /* the stock's place inside that group (its own 1-, 3- and 6-month moves vs the group's other stocks) */
   const grPlace = (g, sym) => { if (!g || !g.order) return null; const o = g.order.split(' '); const i = o.indexOf(sym); return i < 0 ? null : { place: i + 1, of: o.length }; };
@@ -2225,7 +2227,17 @@ defCalc('industry_perf', {
     });
     const clr = h('button', 'tgr-lite', 'Clear'); clr.type = 'button';
     clr.addEventListener('click', () => { f.tr = []; pan.querySelectorAll('input').forEach((c) => { c.checked = false; }); saveFlt(); sumTxt(); draw(); });
-    pan.append(clr); dd.append(sm, pan); sumTxt(); box.append(sel, dd);
+    pan.append(clr); dd.append(sm, pan); sumTxt();
+    /* Group rank: ★ Top / Top + Strong (Watchlist only; Launches unchanged) */
+    if (k === 'wl') {
+      const gs = h('select', 'tgr-search'); gs.setAttribute('aria-label', 'Group rank'); gs.style.maxWidth = '12em';
+      gs.title = 'The stock\'s best group in the group rank (after the last close): ★ Top = the top 3% of themes or industries, Strong = the top 3-10%';
+      [['', 'Group: all'], ['top', 'Group: ★ Top'], ['ts', 'Group: Top + Strong']].forEach(([v, t]) => { const o = h('option', '', t); o.value = v; gs.append(o); });
+      gs.value = f.gt || ''; gs.classList.toggle('on', !!f.gt);
+      gs.addEventListener('change', () => { f.gt = gs.value; gs.classList.toggle('on', !!f.gt); saveFlt(); draw(); });
+      box.append(gs);
+    }
+    box.append(sel, dd);
   });
   document.addEventListener('click', (e) => document.querySelectorAll('.tgr-dd[open]').forEach((d) => { if (!d.contains(e.target)) d.open = false; }));
   /* Launches / Launch laggards as a TradingView import file: the rows on screen, in their order */
