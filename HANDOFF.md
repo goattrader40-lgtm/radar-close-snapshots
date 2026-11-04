@@ -138,6 +138,13 @@ alone.
   re-checks earnings.json at 8:57 for 8:30 reporters. (4) The user to decide: correct DUOL's Nov 4 A in gradelog
   or keep it as the record.
 
+## Desktop alerts: the long explanation folds away (live Nov 4 2026 evening, the user's "go live"; branch test/alertfold)
+
+- The Desktop alerts card (Launches / Launch laggards / Watchlist) shows a "▸ What pops up, and when" box (tgr-more,
+  data-key alerts, closed by default, remembered) holding the long text (#ln-alert-more), then one short status line
+  (#ln-alert-note: "On: pop-ups while this page is open ...; triggers stay on screen until you close them, heads-ups
+  fade. Today:" / Off / blocked), then the log. Text only: no alert changed.
+
 ## Gainers & losers: Gap filter (live Nov 4 2026 evening, the user's "go live"; branch test/gapfilter)
 
 - "Gap up ≥ __ %" next to "Up at least" (Losers: "Gap down ≥", keeps gap-downs of at least that size); off by default
