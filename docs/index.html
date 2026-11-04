@@ -623,6 +623,7 @@
           <thead><tr>
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
             <th><button class="tgr-th" data-sort="grade">Grade</button></th>
+            <th><button class="tgr-th" data-sort="cgrade" title="The code grade (test, Nov 2026: next to Claude's for 1-2 weeks; Claude's Grade stays the one alerts and Launch laggards use). Eligible gap-ups at the pre-market price: 30%+ over the 52-week low, ADR 3.5%+, over the 50 EMA, over the 21-day closing high, a laggard at most 20% under the 200 SMA; else —. Stage at the last close: 2 uptrend (21 > 50 > 200, both rising), 3 pullback, 1 basing, 4 downtrend. News from the SEC filings since the last close. Stage 2 / 3: A / B news = A / B; stage 1 / 4 now over the 200 = ⤴ reversal (A+ / A; A+ only in a leading or turning-up group); still under the 200 = W laggard watch (A / B news or earnings). A 5-8% gap one grade lower; 15x+ ATR over the 50 SMA at most C, 10x+ flagged extended. ≠ = differs from Claude. (Not the ★ stars, not the Trend column's Turn up.) Hover a grade for the why">Code grade</button></th>
             <th><button class="tgr-th" data-sort="stars" title="Conviction stars from yesterday's close, for a launch today: ★★ = ★ Top / Strong group and under the 21 EMA (+0.55R a trade on 222 launch alerts); ★ = Trend Up (+0.33R on 1,203); ⚠ skip = no Trend label (-0.05R on 822); all +0.16R. The tested buy: when it launches (Launching today), over the 5-minute opening range high, stop its low">Stars</button></th>
             <th><button class="tgr-th" data-sort="grank" title="Its best group's rank after yesterday's close (its themes and its industry; each theme ranked among the themes, each industry among the industries). ★ Top = top 3%, Strong = top 3-10%: in 2 years, 5%+ gap-ups in a Top group ran 20%+ within 20 days 44% of the time, Strong 37%, the rest 28-29%. Not part of the news grade">Group rank</button></th>
             <th class="num"><button class="tgr-th" data-sort="rs" title="RS = the stock's rank against the whole market after yesterday's close, 1-99 (99 = the best; like IBD's RS rating). Information only: in 2 years of 5%+ gap-ups, RS 97+ ran 20%+ within 20 days more often (42% vs 31%) but averaged worse 20 days later (-3.6% vs -0.4%), and inside a Top or Strong group it added nothing (44.5% vs 44%)">RS</button></th>
@@ -1819,7 +1820,9 @@ defCalc('industry_perf', {
     $('#pm-stale').hidden = !first || first.scan_date === today;
     const order = { A: 0, B: 1, C: 2, F: 3 };
     const rsAllPm = ldocRS();
-    rows.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsAllPm[r.symbol] ?? null; r.stx = launchStars(r.symbol); r.stars = r.stx ? r.stx.n : null; });
+    const cgDay = CGR && CGR.day && first && CGR.day === first.scan_date ? CGR.rows || {} : {};
+    const CGO = { 'A+': -1, A: 0, B: 1, W: 2, C: 3, F: 4 };
+    rows.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsAllPm[r.symbol] ?? null; r.stx = launchStars(r.symbol); r.stars = r.stx ? r.stx.n : null; r.cg = cgDay[r.symbol] || null; r.cgrade = r.cg ? CGO[r.cg.grade] ?? 5 : null; });
     const spec = S.sort['pm-table'];
     if (spec) {
       const txt = ['symbol', 'catalyst', 'inflection'].includes(spec.key);
@@ -1827,6 +1830,21 @@ defCalc('industry_perf', {
       rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
+    const STG = { uptrend: '2 uptrend', pullback: '3 pullback', basing: '1 basing', downtrend: '4 downtrend', unknown: '' };
+    const cgCell = (r) => {
+      const td = h('td', 'nw'); const c = r.cg;
+      if (!c) { td.append(h('span', 'tgr-lbl', CGR && CGR.day === (first && first.scan_date) ? '—' : 'after 8:52')); return td; }
+      if (c.grade === '—') td.append(h('span', 'tgr-lbl', '—')); else td.append(h('span', 'tgr-grade g' + (c.grade === 'A+' ? 'A' : c.grade === 'W' ? 'C' : c.grade), c.grade));
+      const base = (g) => (g === 'A+' ? 'A' : g === 'W' ? 'C' : g);
+      if (r.grade && c.grade !== '—' && base(c.grade) !== r.grade) { const d = h('span', 'tgr-dn', ' ≠'); d.title = 'Differs from Claude\'s ' + r.grade; td.append(d); }
+      const line = c.eligible === false ? 'not eligible' : c.event === 'turnup' ? '⤴ reversal' : c.event === 'laggard' ? 'laggard (under 200)' : (STG[c.chart] || '');
+      td.append(h('div', 'tgr-lbl' + (c.event === 'turnup' && c.eligible ? ' tgr-up' : ''), line));
+      const lv = c.levels || {};
+      td.title = ['Stage at the last close: ' + (STG[c.chart] || c.chart) + (lv.s200 ? ' (21 EMA ' + lv.e21 + (lv.e21_rising ? ' rising' : ' falling') + ', 50 EMA ' + lv.e50 + (lv.e50_rising ? ' rising' : ' falling') + ', 200 SMA ' + lv.s200 + ', 21-day high ' + lv.hi21 + ')' : ''),
+        c.eligible === false ? 'Not eligible: ' + (c.not_eligible || '') : 'Gap: ' + (c.event === 'turnup' ? '⤴ reversal (over the 50, the 200 and the 21-day closing high from stage 1 / 4)' : c.event === 'laggard' ? 'laggard (over the 50 and the 21-day high, still under the 200)' : 'trend goes on (over the 21-day high)'),
+        'News ' + c.news + ' · ' + (c.catalyst || '') + ': ' + (c.reason || ''), c.flags ? 'Flags: ' + c.flags : '', (c.sources || []).join('\n')].filter(Boolean).join('\n');
+      return td;
+    };
     const tb = table.querySelector('tbody'); tb.replaceChildren();
     if (ok('premarket') && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', S.pmshow === 'all' ? 'No liquid stock is gapping 5%+ this way in this scan.' : 'No A or B grade this way in this scan. Pick Show all to see the rest.'); td.colSpan = 20; tr.append(td); tb.append(tr); }
     rows.forEach((r) => {
@@ -1837,7 +1855,7 @@ defCalc('industry_perf', {
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade, r.grade)); else gd.textContent = '—';
       const sx = h('td', 'c2 tgr-src');
       String(r.sources || '').split(' ').filter(Boolean).forEach((u, i) => { if (i) sx.append(h('span', 'tgr-sep', ' ')); const l = h('a', '', u); l.href = u; l.target = '_blank'; l.rel = 'noopener'; sx.append(l); });
-      tr.append(key, gd, starCell(r.stx), grStockCell(r.gr, r.symbol, true), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
+      tr.append(key, gd, cgCell(r), starCell(r.stx), grStockCell(r.gr, r.symbol, true), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
         h('td', 'num c3', r.pm_vol_pct_adv === null || r.pm_vol_pct_adv === undefined ? '—' : g1.format(num(r.pm_vol_pct_adv)) + '%'),
         h('td', 'num c3', r.gap_x_adr === null || r.gap_x_adr === undefined ? '—' : num(r.gap_x_adr).toFixed(2) + '×'),
         h('td', '', r.catalyst || ''), h('td', '', r.inflection || ''), h('td', 'num', r.inflection_score === null || r.inflection_score === undefined || r.inflection_score === '' ? '—' : String(r.inflection_score)), h('td', 'name', r.reason || ''), h('td', 'c2 tgr-flags', r.flags || ''),
@@ -3569,6 +3587,7 @@ defCalc('industry_perf', {
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
+  let CGR = null;     /* the code grades (radar/codegrade.py, test next to Claude's) */
   let GRPS = {}, SRV = null, LNBT = null, REV = null, EARN = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
   const REVOF = (sym) => (REV && REV.rows ? REV.rows[sym] : null);
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
@@ -3654,7 +3673,8 @@ defCalc('industry_perf', {
       D.launch = ln ? { status: 'ok', data: ln } : (D.launch && D.launch.status === 'ok' ? D.launch : { status: 'error', data: null });
       if (lnbt) LNBT = lnbt;
       SRV = await getJson(sha, 'alerts.json').catch(() => SRV);
-      EARN = await getJson(sha, 'earnings.json').catch(() => EARN);     /* the Earnings tab (radar/earnings.py) */     /* the job's alerts, incl. its 1-minute gap-up checks */
+      EARN = await getJson(sha, 'earnings.json').catch(() => EARN);
+      CGR = await getJson(sha, 'codegrade.json').catch(() => CGR);     /* the code grades, next to Claude's (test) */     /* the Earnings tab (radar/earnings.py) */     /* the job's alerts, incl. its 1-minute gap-up checks */
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {
         const [stocks, themes] = await Promise.all([getJson(sha, 'stocks.json'), getJson(sha, 'themes.json')]);

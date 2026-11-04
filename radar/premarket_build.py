@@ -3,7 +3,8 @@
 
   prepare <premarket/latest.json> <stocks.json> <out_dir> [n_grade_up] [n_grade_down] [--live=premarket_live.json]
       Keeps gaps of 5%+ up or down that pass the liquidity rules (market cap $700M+, 20-day average volume 700K+ shares,
-      20-day average $ volume $20M+, ADR% 3+), adds ADR%, theme, the pre-market price vs the 200-day SMA
+      20-day average $ volume $20M+, ADR% 3+) and sit 30%+ over the 52-week low at the pre-market price (gap-ups also over
+      the 50 EMA), adds ADR%, theme, the pre-market price vs the 200-day SMA
       and the 50-day EMA (both as of the last close), an EP badge, and writes
       <out_dir>/rows.json plus <out_dir>/to_grade.json (by pre-market $ volume: top 20 gap-ups and top 8 gap-downs).
   finish <out_dir> [grades.json]
@@ -16,6 +17,7 @@ grades.json: {"SYM": {"grade": "A|B|C|F", "catalyst": "...", "reason": "...", "f
 import datetime, json, os, re, subprocess, sys, urllib.parse
 
 GAP_MIN, MCAP_MIN, AVGVOL_MIN, DVOL_MIN, ADR_MIN = 5.0, 0.7, 700_000, 20.0, 3.0
+LOW52_MIN = 30.0       # the pre-market price at least 30% over the 52-week low (the user, Nov 4 2026)
 EP_GAP = 10.0          # Qullamaggie: an episodic pivot gaps 10%+ on huge volume
 EP_PM_SHARE = 0.25     # proxy: pre-market volume already 25%+ of a normal full day
 
@@ -56,6 +58,13 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
         adr = num(s.get("adr_20"))
         if adr is not None and adr < ADR_MIN:     # ADR% 3+ (a stock with no ADR yet isn't dropped)
             continue
+        lo52, px = num(s.get("low_52w")), num(g.get("pm_last"))
+        if lo52 and px and px < lo52 * (1 + LOW52_MIN / 100):
+            continue                              # the user, Nov 4 2026: under 30% over the 52-week low (pre-market price)
+                                                  # qualifies for nothing (a stock without a 52-week low yet isn't dropped)
+        e50x = num(s.get("ema50"))
+        if g["gap_pct"] > 0 and e50x and px and px < e50x:
+            continue                              # a gap-up under its 50 EMA in pre-market isn't eligible (the user, Nov 4 2026)
         share = g["pm_volume"] / avgv
         sma, e50, last = num(s.get("sma200")), num(s.get("ema50")), num(g.get("pm_last"))
         vs = lambda m: round((last / m - 1) * 100, 1) if m and last else None   # the pre-market price at scan time
