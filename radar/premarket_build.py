@@ -13,7 +13,7 @@ grades.json: {"SYM": {"grade": "A|B|C|F", "catalyst": "...", "reason": "...", "f
                        "inflection": "Turnaround|Acceleration|New business|Margin|Deterioration|None", "inflection_score": 0-10,
                        "sources": ["url", ...]}}
 """
-import datetime, json, os, sys
+import datetime, json, os, re, subprocess, sys, urllib.parse
 
 GAP_MIN, MCAP_MIN, AVGVOL_MIN, DVOL_MIN, ADR_MIN = 5.0, 0.7, 700_000, 20.0, 3.0
 EP_GAP = 10.0          # Qullamaggie: an episodic pivot gaps 10%+ on huge volume
@@ -87,15 +87,78 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
                       "pass_rules": len(rows), "to_grade": len(todo)}))
 
 
+# ───────── the safety lock on A / B grades (the user, Nov 4 2026: DUOL got an A while its reason said "exact revenue
+# and guidance figures were not confirmed", and the grader never opened the release) ─────────
+HEDGE = re.compile(r"not (?:been |yet )?confirmed|unconfirmed|could ?n[o']t (?:be )?(?:confirm|verif|find|open|read|access)|"
+                   r"not (?:be )?verified|unverified|unable to (?:confirm|verify|open|access)|not available|no (?:primary|official) source",
+                   re.I)
+NEWSWIRES = ("sec.gov", "globenewswire.com", "businesswire.com", "prnewswire.com", "accessnewswire.com", "newsfilecorp.com",
+             "accesswire.com", "newswire.ca")
+
+
+def primary(url, name, sym):
+    """an SEC filing, a newswire carrying the company's own release, or the company's own site"""
+    host = (urllib.parse.urlparse(url).hostname or "").lower()
+    if any(host == d or host.endswith("." + d) for d in NEWSWIRES):
+        return True
+    label = host.split(".")[-2] if host.count(".") >= 1 else host           # riotplatforms.com -> riotplatforms
+    words = [w for w in re.findall(r"[a-z0-9]+", (name or "").lower()) if len(w) >= 4 and w not in ("inc", "corp", "holdings", "group", "company", "technologies", "therapeutics")]
+    return bool(label and (label.startswith(sym.lower()) or any(label.startswith(w[:6]) or w[:6] in label for w in words)))
+
+
+def earnings_reads():
+    """the Earnings tab's reads (radar-data earnings.json): SEC release numbers, no Claude"""
+    try:
+        j = json.loads(subprocess.run(["git", "show", "origin/radar-data:earnings.json"], capture_output=True, text=True, check=True).stdout)
+    except Exception:
+        return {}
+    react = j.get("react") or {}
+    t0, p1 = react.get("t0"), react.get("p1")
+    out = {}
+    for r in j.get("rows", []):
+        if r.get("reported") and r.get("read") and ((r.get("date") == t0 and r.get("when") in ("bmo", "dmh", "tns")) or
+                                                     (r.get("date") == p1 and r.get("when") in ("amc", "dmh", "tns")) or r.get("date") == t0):
+            out[r["sym"]] = r
+    return out
+
+
+def lock(r, er):
+    """A / B only with a primary source the reason doesn't hedge on; earnings gappers carry the Earnings tab's read"""
+    notes = []
+    e = er.get(r["symbol"])
+    if e:
+        notes.append(f"Earnings tab (SEC release): {e['read']}" + (f" ({e['why']})" if e.get("why") else ""))
+    g0 = r.get("grade")
+    if g0 in ("A", "B"):
+        srcs = (r.get("sources") or "").split()
+        why = None
+        if HEDGE.search((r.get("reason") or "") + " " + (r.get("flags") or "")):
+            why = "the grader could not confirm the facts"
+        elif not any(primary(u, r.get("name"), r["symbol"]) for u in srcs):
+            why = "no primary source (company release, SEC filing or newswire)"
+        elif e and r.get("direction") == "up" and e["read"] in ("Bearish", "Somewhat bearish"):
+            why = f"the Earnings tab reads the release {e['read']}"
+        elif e and r.get("direction") == "down" and e["read"] in ("Bullish", "Strong bullish"):
+            why = f"the Earnings tab reads the release {e['read']}"
+        if why:
+            r["grade"] = "C" if why.startswith(("the grader", "no primary")) else {"A": "B", "B": "C"}[g0]
+            r["locked"] = f"{g0} -> {r['grade']}: {why}"
+            r["reason"] = f"⚠ Lowered from {g0}: {why}. " + (r.get("reason") or "")
+    if notes:
+        r["flags"] = "; ".join([x for x in [r.get("flags") or ""] if x] + notes)
+
+
 def finish(out, grades_path=None):
     rows = json.load(open(os.path.join(out, "rows.json")))
     grades = json.load(open(grades_path)) if grades_path and os.path.exists(grades_path) else {}
+    er = earnings_reads()
     for r in rows:
         g = grades.get(r["symbol"])
         if g:
             r.update(grade=str(g.get("grade", "")).upper()[:1], catalyst=g.get("catalyst", ""), reason=g.get("reason", ""),
                      flags=g.get("flags", ""), inflection=g.get("inflection", "") if g.get("inflection") != "None" else "",
                      inflection_score=g.get("inflection_score"), sources=" ".join(g.get("sources", [])[:3]), graded=True)
+            lock(r, er)
     order = {"A": 0, "B": 1, "C": 2, "F": 3}
     rows.sort(key=lambda r: (r["direction"] != "up", order.get(r["grade"], 4), -r["pm_dvol_m"]))
     if not rows:   # keep one placeholder row so the dashboard can still show the scan time
@@ -104,7 +167,8 @@ def finish(out, grades_path=None):
                  "scan_time": meta.get("scan_time", ""), "graded": False, "grade": "", "pm_dvol_m": 0}]
     json.dump(rows, open(os.path.join(out, "premarket.json"), "w"), separators=(",", ":"))
     print(json.dumps({"rows": len(rows), "graded": sum(r["graded"] for r in rows),
-                      "by_grade": {k: sum(r["grade"] == k for r in rows) for k in "ABCF"}}))
+                      "by_grade": {k: sum(r["grade"] == k for r in rows) for k in "ABCF"},
+                      "locked": [f"{r['symbol']} {r['locked']}" for r in rows if r.get("locked")]}))
 
 
 if __name__ == "__main__":
