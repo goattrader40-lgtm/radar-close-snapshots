@@ -24,8 +24,9 @@ Two layers, then one combined grade:
   STAGE (the last close; "rising" = higher than 5 sessions ago): 2 uptrend = 21 EMA > 50 EMA > 200 SMA, the 21 and
         the 50 rising; 3 pullback / chop = over the 200, the 50 over it, not 2; 1 basing / turning = over the 200 with the
         50 still under it, or under the 200 without 4; 4 downtrend = under the 200, the 21 under the 50, both falling
-  ELIGIBLE (gap-ups, the launch rules at the pre-market price): 30%+ over the 52-week low, ADR 3.5%+, at most 28% over
-        the 200 SMA yesterday (50% on an 8%+ gap), over the 50 EMA, over the 21-day high (else it gaps into chop): "—"
+  ELIGIBLE (gap-ups at the pre-market price): 30%+ over the 52-week low, ADR 3.5%+, at most 100% over the 200 SMA
+        yesterday (parabolic), over the 50 EMA, at most 20% under the 200 SMA, over the highest close of the last 21
+        sessions (else it gaps into chop); else "—"
   GRADE (gap-ups) stage 2 / 3: A / B news -> A / B; stage 1 / 4 now over the 200 (★ turn-up, shorts caught off guard):
         A news A+, B news A; stage 1 / 4 still under the 200: W (laggard watch) on A / B news or an earnings report, else
         "—"; C and F as they are. Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200.
@@ -299,7 +300,11 @@ def classify(fs, texts, direction, mcap, e=None):
 # ───────── the chart ─────────
 SLOPE = 5          # "rising" = higher than 5 sessions ago (an EMA's one-day change only repeats the price test: NVDA
                    # May 5 2026 closed under its 21 EMA in an uptrend and would flip to chop for a day)
-LAUNCH = dict(min_adr=3.5, max_ext200=28, power_ext200=50, power_gap=8)   # the launch list's rules (scanner/launch.py)
+LAUNCH = dict(min_adr=3.5)   # the launch list's ADR (scanner/settings.json)
+MAX_EXT200 = 100   # at most 100% over the 200 SMA yesterday: accelerations of trending stocks qualify (the user, Nov 4
+                   # 2026: the launch list's 28% doesn't fit); 100%+ is parabolic (backtest: broke the low 76%, r20 -9.4%)
+MAX_UNDER200 = 20  # a laggard at most 20% under the 200 at the pre-market price (backtest: 10-20% under crossed the 200
+                   # within 60 sessions 78%, 20-30% 50%, 30%+ 8%; the user had 25-30% in mind)
 LOW52_MIN = 30     # 30%+ over the 52-week low, like every list (the user, Nov 4 2026)
 
 
@@ -318,20 +323,22 @@ def stage(c, e21, e50, s200, e21_ago, e50_ago, both=True):
     return 3
 
 
-def eligible(px, prev_c, e50, s200, hi, adr, gap, over_low52):
-    """a gap-up the launch rules allow at the pre-market price: (True, "") or (False, why)"""
+def eligible(px, prev_c, e50, s200, hi, adr, gap, over_low52, max_ext=MAX_EXT200, max_under=MAX_UNDER200):
+    """a gap-up eligible at the pre-market price: (True, "") or (False, why). hi = the 21-day high by the closes (the user,
+    Nov 4 2026: the pre-market / opening price over the highest close of the last 21 sessions)"""
     if over_low52 is not None and over_low52 < LOW52_MIN:
         return False, f"only {over_low52:.0f}% over the 52-week low (30%+)"
     if adr is not None and adr < LAUNCH["min_adr"]:
-        return False, f"ADR {adr:.1f}% (launches: 3.5%+)"
+        return False, f"ADR {adr:.1f}% (3.5%+)"
     ext = 100 * (prev_c / s200 - 1) if s200 else None
-    cap = LAUNCH["power_ext200"] if gap >= LAUNCH["power_gap"] else LAUNCH["max_ext200"]
-    if ext is not None and ext > cap:
-        return False, f"{ext:.0f}% over the 200 SMA yesterday (launches: at most {cap}%)"
+    if ext is not None and max_ext is not None and ext > max_ext:
+        return False, f"{ext:.0f}% over the 200 SMA yesterday (at most {max_ext}%: parabolic)"
     if px < e50:
         return False, "under the 50 EMA"
+    if s200 and px < s200 and max_under is not None and px < s200 * (1 - max_under / 100):
+        return False, f"{100 * (1 - px / s200):.0f}% under the 200 SMA (a laggard at most {max_under}%)"
     if hi is not None and px <= hi:
-        return False, "under the 21-day high (gapping into last month's range = chop)"
+        return False, "under the 21-day high close (gapping into last month's range = chop)"
     return True, ""
 
 
@@ -425,7 +432,7 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
             r.setdefault("grade", cl.get(r["symbol"]))
     except Exception:
         pass
-    rows = [r for r in rows if r.get("graded")] or rows[:16]
+    # every gapper on the list (rows.json: all that pass the list's rules), not only the top 12 Claude researches
     S = {s["symbol"]: s for s in json.load(open(stocks_path))}
     E = {}
     try:
@@ -467,7 +474,7 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
             E21, E50 = ema_series(cl, 21), ema_series(cl, 50)
             e21, e50 = E21[-1], E50[-1]
             s200 = sum(cl[-200:]) / 200 if len(cl) >= 200 else st.get("sma200")
-            hi21 = max(hi[-21:]) if len(hi) >= 21 else None
+            hi21 = max(cl[-21:]) if len(cl) >= 21 else None          # the highest close of the last 21 sessions
             stg = stage(cl[-1], e21, e50, s200, E21[-1 - SLOPE], E50[-1 - SLOPE])
             ok, why = eligible(px, cl[-1], e50, s200, hi21, st.get("adr_20"), r.get("gap_pct") or 0, ol) if d == "up" else (True, "")
             ev = event(stg, px, s200) if d == "up" else None      # the events are a gap-up idea

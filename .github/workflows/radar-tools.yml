@@ -163,11 +163,14 @@ jobs:
             python3 scanner/probe_codegrade.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_codegrade.json --minutes 42
             python3 radar/publish.py "code grader backtest" /tmp/probe_codegrade.json
           fi
-          case "$CMD" in codelive*)   # the code grader on today's pre-market list as of a time ("codelive 2026-11-04T08:57") -> codegrade_test.json
+          case "$CMD" in codelive*)   # the code grader on today's whole pre-market list as of a time ("codelive 2026-11-04T08:57") -> codegrade_test.json
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
-            mkdir -p /tmp/rd && for f in premarket stocks earnings; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
+            mkdir -p /tmp/rd /tmp/pm && for f in stocks earnings; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
+            git show origin/radar-data:premarket_live.json > /tmp/rd/pmlive.json 2>/dev/null || true
+            git show origin/radar-data:premarket.json > /tmp/pm/claude_premarket.json 2>/dev/null || echo '[]' > /tmp/pm/claude_premarket.json
+            python3 radar/premarket_build.py prepare premarket/latest.json /tmp/rd/stocks.json /tmp/pm 8 4 --live=/tmp/rd/pmlive.json
             A=${CMD#codelive}; A=${A# }
-            python3 radar/codegrade.py live /tmp/rd/premarket.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/codegrade_test.json ${A:+--asof=$A}
+            python3 radar/codegrade.py live /tmp/pm/rows.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/codegrade_test.json ${A:+--asof=$A}
             python3 radar/publish.py "code grader test" /tmp/codegrade_test.json;;
           esac
           case "$CMD" in reltext*) git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && git show origin/radar-data:earnings.json > /tmp/earn_now.json && python3 radar/probe_reltext.py /tmp/earn_now.json /tmp/probe_reltext.json ${CMD#reltext} && python3 radar/publish.py "earnings release texts" /tmp/probe_reltext.json;; esac

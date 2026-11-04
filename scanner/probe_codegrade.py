@@ -6,8 +6,10 @@
 Each gap-up of the last ~14 months (2 years of bars; the first 200 sessions build the averages) in the launch universe
 (price $10+, 20-day $20M+ and 700K+ shares, market cap $700M+ then, under $2T) is judged as of that morning, the open
 standing in for the pre-market price, with the grader's own functions:
-  stage     at the last close (codegrade.stage; variants: one-day slopes, only the 21 rising)
-  eligible  the launch rules at the open (codegrade.eligible; variants: the 30-day high, no 21-day high in stage 2 / 3)
+  stage     at the last close (codegrade.stage)
+  eligible  at the open (codegrade.eligible: the 21-day high = the highest close; at most 100% over the 200; a laggard at
+            most 20% under it); variants: no cap over the 200, the launch list's 28% (50% on 8%+ gaps), laggards 30%
+            under, the 21-day high by the wicks, no 21-day high in stage 2 / 3
   news      SEC filings accepted from the last close (4 PM) to 9:30 AM (codegrade.classify); an earnings release gets its
             revenue growth and last quarter's from the SEC's XBRL facts and the guidance words from the release (no
             estimates exist this far back, so no beat / miss). Only gaps that can get a grade in some variant are
@@ -141,7 +143,7 @@ def main():
             px, pcl = float(o[i]), float(c[p])
             lv = dict(px=px, pc=pcl, e21=float(ar.e21[p]), e50=float(ar.e50[p]), s200=float(ar.s200[p]),
                       e21_5=float(ar.e21[p - 5]), e50_5=float(ar.e50[p - 5]), e21_1=float(ar.e21[p - 1]), e50_1=float(ar.e50[p - 1]),
-                      hi21=float(h[i - 21:i].max()), hi30=float(h[i - 30:i].max()), adr=float(st.adr[p]), gap=round(float(gp), 1),
+                      hi21=float(c[i - 21:i].max()), hi21w=float(h[i - 21:i].max()), adr=float(st.adr[p]), gap=round(float(gp), 1),
                       lo52=float(l[max(0, i - 252):i].min()))
             if not all(x == x for x in lv.values()):
                 continue
@@ -167,21 +169,23 @@ def main():
             ev.append(r)
     print(len(ev), "gap-ups")
     # 2. the stage and the eligibility, by variant
-    V = {"rules": dict(slope="5", both=True, hi="hi21", hi_in_trend=True),
-         "slope_1day": dict(slope="1", both=True, hi="hi21", hi_in_trend=True),
-         "only_21_rising": dict(slope="5", both=False, hi="hi21", hi_in_trend=True),
-         "30day_high": dict(slope="5", both=True, hi="hi30", hi_in_trend=True),
-         "no_high_in_stage2_3": dict(slope="5", both=True, hi="hi21", hi_in_trend=False)}
+    V = {"rules": dict(ext=G.MAX_EXT200, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True),
+         "no_cap_over_200": dict(ext=None, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True),
+         "launch_cap_28_50": dict(ext="launch", under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True),
+         "laggard_30_under": dict(ext=G.MAX_EXT200, under=30, hi="hi21", hi_in_trend=True),
+         "21day_high_by_wicks": dict(ext=G.MAX_EXT200, under=G.MAX_UNDER200, hi="hi21w", hi_in_trend=True),
+         "no_high_in_stage2_3": dict(ext=G.MAX_EXT200, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=False)}
     for r in ev:
         L = r["lv"]
         r["v"] = {}
+        stg = G.stage(L["pc"], L["e21"], L["e50"], L["s200"], L["e21_5"], L["e50_5"])
         for name, v in V.items():
-            stg = G.stage(L["pc"], L["e21"], L["e50"], L["s200"], L["e21_" + v["slope"]], L["e50_" + v["slope"]], v["both"])
             hi = L[v["hi"]] if (v["hi_in_trend"] or stg not in (2, 3)) else None
-            ok, why = G.eligible(L["px"], L["pc"], L["e50"], L["s200"], hi, L["adr"], L["gap"], r["over_low52"])
-            cat = ("" if ok else "too far over the 200" if "over the 200" in why else "ADR under 3.5%" if why.startswith("ADR") else
-                   "under 30% over the 52-week low" if "52-week" in why else "under the 50 EMA" if "50 EMA" in why else
-                   "under the 21/30-day high" if "high" in why else why)
+            ext = (50 if L["gap"] >= 8 else 28) if v["ext"] == "launch" else v["ext"]
+            ok, why = G.eligible(L["px"], L["pc"], L["e50"], L["s200"], hi, L["adr"], L["gap"], r["over_low52"], ext, v["under"])
+            cat = ("" if ok else "too far over the 200" if "over the 200" in why else "too far under the 200" if "under the 200" in why
+                   else "ADR under 3.5%" if why.startswith("ADR") else "under 30% over the 52-week low" if "52-week" in why
+                   else "under the 50 EMA" if "50 EMA" in why else "under the 21-day high" if "high" in why else why)
             r["v"][name] = dict(stage=stg, ok=ok, why=cat, ev=G.event(stg, L["px"], L["s200"]))
     need = [r for r in ev if any(x["ok"] for x in r["v"].values())]
     need.sort(key=lambda r: r["date"], reverse=True)              # newest first, if the time runs out
@@ -219,6 +223,7 @@ def main():
         T = out[name] = {}
         T["by_grade"] = {g: stats([r for r in ok_rows if r["v"][name]["grade"] == g]) for g in GR}
         T["eligible_by_stage"] = {f"stage {k}": stats([r for r in ok_rows if r["v"][name]["ok"] and r["v"][name]["stage"] == k]) for k in (2, 3, 1, 4)}
+        T["eligible_all"] = stats([r for r in ok_rows if r["v"][name]["ok"]])
         T["not_eligible_by_reason"] = {w: stats([r for r in ok_rows if not r["v"][name]["ok"] and r["v"][name]["why"] == w])
                                        for w in sorted({r["v"][name]["why"] for r in ok_rows if not r["v"][name]["ok"]})}
     R = out["rules"]

@@ -40,7 +40,7 @@ jobs:
           git show origin/radar-data:premarket.json > /tmp/pm/claude_premarket.json 2>/dev/null || echo '[]' > /tmp/pm/claude_premarket.json
           git show origin/radar-data:codegrade_log.json > /tmp/rd/codegrade_log.json 2>/dev/null || echo '[]' > /tmp/rd/codegrade_log.json
           python3 radar/premarket_build.py prepare premarket/latest.json /tmp/rd/stocks.json /tmp/pm 8 4 --live=/tmp/rd/pmlive.json
-          python3 radar/codegrade.py live /tmp/pm/to_grade.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/codegrade.json
+          python3 radar/codegrade.py live /tmp/pm/rows.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/codegrade.json
           python3 radar/codegrade.py log /tmp/codegrade.json /tmp/rd/codegrade_log.json
           cp /tmp/rd/codegrade_log.json /tmp/codegrade_log.json
           python3 radar/publish.py "code grades $(TZ=America/New_York date +%F' '%H:%M)" /tmp/codegrade.json /tmp/codegrade_log.json
