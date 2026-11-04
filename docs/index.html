@@ -2891,7 +2891,11 @@ defCalc('industry_perf', {
     const symOfLine = (x) => ((/· (\S+)/.exec(x) || [])[1] || '');
     const isLag = (x) => / LAGGARD /.test(x) || lag.has(symOfLine(x));
     const isGrp = (x) => / · GROUP MOVE: /.test(x);
-    const isWl = (x) => / 3-SETUPS /.test(x) || (!isLag(x) && !onLn.has(symOfLine(x)) && !/ (POWER DAY|CATALYST GAP|launch|LAGGARD|EARLY)/.test(x));
+    /* the Watchlist log: only tickers on 3-SETUPS or the TREND list (the user, Nov 3 2026), not on Launches / laggards
+       (those alert from there); everything else (the 50 EMA undercut tab, pre-market grades...) stays on Launches */
+    const sdoc = st('setups').status === 'ok' ? st('setups').data : null;
+    const wlSet = new Set(((ldoc && ldoc.setups3) || []).map((r) => r.symbol).concat(sdoc ? trendSrc(sdoc).map((r) => r.symbol) : []));
+    const isWl = (x) => { const sym = symOfLine(x); return wlSet.has(sym) && !onLn.has(sym) && !isLag(x); };
     $('#ln-alert-card h2').textContent = LAG ? 'Desktop alerts · laggards' : WL ? 'Desktop alerts · watchlist' : 'Desktop alerts';
     const mine = log.filter((x) => isGrp(x) || (WL ? isWl(x) : !isWl(x) && isLag(x) === LAG));
     const shown = q ? mine.filter((x) => new RegExp('· ' + q.replace(/[^A-Z0-9.\-]/g, '') + '\\b').test(x)) : mine;
