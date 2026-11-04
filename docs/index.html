@@ -439,6 +439,7 @@
     <div class="tgr-filters" id="g-filters" role="group" aria-label="Gainer filters">
       <span class="tgr-seg" data-param="g_dir" aria-label="Gainers or losers"><button data-v="up" aria-pressed="true">Gainers</button><button data-v="down" aria-pressed="false">Losers</button></span>
       <label class="tgr-f"><span id="g-pct-lbl">Up</span> at least <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-param="g_pct" aria-label="Minimum move today, %"> % today</label>
+      <label class="tgr-f" title="Today's open vs yesterday's close. Empty = off"><span id="g-gap-lbl">Gap up</span> ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-param="g_gap" aria-label="Minimum gap at the open, %"> %</label>
       <label class="tgr-f">Rel vol ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-param="g_rv" aria-label="Minimum relative volume, times the last 20 trading days"> ×</label>
       <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-param="g_price" aria-label="Minimum price, dollars"></label>
       <label class="tgr-f">ADR ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-param="g_adr" aria-label="Minimum ADR %"> %</label>
@@ -450,7 +451,7 @@
       <label class="tgr-f">20-day avg volume ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-param="g_avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K shares</label>
       <button class="tgr-lite" id="g-reset" type="button">Reset to my defaults</button>
     </div>
-    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. Rel vol = today's volume ÷ the average of the last 20 trading days: during market hours by this time of day (volume from 9:30 to now vs the same stretch on those days), after the close the full day; it's rough in the first 5 minutes. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list.</p>
+    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. Gap = today's open vs yesterday's close (off unless you fill it in; while it's set, a stock without an open yet is left out: Yahoo leaves an NYSE stock's open empty for its first ~10 minutes). Rel vol = today's volume ÷ the average of the last 20 trading days: during market hours by this time of day (volume from 9:30 to now vs the same stretch on those days), after the close the full day; it's rough in the first 5 minutes. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list.</p>
     <div class="tgr-moves" id="g-moves"><span class="tgr-lbl">Group moves today (3+ tight members pass):</span> <span class="tgr-chips" id="g-moves-list"></span></div>
     <div class="tgr-bar">
       <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
@@ -1089,7 +1090,7 @@ defCalc('industry_perf', {
   };
 
   /* gainer filters: your defaults; a cleared box (null) turns that filter off. Kept in the page, so a reload starts from these. */
-  const PDEF = { g_dir: 'up', g_pct: 4, g_rv: null, g_price: 5, g_adr: 3.5, g_dvol_m: 30, g_dvol_days: 20, g_above200: true, g_above50e: false, g_mcap_b: 0.7, g_avgvol_k: 700 };
+  const PDEF = { g_dir: 'up', g_pct: 4, g_rv: null, g_price: 5, g_adr: 3.5, g_dvol_m: 30, g_dvol_days: 20, g_above200: true, g_above50e: false, g_mcap_b: 0.7, g_avgvol_k: 700, g_gap: null };   /* g_gap: the gap filter, off by default (the user, Nov 4 2026) */
   const F = Object.assign({}, PDEF);
   const params = () => F;
   const passes = (r, p) => {
@@ -1099,6 +1100,9 @@ defCalc('industry_perf', {
     const mv = p.g_dir === 'down' ? -c : c;   /* losers: a drop of at least g_pct */
     if (p.g_pct !== null ? mv < p.g_pct : mv <= 0) return false;
     if (p.g_price !== null && (n(r.price) ?? -1) < p.g_price) return false;
+    /* gap = today's open vs yesterday's close; gainers: a gap up of at least g_gap, losers: a gap down. A stock without
+       an open yet (Yahoo leaves an NYSE stock's open empty for its first ~10 minutes) is left out while the box is set */
+    if (p.g_gap !== null && p.g_gap !== undefined) { const g = n(r.gap_pct); if (g === null || (p.g_dir === 'down' ? -g : g) < p.g_gap) return false; }
     const rv = n(r.rel_vol);                    /* today's volume vs the last 20 trading days (by this time of day while the market is open) */
     if (p.g_rv !== null && p.g_rv !== undefined && rv !== null && rv < p.g_rv) return false;
     if (p.g_mcap_b !== null && (n(r.mcap_b) ?? -1) < p.g_mcap_b) return false;
@@ -1749,7 +1753,7 @@ defCalc('industry_perf', {
     const byGain = (a2, b2) => (down ? cmp(num(a2.chg_1d), num(b2.chg_1d)) : cmp(num(b2.chg_1d), num(a2.chg_1d)));
     const byAvg = (x, y) => (down ? cmp(x, y) : cmp(y, x));
     const word = down ? 'Losers' : 'Gainers';
-    $('#g-themes-h').textContent = word + ' by theme'; $('#g-pct-lbl').textContent = down ? 'Down' : 'Up';
+    $('#g-themes-h').textContent = word + ' by theme'; $('#g-pct-lbl').textContent = down ? 'Down' : 'Up'; $('#g-gap-lbl').textContent = down ? 'Gap down' : 'Gap up';
     /* by theme: counted from the stocks passing the filters, tight = score 0.7+ with that theme */
     const fits = new Map(rowsOf('themes').map((t) => [t.theme, fitMap(t.scores)]));
     const byTheme = new Map();
@@ -3296,6 +3300,7 @@ defCalc('industry_perf', {
     ['chg_1w', '1W', 'Price', 'Change over 1 week', ['chg_1w'], (s) => cPct((SK(s) || {}).chg_1w, true)],
     ['chg_1m', '1M', 'Price', 'Change over 1 month', ['chg_1m', 'perf_1m_pct'], (s) => cPct((SK(s) || {}).chg_1m, true)],
     ['chg_3m', '3M', 'Price', 'Change over 3 months', ['chg_3m', 'perf_3m_pct'], (s) => cPct((SK(s) || {}).chg_3m, true)],
+    ['gap', 'Gap', 'Price', 'Today\'s open vs yesterday\'s close (from the live quotes)', ['gap', 'gap_pct'], (s) => cPct((SK(s) || {}).gap_pct, true)],
     ['off52h', 'Off 52W high', 'Price', 'How far under its 52-week high now', ['off_high', 'off_52w_high_pct'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.high_52w) : null; return cNum(v, p1(v, true), tone(v), r && r.high_52w ? '52-week high ' + fPrice(r.high_52w) : ''); }],
     ['over52l', 'Over 52W low', 'Price', 'How far over its 52-week low now', ['over_low52', 'below_low52'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.low_52w) : null; return cNum(v, p1(v, true), '', r && r.low_52w ? '52-week low ' + fPrice(r.low_52w) : ''); }],
     ['rel_vol', 'Rel vol', 'Volume', 'Relative volume at the time of day (live in the session)', ['rel_vol', 'rv', 'rv_today'], (s) => { const v = num((SK(s) || {}).rel_vol); return cNum(v, fX(v)); }],
@@ -3592,15 +3597,21 @@ defCalc('industry_perf', {
   }
   const r2 = (x) => Math.round(x * 100) / 100;
   /* today's live quote on top of the last close: [price, change %, volume, quote time] */
+  /* today's gap: the open (live quotes, [5]) vs yesterday's close (the price over today's change) */
+  const gapOf = (q, p, c) => { const op = q ? num(q[5]) : null, pr = num(p), cc = num(c); const prev = pr && cc !== null ? pr / (1 + cc / 100) : null; return op && prev ? Math.round((op / prev - 1) * 1000) / 10 : null; };
   function applyLive(stocks, live, b) {
     LIVE_ON = !!(live && live.rows && b && live.session > b.asof);
-    if (!LIVE_ON) return stocks;
+    if (!LIVE_ON) {
+      /* after the evening build (same session): the stocks are today's close, the day's last live snapshot has its open */
+      if (live && live.rows && b && live.session === b.asof) return stocks.map((r) => { const q = live.rows[r.symbol]; return q ? Object.assign({}, r, { open: num(q[5]), gap_pct: gapOf(q, r.price, r.chg_1d) }) : r; });
+      return stocks;
+    }
     return stocks.map((r) => {
       const q = live.rows[r.symbol];
       const o = Object.assign({}, r);
       if (!q) { o.chg_1d = null; o.no_new_price = true; return o; }
       const [p, c, vol] = q;
-      o.price = p; o.chg_1d = r2(c); o.volume = vol;
+      o.price = p; o.chg_1d = r2(c); o.volume = vol; o.open = num(q[5]); o.gap_pct = gapOf(q, p, c);
       o.rel_vol = q[4] !== undefined && q[4] !== null ? q[4] : null;   /* 9:30-to-now volume vs the 20-day average 9:30-to-same-time */
       [['1w', 'ref_1w'], ['1m', 'ref_1m'], ['3m', 'ref_3m']].forEach(([k, ref]) => { o['chg_' + k] = r[ref] ? r2((p / r[ref] - 1) * 100) : null; });
       if (r.price && r.mcap_b) o.mcap_b = r2((r.mcap_b * p) / r.price);
