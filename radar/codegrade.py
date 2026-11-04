@@ -24,9 +24,10 @@ Two layers, then one combined grade:
   STAGE (the last close; "rising" = higher than 5 sessions ago): 2 uptrend = 21 EMA > 50 EMA > 200 SMA, the 21 and
         the 50 rising; 3 pullback / chop = over the 200, the 50 over it, not 2; 1 basing / turning = over the 200 with the
         50 still under it, or under the 200 without 4; 4 downtrend = under the 200, the 21 under the 50, both falling
-  ELIGIBLE (gap-ups at the pre-market price): 30%+ over the 52-week low, ADR 3.5%+, at most 100% over the 200 SMA
-        yesterday (parabolic), over the 50 EMA, at most 20% under the 200 SMA, over the highest close of the last 21
-        sessions (else it gaps into chop); else "—"
+  ELIGIBLE (gap-ups at the pre-market price): 30%+ over the 52-week low, ADR 3.5%+, over the 50 EMA, at most 20% under
+        the 200 SMA, over the highest close of the last 21 sessions (else it gaps into chop); else "—". No cap over the
+        200; extension = the ATR multiple from the 50 SMA: 10x+ flagged "extended", 15x+ at most C. A+ / A / B only on
+        8%+ gaps (5-8% gaps: at most C).
   GRADE (gap-ups) stage 2 / 3: A / B news -> A / B; stage 1 / 4 now over the 200 (★ turn-up, shorts caught off guard):
         A news A+, B news A; stage 1 / 4 still under the 200: W (laggard watch) on A / B news or an earnings report, else
         "—"; C and F as they are. Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200.
@@ -301,8 +302,11 @@ def classify(fs, texts, direction, mcap, e=None):
 SLOPE = 5          # "rising" = higher than 5 sessions ago (an EMA's one-day change only repeats the price test: NVDA
                    # May 5 2026 closed under its 21 EMA in an uptrend and would flip to chop for a day)
 LAUNCH = dict(min_adr=3.5)   # the launch list's ADR (scanner/settings.json)
-MAX_EXT200 = 100   # at most 100% over the 200 SMA yesterday: accelerations of trending stocks qualify (the user, Nov 4
-                   # 2026: the launch list's 28% doesn't fit); 100%+ is parabolic (backtest: broke the low 76%, r20 -9.4%)
+MAX_EXT200 = None  # no cap over the 200 SMA: leaders run 200-300% over it (the user, Nov 4 2026); extension is the ATR
+                   # multiple from the 50 SMA instead (the user's own setting)
+EXTENDED = 10      # pre-market price 10+ ATRs over the 50 SMA: flagged "extended" (the user's setting)
+TOO_EXTENDED = 15  # 15+ ATRs: at most C (backtest, 8%+ gaps: trade -6.7%, broke the low 68%)
+MIN_GAP_AB = 8     # A+ / A / B only on gaps of 8%+ (backtest: 5-8% gaps with A / B news ran 20%+ only 9-14% of the time)
 MAX_UNDER200 = 20  # a laggard at most 20% under the 200 at the pre-market price (backtest: 10-20% under crossed the 200
                    # within 60 sessions 78%, 20-30% 50%, 30%+ 8%; the user had 25-30% in mind)
 LOW52_MIN = 30     # 30%+ over the 52-week low, like every list (the user, Nov 4 2026)
@@ -342,6 +346,13 @@ def eligible(px, prev_c, e50, s200, hi, adr, gap, over_low52, max_ext=MAX_EXT200
     return True, ""
 
 
+def atr_mult(px, sma50, atr, prev_c):
+    """the ATR multiple from the 50 SMA: (% over the 50 SMA) / (ATR %)"""
+    if not (px and sma50 and atr and prev_c):
+        return None
+    return round((px / sma50 - 1) / (atr / prev_c), 1)
+
+
 def event(stg, px, s200):
     """what the gap does: 'trend' (stage 2 / 3 over the 21-day high: the trend goes on, chop cleared), 'turnup' (stage 1 / 4
     now over the 200: shorts caught off guard), 'laggard' (stage 1 / 4 still under the 200)"""
@@ -350,7 +361,17 @@ def event(stg, px, s200):
     return "turnup" if px > s200 else "laggard"
 
 
-def combine(news, ev, direction, ok=True, earn=False, broke_trend=False):
+def combine(news, ev, direction, ok=True, earn=False, broke_trend=False, gap=None, mult=None):
+    g = _combine(news, ev, direction, ok, earn, broke_trend)
+    if direction == "up" and g in ("A+", "A", "B"):
+        if gap is not None and gap < MIN_GAP_AB:
+            g = "C"                                     # a 5-8% gap: at most C
+        elif mult is not None and mult >= TOO_EXTENDED:
+            g = "C"                                     # 15+ ATRs over the 50 SMA: at most C
+    return g
+
+
+def _combine(news, ev, direction, ok=True, earn=False, broke_trend=False):
     """the grade: gap-ups eligible only by the launch rules; over the 200 A / B news -> A / B (turn-up A+ / A); under the
     200 only W (laggard watch: A / B news or an earnings report, the Launch laggards rule); C and F as they are; the rest
     "—". Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200."""
@@ -379,9 +400,9 @@ def yahoo_bars(sym, before):
     j = _y[0].get(f"https://query1.finance.yahoo.com/v8/finance/chart/{sym.replace('.', '-')}?range=1y&interval=1d")
     r = j["chart"]["result"][0]
     q = r["indicators"]["quote"][0]
-    rows = [(datetime.datetime.fromtimestamp(t, NY).date().isoformat(), c, h) for t, c, h in zip(r["timestamp"], q["close"], q["high"]) if c and h]
+    rows = [(datetime.datetime.fromtimestamp(t, NY).date().isoformat(), c, h, lo) for t, c, h, lo in zip(r["timestamp"], q["close"], q["high"], q["low"]) if c and h and lo]
     rows = [x for x in rows if x[0] < before]
-    return [x[1] for x in rows], [x[2] for x in rows]
+    return [x[1] for x in rows], [x[2] for x in rows], [x[3] for x in rows]
 
 
 def ema_series(xs, n):
@@ -471,7 +492,7 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
         px, lo52 = r.get("pm_last"), st.get("low_52w")
         ol = round((px / lo52 - 1) * 100, 1) if lo52 and px else None
         try:
-            cl, hi = yahoo_bars(sym, day)
+            cl, hi, lo = yahoo_bars(sym, day)
             E21, E50 = ema_series(cl, 21), ema_series(cl, 50)
             e21, e50 = E21[-1], E50[-1]
             s200 = sum(cl[-200:]) / 200 if len(cl) >= 200 else st.get("sma200")
@@ -479,14 +500,22 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
             stg = stage(cl[-1], e21, e50, s200, E21[-1 - SLOPE], E50[-1 - SLOPE])
             ok, why = eligible(px, cl[-1], e50, s200, hi21, st.get("adr_20"), r.get("gap_pct") or 0, ol) if d == "up" else (True, "")
             ev = event(stg, px, s200) if d == "up" else None      # the events are a gap-up idea
+            sma50 = sum(cl[-50:]) / 50 if len(cl) >= 50 else None
+            tr = [max(hi[k] - lo[k], abs(hi[k] - cl[k - 1]), abs(lo[k] - cl[k - 1])) for k in range(len(cl) - 14, len(cl))] if len(cl) > 15 else []
+            mult = atr_mult(px, sma50, sum(tr) / len(tr) if tr else None, cl[-1])
             broke = bool(d == "down" and stg == 2 and px < e50 and px < s200)
             lv = dict(e21=round(e21, 2), e50=round(e50, 2), s200=round(s200, 2) if s200 else None, hi21=round(hi21, 2) if hi21 else None,
-                      e21_rising=E21[-1] > E21[-1 - SLOPE], e50_rising=E50[-1] > E50[-1 - SLOPE], ext200=round(100 * (cl[-1] / s200 - 1), 1) if s200 else None)
+                      e21_rising=E21[-1] > E21[-1 - SLOPE], e50_rising=E50[-1] > E50[-1 - SLOPE], ext200=round(100 * (cl[-1] / s200 - 1), 1) if s200 else None,
+                      sma50=round(sma50, 2) if sma50 else None, atr_mult=mult)
         except Exception as ex:
-            stg, ok, why, ev, broke, lv = None, False, "no daily bars", None, False, {}
+            stg, ok, why, ev, broke, lv, mult = None, False, "no daily bars", None, False, {}, None
             print("bars", sym, repr(ex)[:120])
         earn = bool(er or E.get(sym))
-        fin = combine(nw["news"], ev, d, ok, earn, broke)
+        fin = combine(nw["news"], ev, d, ok, earn, broke, r.get("gap_pct"), mult)
+        if d == "up" and mult is not None and mult >= EXTENDED:
+            nw["flags"] = "; ".join(x for x in (nw["flags"], f"extended: {mult:.0f}x ATR over the 50 SMA" + (" (15x+: at most C)" if mult >= TOO_EXTENDED else "")) if x)
+        if d == "up" and ok and nw["news"] in ("A", "B") and (r.get("gap_pct") or 0) < MIN_GAP_AB:
+            nw["flags"] = "; ".join(x for x in (nw["flags"], f"gap {r.get('gap_pct'):.1f}%: A / B need 8%+") if x)
         ch = {2: "uptrend", 3: "pullback", 1: "basing", 4: "downtrend"}.get(stg, "unknown")
         out[sym] = dict(nw, direction=d, stage=stg, chart=ch, event=ev if ok else None, eligible=ok, not_eligible=why, grade=fin,
                         levels=lv, claude=r.get("grade"), pm_last=px, over_low52=ol)

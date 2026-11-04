@@ -144,6 +144,8 @@ def main():
             lv = dict(px=px, pc=pcl, e21=float(ar.e21[p]), e50=float(ar.e50[p]), s200=float(ar.s200[p]),
                       e21_5=float(ar.e21[p - 5]), e50_5=float(ar.e50[p - 5]), e21_1=float(ar.e21[p - 1]), e50_1=float(ar.e50[p - 1]),
                       hi21=float(c[i - 21:i].max()), hi21w=float(h[i - 21:i].max()), adr=float(st.adr[p]), gap=round(float(gp), 1),
+                      s50=float(c[i - 50:i].mean()),
+                      atr=float(np.mean([max(h[k] - l[k], abs(h[k] - c[k - 1]), abs(l[k] - c[k - 1])) for k in range(i - 14, i)])),
                       lo52=float(l[max(0, i - 252):i].min()))
             if not all(x == x for x in lv.values()):
                 continue
@@ -169,12 +171,12 @@ def main():
             ev.append(r)
     print(len(ev), "gap-ups")
     # 2. the stage and the eligibility, by variant
-    V = {"rules": dict(ext=G.MAX_EXT200, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True),
-         "no_cap_over_200": dict(ext=None, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True),
-         "launch_cap_28_50": dict(ext="launch", under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True),
-         "laggard_30_under": dict(ext=G.MAX_EXT200, under=30, hi="hi21", hi_in_trend=True),
-         "21day_high_by_wicks": dict(ext=G.MAX_EXT200, under=G.MAX_UNDER200, hi="hi21w", hi_in_trend=True),
-         "no_high_in_stage2_3": dict(ext=G.MAX_EXT200, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=False)}
+    V = {"rules": dict(ext=None, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True, gap8=True, atr_cap=G.TOO_EXTENDED),
+         "no_8pct_rule": dict(ext=None, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True, gap8=False, atr_cap=G.TOO_EXTENDED),
+         "no_atr_cap": dict(ext=None, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True, gap8=True, atr_cap=None),
+         "atr_cap_10": dict(ext=None, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True, gap8=True, atr_cap=10),
+         "cap_100pct_over_200": dict(ext=100, under=G.MAX_UNDER200, hi="hi21", hi_in_trend=True, gap8=True, atr_cap=None),
+         "21day_high_by_wicks": dict(ext=None, under=G.MAX_UNDER200, hi="hi21w", hi_in_trend=True, gap8=True, atr_cap=G.TOO_EXTENDED)}
     for r in ev:
         L = r["lv"]
         r["v"] = {}
@@ -183,6 +185,7 @@ def main():
             hi = L[v["hi"]] if (v["hi_in_trend"] or stg not in (2, 3)) else None
             ext = (50 if L["gap"] >= 8 else 28) if v["ext"] == "launch" else v["ext"]
             ok, why = G.eligible(L["px"], L["pc"], L["e50"], L["s200"], hi, L["adr"], L["gap"], r["over_low52"], ext, v["under"])
+            r.setdefault("mult", G.atr_mult(L["px"], L["s50"], L["atr"], L["pc"]))
             cat = ("" if ok else "too far over the 200" if "over the 200" in why else "too far under the 200" if "under the 200" in why
                    else "ADR under 3.5%" if why.startswith("ADR") else "under 30% over the 52-week low" if "52-week" in why
                    else "under the 50 EMA" if "50 EMA" in why else "under the 21-day high" if "high" in why else why)
@@ -213,7 +216,13 @@ def main():
     # 4. the grades and the tables
     for r in ev:
         for name, x in r["v"].items():
-            x["grade"] = "—" if not x["ok"] else (G.combine(r["news"], x["ev"], "up", True, r.get("earn", False)) if r.get("news") else None)
+            v = V[name]
+            x["grade"] = "—" if not x["ok"] else (G._combine(r["news"], x["ev"], "up", True, r.get("earn", False)) if r.get("news") else None)
+            if x["grade"] in ("A+", "A", "B"):
+                if v["gap8"] and r["lv"]["gap"] < G.MIN_GAP_AB:
+                    x["grade"] = "C"
+                elif v["atr_cap"] is not None and r.get("mult") is not None and r["mult"] >= v["atr_cap"]:
+                    x["grade"] = "C"
     out = {"made_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "gap_ups": len(ev), "needed_news": len(need),
            "news_looked_up": done, "first": min((r["date"] for r in ev), default=None), "last": max((r["date"] for r in ev), default=None)}
     ok_rows = [r for r in ev if all(x.get("grade") is not None for x in r["v"].values())]
@@ -234,12 +243,15 @@ def main():
                                  for k in sorted({r.get("catalyst") for r in ok_rows if r["v"]["rules"]["ok"] and r.get("catalyst")})}
     ws = [r for r in ok_rows if r["v"]["rules"]["grade"] == "W"]
     cr = [r for r in ws if r.get("crossed200")]
+    R["eligible_by_atr_mult"] = {k: stats([r for r in ok_rows if r["v"]["rules"]["ok"] and r.get("mult") is not None and lo <= r["mult"] < hi])
+                                 for k, lo, hi in (("<5x", -1e9, 5), ("5-10x", 5, 10), ("10-15x", 10, 15), ("15x+", 15, 1e9))}
+    R["eligible_by_gap"] = {k: stats([r for r in ok_rows if r["v"]["rules"]["ok"] and lo <= r["lv"]["gap"] < hi]) for k, lo, hi in (("5-8%", 5, 8), ("8-15%", 8, 15), ("15%+", 15, 1e9))}
     R["W_laggards"] = {"n": len(ws), "crossed_200_within_60%": pc([r.get("crossed200") for r in ws]),
                        "median_days_to_cross": None, "after_cross_held_5d%": pc([r["after_cross"]["held5"] for r in cr]),
                        "after_cross_ran20%": pc([r["after_cross"]["ran20"] for r in cr]), "after_cross_r20_avg": mean([r["after_cross"]["r20"] for r in cr])}
     R["examples"] = {g: [(r["sym"], r["date"], r["lv"]["gap"], r["v"]["rules"]["stage"], r.get("news"), r.get("catalyst"), (r.get("why") or "")[:80], r.get("r20"))
                          for r in ok_rows if r["v"]["rules"]["grade"] == g][:10] for g in ("A+", "A", "B", "W")}
-    K = ("sym", "date", "over_low52", "group", "held", "ran20", "broke5", "r20", "trade", "crossed200", "news", "catalyst", "earn")
+    K = ("sym", "date", "over_low52", "group", "held", "ran20", "broke5", "r20", "trade", "crossed200", "news", "catalyst", "earn", "mult")
     out["rows_keys"] = list(K) + ["lv", "v"]
     out["rows"] = [[r.get(k) for k in K] + [{k2: round(v2, 3) if isinstance(v2, float) else v2 for k2, v2 in r["lv"].items()},
                                              {n2: {k3: x[k3] for k3 in ("stage", "ok", "grade")} for n2, x in r["v"].items()}] for r in ev]
