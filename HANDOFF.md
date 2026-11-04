@@ -68,6 +68,28 @@ alone.
   re-checks earnings.json at 8:57 for 8:30 reporters. (4) The user to decide: correct DUOL's Nov 4 A in gradelog
   or keep it as the record.
 
+## Your table layouts: move / delete / add columns on every table (live Nov 4 2026, the user's "go live"; branch test/columns)
+
+- **What**: on all 20 tables (every tab) the user drags a header to move a column, hovers a header and clicks ✕ to
+  delete it, and opens **⚙** (in the first header, next to Ticker) for the list: ↑ ↓ (phone), ✕, "+ bring back", Reset
+  this table, and **+ Add a column** = a search over a catalog of ~50 stock columns (price / 1D-3M / off 52W high / over
+  52W low, rel vol, ADR, $ vol, avg vol, vs 200D / 50 EMA / 21 EMA, Trend live / last close, Group rank, RS, Stars,
+  earnings date, ER look, earnings move, pre-market grade / chg / gap / $ vol, Launches fields (Launched, grade, status,
+  trigger, buy point, away, base day / length / depth, LD -> now, max, correction), Watchlist list / section / buy point
+  / why, company, sector, industry, themes, index, revenue). An added column lands right after the ticker and sorts on
+  a header click. Group tables (Themes, Industries, Gainers groups, Groups, History test, Track record) get move /
+  delete only (no ticker in the rows).
+- **How** (docs/index.html, "your table layouts"): the tables build as before; a MutationObserver on each tbody
+  re-applies the layout after every draw (reorders cells by their header key, hides deleted ones with .col-off, adds
+  catalog cells looked up by the row's ticker). Keys = the header's data-sort, else its text. Layout per tab + table
+  (Launches and Launch laggards share ln-table but keep separate layouts), in localStorage `radar-layout` (per
+  browser: desktop and phone keep their own). The old "Columns" tick boxes are gone; what they hid (radar-cols-<id>)
+  carries over as deleted. Ticker stays first. A column added to a table's code later lands where the code puts it.
+- **New table columns in code**: give the header a data-sort key (stable layout key). New stock data worth adding by
+  hand: add a line to CATL.
+- Checked: no saved layout = every table identical to main; delete / drag / add / sort / reload / bring back / Reset,
+  Launches vs laggards separate, Earnings redraws keep it, Launches redraw as fast as before, phone menu.
+
 ## Launch watch: ADR column, earnings Read and grade (live Nov 4 2026 morning, the user's "go live"; branch test/lwcols)
 
 - Pre-market tab, ★ Launch watch card only (display): an **ADR** column (adr_20 at the last close, base_stocks.json;
