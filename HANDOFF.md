@@ -45,6 +45,18 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Every device sees the day; power days in the EP box; EP in the job (TEST ONLY Nov 5 2026, branch test/everydevice)
+
+- The user's phone (alerts off, notifications blocked) showed empty boxes while the job had sent 107 alerts: the boxes were
+  filled only by a browser with alerts on. Now drawAlog() merges alerts.json (SRV, the job's record) with the page's own
+  log (dedupe by key, which the log line now carries after the codes, and by text), sorted by time: every device.
+- The ⏰ box fills with alerts off too (pop-ups only with alerts on, 8:45-9:25); its lines carry CGR.built_at (code) or
+  "Pre-market" (Claude's, seen after 9:25).
+- Power days in the ⚡ box (BOX_OF.power = 'e', spoken "Power day"); Launching now keeps catalyst / A launch / ★ / reversal /
+  laggard. radar/alerts.py find(): ':ep' (4x+, gap 6%+, over the 1-month high and the 200 SMA), after the power day; main()
+  skips a later launch / catalyst of an EP stock and an EP after a power day. Nov 5 9:35 replay: CHYM EP. Regress: same.
+- Still page-only (not in the job): TREND triggers, W crossing the 200 (need the TREND list / W names in the job).
+
 ## Alerts readable: key-fact bullets, click to open (LIVE Nov 5 2026 afternoon, the user's "go live"; branch test/bullets)
 
 - ⏰ Pre-market lines (the user: "not user friendly, it should be bullet points: beat, raise, buyback, 50% FCF return,
