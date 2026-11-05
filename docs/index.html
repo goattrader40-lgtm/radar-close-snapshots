@@ -310,7 +310,22 @@
   .al-box li.al-pm { white-space: normal; padding: 5px 0; }
   .al-box.al-wide { grid-column: span 2; }                               /* the Pre-market box: two boxes wide */
   @media (max-width: 560px) { .al-box.al-wide { grid-column: auto; } }
-  .al-why { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-weight: 400; line-height: 1.35; margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .al-why { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-weight: 400; line-height: 1.35; margin-top: 2px; }
+  .al-head { color: var(--color-fg); }
+  .al-box ul.al-bul { margin: 2px 0 0; padding-left: 1.2em; list-style: disc; max-height: none; min-height: 0; overflow: visible; font-size: var(--cds-font-size-caption); }
+  .al-box .al-bul li { border-top: 0; padding: 0; white-space: normal; overflow: visible; color: var(--color-fg-muted); }
+  .al-box .al-bul li.al-warn { color: var(--color-fg-danger, #d1242f); }
+  .al-box .al-bul li.al-good { color: var(--color-fg-success, #1a7f37); }
+  /* a box line opened with a click: the whole message as bullets, then the buttons */
+  .al-box li.al-open { white-space: normal; background: var(--color-bg); border-radius: 6px; padding: 6px; margin: 2px 0; }
+  .al-box li.al-open:hover, .al-box li.al-open .al-detail { text-decoration: none; }
+  .al-detail { margin-top: 4px; font-weight: 400; cursor: default; }
+  .al-dtitle { font-weight: 600; margin-bottom: 2px; }
+  .al-box .al-detail .al-bul li { color: var(--color-fg); }
+  .al-links { display: flex; gap: 14px; margin-top: 4px; font-size: var(--cds-font-size-caption); font-weight: 400; }
+  .al-chart { font-weight: 600; white-space: nowrap; }
+  .al-box .al-bul li.al-hid { display: none; }
+  .al-more { font-size: var(--cds-font-size-caption); margin-right: 8px; }
   .al-news { font-size: var(--cds-font-size-caption); font-weight: 400; margin-left: 2px; white-space: nowrap; }
   .al-bar { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 6px 10px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-panel); font-size: var(--cds-font-size-caption); cursor: pointer; }
   .al-bar:hover { border-color: var(--color-fg-muted); }
@@ -3214,6 +3229,7 @@ defCalc('industry_perf', {
      boxes and the full log, each line tagged with the tab it belongs to (Launches / Watchlist / Laggards), the chips show one
      tab's only; on Launches and the Watchlist a bar with the newest ones opens it */
   let ALF = 'All';
+  const AL_OPEN = new Set();       /* the box lines opened with a click (the user, Nov 5 2026: "click shows the message, then I go to TradingView") */
   try { ALF = localStorage.getItem('radar-alerts-filter') || 'All'; } catch (e) { ALF = 'All'; }
   function drawAlog(log) {
     const ul = $('#ln-alert-log'); ul.replaceChildren();
@@ -3245,8 +3261,113 @@ defCalc('industry_perf', {
     };
     const order = (a, c) => (c.star - a.star) || (c.mn - a.mn);          /* the most stars first, then the newest by the alert's time */
     const urlOf = (x) => (/ · 📰 (https?:\/\/\S+)/.exec(x) || [])[1] || '';
+    /* a reason as a headline (the gap, the catalyst, the chart) and one fact per bullet, the flags as ⚠ (the user, Nov 5
+       2026: "this part is not really user friendly, it should be bullet points"); the first 5, the rest behind "+N more" */
+    const cap = (x) => x.charAt(0).toUpperCase() + x.slice(1);
+    /* split at a separator outside brackets only ("Strong bullish (revenue beat +9.6%, EPS beat …)" stays whole) */
+    const splitTop = (txt, re) => {
+      const out = []; let depth = 0, cur = '';
+      for (let i = 0; i < txt.length; i++) {
+        const ch = txt[i];
+        if (ch === '(' || ch === '[') depth++;
+        else if ((ch === ')' || ch === ']') && depth > 0) depth--;
+        const m = depth === 0 ? re.exec(txt.slice(i, i + 3)) : null;
+        if (m && m.index === 0) { out.push(cur); cur = ''; i += m[0].length - 1; continue; }
+        cur += ch;
+      }
+      out.push(cur);
+      return out.map((x) => x.trim()).filter(Boolean);
+    };
+    const factsOf = (txt) => {
+      const out = [];
+      splitTop(txt, /^(;\s|\.\s(?=[A-Z$]))/).forEach((sent) => {
+        /* a comma joins two clauses when both sides have 3+ words ("…beat its guides, buyback authorization was raised…") */
+        let cur = '';
+        splitTop(sent, /^,\s/).forEach((piece) => {
+          const words = (x) => x.trim().split(/\s+/).filter(Boolean).length;
+          if (cur && words(cur) >= 3 && words(piece) >= 3) { out.push(cur); cur = piece; } else cur = cur ? cur + ', ' + piece : piece;
+        });
+        if (cur) out.push(cur);
+      });
+      return out.map((x) => cap(x.trim().replace(/^and\s+/i, '').replace(/[.;,]+$/, ''))).filter(Boolean);
+    };
+    /* the key facts, short and always in the same order (the user, Nov 5 2026: "beat, raise, buyback, 50% FCF return ...
+       then guidance"): the results, the growth and the guidance from the Earnings tab's numbers (the SEC release), then
+       the capital returns and milestones picked out of the reason, then the warnings; the whole text stays on hover */
+    const pc = (x) => (x > 0 ? '+' : x < 0 ? '−' : '') + Math.abs(x).toFixed(Math.abs(x) >= 10 ? 0 : 1) + '%';
+    const earnOf = (sym) => {
+      const since = new Date(Date.now() - 4 * 864e5).toISOString().slice(0, 10);
+      return ((EARN && EARN.rows) || []).filter((r) => r.sym === sym && r.date >= since).sort((a, c) => (a.date < c.date ? 1 : -1))[0] || null;
+    };
+    const keyFacts = (e, text) => {
+      const out = [], rs = e ? e.rev_surprise : null, es = e ? e.eps_surprise : null;
+      if (rs !== null && rs !== undefined || es !== null && es !== undefined) {
+        const beat = (x) => x !== null && x !== undefined && x > 0, miss = (x) => x !== null && x !== undefined && x < 0;
+        const word = beat(rs) && beat(es) ? 'Beat' : miss(rs) && miss(es) ? 'Miss' : beat(rs) || beat(es) ? (miss(rs) || miss(es) ? 'Mixed' : 'Beat') : 'Miss';
+        out.push({ t: word + ': ' + [rs !== null && rs !== undefined ? 'revenue ' + pc(rs) : '', es !== null && es !== undefined ? 'EPS ' + pc(es) : ''].filter(Boolean).join(', '), cls: word === 'Beat' ? 'al-good' : word === 'Miss' ? 'al-warn' : '' });
+      }
+      if (e && e.rev_growth !== null && e.rev_growth !== undefined) {
+        const pg = e.rev_prev_growth, acc = pg !== null && pg !== undefined ? e.rev_growth - pg : null;
+        out.push({ t: 'Growth: revenue ' + pc(e.rev_growth) + ' y/y' + (acc !== null ? (acc >= 1 ? ', faster (last q ' + pc(pg) + ')' : acc <= -1 ? ', slower (last q ' + pc(pg) + ')' : ', same as last q') : '') });
+      }
+      const g = (e && e.guide) || {}, guide = [];
+      const hasNum = (x) => x !== null && x !== undefined;
+      if (g.dir && g.dir !== 'none' && (g.dir !== 'given' || hasNum(g.vs_street) || hasNum(g.growth))) {
+        const d = { raised: 'raised', lowered: 'cut', reaffirmed: 'reaffirmed', given: 'given' }[g.dir] || g.dir;
+        guide.push({ t: 'Guidance ' + d + (g.vs_street !== null && g.vs_street !== undefined ? ', ' + pc(g.vs_street) + ' vs street' : '') + (g.growth !== null && g.growth !== undefined ? ' (' + pc(g.growth) + ' y/y' + (Math.abs(g.growth) < 3 ? ': flat' : '') + ')' : ''),
+          cls: g.dir === 'raised' ? 'al-good' : g.dir === 'lowered' || (g.vs_street !== null && g.vs_street !== undefined && g.vs_street <= -1) ? 'al-warn' : '' });
+      }
+      /* from the reason's text: capital returns and milestones */
+      const T = String(text || ''), pick = [];
+      let m = /(\$[\d.]+\s?[BMK])\s*(?:share\s+)?(?:buyback|repurchase)/i.exec(T) || /(?:buyback|repurchase)[^;·]{0,40}?(\$[\d.]+\s?[BMK])/i.exec(T);
+      if (m) pick.push('Buyback ' + m[1] + (/(\$[\d.]+\s?[BM])\s+ASR/i.exec(T) ? ' (' + /(\$[\d.]+\s?[BM])\s+ASR/i.exec(T)[1] + ' ASR now)' : ''));
+      if ((m = /(\d+%\+?)\s+of\s+(?:its\s+)?(?:FCF|free cash flow)/i.exec(T))) pick.push('Returns ' + m[1] + ' of free cash flow' + ((m = /(?:in|over|through)\s+(20\d\d[-–]\d{2,4})/.exec(T)) ? ' (' + m[1] + ')' : ''));
+      if ((m = /\bFCF\s+(\$[\d.]+\s?[BM])(\s*\([^)]*\))?/i.exec(T))) pick.push('Free cash flow ' + m[1] + (m[2] || ''));
+      if (/first\s+GAAP[- ]profit/i.test(T)) pick.push('First GAAP profit');
+      if ((m = /dividend[^;,.]*?(raised|increased|initiated|hiked)/i.exec(T))) pick.push('Dividend ' + m[1]);
+      if ((m = /(acquir\w+|merger|takeover)[^;,.]{0,60}/i.exec(T)) && !/buyback/i.test(m[0])) pick.push(cap(m[0].trim()));
+      if ((m = /(FDA\s+approv\w+|approval)[^;,.]{0,50}/i.exec(T))) pick.push(cap(m[0].trim()));
+      pick.forEach((x) => out.push({ t: x, cls: 'al-good' }));
+      return out.concat(guide);                                          /* beat, growth, buyback / FCF, then the guidance */
+    };
+    const reasonEl = (body, sym) => {
+      const wrap = h('div', 'al-why'), parts = body.split(' · ').map((x) => x.trim()).filter(Boolean), head = [], bul = [];
+      const e = sym ? earnOf(sym) : null;
+      if (e) {                                                            /* an earnings report: the key facts, short */
+        parts.forEach((p) => { if (!/^flags?:/i.test(p) && !head.length || (head.length < 3 && p.length <= 48 && !/;/.test(p) && !/^flags?:/i.test(p) && !bul.length)) head.push(p); });
+        keyFacts(e, body).forEach((f) => bul.push({ t: f.t, warn: f.cls === 'al-warn', good: f.cls === 'al-good' }));
+        parts.filter((p) => /^flags?:/i.test(p)).forEach((p) => splitTop(p.replace(/^flags?:\s*/i, ''), /^;\s/)
+          .filter((f) => !/^earnings tab/i.test(f)).forEach((f) => bul.push({ t: cap(f.replace(/[.;,]+$/, '')), warn: true })));
+        return finish(wrap, head.filter((x) => x.length <= 48).slice(0, 3), bul);
+      }
+      parts.forEach((p) => {
+        /* the flags: a warning gets ⚠; the Earnings tab's cross-check is information, not a warning */
+        if (/^flags?:/i.test(p)) splitTop(p.replace(/^flags?:\s*/i, ''), /^;\s/).forEach((f) => bul.push({ t: cap(f.replace(/[.;,]+$/, '')), warn: !/^earnings tab/i.test(f) }));
+        else if (!bul.length && p.length <= 48 && !/;/.test(p)) head.push(p);
+        else factsOf(p).forEach((f) => bul.push({ t: f, warn: false }));
+      });
+      return finish(wrap, head, bul);
+    };
+    const finish = (wrap, head, bul) => {
+      if (head.length) {
+        const hd = h('div', 'al-head');
+        head.forEach((x, i) => { if (i) hd.append(' · '); hd.append(i === 1 ? h('b', '', x) : document.createTextNode(i ? x : cap(x))); });
+        wrap.append(hd);
+      }
+      if (bul.length) {
+        const ul2 = h('ul', 'al-bul'), MAXB = 5;
+        bul.forEach((b, i) => { const it = h('li', (b.warn ? 'al-warn' : b.good ? 'al-good' : '') + (i >= MAXB ? ' al-hid' : ''), (b.warn ? '⚠ ' : '') + b.t); ul2.append(it); });
+        wrap.append(ul2);
+        if (bul.length > MAXB) {
+          const more = h('a', 'al-more', '+' + (bul.length - MAXB) + ' more'); more.href = '#';
+          more.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); ul2.querySelectorAll('.al-hid').forEach((x) => x.classList.remove('al-hid')); more.remove(); });
+          wrap.append(more);
+        }
+      }
+      return wrap;
+    };
     const newsLink = (u) => { const a = h('a', 'al-news', '📰 news'); a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.title = u; a.addEventListener('click', (e) => e.stopPropagation()); return a; };
-    const lineEl = (o, text, cls, more) => {
+    const lineEl = (o, text, cls, more, where) => {
       const li = h('li', [cls || '', o.trig ? 'al-trig' : '', o.sym ? 'al-click' : '', more ? 'al-pm' : ''].filter(Boolean).join(' '));
       if (o.tab) li.append(h('span', 'al-src', SHORT[o.tab]));
       const u = urlOf(text);
@@ -3254,11 +3375,49 @@ defCalc('industry_perf', {
       if (u) { li.append(' '); li.append(newsLink(u)); }
       if (more) {                                                        /* the Pre-market box: the reason under the line */
         const mu = urlOf(o.full), body = o.full.split(' — ').slice(1).join(' — ').replace(mu ? ' · 📰 ' + mu : '', '');
-        if (body) li.append(h('div', 'al-why', body));
+        if (body) li.append(reasonEl(body, o.sym));
         if (mu) li.append(newsLink(mu));
       }
-      li.title = o.sym ? o.full + '\n(click: ' + o.sym + ' on TradingView)' : o.full;
-      if (o.sym) li.addEventListener('click', () => openTV(tv(o.sym)));
+      /* a click opens the message here (bullets, the chart and news buttons) instead of going straight to TradingView;
+         in the full log the line is already whole: a chart button at its end */
+      const chartBtn = () => { const a = h('a', 'al-chart', '📈 Chart'); a.href = tv(o.sym); a.target = TVTAB; a.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); openTV(tv(o.sym)); }); return a; };
+      if (where === 'log') {
+        if (o.sym) { li.append(' '); li.append(chartBtn()); }
+        li.classList.remove('al-click');
+        return li;
+      }
+      if (more) {                                                       /* the Pre-market box: already open */
+        const links = h('div', 'al-links');
+        li.querySelectorAll(':scope > .al-news').forEach((a) => links.append(a));
+        if (o.sym) links.append(chartBtn());
+        li.append(links); li.classList.remove('al-click');
+        return li;
+      }
+      li.title = 'Click for the details';
+      const open = () => {
+        li.classList.add('al-open');
+        const d = h('div', 'al-detail'), body = o.full.split(' — ').slice(1).join(' — '), mu = urlOf(o.full);
+        const ul3 = h('ul', 'al-bul');
+        /* the short figures (+30.1%, gap +15.2%, vol 3.5×, $16.83) on one line, each longer fact on its own */
+        let run = [];
+        const flush = () => { if (run.length) ul3.append(h('li', '', run.join(' · '))); run = []; };
+        body.replace(mu ? ' · 📰 ' + mu : '', '').split(' · ').map((x) => x.trim()).filter(Boolean).forEach((x) => {
+          if (x.length <= 30 && /\d/.test(x)) run.push(cap(x)); else { flush(); ul3.append(h('li', /^⚠|^\W*no\b|isn't|fell back|under its buy/i.test(x) ? 'al-warn' : '', cap(x))); }
+        });
+        flush();
+        if (ul3.children.length) d.append(ul3);
+        const links = h('div', 'al-links');
+        if (mu) links.append(newsLink(mu));
+        if (o.sym) links.append(chartBtn());
+        d.append(links);
+        d.addEventListener('click', (e) => e.stopPropagation());       /* reading the details doesn't close them */
+        li.append(d);
+      };
+      li.addEventListener('click', () => {
+        if (li.classList.contains('al-open')) { AL_OPEN.delete(o.x); li.classList.remove('al-open'); const d = li.querySelector('.al-detail'); if (d) d.remove(); }
+        else { AL_OPEN.add(o.x); open(); }
+      });
+      if (AL_OPEN.has(o.x)) open();
       return li;
     };
     const here = ALF;
@@ -3269,7 +3428,7 @@ defCalc('industry_perf', {
     const qq = q.replace(/[^A-Z0-9.\-]/g, ''), qre = new RegExp('· ' + qq.replace(/\./g, '\\.') + '\\b');
     const shown = q ? (qq ? log.filter((x) => (!isGrp(x) && symOfLine(x) === qq) || qre.test(x)) : []) : mine;
     /* the full log: each line opens its stock's chart; a trigger (the bell) is bold with a red dot */
-    shown.forEach((x) => { const o = parse(x); ul.append(lineEl(o, o.full)); });
+    shown.forEach((x) => { const o = parse(x); ul.append(lineEl(o, o.full, '', false, 'log')); });
     /* the boxes, by kind (a line from before the boxes, Nov 5 2026, has no box: the log only) */
     const bx = $('#ln-alert-boxes');
     safe('Boxes', () => {
