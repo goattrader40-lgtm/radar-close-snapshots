@@ -312,6 +312,9 @@
   @media (max-width: 560px) { .al-box.al-wide { grid-column: auto; } }
   .al-why { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-weight: 400; line-height: 1.35; margin-top: 2px; }
   .al-head { color: var(--color-fg); }
+  .al-str { font-size: var(--cds-font-size-caption); margin: 1px 0 2px; color: var(--color-fg-muted); }
+  .al-str .al-good { color: var(--color-fg-success, #1a7f37); font-weight: 600; }
+  .al-str .al-weak { color: var(--color-fg-danger, #d1242f); }
   .al-box ul.al-bul { margin: 2px 0 0; padding-left: 1.2em; list-style: disc; max-height: none; min-height: 0; overflow: visible; font-size: var(--cds-font-size-caption); }
   .al-box .al-bul li { border-top: 0; padding: 0; white-space: normal; overflow: visible; color: var(--color-fg-muted); }
   .al-box .al-bul li.al-warn { color: var(--color-fg-danger, #d1242f); }
@@ -3174,7 +3177,12 @@ defCalc('industry_perf', {
           const nw2 = nyNow(), inWin = nw2.m >= 525 && nw2.m <= 565;
           const when = src === 'code' && CGR && CGR.built_at ? new Date(CGR.built_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })
             : inWin ? hmNow : 'Pre-market';
-          log.unshift(logLine(when, t, ([gp(e.sym).slice(3), why].filter(Boolean).join(' · ') || (e.dir === 'down' ? 'gap-down' : 'gap-up')) + (url ? ' · 📰 ' + url : ''), e.sym + ':pm' + src, null, null));
+          /* the stock's RS and its best group's strength (the user, Nov 5 2026: "in the pre-market grading I want to see
+             the stock's RS and its group's strength"), from the last close, as on Launches */
+          const gB = grBest(e.sym), rsV = ldocRS()[e.sym];
+          const strength = ['RS ' + (rsV !== null && rsV !== undefined ? rsV : '—'),
+            'Group ' + (gB ? (gB.tier === 'Top' ? '★ Top ' : gB.tier === 'Strong' ? 'Strong ' : '') + String(gB.group).replace(/ · other$/, ' (other)').replace(/ · /g, ', ') + ' #' + gB.rank + '/' + gB.of : '—')];
+          log.unshift(logLine(when, t, ([gp(e.sym).slice(3)].concat(strength, [why]).filter(Boolean).join(' · ') || (e.dir === 'down' ? 'gap-down' : 'gap-up')) + (url ? ' · 📰 ' + url : ''), e.sym + ':pm' + src, null, null));
         });
       });
       saveDay('pmsnap', snap); saveDay('log', log.slice(0, LOG_MAX));
@@ -3354,8 +3362,20 @@ defCalc('industry_perf', {
       pick.forEach((x) => out.push({ t: x, cls: 'al-good' }));
       return out.concat(guide);                                          /* beat, growth, buyback / FCF, then the guidance */
     };
+    const strengthEl = (parts) => {                                  /* "RS 92 · ★ Top Software #2/213", green when strong */
+      const rs = parts.find((x) => /^RS /.test(x)), gr = parts.find((x) => /^Group /.test(x));
+      if (!rs && !gr) return null;
+      const d = h('div', 'al-str'), rv = rs ? num(rs.slice(3)) : null, gt = gr ? gr.slice(6) : '—';
+      const a = h('span', rv !== null && rv >= 80 ? 'al-good' : rv !== null && rv < 50 ? 'al-weak' : '', rs || 'RS —');
+      const b = h('span', /^(★ Top|Strong) /.test(gt) ? 'al-good' : '', gt === '—' ? 'no group' : gt);
+      d.append(a, ' · ', b);
+      return d;
+    };
     const reasonEl = (body, sym) => {
-      const wrap = h('div', 'al-why'), parts = body.split(' · ').map((x) => x.trim()).filter(Boolean), head = [], bul = [];
+      const all = body.split(' · ').map((x) => x.trim()).filter(Boolean), str = strengthEl(all);
+      const wrap = h('div', 'al-why'), parts = all.filter((x) => !/^RS /.test(x) && !/^Group /.test(x)), head = [], bul = [];
+      body = parts.join(' · ');
+      if (str) wrap.append(str);
       const e = sym ? earnOf(sym) : null;
       if (e) {                                                            /* an earnings report: the key facts, short */
         parts.forEach((p) => { if (!/^flags?:/i.test(p) && !head.length || (head.length < 3 && p.length <= 48 && !/;/.test(p) && !/^flags?:/i.test(p) && !bul.length)) head.push(p); });
