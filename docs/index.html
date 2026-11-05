@@ -3366,7 +3366,7 @@ defCalc('industry_perf', {
   const CATL = [
     /* [id, name, group, what it is, the same column's keys in the tables (marks "already here"), (ticker) -> [sort value, cell]] */
     ['price', 'Price', 'Price', 'Latest price (live in the session)', ['price', 'px'], (s) => { const v = pxOf(s); return cNum(v, fPrice(v)); }],
-    ['chg_1d', '1D', 'Price', 'Change today (live in the session)', ['chg_1d', 'chg'], (s) => cPct((SK(s) || {}).chg_1d, true)],
+    ['chg_1d', '1D', 'Price', 'Change today, % (live in the session; the same as the Today / Chg / Day columns of other tables)', ['chg_1d', 'chg'], (s) => cPct((SK(s) || {}).chg_1d, true)],
     ['chg_1w', '1W', 'Price', 'Change over 1 week', ['chg_1w'], (s) => cPct((SK(s) || {}).chg_1w, true)],
     ['chg_1m', '1M', 'Price', 'Change over 1 month', ['chg_1m', 'perf_1m_pct'], (s) => cPct((SK(s) || {}).chg_1m, true)],
     ['chg_3m', '3M', 'Price', 'Change over 3 months', ['chg_3m', 'perf_3m_pct'], (s) => cPct((SK(s) || {}).chg_3m, true)],
