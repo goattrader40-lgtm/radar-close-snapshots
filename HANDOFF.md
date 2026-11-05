@@ -45,6 +45,23 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Alert boxes and the episodic pivot alert (TEST ONLY Nov 4 2026 night, branch test/alertboxes = test/trendtrig + this)
+
+- **Boxes (the user's layout, Nov 4)**: the Desktop alerts card shows 6 boxes above the full log, with the tab's alerts by
+  kind, set when each fires (the 2nd code after the tab's in the log line's invisible marker; BOX_OF / boxOfKey):
+  🚀 Launching now = power, catalyst, A+/A launch, ★ launching, reversal, laggard; 🎯 Pattern breakouts = breakout, confirm,
+  gap out of base (gapbase, gob1/5/950), base high cleared, pop, 3-SETUPS & TREND triggers (every pattern's buy point:
+  base top, inner base, flags, pennants, tight / high tight flag, flat base, cup, ascending triangle, Qullamaggie, MSF);
+  ⚡ Episodic pivots = the EP alert; ↩️ Pullback entries = retest holding, 21 EMA retest / undercut, undercut & reclaim,
+  push, 50 EMA back, touch, ★★★ (and a 3-SETUPS 21 EMA retest / retest held trigger); 👀 Heads-ups = early, near the buy
+  point, retest zone, at the 21 EMA; 👥 Groups & news = group moves, pre-market grades, after-close heads-ups. Newest
+  first by the alert's time, starred on top (bold), click for the chart; 3 across, 2, 1 on a phone.
+- **EP alert (':ep', desktop only)**: the user's rule: volume pace 4x+, gap 6%+, over the 1-month high (the previous 20
+  sessions' highest high, the power day's; the user agreed) and the 200 SMA, from the 9:35 check (allowed up to the
+  power day's 200 SMA extension). A power day is an EP: no EP alert for it (power covers ':ep'); an EP covers that
+  stock's catalyst gap, A launch and ★ launching pop-ups. A trigger (bell). Nov 4 data: DUOL, VRDN power days; PCOR's gap
+  5.95% (no); CDW (+7.4% gap, +12.7%) and OSCR (+9.9% gap, +8.6%) at a 4.5x test pace -> EP box.
+
 ## KD "missing" from the desktop alert log: the log, not the alert (LIVE Nov 4 2026 ~7:30 PM, the user's "go live"; branch test/livelog)
 
 - **What happened** (reproduced in Chromium at 9:45 AM Nov 4 on the Nov 3 lists and Trend labels, alerts on, empty log):
