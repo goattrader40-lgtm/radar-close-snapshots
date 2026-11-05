@@ -60,6 +60,8 @@ alone.
   Only names that pass every filter (the user: "obviously only names over the 21-day high and all other filters"): a
   code A+ / A / B always does; Claude's A / B only when the code grader found it eligible (Nov 4: DUOL; not RIOT, NVTS,
   ARRY); before the code's first run it shows, marked "filters unchecked". Gap-downs stay on the Pre-market tab.
+  (LIVE Nov 4 ~10:30 PM, test/pm200) Claude's A / B also needs the code's event not 'laggard': over the 200 SMA at the
+  pre-market price, like every code A+ / A / B (under it = W).
 - **20-second checks**: tipSha() sends the browser's GitHub key (the Follow button's, radar-gh-key) when there is one
   (5,000 checks an hour; 401/403 -> retried without); with a key the page checks every 20 s from 8:45 to 10:00 ET. The
   alert card says which (⏱ line), with an "Add the key" button (the Follow button's key dialog) when there is none.
