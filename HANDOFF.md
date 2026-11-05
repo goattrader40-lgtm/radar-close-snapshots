@@ -185,6 +185,34 @@ alone.
   re-checks earnings.json at 8:57 for 8:30 reporters. (4) The user to decide: correct DUOL's Nov 4 A in gradelog
   or keep it as the record.
 
+## Status at the end of the session "Radar: work session (Nov 4)" (Nov 4 midday - Nov 5 2026: the portal's tables)
+
+- **Live on main** (each after the user's "go live"; display only: no scanner, alert or grading code touched, so no
+  regress / 2-year check was needed; each checked in the browser against main and on the merged page):
+  (1) Launch watch: ADR column, Claude's 8:45 grade in the Earnings cell, the Earnings tab's Read in its own "ER look"
+  column; (2) your table layouts on all 20 tables: drag a header to move, ✕ to delete, ⚙ / "⚙ Columns" button to bring
+  back, Reset, + add from a catalog of ~50 stock columns; (3) column widths (drag a header's right edge; double-click /
+  "Normal widths" = back); (4) Gainers & losers "Gap up / Gap down ≥" filter + a Gap catalog column; (5) the Desktop
+  alerts explanation folds away ("What pops up, and when"); (6) + Filter on the Watchlist, Launches and Gainers.
+  Details in the sections below.
+- **Test branches**: test/lwcols, test/columns, test/colwidth, test/gapfilter, test/alertfold, test/xfilter = all
+  merged (nothing waiting). test/grfilter (from before) still conflicts with main (see the older status).
+- **Agreed with the user**: layouts, widths and + Filter filters are per browser (desktop and phone keep their own); the
+  ticker column stays first; a filter on a table's column uses the value the cell shows; the + Filter picker is a search
+  box only (no full list), a criterion already added is removed from the search ("✓ added") or its chip's ✕.
+  No new agreed reads (tools/examples.txt unchanged).
+- **Open (each needs the user's go)**: Export / Import of the layouts between devices (offered, no answer); the older
+  open items below are unchanged (Launches Group tick-box filter on test/grfilter, Base day from the base's high, the
+  1 ADR confluence distance, the retest zone, GROUP MOVE noise, ★★ caveat, Earnings reader misses, momentum cutoff).
+- **First thing to check next session**: the user's own layouts / filters on the real portal (any table looking odd:
+  ⚙ Columns → Reset this table); the Gap filter in the first 10 minutes after 9:30 (NYSE opens come late: those stocks
+  are left out while a Gap is set); + Filter on Launches after the 4:40 PM scan (the rows rebuild, the filters re-apply).
+- **Watch out**: other sessions edit docs/index.html the same day (Earnings reader, the desktop alert log): fetch main
+  before merging and re-test the merged page. How this session tested the portal: serve docs/ with python3 -m
+  http.server, Playwright against it (it loads radar-data from raw.githubusercontent.com), compare every table's
+  header and rows with main's page served the same way (an empty layout must read the same), then drive the feature.
+  A long shell command with a heredoc + background servers can trip the safety check: put the script in a file first.
+
 ## + Filter: your own filters on the Watchlist, Launches and Gainers (live Nov 5 2026, the user's "go live"; branch test/xfilter)
 
 - **What**: a "+ Filter" button in the filter row of the Watchlist (.tgr-flt wl), Launches / Launch laggards (.tgr-flt ln)
