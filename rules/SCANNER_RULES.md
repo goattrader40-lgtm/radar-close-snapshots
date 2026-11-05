@@ -225,6 +225,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Market cap | $0.7B+ |
 | Avg volume (20D) | 700K+ |
 | Gap (today's open vs yesterday's close) | off (fill in a % to use it: gap up for Gainers, gap down for Losers; a stock without an open yet is left out while it's set) (the user, Nov 4 2026) |
+| Your own filters (+ Filter) | none by default: search any criterion (the table's columns first, then the column catalog) and add it with a value (≥ / ≤, is, has); kept in the browser; Reset to my defaults clears them (also on the Watchlist and Launches, the user, Nov 4 2026) |
 
 ## Group rank
 

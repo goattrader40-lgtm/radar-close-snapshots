@@ -41,6 +41,14 @@
   .tgr-table tr.umb td.key a { font-weight: 700; }
   .tgr-table tr.inarea td.key { padding-left: 1.4rem; }
   .tgr-etag { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 4px; border: 1px solid var(--color-border-line); font-size: .75em; color: var(--color-fg-muted); font-weight: 400; }
+  .tgr-table tr.xf-off { display: none; }
+  .xf-box { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .xf-chip { display: inline-flex; align-items: center; gap: 2px; border: 1px dashed var(--color-border-line); border-radius: 999px; padding: 1px 2px 1px 10px; font-size: var(--cds-font-size-caption); background: var(--color-bg); white-space: nowrap; }
+  .xf-chip.on { border-style: solid; border-color: var(--color-fg); }
+  .xf-chip b { font-weight: var(--cds-font-weight-medium); }
+  .xf-chip .xf-in, .xf-chip .xf-op { font: inherit; border: 1px solid var(--color-border-line); border-radius: 4px; background: var(--color-panel); color: var(--color-fg); padding: 0 4px; line-height: 1.5; }
+  .xf-x { border: 0; background: none; color: var(--color-fg-muted); cursor: pointer; font-size: 11px; padding: 0 6px; }
+  .xf-x:hover { color: var(--color-bad); }
   .tgr-table .col-off { display: none !important; }
   .tgr-table th[draggable="true"] { cursor: grab; }
   .tgr-table th .col-rs { position: absolute; top: 0; right: -3px; bottom: 0; width: 7px; cursor: col-resize; touch-action: none; z-index: 3; }
@@ -1115,6 +1123,7 @@ defCalc('industry_perf', {
     if (p.g_dvol_m !== null && dv !== null && dv < p.g_dvol_m) return false;
     if (p.g_above200 === true && (r.above_200 === false || r.above_200 === 'false')) return false;
     if (p.g_above50e === true && n(r.vs_50e) !== null && n(r.vs_50e) <= 0) return false;
+    if (p === F && !(xfOk(FLT.g.x, r.symbol) && xcRow(FLT.g.x, r))) return false;   /* your own filters (+ Filter) */
     return true;
   };
   const LIST_MAX = 600;
@@ -1508,13 +1517,13 @@ defCalc('industry_perf', {
   /* RS and Trend filters (the user, Nov 4 2026): one set for the Watchlist (all five lists), one for Launches and Launch
      laggards; kept in this browser. RS = at least that rank; Trend = any of the ticked ones ("—" = no trend label). */
   const TR_OPTS = ['Up', 'Turn up', 'Reclaim', 'Resting', 'Negative', '—'], FKEY = 'radar-filters';
-  const FLT = (() => { const d = () => ({ rs: 0, tr: [], gt: '' }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); return { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln) }; } catch (e) { return { wl: d(), ln: d() }; } })();
+  const FLT = (() => { const d = () => ({ rs: 0, tr: [], gt: '', x: [] }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); const r = { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln), g: Object.assign(d(), o.g) }; Object.values(r).forEach((f) => { if (!Array.isArray(f.x)) f.x = []; }); return r; } catch (e) { return { wl: d(), ln: d(), g: d() }; } })();   /* x = your own filters (+ Filter) */
   const saveFlt = () => { try { localStorage.setItem(FKEY, JSON.stringify(FLT)); } catch (e) { /* private window: not kept */ } };
   const trLabel = (sym) => { const x = trendOf(sym); return x && x.st ? x.st : '—'; };
   /* the group rank filter (Watchlist only, the user Nov 4 2026): '' all, 'top' = ★ Top only, 'ts' = Top or Strong (the stock's best group, as in the Group rank column) */
   const gtPass = (gt, sym) => { if (!gt) return true; const t = (grBest(sym) || {}).tier || ''; return gt === 'top' ? t === 'Top' : t === 'Top' || t === 'Strong'; };
-  const fltPass = (k, sym, rs) => { const f = FLT[k], v = num(rs); return (!f.rs || (v !== null && v >= f.rs)) && (!f.tr.length || f.tr.includes(trLabel(sym))) && gtPass(f.gt, sym); };
-  const fltText = (k) => { const f = FLT[k], t = []; if (f.gt) t.push(f.gt === 'top' ? 'group ★ Top' : 'group Top / Strong'); if (f.rs) t.push('RS ' + f.rs + '+'); if (f.tr.length) t.push('Trend ' + f.tr.join(' / ')); return t.length ? ' Filtered: ' + t.join(', ') + '.' : ''; };
+  const fltPass = (k, sym, rs) => { const f = FLT[k], v = num(rs); return (!f.rs || (v !== null && v >= f.rs)) && (!f.tr.length || f.tr.includes(trLabel(sym))) && gtPass(f.gt, sym) && xfOk(f.x, sym); };
+  const fltText = (k) => { const f = FLT[k], t = []; if (f.gt) t.push(f.gt === 'top' ? 'group ★ Top' : 'group Top / Strong'); if (f.rs) t.push('RS ' + f.rs + '+'); if (f.tr.length) t.push('Trend ' + f.tr.join(' / ')); t.push(...xfText(f.x)); return t.length ? ' Filtered: ' + t.join(', ') + '.' : ''; };
   const grTierN = (g) => (!g ? null : g.tier === 'Top' ? 2 : g.tier === 'Strong' ? 1 : 0);
   /* the stock's place inside that group (its own 1-, 3- and 6-month moves vs the group's other stocks) */
   const grPlace = (g, sym) => { if (!g || !g.order) return null; const o = g.order.split(' '); const i = o.indexOf(sym); return i < 0 ? null : { place: i + 1, of: o.length }; };
@@ -2307,7 +2316,7 @@ defCalc('industry_perf', {
   document.addEventListener('click', (e) => document.querySelectorAll('.tgr-dd[open]').forEach((d) => { if (!d.contains(e.target)) d.open = false; }));
   /* Launches / Launch laggards as a TradingView import file: the rows on screen, in their order */
   $('#ln-dl').addEventListener('click', () => {
-    const rows = S.lnShown || [];
+    const rows = (S.lnShown || []).filter((r) => !(XHID['ln-table'] && XHID['ln-table'].has(r.symbol)));   /* your column filters too */
     if (!rows.length) { toast('No rows to save.'); return; }
     const name = S.tab === 'laggards' ? 'Launch laggards' : 'Launches';
     const syms = [...new Set(rows.map((r) => r.tv || r.tv_symbol || r.symbol))];
@@ -2318,7 +2327,7 @@ defCalc('industry_perf', {
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
   $('#wl-dl').addEventListener('click', () => {   /* the list on screen as a TradingView import file: ###section, then EXCHANGE:SYMBOL lines */
-    const rows = S.wlShown || [];
+    const rows = (S.wlShown || []).filter((r) => !(XHID['wl-table'] && XHID['wl-table'].has(r.symbol)));
     if (!rows.length) return;
     const by = new Map();
     rows.forEach((r) => { const k = secName(S.wl, r.section || '') || S.wl; if (!by.has(k)) by.set(k, []); by.get(k).push(r.tv_symbol); });
@@ -3514,6 +3523,7 @@ defCalc('industry_perf', {
       if (sorted.some((r, i) => r !== rows[i])) tb.append(...sorted);
       markSort(t, spec);
     }
+    try { xcApply(t); } catch (e) { /* the filters are set up further down: the first draw applies them */ }
   };
   /* the ⚙ list */
   let menuEl = null;
@@ -3587,6 +3597,172 @@ defCalc('industry_perf', {
     try { applyLay(t); } catch (e) { /* the data isn't loaded yet: the first draw applies it */ }
     o.takeRecords();
   });
+  /* ───────── your own filters (the user, Nov 4 2026): "+ Filter" on the Watchlist, Launches (and Launch laggards) and
+     Gainers & losers: search a criterion (the table's own columns first, then the column catalog), add it, set its value
+     (Base day ≥ 10, ADR% ≥ 4, Trend is Up, Industry has "software" ...): only the stocks that pass show. A column of the
+     table filters on what its cell shows; a catalog criterion on the same data as the catalog column (and works without
+     the column in the table). An empty box = off; while one is set, a stock without a value is left out. Kept in this
+     browser with the RS / Trend filters (radar-filters: wl / ln / g .x). The picker is a search box only (the user:
+     "I don't want to see all column names"); a criterion already added shows "✓ added": click it to remove it. ───────── */
+  const XF_TIER = (s) => (grBest(s) || {}).tier || '';
+  const XF_TR = ['Up', 'Turn up', 'Reclaim', 'Resting', 'Negative', '—'];
+  const XF = {
+    name: { k: 'text' }, sector: { k: 'text' }, industry: { k: 'text' }, themes: { k: 'text' }, index: { k: 'text' },
+    l_status: { k: 'text' }, l_trigger: { k: 'text' }, l_date: { k: 'text' }, w_section: { k: 'text' }, w_why: { k: 'text' },
+    trend: { k: 'cat', opts: XF_TR.map((o) => [o, (s) => trLabel(s) === o]) },
+    trend_y: { k: 'cat', opts: XF_TR.map((o) => [o, (s) => { const x = trendLast(s); return (x ? x.st || '—' : '—') === o; }]) },
+    grank: { k: 'cat', opts: [['★ Top', (s) => XF_TIER(s) === 'Top'], ['Strong', (s) => XF_TIER(s) === 'Strong'], ['★ Top or Strong', (s) => ['Top', 'Strong'].includes(XF_TIER(s))], ['Not in the top 10%', (s) => !['Top', 'Strong'].includes(XF_TIER(s))]] },
+    stars: { k: 'cat', opts: [['★★', (s) => (launchStars(s) || {}).n === 2], ['★', (s) => (launchStars(s) || {}).n === 1], ['★★ or ★', (s) => ((launchStars(s) || {}).n || 0) >= 1], ['⚠ skip', (s) => (launchStars(s) || {}).n === -1]] },
+    earn: { k: 'cat', opts: [['Reports this week', (s) => !!EK(s)], ['Reported already', (s) => !!(EK(s) && EK(s).reported)], ['Not reported yet', (s) => !!(EK(s) && !EK(s).reported)], ['Not reporting this week', (s) => !EK(s)]] },
+    er_look: { k: 'cat', opts: ['Strong bullish', 'Bullish', 'Strong bullish or Bullish', 'Mixed', 'Somewhat bearish', 'Bearish', 'Bearish or Somewhat bearish'].map((o) => [o, (s) => { const e = EK(s); return !!(e && e.read) && o.split(' or ').map((x) => x.charAt(0).toUpperCase() + x.slice(1)).includes(e.read); }]) },
+    pm_grade: { k: 'cat', opts: ['A', 'B', 'C', 'F', 'A or B'].map((o) => [o, (s) => { const g = PGK(s); return !!g && o.split(' or ').includes(g.grade); }]) },
+    l_grade: { k: 'cat', opts: ['A+', 'A', 'B', 'C', 'A+ or A', 'A+, A or B'].map((o) => [o, (s) => { const r = LK(s); return !!(r && r.grade) && o.replace(', ', ' or ').split(' or ').includes(r.grade); }]) },
+    w_list: { k: 'cat', opts: ['3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'].map((o) => [o, (s) => { const w = WK(s); return !!w && w.lists.includes(o); }]).concat([['Not on the Watchlist', (s) => !WK(s)]]) },
+  };
+  const xfSpec = (id) => XF[id] || { k: 'num' };
+  const xfVal = (id, s) => { const c = CAT.get(id); if (!c) return null; try { return c[5](s); } catch (e) { return [null, null]; } };
+  const xfOn = (f) => f.v !== null && f.v !== undefined && f.v !== '';
+  const txtOk = (t, f) => { const a = String(t || '').trim().toLowerCase(), b = String(f.v).trim().toLowerCase(); return f.op === 'is' ? a === b : f.op === 'not' ? !a.includes(b) : a.includes(b); };
+  const numOk = (v, f) => v !== null && v !== undefined && !Number.isNaN(v) && (f.op === '<=' ? v <= Number(f.v) : v >= Number(f.v));
+  /* catalog criteria (f.id), by ticker: the Watchlist / Launches lists (fltPass) and the Gainers screen (passes) */
+  const xfOk = (list, s) => (list || []).every((f) => {
+    if (f.col || !xfOn(f) || !CAT.has(f.id)) return true;
+    const sp = xfSpec(f.id);
+    if (sp.k === 'cat') { const o = sp.opts.find((x) => x[0] === f.v); return !o || o[1](s); }
+    const r = xfVal(f.id, s);
+    if (sp.k === 'text') return txtOk(r && r[1] ? r[1].textContent : '', f);
+    return numOk(r ? num(r[0]) : null, f);
+  });
+  const xfName = (f) => (f.col ? f.name : (CAT.get(f.id) || [])[1] || f.id);
+  const xfDesc = (f) => { const t = f.col ? f.t : xfSpec(f.id).k; return xfName(f) + (t === 'cat' ? ' is ' + f.v : t === 'text' ? ' ' + ({ is: 'is', not: 'has no' }[f.op] || 'has') + ' "' + f.v + '"' : ' ' + (f.op === '<=' ? '≤' : '≥') + ' ' + f.v); };
+  const xfText = (list) => (list || []).filter((f) => !f.col && xfOn(f) && CAT.has(f.id)).map(xfDesc);
+  /* the table's own columns (f.col): Gainers from the stock's row (so the counts and the theme / industry tables follow),
+     the Watchlist and Launches from what the cell shows */
+  const XF_TBL = { wl: 'wl-table', ln: 'ln-table', g: 'g-table' };
+  const G_TEXT = new Set(['name', 'ind', 'themes', 'index']);
+  const gField = (col, r) => (col === 'dvol' ? r[dvKey()] : col === 'ind' ? r[S.level] : r[col]);
+  const xcRow = (list, r) => (list || []).every((f) => { if (!f.col || !xfOn(f)) return true; const v = gField(f.col, r); return f.t === 'text' ? txtOk(v, f) : numOk(num(v), f); });
+  const NUM_RE = /^(?:day\s+)?[+\-−]?\$?\d[\d,]*(?:\.\d+)?\s*(?:%|×|x|d)?$/i;
+  const cellNum = (t) => { const m = /[+\-−]?\d[\d,]*(?:\.\d+)?/.exec(String(t)); return m ? Number(m[0].replace('−', '-').replace(/,/g, '')) : null; };
+  const XHID = {};
+  const xcApply = (t) => {
+    const k = Object.keys(XF_TBL).find((x) => XF_TBL[x] === t.id); if (!k || k === 'g') return;
+    const list = (FLT[k].x || []).filter((f) => f.col && xfOn(f));
+    const tb = t.querySelector('tbody'), rows = [...tb.children].filter((tr) => tr._sym), hid = new Set();
+    rows.forEach((tr) => {
+      const ok = list.every((f) => { const td = [...tr.children].find((c) => c._ck === f.col); if (!td) return true; const tx = td.textContent.trim(); return f.t === 'text' ? txtOk(tx, f) : numOk(tx === '—' || tx === '' ? null : cellNum(tx), f); });
+      tr.classList.toggle('xf-off', !ok); if (!ok) hid.add(tr._sym);
+    });
+    XHID[t.id] = hid;
+    /* the result next to the chips (the table's note above only counts the catalog criteria) */
+    const cnt = XBOX[k] && XBOX[k].querySelector('.xf-cnt');
+    if (cnt) cnt.textContent = (FLT[k].x || []).some(xfOn) ? '→ ' + (rows.length - hid.size) + ' shown' : '';
+  };
+  /* the chips and the + Filter button, in each filter row */
+  const XBOX = {};
+  const xfBox = (k, host) => {
+    const box = h('span', 'xf-box'); host.append(box); XBOX[k] = box;
+    const L = () => (FLT[k].x = Array.isArray(FLT[k].x) ? FLT[k].x : []);
+    const changed = () => { saveFlt(); draw(); };
+    const render = (focusI) => {
+      box.replaceChildren();
+      L().forEach((f, i) => {
+        const c = f.col ? null : CAT.get(f.id); if (!f.col && !c) return;
+        const kind = f.col ? f.t : xfSpec(f.id).k, chip = h('span', 'xf-chip' + (xfOn(f) ? ' on' : ''));
+        chip.title = (c ? c[3] : 'This table\'s ' + f.name + ' column, as it shows') + (kind === 'cat' ? '' : ' (empty box = off; a stock without a value is left out while it is set)');
+        chip.append(h('b', '', xfName(f)));
+        let inp;
+        if (kind === 'cat') {
+          chip.append(document.createTextNode(' is '));
+          inp = h('select', 'xf-in'); const o0 = h('option', '', 'any'); o0.value = ''; inp.append(o0);
+          xfSpec(f.id).opts.forEach(([o]) => { const op = h('option', '', o); op.value = o; inp.append(op); });
+          inp.value = f.v || ''; inp.addEventListener('change', () => { f.v = inp.value || null; chip.classList.toggle('on', xfOn(f)); changed(); });
+          chip.append(inp);
+        } else {
+          const opS = h('select', 'xf-op');
+          (kind === 'text' ? [['has', 'has'], ['is', 'is'], ['not', 'has no']] : [['>=', '≥'], ['<=', '≤']]).forEach(([v, t]) => { const o = h('option', '', t); o.value = v; opS.append(o); });
+          opS.value = kind === 'text' ? (['is', 'not'].includes(f.op) ? f.op : 'has') : (f.op === '<=' ? '<=' : '>=');
+          if (kind === 'text' && !['has', 'is', 'not'].includes(f.op)) f.op = 'has';
+          opS.addEventListener('change', () => { f.op = opS.value; changed(); });
+          inp = h('input', 'xf-in');
+          if (kind === 'text') { inp.type = 'text'; inp.placeholder = 'text'; inp.value = f.v || ''; inp.style.width = '7em'; inp.addEventListener('change', () => { f.v = inp.value.trim() || null; chip.classList.toggle('on', xfOn(f)); changed(); }); }
+          else { inp.type = 'number'; inp.step = 'any'; inp.inputMode = 'decimal'; inp.placeholder = 'value'; inp.value = xfOn(f) ? String(f.v) : ''; inp.style.width = '5.5em'; inp.addEventListener('change', () => { const raw = inp.value.trim(); f.v = raw === '' || !Number.isFinite(Number(raw)) ? null : Number(raw); chip.classList.toggle('on', xfOn(f)); changed(); }); }
+          chip.append(document.createTextNode(' '), opS, document.createTextNode(' '), inp);
+        }
+        inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') inp.blur(); });
+        const x = h('button', 'xf-x', '✕'); x.type = 'button'; x.title = 'Remove this filter';
+        x.addEventListener('click', () => { L().splice(i, 1); render(); changed(); });
+        chip.append(x); box.append(chip);
+        if (focusI === i) setTimeout(() => inp.focus(), 0);
+      });
+      const add = h('button', 'tgr-lite xf-add', '+ Filter'); add.type = 'button';
+      add.title = 'Search a criterion (this table\'s columns first: Base day, Depth, ADR ...) and add it with a value: only the stocks that pass show';
+      add.addEventListener('click', (e) => { e.stopPropagation(); xfMenu(k, add, render); });
+      box.append(add);
+      if (k !== 'g') { box.append(h('span', 'tgr-lbl xf-cnt')); const t = $('#' + XF_TBL[k]); if (t) try { xcApply(t); } catch (e) { /* not drawn yet */ } }
+    };
+    render();
+    return render;
+  };
+  /* the picker: a search box only; results = this table's columns that match, then the catalog's */
+  const XF_COLCAT = { trend: 'trend', trend_n: 'trend', trend_y: 'trend_y', grank: 'grank', stars: 'stars', read: 'er_look', er_look: 'er_look' };
+  const xfMenu = (k, anchor, render) => {
+    closeMenu();
+    const L = () => (FLT[k].x = Array.isArray(FLT[k].x) ? FLT[k].x : []);
+    const m = h('div', 'col-menu'); menuEl = m;
+    const head = h('div', 'col-mh'); head.append(h('strong', '', 'Add a filter'), h('span', 'tgr-lbl', 'type to search, click to add'));
+    const cx = h('button', 'col-mb', '✕'); cx.type = 'button'; cx.addEventListener('click', closeMenu); head.append(cx); m.append(head);
+    const inp = h('input', 'tgr-search'); inp.type = 'search'; inp.placeholder = 'Search: base day, depth, ADR, RS, gap, trend…';
+    const res = h('div', 'col-res');
+    const t = $('#' + XF_TBL[k]);
+    /* this table's columns, in its order (your layout), the ticker and deleted columns left out */
+    const own = () => {
+      if (!t || !DEFK[t.id]) return [];
+      const Ly = layOf(t), off = new Set(Ly.off);
+      return Ly.order.slice(1).filter((key) => !off.has(key)).map((key) => {
+        if (key.startsWith('x:')) return { name: colName(t, key), add: { id: key.slice(2), op: '>=', v: null }, kind: xfSpec(key.slice(2)).k };
+        if (XF_COLCAT[key]) return { name: colName(t, key), add: { id: XF_COLCAT[key], op: '>=', v: null }, kind: 'cat' };
+        let kind = 'num';
+        if (k === 'g') kind = G_TEXT.has(key) ? 'text' : 'num';
+        else { const tx = [...t.querySelectorAll('tbody tr')].filter((tr) => tr._sym).map((tr) => { const td = [...tr.children].find((c) => c._ck === key); return td ? td.textContent.trim() : ''; }).filter((x) => x && x !== '—'); kind = tx.length && tx.filter((x) => NUM_RE.test(x)).length >= tx.length * 0.7 ? 'num' : 'text'; }
+        return { name: colName(t, key).replace(/\s+/g, ' '), add: { col: key, name: colName(t, key).replace(/\s+/g, ' '), t: kind, op: kind === 'text' ? 'has' : '>=', v: null }, kind };
+      });
+    };
+    const same = (a, b) => (a.col ? a.col === b.col : !b.col && a.id === b.id);
+    const fill = () => {
+      const q = inp.value.trim().toLowerCase(); res.replaceChildren();
+      if (!q) { res.append(h('div', 'tgr-lbl', 'Type a few letters of the criterion (e.g. "base", "adr", "rs", "gap").')); return; }
+      const rank = (n) => { n = n.toLowerCase(); return n === q ? 0 : n.startsWith(q) ? 1 : 2; };
+      const mine = own().filter((o) => o.name.toLowerCase().includes(q)).sort((a, b) => rank(a.name) - rank(b.name));
+      const ownIds = new Set(mine.filter((o) => o.add.id).map((o) => o.add.id));
+      const cat = CATL.filter((c) => !ownIds.has(c[0]) && (c[1] + ' ' + c[2] + ' ' + c[3]).toLowerCase().includes(q)).sort((a, b) => rank(a[1]) - rank(b[1])).map((c) => ({ name: c[1], add: { id: c[0], op: '>=', v: null }, kind: xfSpec(c[0]).k, grp: c[2], tip: c[3] }));
+      const item = (o, tag) => {
+        const i = L().findIndex((f) => same(f, o.add)), b = h('button', 'col-item' + (i >= 0 ? ' on' : ''), (i >= 0 ? '✓ ' : '') + o.name); b.type = 'button'; b.title = i >= 0 ? 'Added: click to remove it' : (o.tip || 'This table\'s column, as it shows');
+        b.append(h('span', 'tgr-lbl', i >= 0 ? ' added · click to remove' : tag ? ' · ' + tag : ''));
+        b.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const j = L().findIndex((f) => same(f, o.add));
+          if (j >= 0) { L().splice(j, 1); render(); saveFlt(); draw(); fill(); return; }
+          L().push(Object.assign({}, o.add)); closeMenu(); render(L().length - 1); saveFlt();
+        });
+        return b;
+      };
+      if (mine.length) { res.append(h('div', 'col-grp', 'In this table')); mine.forEach((o) => res.append(item(o))); }
+      if (cat.length) { res.append(h('div', 'col-grp', mine.length ? 'More' : 'Criteria')); cat.slice(0, 30).forEach((o) => res.append(item(o, o.grp))); }
+      if (!mine.length && !cat.length) res.append(h('div', 'tgr-lbl', 'Nothing matches "' + inp.value + '".'));
+    };
+    inp.addEventListener('input', fill); fill();
+    m.append(inp, res); m.addEventListener('click', (e) => e.stopPropagation());
+    document.body.append(m);
+    const r = anchor.getBoundingClientRect(), w = Math.min(340, window.innerWidth - 16);
+    m.style.width = w + 'px'; m.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px';
+    const top = Math.min(r.bottom + 4, window.innerHeight - 160); m.style.top = top + 'px'; m.style.maxHeight = (window.innerHeight - top - 8) + 'px';
+    setTimeout(() => inp.focus(), 0);
+  };
+  const xfRender = {};
+  document.querySelectorAll('.tgr-flt[data-f]').forEach((box) => { const k = box.dataset.f; if (FLT[k]) xfRender[k] = xfBox(k, box); });
+  { const gf = $('#g-filters'); if (gf) { const sp = h('span', 'tgr-flt'); sp.style.flexBasis = '100%'; gf.append(sp); xfRender.g = xfBox('g', sp); } }
+  $('#g-reset').addEventListener('click', () => { FLT.g.x = []; saveFlt(); if (xfRender.g) xfRender.g(); draw(); });   /* Reset to my defaults also clears your added Gainers filters */
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
