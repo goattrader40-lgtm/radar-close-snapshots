@@ -45,7 +45,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Alert boxes and the episodic pivot alert (TEST ONLY Nov 4 2026 night, branch test/alertboxes = test/trendtrig + this)
+## Alerts tab, alert boxes, the episodic pivot alert, sounds per box (LIVE Nov 4 2026 ~9 PM, the user's "go live"; branch test/alertboxes)
 
 - **🔔 Alerts tab (the user, Nov 4: "should we have a separate tab for alerts")**: the Desktop alerts card moved from
   Launches / Watchlist to its own tab (#alerts): every tab's alerts, each line tagged Launches / Watchlist / Laggards
@@ -101,15 +101,15 @@ alone.
   stock on Launches and 3-SETUPS). Before, the tab followed the stock's lists when you looked, with the live Trend label
   (KD's EARLY sat on Watchlist). Browser test at 9:45 Nov 4: KD's EARLY and ★★ catalyst on Launches; Watchlist = 9
   3-SETUPS breakouts (NAVN, KSS, XMTR, KYMR, ARLO ...); group moves on every tab. Lines logged before keep the old filing.
-- **TREND triggers (TEST ONLY, branch test/trendtrig; the user, Nov 4 night: only 3-SETUPS and TREND of the 5 Watchlist lists
+- **TREND triggers (LIVE Nov 4 2026 ~9 PM with test/alertboxes, branch test/trendtrig; the user, Nov 4 night: only 3-SETUPS and TREND of the 5 Watchlist lists
   trigger, Launches has its own; "watchlist needs trigger for trend watchlist as
   well, setup and trend")**: desktop liveAlerts ':trend' = a TREND-list stock (2-POOL / 1-UPDAY / 1-EP/GAP, Trend Up / Turn
   up / Reclaim / Resting at the last close, not on Launches / Launch laggards / 3-SETUPS) trading over its buy point with
   the close under it; over the 200 SMA and 30%+ over the 52-week low (as 3-SETUPS); a trigger (bell); Watchlist tab. A
   stock with a launch-type alert today: no TREND pop-up, and its 3-SETUPS / TREND triggers are filed on Launches (ARLO Nov
   4). Nov 4 test: XNCR, BRZE (LW intraday); PCOR, RELY only their launch alerts. Phone (alerts.py) not done: on hold.
-- **Open (asked Nov 4 night)**: many triggers at once (9:35-9:45: 60+ lines in the first checks) bury the starred /
-  A+-A ones among C breakouts: a priority order for the pop-ups and a "top" view of the log (proposal in the session).
+- **Answered Nov 4 night**: many triggers at once -> the 🔔 Alerts tab, the boxes and the sounds per box (live). Still
+  open: the page checking every 20 s from 9:30 to 10:00 with the user's GitHub key (the 60-an-hour limit), not asked yet.
 
 ## Phone alerts crashed after 9:34 on Nov 4: fixed (LIVE Nov 4 2026 evening, the user's "go live"; test/alertfix)
 
