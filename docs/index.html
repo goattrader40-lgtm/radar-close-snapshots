@@ -290,14 +290,16 @@
   .tgr-alog li.al-trig { font-weight: 600; }
   .tgr-alog li.al-trig::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-fg-danger, #d1242f); margin-right: 6px; vertical-align: middle; }
   /* the alert boxes (Nov 4 2026): 3 across, 2 on a narrow screen, 1 on a phone */
-  .al-boxes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 10px; }
+  /* the boxes (bigger, the user Nov 4 2026: "they look small"): about 12 lines before they scroll, never shorter than 6 */
+  .al-boxes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 10px 0 12px; }
+  @media (max-width: 1350px) { .al-boxes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 900px) { .al-boxes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 560px) { .al-boxes { grid-template-columns: minmax(0, 1fr); } }
-  .al-box { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 6px 8px; min-width: 0; background: var(--color-panel); }
-  .al-box h3 { margin: 0 0 4px; font-size: var(--cds-font-size-caption); font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
+  .al-box { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 10px; min-width: 0; background: var(--color-panel); }
+  .al-box h3 { margin: 0 0 6px; font-size: var(--cds-font-size-body); font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
   .al-box h3 .al-n { color: var(--color-fg-muted); font-weight: 400; }
-  .al-box ul { margin: 0; padding: 0; list-style: none; font-size: var(--cds-font-size-caption); max-height: 9.5rem; overflow: auto; }
-  .al-box li { padding: 2px 0; border-top: 1px solid var(--color-border-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .al-box ul { margin: 0; padding: 0; list-style: none; font-size: var(--cds-font-size-body); min-height: 10.5rem; max-height: 21rem; overflow: auto; }
+  .al-box li { padding: 3px 0; border-top: 1px solid var(--color-border-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .al-box li:first-child { border-top: 0; }
   .al-box li.al-star { font-weight: 600; }
   .al-box li.al-click { cursor: pointer; }
@@ -312,6 +314,7 @@
   .al-bar .al-last { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   .al-src { display: inline-block; margin-right: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.8em; font-weight: 400; line-height: 1.45; vertical-align: 1px; }
   .al-filter { margin: 6px 0 0; }
+  #alerts .tgr-alog { max-height: 65vh; font-size: var(--cds-font-size-body); }
   .tgr-auto { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; }
   .tgr-gdot { display: inline-block; width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-ok); margin-left: 5px; vertical-align: middle; }
   .tgr-pill { appearance: none; border: 1px solid var(--color-fg); background: var(--color-fg); color: var(--color-bg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
@@ -973,7 +976,8 @@
       </div>
       <details class="tgr-legend tgr-more" data-key="alerts"><summary>What pops up, and when</summary><p class="tgr-note" id="ln-alert-more"></p></details>
       <p class="tgr-note" id="ln-alert-note"></p>
-      <div class="al-filter"><span class="tgr-seg" id="al-filter" role="group" aria-label="Which tab's alerts"><button data-v="All" aria-pressed="true">All</button><button data-v="Launches" aria-pressed="false">Launches</button><button data-v="Watchlist" aria-pressed="false">Watchlist</button><button data-v="Launch laggards" aria-pressed="false">Laggards</button></span></div>
+      <p class="tgr-note" id="ln-alert-speed"></p>
+      <div class="al-filter"><span class="tgr-seg" id="al-filter" role="group" aria-label="Which tab's alerts"><button data-v="All" aria-pressed="true">All</button><button data-v="Launches" aria-pressed="false">Launches</button><button data-v="Watchlist" aria-pressed="false">Watchlist</button><button data-v="Launch laggards" aria-pressed="false">Laggards</button><button data-v="Pre-market" aria-pressed="false">Pre-market</button></span></div>
       <div class="al-boxes" id="ln-alert-boxes"></div>
       <ul class="tgr-alog" id="ln-alert-log"></ul>
     </div>
@@ -2743,6 +2747,18 @@ defCalc('industry_perf', {
       return Object.assign({}, r.live, { symbol: r.symbol, tv: r.tv || r.symbol, s3: true, group_tier_now: g && !g.loose ? (g.tier || '') : '', group_rank_now: g ? g.group + ' #' + g.rank + '/' + g.of : null });
     });
   };
+  /* the W names (the code grade's laggard watch: real news or earnings, over the 50 EMA and the 21-day closing high, up to
+     20% under the 200 SMA), kept 60 sessions (the user, Nov 4 2026: "yes fine about W"): their first close over the 200 is
+     where the backtest's laggard edge is (77% crossed within 60 sessions, +6.5% the 20 after) */
+  const wNames = () => {
+    const m = new Map(), since = new Date(Date.now() - 90 * 864e5).toISOString().slice(0, 10);
+    (Array.isArray(CGL) ? CGL : []).forEach((r) => {
+      if (r.grade !== 'W' || r.direction !== 'up' || !(r.date >= since)) return;
+      const o = m.get(r.symbol); if (!o || r.date > o.date) m.set(r.symbol, r);
+    });
+    return m;
+  };
+  const wWhy = (w) => 'W since ' + fDate(w.date).replace(/, \d{4}$/, '') + (w.news ? ' (' + w.news + ' news' + (w.catalyst ? ': ' + w.catalyst : '') + ')' : '');
   const liveAlerts = () => {
     const doc = st('launch').status === 'ok' ? st('launch').data : null;
     if (!doc || !LIVE_ON || !LIVE || !LIVE.rows) return [];
@@ -2777,6 +2793,16 @@ defCalc('industry_perf', {
       }
       if (sn >= 1 && r.chg >= R.min_chg && r.rv >= R.min_rv && r.price > (doc.watch[r.symbol] || [])[2]) out.push([r.symbol + ':stars', STAR_TXT[sn] + ' ' + (sn === 2 ? 'STRONG LAUNCH' : 'LAUNCH, TREND UP') + ' · ' + r.symbol + ' launching (grade so far ' + r.grade + ')',
         facts + (r.earnings ? ' · EARNINGS' : '') + ' · base high ' + fPrice(r.pivot) + (r.bo ? ' cleared' : ' not cleared') + ' · ' + sx.why, r.tv_symbol]);
+    });
+    const smaW = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, num(x.sma200)])), lateW = nyNow().m >= 950;
+    wNames().forEach((w, sym) => {
+      const q = LIVE.rows[sym], sma = smaW.get(sym);
+      if (!q || !q[0] || q[1] === null || q[1] === undefined || !sma) return;
+      const prev = q[0] / (1 + q[1] / 100);
+      if (!(prev <= sma && q[0] > sma)) return;                        /* under the 200 at the last close, over it now */
+      const facts = fPrice(q[0]) + ' over its 200 SMA ' + fPrice(sma) + ' (' + f1(100 * (q[0] / sma - 1)) + ') · ' + f1(q[1]) + (q[4] !== null && q[4] !== undefined ? ' · vol ' + q[4].toFixed(1) + '× for the time of day' : '') + ' · ' + wWhy(w);
+      if (lateW) out.push([sym + ':w200', sym + ' W CROSSING THE 200 into the close', facts + ' · the first close over it moves it into the over-200 lists (Watchlist / Launches)', sym]);
+      else out.push([sym + ':w200now', sym + ' W over its 200 SMA now', facts + ' · a close over it is the trigger (from 3:50 PM: its own alert)', sym]);
     });
     (doc.launches || []).concat(doc.laggards || []).concat(s3Live(doc)).forEach((r) => {
       const q = LIVE.rows[r.symbol]; if (!q || q[4] === null || q[4] === undefined) return;
@@ -2860,24 +2886,25 @@ defCalc('industry_perf', {
      TRIGGERS: the 21 EMA retest alone is a heads-up ("not a strong sign by itself"), with the breakout level under it
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
-    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl']);
+    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close']);
   const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
   /* a few words per kind for the group-move lines (radar/alerts.py KIND_WORDS) */
   const KIND_WORDS = { retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
     breakout: 'breakout', touch: 'touched the buy point', confirm: 'breakout confirmed', power: 'power day', catalyst: 'catalyst gap', basebreak: 'base high cleared',
     launch: 'launch', reversal: 'reversal launch', laggard: 'laggard launch', reclaimbo: 'back over its breakout level', reclaimbo2: 'breakout undercut & reclaim',
     ema50back: 'back over the 50 EMA', ema50: '50 EMA undercut & reclaim', push: 'push', pop: 'pop', gapbase: 'gap out of base', gob1: 'gap out of base',
-    gob5: 'gap out of base', s3: '3-SETUPS trigger', trend: 'TREND trigger', ep: 'episodic pivot', early: 'early gap', near: 'gapping to the buy point' };
+    gob5: 'gap out of base', s3: '3-SETUPS trigger', trend: 'TREND trigger', ep: 'episodic pivot', w200: 'W crossing the 200', w200now: 'W over the 200', w200close: 'W closed over the 200', early: 'early gap', near: 'gapping to the buy point' };
   const kindWords = (key, title) => { const k = String(key).split(':')[1] || ''; return k === 'ema21' && /UNDERCUT/.test(title || '') ? '21 EMA undercut & reclaim' : (KIND_WORDS[k] || k); };
   /* each box its own sound for a trigger (the user, Nov 4 2026), and a voice that says the box and the ticker ("Episodic
      pivot, C D W"); the browser plays them once you clicked on the page after opening it.
      ⚡ EP: three quick rising notes · 🚀 Launching now: two rising (the old chime) · 🎯 Pattern breakout: one bell ·
-     ↩️ Pullback entry: two falling · 👥 Group move: two low · 👀 Heads-up: one soft high tick */
+     ↩️ Pullback entry: two falling · 👥 Group move: two low · 👀 Heads-up: one soft high tick · ⏰ Pre-market: three
+     gentle rising notes (C, E, G) */
   let actx = null;
   const TONES = { e: [[660, 0], [990, 0.11], [1480, 0.22]], l: [[880, 0], [1320, 0.18]], p: [[1047, 0, 0.6]], b: [[784, 0], [587, 0.2]],
-    g: [[440, 0], [440, 0.22]], h: [[1568, 0, 0.2, 0.08]] };
-  const BOX_SAY = { l: 'Launching now', p: 'Pattern breakout', e: 'Episodic pivot', b: 'Pullback entry', h: 'Heads up', g: 'Group move' };
-  const BOX_RANK = { e: 0, l: 1, p: 2, b: 3, g: 4, h: 5 };
+    g: [[440, 0], [440, 0.22]], h: [[1568, 0, 0.2, 0.08]], m: [[523, 0], [659, 0.16], [784, 0.32, 0.5]] };
+  const BOX_SAY = { m: 'Pre-market', l: 'Launching now', p: 'Pattern breakout', e: 'Episodic pivot', b: 'Pullback entry', h: 'Heads up', g: 'Group move' };
+  const BOX_RANK = { e: 0, l: 1, p: 2, b: 3, g: 4, h: 5, m: 6 };
   const chime = (box) => {
     try {
       actx = actx || new (window.AudioContext || window.webkitAudioContext)();
@@ -2896,6 +2923,8 @@ defCalc('industry_perf', {
   const STARS_SAY = { 3: 'three stars', 2: 'two stars', 1: 'one star' };
   /* the words for one alert: the box, the stars, the ticker spelled out (KD -> "K D"); a group move: its group */
   const sayOf = (b) => {
+    if (b.say) return b.say;
+    if (/ W (CROSSING THE 200|closed over its 200)/.test(b.title)) return 'W ' + (/CROSSING/.test(b.title) ? 'crossing' : 'closed over') + ' the two hundred, ' + (b.sym || '').split('').join(' ');
     if (b.box === 'g') { const m = / GROUP MOVE: ([^(]+)/.exec(b.title); return 'Group move' + (m ? ', ' + m[1].trim().replace(/&/g, 'and') : ''); }
     const n = (/^★+/.exec(b.title) || [''])[0].length;
     return BOX_SAY[b.box] + (n ? ', ' + STARS_SAY[Math.min(n, 3)] : '') + (b.sym ? ', ' + b.sym.split('').join(' ') : '');
@@ -2909,7 +2938,7 @@ defCalc('industry_perf', {
     list.sort((a, c) => ((a.box === 'e' ? 0 : 1) - (c.box === 'e' ? 0 : 1)) || (nst(c) - nst(a)) || (BOX_RANK[a.box] - BOX_RANK[c.box]));
     const kinds = [...new Set(list.map((b) => b.box))].sort((a, c) => BOX_RANK[a] - BOX_RANK[c]).slice(0, 3);
     kinds.forEach((k, i) => setTimeout(() => chime(k), i * 800));
-    const words = list.slice(0, 3).map(sayOf).join('. ') + (list.length > 3 ? '. And ' + (list.length - 3) + ' more.' : '.');
+    const words = list.slice(0, 3).map(sayOf).join('. ') + (list.length > 3 ? '. And ' + (list.length - 3) + ' more.' : '.');   /* the parts end without a period */
     setTimeout(() => say(words), 700 + 800 * (kinds.length - 1));
   };
   document.addEventListener('click', () => { if (actx && actx.state === 'suspended') actx.resume(); });
@@ -2925,15 +2954,15 @@ defCalc('industry_perf', {
   };
   document.addEventListener('visibilitychange', () => { if (!document.hidden && flashT) { clearInterval(flashT); flashT = null; flashSyms = []; document.title = baseTitle; } });
   const showLog = () => { window.focus(); showTab('alerts'); };
-  const notify = (title, body, tvs, key) => {
+  const notify = (title, body, tvs, key, speak) => {
     const trig = isTrigger(key, title), sum = String(key).startsWith('summary:');
     try {
       /* a trigger stays on the screen until you close it; a heads-up fades as before */
       const n = new Notification(trig ? '🔔 ' + title : title, { body, tag: key, requireInteraction: trig });
-      n.onclick = () => { if (sum || !tvs) showLog(); else openTV(tv(tvs)); n.close(); };
+      n.onclick = () => { if (/^PM:pm/.test(String(key))) { window.focus(); showTab('premarket'); } else if (sum || !tvs) showLog(); else openTV(tv(tvs)); n.close(); };
     } catch (e) { /* blocked */ }
     if (trig) {
-      const b = { box: boxOfKey(key, title), title: String(title || ''), sym: tickerOfTitle(title) };
+      const b = { box: boxOfKey(key, title), title: String(title || ''), sym: tickerOfTitle(title), say: speak || '' };
       if (BELLS) BELLS.push(b); else announce([b]);
       flash(String(key).split(':')[0]);
     }
@@ -2951,6 +2980,8 @@ defCalc('industry_perf', {
   const LAUNCH_KINDS = new Set(['power', 'catalyst', 'launch', 'stars', 'early', 'basebreak', 'reversal', 'ep']);
   const tabOfKey = (key, doc, launched) => {
     const [sym, kind] = String(key).split(':'), on = (k) => !!doc && (doc[k] || []).some((r) => r.symbol === sym);
+    if (kind === 'pmclaude' || kind === 'pmcode') return 'P';                       /* the pre-market grades */
+    if (kind === 'w200' || kind === 'w200now' || kind === 'w200close') return 'G';   /* a W name: a laggard until it closes over the 200 */
     if (kind === 'laggard') return 'G';
     if (on('launches')) return 'L';
     if (on('laggards')) return 'G';
@@ -2960,13 +2991,13 @@ defCalc('industry_perf', {
     return on('setups3') ? 'W' : 'L';
   };
   /* the alert boxes (the user, Nov 4 2026), by what the alert is for; each alert in one box, set when it fires */
-  const BOXES = [['l', '🚀', 'Launching now'], ['p', '🎯', 'Pattern breakouts'], ['e', '⚡', 'Episodic pivots'],
+  const BOXES = [['m', '⏰', 'Pre-market'], ['l', '🚀', 'Launching now'], ['p', '🎯', 'Pattern breakouts'], ['e', '⚡', 'Episodic pivots'],
     ['b', '↩️', 'Pullback entries'], ['h', '👀', 'Heads-ups'], ['g', '👥', 'Groups & news']];
   const BOX_OF = { power: 'l', catalyst: 'l', launch: 'l', stars: 'l', reversal: 'l', laggard: 'l',
     breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
     ep: 'e',
     retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b',
-    early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g' };
+    early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g' };
   const boxOfKey = (key, title) => {
     const [a, kind] = String(key).split(':'), t = String(title || '');
     if (a === 'grp' || / GROUP MOVE/.test(t) || /\(after the close\)/.test(t)) return 'g';            /* group moves, the after-close heads-ups */
@@ -3049,16 +3080,54 @@ defCalc('industry_perf', {
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX)); saveDay('gm', gm);
     }
-    /* the morning's pre-market grades (the 8:47 grading posts them by about 9:10): one pop-up with the A and B names */
-    const pmRows = rowsOf('premarket').filter((r) => !r.placeholder && (r.graded === true || r.graded === 'true'));
-    if (alertsOn && pmRows.length && pmRows[0].scan_date === todayNY() && !sent.has('pm:' + todayNY())) {
-      sent.add('pm:' + todayNY());
-      const pick = (dir) => pmRows.filter((r) => r.direction === dir && (r.grade === 'A' || r.grade === 'B')).map((r) => r.symbol + ' ' + r.grade).join(', ');
-      const up = pick('up'), dn = pick('down');
-      const body = (up ? 'Gap-ups: ' + up : 'No A or B gap-up') + (dn ? ' · gap-downs: ' + dn : '') + ' · ' + pmRows.length + ' graded';
-      try { const n = new Notification('Pre-market grades', { body, tag: 'pm' }); n.onclick = () => { window.focus(); location.hash = '#premarket'; n.close(); }; } catch (e) { /* blocked */ }
-      log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · Pre-market grades — ' + body + TABMARK + 'Lg');
-      saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX));
+    /* ⏰ the pre-market grades (the user, Nov 4 2026: "anything changes, I get an alert in a pre-market box"): Claude's (the
+       8:45 grading, saved by about 8:57) and the code's (8:45 / 8:55 / 9:00). A gap-up whose grade becomes A+ / A / B,
+       changes, or loses it: one pop-up per update (each source), a line per stock in the Pre-market box with both grades;
+       the first update of the day lists them all. Only names that pass every filter (the user, Nov 4 2026: "obviously
+       only names over the 21-day high and all the other filters"): a code A+ / A / B always does; Claude's A / B counts
+       when the code grader found the stock eligible (30%+ over the 52-week low, ADR, over the 50 EMA and the 21-day
+       closing high, at most 20% under the 200); before the code's first run of the day it shows, marked unchecked.
+       Gap-downs stay on the Pre-market tab */
+    if (alertsOn) {
+      const today = todayNY(), snap = loadDay('pmsnap', '{}'), hmNow = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
+      const pmAll = rowsOf('premarket').filter((r) => !r.placeholder && r.scan_date === today), byS = new Map(pmAll.map((r) => [r.symbol, r]));
+      const codeToday = !!(CGR && CGR.day === today), okCode = (sym) => !codeToday || !!(CGR.rows && CGR.rows[sym] && CGR.rows[sym].eligible === true);
+      const claude = Object.fromEntries(pmAll.filter((r) => r.graded === true || r.graded === 'true').map((r) => [r.symbol, { g: r.grade || '', dir: r.direction, ok: okCode(r.symbol) }]));
+      const code = codeToday ? Object.fromEntries(Object.entries(CGR.rows || {}).map(([sym, c]) => [sym, { g: c.grade || '—', dir: c.direction, ok: true }])) : {};
+      const GOOD = new Set(['A+', 'A', 'B']), gp = (sym) => { const r = byS.get(sym); return r && r.gap_pct !== null && r.gap_pct !== undefined ? ' · gap ' + (r.gap_pct > 0 ? '+' : '') + Number(r.gap_pct).toFixed(1) + '%' : ''; };
+      const spell = (sym) => sym.split('').join(' '), gSay = (g) => (g === 'A+' ? 'A plus' : g === '—' ? 'none' : g);
+      [['claude', 'Claude', claude, Object.keys(claude).length ? 'x' : ''], ['code', 'Code', code, CGR && CGR.day === today ? CGR.built_at || 'x' : '']].forEach(([src, name, now, stamp]) => {
+        if (!stamp) return;
+        const was = snap[src] || null, first = !was, ev = [];
+        const isGood = (o) => !!o && o.dir === 'up' && GOOD.has(o.g) && o.ok !== false;
+        Object.entries(now).forEach(([sym, o]) => {
+          const p = was ? was[sym] : null, pg = p ? p.g : null, good = isGood(o), pgood = isGood(p);
+          if (first ? good : (good && !pgood) || (good && pg !== o.g) || (pgood && !good))
+            ev.push({ sym, g: o.g, pg: first || !pgood ? (pgood || !p || pg === o.g ? null : pg) : pg === o.g ? null : pg, dir: o.dir, lost: pgood && !good,
+              why: pgood && !good && GOOD.has(o.g) ? 'no longer passes the filters' : '' });
+        });
+        if (was) Object.entries(was).forEach(([sym, o]) => {                       /* an A / B no longer on the list (its gap faded) */
+          if (!now[sym] && isGood(o)) ev.push({ sym, g: 'off the list', pg: o.g, dir: o.dir, lost: true });
+        });
+        snap[src] = Object.fromEntries(Object.entries(now).map(([sym, o]) => [sym, o]));
+        if (!ev.length && !first) return;
+        const other = src === 'claude' ? code : claude, oName = src === 'claude' ? 'code' : 'Claude';
+        ev.sort((x, y) => (x.lost ? 1 : 0) - (y.lost ? 1 : 0) || ['A+', 'A', 'B'].indexOf(x.g) - ['A+', 'A', 'B'].indexOf(y.g));
+        const word = (e) => e.sym + ' ' + (e.why ? e.g + ' (' + e.why + ')' : e.g + (e.pg ? ' (was ' + e.pg + ')' : first ? '' : ' (new)'));
+        const title = '⏰ ' + name + (first ? ' grades are in' : ' grades changed') + ' (' + hmNow + ')';
+        const body = (ev.length ? ev.map(word).join(' · ') : 'No A or B gap-up that passes the filters') + ' · ' + Object.keys(now).length + ' graded';
+        const speak = 'Pre-market. ' + name + (first ? ' grades are in. ' : ' grades changed. ') + (ev.length ? ev.slice(0, 4).map((e) => spell(e.sym) + ', ' + (e.lost ? 'no longer ' + gSay(e.pg || e.g) : gSay(e.g))).join('. ') + (ev.length > 4 ? '. And ' + (ev.length - 4) + ' more' : '') : 'No A or B gap-up');
+        notify(title, body, null, 'PM:pm' + src + ':' + today + ' ' + hmNow, speak);
+        ev.forEach((e) => {
+          const r = byS.get(e.sym), o = other[e.sym];
+          const t = e.sym + ' ' + name + ' ' + (e.lost && e.g === 'off the list' ? 'off the list (was ' + e.pg + ')' : e.why ? e.g + ', ' + e.why : e.g + (e.pg ? ' (was ' + e.pg + ')' : '')) + ' · ' + oName + ' ' + (o && o.g && o.g !== '—' ? o.g : '–') + (src === 'claude' && !codeToday ? ' · filters unchecked (no code run yet)' : '');
+          const c = src === 'code' && CGR && CGR.rows ? CGR.rows[e.sym] : null;
+          const why = c ? [c.catalyst, c.eligible === false ? 'not eligible: ' + (c.not_eligible || '') : c.event === 'turnup' ? '⤴ reversal' : c.event === 'laggard' ? 'laggard (under 200)' : c.chart || ''].filter(Boolean).join(' · ')
+            : r ? [r.catalyst, r.reason].filter(Boolean).join(' · ') : '';
+          log.unshift(logLine(hmNow, t, [gp(e.sym).slice(3), why].filter(Boolean).join(' · ') || (e.dir === 'down' ? 'gap-down' : 'gap-up'), e.sym + ':pm' + src, null, null));
+        });
+      });
+      saveDay('pmsnap', snap); saveDay('log', log.slice(0, LOG_MAX));
     }
     /* after the close: the evening scan's heads-ups for tomorrow (tight under a buy point, retest held) */
     const ldoc = st('launch').status === 'ok' ? st('launch').data : null;
@@ -3075,18 +3144,42 @@ defCalc('industry_perf', {
         sent.add(it[0]); notify(it[1], it[2], r.tv, it[0]);
         log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), it[1], it[2], it[0], ldoc));
       });
+      /* a W name that closed over its 200 SMA today (the first close over since it was under) */
+      wNames().forEach((w, sym) => {
+        const x = (BASE ? BASE.stocks : []).find((y) => y.symbol === sym); if (!x) return;
+        const c = num(x.price), d = num(x.chg_1d), sma = num(x.sma200);
+        if (!c || d === null || !sma) return;
+        const prev = c / (1 + d / 100), key = sym + ':w200close';
+        if (!(prev <= sma && c > sma) || sent.has(key)) return;
+        const title = sym + ' W closed over its 200 SMA (after the close)', body = 'Closed at ' + fPrice(c) + ' (' + (d > 0 ? '+' : '') + d.toFixed(1) + '%), over its 200 SMA ' + fPrice(sma) + ' · ' + wWhy(w) + ' · the first close over it: into the over-200 lists';
+        sent.add(key); notify(title, body, sym, key);
+        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key, ldoc));
+      });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX));
     }
     const bells = BELLS; BELLS = null; announce(bells);
     drawAlog(log);
     $('#ln-alert-btn').textContent = alertsOn ? 'Turn off' : 'Turn on';
     $('#ln-alert-voice').textContent = 'Voice: ' + (VOICE ? 'on' : 'off');
+    /* how often the page checks for new alerts (the user, Nov 4 2026: "will I have 20-second updates or not?"): every 20
+       seconds from 8:45 to 10:00 needs the GitHub key in this browser (the Follow button's); without it, 90 seconds */
+    const sp = $('#ln-alert-speed');
+    if (sp) {
+      sp.replaceChildren();
+      if (ghKey()) sp.textContent = '⏱ Checks for new alerts every 20 seconds from 8:45 to 10:00 AM ET (this browser has your GitHub key), every 90 seconds the rest of the day.';
+      else {
+        sp.append('⏱ Checks for new alerts every 90 seconds. For every 20 seconds from 8:45 to 10:00 AM ET, this browser needs your GitHub key (the one the Follow button on Launches asks for, once per browser): ');
+        const bt = h('button', 'tgr-lite', 'Add the key'); bt.type = 'button';
+        bt.addEventListener('click', async () => { if (await askKey()) runAlerts(); });
+        sp.append(bt);
+      }
+    }
     $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
       : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
       : alertsOn ? 'On: pop-ups while this page is open (a background tab is fine); triggers stay on screen until you close them, heads-ups fade. ' + (log.length ? 'Today:' : 'None yet today.')
       : 'Off. Turn on to get desktop pop-ups while this page is open.';
     /* the long explanation folds away (the user, Nov 4 2026: "make it so I can minimize it") */
-    $('#ln-alert-more').textContent = 'While this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each tab keeps its own triggers: the Watchlist tab the 3-SETUPS triggers and the TREND list\'s (a TREND stock, Trend Up / Turn up / Reclaim / Resting at the last close, trading over its buy point: on this page only), Launches the launches; a stock with both shows on Launches. The boxes sort each tab\'s alerts by kind as they fire: 🚀 Launching now (power day, catalyst gap, A+/A launch, ★ launching, reversal, laggard), 🎯 Pattern breakouts (every pattern\'s buy point: base top, flags, pennants, flat base, cup, ascending triangle, gap out of base, base high cleared, 3-SETUPS and TREND triggers), ⚡ Episodic pivots (a volume pace of 4×+, a 6%+ gap, over the 1-month high and the 200 SMA, from 9:35; a power day is one already, so it alerts as the power day; the EP alert stands for that stock\'s catalyst gap and A launch), ↩️ Pullback entries (retest holding, 21 EMA, undercut & reclaim, push, back over the 50 EMA, a touch of the buy point, ★★★), 👀 Heads-ups (early gaps, near the buy point, in the retest zone, at the 21 EMA), 👥 Groups & news (group moves, pre-market grades, after-close heads-ups); newest first, the most stars on top, click for the chart; every tab\'s alerts are on the 🔔 Alerts tab (the chips show one tab\'s; Launches and the Watchlist show their newest in a bar on top). Sounds: each box has its own for a trigger (⚡ three quick rising notes, 🚀 two rising, 🎯 one bell, ↩️ two falling, 👥 two low) and a voice says the box, the stars and the ticker ("Episodic pivot, C D W"; Voice: on / off; Test plays each sound with its name); several at once: each kind\'s sound once, then the first three read out (EPs first, then the most stars) and "and N more". Click anywhere on the page once after opening it, or the browser keeps it silent. Each stock and kind once a day. Triggers (the buys) stay on the screen until you close them, chime, flash this tab and show bold with a red dot below; heads-ups fade, and in a flood they are grouped into one pop-up. Every alert has its own line below: click it for the chart. Starred alerts stay on screen until clicked, with a tone: ★★ / ★ = a starred stock launching (from yesterday\'s close: ★★ Top / Strong group under the 21 EMA, ★ Trend Up; buy over the 5-minute opening range high, stop its low); ★★★ HIGH CONVICTION = a retest, push or 21 EMA entry holding into the close on a launch in a Top / Strong group with RS 80+ and Trend Up (buy near the close, stop under the day\'s low).';
+    $('#ln-alert-more').textContent = 'While this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each tab keeps its own triggers: the Watchlist tab the 3-SETUPS triggers and the TREND list\'s (a TREND stock, Trend Up / Turn up / Reclaim / Resting at the last close, trading over its buy point: on this page only), Launches the launches; a stock with both shows on Launches. The boxes sort each tab\'s alerts by kind as they fire: 🚀 Launching now (power day, catalyst gap, A+/A launch, ★ launching, reversal, laggard), 🎯 Pattern breakouts (every pattern\'s buy point: base top, flags, pennants, flat base, cup, ascending triangle, gap out of base, base high cleared, 3-SETUPS and TREND triggers), ⚡ Episodic pivots (a volume pace of 4×+, a 6%+ gap, over the 1-month high and the 200 SMA, from 9:35; a power day is one already, so it alerts as the power day; the EP alert stands for that stock\'s catalyst gap and A launch), ↩️ Pullback entries (retest holding, 21 EMA, undercut & reclaim, push, back over the 50 EMA, a touch of the buy point, ★★★), 👀 Heads-ups (early gaps, near the buy point, in the retest zone, at the 21 EMA), 👥 Groups & news (group moves, pre-market grades, after-close heads-ups); newest first, the most stars on top, click for the chart; every tab\'s alerts are on the 🔔 Alerts tab (the chips show one tab\'s; Launches and the Watchlist show their newest in a bar on top). Sounds: each box has its own for a trigger (⚡ three quick rising notes, 🚀 two rising, 🎯 one bell, ↩️ two falling, 👥 two low) and a voice says the box, the stars and the ticker ("Episodic pivot, C D W"; Voice: on / off; Test plays each sound with its name); several at once: each kind\'s sound once, then the first three read out (EPs first, then the most stars) and "and N more". ⏰ Pre-market: Claude\'s grades (by about 8:57) and the code\'s (8:45, 8:55, 9:00, done by about 9:02) as they arrive or change: a gap-up that becomes A+ / A / B, changes, or loses it, and Claude\'s A / B gap-downs; one pop-up per update (click: the Pre-market tab), a line per stock with both grades. W names (the code grade\'s laggard watch, kept 60 sessions): over the 200 SMA during the day = a heads-up, still over it from 3:50 PM = 🚀 W CROSSING THE 200, and the evening\'s "W closed over its 200 SMA". With your GitHub key in this browser (the Follow button\'s) the page checks every 20 seconds from 8:45 to 10:00 (else every 90). Click anywhere on the page once after opening it, or the browser keeps it silent. Each stock and kind once a day. Triggers (the buys) stay on the screen until you close them, chime, flash this tab and show bold with a red dot below; heads-ups fade, and in a flood they are grouped into one pop-up. Every alert has its own line below: click it for the chart. Starred alerts stay on screen until clicked, with a tone: ★★ / ★ = a starred stock launching (from yesterday\'s close: ★★ Top / Strong group under the 21 EMA, ★ Trend Up; buy over the 5-minute opening range high, stop its low); ★★★ HIGH CONVICTION = a retest, push or 21 EMA entry holding into the close on a launch in a Top / Strong group with RS 80+ and Trend Up (buy near the close, stop under the day\'s low).';
   }
   /* today's alert log, or only one ticker's alerts (each line: "3:12 PM · LION C breakout: ... — ...") */
   /* the Alerts tab (the user, Nov 4 2026: "should we have a separate tab for alerts"): every tab's alerts in one place, the six
@@ -3113,7 +3206,7 @@ defCalc('industry_perf', {
     const wlSet = new Set(((ldoc && ldoc.setups3) || []).map((r) => r.symbol).concat(sdoc ? trendSrc(sdoc).map((r) => r.symbol) : []));
     const isWl = (x) => { const sym = tabSym(x); return wlSet.has(sym) && !onLn.has(sym) && !isLag(x); };
     /* the tab set when the alert fired (tabOfKey) */
-    const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards' }, SHORT = { Launches: 'Launches', Watchlist: 'Watchlist', 'Launch laggards': 'Laggards' };
+    const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards', P: 'Pre-market' }, SHORT = { Launches: 'Launches', Watchlist: 'Watchlist', 'Launch laggards': 'Laggards', 'Pre-market': 'Pre-market' };
     const marked = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? TABNAME[x.charAt(i + 1)] : null; };
     const tabOf = (x) => (isGrp(x) ? '' : marked(x) || (isWl(x) ? 'Watchlist' : isLag(x) ? 'Launch laggards' : 'Launches'));
     const boxOf = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? x.charAt(i + 2) : ''; };
@@ -3149,7 +3242,7 @@ defCalc('industry_perf', {
         const box = h('div', 'al-box'), hd = h('h3', '', icon + ' ' + name);
         hd.append(h('span', 'al-n', String(lines.length)));
         const list = h('ul', '');
-        lines.forEach((o) => list.append(lineEl(o, o.head, o.star ? 'al-star' : '')));
+        lines.forEach((o) => list.append(lineEl(code === 'm' ? Object.assign({}, o, { tab: '' }) : o, o.head, o.star ? 'al-star' : '')));
         if (!lines.length) list.append(h('li', 'al-none', 'None yet'));
         box.append(hd, list); bx.append(box);
       });
@@ -3967,15 +4060,21 @@ defCalc('industry_perf', {
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
   let CGR = null;     /* the code grades (radar/codegrade.py, test next to Claude's) */
+  let CGL = null;     /* the code grader's daily log: its W (laggard watch) names for the W-crossed-the-200 alerts */
   let GRPS = {}, SRV = null, LNBT = null, REV = null, EARN = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
   const REVOF = (sym) => (REV && REV.rows ? REV.rows[sym] : null);
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
   const nyNow = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value])); return { wd: p.weekday, m: Number(p.hour) * 60 + Number(p.minute) }; };
   const marketOpen = () => { const n = nyNow(); return !['Sat', 'Sun'].includes(n.wd) && n.m >= 570 && n.m <= 970; };
   const todayNY = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  /* the newest radar-data commit. With the GitHub key this browser keeps for the Follow button the check counts against
+     5,000 an hour, not GitHub's 60 an hour per internet connection (two open tabs ran out of those in the morning, and
+     the page then read copies up to 5 minutes old) */
   async function tipSha() {
+    const url = `https://api.github.com/repos/${GH.owner}/${GH.repo}/commits/${GH.branch}`, k = ghKey();
     try {
-      const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/commits/${GH.branch}`, { headers: { Accept: 'application/vnd.github.sha' }, cache: 'no-store' });
+      let r = await fetch(url, { headers: Object.assign({ Accept: 'application/vnd.github.sha' }, k ? { Authorization: 'Bearer ' + k } : {}), cache: 'no-store' });
+      if (k && (r.status === 401 || r.status === 403)) r = await fetch(url, { headers: { Accept: 'application/vnd.github.sha' }, cache: 'no-store' });
       if (r.ok) return (await r.text()).trim();
     } catch (e) { /* rate-limited or offline: fall back to the branch name */ }
     return null;
@@ -4053,6 +4152,7 @@ defCalc('industry_perf', {
       if (lnbt) LNBT = lnbt;
       SRV = await getJson(sha, 'alerts.json').catch(() => SRV);
       EARN = await getJson(sha, 'earnings.json').catch(() => EARN);
+      CGL = await getJson(sha, 'codegrade_log.json').catch(() => CGL);
       CGR = await getJson(sha, 'codegrade.json').catch(() => CGR);     /* the code grades, next to Claude's (test) */     /* the Earnings tab (radar/earnings.py) */     /* the job's alerts, incl. its 1-minute gap-up checks */
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {
@@ -4102,6 +4202,14 @@ defCalc('industry_perf', {
   $('#live-reload').addEventListener('click', () => refresh(true));
   document.addEventListener('visibilitychange', () => { if (!document.hidden && (!lastCheck || Date.now() - lastCheck > 60000)) refresh(false); });
   setInterval(() => { if (!document.hidden || alertsOn) refresh(false); }, 90000);    /* alerts on: keep checking in a background tab */
+  /* 8:45-10:00 ET on weekdays (the grades, then the open's alerts): every 20 seconds, with the GitHub key (the user, Nov 4
+     2026: the 9:31 heads-ups showed a minute or two late); without a key the 60-an-hour limit allows only the 90 seconds */
+  setInterval(() => {
+    const n = nyNow();
+    if (!ghKey() || ['Sat', 'Sun'].includes(n.wd) || n.m < 525 || n.m > 600 || (document.hidden && !alertsOn)) return;
+    if (lastCheck && Date.now() - lastCheck < 15000) return;
+    refresh(false);
+  }, 20000);
 
   /* the long explanations fold away (closed until you open one; each box remembers it in this browser) */
   document.querySelectorAll('details.tgr-more').forEach((d) => {
