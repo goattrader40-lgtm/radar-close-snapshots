@@ -56,8 +56,8 @@ alone.
   place: the short figures on one line, one fact per bullet, 📈 Chart and 📰 news buttons; a second click closes it
   (AL_OPEN keeps it open across refreshes). Only the Chart button opens TradingView; the log gets a Chart button.
 - Open: EPAM Nov 5 read "EPS -26%" on the Earnings tab while Claude read adjusted EPS as a beat (GAAP vs adjusted pairing?).
-- Waiting for the user (asked Nov 5): test/pmwindow (pop-ups 8:45-9:25, code runs 9:10 / 9:20); power days also in the ⚡
-  EP box + the EP alert in the GitHub job; the boxes filled from GitHub's alerts.json on every device.
+- The user said yes (Nov 5): test/pmwindow live; power days also in the ⚡ EP box + the EP alert in the GitHub job and
+  the boxes filled from GitHub's alerts.json on every device: being built (test branch first).
 
 ## Alerts walled off part by part (LIVE Nov 4 2026 ~11:45 PM, the user's "both"; branch test/safeparts)
 
