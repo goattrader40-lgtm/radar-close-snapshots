@@ -290,14 +290,16 @@
   .tgr-alog li.al-trig { font-weight: 600; }
   .tgr-alog li.al-trig::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-fg-danger, #d1242f); margin-right: 6px; vertical-align: middle; }
   /* the alert boxes (Nov 4 2026): 3 across, 2 on a narrow screen, 1 on a phone */
-  .al-boxes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 10px; }
+  /* the boxes (bigger, the user Nov 4 2026: "they look small"): about 12 lines before they scroll, never shorter than 6 */
+  .al-boxes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 10px 0 12px; }
+  @media (max-width: 1350px) { .al-boxes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 900px) { .al-boxes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 560px) { .al-boxes { grid-template-columns: minmax(0, 1fr); } }
-  .al-box { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 6px 8px; min-width: 0; background: var(--color-panel); }
-  .al-box h3 { margin: 0 0 4px; font-size: var(--cds-font-size-caption); font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
+  .al-box { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 10px; min-width: 0; background: var(--color-panel); }
+  .al-box h3 { margin: 0 0 6px; font-size: var(--cds-font-size-body); font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
   .al-box h3 .al-n { color: var(--color-fg-muted); font-weight: 400; }
-  .al-box ul { margin: 0; padding: 0; list-style: none; font-size: var(--cds-font-size-caption); max-height: 9.5rem; overflow: auto; }
-  .al-box li { padding: 2px 0; border-top: 1px solid var(--color-border-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .al-box ul { margin: 0; padding: 0; list-style: none; font-size: var(--cds-font-size-body); min-height: 10.5rem; max-height: 21rem; overflow: auto; }
+  .al-box li { padding: 3px 0; border-top: 1px solid var(--color-border-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .al-box li:first-child { border-top: 0; }
   .al-box li.al-star { font-weight: 600; }
   .al-box li.al-click { cursor: pointer; }
@@ -312,6 +314,7 @@
   .al-bar .al-last { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   .al-src { display: inline-block; margin-right: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.8em; font-weight: 400; line-height: 1.45; vertical-align: 1px; }
   .al-filter { margin: 6px 0 0; }
+  #alerts .tgr-alog { max-height: 65vh; font-size: var(--cds-font-size-body); }
   .tgr-auto { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; }
   .tgr-gdot { display: inline-block; width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-ok); margin-left: 5px; vertical-align: middle; }
   .tgr-pill { appearance: none; border: 1px solid var(--color-fg); background: var(--color-fg); color: var(--color-bg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
@@ -973,7 +976,7 @@
       </div>
       <details class="tgr-legend tgr-more" data-key="alerts"><summary>What pops up, and when</summary><p class="tgr-note" id="ln-alert-more"></p></details>
       <p class="tgr-note" id="ln-alert-note"></p>
-      <div class="al-filter"><span class="tgr-seg" id="al-filter" role="group" aria-label="Which tab's alerts"><button data-v="All" aria-pressed="true">All</button><button data-v="Launches" aria-pressed="false">Launches</button><button data-v="Watchlist" aria-pressed="false">Watchlist</button><button data-v="Launch laggards" aria-pressed="false">Laggards</button></span></div>
+      <div class="al-filter"><span class="tgr-seg" id="al-filter" role="group" aria-label="Which tab's alerts"><button data-v="All" aria-pressed="true">All</button><button data-v="Launches" aria-pressed="false">Launches</button><button data-v="Watchlist" aria-pressed="false">Watchlist</button><button data-v="Launch laggards" aria-pressed="false">Laggards</button><button data-v="Pre-market" aria-pressed="false">Pre-market</button></span></div>
       <div class="al-boxes" id="ln-alert-boxes"></div>
       <ul class="tgr-alog" id="ln-alert-log"></ul>
     </div>
@@ -2860,7 +2863,7 @@ defCalc('industry_perf', {
      TRIGGERS: the 21 EMA retest alone is a heads-up ("not a strong sign by itself"), with the breakout level under it
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
-    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl']);
+    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode']);
   const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
   /* a few words per kind for the group-move lines (radar/alerts.py KIND_WORDS) */
   const KIND_WORDS = { retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
@@ -2872,12 +2875,13 @@ defCalc('industry_perf', {
   /* each box its own sound for a trigger (the user, Nov 4 2026), and a voice that says the box and the ticker ("Episodic
      pivot, C D W"); the browser plays them once you clicked on the page after opening it.
      ⚡ EP: three quick rising notes · 🚀 Launching now: two rising (the old chime) · 🎯 Pattern breakout: one bell ·
-     ↩️ Pullback entry: two falling · 👥 Group move: two low · 👀 Heads-up: one soft high tick */
+     ↩️ Pullback entry: two falling · 👥 Group move: two low · 👀 Heads-up: one soft high tick · ⏰ Pre-market: three
+     gentle rising notes (C, E, G) */
   let actx = null;
   const TONES = { e: [[660, 0], [990, 0.11], [1480, 0.22]], l: [[880, 0], [1320, 0.18]], p: [[1047, 0, 0.6]], b: [[784, 0], [587, 0.2]],
-    g: [[440, 0], [440, 0.22]], h: [[1568, 0, 0.2, 0.08]] };
-  const BOX_SAY = { l: 'Launching now', p: 'Pattern breakout', e: 'Episodic pivot', b: 'Pullback entry', h: 'Heads up', g: 'Group move' };
-  const BOX_RANK = { e: 0, l: 1, p: 2, b: 3, g: 4, h: 5 };
+    g: [[440, 0], [440, 0.22]], h: [[1568, 0, 0.2, 0.08]], m: [[523, 0], [659, 0.16], [784, 0.32, 0.5]] };
+  const BOX_SAY = { m: 'Pre-market', l: 'Launching now', p: 'Pattern breakout', e: 'Episodic pivot', b: 'Pullback entry', h: 'Heads up', g: 'Group move' };
+  const BOX_RANK = { e: 0, l: 1, p: 2, b: 3, g: 4, h: 5, m: 6 };
   const chime = (box) => {
     try {
       actx = actx || new (window.AudioContext || window.webkitAudioContext)();
@@ -2896,6 +2900,7 @@ defCalc('industry_perf', {
   const STARS_SAY = { 3: 'three stars', 2: 'two stars', 1: 'one star' };
   /* the words for one alert: the box, the stars, the ticker spelled out (KD -> "K D"); a group move: its group */
   const sayOf = (b) => {
+    if (b.say) return b.say;
     if (b.box === 'g') { const m = / GROUP MOVE: ([^(]+)/.exec(b.title); return 'Group move' + (m ? ', ' + m[1].trim().replace(/&/g, 'and') : ''); }
     const n = (/^★+/.exec(b.title) || [''])[0].length;
     return BOX_SAY[b.box] + (n ? ', ' + STARS_SAY[Math.min(n, 3)] : '') + (b.sym ? ', ' + b.sym.split('').join(' ') : '');
@@ -2909,7 +2914,7 @@ defCalc('industry_perf', {
     list.sort((a, c) => ((a.box === 'e' ? 0 : 1) - (c.box === 'e' ? 0 : 1)) || (nst(c) - nst(a)) || (BOX_RANK[a.box] - BOX_RANK[c.box]));
     const kinds = [...new Set(list.map((b) => b.box))].sort((a, c) => BOX_RANK[a] - BOX_RANK[c]).slice(0, 3);
     kinds.forEach((k, i) => setTimeout(() => chime(k), i * 800));
-    const words = list.slice(0, 3).map(sayOf).join('. ') + (list.length > 3 ? '. And ' + (list.length - 3) + ' more.' : '.');
+    const words = list.slice(0, 3).map(sayOf).join('. ') + (list.length > 3 ? '. And ' + (list.length - 3) + ' more.' : '.');   /* the parts end without a period */
     setTimeout(() => say(words), 700 + 800 * (kinds.length - 1));
   };
   document.addEventListener('click', () => { if (actx && actx.state === 'suspended') actx.resume(); });
@@ -2925,15 +2930,15 @@ defCalc('industry_perf', {
   };
   document.addEventListener('visibilitychange', () => { if (!document.hidden && flashT) { clearInterval(flashT); flashT = null; flashSyms = []; document.title = baseTitle; } });
   const showLog = () => { window.focus(); showTab('alerts'); };
-  const notify = (title, body, tvs, key) => {
+  const notify = (title, body, tvs, key, speak) => {
     const trig = isTrigger(key, title), sum = String(key).startsWith('summary:');
     try {
       /* a trigger stays on the screen until you close it; a heads-up fades as before */
       const n = new Notification(trig ? '🔔 ' + title : title, { body, tag: key, requireInteraction: trig });
-      n.onclick = () => { if (sum || !tvs) showLog(); else openTV(tv(tvs)); n.close(); };
+      n.onclick = () => { if (/^PM:pm/.test(String(key))) { window.focus(); showTab('premarket'); } else if (sum || !tvs) showLog(); else openTV(tv(tvs)); n.close(); };
     } catch (e) { /* blocked */ }
     if (trig) {
-      const b = { box: boxOfKey(key, title), title: String(title || ''), sym: tickerOfTitle(title) };
+      const b = { box: boxOfKey(key, title), title: String(title || ''), sym: tickerOfTitle(title), say: speak || '' };
       if (BELLS) BELLS.push(b); else announce([b]);
       flash(String(key).split(':')[0]);
     }
@@ -2951,6 +2956,7 @@ defCalc('industry_perf', {
   const LAUNCH_KINDS = new Set(['power', 'catalyst', 'launch', 'stars', 'early', 'basebreak', 'reversal', 'ep']);
   const tabOfKey = (key, doc, launched) => {
     const [sym, kind] = String(key).split(':'), on = (k) => !!doc && (doc[k] || []).some((r) => r.symbol === sym);
+    if (kind === 'pmclaude' || kind === 'pmcode') return 'P';                       /* the pre-market grades */
     if (kind === 'laggard') return 'G';
     if (on('launches')) return 'L';
     if (on('laggards')) return 'G';
@@ -2960,13 +2966,13 @@ defCalc('industry_perf', {
     return on('setups3') ? 'W' : 'L';
   };
   /* the alert boxes (the user, Nov 4 2026), by what the alert is for; each alert in one box, set when it fires */
-  const BOXES = [['l', '🚀', 'Launching now'], ['p', '🎯', 'Pattern breakouts'], ['e', '⚡', 'Episodic pivots'],
+  const BOXES = [['m', '⏰', 'Pre-market'], ['l', '🚀', 'Launching now'], ['p', '🎯', 'Pattern breakouts'], ['e', '⚡', 'Episodic pivots'],
     ['b', '↩️', 'Pullback entries'], ['h', '👀', 'Heads-ups'], ['g', '👥', 'Groups & news']];
   const BOX_OF = { power: 'l', catalyst: 'l', launch: 'l', stars: 'l', reversal: 'l', laggard: 'l',
     breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
     ep: 'e',
     retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b',
-    early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g' };
+    early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', pmclaude: 'm', pmcode: 'm' };
   const boxOfKey = (key, title) => {
     const [a, kind] = String(key).split(':'), t = String(title || '');
     if (a === 'grp' || / GROUP MOVE/.test(t) || /\(after the close\)/.test(t)) return 'g';            /* group moves, the after-close heads-ups */
@@ -3049,16 +3055,48 @@ defCalc('industry_perf', {
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX)); saveDay('gm', gm);
     }
-    /* the morning's pre-market grades (the 8:47 grading posts them by about 9:10): one pop-up with the A and B names */
-    const pmRows = rowsOf('premarket').filter((r) => !r.placeholder && (r.graded === true || r.graded === 'true'));
-    if (alertsOn && pmRows.length && pmRows[0].scan_date === todayNY() && !sent.has('pm:' + todayNY())) {
-      sent.add('pm:' + todayNY());
-      const pick = (dir) => pmRows.filter((r) => r.direction === dir && (r.grade === 'A' || r.grade === 'B')).map((r) => r.symbol + ' ' + r.grade).join(', ');
-      const up = pick('up'), dn = pick('down');
-      const body = (up ? 'Gap-ups: ' + up : 'No A or B gap-up') + (dn ? ' · gap-downs: ' + dn : '') + ' · ' + pmRows.length + ' graded';
-      try { const n = new Notification('Pre-market grades', { body, tag: 'pm' }); n.onclick = () => { window.focus(); location.hash = '#premarket'; n.close(); }; } catch (e) { /* blocked */ }
-      log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · Pre-market grades — ' + body + TABMARK + 'Lg');
-      saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX));
+    /* ⏰ the pre-market grades (the user, Nov 4 2026: "anything changes, I get an alert in a pre-market box"): Claude's (the
+       8:45 grading, saved by about 8:57) and the code's (8:52 / 9:05 / 9:18). A gap-up whose grade becomes A+ / A / B,
+       changes, or loses its A / B, and Claude's gap-downs graded A / B: one pop-up per update (each source), a line per
+       stock in the Pre-market box with both grades; the first update of the day lists them all */
+    if (alertsOn) {
+      const today = todayNY(), snap = loadDay('pmsnap', '{}'), hmNow = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
+      const pmAll = rowsOf('premarket').filter((r) => !r.placeholder && r.scan_date === today), byS = new Map(pmAll.map((r) => [r.symbol, r]));
+      const claude = Object.fromEntries(pmAll.filter((r) => r.graded === true || r.graded === 'true').map((r) => [r.symbol, { g: r.grade || '', dir: r.direction }]));
+      const code = CGR && CGR.day === today ? Object.fromEntries(Object.entries(CGR.rows || {}).map(([sym, c]) => [sym, { g: c.grade || '—', dir: c.direction }])) : {};
+      const GOOD = new Set(['A+', 'A', 'B']), gp = (sym) => { const r = byS.get(sym); return r && r.gap_pct !== null && r.gap_pct !== undefined ? ' · gap ' + (r.gap_pct > 0 ? '+' : '') + Number(r.gap_pct).toFixed(1) + '%' : ''; };
+      const spell = (sym) => sym.split('').join(' '), gSay = (g) => (g === 'A+' ? 'A plus' : g === '—' ? 'none' : g);
+      [['claude', 'Claude', claude, Object.keys(claude).length ? 'x' : ''], ['code', 'Code', code, CGR && CGR.day === today ? CGR.built_at || 'x' : '']].forEach(([src, name, now, stamp]) => {
+        if (!stamp) return;
+        const was = snap[src] || null, first = !was, ev = [];
+        Object.entries(now).forEach(([sym, o]) => {
+          const pg = was ? (was[sym] ? was[sym].g : null) : null;
+          const good = o.dir === 'up' ? GOOD.has(o.g) : src === 'claude' && (o.g === 'A' || o.g === 'B');
+          const pgood = pg !== null && (o.dir === 'up' ? GOOD.has(pg) : src === 'claude' && (pg === 'A' || pg === 'B'));
+          if (first ? good : (good && pg !== o.g) || (pgood && !good)) ev.push({ sym, g: o.g, pg: first ? null : pg, dir: o.dir, lost: pgood && !good });
+        });
+        if (was) Object.entries(was).forEach(([sym, o]) => {                       /* an A / B no longer on the list (its gap faded) */
+          if (!now[sym] && (o.dir === 'up' ? GOOD.has(o.g) : src === 'claude' && (o.g === 'A' || o.g === 'B'))) ev.push({ sym, g: 'off the list', pg: o.g, dir: o.dir, lost: true });
+        });
+        snap[src] = Object.fromEntries(Object.entries(now).map(([sym, o]) => [sym, o]));
+        if (!ev.length && !first) return;
+        const other = src === 'claude' ? code : claude, oName = src === 'claude' ? 'code' : 'Claude';
+        ev.sort((x, y) => (x.dir === 'up' ? 0 : 1) - (y.dir === 'up' ? 0 : 1) || ['A+', 'A', 'B'].indexOf(x.g) - ['A+', 'A', 'B'].indexOf(y.g));
+        const word = (e) => e.sym + ' ' + e.g + (e.pg ? ' (was ' + e.pg + ')' : first ? '' : ' (new)') + (e.dir === 'down' ? ' ↓' : '');
+        const title = '⏰ ' + name + (first ? ' grades are in' : ' grades changed') + ' (' + hmNow + ')';
+        const body = (ev.length ? ev.map(word).join(' · ') : 'No A or B gap-up') + ' · ' + Object.keys(now).length + ' graded';
+        const speak = 'Pre-market. ' + name + (first ? ' grades are in. ' : ' grades changed. ') + (ev.length ? ev.slice(0, 4).map((e) => spell(e.sym) + ', ' + (e.lost ? 'no longer ' + gSay(e.pg) : gSay(e.g))).join('. ') + (ev.length > 4 ? '. And ' + (ev.length - 4) + ' more' : '') : 'No A or B gap-up');
+        notify(title, body, null, 'PM:pm' + src + ':' + today + ' ' + hmNow, speak);
+        ev.forEach((e) => {
+          const r = byS.get(e.sym), o = other[e.sym];
+          const t = e.sym + ' ' + name + ' ' + (e.lost && e.g === 'off the list' ? 'off the list (was ' + e.pg + ')' : e.g + (e.pg ? ' (was ' + e.pg + ')' : '')) + ' · ' + oName + ' ' + (o && o.g && o.g !== '—' ? o.g : '–') + (e.dir === 'down' ? ' · gap-down' : '');
+          const c = src === 'code' && CGR && CGR.rows ? CGR.rows[e.sym] : null;
+          const why = c ? [c.catalyst, c.eligible === false ? 'not eligible: ' + (c.not_eligible || '') : c.event === 'turnup' ? '⤴ reversal' : c.event === 'laggard' ? 'laggard (under 200)' : c.chart || ''].filter(Boolean).join(' · ')
+            : r ? [r.catalyst, r.reason].filter(Boolean).join(' · ') : '';
+          log.unshift(logLine(hmNow, t, [gp(e.sym).slice(3), why].filter(Boolean).join(' · ') || (e.dir === 'down' ? 'gap-down' : 'gap-up'), e.sym + ':pm' + src, null, null));
+        });
+      });
+      saveDay('pmsnap', snap); saveDay('log', log.slice(0, LOG_MAX));
     }
     /* after the close: the evening scan's heads-ups for tomorrow (tight under a buy point, retest held) */
     const ldoc = st('launch').status === 'ok' ? st('launch').data : null;
@@ -3113,7 +3151,7 @@ defCalc('industry_perf', {
     const wlSet = new Set(((ldoc && ldoc.setups3) || []).map((r) => r.symbol).concat(sdoc ? trendSrc(sdoc).map((r) => r.symbol) : []));
     const isWl = (x) => { const sym = tabSym(x); return wlSet.has(sym) && !onLn.has(sym) && !isLag(x); };
     /* the tab set when the alert fired (tabOfKey) */
-    const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards' }, SHORT = { Launches: 'Launches', Watchlist: 'Watchlist', 'Launch laggards': 'Laggards' };
+    const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards', P: 'Pre-market' }, SHORT = { Launches: 'Launches', Watchlist: 'Watchlist', 'Launch laggards': 'Laggards', 'Pre-market': 'Pre-market' };
     const marked = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? TABNAME[x.charAt(i + 1)] : null; };
     const tabOf = (x) => (isGrp(x) ? '' : marked(x) || (isWl(x) ? 'Watchlist' : isLag(x) ? 'Launch laggards' : 'Launches'));
     const boxOf = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? x.charAt(i + 2) : ''; };
@@ -3149,7 +3187,7 @@ defCalc('industry_perf', {
         const box = h('div', 'al-box'), hd = h('h3', '', icon + ' ' + name);
         hd.append(h('span', 'al-n', String(lines.length)));
         const list = h('ul', '');
-        lines.forEach((o) => list.append(lineEl(o, o.head, o.star ? 'al-star' : '')));
+        lines.forEach((o) => list.append(lineEl(code === 'm' ? Object.assign({}, o, { tab: '' }) : o, o.head, o.star ? 'al-star' : '')));
         if (!lines.length) list.append(h('li', 'al-none', 'None yet'));
         box.append(hd, list); bx.append(box);
       });
@@ -3973,9 +4011,14 @@ defCalc('industry_perf', {
   const nyNow = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value])); return { wd: p.weekday, m: Number(p.hour) * 60 + Number(p.minute) }; };
   const marketOpen = () => { const n = nyNow(); return !['Sat', 'Sun'].includes(n.wd) && n.m >= 570 && n.m <= 970; };
   const todayNY = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  /* the newest radar-data commit. With the GitHub key this browser keeps for the Follow button the check counts against
+     5,000 an hour, not GitHub's 60 an hour per internet connection (two open tabs ran out of those in the morning, and
+     the page then read copies up to 5 minutes old) */
   async function tipSha() {
+    const url = `https://api.github.com/repos/${GH.owner}/${GH.repo}/commits/${GH.branch}`, k = ghKey();
     try {
-      const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/commits/${GH.branch}`, { headers: { Accept: 'application/vnd.github.sha' }, cache: 'no-store' });
+      let r = await fetch(url, { headers: Object.assign({ Accept: 'application/vnd.github.sha' }, k ? { Authorization: 'Bearer ' + k } : {}), cache: 'no-store' });
+      if (k && (r.status === 401 || r.status === 403)) r = await fetch(url, { headers: { Accept: 'application/vnd.github.sha' }, cache: 'no-store' });
       if (r.ok) return (await r.text()).trim();
     } catch (e) { /* rate-limited or offline: fall back to the branch name */ }
     return null;
@@ -4102,6 +4145,14 @@ defCalc('industry_perf', {
   $('#live-reload').addEventListener('click', () => refresh(true));
   document.addEventListener('visibilitychange', () => { if (!document.hidden && (!lastCheck || Date.now() - lastCheck > 60000)) refresh(false); });
   setInterval(() => { if (!document.hidden || alertsOn) refresh(false); }, 90000);    /* alerts on: keep checking in a background tab */
+  /* 8:45-10:00 ET on weekdays (the grades, then the open's alerts): every 20 seconds, with the GitHub key (the user, Nov 4
+     2026: the 9:31 heads-ups showed a minute or two late); without a key the 60-an-hour limit allows only the 90 seconds */
+  setInterval(() => {
+    const n = nyNow();
+    if (!ghKey() || ['Sat', 'Sun'].includes(n.wd) || n.m < 525 || n.m > 600 || (document.hidden && !alertsOn)) return;
+    if (lastCheck && Date.now() - lastCheck < 15000) return;
+    refresh(false);
+  }, 20000);
 
   /* the long explanations fold away (closed until you open one; each box remembers it in this browser) */
   document.querySelectorAll('details.tgr-more').forEach((d) => {
