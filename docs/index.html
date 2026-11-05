@@ -1495,6 +1495,41 @@ defCalc('industry_perf', {
     if (t.st === '') return { n: -1, short: 'skip', why: '⚠ No Trend label at the last close. Tested: -0.05R a trade on 822 live launch alerts: skip' };
     return { n: 0, short: '', why: 'Trend ' + t.st + ' at the last close: no star (all launch alerts +0.16R)' };
   };
+  /* a job alert of a launch in a Top / Strong group with RS 80+ and Trend Up: the ★★★ version (used for the pop-up and for
+     GitHub's record on every device) */
+  const hcItem = (it0, r) => (/:(retest|push|ema21|ema21bl|reclaimbo2)$/.test(it0.key) && r && hcReady(r)
+    ? Object.assign({}, it0, { title: '★★★ HIGH CONVICTION · ' + it0.title, msg: it0.msg + ' · ★★★ ' + (r.group_tier_now === 'Top' ? '★ Top' : 'Strong') + ' group, RS ' + r.rs_now + ', Trend Up: tested +0.68R a trade (169, both halves positive): buy near the close, stop under the day\'s low' }) : it0);
+  /* a stock's RS and its best group (the user, Nov 5 2026: "RS rating and theme / industry ranking" on every alert) */
+  const strengthParts = (sym) => {
+    const gB = grBest(sym), rsV = ldocRS()[sym];
+    return ['RS ' + (rsV !== null && rsV !== undefined ? rsV : '—'),
+      'Group ' + (gB ? (gB.tier === 'Top' ? '★ Top ' : gB.tier === 'Strong' ? 'Strong ' : '') + String(gB.group).replace(/ · other$/, ' (other)').replace(/ · /g, ', ') + ' #' + gB.rank + '/' + gB.of : '—')];
+  };
+  /* the end of the day (the user, Nov 5 2026: "end of day, which retest held or not: the ★★★, the retests, the breakouts, the
+     10 / 21 EMA pullbacks"): after the evening scan, each stock with a pullback-type alert today: its close vs the level it
+     pulled back to (the breakout level it retested, else the 21 EMA) */
+  const EOD_KINDS = /:(retest|zone|ema21|ema21bl|ema21zone|push|reclaimbo|reclaimbo2)$/;   /* the pullbacks (a touch of the buy point isn't one) */
+  const eodList = (ldoc, keys) => {
+    if (!ldoc || ldoc.date !== todayNY()) return [];
+    const rows = new Map(((ldoc.launches || []).concat(ldoc.laggards || [])).map((r) => [r.symbol, r]));
+    (ldoc.setups3 || []).forEach((r) => { if (r.live && !rows.has(r.symbol)) rows.set(r.symbol, Object.assign({}, r.live, { symbol: r.symbol, tv: r.tv, s3: true })); });
+    const syms = new Set(keys.filter((k) => EOD_KINDS.test(k)).map((k) => k.split(':')[0]));
+    (ldoc.launches || []).forEach((r) => { if (r.retest_today) syms.add(r.symbol); });
+    const out = [];
+    syms.forEach((sym) => {
+      const r = rows.get(sym); if (!r) return;
+      const close = num(r.price), lvl = num(r.retest_level) || num(r.last_breakout_top), e21 = num(r.ema21);
+      const ref = lvl || e21; if (!close || !ref) return;
+      const held = close >= ref, emas = (r.retest_ema || []).join(' & ');
+      out.push({ sym, held, hc: held && hcReady(r), close, ref, what: lvl ? 'its breakout level' : 'its 21 EMA', emas, r });
+    });
+    return out.sort((a, c) => (c.hc - a.hc) || (c.held - a.held) || (a.sym < c.sym ? -1 : 1));
+  };
+  const eodLine = (x) => [x.sym + ':' + (x.held ? 'eodheld' : 'eodlost'),
+    (x.hc ? '★★★ ' : '') + x.sym + (x.held ? ' ✓ HELD at the close' : ' ✗ DID NOT HOLD at the close') + ' (after the close)',
+    'Closed ' + fPrice(x.close) + (x.held ? ' over ' : ' under ') + x.what + ' ' + fPrice(x.ref) + (x.emas ? ' (with the ' + x.emas + ')' : '')
+      + (x.hc ? ' · ★★★ ' + (x.r.group_tier_now === 'Top' ? '★ Top' : 'Strong') + ' group, RS ' + x.r.rs_now + ', Trend Up' : '')
+      + (x.held ? '' : ' · the pullback failed: no entry')];
   const hcReady = (r) => { const tier = r.group_tier_now || '', t = trendOf(r.symbol); return (tier === 'Top' || tier === 'Strong') && num(r.rs_now) !== null && r.rs_now >= 80 && !!t && t.st === 'Up'; };
   const hcToday = (r) => !!(r.retest_today || r.push_today || r.ema21_today || r.breakout_reclaim_today);
   const HC_WHY = '★★★ HIGH CONVICTION: a pullback entry (retest held, push out of the 21 EMA, 21 EMA retest or undercut & reclaim, breakout undercut & reclaim) on a launch in a ★ Top / Strong group, RS 80+, Trend Up. Tested: +0.68R a trade on 169 (36% won, 40% ran 20%+), both halves positive, the only combination that beat the luck test. Buy near the close (3:45-4:00 PM), stop under the day\'s low';
@@ -3036,7 +3071,7 @@ defCalc('industry_perf', {
     breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
     ep: 'e',
     retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b',
-    early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g' };
+    early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', eodheld: 'g', eodlost: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g' };
   const boxOfKey = (key, title) => {
     const [a, kind] = String(key).split(':'), t = String(title || '');
     if (a === 'grp' || / GROUP MOVE/.test(t) || /\(after the close\)/.test(t)) return 'g';            /* group moves, the after-close heads-ups */
@@ -3110,8 +3145,7 @@ defCalc('industry_perf', {
       ((SRV && SRV.date === todayNY() && SRV.items) || []).forEach((it0) => {
         if (sent.has(it0.key)) return;
         sent.add(it0.key);
-        const r = lrow.get(it0.key.split(':')[0]), hc = /:(retest|push|ema21|ema21bl|reclaimbo2)$/.test(it0.key) && r && hcReady(r);
-        const it = hc ? Object.assign({}, it0, { title: '★★★ HIGH CONVICTION · ' + it0.title, msg: it0.msg + ' · ★★★ ' + (r.group_tier_now === 'Top' ? '★ Top' : 'Strong') + ' group, RS ' + r.rs_now + ', Trend Up: tested +0.68R a trade (169, both halves positive): buy near the close, stop under the day\'s low' }) : it0;
+        const it = hcItem(it0, lrow.get(it0.key.split(':')[0]));
         const [H, M] = it.time.split(':').map(Number);
         if (nm - (H * 60 + M) <= 10 && !it.grouped) notify(it.title, it.msg, it.tv, it.key);
         if (String(it.key).startsWith('summary:') && it.kind === 'summary') return;      /* its names are in the log line by line */
@@ -3204,6 +3238,17 @@ defCalc('industry_perf', {
         log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), it[1], it[2], it[0], ldoc));
       });
       safe('W alerts (evening)', () => {
+      /* the end of the day: which pullbacks held at the close; one pop-up with the names, the lines in the box */
+      safe('End of day', () => {
+        const keys = log.map((x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? x.slice(i + 3) : ''; })
+          .concat(((SRV && SRV.date === todayNY() && SRV.items) || []).map((it) => it.key));
+        const ev = eodList(ldoc, keys), kEod = 'eod:' + todayNY();
+        if (ev.length && !sent.has(kEod)) {
+          sent.add(kEod);
+          const held = ev.filter((x) => x.held).map((x) => (x.hc ? '★★★ ' : '') + x.sym), lost = ev.filter((x) => !x.held).map((x) => x.sym);
+          notify('End of day: ' + held.length + ' pullback' + (held.length === 1 ? '' : 's') + ' held', (held.length ? 'Held: ' + held.join(', ') : 'None held') + (lost.length ? ' · didn\'t hold: ' + lost.join(', ') : ''), null, 'summary:eod', 'End of day. ' + (held.length ? 'Held: ' + held.slice(0, 4).join(', ') : 'None held'));
+        }
+      });
       /* a W name that closed over its 200 SMA today (the first close over since it was under) */
       wNames().forEach((w, sym) => {
         const x = (BASE ? BASE.stocks : []).find((y) => y.symbol === sym); if (!x) return;
@@ -3258,8 +3303,14 @@ defCalc('industry_perf', {
       const keyOf = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? x.slice(i + 3) : ''; };
       const ldoc0 = st('launch').status === 'ok' ? st('launch').data : null;
       const haveT = new Set(log.map(vis)), haveK = new Set(log.map(keyOf).filter(Boolean));
+      const lrow0 = new Map(((ldoc0 && ldoc0.launches) || []).concat((ldoc0 && ldoc0.laggards) || []).map((r) => [r.symbol, r]));
       const srv = ((SRV && SRV.date === todayNY() && SRV.items) || []).filter((it) => !/^summary:/.test(it.key) && !haveK.has(it.key))
+        .map((it) => hcItem(it, lrow0.get(it.key.split(':')[0])))
         .map((it) => logLine(t12(it.time), it.title, it.msg, it.key, ldoc0, null)).filter((x) => !haveT.has(vis(x)));
+      /* the end of the day, after the evening scan: held / didn't hold, on every device */
+      const allKeys = log.map(keyOf).concat(((SRV && SRV.date === todayNY() && SRV.items) || []).map((it) => it.key));
+      const sc = ldoc0 && ldoc0.made_at ? new Date(ldoc0.made_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) : '4:30 PM';
+      eodList(ldoc0, allKeys).forEach((x) => { const [k, t, b] = eodLine(x); if (!haveK.has(k)) srv.push(logLine(sc, t, b, k, ldoc0, null)); });
       if (srv.length) {
         const mnOf = (x) => { const m = /^(\d+):(\d\d) (AM|PM)/.exec(vis(x)); return m ? (Number(m[1]) % 12 + (m[3] === 'PM' ? 12 : 0)) * 60 + Number(m[2]) : 0; };
         log = log.concat(srv).map((x, i) => [x, i]).sort((a, c) => (mnOf(c[0]) - mnOf(a[0])) || (a[1] - c[1])).map((p) => p[0]);
@@ -3430,6 +3481,7 @@ defCalc('industry_perf', {
         li.classList.remove('al-click');
         return li;
       }
+      if (!more && o.sym) { const st0 = strengthEl(strengthParts(o.sym)); if (st0) li.append(st0); }
       if (more) {                                                       /* the Pre-market box: already open */
         const links = h('div', 'al-links');
         li.querySelectorAll(':scope > .al-news').forEach((a) => links.append(a));
@@ -3479,7 +3531,8 @@ defCalc('industry_perf', {
     if (bx) {
       bx.replaceChildren();
       BOXES.forEach(([code, icon, name]) => {
-        const lines = mine.filter((x) => boxOf(x) === code).map(parse).sort(order);
+        /* a ticker search filters the boxes too, across every tab (the user, Nov 5 2026) */
+        const lines = (q ? shown : mine).filter((x) => boxOf(x) === code).map(parse).sort(order);
         const box = h('div', 'al-box' + (code === 'm' ? ' al-wide' : '')), hd = h('h3', '', icon + ' ' + name);
         hd.append(h('span', 'al-n', String(lines.length)));
         const list = h('ul', '');
