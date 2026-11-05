@@ -3366,10 +3366,10 @@ defCalc('industry_perf', {
   const CATL = [
     /* [id, name, group, what it is, the same column's keys in the tables (marks "already here"), (ticker) -> [sort value, cell]] */
     ['price', 'Price', 'Price', 'Latest price (live in the session)', ['price', 'px'], (s) => { const v = pxOf(s); return cNum(v, fPrice(v)); }],
-    ['chg_1d', '1D', 'Price', 'Change today (live in the session)', ['chg_1d', 'chg'], (s) => cPct((SK(s) || {}).chg_1d, true)],
-    ['chg_1w', '1W', 'Price', 'Change over 1 week', ['chg_1w'], (s) => cPct((SK(s) || {}).chg_1w, true)],
-    ['chg_1m', '1M', 'Price', 'Change over 1 month', ['chg_1m', 'perf_1m_pct'], (s) => cPct((SK(s) || {}).chg_1m, true)],
-    ['chg_3m', '3M', 'Price', 'Change over 3 months', ['chg_3m', 'perf_3m_pct'], (s) => cPct((SK(s) || {}).chg_3m, true)],
+    ['chg_1d', 'Change 1D', 'Price', 'Change today, % (live in the session; the 1D / Chg / Day columns)', ['chg_1d', 'chg'], (s) => cPct((SK(s) || {}).chg_1d, true)],
+    ['chg_1w', 'Change 1W', 'Price', 'Change over 1 week, %', ['chg_1w'], (s) => cPct((SK(s) || {}).chg_1w, true)],
+    ['chg_1m', 'Change 1M', 'Price', 'Change over 1 month, %', ['chg_1m', 'perf_1m_pct'], (s) => cPct((SK(s) || {}).chg_1m, true)],
+    ['chg_3m', 'Change 3M', 'Price', 'Change over 3 months, %', ['chg_3m', 'perf_3m_pct'], (s) => cPct((SK(s) || {}).chg_3m, true)],
     ['gap', 'Gap', 'Price', 'Today\'s open vs yesterday\'s close (from the live quotes)', ['gap', 'gap_pct'], (s) => cPct((SK(s) || {}).gap_pct, true)],
     ['off52h', 'Off 52W high', 'Price', 'How far under its 52-week high now', ['off_high', 'off_52w_high_pct'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.high_52w) : null; return cNum(v, p1(v, true), tone(v), r && r.high_52w ? '52-week high ' + fPrice(r.high_52w) : ''); }],
     ['over52l', 'Over 52W low', 'Price', 'How far over its 52-week low now', ['over_low52', 'below_low52'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.low_52w) : null; return cNum(v, p1(v, true), '', r && r.low_52w ? '52-week low ' + fPrice(r.low_52w) : ''); }],
@@ -3396,9 +3396,9 @@ defCalc('industry_perf', {
     ['stars', 'Stars (launch)', 'Rank & trend', '★★ / ★ / ⚠ skip for a launch today, from the last close', ['stars'], (s) => { const x = launchStars(s); return cNode(x ? x.n : null, starCell(x)); }],
     ['earn', 'Earnings date', 'Earnings', 'When it reports this week (the Earnings tab)', ['earn'], (s) => { const e = EK(s); if (!e) return cTxt(null); const t = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }) + ' ' + ({ bmo: 'AM', amc: 'PM', dmh: 'day' }[e.when] || '?'); return cell(e.date + (e.when === 'amc' ? 'b' : 'a'), t, 'nw', 'Reports ' + fDate(e.date) + ' ' + (ER_WHEN[e.when] || '')); }],
     ['er_look', 'ER look', 'Earnings', 'The Earnings tab\'s Read: Strong bullish / Bullish / Mixed / Somewhat bearish / Bearish', ['er_look', 'read'], (s) => { const e = EK(s); const td = h('td', 'nw', e && e.read ? '' : '—'); if (e && e.read) { const b = h('span', 'er-read r' + (ER_R[e.read] || 0), e.read); b.title = (e.points > 0 ? '+' : '') + e.points + ' points: ' + (e.why || ''); td.append(b); } return cNode(e && e.read ? (ER_R[e.read] || 0) * 100 + (num(e.points) || 0) : null, td); }],
-    ['er_move', 'Earnings move', 'Earnings', 'The move after the report (pre-market / after hours, then the reaction day)', ['move'], (s) => { const e = EK(s); const v = e ? num(e.react_move ?? e.move) : null; return cNum(v, p1(v, true), tone(v), e && e.react_kind ? e.react_kind : ''); }],
+    ['er_move', 'Earnings move', 'Earnings', 'The change after the report (pre-market / after hours, then the reaction day)', ['move'], (s) => { const e = EK(s); const v = e ? num(e.react_move ?? e.move) : null; return cNum(v, p1(v, true), tone(v), e && e.react_kind ? e.react_kind : ''); }],
     ['pm_grade', 'Pre-mkt grade', 'Pre-market', 'Today\'s 8:45 AM grade (A / B / C / F) of the news behind the gap', [], (s) => { const g = PGK(s); const td = h('td', 'nw', g ? '' : '—'); if (g) { const b = h('span', 'tgr-grade g' + g.grade, g.grade); b.title = ((g.direction || 'up') === 'down' ? 'Gap down: ' : '') + (g.catalyst ? g.catalyst + ': ' : '') + (g.reason || ''); td.append(b); } return cNode(g ? ({ A: 4, B: 3, C: 2, F: 1 }[g.grade] || 0) : null, td); }],
-    ['pm_chg', 'Pre-mkt chg', 'Pre-market', 'The latest pre-market price vs yesterday\'s close (7:00-9:29 AM ET)', ['pm_chg'], (s) => cPct((PMK(s) || [])[1], true)],
+    ['pm_chg', 'Pre-mkt chg', 'Pre-market', 'Pre-market change: the latest pre-market price vs yesterday\'s close (7:00-9:29 AM ET)', ['pm_chg'], (s) => cPct((PMK(s) || [])[1], true)],
     ['pm_gap', 'Pre-mkt gap', 'Pre-market', 'The first pre-market trade vs yesterday\'s close', ['pm_gap'], (s) => cPct((PMK(s) || [])[2], true)],
     ['pm_dvol', 'PM $ vol $M', 'Pre-market', 'Pre-market $ volume so far, millions', ['pm_dvol_m'], (s) => { const v = num((PMK(s) || [])[4]); return cNum(v, fDv(v)); }],
     ['l_date', 'Launched', 'Launches', 'Its launch day (stocks on Launches / Launch laggards)', ['date'], (s) => { const r = LK(s); return cell(r ? r.date : null, r ? fDate(r.date).replace(/, \d{4}$/, '') + (r._lag ? ' (laggard)' : '') : '—', 'nw'); }],
@@ -3591,7 +3591,7 @@ defCalc('industry_perf', {
           if (!q && c[2] !== grp) { grp = c[2]; res.append(h('div', 'col-grp', grp)); }
           const added = have.has('x:' + c[0]), here = !added && c[4].some((a) => def.includes(a) && !L.off.includes(a));
           const b = h('button', 'col-item' + (added ? ' on' : ''), c[1]); b.type = 'button'; b.title = c[3];
-          b.append(h('span', 'tgr-lbl', added ? ' added' : here ? ' (already in this table)' : (q ? ' · ' + c[2] : '')));
+          b.append(h('span', 'tgr-lbl', added ? ' added' : here ? ' (already in this table)' : (q ? ' · ' + (c[1].toLowerCase().includes(q) ? c[2] : c[3].split(/[(;]/)[0].trim()) : '')));
           b.addEventListener('click', (e) => { e.stopPropagation(); const L2 = layOf(t); if (!L2.order.includes('x:' + c[0])) { L2.order.splice(1, 0, 'x:' + c[0]); laySet(t, L2); } re(); });
           res.append(b);
         });
@@ -3775,7 +3775,7 @@ defCalc('industry_perf', {
       const rank = (n) => { n = n.toLowerCase(); return n === q ? 0 : n.startsWith(q) ? 1 : 2; };
       const mine = own().filter((o) => o.name.toLowerCase().includes(q)).sort((a, b) => rank(a.name) - rank(b.name));
       const ownIds = new Set(mine.filter((o) => o.add.id).map((o) => o.add.id));
-      const cat = CATL.filter((c) => !ownIds.has(c[0]) && (c[1] + ' ' + c[2] + ' ' + c[3]).toLowerCase().includes(q)).sort((a, b) => rank(a[1]) - rank(b[1])).map((c) => ({ name: c[1], add: { id: c[0], op: '>=', v: null }, kind: xfSpec(c[0]).k, grp: c[2], tip: c[3] }));
+      const cat = CATL.filter((c) => !ownIds.has(c[0]) && (c[1] + ' ' + c[2] + ' ' + c[3]).toLowerCase().includes(q)).sort((a, b) => rank(a[1]) - rank(b[1])).map((c) => ({ name: c[1], add: { id: c[0], op: '>=', v: null }, kind: xfSpec(c[0]).k, grp: c[1].toLowerCase().includes(q) ? c[2] : c[3].split(/[(;]/)[0].trim(), tip: c[3] }));
       const item = (o, tag) => {
         const i = L().findIndex((f) => same(f, o.add)), b = h('button', 'col-item' + (i >= 0 ? ' on' : ''), (i >= 0 ? '✓ ' : '') + o.name); b.type = 'button'; b.title = i >= 0 ? 'Added: click to remove it' : (o.tip || 'This table\'s column, as it shows');
         b.append(h('span', 'tgr-lbl', i >= 0 ? ' added · click to remove' : tag ? ' · ' + tag : ''));
