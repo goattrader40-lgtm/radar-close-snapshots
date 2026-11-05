@@ -47,6 +47,19 @@ alone.
 
 ## Alert boxes and the episodic pivot alert (TEST ONLY Nov 4 2026 night, branch test/alertboxes = test/trendtrig + this)
 
+- **🔔 Alerts tab (the user, Nov 4: "should we have a separate tab for alerts")**: the Desktop alerts card moved from
+  Launches / Watchlist to its own tab (#alerts): every tab's alerts, each line tagged Launches / Watchlist / Laggards
+  (the tab set when it fired), chips All / Launches / Watchlist / Laggards (kept in localStorage radar-alerts-filter),
+  the six boxes, the full log and search. Launches (Launch laggards) and the Watchlist show a bar on top with their
+  count and newest 3 (most stars first); a click opens the Alerts tab. A summary pop-up's click opens it too.
+- **Sounds (the user: "can it make a different sound for episodic pivot or box names")**: a trigger plays its box's tone
+  (TONES: EP 3 quick rising, launching 2 rising = the old chime, pattern 1 bell, pullback 2 falling, group 2 low,
+  heads-up a soft tick) and the voice (speechSynthesis) says box, stars, ticker spelled ("Launching now, two stars, K D").
+  One check's triggers go together (BELLS / announce): each kind's tone once (EP first, at most 3), then the first 3
+  read out (EPs first, then most stars, then box) + "and N more". Voice on/off button (radar-alerts-voice); Test plays
+  each box's tone with its name. Nov 4 test at 9:45: "Launching now, two stars, B R K R. ... K D. ... one star, A R L O.
+  And 52 more."; with CDW / OSCR as EPs: EP tone first, "Episodic pivot, C D W. Episodic pivot, O S C R. ..." 
+
 - **Boxes (the user's layout, Nov 4)**: the Desktop alerts card shows 6 boxes above the full log, with the tab's alerts by
   kind, set when each fires (the 2nd code after the tab's in the log line's invisible marker; BOX_OF / boxOfKey):
   🚀 Launching now = power, catalyst, A+/A launch, ★ launching, reversal, laggard; 🎯 Pattern breakouts = breakout, confirm,
