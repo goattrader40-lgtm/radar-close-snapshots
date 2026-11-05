@@ -2843,7 +2843,25 @@ defCalc('industry_perf', {
   /* one line of the alert log: a trigger starts with the bell (bold, a red dot in the log) */
   /* the day's log keeps the newest 400 lines (it kept 100: on a busy day the 9:35 alerts dropped off by the afternoon) */
   const LOG_MAX = 400;
-  const logLine = (when, title, body, key) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body;
+  /* the tab an alert is filed under, set when it fires by where the trigger comes from (the user, Nov 4 2026: "anything under
+     watchlist is trigger under watchlist, any in launch trigger in launch, if duplicate trigger in launches"):
+     Watchlist = the 3-SETUPS triggers (the 3-SETUPS trigger, and the live entries of a 3-SETUPS stock not on Launches /
+     Launch laggards); Launch laggards = the laggard launches and the stocks on that list; Launches = the rest: the power
+     days, catalyst gaps, A+/A launches, ★ launches, EARLY heads-ups of the launch watch list, whatever other list the stock
+     is on, and a stock on both Launches and 3-SETUPS. Before, the tab followed the stock's lists when you looked, with the
+     live Trend label: KD's 9:32 EARLY (2-POOL, Trend Reclaim once up 15%) sat on the Watchlist tab on Nov 4 */
+  const LAUNCH_KINDS = new Set(['power', 'catalyst', 'launch', 'stars', 'early', 'basebreak', 'reversal']);
+  const tabOfKey = (key, doc) => {
+    const [sym, kind] = String(key).split(':'), on = (k) => !!doc && (doc[k] || []).some((r) => r.symbol === sym);
+    if (kind === 'laggard') return 'G';
+    if (on('launches')) return 'L';
+    if (on('laggards')) return 'G';
+    if (kind === 's3') return 'W';
+    if (LAUNCH_KINDS.has(kind)) return 'L';
+    return on('setups3') ? 'W' : 'L';
+  };
+  const TABMARK = '\u2063';    /* an invisible separator: the tab's code (L / W / G) at the end of a log line */
+  const logLine = (when, title, body, key, doc) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body + TABMARK + tabOfKey(key, doc);
   function runAlerts() {
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
     const ldocA = st('launch').status === 'ok' ? st('launch').data : null;
@@ -2883,7 +2901,7 @@ defCalc('industry_perf', {
         addGm(key, title, hm());
         if (!/ MOVE: also /.test(body)) body += gmTag(key);
         notify(title, body, tvs, key);
-        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key));
+        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key, ldocA));
       });
       /* the job's own alerts (it checks the big gap-ups every minute): a pop-up for the last 10 minutes' ones. In a flood
          the job groups the heads-ups into one alert that names them; each still comes with its full text: a line in the
@@ -2902,7 +2920,7 @@ defCalc('industry_perf', {
         const [H, M] = it.time.split(':').map(Number);
         if (nm - (H * 60 + M) <= 10 && !it.grouped) notify(it.title, it.msg, it.tv, it.key);
         if (String(it.key).startsWith('summary:') && it.kind === 'summary') return;      /* its names are in the log line by line */
-        log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key));
+        log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key, ldocA));
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX)); saveDay('gm', gm);
     }
@@ -2914,7 +2932,7 @@ defCalc('industry_perf', {
       const up = pick('up'), dn = pick('down');
       const body = (up ? 'Gap-ups: ' + up : 'No A or B gap-up') + (dn ? ' · gap-downs: ' + dn : '') + ' · ' + pmRows.length + ' graded';
       try { const n = new Notification('Pre-market grades', { body, tag: 'pm' }); n.onclick = () => { window.focus(); location.hash = '#premarket'; n.close(); }; } catch (e) { /* blocked */ }
-      log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · Pre-market grades — ' + body);
+      log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · Pre-market grades — ' + body + TABMARK + 'L');
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX));
     }
     /* after the close: the evening scan's heads-ups for tomorrow (tight under a buy point, retest held) */
@@ -2930,7 +2948,7 @@ defCalc('industry_perf', {
               ', now ' + fPrice(r.price) + ': watch for the breakout' + tail] : null;
         if (!it || sent.has(it[0])) return;
         sent.add(it[0]); notify(it[1], it[2], r.tv, it[0]);
-        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), it[1], it[2], it[0]));
+        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), it[1], it[2], it[0], ldoc));
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX));
     }
@@ -2974,7 +2992,10 @@ defCalc('industry_perf', {
     const wlSet = new Set(((ldoc && ldoc.setups3) || []).map((r) => r.symbol).concat(sdoc ? trendSrc(sdoc).map((r) => r.symbol) : []));
     const isWl = (x) => { const sym = tabSym(x); return wlSet.has(sym) && !onLn.has(sym) && !isLag(x); };
     $('#ln-alert-card h2').textContent = LAG ? 'Desktop alerts · laggards' : WL ? 'Desktop alerts · watchlist' : 'Desktop alerts';
-    const tabOf = (x) => (isGrp(x) ? '' : isWl(x) ? 'Watchlist' : isLag(x) ? 'Launch laggards' : 'Launches');
+    /* the tab set when the alert fired (tabOfKey); a line logged before Nov 5 2026 has none: the lists as before */
+    const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards' };
+    const marked = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? TABNAME[x.slice(i + 1)] : null; };
+    const tabOf = (x) => (isGrp(x) ? '' : marked(x) || (isWl(x) ? 'Watchlist' : isLag(x) ? 'Launch laggards' : 'Launches'));
     const here = WL ? 'Watchlist' : LAG ? 'Launch laggards' : 'Launches';
     const mine = log.filter((x) => isGrp(x) || tabOf(x) === here);
     /* a ticker search looks through every tab's alerts, and names the tab a line is filed under (KD, Nov 4 2026: its 9:32
@@ -2985,7 +3006,8 @@ defCalc('industry_perf', {
     /* each line opens its stock's chart; a trigger (the bell) is bold with a red dot */
     shown.forEach((x) => {
       const trig = x.startsWith('🔔 '), sym = isGrp(x) ? null : symOfLine(x) || null, tb = tabOf(x);
-      const li = h('li', (trig ? 'al-trig' : '') + (sym ? ' al-click' : ''), trig ? x.slice(3) : x);
+      const txt = x.lastIndexOf(TABMARK) >= 0 ? x.slice(0, x.lastIndexOf(TABMARK)) : x;
+      const li = h('li', (trig ? 'al-trig' : '') + (sym ? ' al-click' : ''), trig ? txt.slice(3) : txt);
       if (q && tb && tb !== here) li.append(h('span', 'tgr-lbl', ' · on the ' + tb + ' tab'));
       if (sym) { li.title = 'Open ' + sym + ' on TradingView'; li.addEventListener('click', () => openTV(tv(sym))); }
       ul.append(li);

@@ -45,7 +45,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## KD "missing" from the desktop alert log: the log, not the alert (TEST ONLY Nov 4 2026 night, branch test/livelog)
+## KD "missing" from the desktop alert log: the log, not the alert (LIVE Nov 4 2026 ~7:30 PM, the user's "go live"; branch test/livelog)
 
 - **What happened** (reproduced in Chromium at 9:45 AM Nov 4 on the Nov 3 lists and Trend labels, alerts on, empty log):
   the desktop **did** fire `★★ KD CATALYST GAP` and filed it on the Launches log; the job's 9:32 `KD EARLY` went to the
@@ -63,9 +63,16 @@ alone.
   keeps 400 lines. radar/livelog.py + radar/day.py: the **morning record** live_history.json on radar-data (9:30-11:00,
   each watch-list stock gapping or up 5%+: time, price, chg, gap, volume, rel vol, the Alpaca correction in effect,
   the alerts the rules fire then; missing quotes), restored from radar-data after a job handover.
-- **Open (the user's call)**: launch-type alerts (power day, catalyst gap, A+/A launch, ★ launches, EARLY, 2nd trigger) of
-  a TREND-list stock go to the Watchlist log under the Nov 3 rule, and the TREND list moves with the live price, so a big
-  gap-up can file there mid-morning. Proposal: those always on Launches; the Watchlist log keeps 3-SETUPS triggers.
+- **Which tab's log (the user, Nov 4 2026: "anything under watchlist is trigger under watchlist, any in launch trigger in
+  launch, if duplicate trigger in launches")**: set when the alert fires (tabOfKey in docs/index.html, an invisible code at
+  the end of the log line): Watchlist = the 3-SETUPS trigger and the live entries of a 3-SETUPS stock not on Launches /
+  Launch laggards; Launch laggards = laggard launches and that list's stocks; Launches = the rest (power day, catalyst
+  gap, A+/A launch, ★ launches, EARLY, 2nd trigger, reversal of any watch-list stock, whatever other list it is on; a
+  stock on Launches and 3-SETUPS). Before, the tab followed the stock's lists when you looked, with the live Trend label
+  (KD's EARLY sat on Watchlist). Browser test at 9:45 Nov 4: KD's EARLY and ★★ catalyst on Launches; Watchlist = 9
+  3-SETUPS breakouts (NAVN, KSS, XMTR, KYMR, ARLO ...); group moves on every tab. Lines logged before keep the old filing.
+- **Open (asked Nov 4 night)**: many triggers at once (9:35-9:45: 60+ lines in the first checks) bury the starred /
+  A+-A ones among C breakouts: a priority order for the pop-ups and a "top" view of the log (proposal in the session).
 
 ## Phone alerts crashed after 9:34 on Nov 4: fixed (LIVE Nov 4 2026 evening, the user's "go live"; test/alertfix)
 
