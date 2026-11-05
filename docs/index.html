@@ -3773,9 +3773,9 @@ defCalc('industry_perf', {
     th.append(g);
   };
   const xBtn = (t, th) => {
-    const x = h('button', 'col-x', '✕'); x.type = 'button'; x.title = 'Delete this column (bring it back with ⚙ in the first column\'s header)';
-    x.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); delCol(t, th._ck); });
-    th.append(x); rsHandle(t, th); th.draggable = true;
+    /* no ✕ on the header any more (the user, Nov 5 2026: on narrow columns it sat on the label and closed columns by
+       mistake): a column is deleted from the ⚙ Columns list, where each has its own row */
+    rsHandle(t, th); th.draggable = true;
     th.addEventListener('dragstart', (e) => { dragK = th._ck; dragT = t; th.classList.add('col-drag'); try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', th._ck); } catch (e2) { /* old browser */ } });
     th.addEventListener('dragend', () => { dragK = null; dragT = null; t.querySelectorAll('th').forEach((x2) => x2.classList.remove('col-drag', 'col-drop-l', 'col-drop-r')); });
   };
@@ -3802,7 +3802,7 @@ defCalc('industry_perf', {
     if (!t._bar) {
       const box = t.closest('.tgr-scroll') || t.parentElement || t;
       const bar = h('div', 'col-bar'), b = h('button', 'col-open', '⚙ Columns: move · resize · delete · + add');
-      b.type = 'button'; b.title = 'Search and add a column, bring back a deleted one, reset the table. In the table: drag a header to move it, drag its right edge to resize it, ✕ on a header to delete it';
+      b.type = 'button'; b.title = 'Search and add a column, delete one (✕ in the list), bring back a deleted one, reset the table. In the table: drag a header to move it, drag its right edge to resize it';
       b.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); colMenu(t, b); });
       bar.append(b); box.before(bar); t._bar = bar;
     }
@@ -3869,7 +3869,7 @@ defCalc('industry_perf', {
     closeMenu();
     const m = h('div', 'col-menu'); m._t = t; menuEl = m;
     const L = layOf(t), stock = isStock(t), def = DEFK[t.id] || [];
-    const head = h('div', 'col-mh'); head.append(h('strong', '', 'Columns'), h('span', 'tgr-lbl', 'drag a header to move it, its right edge to resize, ✕ to delete'));
+    const head = h('div', 'col-mh'); head.append(h('strong', '', 'Columns'), h('span', 'tgr-lbl', 'drag a header to move it, its right edge to resize; ✕ below deletes'));
     const cx = h('button', 'col-mb', '✕'); cx.type = 'button'; cx.title = 'Close'; cx.addEventListener('click', closeMenu); head.append(cx); m.append(head);
     const re = () => colMenu(t, anchor);
     if (stock) {
