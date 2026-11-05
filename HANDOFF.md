@@ -45,7 +45,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Every device sees the day; power days in the EP box; EP in the job (TEST ONLY Nov 5 2026, branch test/everydevice)
+## Every device sees the day; power days in the EP box; EP in the job (LIVE Nov 5 2026 ~2 PM, the user's "do it"; branch test/everydevice)
 
 - The user's phone (alerts off, notifications blocked) showed empty boxes while the job had sent 107 alerts: the boxes were
   filled only by a browser with alerts on. Now drawAlog() merges alerts.json (SRV, the job's record) with the page's own
@@ -56,6 +56,9 @@ alone.
   laggard. radar/alerts.py find(): ':ep' (4x+, gap 6%+, over the 1-month high and the 200 SMA), after the power day; main()
   skips a later launch / catalyst of an EP stock and an EP after a power day. Nov 5 9:35 replay: CHYM EP. Regress: same.
 - Still page-only (not in the job): TREND triggers, W crossing the 200 (need the TREND list / W names in the job).
+- The user (Nov 5): "power day has to be above the 200 SMA too, so the only difference is the gap %": it already is (the
+  job and the page skip a stock at or under its 200 before the power-day test). The power day also needs +10% on the day;
+  asked whether to keep that (then the gap and the day's gain differ) or drop it (only the gap: 8%+ vs 6%+).
 
 ## Alerts readable: key-fact bullets, click to open (LIVE Nov 5 2026 afternoon, the user's "go live"; branch test/bullets)
 
