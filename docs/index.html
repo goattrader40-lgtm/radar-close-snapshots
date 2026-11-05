@@ -289,6 +289,29 @@
   .tgr-alog li.al-click:hover { text-decoration: underline; }
   .tgr-alog li.al-trig { font-weight: 600; }
   .tgr-alog li.al-trig::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-fg-danger, #d1242f); margin-right: 6px; vertical-align: middle; }
+  /* the alert boxes (Nov 4 2026): 3 across, 2 on a narrow screen, 1 on a phone */
+  .al-boxes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 10px; }
+  @media (max-width: 900px) { .al-boxes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .al-boxes { grid-template-columns: minmax(0, 1fr); } }
+  .al-box { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 6px 8px; min-width: 0; background: var(--color-panel); }
+  .al-box h3 { margin: 0 0 4px; font-size: var(--cds-font-size-caption); font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
+  .al-box h3 .al-n { color: var(--color-fg-muted); font-weight: 400; }
+  .al-box ul { margin: 0; padding: 0; list-style: none; font-size: var(--cds-font-size-caption); max-height: 9.5rem; overflow: auto; }
+  .al-box li { padding: 2px 0; border-top: 1px solid var(--color-border-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .al-box li:first-child { border-top: 0; }
+  .al-box li.al-star { font-weight: 600; }
+  .al-box li.al-click { cursor: pointer; }
+  .al-box li.al-click:hover { text-decoration: underline; }
+  .al-box li.al-trig::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--color-fg-danger, #d1242f); margin-right: 5px; vertical-align: middle; }
+  .al-box li.al-none { color: var(--color-fg-muted); }
+  .al-bar { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 6px 10px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-panel); font-size: var(--cds-font-size-caption); cursor: pointer; }
+  .al-bar:hover { border-color: var(--color-fg-muted); }
+  .al-bar b { font-weight: 600; }
+  .al-bar .al-go { margin-left: auto; color: var(--color-fg-muted); }
+  .al-bar .al-star { font-weight: 600; }
+  .al-bar .al-last { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .al-src { display: inline-block; margin-right: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.8em; font-weight: 400; line-height: 1.45; vertical-align: 1px; }
+  .al-filter { margin: 6px 0 0; }
   .tgr-auto { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; }
   .tgr-gdot { display: inline-block; width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-ok); margin-left: 5px; vertical-align: middle; }
   .tgr-pill { appearance: none; border: 1px solid var(--color-fg); background: var(--color-fg); color: var(--color-bg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
@@ -324,6 +347,7 @@
     <button class="tgr-tab" id="tab-watchlist" role="tab" aria-selected="false" aria-controls="watchlist" data-tab="watchlist">Watchlist</button>
     <button class="tgr-tab" id="tab-launches" role="tab" aria-selected="false" aria-controls="launches" data-tab="launches">Launches</button>
     <button class="tgr-tab" id="tab-laggards" role="tab" aria-selected="false" aria-controls="launches" data-tab="laggards">Launch laggards</button>
+    <button class="tgr-tab" id="tab-alerts" role="tab" aria-selected="false" aria-controls="alerts" data-tab="alerts">🔔 Alerts</button>
     <button class="tgr-tab" id="tab-earnings" role="tab" aria-selected="false" aria-controls="earnings" data-tab="earnings">Earnings</button>
   </nav>
 
@@ -680,6 +704,7 @@
 
   <!-- ───────── Tab 4: watchlist (the setup scanner's lists) ───────── -->
   <section class="tgr-page" id="watchlist" role="tabpanel" aria-labelledby="tab-watchlist" hidden>
+    <div class="al-bar" id="wl-al-bar" role="button" tabindex="0" hidden></div>
     <div class="tgr-card" id="wl-card">
       <div class="tgr-cardhead">
         <h2 id="wl-h">Watchlist</h2>
@@ -758,15 +783,7 @@
 
   <!-- ───────── Tab 5: launches (the first day of a new trend, its theme, and the bases after it) ───────── -->
   <section class="tgr-page" id="launches" role="tabpanel" aria-labelledby="tab-launches" hidden>
-    <div class="tgr-card" id="ln-alert-card">
-      <div class="tgr-cardhead">
-        <h2>Desktop alerts</h2>
-        <span class="tgr-ctl"><input class="tgr-search" id="ln-alert-search" type="search" placeholder="Find a ticker" aria-label="Show only this ticker's alerts"> <button class="tgr-lite" id="ln-alert-btn" type="button">Turn on</button> <button class="tgr-lite" id="ln-alert-test" type="button">Test</button></span>
-      </div>
-      <details class="tgr-legend tgr-more" data-key="alerts"><summary>What pops up, and when</summary><p class="tgr-note" id="ln-alert-more"></p></details>
-      <p class="tgr-note" id="ln-alert-note"></p>
-      <ul class="tgr-alog" id="ln-alert-log"></ul>
-    </div>
+    <div class="al-bar" id="ln-al-bar" role="button" tabindex="0" hidden></div>
     <div class="tgr-card" id="ln-legend-card">
       <details class="tgr-legend" id="ln-legend">
         <summary>How the grades work (Launching today, Launches, breakout alerts)</summary>
@@ -948,6 +965,20 @@
   </section>
 
   <!-- ───────── Earnings: this week's reports for the stocks that pass your rules (radar/earnings.py, no Claude) ───────── -->
+  <section class="tgr-page" id="alerts" role="tabpanel" aria-labelledby="tab-alerts" hidden>
+    <div class="tgr-card" id="ln-alert-card">
+      <div class="tgr-cardhead">
+        <h2>Desktop alerts</h2>
+        <span class="tgr-ctl"><input class="tgr-search" id="ln-alert-search" type="search" placeholder="Find a ticker" aria-label="Show only this ticker's alerts"> <button class="tgr-lite" id="ln-alert-btn" type="button">Turn on</button> <button class="tgr-lite" id="ln-alert-test" type="button">Test</button> <button class="tgr-lite" id="ln-alert-voice" type="button" title="Each box has its own sound; the voice says the box and the ticker">Voice: on</button></span>
+      </div>
+      <details class="tgr-legend tgr-more" data-key="alerts"><summary>What pops up, and when</summary><p class="tgr-note" id="ln-alert-more"></p></details>
+      <p class="tgr-note" id="ln-alert-note"></p>
+      <div class="al-filter"><span class="tgr-seg" id="al-filter" role="group" aria-label="Which tab's alerts"><button data-v="All" aria-pressed="true">All</button><button data-v="Launches" aria-pressed="false">Launches</button><button data-v="Watchlist" aria-pressed="false">Watchlist</button><button data-v="Launch laggards" aria-pressed="false">Laggards</button></span></div>
+      <div class="al-boxes" id="ln-alert-boxes"></div>
+      <ul class="tgr-alog" id="ln-alert-log"></ul>
+    </div>
+  </section>
+
   <section class="tgr-page" id="earnings" role="tabpanel" aria-labelledby="tab-earnings" hidden>
     <div class="tgr-card" id="er-week-card">
       <div class="tgr-cardhead">
@@ -1272,6 +1303,7 @@ defCalc('industry_perf', {
     $('#watchlist').hidden = S.tab !== 'watchlist';
     $('#launches').hidden = S.tab !== 'launches' && S.tab !== 'laggards';     /* Launch laggards: the same page, its own list */
     $('#earnings').hidden = S.tab !== 'earnings';
+    $('#alerts').hidden = S.tab !== 'alerts';
   };
   document.querySelectorAll('.tgr-seg[data-k]').forEach((seg) => seg.addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
@@ -2348,7 +2380,10 @@ defCalc('industry_perf', {
     if (vol3 && bo && (gap3 || big)) return 'A';
     return (+vol3) + (+bo) + (+gap3) + (+big) >= 2 ? 'B' : 'C';
   };
-  const lnLive = (doc) => {
+  /* an episodic pivot (the user, Nov 4 2026): a volume pace of 4x+, a 6%+ gap and over the 1-month high (the previous 20
+     sessions' highest high, the power day's) and the 200 SMA; every power day (8%+ gap, +10%) is one */
+  const EPIV = { rv: 4, gap: 6 };
+  const lnLive = (doc, withEp) => {
     if (!doc || !doc.watch || !LIVE_ON || !LIVE || !LIVE.rows) return [];
     const R = doc.rules, out = [];
     const [yy, mm, dd] = doc.date.split('-').map(Number);
@@ -2364,7 +2399,8 @@ defCalc('industry_perf', {
       /* 28-50% over the 200 SMA the day before: only a power day counts (volume 4x+, an 8%+ gap, up 10%+) */
       const ext = s200 ? (close0 / s200 - 1) * 100 : 0;
       const powerNow = rv >= (R.power_rv || 4) && gap !== null && gap >= (R.power_gap || 8) && chg >= (R.power_chg || 10) && price > pivot;   /* over its 1-month high */
-      if (ext > R.max_ext200 && !powerNow) return;
+      const epNow = rv >= EPIV.rv && gap !== null && gap >= EPIV.gap && price > pivot && !!s200 && price > s200;
+      if (ext > R.max_ext200 && !powerNow && !(withEp && epNow)) return;
       /* a catalyst gap (episodic pivot): a neglected stock, under its 50 EMA or 200 SMA at the last close, gaps 5%+ on
          earnings or news with volume pace 3x+ and trades above both (HRI, Oct 27 2026) */
       const s50 = ema50;
@@ -2379,11 +2415,11 @@ defCalc('industry_perf', {
       const low52 = w[14];
       const reversal = !!R.reversal_launch && gap !== null && gap < 0 && chg >= (R.rev_chg || 8) && rv >= (R.rev_rv || 2) && price > pivot && price > s200
         && (!low52 || price >= low52 * (1 + R.min_above_low52 / 100));
-      if (!reversal && !follower && !(shape && rv >= 1) && (chg < R.min_chg || !(rv >= R.min_rv) || !(price > s200) || (gap !== null && gap <= 0))) return;
+      if (!(withEp && epNow) && !reversal && !follower && !(shape && rv >= 1) && (chg < R.min_chg || !(rv >= R.min_rv) || !(price > s200) || (gap !== null && gap <= 0))) return;
       /* a delayed launch (a high-volume gap that faded and held its base): credit that day's volume and gap */
       const bo = price > pivot || !!(mem && price > mem[1]);
       const grade = mem ? lnGrade(Math.max(rv, R.rv_big), bo, Math.max(gap ?? 0, R.gap_big), chg, R, false) : lnGrade(rv, bo, gap, chg, R, close0 < s200);
-      out.push({ symbol: sym, tv_symbol: tvs, grade, chg, gap, rv, price, earnings: ernDay, pivot: mem && !(price > pivot) ? mem[1] : pivot, bo, group, gstat, corr, days, mem, follows: follower && chg < R.min_chg ? leaders : null, h52: h52 ? (price / h52) * 100 : null, ep, shape, under, over: !!s50 && price > s50 && price > s200, reversal });
+      out.push({ symbol: sym, tv_symbol: tvs, grade, chg, gap, rv, price, earnings: ernDay, pivot: mem && !(price > pivot) ? mem[1] : pivot, bo, group, gstat, corr, days, mem, follows: follower && chg < R.min_chg ? leaders : null, h52: h52 ? (price / h52) * 100 : null, ep, shape, under, over: !!s50 && price > s50 && price > s200, reversal, epiv: epNow });
     });
     return out;
   };
@@ -2718,7 +2754,7 @@ defCalc('industry_perf', {
     const f1 = (x) => (x > 0 ? '+' : '') + x.toFixed(1) + '%';
     lagLive(doc).forEach((r) => out.push([r.symbol + ':laggard', r.symbol + ' ' + r.grade + ' LAGGARD launch on ' + (r.earnings ? 'earnings' : 'news (' + r.news + ')'),
       f1(r.chg) + (r.gap !== null ? ' · gap ' + f1(r.gap) : '') + ' · vol ' + r.rv.toFixed(1) + '× · ' + fPrice(r.price) + ', ' + f1(r.vs200) + ' vs the 200 SMA · base high ' + fPrice(r.pivot) + (r.bo ? ' cleared' : ' not cleared') + ' · moves to Launches after 5 closes over the 200 SMA', r.tv_symbol]));
-    lnLive(doc).forEach((r) => {
+    lnLive(doc, true).forEach((r) => {
       const facts = f1(r.chg) + (r.gap !== null ? ' · gap ' + f1(r.gap) : '') + ' · vol ' + r.rv.toFixed(1) + '× for the time of day · ' + fPrice(r.price);
       const power = r.rv >= (R.power_rv || 4) && r.gap !== null && r.gap >= (R.power_gap || 8) && r.chg >= (R.power_chg || 10) && r.bo;
       const crossed = r.under.length && r.over ? ' · was under its ' + r.under.join(' & ') + ', now above the 50 EMA & 200 SMA' : '';
@@ -2732,6 +2768,8 @@ defCalc('industry_perf', {
       const sx = launchStars(r.symbol), sn = sx ? sx.n : 0;
       const pre = sn >= 1 ? STAR_TXT[sn] + ' ' : '', post = sn >= 1 ? ' · ' + STAR_TXT[sn] + ' ' + sx.short + ': buy over the 5-min opening range high, stop its low' : sn === -1 ? ' · ⚠ no Trend label yesterday: skip (tested -0.05R)' : '';
       if (power) out.push([r.symbol + ':power', pre + r.symbol + ' POWER DAY' + (r.earnings ? ' on earnings' : ''), facts + crossed + neglect + ' · ' + (r.group || 'no group') + post, r.tv_symbol]);
+      else if (r.epiv) out.push([r.symbol + ':ep', pre + r.symbol + ' EPISODIC PIVOT' + (r.earnings ? ' on earnings' : ''),
+        facts + ' · over its 1-month high ' + fPrice(r.pivot) + crossed + neglect + ' · grade so far ' + r.grade + ' · ' + (r.group || 'no group') + post, r.tv_symbol]);
       else {
         if (r.ep) out.push([r.symbol + ':catalyst', pre + r.symbol + ' CATALYST GAP: ' + (r.earnings ? 'earnings' : 'news? (no earnings)') + ', over its 50 EMA & 200 SMA',
           facts + crossed + neglect + ' · base high ' + fPrice(r.pivot) + (r.bo ? ' cleared (grade so far ' + r.grade + ')' : ' not cleared yet: 2nd alert when it is') + ' · ' + (r.group || 'no group') + post, r.tv_symbol]);
@@ -2800,34 +2838,81 @@ defCalc('industry_perf', {
       if (q[0] > r.buy_point) out.push([r.symbol + ':s3', r.symbol + ' 3-SETUPS ' + r.section + ': ' + r.setup + ' trigger',
         fPrice(q[0]) + ' over ' + fPrice(r.buy_point) + ' · ' + f1(q[1]) + ' · vol ' + q[4].toFixed(1) + '× for the time of day', r.tv]);
     });
+    /* TREND (Watchlist tab, the user, Nov 4 2026: of the 5 Watchlist lists only 3-SETUPS and TREND trigger; Launches has its
+       own): a stock on the TREND list as it stood at the last close (its 2-POOL / 1-UPDAY / 1-EP/GAP names with Trend Up,
+       Turn up, Reclaim or Resting; its Launches and 3-SETUPS names trigger from there), so the list holds still in the day, trading over its buy point, the close under it; the same trigger as 3-SETUPS
+       (over the 200 SMA, 30%+ over the 52-week low: runAlerts). A stock on Launches, Launch laggards or 3-SETUPS alerts from
+       there. Nov 4 2026: PCOR, XNCR, RELY, LW, BRZE (PCOR and RELY also launched: those stay on Launches) */
+    const sdocT = st('setups').status === 'ok' ? st('setups').data : null, s3sym = new Set((doc.setups3 || []).map((r) => r.symbol));
+    const fol3 = new Set((doc.launches || []).concat(doc.laggards || []).map((r) => r.symbol)), seenT = new Set();
+    ['2-POOL', '1-UPDAY', '1-EP/GAP'].forEach((n) => ((sdocT && sdocT.lists && sdocT.lists[n]) || []).forEach((r) => {
+      if (seenT.has(r.symbol) || fol3.has(r.symbol) || s3sym.has(r.symbol)) return;
+      seenT.add(r.symbol);
+      const t = trendLast(r.symbol); if (!t || !TREND_ON.has(t.st)) return;
+      if (!r.buy_point || !(r.close < r.buy_point)) return;
+      const q = LIVE.rows[r.symbol]; if (!q || q[4] === null || q[4] === undefined || !(q[0] > r.buy_point)) return;
+      out.push([r.symbol + ':trend', r.symbol + ' TREND trigger' + (r.pattern ? ' (' + r.pattern + ')' : r.section ? ' (' + r.section + ')' : ''),
+        fPrice(q[0]) + ' over ' + fPrice(r.buy_point) + ' · ' + f1(q[1]) + ' · vol ' + q[4].toFixed(1) + '× for the time of day · Trend ' + t.st + ' ' + t.d + 'd at the last close' + (r.why ? ' · ' + r.why : ''), r.tv || r.symbol]);
+    }));
     return out;
   };
   /* the buys (the user, Nov 3 2026: "so it gets my attention"); the rest are heads-ups. Same list as radar/alerts.py
      TRIGGERS: the 21 EMA retest alone is a heads-up ("not a strong sign by itself"), with the breakout level under it
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
-    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'ema21bl']);
+    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl']);
   const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
   /* a few words per kind for the group-move lines (radar/alerts.py KIND_WORDS) */
   const KIND_WORDS = { retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
     breakout: 'breakout', touch: 'touched the buy point', confirm: 'breakout confirmed', power: 'power day', catalyst: 'catalyst gap', basebreak: 'base high cleared',
     launch: 'launch', reversal: 'reversal launch', laggard: 'laggard launch', reclaimbo: 'back over its breakout level', reclaimbo2: 'breakout undercut & reclaim',
     ema50back: 'back over the 50 EMA', ema50: '50 EMA undercut & reclaim', push: 'push', pop: 'pop', gapbase: 'gap out of base', gob1: 'gap out of base',
-    gob5: 'gap out of base', s3: '3-SETUPS trigger', early: 'early gap', near: 'gapping to the buy point' };
+    gob5: 'gap out of base', s3: '3-SETUPS trigger', trend: 'TREND trigger', ep: 'episodic pivot', early: 'early gap', near: 'gapping to the buy point' };
   const kindWords = (key, title) => { const k = String(key).split(':')[1] || ''; return k === 'ema21' && /UNDERCUT/.test(title || '') ? '21 EMA undercut & reclaim' : (KIND_WORDS[k] || k); };
-  /* a short two-tone chime for a trigger (the browser lets the page play it once you clicked on it today) */
+  /* each box its own sound for a trigger (the user, Nov 4 2026), and a voice that says the box and the ticker ("Episodic
+     pivot, C D W"); the browser plays them once you clicked on the page after opening it.
+     ⚡ EP: three quick rising notes · 🚀 Launching now: two rising (the old chime) · 🎯 Pattern breakout: one bell ·
+     ↩️ Pullback entry: two falling · 👥 Group move: two low · 👀 Heads-up: one soft high tick */
   let actx = null;
-  const chime = () => {
+  const TONES = { e: [[660, 0], [990, 0.11], [1480, 0.22]], l: [[880, 0], [1320, 0.18]], p: [[1047, 0, 0.6]], b: [[784, 0], [587, 0.2]],
+    g: [[440, 0], [440, 0.22]], h: [[1568, 0, 0.2, 0.08]] };
+  const BOX_SAY = { l: 'Launching now', p: 'Pattern breakout', e: 'Episodic pivot', b: 'Pullback entry', h: 'Heads up', g: 'Group move' };
+  const BOX_RANK = { e: 0, l: 1, p: 2, b: 3, g: 4, h: 5 };
+  const chime = (box) => {
     try {
       actx = actx || new (window.AudioContext || window.webkitAudioContext)();
-      [[880, 0], [1320, 0.18]].forEach(([f, t]) => {
-        const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + t;
+      if (actx.state === 'suspended') actx.resume();
+      (TONES[box] || TONES.l).forEach(([f, t, len, vol]) => {
+        const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + t, d = len || 0.35;
         o.frequency.value = f; o.connect(g); g.connect(actx.destination);
-        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.25, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.35);
-        o.start(t0); o.stop(t0 + 0.4);
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol || 0.25, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
+        o.start(t0); o.stop(t0 + d + 0.05);
       });
     } catch (e) { /* no sound */ }
   };
+  let VOICE = true;
+  try { VOICE = localStorage.getItem('radar-alerts-voice') !== '0'; } catch (e) { VOICE = true; }
+  const say = (txt) => { if (!VOICE || !window.speechSynthesis) return; try { const u = new SpeechSynthesisUtterance(txt); u.rate = 1.05; window.speechSynthesis.speak(u); } catch (e) { /* no voice */ } };
+  const STARS_SAY = { 3: 'three stars', 2: 'two stars', 1: 'one star' };
+  /* the words for one alert: the box, the stars, the ticker spelled out (KD -> "K D"); a group move: its group */
+  const sayOf = (b) => {
+    if (b.box === 'g') { const m = / GROUP MOVE: ([^(]+)/.exec(b.title); return 'Group move' + (m ? ', ' + m[1].trim().replace(/&/g, 'and') : ''); }
+    const n = (/^★+/.exec(b.title) || [''])[0].length;
+    return BOX_SAY[b.box] + (n ? ', ' + STARS_SAY[Math.min(n, 3)] : '') + (b.sym ? ', ' + b.sym.split('').join(' ') : '');
+  };
+  /* the triggers of one check go together: each kind's sound once (EP first, then launching now, pattern, pullback, group;
+     at most 3), then the voice for the first three alerts (the EPs first, then the most stars, then by box) and "and N more" */
+  let BELLS = null;
+  const announce = (list) => {
+    if (!list || !list.length) return;
+    const nst = (b) => (/^★+/.exec(b.title) || [''])[0].length;
+    list.sort((a, c) => ((a.box === 'e' ? 0 : 1) - (c.box === 'e' ? 0 : 1)) || (nst(c) - nst(a)) || (BOX_RANK[a.box] - BOX_RANK[c.box]));
+    const kinds = [...new Set(list.map((b) => b.box))].sort((a, c) => BOX_RANK[a] - BOX_RANK[c]).slice(0, 3);
+    kinds.forEach((k, i) => setTimeout(() => chime(k), i * 800));
+    const words = list.slice(0, 3).map(sayOf).join('. ') + (list.length > 3 ? '. And ' + (list.length - 3) + ' more.' : '.');
+    setTimeout(() => say(words), 700 + 800 * (kinds.length - 1));
+  };
+  document.addEventListener('click', () => { if (actx && actx.state === 'suspended') actx.resume(); });
   /* the tab's title flashes the trigger's ticker until you look at the page */
   const baseTitle = document.title;
   let flashT = null, flashSyms = [];
@@ -2839,7 +2924,7 @@ defCalc('industry_perf', {
     flashT = setInterval(() => { on = !on; document.title = on ? '🔔 ' + flashSyms.join(' ') : baseTitle; }, 900);
   };
   document.addEventListener('visibilitychange', () => { if (!document.hidden && flashT) { clearInterval(flashT); flashT = null; flashSyms = []; document.title = baseTitle; } });
-  const showLog = () => { window.focus(); const c = document.getElementById('ln-alert-card'); if (c) c.scrollIntoView({ block: 'center' }); };
+  const showLog = () => { window.focus(); showTab('alerts'); };
   const notify = (title, body, tvs, key) => {
     const trig = isTrigger(key, title), sum = String(key).startsWith('summary:');
     try {
@@ -2847,7 +2932,11 @@ defCalc('industry_perf', {
       const n = new Notification(trig ? '🔔 ' + title : title, { body, tag: key, requireInteraction: trig });
       n.onclick = () => { if (sum || !tvs) showLog(); else openTV(tv(tvs)); n.close(); };
     } catch (e) { /* blocked */ }
-    if (trig) { chime(); flash(String(key).split(':')[0]); }
+    if (trig) {
+      const b = { box: boxOfKey(key, title), title: String(title || ''), sym: tickerOfTitle(title) };
+      if (BELLS) BELLS.push(b); else announce([b]);
+      flash(String(key).split(':')[0]);
+    }
   };
   /* one line of the alert log: a trigger starts with the bell (bold, a red dot in the log) */
   /* the day's log keeps the newest 400 lines (it kept 100: on a busy day the 9:35 alerts dropped off by the afternoon) */
@@ -2859,19 +2948,39 @@ defCalc('industry_perf', {
      days, catalyst gaps, A+/A launches, ★ launches, EARLY heads-ups of the launch watch list, whatever other list the stock
      is on, and a stock on both Launches and 3-SETUPS. Before, the tab followed the stock's lists when you looked, with the
      live Trend label: KD's 9:32 EARLY (2-POOL, Trend Reclaim once up 15%) sat on the Watchlist tab on Nov 4 */
-  const LAUNCH_KINDS = new Set(['power', 'catalyst', 'launch', 'stars', 'early', 'basebreak', 'reversal']);
-  const tabOfKey = (key, doc) => {
+  const LAUNCH_KINDS = new Set(['power', 'catalyst', 'launch', 'stars', 'early', 'basebreak', 'reversal', 'ep']);
+  const tabOfKey = (key, doc, launched) => {
     const [sym, kind] = String(key).split(':'), on = (k) => !!doc && (doc[k] || []).some((r) => r.symbol === sym);
     if (kind === 'laggard') return 'G';
     if (on('launches')) return 'L';
     if (on('laggards')) return 'G';
-    if (kind === 's3') return 'W';
+    if (launched && launched.has(sym)) return 'L';      /* a 3-SETUPS / TREND trigger of a stock launching today (ARLO Nov 4) */
+    if (kind === 's3' || kind === 'trend') return 'W';
     if (LAUNCH_KINDS.has(kind)) return 'L';
     return on('setups3') ? 'W' : 'L';
   };
-  const TABMARK = '\u2063';    /* an invisible separator: the tab's code (L / W / G) at the end of a log line */
-  const logLine = (when, title, body, key, doc) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body + TABMARK + tabOfKey(key, doc);
+  /* the alert boxes (the user, Nov 4 2026), by what the alert is for; each alert in one box, set when it fires */
+  const BOXES = [['l', '🚀', 'Launching now'], ['p', '🎯', 'Pattern breakouts'], ['e', '⚡', 'Episodic pivots'],
+    ['b', '↩️', 'Pullback entries'], ['h', '👀', 'Heads-ups'], ['g', '👥', 'Groups & news']];
+  const BOX_OF = { power: 'l', catalyst: 'l', launch: 'l', stars: 'l', reversal: 'l', laggard: 'l',
+    breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
+    ep: 'e',
+    retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b',
+    early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g' };
+  const boxOfKey = (key, title) => {
+    const [a, kind] = String(key).split(':'), t = String(title || '');
+    if (a === 'grp' || / GROUP MOVE/.test(t) || /\(after the close\)/.test(t)) return 'g';            /* group moves, the after-close heads-ups */
+    if (kind === 's3' && /retest|21 EMA/i.test(t)) return 'b';                                         /* a 3-SETUPS 21 EMA retest / retest held */
+    return BOX_OF[kind] || 'h';
+  };
+  const tickerOfTitle = (title) => {
+    const t = String(title || '').replace(/^🔔 /, '').replace(/^★+ (?:(?:HIGH CONVICTION|STRONG LAUNCH|LAUNCH, TREND UP) · )?/, '');
+    return (/^([A-Z][A-Z0-9.\-]*)(?= |:|$)/.exec(t) || [])[1] || '';
+  };
+  const TABMARK = '\u2063';    /* an invisible separator, then the tab's code (L / W / G) and the box's (BOXES) at the end of a log line */
+  const logLine = (when, title, body, key, doc, launched) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body + TABMARK + tabOfKey(key, doc, launched) + boxOfKey(key, title);
   function runAlerts() {
+    BELLS = [];
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
     const ldocA = st('launch').status === 'ok' ? st('launch').data : null;
     if (alertsOn && marketOpen()) {
@@ -2879,7 +2988,7 @@ defCalc('industry_perf', {
       const lowOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.low_52w])), smaOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.sma200]));
       /* 3-SETUPS triggers only over the 200 SMA (the user, Nov 3 2026: ECHO under its 200 SMA 106.63) */
       const s3s = new Set(ldocA ? s3Live(ldocA).map((r) => r.symbol) : []);
-      const over200 = (k) => { if (!k.endsWith(':s3') && !s3s.has(k.split(':')[0])) return true; const sym = k.split(':')[0], sma = num(smaOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !sma || !q || !q[0] || q[0] > sma; };
+      const over200 = (k) => { if (!k.endsWith(':s3') && !k.endsWith(':trend') && !s3s.has(k.split(':')[0])) return true; const sym = k.split(':')[0], sma = num(smaOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !sma || !q || !q[0] || q[0] > sma; };
       const over52 = (k) => { const sym = k.split(':')[0], lo = num(lowOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !lo || !q || !q[0] || q[0] >= lo * 1.3; };
       const found = liveAlerts().filter(([k]) => over52(k) && over200(k)), symOf = (k) => k.split(':')[0];
       /* group moves (the user, Nov 3 2026: RPD and QLYS both in Cybersecurity): 2+ stocks of the same theme or tight
@@ -2896,12 +3005,19 @@ defCalc('industry_perf', {
       const gmTag = (key) => { const sym = symOf(key); return (grpOf.get(sym) || []).filter((g) => (gm[g] || []).length >= 2 && oneMove(g))
         .map((g) => ' · ' + g.toUpperCase() + ' MOVE: also ' + gm[g].filter((x) => x[0] !== sym).map((x) => x.join(' ')).join(', ')).join(''); };
       const catBefore = new Set([...sent].filter((k) => k.endsWith(':catalyst')).map(symOf));
+      /* the stocks with a launch-type alert today (this page's, the job's, this check's): their other triggers go on Launches */
+      const launched = new Set([...sent].concat(found.map(([k]) => k)).concat(((SRV && SRV.date === todayNY() && SRV.items) || []).map((it) => it.key))
+        .filter((k) => LAUNCH_KINDS.has(String(k).split(':')[1])).map(symOf));
       const catNow = new Set(found.map(([k]) => k).filter((k) => k.endsWith(':catalyst') && !sent.has(k)).map(symOf));
       found.forEach(([key, title, body, tvs]) => {
         const sym = symOf(key);
-        if (sent.has(key) || (key.endsWith(':near') && sent.has(sym + ':breakout')) || (key.endsWith(':launch') && (sent.has(sym + ':power') || sent.has(sym + ':stars')))) return;
+        if (sent.has(key) || (key.endsWith(':near') && sent.has(sym + ':breakout')) || (key.endsWith(':launch') && (sent.has(sym + ':power') || sent.has(sym + ':stars') || sent.has(sym + ':ep')))) return;
+        /* an episodic pivot covers the stock's catalyst gap and A launch; a power day covers its EP (every power day is one) */
+        if ((key.endsWith(':catalyst') && sent.has(sym + ':ep')) || (key.endsWith(':ep') && sent.has(sym + ':power'))) { sent.add(key); return; }
         /* a starred launch gets one pop-up: the launch-type alert carries its stars, the ':stars' one only when there is none */
-        if (key.endsWith(':stars') && ['power', 'catalyst', 'launch'].some((k) => sent.has(sym + ':' + k))) { sent.add(key); return; }
+        if (key.endsWith(':stars') && ['power', 'catalyst', 'launch', 'ep'].some((k) => sent.has(sym + ':' + k))) { sent.add(key); return; }
+        /* a TREND trigger of a stock launching today: the launch alert (Launches) is the one (the user: "if duplicate, trigger in launches") */
+        if (key.endsWith(':trend') && [...LAUNCH_KINDS].some((k) => sent.has(sym + ':' + k) || found.some(([k2]) => k2 === sym + ':' + k))) { sent.add(key); return; }
         /* a catalyst stock gets two pop-ups: the catalyst gap, then (if its base wasn't cleared yet) the base breakout;
            its launch pop-up would only repeat them */
         if (key.endsWith(':basebreak') && !catBefore.has(sym)) { if (catNow.has(sym)) sent.add(key); return; }
@@ -2910,7 +3026,7 @@ defCalc('industry_perf', {
         addGm(key, title, hm());
         if (!/ MOVE: also /.test(body)) body += gmTag(key);
         notify(title, body, tvs, key);
-        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key, ldocA));
+        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key, ldocA, launched));
       });
       /* the job's own alerts (it checks the big gap-ups every minute): a pop-up for the last 10 minutes' ones. In a flood
          the job groups the heads-ups into one alert that names them; each still comes with its full text: a line in the
@@ -2929,7 +3045,7 @@ defCalc('industry_perf', {
         const [H, M] = it.time.split(':').map(Number);
         if (nm - (H * 60 + M) <= 10 && !it.grouped) notify(it.title, it.msg, it.tv, it.key);
         if (String(it.key).startsWith('summary:') && it.kind === 'summary') return;      /* its names are in the log line by line */
-        log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key, ldocA));
+        log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key, ldocA, launched));
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX)); saveDay('gm', gm);
     }
@@ -2941,7 +3057,7 @@ defCalc('industry_perf', {
       const up = pick('up'), dn = pick('down');
       const body = (up ? 'Gap-ups: ' + up : 'No A or B gap-up') + (dn ? ' · gap-downs: ' + dn : '') + ' · ' + pmRows.length + ' graded';
       try { const n = new Notification('Pre-market grades', { body, tag: 'pm' }); n.onclick = () => { window.focus(); location.hash = '#premarket'; n.close(); }; } catch (e) { /* blocked */ }
-      log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · Pre-market grades — ' + body + TABMARK + 'L');
+      log.unshift(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' · Pre-market grades — ' + body + TABMARK + 'Lg');
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX));
     }
     /* after the close: the evening scan's heads-ups for tomorrow (tight under a buy point, retest held) */
@@ -2961,69 +3077,105 @@ defCalc('industry_perf', {
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX));
     }
+    const bells = BELLS; BELLS = null; announce(bells);
     drawAlog(log);
     $('#ln-alert-btn').textContent = alertsOn ? 'Turn off' : 'Turn on';
+    $('#ln-alert-voice').textContent = 'Voice: ' + (VOICE ? 'on' : 'off');
     $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
       : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
       : alertsOn ? 'On: pop-ups while this page is open (a background tab is fine); triggers stay on screen until you close them, heads-ups fade. ' + (log.length ? 'Today:' : 'None yet today.')
       : 'Off. Turn on to get desktop pop-ups while this page is open.';
     /* the long explanation folds away (the user, Nov 4 2026: "make it so I can minimize it") */
-    $('#ln-alert-more').textContent = 'While this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day. Triggers (the buys) stay on the screen until you close them, chime, flash this tab and show bold with a red dot below; heads-ups fade, and in a flood they are grouped into one pop-up. Every alert has its own line below: click it for the chart. Starred alerts stay on screen until clicked, with a tone: ★★ / ★ = a starred stock launching (from yesterday\'s close: ★★ Top / Strong group under the 21 EMA, ★ Trend Up; buy over the 5-minute opening range high, stop its low); ★★★ HIGH CONVICTION = a retest, push or 21 EMA entry holding into the close on a launch in a Top / Strong group with RS 80+ and Trend Up (buy near the close, stop under the day\'s low).';
+    $('#ln-alert-more').textContent = 'While this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each tab keeps its own triggers: the Watchlist tab the 3-SETUPS triggers and the TREND list\'s (a TREND stock, Trend Up / Turn up / Reclaim / Resting at the last close, trading over its buy point: on this page only), Launches the launches; a stock with both shows on Launches. The boxes sort each tab\'s alerts by kind as they fire: 🚀 Launching now (power day, catalyst gap, A+/A launch, ★ launching, reversal, laggard), 🎯 Pattern breakouts (every pattern\'s buy point: base top, flags, pennants, flat base, cup, ascending triangle, gap out of base, base high cleared, 3-SETUPS and TREND triggers), ⚡ Episodic pivots (a volume pace of 4×+, a 6%+ gap, over the 1-month high and the 200 SMA, from 9:35; a power day is one already, so it alerts as the power day; the EP alert stands for that stock\'s catalyst gap and A launch), ↩️ Pullback entries (retest holding, 21 EMA, undercut & reclaim, push, back over the 50 EMA, a touch of the buy point, ★★★), 👀 Heads-ups (early gaps, near the buy point, in the retest zone, at the 21 EMA), 👥 Groups & news (group moves, pre-market grades, after-close heads-ups); newest first, the most stars on top, click for the chart; every tab\'s alerts are on the 🔔 Alerts tab (the chips show one tab\'s; Launches and the Watchlist show their newest in a bar on top). Sounds: each box has its own for a trigger (⚡ three quick rising notes, 🚀 two rising, 🎯 one bell, ↩️ two falling, 👥 two low) and a voice says the box, the stars and the ticker ("Episodic pivot, C D W"; Voice: on / off; Test plays each sound with its name); several at once: each kind\'s sound once, then the first three read out (EPs first, then the most stars) and "and N more". Click anywhere on the page once after opening it, or the browser keeps it silent. Each stock and kind once a day. Triggers (the buys) stay on the screen until you close them, chime, flash this tab and show bold with a red dot below; heads-ups fade, and in a flood they are grouped into one pop-up. Every alert has its own line below: click it for the chart. Starred alerts stay on screen until clicked, with a tone: ★★ / ★ = a starred stock launching (from yesterday\'s close: ★★ Top / Strong group under the 21 EMA, ★ Trend Up; buy over the 5-minute opening range high, stop its low); ★★★ HIGH CONVICTION = a retest, push or 21 EMA entry holding into the close on a launch in a Top / Strong group with RS 80+ and Trend Up (buy near the close, stop under the day\'s low).';
   }
   /* today's alert log, or only one ticker's alerts (each line: "3:12 PM · LION C breakout: ... — ...") */
+  /* the Alerts tab (the user, Nov 4 2026: "should we have a separate tab for alerts"): every tab's alerts in one place, the six
+     boxes and the full log, each line tagged with the tab it belongs to (Launches / Watchlist / Laggards), the chips show one
+     tab's only; on Launches and the Watchlist a bar with the newest ones opens it */
+  let ALF = 'All';
+  try { ALF = localStorage.getItem('radar-alerts-filter') || 'All'; } catch (e) { ALF = 'All'; }
   function drawAlog(log) {
     const ul = $('#ln-alert-log'); ul.replaceChildren();
     const q = ($('#ln-alert-search').value || '').trim().toUpperCase();
-    /* each tab shows its own alerts: Launch laggards the laggard launches and the alerts of stocks on its list, Launches the rest */
     const ldoc = st('launch').status === 'ok' ? st('launch').data : null;
-    const lag = new Set(ldoc ? (ldoc.laggards || []).map((r) => r.symbol) : []), LAG = S.tab === 'laggards', WL = S.tab === 'watchlist';
-    /* the Watchlist tab has its own log (the user, Nov 3 2026: "alerts has to be under watchlist"): the alerts of stocks
-       on 3-SETUPS / the watchlist lists that are not on Launches or Launch laggards; one pop-up each, wherever it shows.
-       The card moves to the top of the tab you are on */
-    const card = $('#ln-alert-card'), home = WL ? $('#watchlist') : $('#launches');
-    if (card.parentNode !== home) home.prepend(card);
+    const lag = new Set(ldoc ? (ldoc.laggards || []).map((r) => r.symbol) : []);
     const onLn = new Set(ldoc ? (ldoc.launches || []).map((r) => r.symbol) : []);
     /* the ticker of a line, past the stars of a starred alert ("9:35 AM · ★★ KD CATALYST GAP: …", "★★★ HIGH CONVICTION · LION …",
        "★★ STRONG LAUNCH · KD launching …"): reading the first word after the time, a starred line had no ticker, so a search
        for KD missed "★★ KD CATALYST GAP" and a click on it opened the chart of IT ("· IT Services & Consulting") (Nov 4 2026) */
-    const symOfLine = (x) => {
-      const t = x.replace(/^🔔 /, '').split(' — ')[0].replace(/^[^·]*· /, '').replace(/^★+ (?:(?:HIGH CONVICTION|STRONG LAUNCH|LAUNCH, TREND UP) · )?/, '');
-      return (/^([A-Z][A-Z0-9.\-]*)(?= |:|$)/.exec(t) || [])[1] || '';
-    };
-    /* the tab a line is filed under still reads the first word after the time, as before (a starred launch alert stays on
-       Launches); only the search and the chart link read the ticker past the stars */
+    const symOfLine = (x) => tickerOfTitle(x.replace(/^🔔 /, '').split(' — ')[0].replace(/^[^·]*· /, ''));
+    /* a line logged before Nov 5 2026 carries no tab: the lists as they were (the first word after the time, 3-SETUPS /
+       TREND list stocks not on Launches -> Watchlist) */
     const tabSym = (x) => ((/· (\S+)/.exec(x) || [])[1] || '');
     const isLag = (x) => / LAGGARD /.test(x) || lag.has(tabSym(x));
     const isGrp = (x) => / · GROUP MOVE: /.test(x);
-    /* the Watchlist log: only tickers on 3-SETUPS or the TREND list (the user, Nov 3 2026), not on Launches / laggards
-       (those alert from there); everything else (the 50 EMA undercut tab, pre-market grades...) stays on Launches */
     const sdoc = st('setups').status === 'ok' ? st('setups').data : null;
     const wlSet = new Set(((ldoc && ldoc.setups3) || []).map((r) => r.symbol).concat(sdoc ? trendSrc(sdoc).map((r) => r.symbol) : []));
     const isWl = (x) => { const sym = tabSym(x); return wlSet.has(sym) && !onLn.has(sym) && !isLag(x); };
-    $('#ln-alert-card h2').textContent = LAG ? 'Desktop alerts · laggards' : WL ? 'Desktop alerts · watchlist' : 'Desktop alerts';
-    /* the tab set when the alert fired (tabOfKey); a line logged before Nov 5 2026 has none: the lists as before */
-    const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards' };
-    const marked = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? TABNAME[x.slice(i + 1)] : null; };
+    /* the tab set when the alert fired (tabOfKey) */
+    const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards' }, SHORT = { Launches: 'Launches', Watchlist: 'Watchlist', 'Launch laggards': 'Laggards' };
+    const marked = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? TABNAME[x.charAt(i + 1)] : null; };
     const tabOf = (x) => (isGrp(x) ? '' : marked(x) || (isWl(x) ? 'Watchlist' : isLag(x) ? 'Launch laggards' : 'Launches'));
-    const here = WL ? 'Watchlist' : LAG ? 'Launch laggards' : 'Launches';
-    const mine = log.filter((x) => isGrp(x) || tabOf(x) === here);
-    /* a ticker search looks through every tab's alerts, and names the tab a line is filed under (KD, Nov 4 2026: its 9:32
-       EARLY line sat on the Watchlist tab (up 15%+ it had the live Trend label Reclaim and was on 2-POOL), its ★★ catalyst
+    const boxOf = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? x.charAt(i + 2) : ''; };
+    const parse = (x) => {
+      const i = x.lastIndexOf(TABMARK), full = (i >= 0 ? x.slice(0, i) : x).replace(/^🔔 /, '');
+      const tm = /^(\d+):(\d\d) (AM|PM)/.exec(full), mn = tm ? (Number(tm[1]) % 12 + (tm[3] === 'PM' ? 12 : 0)) * 60 + Number(tm[2]) : 0;
+      return { x, full, head: full.split(' — ')[0], star: ((/^[^·]*· (★+)/.exec(full) || [])[1] || '').length, trig: x.startsWith('🔔 '), mn, sym: isGrp(x) ? null : symOfLine(x) || null, tab: tabOf(x) };
+    };
+    const order = (a, c) => (c.star - a.star) || (c.mn - a.mn);          /* the most stars first, then the newest by the alert's time */
+    const lineEl = (o, text, cls) => {
+      const li = h('li', [cls || '', o.trig ? 'al-trig' : '', o.sym ? 'al-click' : ''].filter(Boolean).join(' '));
+      if (o.tab) li.append(h('span', 'al-src', SHORT[o.tab]));
+      li.append(document.createTextNode(text));
+      li.title = o.sym ? o.full + '\n(click: ' + o.sym + ' on TradingView)' : o.full;
+      if (o.sym) li.addEventListener('click', () => openTV(tv(o.sym)));
+      return li;
+    };
+    const here = ALF;
+    document.querySelectorAll('#al-filter button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === here)));
+    const mine = here === 'All' ? log : log.filter((x) => isGrp(x) || tabOf(x) === here);
+    /* a ticker search looks through every tab's alerts (KD, Nov 4 2026: its EARLY line on the Watchlist tab, its ★★ catalyst
        line on Launches, and a search for KD on Launches found neither) */
     const qq = q.replace(/[^A-Z0-9.\-]/g, ''), qre = new RegExp('· ' + qq.replace(/\./g, '\\.') + '\\b');
     const shown = q ? (qq ? log.filter((x) => (!isGrp(x) && symOfLine(x) === qq) || qre.test(x)) : []) : mine;
-    /* each line opens its stock's chart; a trigger (the bell) is bold with a red dot */
-    shown.forEach((x) => {
-      const trig = x.startsWith('🔔 '), sym = isGrp(x) ? null : symOfLine(x) || null, tb = tabOf(x);
-      const txt = x.lastIndexOf(TABMARK) >= 0 ? x.slice(0, x.lastIndexOf(TABMARK)) : x;
-      const li = h('li', (trig ? 'al-trig' : '') + (sym ? ' al-click' : ''), trig ? txt.slice(3) : txt);
-      if (q && tb && tb !== here) li.append(h('span', 'tgr-lbl', ' · on the ' + tb + ' tab'));
-      if (sym) { li.title = 'Open ' + sym + ' on TradingView'; li.addEventListener('click', () => openTV(tv(sym))); }
-      ul.append(li);
+    /* the full log: each line opens its stock's chart; a trigger (the bell) is bold with a red dot */
+    shown.forEach((x) => { const o = parse(x); ul.append(lineEl(o, o.full)); });
+    /* the boxes, by kind (a line from before the boxes, Nov 5 2026, has no box: the log only) */
+    const bx = $('#ln-alert-boxes');
+    if (bx) {
+      bx.replaceChildren();
+      BOXES.forEach(([code, icon, name]) => {
+        const lines = mine.filter((x) => boxOf(x) === code).map(parse).sort(order);
+        const box = h('div', 'al-box'), hd = h('h3', '', icon + ' ' + name);
+        hd.append(h('span', 'al-n', String(lines.length)));
+        const list = h('ul', '');
+        lines.forEach((o) => list.append(lineEl(o, o.head, o.star ? 'al-star' : '')));
+        if (!lines.length) list.append(h('li', 'al-none', 'None yet'));
+        box.append(hd, list); bx.append(box);
+      });
+    }
+    if (q && !shown.length) ul.append(h('li', 'tgr-lbl', 'No alerts for ' + q + ' today.'));
+    else if (!shown.length && log.length) ul.append(h('li', 'tgr-lbl', 'No ' + (here === 'All' ? '' : SHORT[here] + ' ') + 'alerts yet today.'));
+    /* the bars on Launches (Launch laggards) and the Watchlist: this tab's newest alerts; a click opens the Alerts tab */
+    [['#ln-al-bar', S.tab === 'laggards' ? 'Launch laggards' : 'Launches'], ['#wl-al-bar', 'Watchlist']].forEach(([id, tb]) => {
+      const el = $(id); if (!el) return;
+      const its = log.filter((x) => !isGrp(x) && tabOf(x) === tb).map(parse).sort(order);
+      el.replaceChildren(); el.hidden = false;
+      el.append(h('b', '', '🔔 ' + (its.length ? its.length + ' alert' + (its.length > 1 ? 's' : '') + ' today on this tab' : 'No alerts yet today on this tab')));
+      its.slice(0, 3).forEach((o) => el.append(h('span', 'al-last' + (o.star ? ' al-star' : ''), o.head)));
+      el.append(h('span', 'al-go', 'All alerts: the 🔔 Alerts tab →'));
     });
-    if (q && !shown.length) ul.append(h('li', 'tgr-lbl', 'No alerts for ' + q + ' today (on any tab).'));
-    else if (!shown.length && log.length) ul.append(h('li', 'tgr-lbl', 'No ' + (LAG ? 'laggard' : WL ? 'watchlist' : 'launch') + ' alerts yet today.'));
   }
+  ['#ln-al-bar', '#wl-al-bar'].forEach((id) => {
+    const el = $(id); if (!el) return;
+    el.addEventListener('click', () => showTab('alerts'));
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showTab('alerts'); } });
+  });
+  $('#al-filter').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    ALF = b.dataset.v; try { localStorage.setItem('radar-alerts-filter', ALF); } catch (e2) { /* private window */ }
+    drawAlog(loadDay('log', '[]'));
+  });
   $('#ln-alert-search').addEventListener('input', () => drawAlog(loadDay('log', '[]')));
   $('#ln-alert-btn').addEventListener('click', async () => {
     if (alertsOn) { alertsOn = false; try { localStorage.setItem(AKEY, '0'); } catch (e) { /* private window */ } runAlerts(); return; }
@@ -3038,6 +3190,13 @@ defCalc('industry_perf', {
     const p = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
     if (p === 'granted') notify('Radar test alert', 'Desktop alerts work. Launches, power days and breakouts will pop up like this.', 'SPY', 'test');
     runAlerts();
+    /* the sounds: each box's, with its name */
+    ['e', 'l', 'p', 'b', 'h', 'g'].forEach((bx, i) => setTimeout(() => { chime(bx); setTimeout(() => say(BOX_SAY[bx]), 600); }, 400 + i * 2600));
+  });
+  $('#ln-alert-voice').addEventListener('click', () => {
+    VOICE = !VOICE; try { localStorage.setItem('radar-alerts-voice', VOICE ? '1' : '0'); } catch (e) { /* private window */ }
+    $('#ln-alert-voice').textContent = 'Voice: ' + (VOICE ? 'on' : 'off');
+    if (VOICE) say('Voice on');
   });
 
   const drawTrack = () => {
@@ -3331,6 +3490,7 @@ defCalc('industry_perf', {
     else if (S.tab === 'premarket') { drawStars(); drawPmLive(symMap); drawPremarket(symMap); drawTrack(); }
     else if (S.tab === 'watchlist') drawWatchlist(symMap);
     else if (S.tab === 'earnings') drawEarnings();
+    else if (S.tab === 'alerts') drawAlog(loadDay('log', '[]'));
     else drawLaunches(symMap);
   }
 
@@ -3950,7 +4110,7 @@ defCalc('industry_perf', {
     d.addEventListener('toggle', () => { try { localStorage.setItem(k, d.open ? '1' : '0'); } catch (e) { /* private window */ } });
   });
   const named = location.hash.slice(1);
-  if (['gainers', 'groups', 'premarket', 'watchlist', 'launches', 'laggards', 'earnings'].includes(named)) S.tab = named;
+  if (['gainers', 'groups', 'premarket', 'watchlist', 'launches', 'laggards', 'earnings', 'alerts'].includes(named)) S.tab = named;
   draw();
   refresh(true);
 })();

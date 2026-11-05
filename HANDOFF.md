@@ -45,6 +45,36 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Alert boxes and the episodic pivot alert (TEST ONLY Nov 4 2026 night, branch test/alertboxes = test/trendtrig + this)
+
+- **🔔 Alerts tab (the user, Nov 4: "should we have a separate tab for alerts")**: the Desktop alerts card moved from
+  Launches / Watchlist to its own tab (#alerts): every tab's alerts, each line tagged Launches / Watchlist / Laggards
+  (the tab set when it fired), chips All / Launches / Watchlist / Laggards (kept in localStorage radar-alerts-filter),
+  the six boxes, the full log and search. Launches (Launch laggards) and the Watchlist show a bar on top with their
+  count and newest 3 (most stars first); a click opens the Alerts tab. A summary pop-up's click opens it too.
+- **Sounds (the user: "can it make a different sound for episodic pivot or box names")**: a trigger plays its box's tone
+  (TONES: EP 3 quick rising, launching 2 rising = the old chime, pattern 1 bell, pullback 2 falling, group 2 low,
+  heads-up a soft tick) and the voice (speechSynthesis) says box, stars, ticker spelled ("Launching now, two stars, K D").
+  One check's triggers go together (BELLS / announce): each kind's tone once (EP first, at most 3), then the first 3
+  read out (EPs first, then most stars, then box) + "and N more". Voice on/off button (radar-alerts-voice); Test plays
+  each box's tone with its name. Nov 4 test at 9:45: "Launching now, two stars, B R K R. ... K D. ... one star, A R L O.
+  And 52 more."; with CDW / OSCR as EPs: EP tone first, "Episodic pivot, C D W. Episodic pivot, O S C R. ..." 
+
+- **Boxes (the user's layout, Nov 4)**: the Desktop alerts card shows 6 boxes above the full log, with the tab's alerts by
+  kind, set when each fires (the 2nd code after the tab's in the log line's invisible marker; BOX_OF / boxOfKey):
+  🚀 Launching now = power, catalyst, A+/A launch, ★ launching, reversal, laggard; 🎯 Pattern breakouts = breakout, confirm,
+  gap out of base (gapbase, gob1/5/950), base high cleared, pop, 3-SETUPS & TREND triggers (every pattern's buy point:
+  base top, inner base, flags, pennants, tight / high tight flag, flat base, cup, ascending triangle, Qullamaggie, MSF);
+  ⚡ Episodic pivots = the EP alert; ↩️ Pullback entries = retest holding, 21 EMA retest / undercut, undercut & reclaim,
+  push, 50 EMA back, touch, ★★★ (and a 3-SETUPS 21 EMA retest / retest held trigger); 👀 Heads-ups = early, near the buy
+  point, retest zone, at the 21 EMA; 👥 Groups & news = group moves, pre-market grades, after-close heads-ups. Newest
+  first by the alert's time, starred on top (bold), click for the chart; 3 across, 2, 1 on a phone.
+- **EP alert (':ep', desktop only)**: the user's rule: volume pace 4x+, gap 6%+, over the 1-month high (the previous 20
+  sessions' highest high, the power day's; the user agreed) and the 200 SMA, from the 9:35 check (allowed up to the
+  power day's 200 SMA extension). A power day is an EP: no EP alert for it (power covers ':ep'); an EP covers that
+  stock's catalyst gap, A launch and ★ launching pop-ups. A trigger (bell). Nov 4 data: DUOL, VRDN power days; PCOR's gap
+  5.95% (no); CDW (+7.4% gap, +12.7%) and OSCR (+9.9% gap, +8.6%) at a 4.5x test pace -> EP box.
+
 ## KD "missing" from the desktop alert log: the log, not the alert (LIVE Nov 4 2026 ~7:30 PM, the user's "go live"; branch test/livelog)
 
 - **What happened** (reproduced in Chromium at 9:45 AM Nov 4 on the Nov 3 lists and Trend labels, alerts on, empty log):
@@ -71,6 +101,13 @@ alone.
   stock on Launches and 3-SETUPS). Before, the tab followed the stock's lists when you looked, with the live Trend label
   (KD's EARLY sat on Watchlist). Browser test at 9:45 Nov 4: KD's EARLY and ★★ catalyst on Launches; Watchlist = 9
   3-SETUPS breakouts (NAVN, KSS, XMTR, KYMR, ARLO ...); group moves on every tab. Lines logged before keep the old filing.
+- **TREND triggers (TEST ONLY, branch test/trendtrig; the user, Nov 4 night: only 3-SETUPS and TREND of the 5 Watchlist lists
+  trigger, Launches has its own; "watchlist needs trigger for trend watchlist as
+  well, setup and trend")**: desktop liveAlerts ':trend' = a TREND-list stock (2-POOL / 1-UPDAY / 1-EP/GAP, Trend Up / Turn
+  up / Reclaim / Resting at the last close, not on Launches / Launch laggards / 3-SETUPS) trading over its buy point with
+  the close under it; over the 200 SMA and 30%+ over the 52-week low (as 3-SETUPS); a trigger (bell); Watchlist tab. A
+  stock with a launch-type alert today: no TREND pop-up, and its 3-SETUPS / TREND triggers are filed on Launches (ARLO Nov
+  4). Nov 4 test: XNCR, BRZE (LW intraday); PCOR, RELY only their launch alerts. Phone (alerts.py) not done: on hold.
 - **Open (asked Nov 4 night)**: many triggers at once (9:35-9:45: 60+ lines in the first checks) bury the starred /
   A+-A ones among C breakouts: a priority order for the pop-ups and a "top" view of the log (proposal in the session).
 
