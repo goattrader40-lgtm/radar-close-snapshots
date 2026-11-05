@@ -45,6 +45,20 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Alerts readable: key-fact bullets, click to open (LIVE Nov 5 2026 afternoon, the user's "go live"; branch test/bullets)
+
+- ⏰ Pre-market lines (the user: "not user friendly, it should be bullet points: beat, raise, buyback, 50% FCF return,
+  then guidance"): a headline (gap, catalyst, chart), then keyFacts(): beat / miss with revenue and EPS surprise, growth
+  (faster / slower), buyback / % of FCF returned / FCF / first GAAP profit / dividend / deal / FDA picked from the reason,
+  the guidance (raised / cut / given, vs street, y/y), ⚠ warnings (the Earnings tab cross-check isn't one). Numbers from
+  the Earnings tab (EARN, the SEC release); no earnings row = the reason in short bullets. Green good, red ⚠.
+- A click on a box line (the user: "click shows the message, then I go to TradingView; hover is hard to read") opens it in
+  place: the short figures on one line, one fact per bullet, 📈 Chart and 📰 news buttons; a second click closes it
+  (AL_OPEN keeps it open across refreshes). Only the Chart button opens TradingView; the log gets a Chart button.
+- Open: EPAM Nov 5 read "EPS -26%" on the Earnings tab while Claude read adjusted EPS as a beat (GAAP vs adjusted pairing?).
+- Waiting for the user (asked Nov 5): test/pmwindow (pop-ups 8:45-9:25, code runs 9:10 / 9:20); power days also in the ⚡
+  EP box + the EP alert in the GitHub job; the boxes filled from GitHub's alerts.json on every device.
+
 ## Alerts walled off part by part (LIVE Nov 4 2026 ~11:45 PM, the user's "both"; branch test/safeparts)
 
 - docs/index.html safe(name, fn): the W alerts (live / evening), TREND triggers, the Pre-market box, the sounds, the
