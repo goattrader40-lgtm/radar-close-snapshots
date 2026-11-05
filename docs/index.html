@@ -2791,20 +2791,36 @@ defCalc('industry_perf', {
       if (q[0] > r.buy_point) out.push([r.symbol + ':s3', r.symbol + ' 3-SETUPS ' + r.section + ': ' + r.setup + ' trigger',
         fPrice(q[0]) + ' over ' + fPrice(r.buy_point) + ' · ' + f1(q[1]) + ' · vol ' + q[4].toFixed(1) + '× for the time of day', r.tv]);
     });
+    /* TREND (Watchlist tab, the user, Nov 4 2026: "watchlist needs trigger for trend watchlist as well, setup and trend"): a
+       stock of the TREND list (2-POOL / 1-UPDAY / 1-EP/GAP with Trend Up, Turn up, Reclaim or Resting at the last close, so
+       the list holds still during the day) trading over its buy point, the close under it; the same trigger as 3-SETUPS
+       (over the 200 SMA, 30%+ over the 52-week low: runAlerts). A stock on Launches, Launch laggards or 3-SETUPS alerts from
+       there. Nov 4 2026: PCOR, XNCR, RELY, LW, BRZE (PCOR and RELY also launched: those stay on Launches) */
+    const sdocT = st('setups').status === 'ok' ? st('setups').data : null, s3sym = new Set((doc.setups3 || []).map((r) => r.symbol));
+    const fol3 = new Set((doc.launches || []).concat(doc.laggards || []).map((r) => r.symbol)), seenT = new Set();
+    ['2-POOL', '1-UPDAY', '1-EP/GAP'].forEach((n) => ((sdocT && sdocT.lists && sdocT.lists[n]) || []).forEach((r) => {
+      if (seenT.has(r.symbol) || fol3.has(r.symbol) || s3sym.has(r.symbol)) return;
+      seenT.add(r.symbol);
+      const t = trendLast(r.symbol); if (!t || !TREND_ON.has(t.st)) return;
+      if (!r.buy_point || !(r.close < r.buy_point)) return;
+      const q = LIVE.rows[r.symbol]; if (!q || q[4] === null || q[4] === undefined || !(q[0] > r.buy_point)) return;
+      out.push([r.symbol + ':trend', r.symbol + ' TREND trigger (' + n + (r.pattern ? ' · ' + r.pattern : r.section ? ' · ' + r.section : '') + ')',
+        fPrice(q[0]) + ' over ' + fPrice(r.buy_point) + ' · ' + f1(q[1]) + ' · vol ' + q[4].toFixed(1) + '× for the time of day · Trend ' + t.st + ' ' + t.d + 'd at the last close' + (r.why ? ' · ' + r.why : ''), r.tv || r.symbol]);
+    }));
     return out;
   };
   /* the buys (the user, Nov 3 2026: "so it gets my attention"); the rest are heads-ups. Same list as radar/alerts.py
      TRIGGERS: the 21 EMA retest alone is a heads-up ("not a strong sign by itself"), with the breakout level under it
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
-    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'ema21bl']);
+    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ema21bl']);
   const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
   /* a few words per kind for the group-move lines (radar/alerts.py KIND_WORDS) */
   const KIND_WORDS = { retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
     breakout: 'breakout', touch: 'touched the buy point', confirm: 'breakout confirmed', power: 'power day', catalyst: 'catalyst gap', basebreak: 'base high cleared',
     launch: 'launch', reversal: 'reversal launch', laggard: 'laggard launch', reclaimbo: 'back over its breakout level', reclaimbo2: 'breakout undercut & reclaim',
     ema50back: 'back over the 50 EMA', ema50: '50 EMA undercut & reclaim', push: 'push', pop: 'pop', gapbase: 'gap out of base', gob1: 'gap out of base',
-    gob5: 'gap out of base', s3: '3-SETUPS trigger', early: 'early gap', near: 'gapping to the buy point' };
+    gob5: 'gap out of base', s3: '3-SETUPS trigger', trend: 'TREND trigger', early: 'early gap', near: 'gapping to the buy point' };
   const kindWords = (key, title) => { const k = String(key).split(':')[1] || ''; return k === 'ema21' && /UNDERCUT/.test(title || '') ? '21 EMA undercut & reclaim' : (KIND_WORDS[k] || k); };
   /* a short two-tone chime for a trigger (the browser lets the page play it once you clicked on it today) */
   let actx = null;
@@ -2851,17 +2867,18 @@ defCalc('industry_perf', {
      is on, and a stock on both Launches and 3-SETUPS. Before, the tab followed the stock's lists when you looked, with the
      live Trend label: KD's 9:32 EARLY (2-POOL, Trend Reclaim once up 15%) sat on the Watchlist tab on Nov 4 */
   const LAUNCH_KINDS = new Set(['power', 'catalyst', 'launch', 'stars', 'early', 'basebreak', 'reversal']);
-  const tabOfKey = (key, doc) => {
+  const tabOfKey = (key, doc, launched) => {
     const [sym, kind] = String(key).split(':'), on = (k) => !!doc && (doc[k] || []).some((r) => r.symbol === sym);
     if (kind === 'laggard') return 'G';
     if (on('launches')) return 'L';
     if (on('laggards')) return 'G';
-    if (kind === 's3') return 'W';
+    if (launched && launched.has(sym)) return 'L';      /* a 3-SETUPS / TREND trigger of a stock launching today (ARLO Nov 4) */
+    if (kind === 's3' || kind === 'trend') return 'W';
     if (LAUNCH_KINDS.has(kind)) return 'L';
     return on('setups3') ? 'W' : 'L';
   };
   const TABMARK = '\u2063';    /* an invisible separator: the tab's code (L / W / G) at the end of a log line */
-  const logLine = (when, title, body, key, doc) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body + TABMARK + tabOfKey(key, doc);
+  const logLine = (when, title, body, key, doc, launched) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body + TABMARK + tabOfKey(key, doc, launched);
   function runAlerts() {
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
     const ldocA = st('launch').status === 'ok' ? st('launch').data : null;
@@ -2870,7 +2887,7 @@ defCalc('industry_perf', {
       const lowOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.low_52w])), smaOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.sma200]));
       /* 3-SETUPS triggers only over the 200 SMA (the user, Nov 3 2026: ECHO under its 200 SMA 106.63) */
       const s3s = new Set(ldocA ? s3Live(ldocA).map((r) => r.symbol) : []);
-      const over200 = (k) => { if (!k.endsWith(':s3') && !s3s.has(k.split(':')[0])) return true; const sym = k.split(':')[0], sma = num(smaOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !sma || !q || !q[0] || q[0] > sma; };
+      const over200 = (k) => { if (!k.endsWith(':s3') && !k.endsWith(':trend') && !s3s.has(k.split(':')[0])) return true; const sym = k.split(':')[0], sma = num(smaOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !sma || !q || !q[0] || q[0] > sma; };
       const over52 = (k) => { const sym = k.split(':')[0], lo = num(lowOf.get(sym)), q = LIVE && LIVE.rows ? LIVE.rows[sym] : null; return !lo || !q || !q[0] || q[0] >= lo * 1.3; };
       const found = liveAlerts().filter(([k]) => over52(k) && over200(k)), symOf = (k) => k.split(':')[0];
       /* group moves (the user, Nov 3 2026: RPD and QLYS both in Cybersecurity): 2+ stocks of the same theme or tight
@@ -2887,12 +2904,17 @@ defCalc('industry_perf', {
       const gmTag = (key) => { const sym = symOf(key); return (grpOf.get(sym) || []).filter((g) => (gm[g] || []).length >= 2 && oneMove(g))
         .map((g) => ' · ' + g.toUpperCase() + ' MOVE: also ' + gm[g].filter((x) => x[0] !== sym).map((x) => x.join(' ')).join(', ')).join(''); };
       const catBefore = new Set([...sent].filter((k) => k.endsWith(':catalyst')).map(symOf));
+      /* the stocks with a launch-type alert today (this page's, the job's, this check's): their other triggers go on Launches */
+      const launched = new Set([...sent].concat(found.map(([k]) => k)).concat(((SRV && SRV.date === todayNY() && SRV.items) || []).map((it) => it.key))
+        .filter((k) => LAUNCH_KINDS.has(String(k).split(':')[1])).map(symOf));
       const catNow = new Set(found.map(([k]) => k).filter((k) => k.endsWith(':catalyst') && !sent.has(k)).map(symOf));
       found.forEach(([key, title, body, tvs]) => {
         const sym = symOf(key);
         if (sent.has(key) || (key.endsWith(':near') && sent.has(sym + ':breakout')) || (key.endsWith(':launch') && (sent.has(sym + ':power') || sent.has(sym + ':stars')))) return;
         /* a starred launch gets one pop-up: the launch-type alert carries its stars, the ':stars' one only when there is none */
         if (key.endsWith(':stars') && ['power', 'catalyst', 'launch'].some((k) => sent.has(sym + ':' + k))) { sent.add(key); return; }
+        /* a TREND trigger of a stock launching today: the launch alert (Launches) is the one (the user: "if duplicate, trigger in launches") */
+        if (key.endsWith(':trend') && [...LAUNCH_KINDS].some((k) => sent.has(sym + ':' + k) || found.some(([k2]) => k2 === sym + ':' + k))) { sent.add(key); return; }
         /* a catalyst stock gets two pop-ups: the catalyst gap, then (if its base wasn't cleared yet) the base breakout;
            its launch pop-up would only repeat them */
         if (key.endsWith(':basebreak') && !catBefore.has(sym)) { if (catNow.has(sym)) sent.add(key); return; }
@@ -2901,7 +2923,7 @@ defCalc('industry_perf', {
         addGm(key, title, hm());
         if (!/ MOVE: also /.test(body)) body += gmTag(key);
         notify(title, body, tvs, key);
-        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key, ldocA));
+        log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key, ldocA, launched));
       });
       /* the job's own alerts (it checks the big gap-ups every minute): a pop-up for the last 10 minutes' ones. In a flood
          the job groups the heads-ups into one alert that names them; each still comes with its full text: a line in the
@@ -2920,7 +2942,7 @@ defCalc('industry_perf', {
         const [H, M] = it.time.split(':').map(Number);
         if (nm - (H * 60 + M) <= 10 && !it.grouped) notify(it.title, it.msg, it.tv, it.key);
         if (String(it.key).startsWith('summary:') && it.kind === 'summary') return;      /* its names are in the log line by line */
-        log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key, ldocA));
+        log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key, ldocA, launched));
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX)); saveDay('gm', gm);
     }
@@ -2959,7 +2981,7 @@ defCalc('industry_perf', {
       : alertsOn ? 'On: pop-ups while this page is open (a background tab is fine); triggers stay on screen until you close them, heads-ups fade. ' + (log.length ? 'Today:' : 'None yet today.')
       : 'Off. Turn on to get desktop pop-ups while this page is open.';
     /* the long explanation folds away (the user, Nov 4 2026: "make it so I can minimize it") */
-    $('#ln-alert-more').textContent = 'While this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each stock and kind once a day. Triggers (the buys) stay on the screen until you close them, chime, flash this tab and show bold with a red dot below; heads-ups fade, and in a flood they are grouped into one pop-up. Every alert has its own line below: click it for the chart. Starred alerts stay on screen until clicked, with a tone: ★★ / ★ = a starred stock launching (from yesterday\'s close: ★★ Top / Strong group under the 21 EMA, ★ Trend Up; buy over the 5-minute opening range high, stop its low); ★★★ HIGH CONVICTION = a retest, push or 21 EMA entry holding into the close on a launch in a Top / Strong group with RS 80+ and Trend Up (buy near the close, stop under the day\'s low).';
+    $('#ln-alert-more').textContent = 'While this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each tab keeps its own triggers: the Watchlist tab the 3-SETUPS triggers and the TREND list\'s (a TREND stock, Trend Up / Turn up / Reclaim / Resting at the last close, trading over its buy point: on this page only), Launches the launches; a stock with both shows on Launches. Each stock and kind once a day. Triggers (the buys) stay on the screen until you close them, chime, flash this tab and show bold with a red dot below; heads-ups fade, and in a flood they are grouped into one pop-up. Every alert has its own line below: click it for the chart. Starred alerts stay on screen until clicked, with a tone: ★★ / ★ = a starred stock launching (from yesterday\'s close: ★★ Top / Strong group under the 21 EMA, ★ Trend Up; buy over the 5-minute opening range high, stop its low); ★★★ HIGH CONVICTION = a retest, push or 21 EMA entry holding into the close on a launch in a Top / Strong group with RS 80+ and Trend Up (buy near the close, stop under the day\'s low).';
   }
   /* today's alert log, or only one ticker's alerts (each line: "3:12 PM · LION C breakout: ... — ...") */
   function drawAlog(log) {

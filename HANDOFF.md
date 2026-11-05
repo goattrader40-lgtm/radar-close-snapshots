@@ -71,6 +71,12 @@ alone.
   stock on Launches and 3-SETUPS). Before, the tab followed the stock's lists when you looked, with the live Trend label
   (KD's EARLY sat on Watchlist). Browser test at 9:45 Nov 4: KD's EARLY and ★★ catalyst on Launches; Watchlist = 9
   3-SETUPS breakouts (NAVN, KSS, XMTR, KYMR, ARLO ...); group moves on every tab. Lines logged before keep the old filing.
+- **TREND triggers (TEST ONLY, branch test/trendtrig; the user, Nov 4 night: "watchlist needs trigger for trend watchlist as
+  well, setup and trend")**: desktop liveAlerts ':trend' = a TREND-list stock (2-POOL / 1-UPDAY / 1-EP/GAP, Trend Up / Turn
+  up / Reclaim / Resting at the last close, not on Launches / Launch laggards / 3-SETUPS) trading over its buy point with
+  the close under it; over the 200 SMA and 30%+ over the 52-week low (as 3-SETUPS); a trigger (bell); Watchlist tab. A
+  stock with a launch-type alert today: no TREND pop-up, and its 3-SETUPS / TREND triggers are filed on Launches (ARLO Nov
+  4). Nov 4 test: XNCR, BRZE (LW intraday); PCOR, RELY only their launch alerts. Phone (alerts.py) not done: on hold.
 - **Open (asked Nov 4 night)**: many triggers at once (9:35-9:45: 60+ lines in the first checks) bury the starred /
   A+-A ones among C breakouts: a priority order for the pop-ups and a "top" view of the log (proposal in the session).
 
