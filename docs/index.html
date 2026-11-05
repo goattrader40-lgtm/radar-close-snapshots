@@ -316,6 +316,14 @@
   .al-box .al-bul li { border-top: 0; padding: 0; white-space: normal; overflow: visible; color: var(--color-fg-muted); }
   .al-box .al-bul li.al-warn { color: var(--color-fg-danger, #d1242f); }
   .al-box .al-bul li.al-good { color: var(--color-fg-success, #1a7f37); }
+  /* a box line opened with a click: the whole message as bullets, then the buttons */
+  .al-box li.al-open { white-space: normal; background: var(--color-bg); border-radius: 6px; padding: 6px; margin: 2px 0; }
+  .al-box li.al-open:hover, .al-box li.al-open .al-detail { text-decoration: none; }
+  .al-detail { margin-top: 4px; font-weight: 400; cursor: default; }
+  .al-dtitle { font-weight: 600; margin-bottom: 2px; }
+  .al-box .al-detail .al-bul li { color: var(--color-fg); }
+  .al-links { display: flex; gap: 14px; margin-top: 4px; font-size: var(--cds-font-size-caption); font-weight: 400; }
+  .al-chart { font-weight: 600; white-space: nowrap; }
   .al-box .al-bul li.al-hid { display: none; }
   .al-more { font-size: var(--cds-font-size-caption); margin-right: 8px; }
   .al-news { font-size: var(--cds-font-size-caption); font-weight: 400; margin-left: 2px; white-space: nowrap; }
@@ -3221,6 +3229,7 @@ defCalc('industry_perf', {
      boxes and the full log, each line tagged with the tab it belongs to (Launches / Watchlist / Laggards), the chips show one
      tab's only; on Launches and the Watchlist a bar with the newest ones opens it */
   let ALF = 'All';
+  const AL_OPEN = new Set();       /* the box lines opened with a click (the user, Nov 5 2026: "click shows the message, then I go to TradingView") */
   try { ALF = localStorage.getItem('radar-alerts-filter') || 'All'; } catch (e) { ALF = 'All'; }
   function drawAlog(log) {
     const ul = $('#ln-alert-log'); ul.replaceChildren();
@@ -3358,7 +3367,7 @@ defCalc('industry_perf', {
       return wrap;
     };
     const newsLink = (u) => { const a = h('a', 'al-news', '📰 news'); a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.title = u; a.addEventListener('click', (e) => e.stopPropagation()); return a; };
-    const lineEl = (o, text, cls, more) => {
+    const lineEl = (o, text, cls, more, where) => {
       const li = h('li', [cls || '', o.trig ? 'al-trig' : '', o.sym ? 'al-click' : '', more ? 'al-pm' : ''].filter(Boolean).join(' '));
       if (o.tab) li.append(h('span', 'al-src', SHORT[o.tab]));
       const u = urlOf(text);
@@ -3369,8 +3378,46 @@ defCalc('industry_perf', {
         if (body) li.append(reasonEl(body, o.sym));
         if (mu) li.append(newsLink(mu));
       }
-      li.title = o.sym ? o.full + '\n(click: ' + o.sym + ' on TradingView)' : o.full;
-      if (o.sym) li.addEventListener('click', () => openTV(tv(o.sym)));
+      /* a click opens the message here (bullets, the chart and news buttons) instead of going straight to TradingView;
+         in the full log the line is already whole: a chart button at its end */
+      const chartBtn = () => { const a = h('a', 'al-chart', '📈 Chart'); a.href = tv(o.sym); a.target = TVTAB; a.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); openTV(tv(o.sym)); }); return a; };
+      if (where === 'log') {
+        if (o.sym) { li.append(' '); li.append(chartBtn()); }
+        li.classList.remove('al-click');
+        return li;
+      }
+      if (more) {                                                       /* the Pre-market box: already open */
+        const links = h('div', 'al-links');
+        li.querySelectorAll(':scope > .al-news').forEach((a) => links.append(a));
+        if (o.sym) links.append(chartBtn());
+        li.append(links); li.classList.remove('al-click');
+        return li;
+      }
+      li.title = 'Click for the details';
+      const open = () => {
+        li.classList.add('al-open');
+        const d = h('div', 'al-detail'), body = o.full.split(' — ').slice(1).join(' — '), mu = urlOf(o.full);
+        const ul3 = h('ul', 'al-bul');
+        /* the short figures (+30.1%, gap +15.2%, vol 3.5×, $16.83) on one line, each longer fact on its own */
+        let run = [];
+        const flush = () => { if (run.length) ul3.append(h('li', '', run.join(' · '))); run = []; };
+        body.replace(mu ? ' · 📰 ' + mu : '', '').split(' · ').map((x) => x.trim()).filter(Boolean).forEach((x) => {
+          if (x.length <= 30 && /\d/.test(x)) run.push(cap(x)); else { flush(); ul3.append(h('li', /^⚠|^\W*no\b|isn't|fell back|under its buy/i.test(x) ? 'al-warn' : '', cap(x))); }
+        });
+        flush();
+        if (ul3.children.length) d.append(ul3);
+        const links = h('div', 'al-links');
+        if (mu) links.append(newsLink(mu));
+        if (o.sym) links.append(chartBtn());
+        d.append(links);
+        d.addEventListener('click', (e) => e.stopPropagation());       /* reading the details doesn't close them */
+        li.append(d);
+      };
+      li.addEventListener('click', () => {
+        if (li.classList.contains('al-open')) { AL_OPEN.delete(o.x); li.classList.remove('al-open'); const d = li.querySelector('.al-detail'); if (d) d.remove(); }
+        else { AL_OPEN.add(o.x); open(); }
+      });
+      if (AL_OPEN.has(o.x)) open();
       return li;
     };
     const here = ALF;
@@ -3381,7 +3428,7 @@ defCalc('industry_perf', {
     const qq = q.replace(/[^A-Z0-9.\-]/g, ''), qre = new RegExp('· ' + qq.replace(/\./g, '\\.') + '\\b');
     const shown = q ? (qq ? log.filter((x) => (!isGrp(x) && symOfLine(x) === qq) || qre.test(x)) : []) : mine;
     /* the full log: each line opens its stock's chart; a trigger (the bell) is bold with a red dot */
-    shown.forEach((x) => { const o = parse(x); ul.append(lineEl(o, o.full)); });
+    shown.forEach((x) => { const o = parse(x); ul.append(lineEl(o, o.full, '', false, 'log')); });
     /* the boxes, by kind (a line from before the boxes, Nov 5 2026, has no box: the log only) */
     const bx = $('#ln-alert-boxes');
     safe('Boxes', () => {
