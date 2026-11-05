@@ -279,7 +279,7 @@ alone.
 - **Live on main** (each after the user's "go live"; display only: no scanner, alert or grading code touched, so no
   regress / 2-year check was needed; each checked in the browser against main and on the merged page):
   (1) Launch watch: ADR column, Claude's 8:45 grade in the Earnings cell, the Earnings tab's Read in its own "ER look"
-  column; (2) your table layouts on all 20 tables: drag a header to move, ✕ to delete, ⚙ / "⚙ Columns" button to bring
+  column; (2) your table layouts on all 20 tables: drag a header to move, ⚙ / "⚙ Columns" list to delete (✕) and bring
   back, Reset, + add from a catalog of ~50 stock columns; (3) column widths (drag a header's right edge; double-click /
   "Normal widths" = back); (4) Gainers & losers "Gap up / Gap down ≥" filter + a Gap catalog column; (5) the Desktop
   alerts explanation folds away ("What pops up, and when"); (6) + Filter on the Watchlist, Launches and Gainers.
@@ -362,6 +362,9 @@ alone.
   normal width, "Normal widths" in the list resets all widths (keeps the order). Saved in the same layout (`w`). A
   visible "⚙ Columns: move · resize · delete · + add" button sits above every table (the user didn't see the ⚙ in the
   first header at first).
+- **No ✕ on the headers (live Nov 5 2026, the user's go; branch test/nohdrx)**: on narrow columns (1D, 63 px) the hover ✕
+  sat on the label and closed columns by mistake; a header click now only sorts. Delete = ✕ on the column's row in the
+  ⚙ Columns list; "+ bring back" there.
 - **New table columns in code**: give the header a data-sort key (stable layout key). New stock data worth adding by
   hand: add a line to CATL.
 - Checked: no saved layout = every table identical to main; delete / drag / add / sort / reload / bring back / Reset,
