@@ -7,6 +7,7 @@
 
 Timeline (ET, trading days):
   8:25, 8:40   start the "Pre-market scan" workflow (if today's scan isn't saved yet)
+  8:45, 8:55, 9:00   start the "Code grader" workflow after that update's pre-market prices (its grades in by 9:05)
   9:30-4:10    every 5 minutes: live prices -> live.json on the radar-data branch
   9:31-12:00, 3:00-4:00   every minute in between: the launch watch list and the followed launches (radar/fast.py),
                for the big gap-up alerts and the breakouts
@@ -341,7 +342,7 @@ def day():
             volprofile()
         except Exception as e:
             log("volume curves failed:", e)
-    pm_started, snap_started, last_live, last_pm = set(), None, None, None
+    pm_started, snap_started, last_live, last_pm, cg_started = set(), None, None, None, set()
     while True:
         t = now()
         if time.monotonic() - T0 > BUDGET:
@@ -361,6 +362,14 @@ def day():
                 pm_once()
             except Exception as e:
                 log("pre-market scan failed:", e)
+        # the code grader (radar/codegrade.py) at 8:45, 8:55 and 9:00, right after that update's pre-market prices, so its
+        # grades are in by 9:05 for the user's picks (the user, Nov 4 2026: each run takes about 40 seconds); GitHub's
+        # own schedule for it (8:52 / 9:05 / 9:18) often starts 5-20 minutes late and stays as a backup. A job that
+        # starts later starts it once, for the latest slot that's due.
+        due = [slot for slot in ((8, 45), (8, 55), (9, 0)) if slot <= hm(t) < (9, 20)]
+        if due and due[-1] not in cg_started:
+            cg_started.update(due)
+            dispatch("codegrade.yml")
         # live prices every 5 minutes, 9:30-4:10
         if (9, 30) <= hm(t) <= (16, 10):
             due = last_live is None or (t - last_live).total_seconds() >= 290
