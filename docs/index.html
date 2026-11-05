@@ -3091,7 +3091,9 @@ defCalc('industry_perf', {
     if (alertsOn) {
       const today = todayNY(), snap = loadDay('pmsnap', '{}'), hmNow = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
       const pmAll = rowsOf('premarket').filter((r) => !r.placeholder && r.scan_date === today), byS = new Map(pmAll.map((r) => [r.symbol, r]));
-      const codeToday = !!(CGR && CGR.day === today), okCode = (sym) => !codeToday || !!(CGR.rows && CGR.rows[sym] && CGR.rows[sym].eligible === true);
+      /* Claude's A / B counts when the code grader found the gap-up eligible and over the 200 SMA (not a W laggard: under
+         the 200 nothing is an A / B, the user's rule) */
+      const codeToday = !!(CGR && CGR.day === today), okCode = (sym) => { const c = codeToday && CGR.rows ? CGR.rows[sym] : null; return !codeToday || !!(c && c.eligible === true && c.event !== 'laggard'); };
       const claude = Object.fromEntries(pmAll.filter((r) => r.graded === true || r.graded === 'true').map((r) => [r.symbol, { g: r.grade || '', dir: r.direction, ok: okCode(r.symbol) }]));
       const code = codeToday ? Object.fromEntries(Object.entries(CGR.rows || {}).map(([sym, c]) => [sym, { g: c.grade || '—', dir: c.direction, ok: true }])) : {};
       const GOOD = new Set(['A+', 'A', 'B']), gp = (sym) => { const r = byS.get(sym); return r && r.gap_pct !== null && r.gap_pct !== undefined ? ' · gap ' + (r.gap_pct > 0 ? '+' : '') + Number(r.gap_pct).toFixed(1) + '%' : ''; };
