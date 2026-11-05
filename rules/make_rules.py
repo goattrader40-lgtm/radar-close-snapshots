@@ -163,6 +163,7 @@ SHEETS.update({
  ["Direction", "Gainers"], ["Day's change", "4%+"], ["Price", "$5+"], ["ADR", "3.5%+"], ["$ volume", "$30M+ (20-day)"],
  ["Above 200 SMA", "on"], ["Above 50 EMA", "off"], ["Market cap", "$0.7B+"], ["Avg volume (20D)", "700K+"],
  ["Gap (today's open vs yesterday's close)", "off (fill in a % to use it: gap up for Gainers, gap down for Losers; a stock without an open yet is left out while it's set) (the user, Nov 4 2026)"],
+ ["Your own filters (+ Filter)", "none by default: search any criterion (the table's columns first, then the column catalog) and add it with a value (≥ / ≤, is, has); kept in the browser; Reset to my defaults clears them (also on the Watchlist and Launches, the user, Nov 4 2026)"],
 ]),
 "A1 Alerts": (["Alert", "When it fires", "Checked"], [
  ["3-SETUPS triggers", "Only while the price is over the 200-day SMA (the last close's); under it, no alert (the user, Nov 3 2026: ECHO's base top 100.90 under its 200 SMA 106.63)", "Each live run"],
