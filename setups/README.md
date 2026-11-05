@@ -1,6 +1,6 @@
-# Setups — 2026-11-04
+# Setups — 2026-11-05
 
-**1-EP/GAP** 37 · **1-UPDAY** 182 · **2-POOL** 199 · **3-SETUPS** 62
+**1-EP/GAP** 49 · **1-UPDAY** 133 · **2-POOL** 184 · **3-SETUPS** 53
 
 TradingView import files are in [`tradingview/`](tradingview/) (Watchlist menu → Import list).
 
@@ -10,217 +10,157 @@ Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Laun
 
 | # | Symbol | Setup (last hit) | Grade | Pattern | Buy point | Away | Other entries | ADR | From |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | APPN | Triggered today: Bull flag breakout | A+ | Bull flag (trendline) | 50.44 | +1.2% | flag trendline 50.44 | 6.58% | 1-UPDAY |
-| 2 | SYRE | Triggered today: 21 EMA retest | A | Base top | 100.42 | +1.4% | pullback tight day 100.0 | 5.05% | 2-POOL |
-| 3 | AMPL | Triggered today: Push out of the 21 EMA | A | Base top | 17.84 | +3.8% |  | 4.68% | 1-UPDAY |
-| 4 | CAI | Triggered today: Retest held | A+ | Bull flag (trendline) | 34.94 | +5.2% | flag trendline 33.59 | 6.42% | 2-POOL |
-| 5 | AMN | Triggered today: Bull flag breakout | A | Base top | 49.62 | +3.9% | flag trendline 47.85 | 4.71% | 1-UPDAY |
-| 6 | HTFL | Triggered today: Push out of the 21 EMA | A+ | Base top | 60.56 | +7.1% |  | 5.8% | 1-UPDAY |
-| 7 | PRGO | Triggered today: Breakout | A+ | Base top | 16.79 | +6.1% |  | 4.29% | 2-POOL |
-| 8 | NTSK | Triggered today: Breakout undercut & reclaim | A | Bull flag (trendline) | 26.35 | +15.7% | flag trendline 24.9 | 7.14% | 1-UPDAY |
-| 9 | MNDY | Triggered today: Bull flag breakout |  | Base top | 110.77 | +14.4% | flag trendline 97.45 | 5.67% | 2-POOL |
-| 10 | ARQT | Triggered today: Breakout | A | Tight flag |  |  |  | 5.08% | 1-UPDAY |
-| 11 | ETSY | Triggered today: Base breakout | A | Tight flag |  |  |  | 4.72% | 1-UPDAY |
-| 12 | KSS | Triggered today: Base breakout | A | Tight flag |  |  |  | 5.12% | 1-UPDAY |
-| 13 | MAZE | Triggered today: Base breakout | A |  |  |  | level 33.59 | 5.61% | 1-UPDAY |
-| 14 | MRNA | Triggered today: Base breakout | A+ | Base forming (no pattern yet) |  |  |  | 10.57% | 1-UPDAY |
-| 15 | VSXY | Triggered today: Breakout | A | Cup (no handle) |  |  |  | 5.16% | 1-UPDAY |
-| 16 | WGO | Triggered today: Base breakout | A |  |  |  |  | 5.49% | 1-UPDAY |
-| 17 | XMTR | Triggered today: Base breakout | B |  |  |  |  | 8.33% | 1-UPDAY |
-| 18 | XNCR | Triggered today: Base breakout | A+ | Base breakout |  |  |  | 6.72% | 1-EP/GAP |
-| 19 | NCNO | Ready: Base top | A | Base top | 23.5 | +0.3% | level 23.83 | 4.15% | 1-UPDAY |
-| 20 | PACS | Ready: Base top | A | Base top | 50.38 | +0.2% |  | 4.25% | 1-UPDAY |
-| 21 | DOCS | Ready: Base top | A | Base top | 34.8 | +0.4% |  | 4.1% | 1-UPDAY |
-| 22 | MWH | Ready: Base top |  | Base top | 26.55 | +0.8% |  | 6.03% | 1-UPDAY |
-| 23 | PGY | Ready: Bull flag (trendline) |  | Bull flag (trendline) | 19.29 | +0.9% | flag line 19.29 | 7.0% | 2-POOL |
-| 24 | NXPI | Ready: Base top | A | Base top | 266.98 | +0.7% |  | 4.35% | 2-POOL |
-| 25 | RPD | Ready: Bull flag (trendline) | B | Bull flag (trendline) | 15.28 | +1.6% | flag line 15.28 | 8.12% | 2-POOL |
-| 26 | TRAX | Ready: Base top |  | Base top | 49.91 | +1.8% |  | 8.75% | 1-UPDAY |
-| 27 | RKT | Ready: Base top |  | Base top | 15.18 | +1.1% |  | 4.71% | 1-UPDAY |
-| 28 | FIGS | Ready: Base top | A | Base top | 22.3 | +1.6% |  | 5.85% | 1-UPDAY |
-| 29 | REAL | Ready: Base top | A | Base top | 13.82 | +1.8% |  | 6.0% | 1-UPDAY |
-| 30 | LEGN | Ready: Base top | A | Base top | 23.24 | +2.1% |  | 5.66% | 1-UPDAY |
-| 31 | IRON | Ready: Base top | A | Base top | 85.0 | +2.1% |  | 5.42% | 1-EP/GAP |
-| 32 | IOT | Ready: Bull flag (trendline) | A+ | Bull flag (trendline) | 43.58 | +1.8% |  | 4.57% | 1-UPDAY |
-| 33 | RVMD | Ready: Inner base (last 20 days) |  | Inner base (last 20 days) | 203.49 | +1.9% | flat top 203.5 | 4.81% | 2-POOL |
-| 34 | WK | Ready: Base top | A | Base top | 86.56 | +1.5% |  | 3.86% | 2-POOL |
-| 35 | AMLX | Ready: Base top | A | Base top | 30.0 | +2.0% | flat top 31.0 | 5.1% | 2-POOL |
-| 36 | WLTH | Ready: Base top | A+ | Base top | 11.36 | +1.7% | flat top 11.36 | 4.34% | 1-UPDAY |
-| 37 | ACHC | Ready: Base top | A+ | Base top | 32.87 | +1.9% |  | 4.58% | 1-UPDAY |
-| 38 | MANE | Ready: Bull flag (trendline) |  | Bull flag (trendline) | 140.73 | +3.1% | flag trendline 140.73 | 7.44% | 1-UPDAY |
-| 39 | OLLI | Ready: Base top | A | Base top | 95.77 | +1.8% |  | 4.18% | 1-UPDAY |
-| 40 | XERS | Ready: Bull pennant (trendline) | A+ | Bull pennant (trendline) | 10.66 | +1.9% | coil 10.71, level 11.33, flat top 10.98 | 4.57% | 2-POOL |
-| 41 | PAY | Ready: Base top |  | Base top | 34.16 | +2.0% |  | 4.55% | 1-UPDAY |
-| 42 | BLMN | Ready: Inner base (last 20 days) | A+ | Inner base (last 20 days) | 11.28 | +2.8% |  | 6.29% | 2-POOL |
-| 43 | NAVN | Ready: Base top | A+ | Base top | 27.61 | +2.0% |  | 4.3% | 1-UPDAY |
-| 44 | COMP | Ready: Base top |  | Base top | 10.28 | +2.4% |  | 5.02% | 1-UPDAY |
-| 45 | KNSA | Ready: Tight flag | A | Tight flag | 98.48 | +2.5% |  | 5.02% | 1-UPDAY |
-| 46 | RAL | Ready: Inner base (last 20 days) | A+ | Inner base (last 20 days) | 73.56 | +2.8% | pullback tight day 72.34 | 4.44% | 1-UPDAY |
-| 47 | AXGN | Ready: Base top | A | Base top | 52.91 | +3.0% |  | 4.43% | 1-EP/GAP |
-| 48 | KOD | Setting up: 21 EMA retest setup | A | Inner base (last 20 days) | 103.73 | +5.3% | level 104.0 | 7.08% | 2-POOL |
-| 49 | LION | Setting up: 21 EMA retest setup | A | Inner base (last 20 days) | 13.17 | +3.5% |  | 4.38% | 2-POOL |
-| 50 | DXC | Setting up: Bull flag forming | A | Bull flag (trendline) | 15.7 | +5.5% | flag trendline 14.76 | 5.76% | 1-UPDAY |
-| 51 | CERT | Setting up: 21 EMA retest setup | A+ | Base top | 11.73 | +5.8% | flag trendline 11.2 | 5.34% | 2-POOL |
-| 52 | BHVN | Setting up: 21 EMA retest setup | A | Base top | 16.54 | +8.5% |  | 6.85% | 1-EP/GAP |
-| 53 | SAIL | Setting up: Bull flag forming | A | Bull flag (trendline) | 21.31 | +8.1% | flag line 21.31 | 5.83% | 2-POOL |
-| 54 | HRI | Setting up: 21 EMA retest setup | A+ | Inner base (last 20 days) | 174.42 | +10.1% |  | 6.05% | 1-EP/GAP |
-| 55 | GTLB | Setting up: 21 EMA undercut & reclaim setup | A+ | Base top | 58.01 | +10.8% |  | 5.25% | 2-POOL |
-| 56 | CLF | Setting up: Near the retest zone | A | Base top | 14.58 | +13.6% |  | 6.54% | 1-EP/GAP |
-| 57 | OMER | Setting up: 21 EMA retest setup |  | Base top | 20.24 | +11.3% |  | 5.03% | 1-UPDAY |
-| 58 | ZS | Setting up: Bull flag forming | A | Bull flag (trendline) | 254.74 | +13.5% | flag line 254.74 | 5.66% | 2-POOL |
-| 59 | CRL | Setting up: Near the retest zone | A+ | Base top | 379.63 | +16.3% | flag trendline 354.58 | 4.79% | 1-UPDAY |
-| 60 | RNG | Setting up: 21 EMA undercut & reclaim setup |  | Base top | 98.14 | +25.9% |  | 5.79% | 1-EP/GAP |
-| 61 | QLYS | Setting up: Near the retest zone | A+ | Base forming (no pattern yet) |  |  |  | 5.71% | 1-UPDAY |
-| 62 | TENB | Setting up: 21 EMA retest setup | A+ | Base forming (no pattern yet) |  |  |  | 6.7% | 1-UPDAY |
+| 1 | APPN | Triggered today: Breakout | A | Base top | 54.12 | +0.2% |  | 6.84% | 1-UPDAY |
+| 2 | AMN | Triggered today: Breakout | A | Base top | 49.62 | +4.6% |  | 4.78% | 1-UPDAY |
+| 3 | CERT | Triggered today: Breakout | A+ | Tight flag |  |  |  | 5.78% | 1-UPDAY |
+| 4 | XERS | Triggered today: Breakout | A+ | Ascending triangle |  |  |  | 4.97% | 1-EP/GAP |
+| 5 | WGO | Ready: Base top | A | Base top | 33.19 | +0.1% |  | 5.78% | 1-UPDAY |
+| 6 | PACS | Ready: Base top | A+ | Base top | 50.38 | +0.4% |  | 4.35% | 1-UPDAY |
+| 7 | LYFT | Ready: Base top | A | Base top | 17.98 | +0.8% |  | 4.19% | 1-UPDAY |
+| 8 | WAY | Ready: Base top | A | Base top | 29.25 | +1.3% |  | 4.8% | 1-UPDAY |
+| 9 | WK | Ready: Base top | A | Base top | 86.56 | +1.2% |  | 3.86% | 2-POOL |
+| 10 | MAZE | Ready: Base top | A | Base top | 33.19 | +2.0% | level 33.99 | 5.67% | 1-UPDAY |
+| 11 | GLBE | Ready: Base top | A | Base top | 43.99 | +1.5% |  | 4.09% | 1-UPDAY |
+| 12 | QLYS | Ready: Bull flag (trendline) | A | Bull flag (trendline) | 203.92 | +2.1% | flag trendline 203.92 | 5.65% | 2-POOL |
+| 13 | COCO | Ready: Base top |  | Base top | 65.06 | +2.2% |  | 5.61% | 1-UPDAY |
+| 14 | XMTR | Ready: Base top | B | Base top | 112.94 | +3.6% | coil 113.45 | 8.59% | 1-UPDAY |
+| 15 | BAX | Ready: Base top | A | Base top | 26.1 | +1.8% |  | 4.08% | 1-UPDAY |
+| 16 | MRNA | Ready: Base top | A | Base top | 254.48 | +5.4% |  | 10.86% | 1-UPDAY |
+| 17 | DXC | Ready: Bull pennant (trendline) | A | Bull pennant (trendline) | 15.62 | +3.0% | flag trendline 15.39 | 5.66% | 1-UPDAY |
+| 18 | RKT | Ready: Base top | A | Base top | 15.18 | +2.4% |  | 4.68% | 1-UPDAY |
+| 19 | LEGN | Ready: Base top | A | Base top | 23.24 | +3.1% |  | 5.84% | 1-UPDAY |
+| 20 | WRBY | Ready: Base top |  | Base top | 27.0 | +3.5% | flat top 27.43 | 6.36% | 1-EP/GAP |
+| 21 | TENB | Ready: Bull flag (trendline) | A | Bull flag (trendline) | 45.8 | +3.7% | flag trendline 45.8 | 6.64% | 2-POOL |
+| 22 | ARLO | Ready: Base top | A+ | Base top | 15.36 | +3.5% | pullback tight day 15.22 | 5.69% | 1-UPDAY |
+| 23 | ATRC | Ready: Base top | A+ | Base top | 63.0 | +2.8% |  | 4.44% | 1-UPDAY |
+| 24 | SYRE | Ready: Bull flag (trendline) | A | Bull flag (trendline) | 99.79 | +3.3% | pullback tight day 100.0, flag line 99.79 | 5.07% | 2-POOL |
+| 25 | OLLI | Ready: Base top | A | Base top | 95.77 | +3.0% |  | 4.32% | 1-UPDAY |
+| 26 | LION | Setting up: 21 EMA retest setup | A | Base top | 13.17 | +4.9% |  | 4.5% | 2-POOL |
+| 27 | PGY | Setting up: Bull flag forming |  | Bull flag (trendline) | 18.91 | +8.6% | flag line 18.91 | 7.44% | 2-POOL |
+| 28 | IOT | Setting up: Bull flag forming | A+ | Bull flag (trendline) | 43.37 | +5.5% |  | 4.64% | 2-POOL |
+| 29 | BLMN | Setting up: 21 EMA retest setup | A+ | Inner base (last 20 days) | 11.28 | +7.7% |  | 6.42% | 2-POOL |
+| 30 | MANE | Setting up: Bull flag forming |  | Bull flag (trendline) | 139.56 | +8.5% | flag trendline 134.27 | 6.7% | 1-UPDAY |
+| 31 | IRON | Setting up: 21 EMA retest setup | A | Base top | 85.0 | +8.3% |  | 5.56% | 1-EP/GAP |
+| 32 | EAT | Setting up: Near the retest zone | A+ | Base top | 231.74 | +9.0% |  | 5.35% | 1-EP/GAP |
+| 33 | NAVN | Setting up: Bull flag forming | A+ | Bull flag (trendline) | 27.27 | +7.3% |  | 4.34% | 1-UPDAY |
+| 34 | CART | Setting up: Near the retest zone | A | Base top | 62.0 | +7.3% | flag trendline 59.41 | 4.29% | 1-UPDAY |
+| 35 | ICLR | Setting up: 21 EMA retest setup | A | Base top | 219.04 | +8.6% | flag trendline 205.06 | 4.74% | 1-EP/GAP |
+| 36 | ELF | Setting up: Near the retest zone | A+ | Base top | 118.29 | +7.7% |  | 4.18% | 2-POOL |
+| 37 | RHI | Setting up: 21 EMA retest setup | A+ | Base top | 47.14 | +9.7% |  | 5.13% | 1-EP/GAP |
+| 38 | CBRL | Setting up: 21 EMA retest setup | A | Base top | 73.67 | +8.5% | flag trendline 70.52 | 4.43% | 1-UPDAY |
+| 39 | KOD | Setting up: 21 EMA retest setup | A+ | Inner base (last 20 days) | 103.73 | +14.0% | flat top 104.0 | 7.25% | 2-POOL |
+| 40 | AMPL | Setting up: Near the retest zone | A+ | Base top | 17.84 | +10.8% |  | 5.31% | 1-UPDAY |
+| 41 | KNSA | Setting up: Near the retest zone | A+ | Base top | 98.48 | +11.5% |  | 5.35% | 1-UPDAY |
+| 42 | HTFL | Setting up: Bull flag forming | A+ | Bull flag (trendline) | 58.88 | +13.3% | flag line 58.88 | 5.95% | 1-UPDAY |
+| 43 | NXPI | Setting up: 21 EMA retest setup |  | Inner base (last 20 days) | 272.08 | +11.3% |  | 4.63% | 2-POOL |
+| 44 | HRI | Setting up: 21 EMA retest setup | A | Inner base (last 20 days) | 174.42 | +16.4% |  | 6.37% | 1-EP/GAP |
+| 45 | BHVN | Setting up: 21 EMA retest setup | A | Base top | 16.54 | +19.0% |  | 7.02% | 1-EP/GAP |
+| 46 | CDNA | Setting up: 21 EMA retest setup | A | Base top | 90.87 | +19.0% |  | 6.87% | 1-EP/GAP |
+| 47 | NTSK | Setting up: Bull flag forming |  | Bull flag (trendline) | 26.29 | +21.3% | flag line 26.29 | 7.47% | 2-POOL |
+| 48 | BSP | Setting up: Near the retest zone |  | Base top | 59.5 | +32.0% | flat top 48.13 | 9.28% | 1-EP/GAP |
+| 49 | ORKA | Setting up: 21 EMA retest setup | A | Base top | 115.52 | +20.3% |  | 5.65% | 1-UPDAY |
+| 50 | CRL | Setting up: Near the retest zone | A | Base top | 379.63 | +21.3% | flag trendline 349.81 | 4.93% | 2-POOL |
+| 51 | FIGS | Setting up: 21 EMA retest setup | A+ | Base forming (no pattern yet) |  |  |  | 6.08% | 2-POOL |
+| 52 | KVYO | Setting up: 21 EMA retest setup | A |  |  |  |  | 5.55% | 1-EP/GAP |
+| 53 | TGTX | Setting up: 21 EMA retest setup | A |  |  |  |  | 4.38% | 2-POOL |
 
 ## Changes today
 
 | List | Symbol | | Why |
 |---|---|---|---|
-| 1-EP/GAP | BRKR | added | gap +15.7%, rel vol 3.0 |
-| 1-EP/GAP | DNLI | added | gap +9.2%, rel vol 3.5 |
-| 1-EP/GAP | DUOL | added | gap +25.0%, rel vol 9.0 |
-| 1-EP/GAP | FLYW | added | gap +9.1%, rel vol 4.4 |
-| 1-EP/GAP | KD | added | gap +15.2%, rel vol 3.8 |
-| 1-EP/GAP | NXT | added | gap +8.6%, rel vol 3.4 |
-| 1-EP/GAP | OSCR | added | gap +9.9%, rel vol 3.3 |
-| 1-EP/GAP | PCOR | added | gap +6.0%, rel vol 3.0 |
-| 1-EP/GAP | RELY | added | gap +5.2%, rel vol 3.3 |
-| 1-EP/GAP | SMG | added | gap +7.7%, rel vol 2.5 |
-| 1-EP/GAP | TREX | added | gap +7.9%, rel vol 2.7 |
-| 1-EP/GAP | VRDN | added | gap +12.4%, rel vol 5.1 |
-| 1-EP/GAP | YOU | added | gap +7.6%, rel vol 5.7 |
-| 1-UPDAY | AAL | added | +6.3%, rel vol 1.1 |
-| 1-UPDAY | AAP | added | +6.7%, rel vol 1.7 |
-| 1-UPDAY | ABSI | added | +4.8%, rel vol 1.0 |
-| 1-UPDAY | ACHC | added | +8.9%, rel vol 2.8 |
-| 1-UPDAY | AFRM | added | +5.0%, rel vol 2.2 |
-| 1-UPDAY | ASAN | added | +4.4%, rel vol 1.0 |
-| 1-UPDAY | ASO | added | +11.2%, rel vol 2.1 |
-| 1-UPDAY | ATRC | added | +8.5%, rel vol 1.6 |
-| 1-UPDAY | BETA | added | +7.1%, rel vol 1.8 |
-| 1-UPDAY | BILL | added | +4.1%, rel vol 1.7 |
-| 1-UPDAY | BLDR | added | +9.3%, rel vol 1.4 |
-| 1-UPDAY | BOOT | added | +9.0%, rel vol 1.1 |
-| 1-UPDAY | BRBR | added | +8.5%, rel vol 1.4 |
-| 1-UPDAY | BSP | added | +6.5%, rel vol 1.6 |
-| 1-UPDAY | CARG | added | +8.1%, rel vol 2.0 |
-| 1-UPDAY | CCI | added | +6.5%, rel vol 1.2 |
-| 1-UPDAY | CDW | added | +12.7%, rel vol 2.2 |
-| 1-UPDAY | CGAU | added | +9.2%, rel vol 1.4 |
-| 1-UPDAY | CGON | added | +5.7%, rel vol 1.6 |
-| 1-UPDAY | CHWY | added | +6.1%, rel vol 1.3 |
-| 1-UPDAY | CHYM | added | +5.9%, rel vol 2.0 |
-| 1-UPDAY | CNC | added | +12.6%, rel vol 2.6 |
-| 1-UPDAY | CNXC | added | +6.7%, rel vol 1.0 |
-| 1-UPDAY | COCO | added | +9.7%, rel vol 1.2 |
-| 1-UPDAY | COMP | added | +7.7%, rel vol 1.2 |
-| 1-UPDAY | DASH | added | +8.3%, rel vol 1.3 |
-| 1-UPDAY | DG | added | +8.5%, rel vol 1.6 |
-| 1-UPDAY | DLTR | added | +9.6%, rel vol 1.9 |
-| 1-UPDAY | DVA | added | +5.8%, rel vol 1.1 |
-| 1-UPDAY | EAT | added | +6.3%, rel vol 1.0 |
-| 1-UPDAY | EFOR | added | +8.0%, rel vol 1.0 |
-| 1-UPDAY | EL | added | +6.3%, rel vol 1.0 |
-| 1-UPDAY | ELVN | added | +5.4%, rel vol 1.4 |
-| 1-UPDAY | ENOV | added | +16.9%, rel vol 2.3 |
-| 1-UPDAY | EQX | added | +12.8%, rel vol 2.1 |
-| 1-UPDAY | EXPE | added | +10.5%, rel vol 3.0 |
-| 1-UPDAY | FIGS | added | +5.4%, rel vol 1.1 |
-| 1-UPDAY | GLBE | added | +8.1%, rel vol 1.5 |
-| 1-UPDAY | GO | added | +7.1%, rel vol 1.5 |
-| 1-UPDAY | GWRE | added | +5.9%, rel vol 1.2 |
-| 1-UPDAY | IOT | added | +4.1%, rel vol 1.0 |
-| 1-UPDAY | KNF | added | +6.3%, rel vol 1.3 |
-| 1-UPDAY | KTB | added | +6.6%, rel vol 1.9 |
-| 1-UPDAY | LTH | added | +6.3%, rel vol 1.2 |
-| 1-UPDAY | LUV | added | +6.8%, rel vol 1.2 |
-| 1-UPDAY | LYFT | added | +12.4%, rel vol 2.7 |
-| 1-UPDAY | M | added | +7.6%, rel vol 1.0 |
-| 1-UPDAY | MMYT | added | +11.5%, rel vol 1.5 |
-| 1-UPDAY | MOH | added | +8.9%, rel vol 1.9 |
-| 1-UPDAY | MSTR | added | +5.1%, rel vol 1.1 |
-| 1-UPDAY | NCLH | added | +6.8%, rel vol 1.2 |
-| 1-UPDAY | NVAX | added | +10.0%, rel vol 1.1 |
-| 1-UPDAY | OC | added | +8.5%, rel vol 3.2 |
-| 1-UPDAY | OLLI | added | +5.8%, rel vol 1.2 |
-| 1-UPDAY | PACS | added | +7.7%, rel vol 2.1 |
-| 1-UPDAY | PAY | added | +8.0%, rel vol 1.6 |
-| 1-UPDAY | PCVX | added | +8.0%, rel vol 1.0 |
-| 1-UPDAY | PII | added | +7.6%, rel vol 1.1 |
-| 1-UPDAY | PLNT | added | +4.2%, rel vol 1.3 |
-| 1-UPDAY | PPLI | added | +9.1%, rel vol 2.9 |
-| 1-UPDAY | ROIV | added | +6.1%, rel vol 1.3 |
-| 1-UPDAY | RYTM | added | +28.0%, rel vol 3.8 |
-| 1-UPDAY | SDGR | added | +4.9%, rel vol 1.2 |
-| 1-UPDAY | SITE | added | +5.8%, rel vol 1.4 |
-| 1-UPDAY | SKY | added | +11.3%, rel vol 2.5 |
-| 1-UPDAY | SLG | added | +8.9%, rel vol 1.2 |
-| 1-UPDAY | SN | added | +4.1%, rel vol 1.6 |
-| 1-UPDAY | SONO | added | +5.2%, rel vol 1.7 |
-| 1-UPDAY | SPOT | added | +4.6%, rel vol 1.3 |
-| 1-UPDAY | SRRK | added | +4.8%, rel vol 1.1 |
-| 1-UPDAY | THO | added | +9.4%, rel vol 1.3 |
-| 1-UPDAY | TRAX | added | +5.8%, rel vol 1.4 |
-| 1-UPDAY | U | added | +4.9%, rel vol 3.3 |
-| 1-UPDAY | UAL | added | +8.0%, rel vol 1.4 |
-| 1-UPDAY | UHS | added | +10.9%, rel vol 2.3 |
-| 1-UPDAY | UPWK | added | +4.0%, rel vol 1.3 |
-| 1-UPDAY | VERA | added | +4.1%, rel vol 1.2 |
-| 1-UPDAY | W | added | +11.0%, rel vol 2.4 |
-| 1-UPDAY | WIX | added | +7.8%, rel vol 1.1 |
-| 1-UPDAY | WLTH | added | +7.0%, rel vol 1.8 |
-| 1-UPDAY | XNCR | added | +14.3%, rel vol 1.1 |
-| 1-UPDAY | APH | removed | closed below the up-day low 81.24 |
-| 1-UPDAY | ENTG | removed | closed below the up-day low 151.51 |
-| 1-UPDAY | FTAI | removed | closed below the up-day low 190.48 |
-| 1-UPDAY | HRI | removed | closed below the up-day low 160.9608 |
-| 1-UPDAY | MPWR | removed | closed below the up-day low 1275.75 |
-| 1-UPDAY | NRIX | removed | closed below the up-day low 24.71 |
-| 1-UPDAY | RVTY | removed | closed below the up-day low 162.58 |
-| 1-UPDAY | SOLS | removed | closed below the up-day low 59.535 |
-| 1-UPDAY | VSAT | removed | closed below the up-day low 69.86 |
-| 1-UPDAY | WCC | removed | closed below the up-day low 340.045 |
-| 2-POOL | ADPT | added | first close back above the 50 EMA |
-| 2-POOL | BRKR | added | first close back above the 50 EMA |
-| 2-POOL | CGAU | added | first close back above the 50 EMA |
-| 2-POOL | CGON | added | first close back above the 50 EMA |
-| 2-POOL | CHYM | added | first close back above the 50 EMA |
-| 2-POOL | COMP | added | first close back above the 50 EMA |
-| 2-POOL | DASH | added | first close back above the 50 EMA |
-| 2-POOL | DNLI | added | first close back above the 50 EMA |
-| 2-POOL | DUOL | added | first close back above the 50 EMA |
-| 2-POOL | ELVN | added | first close back above the 50 EMA |
-| 2-POOL | EQX | added | first close back above the 50 EMA |
-| 2-POOL | GWRE | added | first close back above the 50 EMA |
-| 2-POOL | IMAX | added | first close back above the 50 EMA |
-| 2-POOL | MMED | added | first close back above the 50 EMA |
-| 2-POOL | MMYT | added | first close back above the 50 EMA |
-| 2-POOL | MSTR | added | first close back above the 50 EMA |
-| 2-POOL | NEO | added | first close back above the 50 EMA |
-| 2-POOL | NHP | added | first close back above the 50 EMA |
-| 2-POOL | NTLA | added | first close back above the 50 EMA |
-| 2-POOL | NVAX | added | first close back above the 50 EMA |
-| 2-POOL | PBLS | added | first close back above the 50 EMA |
-| 2-POOL | PCVX | added | first close back above the 50 EMA |
-| 2-POOL | PGY | added | first close back above the 50 EMA |
-| 2-POOL | PINS | added | first close back above the 50 EMA |
-| 2-POOL | PPLI | added | first close back above the 50 EMA |
-| 2-POOL | RBLX | added | first close back above the 50 EMA |
-| 2-POOL | RYTM | added | first close back above the 50 EMA |
-| 2-POOL | SAIL | added | first close back above the 50 EMA |
-| 2-POOL | SMMT | added | first close back above the 50 EMA |
-| 2-POOL | SONO | added | first close back above the 50 EMA |
-| 2-POOL | SRRK | added | first close back above the 50 EMA |
-| 2-POOL | U | added | first close back above the 50 EMA |
-| 2-POOL | VERA | added | first close back above the 50 EMA |
-| 2-POOL | WIX | added | first close back above the 50 EMA |
-| 2-POOL | ZETA | added | first close back above the 50 EMA |
-| 2-POOL | CVI | removed | 2 closes in a row below the 50 EMA |
-| 2-POOL | SHOP | removed | 2 closes in a row below the 50 EMA |
+| 1-EP/GAP | ADMA | added | gap +14.6%, rel vol 3.9 |
+| 1-EP/GAP | APP | added | gap +28.7%, rel vol 4.4 |
+| 1-EP/GAP | CHYM | added | gap +6.4%, rel vol 3.0 |
+| 1-EP/GAP | ENOV | added | gap +16.4%, rel vol 2.8 |
+| 1-EP/GAP | EPAM | added | gap +13.7%, rel vol 2.7 |
+| 1-EP/GAP | MGNI | added | gap +13.0%, rel vol 4.1 |
+| 1-EP/GAP | PGNY | added | gap +10.2%, rel vol 3.3 |
+| 1-EP/GAP | U | added | gap +13.2%, rel vol 4.7 |
+| 1-EP/GAP | VCEL | added | gap +11.1%, rel vol 3.7 |
+| 1-EP/GAP | VERX | added | gap +14.4%, rel vol 3.4 |
+| 1-EP/GAP | WRBY | added | gap +21.8%, rel vol 3.4 |
+| 1-EP/GAP | XERS | added | gap +19.6%, rel vol 5.9 |
+| 1-UPDAY | CERT | added | +9.8%, rel vol 1.7 |
+| 1-UPDAY | PRKS | added | +10.7%, rel vol 1.8 |
+| 1-UPDAY | AAL | removed | closed below the up-day low 13.16 |
+| 1-UPDAY | AAP | removed | closed below the up-day low 48.85 |
+| 1-UPDAY | ABSI | removed | closed below the up-day low 9.78 |
+| 1-UPDAY | AFRM | removed | closed below the up-day low 71.97 |
+| 1-UPDAY | ARQT | removed | closed below the up-day low 31.87 |
+| 1-UPDAY | ASAN | removed | closed below the up-day low 11.37 |
+| 1-UPDAY | AZTA | removed | closed below the up-day low 37.685 |
+| 1-UPDAY | BBWI | removed | closed below the up-day low 22.87 |
+| 1-UPDAY | BLDR | removed | closed below the up-day low 66.145 |
+| 1-UPDAY | BOOT | removed | closed below the up-day low 139.1101 |
+| 1-UPDAY | CE | removed | closed below the up-day low 48.12 |
+| 1-UPDAY | COMP | removed | closed below the up-day low 9.79 |
+| 1-UPDAY | CRL | removed | closed below the up-day low 313.83 |
+| 1-UPDAY | CRWD | removed | closed below the up-day low 234.788 |
+| 1-UPDAY | CVNA | removed | closed below the up-day low 72.9 |
+| 1-UPDAY | DASH | removed | closed below the up-day low 188.1625 |
+| 1-UPDAY | ENR | removed | closed below the up-day low 24.57 |
+| 1-UPDAY | EXPE | removed | closed below the up-day low 295.26 |
+| 1-UPDAY | FIGS | removed | closed below the up-day low 21.41 |
+| 1-UPDAY | FIVN | removed | closed below the up-day low 35.43 |
+| 1-UPDAY | GRAL | removed | closed below the up-day low 136.66 |
+| 1-UPDAY | GVA | removed | closed below the up-day low 125.275 |
+| 1-UPDAY | IOT | removed | closed below the up-day low 41.71 |
+| 1-UPDAY | KNF | removed | closed below the up-day low 59.065 |
+| 1-UPDAY | M | removed | closed below the up-day low 24.76 |
+| 1-UPDAY | MSTR | removed | closed below the up-day low 135.8 |
+| 1-UPDAY | MWH | removed | closed below the up-day low 24.52 |
+| 1-UPDAY | NTSK | removed | closed below the up-day low 21.83 |
+| 1-UPDAY | NVAX | removed | closed below the up-day low 9.84 |
+| 1-UPDAY | OMER | removed | closed below the up-day low 17.69 |
+| 1-UPDAY | PCOR | removed | 15 trading days with no setup |
+| 1-UPDAY | PII | removed | closed below the up-day low 64.68 |
+| 1-UPDAY | PSN | removed | closed below the up-day low 50.74 |
+| 1-UPDAY | QDEL | removed | closed below the up-day low 13.09 |
+| 1-UPDAY | QLYS | removed | closed below the up-day low 206.49 |
+| 1-UPDAY | RAL | removed | closed below the up-day low 67.9 |
+| 1-UPDAY | REAL | removed | closed below the up-day low 13.01 |
+| 1-UPDAY | RELY | removed | closed below the up-day low 24.15 |
+| 1-UPDAY | RH | removed | closed below the up-day low 140.5 |
+| 1-UPDAY | RRX | removed | closed below the up-day low 166.21 |
+| 1-UPDAY | S | removed | closed below the up-day low 22.3 |
+| 1-UPDAY | SITE | removed | closed below the up-day low 114.43 |
+| 1-UPDAY | SONO | removed | closed below the up-day low 16.375 |
+| 1-UPDAY | TENB | removed | closed below the up-day low 45.46 |
+| 1-UPDAY | TGTX | removed | closed below the up-day low 58.0 |
+| 1-UPDAY | TRAX | removed | closed below the up-day low 46.09 |
+| 1-UPDAY | VCYT | removed | closed below the up-day low 49.2893 |
+| 1-UPDAY | VERA | removed | closed below the up-day low 30.73 |
+| 1-UPDAY | VFC | removed | closed below the up-day low 20.42 |
+| 1-UPDAY | W | removed | closed below the up-day low 116.17 |
+| 1-UPDAY | WLTH | removed | closed below the up-day low 10.615 |
+| 2-POOL | APP | added | first close back above the 50 EMA |
+| 2-POOL | MGNI | added | first close back above the 50 EMA |
+| 2-POOL | PRKS | added | first close back above the 50 EMA |
+| 2-POOL | WRBY | added | first close back above the 50 EMA |
+| 2-POOL | APH | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | ARXS | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | DINO | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | ENTG | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | FRO | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | GNRC | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | KRMN | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | LIFE | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | MPC | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | MPWR | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | NRIX | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | PBF | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | PTEN | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | PWR | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | SEI | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | SOLS | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | TARS | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | TEAM | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | VSAT | removed | 2 closes in a row below the 50 EMA |
+| 2-POOL | WCC | removed | 2 closes in a row below the 50 EMA |
 
 ## 1-EP/GAP
 
+- **2026-11-05**: ADMA, APP, CHYM, ENOV, EPAM, MGNI, PGNY, U, VCEL, VERX, WRBY, XERS
 - **2026-11-04**: BRKR, DNLI, DUOL, FLYW, KD, NXT, OSCR, PCOR, RELY, SMG, TREX, VRDN, YOU
 - **2026-11-03**: BETA, GPK
 - **2026-10-30**: CDNA, CPRI
@@ -237,20 +177,20 @@ Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Laun
 
 ## 1-UPDAY
 
-- **2026-11-04**: AAL, AAP, ABSI, ACHC, AFRM, ARHS, ARLO, ARQT, ASAN, ASO, ATRC, AZTA, BBWI, BETA, BILL, BLDR, BOOT, BRBR, BSP, CARG, CCI, CDW, CGAU, CGON, CHWY, CHYM, CNC, CNXC, COCO, COMP, CPRI, CVNA, CWK, DASH, DG, DLTR, DOCS, DVA, EAT, EFOR, EL, ELVN, ENOV, ENR, EQX, EXPE, FIGS, GLBE, GLOB, GO, GWRE, HLF, IOT, KMPR, KNF, KTB, KYMR, LEGN, LTH, LUV, LYFT, M, MHK, MMYT, MOH, MSTR, NAVN, NCLH, NVAX, OC, OLLI, PACS, PAY, PCVX, PII, PLNT, POOL, PPLI, REAL, RH, RKT, ROIV, RYTM, SDGR, SITE, SKY, SLG, SN, SONO, SPOT, SRRK, THO, TNDM, TOST, TRAX, U, UAL, UHS, UPBD, UPWK, VCYT, VERA, VFC, VSXY, W, WAY, WIX, WLTH, XNCR
-- **2026-11-03**: BAX, CE, FWRG, GRAL, MWH, OSCR, PRCH, RAL, REPL, RRX, XMTR
-- **2026-11-02**: CAVA, CHDN, FDS, GVA, HOG, KVYO, PENN, PRG, PSN, QDEL, RELY, TEM, WING
-- **2026-10-30**: ACN, EPAM, TGTX
-- **2026-10-29**: MIR, OMER, OWL, SHAK, TENB, TEX
+- **2026-11-05**: ACHC, APPN, CERT, PLNT, PRKS
+- **2026-11-04**: ARHS, ARLO, ASO, ATRC, BETA, BILL, BRBR, BSP, CARG, CCI, CDW, CGAU, CGON, CHWY, CHYM, CNC, CNXC, COCO, CPRI, CWK, DG, DLTR, DOCS, DVA, EAT, EFOR, EL, ELVN, ENOV, EQX, GLBE, GLOB, GO, GWRE, HLF, KMPR, KTB, KYMR, LEGN, LTH, LUV, LYFT, MHK, MMYT, MOH, NAVN, NCLH, OC, OLLI, PACS, PAY, PCVX, POOL, PPLI, RKT, ROIV, RYTM, SDGR, SKY, SLG, SN, SPOT, SRRK, THO, TNDM, TOST, U, UAL, UHS, UPBD, UPWK, VSXY, WAY, WIX, XNCR
+- **2026-11-03**: BAX, FWRG, OSCR, PRCH, REPL, XMTR
+- **2026-11-02**: CAVA, CHDN, FDS, HOG, KVYO, PENN, PRG, TEM, WING
+- **2026-10-30**: ACN, EPAM
+- **2026-10-29**: MIR, OWL, SHAK, TEX
 - **2026-10-28**: BEAM, ECHO, ETSY, GMAB, KNSA, SG
 - **2026-10-27**: ORKA, VIR
 - **2026-10-26**: CART
-- **2026-10-23**: CRWD, FIVN, NTSK, QLYS, S
-- **2026-10-22**: AMN, APPN, KSS, NCNO, RHI, WGO
-- **2026-10-21**: AMPL, CRL, HNGE, ICLR
+- **2026-10-22**: AMN, KSS, NCNO, RHI, WGO
+- **2026-10-21**: AMPL, HNGE, ICLR
 - **2026-10-20**: HTFL, MAZE, SGRY, ZYME
 - **2026-10-19**: DXC, MANE, VRDN
-- **2026-10-15**: BRZE, CBRL, PCOR, RNG, TTAN
+- **2026-10-15**: BRZE, CBRL, RNG, TTAN
 - **2026-10-13**: VRNS
 - **2026-10-09**: MRNA
 - **2026-10-08**: IT
@@ -258,5 +198,5 @@ Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Laun
 
 ## 2-POOL
 
-- **Momentum**: ABCL, ABSI, ACN, AI, AMLX, AMN, AMPL, AMRX, APPN, ARHS, ARLO, ARQT, ASAN, ATRC, AVPT, AXGN, AZTA, BBWI, BEAM, BHVN, BLDR, BLMN, BRZE, BSP, CAI, CART, CBRL, CDNA, CERT, CLF, CNXC, CPRI, CRL, CRWD, DINO, DOCS, DXC, EAT, ECO, ELF, ENTG, EPAM, ETSY, FA, FIGS, FIVN, FRO, FTRE, GH, GKOS, GLOB, GMAB, GO, GRAL, GTLB, HNGE, HRI, HTFL, HUM, ICLR, IOT, IRON, KD, KNSA, KOD, KRMN, KSS, KVYO, KYMR, LEGN, LIFE, LIND, LW, MIR, MNDY, MPC, MRNA, NAVN, NCNO, NRIX, NTRA, NTSK, NXPI, OMER, ORKA, PBF, PCOR, PD, PRCH, PRG, PRGO, PTEN, QDEL, QLYS, RBRK, REAL, RELY, REPL, RGEN, RHI, RNG, RPD, RVTY, RXO, S, SDGR, SEI, SG, SLN, SYNA, SYRE, TEAM, TEM, TENB, TGTX, TRAX, TTAN, UPBD, UTHR, VCYT, VERX, VFC, VRDN, VSAT, VSTS, VSXY, W, WING, WK, XERS, XNCR, ZS, ZYME
-- **50 EMA reclaim**: ACHC, ADPT, AFRM, APH, ARXS, BAX, BETA, BRKR, CGAU, CGON, CHYM, COCO, COMP, DASH, DNLI, DUOL, ELVN, EQX, EXPE, FDS, GME, GNRC, GWRE, IMAX, LION, MMED, MMYT, MOH, MPWR, MSTR, MWH, NEO, NEOG, NHP, NTLA, NVAX, OSCR, OWL, PBLS, PCVX, PENN, PGY, PINS, PPLI, PWR, RAL, RBLX, RRX, RVMD, RYTM, SAIL, SMMT, SOLS, SONO, SRRK, STOK, SWKS, TARS, TNDM, U, VERA, VIR, WCC, WIX, XMTR, ZETA
+- **Momentum**: ABCL, ABSI, ACN, AI, AMLX, AMN, AMPL, AMRX, APPN, ARHS, ARLO, ARQT, ASAN, ATRC, AVPT, AXGN, AZTA, BBWI, BEAM, BHVN, BLDR, BLMN, BRZE, BSP, CAI, CART, CBRL, CDNA, CERT, CLF, CNXC, CPRI, CRL, CRWD, DNA, DOCS, DXC, EAT, ECO, ELF, EPAM, ETSY, FA, FIGS, FIVN, FTRE, GH, GKOS, GLOB, GMAB, GO, GRAL, GTLB, HNGE, HRI, HTFL, HUM, ICLR, IOT, IRON, KD, KNSA, KOD, KSS, KVYO, KYMR, LEGN, LIND, LW, MIR, MNDY, MRNA, NAVN, NCNO, NTRA, NTSK, NXPI, OMER, ORKA, PCOR, PD, PRCH, PRG, PRGO, QDEL, QLYS, RBRK, REAL, RELY, REPL, RGEN, RHI, RNG, RPD, RVTY, RXO, S, SDGR, SG, SLN, SYNA, SYRE, TEM, TENB, TGTX, TRAX, TTAN, UPBD, UTHR, VCYT, VERX, VFC, VRDN, VSTS, VSXY, W, WING, WK, XERS, XNCR, ZS, ZYME
+- **50 EMA reclaim**: ACHC, ADPT, AFRM, APP, BAX, BETA, BRKR, CGAU, CGON, CHYM, COCO, COMP, DASH, DNLI, DUOL, ELVN, EQX, EXPE, FDS, GME, GWRE, IMAX, LION, MGNI, MMED, MMYT, MOH, MSTR, MWH, NEO, NEOG, NHP, NTLA, NVAX, OSCR, OWL, PBLS, PCVX, PENN, PGY, PINS, PPLI, PRKS, RAL, RBLX, RRX, RVMD, RYTM, SAIL, SMMT, SONO, SRRK, STOK, SWKS, TNDM, U, VERA, VIR, WIX, WRBY, XMTR, ZETA

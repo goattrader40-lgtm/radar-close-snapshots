@@ -1,7 +1,14 @@
 {
- "asof": "2026-11-04",
+ "asof": "2026-11-05",
  "lists": {
   "1-EP/GAP": {
+   "ADMA": {
+    "added": "2026-11-05",
+    "low": 11.9,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +14.6%, rel vol 3.9"
+   },
    "AI": {
     "added": "2026-10-12",
     "low": 11.505,
@@ -9,10 +16,17 @@
     "section": "2026-10-12",
     "why": "gap +6.7%, rel vol 2.7"
    },
+   "APP": {
+    "added": "2026-11-05",
+    "low": 338.88,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +28.7%, rel vol 4.4"
+   },
    "AXGN": {
     "added": "2026-10-28",
     "low": 43.5,
-    "promoted": false,
+    "promoted": true,
     "section": "2026-10-28",
     "why": "gap +21.3%, rel vol 7.2"
    },
@@ -58,6 +72,13 @@
     "section": "2026-10-30",
     "why": "gap +14.8%, rel vol 3.0"
    },
+   "CHYM": {
+    "added": "2026-11-05",
+    "low": 29.6966,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +6.4%, rel vol 3.0"
+   },
    "CLF": {
     "added": "2026-10-19",
     "low": 12.94,
@@ -92,6 +113,20 @@
     "promoted": true,
     "section": "2026-10-28",
     "why": "gap +5.2%, rel vol 2.6"
+   },
+   "ENOV": {
+    "added": "2026-11-05",
+    "low": 26.885,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +16.4%, rel vol 2.8"
+   },
+   "EPAM": {
+    "added": "2026-11-05",
+    "low": 154.1,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +13.7%, rel vol 2.7"
    },
    "FLYW": {
     "added": "2026-11-04",
@@ -149,6 +184,13 @@
     "section": "2026-10-20",
     "why": "gap +8.0%, rel vol 2.7"
    },
+   "MGNI": {
+    "added": "2026-11-05",
+    "low": 25.75,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +13.0%, rel vol 4.1"
+   },
    "NCLH": {
     "added": "2026-10-29",
     "low": 17.4,
@@ -176,6 +218,13 @@
     "promoted": false,
     "section": "2026-11-04",
     "why": "gap +6.0%, rel vol 3.0"
+   },
+   "PGNY": {
+    "added": "2026-11-05",
+    "low": 32.03,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +10.2%, rel vol 3.3"
    },
    "PRCH": {
     "added": "2026-10-29",
@@ -226,12 +275,33 @@
     "section": "2026-11-04",
     "why": "gap +7.9%, rel vol 2.7"
    },
+   "U": {
+    "added": "2026-11-05",
+    "low": 44.82,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +13.2%, rel vol 4.7"
+   },
    "UPBD": {
     "added": "2026-10-29",
     "low": 17.63,
     "promoted": true,
     "section": "2026-10-29",
     "why": "gap +6.4%, rel vol 3.0"
+   },
+   "VCEL": {
+    "added": "2026-11-05",
+    "low": 49.0,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +11.1%, rel vol 3.7"
+   },
+   "VERX": {
+    "added": "2026-11-05",
+    "low": 17.05,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +14.4%, rel vol 3.4"
    },
    "VRDN": {
     "added": "2026-11-04",
@@ -247,10 +317,24 @@
     "section": "2026-10-28",
     "why": "gap +9.1%, rel vol 2.9"
    },
+   "WRBY": {
+    "added": "2026-11-05",
+    "low": 24.85,
+    "promoted": false,
+    "section": "2026-11-05",
+    "why": "gap +21.8%, rel vol 3.4"
+   },
+   "XERS": {
+    "added": "2026-11-05",
+    "low": 12.32,
+    "promoted": true,
+    "section": "2026-11-05",
+    "why": "gap +19.6%, rel vol 5.9"
+   },
    "XNCR": {
     "added": "2026-10-26",
     "low": 28.84,
-    "promoted": false,
+    "promoted": true,
     "section": "2026-10-26",
     "why": "gap +28.1%, rel vol 6.7"
    },
@@ -263,33 +347,12 @@
    }
   },
   "1-UPDAY": {
-   "AAL": {
-    "added": "2026-11-04",
-    "low": 13.16,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+6.3%, rel vol 1.1"
-   },
-   "AAP": {
-    "added": "2026-11-04",
-    "low": 48.85,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+6.7%, rel vol 1.7"
-   },
-   "ABSI": {
-    "added": "2026-11-04",
-    "low": 9.78,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+4.8%, rel vol 1.0"
-   },
    "ACHC": {
-    "added": "2026-11-04",
-    "low": 30.11,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+8.9%, rel vol 2.8"
+    "added": "2026-11-05",
+    "low": 33.84,
+    "promoted": true,
+    "section": "2026-11-05",
+    "why": "+7.9%, rel vol 2.4"
    },
    "ACN": {
     "added": "2026-10-30",
@@ -297,13 +360,6 @@
     "promoted": true,
     "section": "2026-10-30",
     "why": "+4.5%, rel vol 1.6"
-   },
-   "AFRM": {
-    "added": "2026-11-04",
-    "low": 71.97,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+5.0%, rel vol 2.2"
    },
    "AMN": {
     "added": "2026-10-22",
@@ -320,11 +376,11 @@
     "why": "+5.2%, rel vol 1.3"
    },
    "APPN": {
-    "added": "2026-10-22",
-    "low": 48.59,
+    "added": "2026-11-05",
+    "low": 51.27,
     "promoted": true,
-    "section": "2026-10-22",
-    "why": "+5.0%, rel vol 1.8"
+    "section": "2026-11-05",
+    "why": "+8.5%, rel vol 1.9"
    },
    "ARHS": {
     "added": "2026-11-04",
@@ -340,20 +396,6 @@
     "section": "2026-11-04",
     "why": "+11.0%, rel vol 1.3"
    },
-   "ARQT": {
-    "added": "2026-11-04",
-    "low": 31.87,
-    "promoted": true,
-    "section": "2026-11-04",
-    "why": "+6.4%, rel vol 1.4"
-   },
-   "ASAN": {
-    "added": "2026-11-04",
-    "low": 11.37,
-    "promoted": true,
-    "section": "2026-11-04",
-    "why": "+4.4%, rel vol 1.0"
-   },
    "ASO": {
     "added": "2026-11-04",
     "low": 63.11,
@@ -368,26 +410,12 @@
     "section": "2026-11-04",
     "why": "+8.5%, rel vol 1.6"
    },
-   "AZTA": {
-    "added": "2026-11-04",
-    "low": 37.685,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+5.4%, rel vol 1.0"
-   },
    "BAX": {
     "added": "2026-11-03",
     "low": 23.92,
     "promoted": false,
     "section": "2026-11-03",
     "why": "+5.2%, rel vol 1.1"
-   },
-   "BBWI": {
-    "added": "2026-11-04",
-    "low": 22.87,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+4.1%, rel vol 1.1"
    },
    "BEAM": {
     "added": "2026-10-28",
@@ -409,20 +437,6 @@
     "promoted": false,
     "section": "2026-11-04",
     "why": "+4.1%, rel vol 1.7"
-   },
-   "BLDR": {
-    "added": "2026-11-04",
-    "low": 66.145,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+9.3%, rel vol 1.4"
-   },
-   "BOOT": {
-    "added": "2026-11-04",
-    "low": 139.1101,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+9.0%, rel vol 1.1"
    },
    "BRBR": {
     "added": "2026-11-04",
@@ -487,12 +501,12 @@
     "section": "2026-11-04",
     "why": "+12.7%, rel vol 2.2"
    },
-   "CE": {
-    "added": "2026-11-03",
-    "low": 48.12,
-    "promoted": false,
-    "section": "2026-11-03",
-    "why": "+5.0%, rel vol 2.4"
+   "CERT": {
+    "added": "2026-11-05",
+    "low": 10.82,
+    "promoted": true,
+    "section": "2026-11-05",
+    "why": "+9.8%, rel vol 1.7"
    },
    "CGAU": {
     "added": "2026-11-04",
@@ -550,13 +564,6 @@
     "section": "2026-11-04",
     "why": "+9.7%, rel vol 1.2"
    },
-   "COMP": {
-    "added": "2026-11-04",
-    "low": 9.79,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+7.7%, rel vol 1.2"
-   },
    "CPRI": {
     "added": "2026-11-04",
     "low": 20.365,
@@ -564,40 +571,12 @@
     "section": "2026-11-04",
     "why": "+5.8%, rel vol 1.1"
    },
-   "CRL": {
-    "added": "2026-10-21",
-    "low": 313.83,
-    "promoted": true,
-    "section": "2026-10-21",
-    "why": "+9.3%, rel vol 3.1"
-   },
-   "CRWD": {
-    "added": "2026-10-23",
-    "low": 234.788,
-    "promoted": false,
-    "section": "2026-10-23",
-    "why": "+8.2%, rel vol 1.5"
-   },
-   "CVNA": {
-    "added": "2026-11-04",
-    "low": 72.9,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+8.8%, rel vol 1.7"
-   },
    "CWK": {
     "added": "2026-11-04",
     "low": 13.7,
     "promoted": false,
     "section": "2026-11-04",
     "why": "+9.6%, rel vol 1.6"
-   },
-   "DASH": {
-    "added": "2026-11-04",
-    "low": 188.1625,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+8.3%, rel vol 1.3"
    },
    "DG": {
     "added": "2026-11-04",
@@ -676,13 +655,6 @@
     "section": "2026-11-04",
     "why": "+16.9%, rel vol 2.3"
    },
-   "ENR": {
-    "added": "2026-11-04",
-    "low": 24.57,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+4.7%, rel vol 1.4"
-   },
    "EPAM": {
     "added": "2026-10-30",
     "low": 136.54,
@@ -704,33 +676,12 @@
     "section": "2026-10-28",
     "why": "+5.4%, rel vol 2.2"
    },
-   "EXPE": {
-    "added": "2026-11-04",
-    "low": 295.26,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+10.5%, rel vol 3.0"
-   },
    "FDS": {
     "added": "2026-11-02",
     "low": 325.345,
     "promoted": false,
     "section": "2026-11-02",
     "why": "+4.3%, rel vol 1.3"
-   },
-   "FIGS": {
-    "added": "2026-11-04",
-    "low": 21.41,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+5.4%, rel vol 1.1"
-   },
-   "FIVN": {
-    "added": "2026-10-23",
-    "low": 35.43,
-    "promoted": true,
-    "section": "2026-10-23",
-    "why": "+7.2%, rel vol 1.7"
    },
    "FWRG": {
     "added": "2026-11-03",
@@ -774,20 +725,6 @@
     "section": "2026-11-04",
     "why": "+7.1%, rel vol 1.5"
    },
-   "GRAL": {
-    "added": "2026-11-03",
-    "low": 136.66,
-    "promoted": false,
-    "section": "2026-11-03",
-    "why": "+4.2%, rel vol 1.4"
-   },
-   "GVA": {
-    "added": "2026-11-02",
-    "low": 125.275,
-    "promoted": false,
-    "section": "2026-11-02",
-    "why": "+4.3%, rel vol 1.2"
-   },
    "GWRE": {
     "added": "2026-11-04",
     "low": 164.215,
@@ -830,13 +767,6 @@
     "section": "2026-10-21",
     "why": "+6.3%, rel vol 1.5"
    },
-   "IOT": {
-    "added": "2026-11-04",
-    "low": 41.71,
-    "promoted": true,
-    "section": "2026-11-04",
-    "why": "+4.1%, rel vol 1.0"
-   },
    "IT": {
     "added": "2026-10-08",
     "low": 186.81,
@@ -850,13 +780,6 @@
     "promoted": false,
     "section": "2026-11-04",
     "why": "+5.9%, rel vol 1.0"
-   },
-   "KNF": {
-    "added": "2026-11-04",
-    "low": 59.065,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+6.3%, rel vol 1.3"
    },
    "KNSA": {
     "added": "2026-10-28",
@@ -896,7 +819,7 @@
    "LEGN": {
     "added": "2026-11-04",
     "low": 21.7,
-    "promoted": false,
+    "promoted": true,
     "section": "2026-11-04",
     "why": "+6.0%, rel vol 1.8"
    },
@@ -920,13 +843,6 @@
     "promoted": false,
     "section": "2026-11-04",
     "why": "+12.4%, rel vol 2.7"
-   },
-   "M": {
-    "added": "2026-11-04",
-    "low": 24.76,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+7.6%, rel vol 1.0"
    },
    "MANE": {
     "added": "2026-10-19",
@@ -977,20 +893,6 @@
     "section": "2026-10-09",
     "why": "+14.2%, rel vol 1.6"
    },
-   "MSTR": {
-    "added": "2026-11-04",
-    "low": 135.8,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+5.1%, rel vol 1.1"
-   },
-   "MWH": {
-    "added": "2026-11-03",
-    "low": 24.52,
-    "promoted": true,
-    "section": "2026-11-03",
-    "why": "+11.7%, rel vol 1.5"
-   },
    "NAVN": {
     "added": "2026-11-04",
     "low": 24.63,
@@ -1012,20 +914,6 @@
     "section": "2026-10-22",
     "why": "+6.1%, rel vol 1.4"
    },
-   "NTSK": {
-    "added": "2026-10-23",
-    "low": 21.83,
-    "promoted": true,
-    "section": "2026-10-23",
-    "why": "+9.4%, rel vol 1.2"
-   },
-   "NVAX": {
-    "added": "2026-11-04",
-    "low": 9.84,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+10.0%, rel vol 1.1"
-   },
    "OC": {
     "added": "2026-11-04",
     "low": 116.62,
@@ -1036,16 +924,9 @@
    "OLLI": {
     "added": "2026-11-04",
     "low": 91.0,
-    "promoted": false,
+    "promoted": true,
     "section": "2026-11-04",
     "why": "+5.8%, rel vol 1.2"
-   },
-   "OMER": {
-    "added": "2026-10-29",
-    "low": 17.69,
-    "promoted": true,
-    "section": "2026-10-29",
-    "why": "+6.0%, rel vol 3.2"
    },
    "ORKA": {
     "added": "2026-10-27",
@@ -1071,23 +952,16 @@
    "PACS": {
     "added": "2026-11-04",
     "low": 46.57,
-    "promoted": false,
+    "promoted": true,
     "section": "2026-11-04",
     "why": "+7.7%, rel vol 2.1"
    },
    "PAY": {
     "added": "2026-11-04",
     "low": 31.45,
-    "promoted": false,
+    "promoted": true,
     "section": "2026-11-04",
     "why": "+8.0%, rel vol 1.6"
-   },
-   "PCOR": {
-    "added": "2026-10-15",
-    "low": 55.23,
-    "promoted": false,
-    "section": "2026-10-15",
-    "why": "+4.7%, rel vol 1.8"
    },
    "PCVX": {
     "added": "2026-11-04",
@@ -1103,19 +977,12 @@
     "section": "2026-11-02",
     "why": "+7.1%, rel vol 1.5"
    },
-   "PII": {
-    "added": "2026-11-04",
-    "low": 64.68,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+7.6%, rel vol 1.1"
-   },
    "PLNT": {
-    "added": "2026-11-04",
-    "low": 55.065,
+    "added": "2026-11-05",
+    "low": 57.745,
     "promoted": false,
-    "section": "2026-11-04",
-    "why": "+4.2%, rel vol 1.3"
+    "section": "2026-11-05",
+    "why": "+4.8%, rel vol 1.7"
    },
    "POOL": {
     "added": "2026-11-04",
@@ -1145,47 +1012,12 @@
     "section": "2026-11-02",
     "why": "+9.9%, rel vol 1.6"
    },
-   "PSN": {
-    "added": "2026-11-02",
-    "low": 50.74,
+   "PRKS": {
+    "added": "2026-11-05",
+    "low": 34.91,
     "promoted": false,
-    "section": "2026-11-02",
-    "why": "+4.5%, rel vol 1.4"
-   },
-   "QDEL": {
-    "added": "2026-11-02",
-    "low": 13.09,
-    "promoted": true,
-    "section": "2026-11-02",
-    "why": "+5.9%, rel vol 1.5"
-   },
-   "QLYS": {
-    "added": "2026-10-23",
-    "low": 206.49,
-    "promoted": true,
-    "section": "2026-10-23",
-    "why": "+4.1%, rel vol 1.7"
-   },
-   "RAL": {
-    "added": "2026-11-03",
-    "low": 67.9,
-    "promoted": false,
-    "section": "2026-11-03",
-    "why": "+7.5%, rel vol 2.7"
-   },
-   "REAL": {
-    "added": "2026-11-04",
-    "low": 13.01,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+6.9%, rel vol 1.1"
-   },
-   "RELY": {
-    "added": "2026-11-02",
-    "low": 24.15,
-    "promoted": false,
-    "section": "2026-11-02",
-    "why": "+4.9%, rel vol 1.4"
+    "section": "2026-11-05",
+    "why": "+10.7%, rel vol 1.8"
    },
    "REPL": {
     "added": "2026-11-03",
@@ -1193,13 +1025,6 @@
     "promoted": false,
     "section": "2026-11-03",
     "why": "+6.0%, rel vol 1.3"
-   },
-   "RH": {
-    "added": "2026-11-04",
-    "low": 140.5,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+8.0%, rel vol 1.2"
    },
    "RHI": {
     "added": "2026-10-22",
@@ -1211,7 +1036,7 @@
    "RKT": {
     "added": "2026-11-04",
     "low": 14.35,
-    "promoted": false,
+    "promoted": true,
     "section": "2026-11-04",
     "why": "+8.7%, rel vol 1.4"
    },
@@ -1229,26 +1054,12 @@
     "section": "2026-11-04",
     "why": "+6.1%, rel vol 1.3"
    },
-   "RRX": {
-    "added": "2026-11-03",
-    "low": 166.21,
-    "promoted": false,
-    "section": "2026-11-03",
-    "why": "+11.8%, rel vol 3.0"
-   },
    "RYTM": {
     "added": "2026-11-04",
     "low": 85.04,
     "promoted": false,
     "section": "2026-11-04",
     "why": "+28.0%, rel vol 3.8"
-   },
-   "S": {
-    "added": "2026-10-23",
-    "low": 22.3,
-    "promoted": true,
-    "section": "2026-10-23",
-    "why": "+6.7%, rel vol 1.3"
    },
    "SDGR": {
     "added": "2026-11-04",
@@ -1278,13 +1089,6 @@
     "section": "2026-10-29",
     "why": "+4.9%, rel vol 1.2"
    },
-   "SITE": {
-    "added": "2026-11-04",
-    "low": 114.43,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+5.8%, rel vol 1.4"
-   },
    "SKY": {
     "added": "2026-11-04",
     "low": 87.5,
@@ -1305,13 +1109,6 @@
     "promoted": false,
     "section": "2026-11-04",
     "why": "+4.1%, rel vol 1.6"
-   },
-   "SONO": {
-    "added": "2026-11-04",
-    "low": 16.375,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+5.2%, rel vol 1.7"
    },
    "SPOT": {
     "added": "2026-11-04",
@@ -1334,26 +1131,12 @@
     "section": "2026-11-02",
     "why": "+8.7%, rel vol 3.1"
    },
-   "TENB": {
-    "added": "2026-10-29",
-    "low": 45.46,
-    "promoted": false,
-    "section": "2026-10-29",
-    "why": "+6.3%, rel vol 1.6"
-   },
    "TEX": {
     "added": "2026-10-29",
     "low": 51.42,
     "promoted": true,
     "section": "2026-10-29",
     "why": "+6.0%, rel vol 1.4"
-   },
-   "TGTX": {
-    "added": "2026-10-30",
-    "low": 58.0,
-    "promoted": false,
-    "section": "2026-10-30",
-    "why": "+5.3%, rel vol 2.0"
    },
    "THO": {
     "added": "2026-11-04",
@@ -1375,13 +1158,6 @@
     "promoted": false,
     "section": "2026-11-04",
     "why": "+5.5%, rel vol 2.3"
-   },
-   "TRAX": {
-    "added": "2026-11-04",
-    "low": 46.09,
-    "promoted": true,
-    "section": "2026-11-04",
-    "why": "+5.8%, rel vol 1.4"
    },
    "TTAN": {
     "added": "2026-10-15",
@@ -1425,27 +1201,6 @@
     "section": "2026-11-04",
     "why": "+4.0%, rel vol 1.3"
    },
-   "VCYT": {
-    "added": "2026-11-04",
-    "low": 49.2893,
-    "promoted": true,
-    "section": "2026-11-04",
-    "why": "+4.4%, rel vol 1.6"
-   },
-   "VERA": {
-    "added": "2026-11-04",
-    "low": 30.73,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+4.1%, rel vol 1.2"
-   },
-   "VFC": {
-    "added": "2026-11-04",
-    "low": 20.42,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+4.4%, rel vol 1.4"
-   },
    "VIR": {
     "added": "2026-10-27",
     "low": 10.86,
@@ -1473,13 +1228,6 @@
     "promoted": true,
     "section": "2026-11-04",
     "why": "+8.4%, rel vol 1.3"
-   },
-   "W": {
-    "added": "2026-11-04",
-    "low": 116.17,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+11.0%, rel vol 2.4"
    },
    "WAY": {
     "added": "2026-11-04",
@@ -1509,13 +1257,6 @@
     "section": "2026-11-04",
     "why": "+7.8%, rel vol 1.1"
    },
-   "WLTH": {
-    "added": "2026-11-04",
-    "low": 10.615,
-    "promoted": false,
-    "section": "2026-11-04",
-    "why": "+7.0%, rel vol 1.8"
-   },
    "XMTR": {
     "added": "2026-11-03",
     "low": 87.0,
@@ -1526,7 +1267,7 @@
    "XNCR": {
     "added": "2026-11-04",
     "low": 30.86,
-    "promoted": false,
+    "promoted": true,
     "section": "2026-11-04",
     "why": "+14.3%, rel vol 1.1"
    },
@@ -1604,8 +1345,8 @@
     "section": "Momentum",
     "why": "momentum 6M"
    },
-   "APH": {
-    "added": "2026-11-03",
+   "APP": {
+    "added": "2026-11-05",
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -1632,11 +1373,6 @@
     "section": "Momentum",
     "why": "momentum 1M"
    },
-   "ARXS": {
-    "added": "2026-11-03",
-    "section": "50 EMA reclaim",
-    "why": "first close back above the 50 EMA"
-   },
    "ASAN": {
     "added": "2026-10-23",
     "promoted": true,
@@ -1656,6 +1392,7 @@
    },
    "AXGN": {
     "added": "2026-10-28",
+    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W"
    },
@@ -1699,6 +1436,7 @@
    },
    "BLMN": {
     "added": "2026-10-30",
+    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W/1M/6M"
    },
@@ -1783,6 +1521,7 @@
    },
    "COMP": {
     "added": "2026-11-04",
+    "promoted": true,
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -1807,12 +1546,6 @@
     "added": "2026-11-04",
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
-   },
-   "DINO": {
-    "added": "2026-10-05",
-    "promoted": true,
-    "section": "Momentum",
-    "why": "momentum 6M"
    },
    "DNA": {
     "added": "2026-10-30",
@@ -1865,12 +1598,6 @@
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
-   "ENTG": {
-    "added": "2026-10-27",
-    "promoted": true,
-    "section": "Momentum",
-    "why": "momentum 1W"
-   },
    "EPAM": {
     "added": "2026-10-23",
     "promoted": true,
@@ -1915,11 +1642,6 @@
     "section": "Momentum",
     "why": "momentum 6M"
    },
-   "FRO": {
-    "added": "2026-10-30",
-    "section": "Momentum",
-    "why": "momentum 6M"
-   },
    "FTRE": {
     "added": "2026-10-05",
     "promoted": true,
@@ -1952,11 +1674,6 @@
    "GME": {
     "added": "2026-10-29",
     "promoted": true,
-    "section": "50 EMA reclaim",
-    "why": "first close back above the 50 EMA"
-   },
-   "GNRC": {
-    "added": "2026-11-03",
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -2053,11 +1770,6 @@
     "section": "Momentum",
     "why": "momentum 1W/3M/6M"
    },
-   "KRMN": {
-    "added": "2026-10-30",
-    "section": "Momentum",
-    "why": "momentum 1M"
-   },
    "KSS": {
     "added": "2026-10-09",
     "promoted": true,
@@ -2082,12 +1794,6 @@
     "section": "Momentum",
     "why": "momentum 1W"
    },
-   "LIFE": {
-    "added": "2026-10-30",
-    "promoted": true,
-    "section": "Momentum",
-    "why": "momentum 1M/3M"
-   },
    "LIND": {
     "added": "2026-10-05",
     "promoted": true,
@@ -2105,6 +1811,11 @@
     "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W"
+   },
+   "MGNI": {
+    "added": "2026-11-05",
+    "section": "50 EMA reclaim",
+    "why": "first close back above the 50 EMA"
    },
    "MIR": {
     "added": "2026-10-30",
@@ -2130,16 +1841,6 @@
    "MOH": {
     "added": "2026-10-30",
     "promoted": true,
-    "section": "50 EMA reclaim",
-    "why": "first close back above the 50 EMA"
-   },
-   "MPC": {
-    "added": "2026-10-05",
-    "section": "Momentum",
-    "why": "momentum 3M/6M"
-   },
-   "MPWR": {
-    "added": "2026-11-03",
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -2187,12 +1888,6 @@
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
-   "NRIX": {
-    "added": "2026-10-15",
-    "promoted": true,
-    "section": "Momentum",
-    "why": "momentum 6M"
-   },
    "NTLA": {
     "added": "2026-11-04",
     "section": "50 EMA reclaim",
@@ -2217,6 +1912,7 @@
    },
    "NXPI": {
     "added": "2026-10-30",
+    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W"
    },
@@ -2241,12 +1937,6 @@
     "promoted": true,
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
-   },
-   "PBF": {
-    "added": "2026-10-30",
-    "promoted": true,
-    "section": "Momentum",
-    "why": "momentum 6M"
    },
    "PBLS": {
     "added": "2026-11-04",
@@ -2275,6 +1965,7 @@
    },
    "PGY": {
     "added": "2026-11-04",
+    "promoted": true,
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -2305,14 +1996,8 @@
     "section": "Momentum",
     "why": "momentum 3M"
    },
-   "PTEN": {
-    "added": "2026-10-30",
-    "promoted": true,
-    "section": "Momentum",
-    "why": "momentum 1W"
-   },
-   "PWR": {
-    "added": "2026-11-03",
+   "PRKS": {
+    "added": "2026-11-05",
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -2330,6 +2015,7 @@
    },
    "RAL": {
     "added": "2026-11-03",
+    "promoted": true,
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -2346,6 +2032,7 @@
    },
    "REAL": {
     "added": "2026-10-30",
+    "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W/1M"
    },
@@ -2389,6 +2076,7 @@
    },
    "RVMD": {
     "added": "2026-11-03",
+    "promoted": true,
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -2416,6 +2104,7 @@
    },
    "SAIL": {
     "added": "2026-11-04",
+    "promoted": true,
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -2424,12 +2113,6 @@
     "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W/3M/6M"
-   },
-   "SEI": {
-    "added": "2026-10-28",
-    "promoted": true,
-    "section": "Momentum",
-    "why": "momentum 1W"
    },
    "SG": {
     "added": "2026-10-30",
@@ -2444,11 +2127,6 @@
    },
    "SMMT": {
     "added": "2026-11-04",
-    "section": "50 EMA reclaim",
-    "why": "first close back above the 50 EMA"
-   },
-   "SOLS": {
-    "added": "2026-11-03",
     "section": "50 EMA reclaim",
     "why": "first close back above the 50 EMA"
    },
@@ -2483,18 +2161,6 @@
     "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W"
-   },
-   "TARS": {
-    "added": "2026-10-29",
-    "promoted": true,
-    "section": "50 EMA reclaim",
-    "why": "first close back above the 50 EMA"
-   },
-   "TEAM": {
-    "added": "2026-10-05",
-    "promoted": true,
-    "section": "Momentum",
-    "why": "momentum 3M/6M"
    },
    "TEM": {
     "added": "2026-10-21",
@@ -2581,12 +2247,6 @@
     "section": "Momentum",
     "why": "momentum 1W/1M/6M"
    },
-   "VSAT": {
-    "added": "2026-10-27",
-    "promoted": true,
-    "section": "Momentum",
-    "why": "momentum 1W"
-   },
    "VSTS": {
     "added": "2026-10-05",
     "promoted": true,
@@ -2605,11 +2265,6 @@
     "section": "Momentum",
     "why": "momentum 6M"
    },
-   "WCC": {
-    "added": "2026-11-03",
-    "section": "50 EMA reclaim",
-    "why": "first close back above the 50 EMA"
-   },
    "WING": {
     "added": "2026-10-30",
     "section": "Momentum",
@@ -2625,6 +2280,11 @@
     "promoted": true,
     "section": "Momentum",
     "why": "momentum 1W/3M/6M"
+   },
+   "WRBY": {
+    "added": "2026-11-05",
+    "section": "50 EMA reclaim",
+    "why": "first close back above the 50 EMA"
    },
    "XERS": {
     "added": "2026-10-05",
@@ -16790,6 +16450,629 @@
    "list": "2-POOL",
    "sym": "ZETA",
    "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "AAL",
+   "why": "closed below the up-day low 13.16"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "AAP",
+   "why": "closed below the up-day low 48.85"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "ABSI",
+   "why": "closed below the up-day low 9.78"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "AFRM",
+   "why": "closed below the up-day low 71.97"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "ARQT",
+   "why": "closed below the up-day low 31.87"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "ASAN",
+   "why": "closed below the up-day low 11.37"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "AZTA",
+   "why": "closed below the up-day low 37.685"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "BBWI",
+   "why": "closed below the up-day low 22.87"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "BLDR",
+   "why": "closed below the up-day low 66.145"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "BOOT",
+   "why": "closed below the up-day low 139.1101"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "CE",
+   "why": "closed below the up-day low 48.12"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "COMP",
+   "why": "closed below the up-day low 9.79"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "CRL",
+   "why": "closed below the up-day low 313.83"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "CRWD",
+   "why": "closed below the up-day low 234.788"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "CVNA",
+   "why": "closed below the up-day low 72.9"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "DASH",
+   "why": "closed below the up-day low 188.1625"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "ENR",
+   "why": "closed below the up-day low 24.57"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "EXPE",
+   "why": "closed below the up-day low 295.26"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "FIGS",
+   "why": "closed below the up-day low 21.41"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "FIVN",
+   "why": "closed below the up-day low 35.43"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "GRAL",
+   "why": "closed below the up-day low 136.66"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "GVA",
+   "why": "closed below the up-day low 125.275"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "IOT",
+   "why": "closed below the up-day low 41.71"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "KNF",
+   "why": "closed below the up-day low 59.065"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "M",
+   "why": "closed below the up-day low 24.76"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "MSTR",
+   "why": "closed below the up-day low 135.8"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "MWH",
+   "why": "closed below the up-day low 24.52"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "NTSK",
+   "why": "closed below the up-day low 21.83"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "NVAX",
+   "why": "closed below the up-day low 9.84"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "OMER",
+   "why": "closed below the up-day low 17.69"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "PCOR",
+   "why": "15 trading days with no setup"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "PII",
+   "why": "closed below the up-day low 64.68"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "PSN",
+   "why": "closed below the up-day low 50.74"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "QDEL",
+   "why": "closed below the up-day low 13.09"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "QLYS",
+   "why": "closed below the up-day low 206.49"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "RAL",
+   "why": "closed below the up-day low 67.9"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "REAL",
+   "why": "closed below the up-day low 13.01"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "RELY",
+   "why": "closed below the up-day low 24.15"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "RH",
+   "why": "closed below the up-day low 140.5"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "RRX",
+   "why": "closed below the up-day low 166.21"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "S",
+   "why": "closed below the up-day low 22.3"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "SITE",
+   "why": "closed below the up-day low 114.43"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "SONO",
+   "why": "closed below the up-day low 16.375"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "TENB",
+   "why": "closed below the up-day low 45.46"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "TGTX",
+   "why": "closed below the up-day low 58.0"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "TRAX",
+   "why": "closed below the up-day low 46.09"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "VCYT",
+   "why": "closed below the up-day low 49.2893"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "VERA",
+   "why": "closed below the up-day low 30.73"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "VFC",
+   "why": "closed below the up-day low 20.42"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "W",
+   "why": "closed below the up-day low 116.17"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "WLTH",
+   "why": "closed below the up-day low 10.615"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "APH",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "ARXS",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "DINO",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "ENTG",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "FRO",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "GNRC",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "KRMN",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "LIFE",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "MPC",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "MPWR",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "NRIX",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "PBF",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "PTEN",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "PWR",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "SEI",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "SOLS",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "TARS",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "TEAM",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "VSAT",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "removed",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "WCC",
+   "why": "2 closes in a row below the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "ADMA",
+   "why": "gap +14.6%, rel vol 3.9"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "APP",
+   "why": "gap +28.7%, rel vol 4.4"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "APP",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "CERT",
+   "why": "+9.8%, rel vol 1.7"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "CHYM",
+   "why": "gap +6.4%, rel vol 3.0"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "ENOV",
+   "why": "gap +16.4%, rel vol 2.8"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "EPAM",
+   "why": "gap +13.7%, rel vol 2.7"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "MGNI",
+   "why": "gap +13.0%, rel vol 4.1"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "MGNI",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "PGNY",
+   "why": "gap +10.2%, rel vol 3.3"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-UPDAY",
+   "sym": "PRKS",
+   "why": "+10.7%, rel vol 1.8"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "PRKS",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "U",
+   "why": "gap +13.2%, rel vol 4.7"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "VCEL",
+   "why": "gap +11.1%, rel vol 3.7"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "VERX",
+   "why": "gap +14.4%, rel vol 3.4"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "WRBY",
+   "why": "gap +21.8%, rel vol 3.4"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "2-POOL",
+   "sym": "WRBY",
+   "why": "first close back above the 50 EMA"
+  },
+  {
+   "action": "added",
+   "date": "2026-11-05",
+   "list": "1-EP/GAP",
+   "sym": "XERS",
+   "why": "gap +19.6%, rel vol 5.9"
   }
  ],
  "pool_refresh": "2026-10-30"
