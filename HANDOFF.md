@@ -45,6 +45,18 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## RS + group on every alert; end-of-day held / didn't hold; ★★★ everywhere; search filters boxes (LIVE Nov 5 2026 ~5 PM, the user's "go live"; branch test/eodholds)
+
+- Every box line: "RS 88 · ★ Top Software #2/214" (strengthParts: launch.json group_rank.rs + grBest; ★ Top = top 3% of
+  groups, Strong = the next 7%, scanner/launch.py GR_TOP / GR_STRONG). The ⏰ lines have it in their text (test/pmrs).
+- End of day (the user: "which retest held or not"): eodList(): after the evening scan (launch.json date today), each stock
+  with a pullback alert today (EOD_KINDS: retest, zone, ema21, ema21bl, ema21zone, push, reclaimbo, reclaimbo2; not touch)
+  plus retest_today: close vs retest_level (else last_breakout_top, else the 21 EMA) -> "✓ HELD / ✗ DID NOT HOLD at the
+  close (after the close)" in 👥, ★★★ when hcReady; drawn on every device; one summary pop-up (alerts on). Nov 5: 12 held,
+  10 didn't (ELF: retest holding at 3:45, under its level at the close).
+- hcItem(): the job's retest / push / 21 EMA alerts get the ★★★ mark on every device (was only in an open page).
+- A ticker search filters the boxes across every tab.
+
 ## Every device sees the day; power days in the EP box; EP in the job (LIVE Nov 5 2026 ~2 PM, the user's "do it"; branch test/everydevice)
 
 - The user's phone (alerts off, notifications blocked) showed empty boxes while the job had sent 107 alerts: the boxes were
