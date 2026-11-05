@@ -2791,9 +2791,9 @@ defCalc('industry_perf', {
       if (q[0] > r.buy_point) out.push([r.symbol + ':s3', r.symbol + ' 3-SETUPS ' + r.section + ': ' + r.setup + ' trigger',
         fPrice(q[0]) + ' over ' + fPrice(r.buy_point) + ' · ' + f1(q[1]) + ' · vol ' + q[4].toFixed(1) + '× for the time of day', r.tv]);
     });
-    /* TREND (Watchlist tab, the user, Nov 4 2026: "watchlist needs trigger for trend watchlist as well, setup and trend"): a
-       stock of the TREND list (2-POOL / 1-UPDAY / 1-EP/GAP with Trend Up, Turn up, Reclaim or Resting at the last close, so
-       the list holds still during the day) trading over its buy point, the close under it; the same trigger as 3-SETUPS
+    /* TREND (Watchlist tab, the user, Nov 4 2026: of the 5 Watchlist lists only 3-SETUPS and TREND trigger; Launches has its
+       own): a stock on the TREND list as it stood at the last close (its 2-POOL / 1-UPDAY / 1-EP/GAP names with Trend Up,
+       Turn up, Reclaim or Resting; its Launches and 3-SETUPS names trigger from there), so the list holds still in the day, trading over its buy point, the close under it; the same trigger as 3-SETUPS
        (over the 200 SMA, 30%+ over the 52-week low: runAlerts). A stock on Launches, Launch laggards or 3-SETUPS alerts from
        there. Nov 4 2026: PCOR, XNCR, RELY, LW, BRZE (PCOR and RELY also launched: those stay on Launches) */
     const sdocT = st('setups').status === 'ok' ? st('setups').data : null, s3sym = new Set((doc.setups3 || []).map((r) => r.symbol));
@@ -2804,7 +2804,7 @@ defCalc('industry_perf', {
       const t = trendLast(r.symbol); if (!t || !TREND_ON.has(t.st)) return;
       if (!r.buy_point || !(r.close < r.buy_point)) return;
       const q = LIVE.rows[r.symbol]; if (!q || q[4] === null || q[4] === undefined || !(q[0] > r.buy_point)) return;
-      out.push([r.symbol + ':trend', r.symbol + ' TREND trigger (' + n + (r.pattern ? ' · ' + r.pattern : r.section ? ' · ' + r.section : '') + ')',
+      out.push([r.symbol + ':trend', r.symbol + ' TREND trigger' + (r.pattern ? ' (' + r.pattern + ')' : r.section ? ' (' + r.section + ')' : ''),
         fPrice(q[0]) + ' over ' + fPrice(r.buy_point) + ' · ' + f1(q[1]) + ' · vol ' + q[4].toFixed(1) + '× for the time of day · Trend ' + t.st + ' ' + t.d + 'd at the last close' + (r.why ? ' · ' + r.why : ''), r.tv || r.symbol]);
     }));
     return out;

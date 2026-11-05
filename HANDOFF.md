@@ -71,7 +71,8 @@ alone.
   stock on Launches and 3-SETUPS). Before, the tab followed the stock's lists when you looked, with the live Trend label
   (KD's EARLY sat on Watchlist). Browser test at 9:45 Nov 4: KD's EARLY and ★★ catalyst on Launches; Watchlist = 9
   3-SETUPS breakouts (NAVN, KSS, XMTR, KYMR, ARLO ...); group moves on every tab. Lines logged before keep the old filing.
-- **TREND triggers (TEST ONLY, branch test/trendtrig; the user, Nov 4 night: "watchlist needs trigger for trend watchlist as
+- **TREND triggers (TEST ONLY, branch test/trendtrig; the user, Nov 4 night: only 3-SETUPS and TREND of the 5 Watchlist lists
+  trigger, Launches has its own; "watchlist needs trigger for trend watchlist as
   well, setup and trend")**: desktop liveAlerts ':trend' = a TREND-list stock (2-POOL / 1-UPDAY / 1-EP/GAP, Trend Up / Turn
   up / Reclaim / Resting at the last close, not on Launches / Launch laggards / 3-SETUPS) trading over its buy point with
   the close under it; over the 200 SMA and 30%+ over the 52-week low (as 3-SETUPS); a trigger (bell); Watchlist tab. A
