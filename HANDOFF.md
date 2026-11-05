@@ -45,7 +45,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## The morning: Pre-market box, grades by 9:05, 20-second checks, W crossing the 200, bigger boxes (TEST ONLY Nov 4 2026 night, branch test/morning)
+## The morning: Pre-market box, grades by 9:05, 20-second checks, W crossing the 200, bigger boxes (LIVE Nov 4 2026 ~10 PM, the user's "go live"; branch test/morning)
 
 - **Grades by 9:05 (the user: "I need pre-market grading done not later than 9:05 to choose what to trade")**: Claude's
   8:45 grading saved at 8:57 on Nov 4 (fine). The code grader (about 40 s a run) ran only on GitHub's schedule (8:52 /
@@ -57,8 +57,12 @@ alone.
   gap-downs. One pop-up per update and source ("⏰ Code grades changed (9:05 AM): TREX off the list (was B) · DUOL A (was
   B) · OSCR A (was C)"), click = the Pre-market tab; a line per stock with both grades ("DUOL Code A (was B) · Claude A");
   its own sound (C-E-G) and voice ("Pre-market. Code grades changed. T R E X, no longer B..."). Tag / chip "Pre-market".
+  Only names that pass every filter (the user: "obviously only names over the 21-day high and all other filters"): a
+  code A+ / A / B always does; Claude's A / B only when the code grader found it eligible (Nov 4: DUOL; not RIOT, NVTS,
+  ARRY); before the code's first run it shows, marked "filters unchecked". Gap-downs stay on the Pre-market tab.
 - **20-second checks**: tipSha() sends the browser's GitHub key (the Follow button's, radar-gh-key) when there is one
-  (5,000 checks an hour; 401/403 -> retried without); with a key the page checks every 20 s from 8:45 to 10:00 ET.
+  (5,000 checks an hour; 401/403 -> retried without); with a key the page checks every 20 s from 8:45 to 10:00 ET. The
+  alert card says which (⏱ line), with an "Add the key" button (the Follow button's key dialog) when there is none.
 - **Bigger boxes**: 4 across (3 / 2 / 1 on narrower screens), body-size text, 10.5-21 rem tall; the log up to 65% of
   the screen on the Alerts tab.
 - **W crossing the 200 (the user approved the proposal)**: W names = codegrade_log.json grade W (gap-ups) of the last
@@ -70,7 +74,10 @@ alone.
   replay regress) - the user's call.
 - **Double beat and raise -> B**: already the rule (a raise or a guide over the street = B unless the guide is cut); KD
   Nov 4 stays C (guidance reaffirmed, revenue -0.6% y/y; revenue +2.1% and EPS +10% beats). Asked: should a double beat
-  with guidance reaffirmed be B too?
+  with guidance reaffirmed be B too? The user: not sure, "the market is forward looking, a raise is different": no change.
+- **Asked Nov 4 night: FCF y/y**: the code grade doesn't use free cash flow (Claude's grading reads the cash-flow
+  statement for red flags). Offered: test in the backtest whether an FCF swing adds anything beyond growth before
+  using it (likely a warning flag, e.g. FCF turned negative while growing, not a grade input).
 
 ## Alerts tab, alert boxes, the episodic pivot alert, sounds per box (LIVE Nov 4 2026 ~9 PM, the user's "go live"; branch test/alertboxes)
 
