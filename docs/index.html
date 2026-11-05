@@ -1502,7 +1502,8 @@ defCalc('industry_perf', {
   /* a stock's RS and its best group (the user, Nov 5 2026: "RS rating and theme / industry ranking" on every alert) */
   const strengthParts = (sym) => {
     const gB = grBest(sym), rsV = ldocRS()[sym];
-    return ['RS ' + (rsV !== null && rsV !== undefined ? rsV : '—'),
+    const t = trendOf(sym);
+    return ['RS ' + (rsV !== null && rsV !== undefined ? rsV : '—'), 'Trend ' + (t && t.st ? t.st + (t.d ? ' ' + t.d + 'd' : '') : '—'),
       'Group ' + (gB ? (gB.tier === 'Top' ? '★ Top ' : gB.tier === 'Strong' ? 'Strong ' : '') + String(gB.group).replace(/ · other$/, ' (other)').replace(/ · /g, ', ') + ' #' + gB.rank + '/' + gB.of : '—')];
   };
   /* the end of the day (the user, Nov 5 2026: "end of day, which retest held or not: the ★★★, the retests, the breakouts, the
@@ -3114,8 +3115,10 @@ defCalc('industry_perf', {
       const launched = new Set([...sent].concat(found.map(([k]) => k)).concat(((SRV && SRV.date === todayNY() && SRV.items) || []).map((it) => it.key))
         .filter((k) => LAUNCH_KINDS.has(String(k).split(':')[1])).map(symOf));
       const catNow = new Set(found.map(([k]) => k).filter((k) => k.endsWith(':catalyst') && !sent.has(k)).map(symOf));
+      const jobKeys = new Set(((SRV && SRV.date === todayNY() && SRV.items) || []).map((it) => it.key));
       found.forEach(([key, title, body, tvs]) => {
         const sym = symOf(key);
+        if (jobKeys.has(key) && !sent.has(key)) return;              /* the job sent it already: its line, its time (EPAM Nov 5) */
         if (sent.has(key) || (key.endsWith(':near') && sent.has(sym + ':breakout')) || (key.endsWith(':launch') && (sent.has(sym + ':power') || sent.has(sym + ':stars') || sent.has(sym + ':ep')))) return;
         /* an episodic pivot covers the stock's catalyst gap and A launch; a power day covers its EP (every power day is one) */
         if ((key.endsWith(':catalyst') && sent.has(sym + ':ep')) || (key.endsWith(':ep') && sent.has(sym + ':power'))) { sent.add(key); return; }
@@ -3302,9 +3305,20 @@ defCalc('industry_perf', {
       const vis = (x) => { const i = x.lastIndexOf(TABMARK); return (i >= 0 ? x.slice(0, i) : x).replace(/^🔔 /, ''); };
       const keyOf = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? x.slice(i + 3) : ''; };
       const ldoc0 = st('launch').status === 'ok' ? st('launch').data : null;
-      const haveT = new Set(log.map(vis)), haveK = new Set(log.map(keyOf).filter(Boolean));
+      /* the same alert saved without its key (before Nov 5 afternoon): the ticker and the alert's first words ("EPAM POWER DAY") */
+      const sigOf = (t) => String(t || '').replace(/^[^·]*·\s*/, '').replace(/^★+\s*(HIGH CONVICTION · )?/, '').split(' — ')[0].split(/\s+/).slice(0, 3).join(' ').toUpperCase();
+      const haveT = new Set(log.map(vis)), haveK = new Set(log.map(keyOf).filter(Boolean)), haveS = new Set(log.map((x) => sigOf(vis(x))));
       const lrow0 = new Map(((ldoc0 && ldoc0.launches) || []).concat((ldoc0 && ldoc0.laggards) || []).map((r) => [r.symbol, r]));
-      const srv = ((SRV && SRV.date === todayNY() && SRV.items) || []).filter((it) => !/^summary:/.test(it.key) && !haveK.has(it.key))
+      /* the same alert twice (the page's own and the job's): the earlier one stays, with its time */
+      const mn0 = (x) => { const m = /^(\d+):(\d\d) (AM|PM)/.exec(vis(x)); return m ? (Number(m[1]) % 12 + (m[3] === 'PM' ? 12 : 0)) * 60 + Number(m[2]) : 9999; };
+      const sigLine = new Map(log.map((x) => [sigOf(vis(x)), x]));
+      const later = new Set();
+      ((SRV && SRV.date === todayNY() && SRV.items) || []).forEach((it) => {
+        const lx = sigLine.get(sigOf('x · ' + it.title)), [H, M] = String(it.time).split(':').map(Number);
+        if (lx && !haveK.has(it.key) && H * 60 + M < mn0(lx)) { later.add(lx); haveS.delete(sigOf('x · ' + it.title)); }
+      });
+      if (later.size) log = log.filter((x) => !later.has(x));
+      const srv = ((SRV && SRV.date === todayNY() && SRV.items) || []).filter((it) => !/^summary:/.test(it.key) && !haveK.has(it.key) && !haveS.has(sigOf('x · ' + it.title)))
         .map((it) => hcItem(it, lrow0.get(it.key.split(':')[0])))
         .map((it) => logLine(t12(it.time), it.title, it.msg, it.key, ldoc0, null)).filter((x) => !haveT.has(vis(x)));
       /* the end of the day, after the evening scan: held / didn't hold, on every device */
@@ -3336,7 +3350,8 @@ defCalc('industry_perf', {
     const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards', P: 'Pre-market' }, SHORT = { Launches: 'Launches', Watchlist: 'Watchlist', 'Launch laggards': 'Laggards', 'Pre-market': 'Pre-market' };
     const marked = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? TABNAME[x.charAt(i + 1)] : null; };
     const tabOf = (x) => (isGrp(x) ? '' : marked(x) || (isWl(x) ? 'Watchlist' : isLag(x) ? 'Launch laggards' : 'Launches'));
-    const boxOf = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? x.charAt(i + 2) : ''; };
+    /* a power day is always in the ⚡ box (a line saved before Nov 5 afternoon carries the 🚀 box) */
+    const boxOf = (x) => { const i = x.lastIndexOf(TABMARK), b = i >= 0 ? x.charAt(i + 2) : ''; return b === 'l' && /^[^—]* POWER DAY/.test(x.slice(0, i)) ? 'e' : b; };
     const parse = (x) => {
       const i = x.lastIndexOf(TABMARK), full = (i >= 0 ? x.slice(0, i) : x).replace(/^🔔 /, '');
       const tm = /^(\d+):(\d\d) (AM|PM)/.exec(full), mn = tm ? (Number(tm[1]) % 12 + (tm[3] === 'PM' ? 12 : 0)) * 60 + Number(tm[2]) : 0;
@@ -3414,17 +3429,18 @@ defCalc('industry_perf', {
       return out.concat(guide);                                          /* beat, growth, buyback / FCF, then the guidance */
     };
     const strengthEl = (parts) => {                                  /* "RS 92 · ★ Top Software #2/213", green when strong */
-      const rs = parts.find((x) => /^RS /.test(x)), gr = parts.find((x) => /^Group /.test(x));
+      const rs = parts.find((x) => /^RS /.test(x)), gr = parts.find((x) => /^Group /.test(x)), tr = parts.find((x) => /^Trend /.test(x));
       if (!rs && !gr) return null;
       const d = h('div', 'al-str'), rv = rs ? num(rs.slice(3)) : null, gt = gr ? gr.slice(6) : '—';
       const a = h('span', rv !== null && rv >= 80 ? 'al-good' : rv !== null && rv < 50 ? 'al-weak' : '', rs || 'RS —');
       const b = h('span', /^(★ Top|Strong) /.test(gt) ? 'al-good' : '', gt === '—' ? 'no group' : gt);
       d.append(a, ' · ', b);
+      if (tr && tr !== 'Trend —') d.append(' · ', h('span', /^Trend (Up|Turn up)/.test(tr) ? 'al-good' : /^Trend Negative/.test(tr) ? 'al-weak' : '', tr));
       return d;
     };
     const reasonEl = (body, sym) => {
       /* the RS / group line: from the line's text, else worked out now (a line saved before Nov 5 evening has none) */
-      const all = body.split(' · ').map((x) => x.trim()).filter(Boolean), str = strengthEl(all) || (sym ? strengthEl(strengthParts(sym)) : null);
+      const all = body.split(' · ').map((x) => x.trim()).filter(Boolean), str = sym ? strengthEl(strengthParts(sym)) : strengthEl(all);
       const wrap = h('div', 'al-why'), parts = all.filter((x) => !/^RS /.test(x) && !/^Group /.test(x)), head = [], bul = [];
       body = parts.join(' · ');
       if (str) wrap.append(str);
@@ -3498,7 +3514,10 @@ defCalc('industry_perf', {
         /* the short figures (+30.1%, gap +15.2%, vol 3.5×, $16.83) on one line, each longer fact on its own */
         let run = [];
         const flush = () => { if (run.length) ul3.append(h('li', '', run.join(' · '))); run = []; };
-        body.replace(mu ? ' · 📰 ' + mu : '', '').split(' · ').map((x) => x.trim()).filter(Boolean).forEach((x) => {
+        const gB0 = o.sym ? grBest(o.sym) : null, gName = gB0 ? String(gB0.group).toLowerCase() : '';
+        const dup = (x) => /^theme\b/i.test(x) || /^#\d+ of \d+ in it/i.test(x) || /^RS \d+$/.test(x) || /#\d+\/\d+$/.test(x)
+          || (gName && x.toLowerCase().replace(/^(★ top|strong)\s+/, '') === gName) || x === 'no group';
+        body.replace(mu ? ' · 📰 ' + mu : '', '').split(' · ').map((x) => x.trim()).filter((x) => x && !dup(x)).forEach((x) => {
           if (x.length <= 30 && /\d/.test(x)) run.push(cap(x)); else { flush(); ul3.append(h('li', /^⚠|^\W*no\b|isn't|fell back|under its buy/i.test(x) ? 'al-warn' : '', cap(x))); }
         });
         flush();
