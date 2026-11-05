@@ -45,6 +45,33 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## The morning: Pre-market box, grades by 9:05, 20-second checks, W crossing the 200, bigger boxes (TEST ONLY Nov 4 2026 night, branch test/morning)
+
+- **Grades by 9:05 (the user: "I need pre-market grading done not later than 9:05 to choose what to trade")**: Claude's
+  8:45 grading saved at 8:57 on Nov 4 (fine). The code grader (about 40 s a run) ran only on GitHub's schedule (8:52 /
+  9:05 / 9:18, often 5-20 min late): radar/day.py now starts codegrade.yml at 8:45, 8:55 and 9:00, right after that
+  5-minute pre-market price update (the loop wakes on 5-minute marks before the open); the schedule stays as a backup.
+- **⏰ Pre-market box (the user: "anything changes, I get an alert in a pre-market box")**: first box on the Alerts tab;
+  the page diffs Claude's (premarket.json) and the code's (codegrade.json) grades on every check against its own copy
+  (localStorage pmsnap per day): a gap-up becoming A+ / A / B, changing, losing it or leaving the list; Claude's A / B
+  gap-downs. One pop-up per update and source ("⏰ Code grades changed (9:05 AM): TREX off the list (was B) · DUOL A (was
+  B) · OSCR A (was C)"), click = the Pre-market tab; a line per stock with both grades ("DUOL Code A (was B) · Claude A");
+  its own sound (C-E-G) and voice ("Pre-market. Code grades changed. T R E X, no longer B..."). Tag / chip "Pre-market".
+- **20-second checks**: tipSha() sends the browser's GitHub key (the Follow button's, radar-gh-key) when there is one
+  (5,000 checks an hour; 401/403 -> retried without); with a key the page checks every 20 s from 8:45 to 10:00 ET.
+- **Bigger boxes**: 4 across (3 / 2 / 1 on narrower screens), body-size text, 10.5-21 rem tall; the log up to 65% of
+  the screen on the Alerts tab.
+- **W crossing the 200 (the user approved the proposal)**: W names = codegrade_log.json grade W (gap-ups) of the last
+  90 days (~60 sessions), loaded as CGL. Live: under its 200 SMA at the last close and over it now -> 👀 "KD W over its 200
+  SMA now" (w200now); from 3:50 PM -> 🚀 "W CROSSING THE 200 into the close" (w200, a trigger); the evening build: closed
+  over it -> 👥 "W closed over its 200 SMA (after the close)" (w200close). Tab Laggards. The backtest's W history is not
+  seeded (it would mix into the code-vs-Claude log): the list fills from the live grader's W days. Not done: putting a W
+  name on the Watchlist / Launches lists the day it closes over the 200 (a scanner change, launch.py: to test with the
+  replay regress) - the user's call.
+- **Double beat and raise -> B**: already the rule (a raise or a guide over the street = B unless the guide is cut); KD
+  Nov 4 stays C (guidance reaffirmed, revenue -0.6% y/y; revenue +2.1% and EPS +10% beats). Asked: should a double beat
+  with guidance reaffirmed be B too?
+
 ## Alerts tab, alert boxes, the episodic pivot alert, sounds per box (LIVE Nov 4 2026 ~9 PM, the user's "go live"; branch test/alertboxes)
 
 - **🔔 Alerts tab (the user, Nov 4: "should we have a separate tab for alerts")**: the Desktop alerts card moved from
