@@ -45,6 +45,15 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Alerts walled off part by part (LIVE Nov 4 2026 ~11:45 PM, the user's "both"; branch test/safeparts)
+
+- docs/index.html safe(name, fn): the W alerts (live / evening), TREND triggers, the Pre-market box, the sounds, the
+  boxes and the bars each run inside it; an error stops only that part, PART_ERR names it on the alert card (the ⏱
+  line: "⚠ Not working right now: <part> (<error>). The other alerts keep running."). The log line codes fall back to
+  Launches / Heads-ups. Test: a null code-grade row stopped only the Pre-market box at 9:45.
+- Check-ins scheduled in this session for Nov 5: 9:07 ET (both grades saved by 9:05? code grader runs at 8:45 / 8:55 /
+  9:00?) and 9:45 ET (the GitHub job's alerts after 9:35, the morning record live_history.json, live.json fresh).
+
 ## The morning: Pre-market box, grades by 9:05, 20-second checks, W crossing the 200, bigger boxes (LIVE Nov 4 2026 ~10 PM, the user's "go live"; branch test/morning)
 
 - **Grades by 9:05 (the user: "I need pre-market grading done not later than 9:05 to choose what to trade")**: Claude's
