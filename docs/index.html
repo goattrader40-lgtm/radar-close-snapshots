@@ -3423,7 +3423,8 @@ defCalc('industry_perf', {
       return d;
     };
     const reasonEl = (body, sym) => {
-      const all = body.split(' · ').map((x) => x.trim()).filter(Boolean), str = strengthEl(all);
+      /* the RS / group line: from the line's text, else worked out now (a line saved before Nov 5 evening has none) */
+      const all = body.split(' · ').map((x) => x.trim()).filter(Boolean), str = strengthEl(all) || (sym ? strengthEl(strengthParts(sym)) : null);
       const wrap = h('div', 'al-why'), parts = all.filter((x) => !/^RS /.test(x) && !/^Group /.test(x)), head = [], bul = [];
       body = parts.join(' · ');
       if (str) wrap.append(str);
