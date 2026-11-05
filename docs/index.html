@@ -306,6 +306,12 @@
   .al-box li.al-click:hover { text-decoration: underline; }
   .al-box li.al-trig::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--color-fg-danger, #d1242f); margin-right: 5px; vertical-align: middle; }
   .al-box li.al-none { color: var(--color-fg-muted); }
+  /* the Pre-market box: the full reason under each line (2 lines, all of it on hover) and the news link */
+  .al-box li.al-pm { white-space: normal; padding: 5px 0; }
+  .al-box.al-wide { grid-column: span 2; }                               /* the Pre-market box: two boxes wide */
+  @media (max-width: 560px) { .al-box.al-wide { grid-column: auto; } }
+  .al-why { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-weight: 400; line-height: 1.35; margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .al-news { font-size: var(--cds-font-size-caption); font-weight: 400; margin-left: 2px; white-space: nowrap; }
   .al-bar { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 6px 10px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-panel); font-size: var(--cds-font-size-caption); cursor: pointer; }
   .al-bar:hover { border-color: var(--color-fg-muted); }
   .al-bar b { font-weight: 600; }
@@ -3124,9 +3130,13 @@ defCalc('industry_perf', {
           const r = byS.get(e.sym), o = other[e.sym];
           const t = e.sym + ' ' + name + ' ' + (e.lost && e.g === 'off the list' ? 'off the list (was ' + e.pg + ')' : e.why ? e.g + ', ' + e.why : e.g + (e.pg ? ' (was ' + e.pg + ')' : '')) + ' · ' + oName + ' ' + (o && o.g && o.g !== '—' ? o.g : '–') + (src === 'claude' && !codeToday ? ' · filters unchecked (no code run yet)' : '');
           const c = src === 'code' && CGR && CGR.rows ? CGR.rows[e.sym] : null;
-          const why = c ? [c.catalyst, c.eligible === false ? 'not eligible: ' + (c.not_eligible || '') : c.event === 'turnup' ? '⤴ reversal' : c.event === 'laggard' ? 'laggard (under 200)' : c.chart || ''].filter(Boolean).join(' · ')
-            : r ? [r.catalyst, r.reason].filter(Boolean).join(' · ') : '';
-          log.unshift(logLine(hmNow, t, [gp(e.sym).slice(3), why].filter(Boolean).join(' · ') || (e.dir === 'down' ? 'gap-down' : 'gap-up'), e.sym + ':pm' + src, null, null));
+          /* the full reason and the news itself (the user, Nov 4 2026: "how will the full reason show up"): the code's
+             reason from the filing / the earnings numbers and its SEC link; Claude's reason and its first source */
+          const why = c ? [c.catalyst, c.eligible === false ? 'not eligible: ' + (c.not_eligible || '') : c.event === 'turnup' ? '⤴ reversal' : c.event === 'laggard' ? 'laggard (under 200)' : c.chart || '', c.reason, c.flags ? 'flags: ' + c.flags : ''].filter(Boolean).join(' · ')
+            : r ? [r.catalyst, r.reason, r.flags ? 'flags: ' + r.flags : ''].filter(Boolean).join(' · ') : '';
+          const srcs = c ? (c.sources || []) : r ? (Array.isArray(r.sources) ? r.sources : String(r.sources || '').split(' ')) : [];
+          const url = srcs.filter((u) => /^https?:\/\//.test(u))[0] || '';
+          log.unshift(logLine(hmNow, t, ([gp(e.sym).slice(3), why].filter(Boolean).join(' · ') || (e.dir === 'down' ? 'gap-down' : 'gap-up')) + (url ? ' · 📰 ' + url : ''), e.sym + ':pm' + src, null, null));
         });
       });
       saveDay('pmsnap', snap); saveDay('log', log.slice(0, LOG_MAX));
@@ -3218,10 +3228,19 @@ defCalc('industry_perf', {
       return { x, full, head: full.split(' — ')[0], star: ((/^[^·]*· (★+)/.exec(full) || [])[1] || '').length, trig: x.startsWith('🔔 '), mn, sym: isGrp(x) ? null : symOfLine(x) || null, tab: tabOf(x) };
     };
     const order = (a, c) => (c.star - a.star) || (c.mn - a.mn);          /* the most stars first, then the newest by the alert's time */
-    const lineEl = (o, text, cls) => {
-      const li = h('li', [cls || '', o.trig ? 'al-trig' : '', o.sym ? 'al-click' : ''].filter(Boolean).join(' '));
+    const urlOf = (x) => (/ · 📰 (https?:\/\/\S+)/.exec(x) || [])[1] || '';
+    const newsLink = (u) => { const a = h('a', 'al-news', '📰 news'); a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.title = u; a.addEventListener('click', (e) => e.stopPropagation()); return a; };
+    const lineEl = (o, text, cls, more) => {
+      const li = h('li', [cls || '', o.trig ? 'al-trig' : '', o.sym ? 'al-click' : '', more ? 'al-pm' : ''].filter(Boolean).join(' '));
       if (o.tab) li.append(h('span', 'al-src', SHORT[o.tab]));
-      li.append(document.createTextNode(text));
+      const u = urlOf(text);
+      li.append(document.createTextNode(u ? text.replace(' · 📰 ' + u, '') : text));
+      if (u) { li.append(' '); li.append(newsLink(u)); }
+      if (more) {                                                        /* the Pre-market box: the reason under the line */
+        const mu = urlOf(o.full), body = o.full.split(' — ').slice(1).join(' — ').replace(mu ? ' · 📰 ' + mu : '', '');
+        if (body) li.append(h('div', 'al-why', body));
+        if (mu) li.append(newsLink(mu));
+      }
       li.title = o.sym ? o.full + '\n(click: ' + o.sym + ' on TradingView)' : o.full;
       if (o.sym) li.addEventListener('click', () => openTV(tv(o.sym)));
       return li;
@@ -3241,10 +3260,10 @@ defCalc('industry_perf', {
       bx.replaceChildren();
       BOXES.forEach(([code, icon, name]) => {
         const lines = mine.filter((x) => boxOf(x) === code).map(parse).sort(order);
-        const box = h('div', 'al-box'), hd = h('h3', '', icon + ' ' + name);
+        const box = h('div', 'al-box' + (code === 'm' ? ' al-wide' : '')), hd = h('h3', '', icon + ' ' + name);
         hd.append(h('span', 'al-n', String(lines.length)));
         const list = h('ul', '');
-        lines.forEach((o) => list.append(lineEl(code === 'm' ? Object.assign({}, o, { tab: '' }) : o, o.head, o.star ? 'al-star' : '')));
+        lines.forEach((o) => list.append(lineEl(code === 'm' ? Object.assign({}, o, { tab: '' }) : o, o.head, o.star ? 'al-star' : '', code === 'm')));
         if (!lines.length) list.append(h('li', 'al-none', 'None yet'));
         box.append(hd, list); bx.append(box);
       });
