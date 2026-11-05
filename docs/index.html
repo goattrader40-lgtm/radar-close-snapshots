@@ -320,6 +320,7 @@
   .al-bar .al-last { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   .al-src { display: inline-block; margin-right: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.8em; font-weight: 400; line-height: 1.45; vertical-align: 1px; }
   .al-filter { margin: 6px 0 0; }
+  .al-err { margin-top: 4px; color: var(--color-fg-danger, #d1242f); font-weight: 600; }
   #alerts .tgr-alog { max-height: 65vh; font-size: var(--cds-font-size-body); }
   .tgr-auto { display: inline-block; margin-left: 5px; padding: 0 5px; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); font-size: 0.75em; font-weight: 400; line-height: 1.5; vertical-align: middle; }
   .tgr-gdot { display: inline-block; width: .4rem; height: .4rem; border-radius: 50%; background: var(--color-ok); margin-left: 5px; vertical-align: middle; }
@@ -2753,6 +2754,13 @@ defCalc('industry_perf', {
       return Object.assign({}, r.live, { symbol: r.symbol, tv: r.tv || r.symbol, s3: true, group_tier_now: g && !g.loose ? (g.tier || '') : '', group_rank_now: g ? g.group + ' #' + g.rank + '/' + g.of : null });
     });
   };
+  /* each new part of the alerts runs walled off (the user, Nov 4 2026: one part hitting data it didn't expect must not stop
+     the other alerts): an error stops only that part, and the alert card names it (PART_ERR) */
+  const PART_ERR = {};
+  const safe = (name, fn) => {
+    try { fn(); delete PART_ERR[name]; }
+    catch (e) { PART_ERR[name] = String((e && e.message) || e).slice(0, 140); try { console.error('radar part failed:', name, e); } catch (e2) { /* no console */ } }
+  };
   /* the W names (the code grade's laggard watch: real news or earnings, over the 50 EMA and the 21-day closing high, up to
      20% under the 200 SMA), kept 60 sessions (the user, Nov 4 2026: "yes fine about W"): their first close over the 200 is
      where the backtest's laggard edge is (77% crossed within 60 sessions, +6.5% the 20 after) */
@@ -2800,6 +2808,7 @@ defCalc('industry_perf', {
       if (sn >= 1 && r.chg >= R.min_chg && r.rv >= R.min_rv && r.price > (doc.watch[r.symbol] || [])[2]) out.push([r.symbol + ':stars', STAR_TXT[sn] + ' ' + (sn === 2 ? 'STRONG LAUNCH' : 'LAUNCH, TREND UP') + ' · ' + r.symbol + ' launching (grade so far ' + r.grade + ')',
         facts + (r.earnings ? ' · EARNINGS' : '') + ' · base high ' + fPrice(r.pivot) + (r.bo ? ' cleared' : ' not cleared') + ' · ' + sx.why, r.tv_symbol]);
     });
+    safe('W alerts', () => {
     const smaW = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, num(x.sma200)])), lateW = nyNow().m >= 950;
     wNames().forEach((w, sym) => {
       const q = LIVE.rows[sym], sma = smaW.get(sym);
@@ -2809,6 +2818,7 @@ defCalc('industry_perf', {
       const facts = fPrice(q[0]) + ' over its 200 SMA ' + fPrice(sma) + ' (' + f1(100 * (q[0] / sma - 1)) + ') · ' + f1(q[1]) + (q[4] !== null && q[4] !== undefined ? ' · vol ' + q[4].toFixed(1) + '× for the time of day' : '') + ' · ' + wWhy(w);
       if (lateW) out.push([sym + ':w200', sym + ' W CROSSING THE 200 into the close', facts + ' · the first close over it moves it into the over-200 lists (Watchlist / Launches)', sym]);
       else out.push([sym + ':w200now', sym + ' W over its 200 SMA now', facts + ' · a close over it is the trigger (from 3:50 PM: its own alert)', sym]);
+    });
     });
     (doc.launches || []).concat(doc.laggards || []).concat(s3Live(doc)).forEach((r) => {
       const q = LIVE.rows[r.symbol]; if (!q || q[4] === null || q[4] === undefined) return;
@@ -2875,6 +2885,7 @@ defCalc('industry_perf', {
        Turn up, Reclaim or Resting; its Launches and 3-SETUPS names trigger from there), so the list holds still in the day, trading over its buy point, the close under it; the same trigger as 3-SETUPS
        (over the 200 SMA, 30%+ over the 52-week low: runAlerts). A stock on Launches, Launch laggards or 3-SETUPS alerts from
        there. Nov 4 2026: PCOR, XNCR, RELY, LW, BRZE (PCOR and RELY also launched: those stay on Launches) */
+    safe('TREND triggers', () => {
     const sdocT = st('setups').status === 'ok' ? st('setups').data : null, s3sym = new Set((doc.setups3 || []).map((r) => r.symbol));
     const fol3 = new Set((doc.launches || []).concat(doc.laggards || []).map((r) => r.symbol)), seenT = new Set();
     ['2-POOL', '1-UPDAY', '1-EP/GAP'].forEach((n) => ((sdocT && sdocT.lists && sdocT.lists[n]) || []).forEach((r) => {
@@ -2886,6 +2897,7 @@ defCalc('industry_perf', {
       out.push([r.symbol + ':trend', r.symbol + ' TREND trigger' + (r.pattern ? ' (' + r.pattern + ')' : r.section ? ' (' + r.section + ')' : ''),
         fPrice(q[0]) + ' over ' + fPrice(r.buy_point) + ' · ' + f1(q[1]) + ' · vol ' + q[4].toFixed(1) + '× for the time of day · Trend ' + t.st + ' ' + t.d + 'd at the last close' + (r.why ? ' · ' + r.why : ''), r.tv || r.symbol]);
     }));
+    });
     return out;
   };
   /* the buys (the user, Nov 3 2026: "so it gets my attention"); the rest are heads-ups. Same list as radar/alerts.py
@@ -2968,8 +2980,10 @@ defCalc('industry_perf', {
       n.onclick = () => { if (/^PM:pm/.test(String(key))) { window.focus(); showTab('premarket'); } else if (sum || !tvs) showLog(); else openTV(tv(tvs)); n.close(); };
     } catch (e) { /* blocked */ }
     if (trig) {
-      const b = { box: boxOfKey(key, title), title: String(title || ''), sym: tickerOfTitle(title), say: speak || '' };
-      if (BELLS) BELLS.push(b); else announce([b]);
+      safe('Sounds', () => {
+        const b = { box: boxOfKey(key, title), title: String(title || ''), sym: tickerOfTitle(title), say: speak || '' };
+        if (BELLS) BELLS.push(b); else announce([b]);
+      });
       flash(String(key).split(':')[0]);
     }
   };
@@ -3015,7 +3029,7 @@ defCalc('industry_perf', {
     return (/^([A-Z][A-Z0-9.\-]*)(?= |:|$)/.exec(t) || [])[1] || '';
   };
   const TABMARK = '\u2063';    /* an invisible separator, then the tab's code (L / W / G) and the box's (BOXES) at the end of a log line */
-  const logLine = (when, title, body, key, doc, launched) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body + TABMARK + tabOfKey(key, doc, launched) + boxOfKey(key, title);
+  const logLine = (when, title, body, key, doc, launched) => (isTrigger(key, title) ? '🔔 ' : '') + when + ' · ' + title + ' — ' + body + TABMARK + (() => { try { return tabOfKey(key, doc, launched) + boxOfKey(key, title); } catch (e) { return 'Lh'; } })();
   function runAlerts() {
     BELLS = [];
     const sent = new Set(loadDay('sent', '[]')), log = loadDay('log', '[]');
@@ -3095,6 +3109,7 @@ defCalc('industry_perf', {
        closing high, at most 20% under the 200); before the code's first run of the day it shows, marked unchecked.
        Gap-downs stay on the Pre-market tab */
     if (alertsOn) {
+      safe('Pre-market box', () => {
       const today = todayNY(), snap = loadDay('pmsnap', '{}'), hmNow = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
       const pmAll = rowsOf('premarket').filter((r) => !r.placeholder && r.scan_date === today), byS = new Map(pmAll.map((r) => [r.symbol, r]));
       /* Claude's A / B counts when the code grader found the gap-up eligible and over the 200 SMA (not a W laggard: under
@@ -3140,6 +3155,7 @@ defCalc('industry_perf', {
         });
       });
       saveDay('pmsnap', snap); saveDay('log', log.slice(0, LOG_MAX));
+      });
     }
     /* after the close: the evening scan's heads-ups for tomorrow (tight under a buy point, retest held) */
     const ldoc = st('launch').status === 'ok' ? st('launch').data : null;
@@ -3156,6 +3172,7 @@ defCalc('industry_perf', {
         sent.add(it[0]); notify(it[1], it[2], r.tv, it[0]);
         log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), it[1], it[2], it[0], ldoc));
       });
+      safe('W alerts (evening)', () => {
       /* a W name that closed over its 200 SMA today (the first close over since it was under) */
       wNames().forEach((w, sym) => {
         const x = (BASE ? BASE.stocks : []).find((y) => y.symbol === sym); if (!x) return;
@@ -3167,9 +3184,10 @@ defCalc('industry_perf', {
         sent.add(key); notify(title, body, sym, key);
         log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), title, body, key, ldoc));
       });
+      });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX));
     }
-    const bells = BELLS; BELLS = null; announce(bells);
+    const bells = BELLS; BELLS = null; safe('Sounds', () => announce(bells));
     drawAlog(log);
     $('#ln-alert-btn').textContent = alertsOn ? 'Turn off' : 'Turn on';
     $('#ln-alert-voice').textContent = 'Voice: ' + (VOICE ? 'on' : 'off');
@@ -3181,6 +3199,8 @@ defCalc('industry_perf', {
       sp.textContent = Date.now() < RL_UNTIL
         ? '⏱ GitHub\'s free limit ran out (several tabs or computers on this connection?): checks every 90 seconds until ' + new Date(RL_UNTIL).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' ET, then every 20 seconds again.'
         : '⏱ Checks for new alerts every 20 seconds from 8:45 to 10:00 AM ET, every 90 seconds the rest of the day.';
+      const bad = Object.keys(PART_ERR);
+      if (bad.length) sp.append(h('div', 'al-err', '⚠ Not working right now: ' + bad.map((k) => k + ' (' + PART_ERR[k] + ')').join(' · ') + '. The other alerts keep running.'));
     }
     $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
       : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
@@ -3252,6 +3272,7 @@ defCalc('industry_perf', {
     shown.forEach((x) => { const o = parse(x); ul.append(lineEl(o, o.full)); });
     /* the boxes, by kind (a line from before the boxes, Nov 5 2026, has no box: the log only) */
     const bx = $('#ln-alert-boxes');
+    safe('Boxes', () => {
     if (bx) {
       bx.replaceChildren();
       BOXES.forEach(([code, icon, name]) => {
@@ -3264,9 +3285,11 @@ defCalc('industry_perf', {
         box.append(hd, list); bx.append(box);
       });
     }
+    });
     if (q && !shown.length) ul.append(h('li', 'tgr-lbl', 'No alerts for ' + q + ' today.'));
     else if (!shown.length && log.length) ul.append(h('li', 'tgr-lbl', 'No ' + (here === 'All' ? '' : SHORT[here] + ' ') + 'alerts yet today.'));
     /* the bars on Launches (Launch laggards) and the Watchlist: this tab's newest alerts; a click opens the Alerts tab */
+    safe('Alert bars', () => {
     [['#ln-al-bar', S.tab === 'laggards' ? 'Launch laggards' : 'Launches'], ['#wl-al-bar', 'Watchlist']].forEach(([id, tb]) => {
       const el = $(id); if (!el) return;
       const its = log.filter((x) => !isGrp(x) && tabOf(x) === tb).map(parse).sort(order);
@@ -3274,6 +3297,7 @@ defCalc('industry_perf', {
       el.append(h('b', '', '🔔 ' + (its.length ? its.length + ' alert' + (its.length > 1 ? 's' : '') + ' today on this tab' : 'No alerts yet today on this tab')));
       its.slice(0, 3).forEach((o) => el.append(h('span', 'al-last' + (o.star ? ' al-star' : ''), o.head)));
       el.append(h('span', 'al-go', 'All alerts: the 🔔 Alerts tab →'));
+    });
     });
   }
   ['#ln-al-bar', '#wl-al-bar'].forEach((id) => {
