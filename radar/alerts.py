@@ -86,7 +86,7 @@ MAX_TRIGGERS = 15             # triggers a run that always get their own push (a
 # the buys (the user, Nov 3 2026: "so it gets my attention"); everything else is a heads-up. The 21 EMA retest alone is a
 # heads-up (the user: "21 ema retest is not a strong sign by itself"); with the breakout level under it (ema21bl) a trigger
 TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "breakout", "retest", "reclaimbo2",
-            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl"}
+            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep"}
 
 
 def is_trigger(key, title=""):
@@ -116,7 +116,7 @@ KIND_WORDS = {"retest": "retest holding", "zone": "in the retest zone", "ema21":
               "reversal": "reversal launch", "laggard": "laggard launch", "reclaimbo": "back over its breakout level",
               "reclaimbo2": "breakout undercut & reclaim", "ema50back": "back over the 50 EMA", "ema50": "50 EMA undercut & reclaim",
               "push": "push", "pop": "pop", "gapbase": "gap out of base", "gob1": "gap out of base", "gob5": "gap out of base",
-              "s3": "3-SETUPS trigger", "early": "early gap", "near": "gapping to the buy point"}
+              "s3": "3-SETUPS trigger", "early": "early gap", "near": "gapping to the buy point", "ep": "episodic pivot"}
 
 
 def kind_words(key, title=""):
@@ -295,7 +295,11 @@ def find(live, doc, now=None):
         ext = (close0 / s200 - 1) * 100
         power = (rv >= R.get("power_rv", 4) and gap is not None and gap >= R.get("power_gap", 8) and chg >= R.get("power_chg", 10)
                  and price > pivot)                                # over its 1-month high (your rule, Nov 2 2026)
-        if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not power):
+        # an episodic pivot (the user, Nov 4 2026; in this job Nov 5, so every device has it): a volume pace of 4x+, a 6%+
+        # gap, over the 1-month high and the 200 SMA; a power day (8%+ gap, +10%) is one and alerts as the power day
+        # (CHYM Nov 5: gap +6.4%, up 4.7%, 5x: an EP, not a power day)
+        ep = rv >= 4 and gap is not None and gap >= 6 and price > pivot
+        if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not (power or ep)):
             continue
         theme = gtext(w)
         facts = f"{chg:+.1f}% · gap {gap:+.1f}% · vol {rv:.1f}x for the time of day" if gap is not None else f"{chg:+.1f}% · vol {rv:.1f}x"
@@ -318,6 +322,11 @@ def find(live, doc, now=None):
         if power:
             out.append((f"{sym}:power", f"{sym} POWER DAY" + (" on earnings" if earn else ""),
                         f"{facts} · ${price:.2f}{crossed}{neglect} · theme {theme}", "high", tvs))
+            continue
+        if ep:                                                     # stands for this stock's catalyst gap and A launch
+            out.append((f"{sym}:ep", f"{sym} EPISODIC PIVOT" + (" on earnings" if earn else ""),
+                        f"{facts} · ${price:.2f} over its 1-month high ${pivot:.2f}{crossed}{neglect} · grade so far {g} · theme {theme}",
+                        "high", tvs))
             continue
         if shape and rv >= R["rv_big"]:
             out.append((f"{sym}:catalyst", f"{sym} CATALYST GAP: " + ("earnings" if earn else "news? (no earnings)")
@@ -763,6 +772,9 @@ def main():
     for a in found:
         key, sym = a[0], a[0].split(":")[0]
         if key in sent or (key.endswith(":launch") and sym + ":power" in sent):
+            continue
+        # one alert per move: an EP covers the stock's later catalyst gap / A launch; a power day covers its EP
+        if ((key.endswith(":launch") or key.endswith(":catalyst")) and sym + ":ep" in sent) or (key.endswith(":ep") and sym + ":power" in sent):
             continue
         # a catalyst stock gets two triggers: the catalyst gap, then (if its base wasn't cleared yet) the base breakout;
         # its launch alert would only repeat them
