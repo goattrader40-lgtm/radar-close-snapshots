@@ -62,6 +62,9 @@ alone.
   ARRY); before the code's first run it shows, marked "filters unchecked". Gap-downs stay on the Pre-market tab.
   (LIVE Nov 4 ~10:30 PM, test/pm200) Claude's A / B also needs the code's event not 'laggard': over the 200 SMA at the
   pre-market price, like every code A+ / A / B (under it = W).
+  (LIVE Nov 4 ~11 PM, test/pmreason) Each Pre-market box line shows the full reason under it (the code's reason from the
+  filing / earnings numbers and flags; Claude's sentence), up to 3 lines, and a 📰 news link (the SEC filing / Claude's
+  first source); the box is two boxes wide; the log shows the news link instead of the address.
 - **20-second checks**: tipSha() sends the browser's GitHub key (the Follow button's, radar-gh-key) when there is one
   (5,000 checks an hour; 401/403 -> retried without); with a key the page checks every 20 s from 8:45 to 10:00 ET. The
   alert card says which (⏱ line), with an "Add the key" button (the Follow button's key dialog) when there is none.
