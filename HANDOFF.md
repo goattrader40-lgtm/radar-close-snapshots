@@ -196,7 +196,9 @@ alone.
   alerts explanation folds away ("What pops up, and when"); (6) + Filter on the Watchlist, Launches and Gainers.
   Details in the sections below.
 - **Test branches**: test/lwcols, test/columns, test/colwidth, test/gapfilter, test/alertfold, test/xfilter = all
-  merged (nothing waiting). test/grfilter (from before) still conflicts with main (see the older status).
+  merged (nothing waiting). **test/chgname** (the change columns renamed Change 1D / 1W / ...) = NOT wanted (the user, Nov 5: "no need, 1D
+  would work"): don't merge it. Today's live change % is the catalog column "1D" (search "1d" or "change": it shows as
+  "1D · Price"). test/grfilter (from before) still conflicts with main (see the older status).
 - **Agreed with the user**: layouts, widths and + Filter filters are per browser (desktop and phone keep their own); the
   ticker column stays first; a filter on a table's column uses the value the cell shows; the + Filter picker is a search
   box only (no full list), a criterion already added is removed from the search ("✓ added") or its chip's ✕.
