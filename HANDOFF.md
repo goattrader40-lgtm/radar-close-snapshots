@@ -68,6 +68,10 @@ alone.
 - **20-second checks**: tipSha() sends the browser's GitHub key (the Follow button's, radar-gh-key) when there is one
   (5,000 checks an hour; 401/403 -> retried without); with a key the page checks every 20 s from 8:45 to 10:00 ET. The
   alert card says which (⏱ line), with an "Add the key" button (the Follow button's key dialog) when there is none.
+  (LIVE Nov 4 ~11:30 PM, test/fastcheck, the user: "make sure it does now") No key needed: tipSha() uses cache 'no-cache',
+  so the browser sends the ETag and an unchanged answer is a 304, which GitHub doesn't count (tested: X-RateLimit-Remaining
+  unchanged); only new commits count. 20-second checks for every browser 8:45-10:00; a 403/429 pauses them until
+  x-ratelimit-reset (RL_UNTIL) and the ⏱ line says so. Browser test: checks at 0, 20, 40, 60 s.
 - **Bigger boxes**: 4 across (3 / 2 / 1 on narrower screens), body-size text, 10.5-21 rem tall; the log up to 65% of
   the screen on the Alerts tab.
 - **W crossing the 200 (the user approved the proposal)**: W names = codegrade_log.json grade W (gap-ups) of the last

@@ -3178,13 +3178,9 @@ defCalc('industry_perf', {
     const sp = $('#ln-alert-speed');
     if (sp) {
       sp.replaceChildren();
-      if (ghKey()) sp.textContent = '⏱ Checks for new alerts every 20 seconds from 8:45 to 10:00 AM ET (this browser has your GitHub key), every 90 seconds the rest of the day.';
-      else {
-        sp.append('⏱ Checks for new alerts every 90 seconds. For every 20 seconds from 8:45 to 10:00 AM ET, this browser needs your GitHub key (the one the Follow button on Launches asks for, once per browser): ');
-        const bt = h('button', 'tgr-lite', 'Add the key'); bt.type = 'button';
-        bt.addEventListener('click', async () => { if (await askKey()) runAlerts(); });
-        sp.append(bt);
-      }
+      sp.textContent = Date.now() < RL_UNTIL
+        ? '⏱ GitHub\'s free limit ran out (several tabs or computers on this connection?): checks every 90 seconds until ' + new Date(RL_UNTIL).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) + ' ET, then every 20 seconds again.'
+        : '⏱ Checks for new alerts every 20 seconds from 8:45 to 10:00 AM ET, every 90 seconds the rest of the day.';
     }
     $('#ln-alert-note').textContent = !canNotify() ? 'This browser has no desktop notifications (use a desktop Chrome, Edge, Firefox or Safari).'
       : Notification.permission === 'denied' ? 'Notifications are blocked for this site: allow them in the browser\'s site settings (the lock icon by the address), then Turn on.'
@@ -4091,11 +4087,17 @@ defCalc('industry_perf', {
   /* the newest radar-data commit. With the GitHub key this browser keeps for the Follow button the check counts against
      5,000 an hour, not GitHub's 60 an hour per internet connection (two open tabs ran out of those in the morning, and
      the page then read copies up to 5 minutes old) */
+  /* The check asks GitHub "anything new?" with the answer it got last time (cache 'no-cache': the browser sends the
+     ETag and gets 304 Not Modified when nothing changed), and GitHub doesn't count a 304 against its 60-an-hour limit:
+     only a check that finds a new commit counts, so checking every 20 seconds costs no more than every 90 (tested Nov 4
+     2026). If the limit still runs out (several tabs on one connection), the 20-second checks pause until GitHub's reset. */
+  let RL_UNTIL = 0;
   async function tipSha() {
     const url = `https://api.github.com/repos/${GH.owner}/${GH.repo}/commits/${GH.branch}`, k = ghKey();
     try {
-      let r = await fetch(url, { headers: Object.assign({ Accept: 'application/vnd.github.sha' }, k ? { Authorization: 'Bearer ' + k } : {}), cache: 'no-store' });
-      if (k && (r.status === 401 || r.status === 403)) r = await fetch(url, { headers: { Accept: 'application/vnd.github.sha' }, cache: 'no-store' });
+      let r = await fetch(url, { headers: Object.assign({ Accept: 'application/vnd.github.sha' }, k ? { Authorization: 'Bearer ' + k } : {}), cache: 'no-cache' });
+      if (k && (r.status === 401 || r.status === 403)) r = await fetch(url, { headers: { Accept: 'application/vnd.github.sha' }, cache: 'no-cache' });
+      if (r.status === 403 || r.status === 429) { const rs = Number(r.headers.get('x-ratelimit-reset')); RL_UNTIL = rs ? rs * 1000 : Date.now() + 10 * 60000; }
       if (r.ok) return (await r.text()).trim();
     } catch (e) { /* rate-limited or offline: fall back to the branch name */ }
     return null;
@@ -4223,11 +4225,11 @@ defCalc('industry_perf', {
   $('#live-reload').addEventListener('click', () => refresh(true));
   document.addEventListener('visibilitychange', () => { if (!document.hidden && (!lastCheck || Date.now() - lastCheck > 60000)) refresh(false); });
   setInterval(() => { if (!document.hidden || alertsOn) refresh(false); }, 90000);    /* alerts on: keep checking in a background tab */
-  /* 8:45-10:00 ET on weekdays (the grades, then the open's alerts): every 20 seconds, with the GitHub key (the user, Nov 4
-     2026: the 9:31 heads-ups showed a minute or two late); without a key the 60-an-hour limit allows only the 90 seconds */
+  /* 8:45-10:00 ET on weekdays (the grades, then the open's alerts): every 20 seconds (the user, Nov 4 2026: the 9:31
+     heads-ups showed a minute or two late; "let's make sure it does"), key or not (tipSha: unchanged checks are free) */
   setInterval(() => {
     const n = nyNow();
-    if (!ghKey() || ['Sat', 'Sun'].includes(n.wd) || n.m < 525 || n.m > 600 || (document.hidden && !alertsOn)) return;
+    if (Date.now() < RL_UNTIL || ['Sat', 'Sun'].includes(n.wd) || n.m < 525 || n.m > 600 || (document.hidden && !alertsOn)) return;
     if (lastCheck && Date.now() - lastCheck < 15000) return;
     refresh(false);
   }, 20000);
