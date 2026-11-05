@@ -185,6 +185,25 @@ alone.
   re-checks earnings.json at 8:57 for 8:30 reporters. (4) The user to decide: correct DUOL's Nov 4 A in gradelog
   or keep it as the record.
 
+## + Filter: your own filters on the Watchlist, Launches and Gainers (live Nov 5 2026, the user's "go live"; branch test/xfilter)
+
+- **What**: a "+ Filter" button in the filter row of the Watchlist (.tgr-flt wl), Launches / Launch laggards (.tgr-flt ln)
+  and Gainers & losers (#g-filters). The picker is a search box only (the user: "I don't want to see all column names"):
+  typed letters list this table's own columns first ("In this table", the layout's order, deleted ones left out), then
+  the column catalog ("More"); a criterion already added shows "✓ added · click to remove". A chip per filter: numbers
+  ≥ / ≤ a value, Trend / Group rank / Stars / ER look / grades / Watchlist list pick from a list, text has / is / has no.
+  Empty box = off; while set, a stock without a value is left out. ✕ removes. Saved in radar-filters (wl / ln / g .x).
+  Gainers' "Reset to my defaults" clears its own.
+- **How**: catalog criteria (f.id) run in fltPass (Watchlist / Launches: the counts in the note, "Filtered: ...",
+  Download follow) and in passes() for Gainers (count, theme / industry tables follow). A table's own column (f.col):
+  Gainers from the stock row's field (gField: same value as the cell); Watchlist / Launches from what the cell shows
+  (xcApply after each draw: number = the cell's first number when 70%+ of the column's cells are numbers, else text;
+  rows hidden with .xf-off, XHID[table] -> the Download skips them; "→ N shown" next to the chips). Trend / Group rank /
+  Stars / ER look columns map to the catalog's pick lists (XF_COLCAT).
+- Checked Nov 4 close data: Launches Base day ≥ 10 = 49 of 141, + Depth ≤ 25 = 37 (download 37); Watchlist TREND ADR% ≥ 4
+  = 125 of 184, + Trend is Up = 97 (download 97); Gainers ADR% ≥ 6 = 19 of 142 (themes 29 -> 7), + Industry has
+  "software" = 3. Rules sheet G1 notes it.
+
 ## Desktop alerts: the long explanation folds away (live Nov 4 2026 evening, the user's "go live"; branch test/alertfold)
 
 - The Desktop alerts card (Launches / Launch laggards / Watchlist) shows a "▸ What pops up, and when" box (tgr-more,
