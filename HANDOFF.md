@@ -111,7 +111,7 @@ alone.
   price $5, cap $0.7B, avg vol 600K, $20M, ADR 4%, 52W low 30%) 23 pass, ticked 7 (LRCX, NET, AMAT, EXTR, FROG, SITM,
   MKSI); NET 290.99 vs PDH 252.44 = +15.3%, MRVL 147.10 vs 152.15 = -3.3% (dropped). Code defaults (0.5-5%): 116 -> 4.
 
-## Main tabs: drag to move them left or right (LIVE Nov 6 2026 ~11 AM ET, the user's "go live"; branch test/tabmove)
+## Main tabs: drag to move them left or right (LIVE Nov 6 2026 ~3:50 PM ET, the user's "go live"; branch test/tabmove)
 
 - The user (Nov 6): "make it so I can move these tabs around myself, left or right" (the main tabs, not the tables).
   docs/index.html after the tab click handler: each .tgr-tab is draggable (HTML5 drag and drop, as the table columns),
