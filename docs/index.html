@@ -99,6 +99,11 @@
   .tgr-tabs { display: flex; gap: var(--cds-gap-xs); border-bottom: 1px solid var(--color-border-line); flex-wrap: wrap; }
   .tgr-tab { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: var(--cds-pad-sm) var(--cds-pad-md); font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); cursor: pointer; display: inline-flex; gap: var(--cds-gap-xs); align-items: center; }
   .tgr-tab[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+  .tgr-tab.tab-drag { opacity: .45; }
+  .tgr-tab.tab-drop-l { box-shadow: inset 3px 0 0 var(--color-fg); }
+  .tgr-tab.tab-drop-r { box-shadow: inset -3px 0 0 var(--color-fg); }
+  .tgr-tab-reset { appearance: none; background: none; border: 0; margin-left: auto; padding: var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); cursor: pointer; }
+  .tgr-tab-reset:hover { color: var(--color-fg); }
   .tgr-tab:focus-visible, .tgr-seg button:focus-visible, .tgr-chip:focus-visible, .tgr-th:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
   .tgr-count { font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 var(--cds-pad-sm); color: var(--color-fg); }
   .tgr-page { display: grid; gap: var(--cds-gap-md); }
@@ -1372,6 +1377,39 @@ defCalc('industry_perf', {
   $('#g-reset').addEventListener('click', () => { Object.assign(F, PDEF); delete S.sort['g-table']; draw(); });
   const showTab = (tab) => { S.tab = tab; history.replaceState(null, '', '#' + tab); draw(); };
   document.querySelectorAll('.tgr-tab').forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab)));
+  /* your tab order (the user, Nov 6 2026: "make it so I can move these tabs around myself, left or right"): drag a tab to
+     its new place (the same drag as the table columns); kept in this browser (localStorage radar-tab-order), like your
+     table layouts; "↺ Tab order" at the end of the bar (shown once you moved one) puts them back */
+  (() => {
+    const nav = document.querySelector('.tgr-tabs'); if (!nav) return;
+    const KEY = 'radar-tab-order', tabs = () => [...nav.querySelectorAll('.tgr-tab')], DEF = tabs().map((t) => t.dataset.tab);
+    const reset = h('button', 'tgr-tab-reset', '↺ Tab order'); reset.type = 'button'; reset.title = 'Put the tabs back in their first order';
+    nav.append(reset);
+    const isDef = () => tabs().map((t) => t.dataset.tab).join() === DEF.join();
+    const apply = (o) => { const by = new Map(tabs().map((t) => [t.dataset.tab, t])); o.concat(DEF).forEach((k) => { const t = by.get(k); if (t) { nav.insertBefore(t, reset); by.delete(k); } }); reset.hidden = isDef(); };
+    const save = () => { try { if (isDef()) localStorage.removeItem(KEY); else localStorage.setItem(KEY, JSON.stringify(tabs().map((t) => t.dataset.tab))); } catch (e) { /* private window */ } reset.hidden = isDef(); };
+    try { const o = JSON.parse(localStorage.getItem(KEY) || 'null'); apply(Array.isArray(o) ? o : DEF); } catch (e) { apply(DEF); }
+    reset.addEventListener('click', () => { apply(DEF); save(); });
+    let drag = null;
+    const clear = () => tabs().forEach((x) => x.classList.remove('tab-drag', 'tab-drop-l', 'tab-drop-r'));
+    const right = (t, e) => { const r = t.getBoundingClientRect(); return e.clientX > r.left + r.width / 2; };
+    tabs().forEach((t) => {
+      t.draggable = true; t.title = 'Drag to move this tab left or right';
+      t.addEventListener('dragstart', (e) => { drag = t; t.classList.add('tab-drag'); try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', t.dataset.tab); } catch (e2) { /* old browser */ } });
+      t.addEventListener('dragend', () => { drag = null; clear(); });
+    });
+    nav.addEventListener('dragover', (e) => {
+      const t = e.target.closest('.tgr-tab'); if (!drag || !t) return;
+      e.preventDefault(); clear(); drag.classList.add('tab-drag');
+      if (t !== drag) t.classList.add(right(t, e) ? 'tab-drop-r' : 'tab-drop-l');
+    });
+    nav.addEventListener('drop', (e) => {
+      const t = e.target.closest('.tgr-tab'); if (!drag || !t) return;
+      e.preventDefault();
+      if (t !== drag) nav.insertBefore(drag, right(t, e) ? t.nextSibling : t);
+      clear(); drag = null; save();
+    });
+  })();
 
   /* selections: rows and chips */
   const select = (kind, name) => {
