@@ -29,6 +29,8 @@ jobs:
       - name: Grade
         env:
           SEC_UA: ${{ secrets.SEC_UA }}
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}     # headlines (Alpaca's news API) for the gappers the SEC has nothing on
+          ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
         run: |
           H=$(TZ=America/New_York date +%H); M=$(TZ=America/New_York date +%M); T=$((10#$H * 60 + 10#$M))
           if [ "$GITHUB_EVENT_NAME" = "schedule" ] && { [ $T -lt 525 ] || [ $T -gt 569 ]; }; then echo "outside 8:45-9:29 ET: nothing to do"; exit 0; fi

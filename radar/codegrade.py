@@ -38,7 +38,7 @@ Two layers, then one combined grade:
         A news A+, B news A; stage 1 / 4 still under the 200: W (laggard watch) on A / B news or an earnings report, else
         "—"; C and F as they are. Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200.
 """
-import datetime, html, json, os, re, sys, time, urllib.request, zoneinfo
+import datetime, html, json, os, re, sys, time, urllib.parse, urllib.request, zoneinfo
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 NY = zoneinfo.ZoneInfo("America/New_York")
@@ -631,6 +631,12 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
         nw, _ = news_of(sym, d, (S.get(sym) or {}).get("mcap_b") or g.get("mcap_b"), E, t_from, t_to, day)
         news[sym] = dict(nw, direction=d, gap_pct=g.get("gap_pct"), pm_last=g.get("pm_last"), dropped=g.get("dropped") or "")
         print(f"{sym:6} {d:4} news only ({g.get('dropped') or 'not on the list'}): {nw['news']} | {nw['catalyst']}")
+    try:                                                # a stock's own headline when the SEC has nothing (FLY Nov 6: the AST
+        H = headlines(list(out) + list(news), t_from, t_to)   # deal was a 7:31 AM press release, no 8-K yet)
+    except Exception as ex:
+        H = {}
+        print("headlines:", repr(ex)[:160])
+    use_headlines({**news, **out}, H, S)
     sector_moves(out, news, every, S)
     json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "day": day,
                "window": [t_from.isoformat(), t_to.isoformat()], "rows": out, "news": news}, open(out_path, "w"), indent=0)
@@ -679,6 +685,110 @@ def news_of(sym, d, mcap, E, t_from, t_to, day):
     return nw, er
 
 
+def weak_news(r):
+    """no news of its own today: none, routine filings, earnings before the last close, a board change (news C)"""
+    return r.get("news") == "C" and (r.get("catalyst") in NO_NEWS or r["catalyst"].startswith("After earnings") or r["catalyst"] == "Executive change")
+
+
+# ───────── headlines: Alpaca's news API (Benzinga: company press releases, Reuters / Dow Jones items, explainers) ─────────
+LIST_ART = re.compile(r"stocks? (?:moving|to watch|making)|stock market today|here are \d+|\b\d+ (?:\w+ )?stocks\b|movers|top (?:gainers|losers)|"
+                      r"futures|pre-?market session|earnings (?:scheduled|preview)|biggest moves|market (?:wrap|recap)", re.I)
+KINDS = [("Analyst upgrade", r"\bupgrad"), ("Analyst downgrade", r"\bdowngrad"),
+         ("Analyst note", r"\banalysts?\b|price target|\bmaintains\b|\breiterates\b|\binitiates\b"),
+         ("Takeover / sale talk", r"\b(?:acquir\w*|buyout|takeover|take-private|explor\w* (?:a )?sale|strategic alternatives|to be acquired|merger|bid for|suitors?)\b"),
+         ("Offering", r"\b(?:public offering|private placement|prices? .{0,30}offering|convertible notes|at-the-market)\b"),
+         ("FDA / trial", r"\b(?:FDA|approval|approved|clearance|phase [123i]+|trial|topline|data readout)\b"),
+         ("Buyback", r"\b(?:buyback|repurchase)\b"),
+         ("Deal / contract", r"\b(?:agreement|deal|contract|orders?|award\w*|partnership|partners? with|collaborat\w*|selected|inks?|signs?|wins?|role in|supply)\b"),
+         ("Earnings", r"\b(?:results|earnings|Q[1-4]|quarter|guidance|outlook)\b")]
+RANK = ["Takeover / sale talk", "FDA / trial", "Offering", "Deal / contract", "Buyback", "Earnings", "Analyst upgrade",
+        "Analyst downgrade", "In the news", "Analyst note"]
+WHY = re.compile(r"what'?s (?:going on|happening)|why is|here'?s why|trading (?:higher|lower)|shares (?:rise|jump|surge|soar|climb|rebound|fall|drop|slide|sink|tumble)|"
+                 r"stock is (?:surging|soaring|rising|gaining|falling|sliding)|(?:rebounds?|rall(?:y|ies)|jumps?|surges?|soars?) (?:\d|after|on)", re.I)
+MINOR = ("In the news", "Analyst note")                 # the stock's own, but no event: a sector move stays the label
+SUFFIX = re.compile(r"\b(?:inc|incorporated|corp|corporation|co|company|ltd|limited|plc|holdings?|group|n\.?v|s\.?a|se|ag|the|class [a-c])\b\.?", re.I)
+GENERIC = {"american", "first", "general", "united", "national", "global", "international", "applied", "advanced", "new", "digital",
+           "energy", "data", "power", "western", "eastern", "pacific", "atlantic", "standard", "universal", "community", "capital",
+           "financial", "north", "south", "great", "royal", "health", "home", "bank", "life", "american", "us", "china", "world"}
+
+
+def headlines(syms, t_from, t_to):
+    """{SYM: [articles tagged with it]} from Alpaca's news API, accepted in (t_from, t_to]; {} without the keys"""
+    key, sec = os.environ.get("ALPACA_KEY_ID"), os.environ.get("ALPACA_SECRET")
+    if not (key and sec) or not syms:
+        return {}
+    hdr = {"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": sec}
+    z = lambda t: t.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    out, syms = {}, sorted(set(syms))
+    for i in range(0, len(syms), 100):
+        chunk, tok = set(syms[i:i + 100]), None
+        for _ in range(40):
+            q = {"symbols": ",".join(sorted(chunk)), "start": z(t_from), "end": z(t_to), "limit": 50, "sort": "asc"}
+            if tok:
+                q["page_token"] = tok
+            rq = urllib.request.Request("https://data.alpaca.markets/v1beta1/news?" + urllib.parse.urlencode(q), headers=hdr)
+            with urllib.request.urlopen(rq, timeout=30) as r:
+                d = json.load(r)
+            for n in d.get("news", []):
+                for s in set(n.get("symbols") or []) & chunk:
+                    out.setdefault(s, []).append(n)
+            tok = d.get("next_page_token")
+            if not tok:
+                break
+    print("headlines:", sum(len(v) for v in out.values()), "for", len(out), "of", len(syms), "stocks")
+    return out
+
+
+def mentions(title, sym, name):
+    """the headline is about this company: its ticker (2+ letters, as written) or its name's first words"""
+    if len(sym) >= 2 and re.search(rf"(?<![A-Za-z]){re.escape(sym)}(?![A-Za-z])", title):
+        return True
+    w = SUFFIX.sub(" ", re.sub(r"[,.()]", " ", name or "")).split()
+    keys = ([" ".join(w[:2])] if len(w) >= 2 else []) + ([w[0]] if w and len(w[0]) >= 4 and w[0].lower() not in GENERIC else [])
+    return any(re.search(rf"(?<![A-Za-z]){re.escape(k)}(?![A-Za-z])", title, re.I) for k in keys)
+
+
+def best_headline(sym, name, arts):
+    """its own headline (not a list of movers), the biggest kind of event first, the earliest of that kind (the release
+    before the "why is it moving" pieces) -> {kind, title, source, at, url} or None"""
+    got = []
+    for n in arts:
+        t = (n.get("headline") or "").strip()
+        if not t or LIST_ART.search(t) or not mentions(t, sym, name):
+            continue
+        kind = next((k for k, rx in KINDS if re.search(rx, t, re.I)), "In the news")
+        got.append((RANK.index(kind), n.get("created_at") or "", kind, t, n))
+    if not got:
+        return None
+    # an event: the earliest (the release, not the follow-ups); a minor item: a "why is it moving" piece first, the newest
+    # (AMD Nov 6: "AMD Shares Rebound 7% Premarket After 17% Rout", not last night's "CEO addresses AI concerns")
+    key = lambda x: (x[0], x[1]) if x[2] not in MINOR else (x[0], not WHY.search(x[3]), -datetime.datetime.fromisoformat(x[1].replace("Z", "+00:00")).timestamp())
+    _, at, kind, t, n = min(got, key=key)
+    when = datetime.datetime.fromisoformat(at.replace("Z", "+00:00")).astimezone(NY)
+    return {"kind": kind, "title": t, "source": (n.get("source") or "news").capitalize(), "url": n.get("url") or "",
+            "at": when.strftime("%-I:%M %p").replace("AM", "AM ET").replace("PM", "PM ET") if when.date() == datetime.datetime.now(NY).date()
+            else when.strftime("%b %-d %-I:%M %p ET")}
+
+
+def use_headlines(allr, H, S):
+    """each gapper's own headline goes on its row ("headline"); when the SEC had nothing of its own (weak news) and the
+    headline is an event (a deal, a sale, an FDA item, a buyback, an offering, earnings, an analyst up/downgrade), the
+    headline is the catalyst; the news grade stays C (no primary source in the filing yet: the safety lock's rule)"""
+    n = 0
+    for sym, r in allr.items():
+        hl = best_headline(sym, (S.get(sym) or {}).get("name"), H.get(sym) or [])
+        if not hl:
+            continue
+        r["headline"] = hl
+        if weak_news(r) and hl["kind"] not in MINOR:
+            sec = "" if r["catalyst"] == "No company news" else f"; SEC: {r['catalyst']}: {r['reason'][:100]}"
+            r.update(catalyst=hl["kind"] + " (headline)", reason=f"{hl['title']} ({hl['source']} {hl['at']})" + sec,
+                     sources=[hl["url"]] + (r.get("sources") or [])[:2],
+                     flags="; ".join(x for x in (r.get("flags"), "headline only: no SEC filing on it yet") if x))
+            n += 1
+    print("headlines used as the catalyst:", n)
+
+
 def sector_moves(out, news, every, S):
     """a gap with no news of its own today (none, a routine filing, earnings before the last close, a board change: news
     C), while 3+ stocks of its theme (with nothing at all: or of its industry), itself included, gap 5%+ the same way:
@@ -694,7 +804,7 @@ def sector_moves(out, news, every, S):
     for sym, d in side.items():
         for t in themes(sym) + inds(sym):
             members.setdefault((t, d), []).append(sym)
-    weak = lambda r: r.get("news") == "C" and (r.get("catalyst") in NO_NEWS or r["catalyst"].startswith("After earnings") or r["catalyst"] == "Executive change")
+    weak = weak_news
     own = {s: r["catalyst"] for s, r in allr.items() if not weak(r)}
     for sym, r in allr.items():
         if not weak(r):
@@ -714,9 +824,18 @@ def sector_moves(out, news, every, S):
         mine = ("; " + r["reason"][:1].lower() + r["reason"][1:] if r["catalyst"] == "No company news" else
                 "; not at the SEC (no filings to check)" if r["catalyst"] == "Not at the SEC" else
                 f"; its own: {r['catalyst']}: {r['reason'][:140]}")      # AMD Nov 6: its Nov 3 report, MU a board retirement
+        hl = r.get("headline")
         r["catalyst"] = "Sector move: " + t
         r["reason"] = (f"{len(mem)} {t} stocks gapping {r['direction']} 5%+ ({', '.join(peers[:6])}{', ...' if len(peers) > 6 else ''})" +
-                       (f"; with their own news: {', '.join(f'{s} ({own[s]})' for s in newsy[:3])}" if newsy else "") + mine)
+                       (f"; with their own news: {', '.join(f'{s} ({own[s]})' for s in newsy[:3])}" if newsy else "") +
+                       (f"; headline: {hl['title']} ({hl['source']} {hl['at']})" if hl else "") + mine)
+        if hl:
+            r["sources"] = [hl["url"]] + [u for u in r.get("sources") or [] if u != hl["url"]][:2]
+    for r in allr.values():                             # no group either: its headline, minor as it is (AMD-type explainers)
+        hl = r.get("headline")
+        if hl and weak(r) and r["catalyst"] in ("No company news", "Not at the SEC"):
+            r.update(catalyst=hl["kind"] + " (headline)", reason=f"{hl['title']} ({hl['source']} {hl['at']}); " + r["reason"][:1].lower() + r["reason"][1:],
+                     sources=[hl["url"]] + (r.get("sources") or [])[:2])
 
 
 def log(cg_path, log_path):
