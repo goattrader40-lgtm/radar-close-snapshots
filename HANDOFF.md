@@ -45,6 +45,32 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status at the end of the session "Radar: work session (Nov 6)" (Nov 5 evening - Nov 6 2026 evening)
+
+- **Live (each after the user's "go live")**, details in the sections below: the end-of-day 👥 list = today's Launches /
+  Watchlist buy-point triggers only (Nov 5); power day / EP must open over the 21-day closing high (from Mon Nov 9: the
+  4:26 / 4:46 PM Nov 6 rebuilds saved the numbers, 703 watch stocks); EP volume pace 3x+ (power day 4x); the alert boxes
+  ladder (a trigger steps down to 👀 when it fails, back up when it holds again; GitHub's job re-checks its triggers each
+  run: alerts.json hold / lost / back; checked live Nov 6 9:45 AM: PACS, ACHC, AVAH stepped down, SARO / TMDX came back);
+  the main tabs drag left / right; Earnings Day 3 and the week calendar folds; the scan at 4:25 PM from the day job + the
+  ~4:30 AM safety run; the new day at 5 AM and today's triggers live on the Watchlist / Launches rows. Nov 5's close
+  check was published into that day's alerts.json by hand (the job's update_holding on the 4:10 PM prices).
+- **Test branches**: none waiting (test/eodtrig, epopen, boxhold, boxfix, ep3x, tabmove, earnday3, scan425, newday all
+  merged).
+- **Answered, no change** (the user): VERX Nov 5 had no alert (not on the watch list: ~$19.7M 20-day $ volume on Nov 4, under
+  $20M; launched A at the close): "no change needed". VCEL graded a day late (Nov 5 pre-market list dropped it: ~600K
+  shares a day, under 700K; graded A on Nov 6 on a 100-share $59.99 print and Thursday's news): "don't change anything".
+  APPN / RRX / PPLI: see "Not to touch" in the tables section.
+- **Open, offered, not decided**: "Show lone wolves" starts unticked on Launches / Launch laggards and hides new launches
+  (Nov 5: APP, ADMA, XERS, U, VCEL, ENOV, RRX): start it ticked, or drop the filter and keep the tag (the user ticked the
+  box). A "Now" column (live change / pace, launching) on the Pre-market tab's ★ Launch watch after 9:30. Moving TREND
+  triggers and the W alerts into GitHub's job (they fire only in an open page). EPAM-type: a power day that steps down
+  shows its own line in 🚀 (no separate A launch alert).
+- **First things to check Monday Nov 9**: the 4:25 PM scan starts from the day job (scanner.yml run "workflow_dispatch",
+  auto=1) and the lists say the Nov 9 close by ~4:35; the power day / EP open rule (watch_close_high_21d) in the job's
+  alerts; the Watchlist / Launches rows show today's triggers live during the day; at 5 AM Tuesday the "Triggered Mon,
+  Nov 9" labels.
+
 ## Pre-market news at 8:05 and 8:35 too (LIVE Nov 6 2026 evening, the user's "go live"; branch test/pmearly)
 
 - The user (Nov 6): news at "805, 835 and 905" ("as long as gappers info is updated and news is pulled at 805 then 835
@@ -154,10 +180,11 @@ alone.
   state at the latest check ("🔔 10:27 AM breakout over $41.42 · holding" / "↓ … back under since 11:24 AM"), a 3-SETUPS
   row holding one in the triggered part; (4) the rest once a day. docs/index.html staleRead / forToday / liveTrigs /
   trigText; the review times: after 4:40 PM, and pre-market 9:05-9:25 AM.
-- Open (the user agreed in the read, not built yet): the evening read counts a 3-SETUPS "Breakout" (the MSF engine's
-  breakout flag) only when the close held over its buy point (APPN Nov 5: over 54.12 at the open, closed 54.03 under it,
-  filed "Triggered today"); also the buy point after a launch (RRX / PPLI Nov 6: a level the launch already closed over came
-  back as a "1st breakout": RRX $166.20 vs its launch high $181.74, PPLI $41.42 under the base top $42.29).
+- **Not to touch (the user, Nov 6: "don't touch 1 and 2, you're misreading it")**: Claude read APPN Nov 5 (over 54.12 at
+  the open, closed 54.03, filed "Triggered today") as a 3-SETUPS breakout that should need the close over its buy point,
+  and RRX / PPLI Nov 6 (RRX's 4:00 PM "B breakout: Base top $166.20" after its Nov 3 launch closed $179.93; PPLI's 10:27 AM
+  breakout over $41.42, the user's base top line higher, $42.29 Oct 6) as a wrong buy point after a launch. The user says
+  that read is wrong: no change; ask the user how they read these before proposing anything on them again.
 
 ## Earnings tab: Day 3, and the week's calendar folds away (LIVE Nov 6 2026 ~4:20 PM ET, the user's "go live"; branch test/earnday3)
 
