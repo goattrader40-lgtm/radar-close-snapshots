@@ -299,6 +299,12 @@ def find(live, doc, now=None):
         # gap, over the 1-month high and the 200 SMA; a power day (8%+ gap, +10%) is one and alerts as the power day
         # (CHYM Nov 5: gap +6.4%, up 4.7%, 5x: an EP, not a power day)
         ep = rv >= 4 and gap is not None and gap >= 6 and price > pivot
+        # both have to gap over the highest close of the last 21 sessions (the user, Nov 5 2026: "the whole point is to gap up
+        # above it"; WRBY Nov 5 opened 25.93 under its 26.52 and fired a power day at 12:35 on a 1-cent pass of its 27.00
+        # high, then closed 26.10); no number (a watch list built before Nov 6) = not checked
+        hc21 = (doc.get("watch_close_high_21d") or {}).get(sym)
+        if hc21 and not (op and op > hc21):
+            power = ep = False
         if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not (power or ep)):
             continue
         theme = gtext(w)

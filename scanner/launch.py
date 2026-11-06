@@ -1977,7 +1977,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         if r["grade"] in ("A+", "A", "B") and not r.get("follows") and r["sessions"] < 10:
             for g in groups.get(r["symbol"], ([], []))[0]:
                 leaders[g].add(r["symbol"])
-    watch = {}
+    watch, watch_hc21 = {}, {}
     for s, a in A.items():
         st = a.st
         i = len(st.dates) - 1
@@ -1988,6 +1988,9 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         if ext > L["power_ext200"] or ext < -max(L["watch_under200"], L["lag_under200"]):
             continue
         hi20 = st.h[i - L["base_days"] + 1:i + 1].max()          # tomorrow's "previous 20 days' high"
+        # tomorrow's power day / episodic pivot has to open over it (the user, Nov 5 2026: "the whole point is to gap up above
+        # it: the opening price has to be above the 21-day highest close"; WRBY Nov 5 opened 25.93 under 26.52)
+        watch_hc21[s] = fnum(st.c[max(0, i - 20):i + 1].max())   # the highest close of the last 21 sessions
         hh = st.h[max(0, i - 119):i + 1]
         kk = int(np.argmax(hh))
         days = hh.size - 1 - kk
@@ -2043,7 +2046,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50", "low_52w", "group rank now (★ Top / Strong, place in it)", "RS now"],
-               launches=rows, ema50_undercut=under50, laggards=lag, watch=watch, groups=[g for g in G if g["status"] != "Not trending"],
+               launches=rows, ema50_undercut=under50, laggards=lag, watch=watch, watch_close_high_21d=watch_hc21, groups=[g for g in G if g["status"] != "Not trending"],
                catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()),
                news_days=sorted([s, d, w] for (s, d), w in NEWS_DAYS.items()),
                # 3-SETUPS for the live alerts (desktop: every trigger; phone: Ready only); kept from the evening scan when

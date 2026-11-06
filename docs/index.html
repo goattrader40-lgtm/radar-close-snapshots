@@ -2561,8 +2561,12 @@ defCalc('industry_perf', {
       const [close0, pivot, s200, , ema50, h52, days, corr, group, gstat, tvs, mem, leaders] = w;
       /* 28-50% over the 200 SMA the day before: only a power day counts (volume 4x+, an 8%+ gap, up 10%+) */
       const ext = s200 ? (close0 / s200 - 1) * 100 : 0;
-      const powerNow = rv >= (R.power_rv || 4) && gap !== null && gap >= (R.power_gap || 8) && chg >= (R.power_chg || 10) && price > pivot;   /* over its 1-month high */
-      const epNow = rv >= EPIV.rv && gap !== null && gap >= EPIV.gap && price > pivot && !!s200 && price > s200;
+      /* a power day / episodic pivot has to open over the highest close of the last 21 sessions (the user, Nov 5 2026: "the
+         whole point is to gap up above it"; WRBY Nov 5 opened 25.93 under its 26.52); no number (an older watch list) = not checked */
+      /* (the alerts only: the Launching today table on the Launches tab lists as before) */
+      const hc21 = (doc.watch_close_high_21d || {})[sym], gapOk = !withEp || !hc21 || (!!open && open > hc21);
+      const powerNow = gapOk && rv >= (R.power_rv || 4) && gap !== null && gap >= (R.power_gap || 8) && chg >= (R.power_chg || 10) && price > pivot;   /* over its 1-month high */
+      const epNow = gapOk && rv >= EPIV.rv && gap !== null && gap >= EPIV.gap && price > pivot && !!s200 && price > s200;
       if (ext > R.max_ext200 && !powerNow && !(withEp && epNow)) return;
       /* a catalyst gap (episodic pivot): a neglected stock, under its 50 EMA or 200 SMA at the last close, gaps 5%+ on
          earnings or news with volume pace 3x+ and trades above both (HRI, Oct 27 2026) */
@@ -2582,7 +2586,7 @@ defCalc('industry_perf', {
       /* a delayed launch (a high-volume gap that faded and held its base): credit that day's volume and gap */
       const bo = price > pivot || !!(mem && price > mem[1]);
       const grade = mem ? lnGrade(Math.max(rv, R.rv_big), bo, Math.max(gap ?? 0, R.gap_big), chg, R, false) : lnGrade(rv, bo, gap, chg, R, close0 < s200);
-      out.push({ symbol: sym, tv_symbol: tvs, grade, chg, gap, rv, price, earnings: ernDay, pivot: mem && !(price > pivot) ? mem[1] : pivot, bo, group, gstat, corr, days, mem, follows: follower && chg < R.min_chg ? leaders : null, h52: h52 ? (price / h52) * 100 : null, ep, shape, under, over: !!s50 && price > s50 && price > s200, reversal, epiv: epNow });
+      out.push({ symbol: sym, tv_symbol: tvs, grade, chg, gap, rv, price, earnings: ernDay, pivot: mem && !(price > pivot) ? mem[1] : pivot, bo, group, gstat, corr, days, mem, follows: follower && chg < R.min_chg ? leaders : null, h52: h52 ? (price / h52) * 100 : null, ep, shape, under, over: !!s50 && price > s50 && price > s200, reversal, epiv: epNow, gapOk });
     });
     return out;
   };
@@ -2938,7 +2942,7 @@ defCalc('industry_perf', {
       f1(r.chg) + (r.gap !== null ? ' · gap ' + f1(r.gap) : '') + ' · vol ' + r.rv.toFixed(1) + '× · ' + fPrice(r.price) + ', ' + f1(r.vs200) + ' vs the 200 SMA · base high ' + fPrice(r.pivot) + (r.bo ? ' cleared' : ' not cleared') + ' · moves to Launches after 5 closes over the 200 SMA', r.tv_symbol]));
     lnLive(doc, true).forEach((r) => {
       const facts = f1(r.chg) + (r.gap !== null ? ' · gap ' + f1(r.gap) : '') + ' · vol ' + r.rv.toFixed(1) + '× for the time of day · ' + fPrice(r.price);
-      const power = r.rv >= (R.power_rv || 4) && r.gap !== null && r.gap >= (R.power_gap || 8) && r.chg >= (R.power_chg || 10) && r.bo;
+      const power = r.gapOk && r.rv >= (R.power_rv || 4) && r.gap !== null && r.gap >= (R.power_gap || 8) && r.chg >= (R.power_chg || 10) && r.bo;
       const crossed = r.under.length && r.over ? ' · was under its ' + r.under.join(' & ') + ', now above the 50 EMA & 200 SMA' : '';
       /* today's distance from the 52-week high, and the correction it is coming out of (AXGN Oct 28 2026: 14% under it, after a 36% correction) */
       const neglect = (r.h52 ? (r.h52 < 100 ? ' · ' + (100 - r.h52).toFixed(0) + '% under its 52-week high' : ' · at a 52-week high') : '') + (r.corr >= 15 ? ', after a ' + r.corr.toFixed(0) + '% correction' : '');
