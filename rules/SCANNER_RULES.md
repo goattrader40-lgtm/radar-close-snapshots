@@ -269,7 +269,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Pre-market grades | The morning's graded gappers | About 9:05 AM ET |
 | Early heads-up | A 5%+ gap with a catalyst-gap / power-day / launch shape, before the volume can be read | 9:31-9:34, every minute |
 | Power day | Volume pace 4x+, 8%+ gap, up 10%+, over its 1-month high, above the 200 SMA (at most 50% over it); it has to open over the highest close of the last 21 sessions (the user, Nov 5 2026: WRBY opened 25.93 under its 26.52: no power day) | 1-minute and 5-minute checks |
-| Episodic pivot | Volume pace 4x+, 6%+ gap, over its 1-month high and the 200 SMA, and it opened over the highest close of the last 21 sessions (the user, Nov 5 2026: 'the whole point is to gap up above it'); a power day is one and alerts as the power day; in the ⚡ box with the power days | 1-minute and 5-minute checks |
+| Episodic pivot | Volume pace 3x+ (the user, Nov 5 2026 evening; was 4x), 6%+ gap, over its 1-month high and the 200 SMA, and it opened over the highest close of the last 21 sessions (the user, Nov 5 2026: 'the whole point is to gap up above it'); a power day is one and alerts as the power day; in the ⚡ box with the power days | 1-minute and 5-minute checks |
 | Catalyst gap | A neglected stock (under its 50 EMA or 200 SMA at the last close) gaps 5%+ on earnings or news with pace 3x+ and trades above both | 1-minute and 5-minute checks |
 | Catalyst 2nd trigger | After a catalyst gap that hadn't cleared its base high: the base high cleared | Same |
 | A+/A launch | Off the watch list, graded like Launching today | Same |

@@ -295,10 +295,12 @@ def find(live, doc, now=None):
         ext = (close0 / s200 - 1) * 100
         power = (rv >= R.get("power_rv", 4) and gap is not None and gap >= R.get("power_gap", 8) and chg >= R.get("power_chg", 10)
                  and price > pivot)                                # over its 1-month high (your rule, Nov 2 2026)
-        # an episodic pivot (the user, Nov 4 2026; in this job Nov 5, so every device has it): a volume pace of 4x+, a 6%+
+        # an episodic pivot (the user, Nov 4 2026; in this job Nov 5, so every device has it): a volume pace of 3x+ (was 4x), a 6%+
         # gap, over the 1-month high and the 200 SMA; a power day (8%+ gap, +10%) is one and alerts as the power day
         # (CHYM Nov 5: gap +6.4%, up 4.7%, 5x: an EP, not a power day)
-        ep = rv >= 4 and gap is not None and gap >= 6 and price > pivot
+        # a volume pace of 3x+ (the user, Nov 5 2026 evening: "change the rule for the episodic pivot: 3 rvol at least,
+        # everything else stays the same"; was 4x, the power day's)
+        ep = rv >= 3 and gap is not None and gap >= 6 and price > pivot
         # both have to gap over the highest close of the last 21 sessions (the user, Nov 5 2026: "the whole point is to gap up
         # above it"; WRBY Nov 5 opened 25.93 under its 26.52 and fired a power day at 12:35 on a 1-cent pass of its 27.00
         # high, then closed 26.10); no number (a watch list built before Nov 6) = not checked
