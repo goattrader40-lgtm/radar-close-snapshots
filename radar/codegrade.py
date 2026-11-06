@@ -123,6 +123,14 @@ def filings(sym, t_from, t_to):
     return sorted(out, key=lambda f: f["at"])
 
 
+def tidy(t):
+    """a release's text without the SEC exhibit header ("EX-99.1 2 lrcx_ex991.htm EX-99.1 Document FOR IMMEDIATE
+    RELEASE"), so a reason starts with its words"""
+    t = re.sub(r"\bEX-\d+(?:\.\d+)?\s+\d+\s+\S+\.(?:htm|html|txt)\b\s*", " ", t[:1500], flags=re.I)
+    t = re.sub(r"\b(?:EX-\d+(?:\.\d+)?\s+Document|EXHIBIT\s+\d+(?:\.\d+)?|FOR IMMEDIATE RELEASE)\b:?\s*", " ", t, flags=re.I)
+    return re.sub(r"\s+", " ", t).strip()
+
+
 def clean(raw):
     txt = re.sub(r"<[^>]+>", " ", re.sub(r"(?is)<(script|style).*?</\1>", " ", raw))
     return re.sub(r"\s+", " ", html.unescape(txt)).strip()
@@ -246,6 +254,7 @@ def classify(fs, texts, direction, mcap, e=None):
     erel = [f for f in fs if (f["form"] == "8-K" and "2.02" in items(f)) or (f["form"] == "6-K" and re.search(r"results|earnings|quarter", texts.get(f["acc"], ("", ""))[1][:600], re.I))]
     alltxt = " ".join(t[1][:4000] for t in texts.values())
     head = " ".join(t[1][:700] for t in texts.values())
+    lead = " ".join(tidy(t[1])[:700] for t in texts.values())      # the same, for the reason shown (no exhibit header)
     srcs = [texts[f["acc"]][0] for f in fs if f["acc"] in texts and texts[f["acc"]][0]] or [f["base"] for f in fs][:3]
     out["sources"] = srcs[:3]
     if offer or re.search(r"pricing of (?:its |an? |the )?(?:upsized )?(?:underwritten |public |registered direct |private )?offering|"
@@ -276,29 +285,29 @@ def classify(fs, texts, direction, mcap, e=None):
                                                                                 r"take(?:s)? .{0,20}private|all-cash transaction", head, re.I) and not re.search(r"\bto acquire\b|\bacquisition of\b", head[:200], re.I):
         out.update(news="A" if direction == "up" else "C", catalyst="Signed takeover", reason="A signed agreement to be acquired (8-K / release)")
     elif re.search(r"\b(?:to acquire|acquisition of|agreed to acquire|will acquire)\b", head, re.I):
-        out.update(news="C" if direction == "up" else "B", catalyst="Buying a company", reason="The company is the acquirer: " + head[:160])
+        out.update(news="C" if direction == "up" else "B", catalyst="Buying a company", reason="The company is the acquirer: " + lead[:160])
     elif re.search(r"FDA (?:has )?(?:approv|grants? (?:accelerated )?approval)|approval (?:of|for) .{0,60}by the (?:U\.S\. )?(?:FDA|Food and Drug)", head, re.I):
-        out.update(news="A" if direction == "up" else "C", catalyst="FDA approval", reason=head[:200], inflection="New business", inflection_score=7)
+        out.update(news="A" if direction == "up" else "C", catalyst="FDA approval", reason=lead[:200], inflection="New business", inflection_score=7)
     elif re.search(r"complete response letter|\bCRL\b", head, re.I):
-        out.update(news="A" if direction == "down" else "C", catalyst="FDA rejection (CRL)", reason=head[:200])
+        out.update(news="A" if direction == "down" else "C", catalyst="FDA rejection (CRL)", reason=lead[:200])
     elif re.search(r"did not (?:meet|achieve)|failed to (?:meet|achieve)|missed (?:its|the) primary endpoint", head, re.I):
-        out.update(news="A" if direction == "down" else "C", catalyst="Failed trial", reason=head[:200])
+        out.update(news="A" if direction == "down" else "C", catalyst="Failed trial", reason=lead[:200])
     elif re.search(r"positive (?:topline|top-line|phase)|met (?:its|the) primary endpoint|statistically significant", head, re.I):
-        out.update(news="B" if direction == "up" else "C", catalyst="Positive trial data", reason=head[:200], inflection="New business", inflection_score=5)
+        out.update(news="B" if direction == "up" else "C", catalyst="Positive trial data", reason=lead[:200], inflection="New business", inflection_score=5)
     elif re.search(r"\b(?:contract|award(?:ed)?|order|agreement|lease|partnership|collaboration)\b", head, re.I) and money_max(head) > 0:
         v = money_max(head)
         share = v / (mcap * 1e9) if mcap else 0
         g = "A" if share >= 0.25 else "B" if share >= 0.05 else "C"
         out.update(news=g if direction == "up" else "C", catalyst="Contract / agreement",
-                   reason=f"{head[:160]} ... (${v / 1e6:,.0f}M = {share * 100:.0f}% of the market cap)",
+                   reason=f"{lead[:160]} ... (${v / 1e6:,.0f}M = {share * 100:.0f}% of the market cap)",
                    inflection="New business" if g == "A" else "None", inflection_score=7 if g == "A" else 0)
     elif re.search(r"(?:chief executive|ceo|chief financial|cfo)\b.{0,80}\b(?:resign|depart|step(?:s|ping)? down|terminat|leave)", head, re.I) or \
             any(f["form"] == "8-K" and "5.02" in items(f) and re.search(r"resign|depart|step(?:s|ping)? down|terminat", texts.get(f["acc"], ("", ""))[1][:3000], re.I) for f in fs):
         imm = re.search(r"effective immediately", alltxt, re.I)
-        out.update(news=("A" if imm else "B") if direction == "down" else "C", catalyst="Executive change", reason=head[:200])
+        out.update(news=("A" if imm else "B") if direction == "down" else "C", catalyst="Executive change", reason=lead[:200])
     elif fs:
         kinds = ", ".join(sorted({f["form"] + (" " + items(f) if items(f) else "") for f in fs}))[:120]
-        out.update(news="C", catalyst="Filing, not classified", reason=f"Filed since the close: {kinds}. " + head[:140])
+        out.update(news="C", catalyst="Filing, not classified", reason=f"Filed since the close: {kinds}. " + lead[:140])
     if direction == "down" and flags and out["news"] == "C":
         out.update(news="B", catalyst="Offering / dilution")
     return out
@@ -629,6 +638,8 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
 
 NEWS_BUDGET = 480      # seconds for the news-only gappers (the job has 15 minutes; ~230 stocks on Nov 6 2026)
 NO_NEWS = ("No company news", "Filing, not classified", "Not at the SEC")
+ROUTINE_FORMS = {"3", "4", "5", "3/A", "4/A", "5/A", "144", "144/A", "SC 13G", "SC 13G/A", "SCHEDULE 13G", "SCHEDULE 13G/A", "13F-HR",
+                 "S-8", "S-8 POS", "10-Q", "10-K", "DEF 14A", "DEFA14A", "ARS", "SD", "11-K", "CORRESP", "UPLOAD"}   # no news in them
 
 
 def news_of(sym, d, mcap, E, t_from, t_to, day):
@@ -655,19 +666,22 @@ def news_of(sym, d, mcap, E, t_from, t_to, day):
         except Exception as ex:
             print("earnings", sym, repr(ex)[:120])
     nw = classify(fs, texts, d, mcap, e)
-    if old and nw["catalyst"] == "No company news":   # say so instead of "no news" (Claude's U Nov 6: "Day-2 after Q3 beat")
-        dt = datetime.date.fromisoformat(old["date"])
+    routine = bool(fs) and all(f["form"] in ROUTINE_FORMS or (f["form"] in ("8-K", "8-K/A") and not worth_reading(f)) for f in fs)
+    if old and (nw["catalyst"] == "No company news" or (nw["catalyst"] == "Filing, not classified" and routine)):
+        dt = datetime.date.fromisoformat(old["date"])    # say so instead of "no news" (Claude's U Nov 6: "Day-2 after Q3 beat")
         when = {"bmo": " before the open", "amc": " after the close"}.get(old.get("when"), "")
         nw.update(catalyst=f"After earnings ({dt:%b} {dt.day})",
-                  reason=f"Reported {dt:%a %b} {dt.day}{when}: {old.get('why') or old.get('read') or 'see the Earnings tab'}; "
-                         "no new filing since the last close")
+                  reason=f"Reported {dt:%a %b} {dt.day}{when}: {old.get('why') or old.get('read') or 'see the Earnings tab'}; " +
+                         (f"only routine filings since the last close ({', '.join(sorted({f['form'] for f in fs}))})" if fs else
+                          "no new filing since the last close"))
     return nw, er
 
 
 def sector_moves(out, news, every, S):
-    """a gap with no filing since the close, while 3+ stocks of its theme or industry (itself included) gap 5%+ the
-    same way: "Sector move: <group>", the peers named, and those with their own news (the user, Nov 6 2026: ~60 chip and
-    AI-hardware names up 5-20% with no filings). Only the catalyst and the reason change, the news grade stays C."""
+    """a gap with no news of its own today (none, a routine filing, earnings before the last close, a board change: news
+    C), while 3+ stocks of its theme (with nothing at all: or of its industry), itself included, gap 5%+ the same way:
+    "Sector move: <group>", the biggest peers named, those with their own news, then its own item (the user, Nov 6 2026:
+    ~60 chip and AI-hardware names up 5-20%). Only the catalyst and the reason change, the news grade stays C."""
     allr = {**news, **out}                              # the same dicts: the changes land in both
     side = {g["symbol"]: g["direction"] for g in every}
     for sym, r in out.items():
@@ -678,14 +692,16 @@ def sector_moves(out, news, every, S):
     for sym, d in side.items():
         for t in themes(sym) + inds(sym):
             members.setdefault((t, d), []).append(sym)
-    own = {s: r["catalyst"] for s, r in allr.items() if r.get("catalyst") not in NO_NEWS and not r["catalyst"].startswith("After earnings")}
+    weak = lambda r: r.get("news") == "C" and (r.get("catalyst") in NO_NEWS or r["catalyst"].startswith("After earnings") or r["catalyst"] == "Executive change")
+    own = {s: r["catalyst"] for s, r in allr.items() if not weak(r)}
     for sym, r in allr.items():
-        if r.get("catalyst") != "No company news":
+        if not weak(r):
             continue
+        nothing = r["catalyst"] in ("No company news", "Not at the SEC")
         best = None                                     # its theme with the most such gappers (the portal's groups: CRWV
-        for cands in (themes(sym), inds(sym)):          # Neoclouds, not Software), else its industry
-            m = max(((t, members.get((t, r["direction"]), [])) for t in cands), key=lambda x: len(x[1]), default=None)
-            if m and len(m[1]) >= 3:
+        for cands in (themes(sym), inds(sym) if nothing else []):   # Neoclouds, not Software); its industry only when
+            m = max(((t, members.get((t, r["direction"]), [])) for t in cands), key=lambda x: len(x[1]), default=None)   # it has
+            if m and len(m[1]) >= 3:                    # nothing of its own (VCEL: "After earnings", not "Biotechnology")
                 best = m
                 break
         if not best:
@@ -693,10 +709,12 @@ def sector_moves(out, news, every, S):
         t, mem = best
         peers = sorted((s for s in mem if s != sym), key=lambda s: -((S.get(s) or {}).get("mcap_b") or 0))   # the best-known first
         newsy = [s for s in peers if s in own]
+        mine = ("; no SEC filing or company release since the last close" if r["catalyst"] == "No company news" else
+                "; not at the SEC (no filings to check)" if r["catalyst"] == "Not at the SEC" else
+                f"; its own: {r['catalyst']}: {r['reason'][:140]}")      # AMD Nov 6: its Nov 3 report, MU a board retirement
         r["catalyst"] = "Sector move: " + t
         r["reason"] = (f"{len(mem)} {t} stocks gapping {r['direction']} 5%+ ({', '.join(peers[:6])}{', ...' if len(peers) > 6 else ''})" +
-                       (f"; with their own news: {', '.join(f'{s} ({own[s]})' for s in newsy[:3])}" if newsy else "") +
-                       "; no SEC filing or company release since the last close")
+                       (f"; with their own news: {', '.join(f'{s} ({own[s]})' for s in newsy[:3])}" if newsy else "") + mine)
 
 
 def log(cg_path, log_path):
