@@ -1070,6 +1070,18 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 
 ## Open items: the to-do list for the next session (each needs the user's go)
 
+New from Nov 5 (alerts / pre-market day, session_01PkbDakDe1EUNP5wQZf4wMH), all unanswered by the user:
+- **Power day vs episodic pivot**: drop the power day's +10% on the day, so the two differ only by the gap (8%+ vs
+  6%+; both need 4x pace, over the 1-month high and the 200 SMA)? Asked twice, no answer: leave as is until the user says.
+- **FCF**: offered a backtest of whether free cash flow change y/y matters for gap-ups when growth is high. Not run.
+- **The official open** from Alpaca's SIP feed instead of the first 1-minute bar (the gap is now the same all day, but
+  it can differ a little from TradingView's open). Offered, not decided.
+- **TREND triggers and the W (200 SMA) alerts in GitHub's job** (radar/alerts.py), so they reach every device like the
+  other alerts; today they come only from the open portal page. Offered, not decided.
+- **Earnings tab, EPAM Nov 5**: EPS -26% (GAAP) on the tab vs Claude's adjusted beat; check the reader pairs GAAP with
+  GAAP and adjusted with adjusted.
+- Check-ins already scheduled in that session: Nov 11 and Nov 18, 5:40 PM ET (code grade vs Claude grade comparison).
+
 0. **Earnings tab, first live week**: check the reads with the user (Wed-Fri reports get estimates saved before
    the report); the guidance reader's misses go in as fixes with a GV bump. Not done: revenue from the release's
    tables (SHOP-style releases give only growth up front: ≈ from growth), the prior quarter's growth (acceleration).
