@@ -92,6 +92,10 @@ alone.
   empty table). The tests had missed it because every 5%+ row had news in the test file. Now checked with the live
   codegrade.json (no "news" key) and with none, on the user's settings, the defaults, gap downs and Reset: rows draw, no
   page errors. Lesson: test a page change with the real live data files too, not only the new ones.
+  **Nov 6 ~4:35 PM ET, the user ("it still doesnt show no news")**: radar-data codegrade.json for Nov 6 = the morning's
+  file + "news" (224 gappers) from the 9:18 codelive test run; the 15 graded rows keep their grades, news letters and
+  eligibility, only their news text taken from the test where the news letter matched (EXTR: Reuters sale headline;
+  VCEL kept whole: A vs C); built_at kept, so no "code grades changed" pop-up; codegrade_log untouched.
   **Check on the first live morning**: the 8:52 run's log ("headlines: N for M of K stocks", "news: out of time" must
   not appear), the News column for the 5%+ gappers, and that FLY-type press releases show as "(headline)".
 - Tested: dry run with SEC / Yahoo stubbed (this container can't reach them) + the page in Chromium with Nov 6's data;
