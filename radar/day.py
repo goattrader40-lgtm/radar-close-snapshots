@@ -381,10 +381,7 @@ def day():
         if (7, 0) <= hm(t) < (9, 30) and (last_pm is None or (t - last_pm).total_seconds() >= 290):
             last_pm = t
             try:
-                if pm_once() and hm(t) < (9, 25):
-                    # the news for that scan's 5%+ gappers, a minute later (the user, Nov 6 2026: "do it in a way it matches
-                    # with the pre-market scan"): codegrade.yml in its news mode -> pmnews.json, no grades
-                    dispatch("codegrade.yml", mode="news")
+                pm_once()
             except Exception as e:
                 log("pre-market scan failed:", e)
         # the code grader (radar/codegrade.py) at 8:45, 8:55 and 9:00, right after that update's pre-market prices, so its
