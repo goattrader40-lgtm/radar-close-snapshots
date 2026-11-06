@@ -2,7 +2,8 @@
 # Downloads 2 years of daily bars for every US stock over $700M, runs the screeners and the
 # Momentum Setup Finder, updates the lists and writes setups/ (latest.json, README.md, TradingView
 # import files). Settings: scanner/settings.json.
-# Two UTC times so it runs at about 4:40 PM ET in summer (EDT) and winter (EST); a run before
+# Started at 4:25 PM ET by the day job (radar/day.py, right after its after-close refresh; the user, Nov 5 2026);
+# the two UTC times (about 4:40 PM ET in summer and winter) are the backup. A scheduled or day-job run before
 # 4:20 PM ET, on a weekend, or after today was already processed skips itself.
 # Run by hand: Actions -> Setup scanner -> Run workflow (backfill N rebuilds the lists over N days).
 name: Setup scanner
@@ -15,6 +16,9 @@ on:
     inputs:
       backfill:
         description: "Rebuild the lists from scratch over the last N trading days (0 = normal daily run)"
+        default: "0"
+      auto:
+        description: "1 = started by the day job: the same checks as a scheduled run"
         default: "0"
 
 permissions:
@@ -40,11 +44,13 @@ jobs:
 
       - name: Is there a new trading day to process?
         id: gate
+        env:
+          AUTO: ${{ github.event.inputs.auto || '0' }}
         run: |
           python3 - <<'PY'
           import datetime, json, os, zoneinfo
           now = datetime.datetime.now(zoneinfo.ZoneInfo("America/New_York"))
-          manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+          manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch" and os.environ.get("AUTO", "0") != "1"
           go = True
           if not manual:
               if now.weekday() >= 5 or (now.hour, now.minute) < (16, 20):

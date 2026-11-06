@@ -427,6 +427,13 @@ def day():
             if not close_saved_today():
                 log("close snapshot not saved after 40 minutes: refreshing with the public files only")
             daily()
+            # the evening scan (Watchlist, Launches, tomorrow's watch list) at 4:25 PM ET, after this refresh it reads
+            # (stocks / themes on radar-data; published about 4:18 PM), or at once when the refresh ends later (the
+            # user, Nov 5 2026: "4:25"; it waited for GitHub's 4:40 schedule, which often starts late, so ~4:50 results).
+            # The 4:40 schedule stays as the backup: it skips a day already scanned
+            while hm(now()) < (16, 25):
+                time.sleep(15)
+            dispatch("scanner.yml", auto="1")
             return
         # next tick: the next minute during the session (live update on the 5-minute marks), else the next event
         nxt = t.replace(second=20, microsecond=0) + datetime.timedelta(minutes=5 - t.minute % 5)

@@ -775,7 +775,7 @@
       </details>
       <details class="tgr-legend" id="wl-about-box" open>
         <summary>About these lists</summary>
-        <p class="tgr-note">Your setup scanner's lists, rebuilt after each close (about 4:40 PM ET). 1-EP/GAP = gap over 5% on 2.5× relative volume; 1-UPDAY = up 4% or more with relative volume 1 or more; 2-POOL = a first close back above the 50 EMA, plus the weekly momentum leaders; 3-SETUPS = the names from those three lists that the Launches engine reads as a setup (an ADR of 4%+ to come in, 3.2% to stay): Triggered today (a base breakout, bull flag or bull pennant break, breakout undercut &amp; reclaim, pop, 21 EMA retest or undercut &amp; reclaim, retest held, push), Ready (its trigger within 0.7 ADR over the close) and Setting up (a bull flag or pennant forming, a 21 EMA pullback set up, near a retest). Names leave 3-SETUPS after 2 closes in a row under the 50 EMA, 62 sessions without a new high, an ADR under 3.2% or your ✕; the 1-lists after 15 trading days without reaching 3-SETUPS. Price, Chg and Rel vol are live during market hours (otherwise the latest close), and Away = how far the buy point is above that price. "armed" (in Why) = a 21 / 50 EMA pullback trigger's daily rules pass and the price is within 1 ADR over that EMA. Download for TradingView saves the list you're looking at as a file for TradingView's Watchlist menu → Import list.</p>
+        <p class="tgr-note">Your setup scanner's lists, rebuilt after each close (about 4:25-4:35 PM ET). 1-EP/GAP = gap over 5% on 2.5× relative volume; 1-UPDAY = up 4% or more with relative volume 1 or more; 2-POOL = a first close back above the 50 EMA, plus the weekly momentum leaders; 3-SETUPS = the names from those three lists that the Launches engine reads as a setup (an ADR of 4%+ to come in, 3.2% to stay): Triggered today (a base breakout, bull flag or bull pennant break, breakout undercut &amp; reclaim, pop, 21 EMA retest or undercut &amp; reclaim, retest held, push), Ready (its trigger within 0.7 ADR over the close) and Setting up (a bull flag or pennant forming, a 21 EMA pullback set up, near a retest). Names leave 3-SETUPS after 2 closes in a row under the 50 EMA, 62 sessions without a new high, an ADR under 3.2% or your ✕; the 1-lists after 15 trading days without reaching 3-SETUPS. Price, Chg and Rel vol are live during market hours (otherwise the latest close), and Away = how far the buy point is above that price. "armed" (in Why) = a 21 / 50 EMA pullback trigger's daily rules pass and the price is within 1 ADR over that EMA. Download for TradingView saves the list you're looking at as a file for TradingView's Watchlist menu → Import list.</p>
       </details>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="wl-table">
@@ -1567,7 +1567,7 @@ defCalc('industry_perf', {
      (GitHub's record and this page's own log; no heads-ups, group moves or pre-market grades; Launch laggards not), each
      checked at the close against the level its own alert named:
      - a launch (power day, catalyst gap, A+/A launch, ★ launching, reversal): the launch-day rules at the close, i.e. the
-       4:40 PM scan put it on Launches dated today; an episodic pivot: that, or the close over the 1-month high it named
+       evening scan put it on Launches dated today; an episodic pivot: that, or the close over the 1-month high it named
      - a breakout (base top, flag / pennant line, 3-SETUPS, TREND, base high cleared, breakout confirmed): the close over its
        level, within 0.5% over it = with caution (the leg rule)
      - gap out of base: the gap over the base high; the 1- / 5-minute entries over their opening range high
@@ -1649,7 +1649,7 @@ defCalc('industry_perf', {
             const asEp = !jh0.ok && kind === 'power' && now0.has(sym + ':ep');
             const down = !jh0.ok && !asEp && (kind === 'power' || kind === 'ep') && ['launch', 'catalyst', 'stars', 'reversal', 'laggard'].some((k) => now0.has(sym + ':' + k));
             parts.push({ ok: jh0.ok || down || asEp, kind: down ? 'launch' : asEp ? 'ep' : kind, txt: name + (jh0.ok ? ': still meets its rule at the close' : ': stopped meeting its rule ' + jh0.lost.at + (jh0.lost.price ? ' (' + fPrice(jh0.lost.price) + ')' : ''))
-              + (down ? ' · down to a launch: still meets a launch\'s rules' : '') + (asEp ? ' · still an episodic pivot (volume pace 3x+)' : '') + (L ? ' · the 4:40 PM scan: a launch day (' + L.grade + (L.power ? ', power day' : '') + ')' : '') });
+              + (down ? ' · down to a launch: still meets a launch\'s rules' : '') + (asEp ? ' · still an episodic pivot (volume pace 3x+)' : '') + (L ? ' · the evening scan: a launch day (' + L.grade + (L.power ? ', power day' : '') + ')' : '') });
             return;
           }
           if (L) { parts.push({ ok: true, kind, txt: name + ': closed as a launch day (' + L.grade + (L.power ? ', power day' : '') + (L.reversal ? ', reversal' : '') + (L.faded ? ', faded' : '') + ')' }); return; }
@@ -1657,7 +1657,7 @@ defCalc('industry_perf', {
           if (pv && close > pv) { parts.push({ ok: true, kind, txt: name + ': over its 1-month high ' + fPrice(pv) + ' (' + f1(100 * (close / pv - 1)) + '), not a launch day at the close' }); return; }
           const chg = num(b.chg_1d), sma = num(b.sma200);
           parts.push({ ok: false, kind, txt: name + ': not a launch day at the close' + (chg !== null && chg < 5 ? ' (closed ' + f1(chg) + ', a launch day needs +5%)' : sma && close <= sma ? ' (closed under its 200 SMA ' + fPrice(sma) + ')'
-            : bh && close <= bh ? ' (closed under its base high ' + fPrice(bh) + ')' : ' (the 4:40 PM scan didn\'t read one)') });
+            : bh && close <= bh ? ' (closed under its base high ' + fPrice(bh) + ')' : ' (the evening scan didn\'t read one)') });
           return;
         }
         if (kind === 'pop') {
@@ -2771,7 +2771,7 @@ defCalc('industry_perf', {
     const live = LAG ? lagLive(doc) : lnLive(doc);
     $('#ln-live-time').textContent = LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : marketOpen() ? 'Waiting for the first live update' : 'Live during market hours';
     $('#ln-live-note').textContent = !doc ? '' : (doc.watch ? Object.keys(doc.watch).length : 0) + ' stocks on watch from the ' + fDate(doc.date) + ' close. ' +
-      (LIVE_ON ? live.length + ' of them are launching right now. "Grade so far" uses the volume pace and price so far; the close still has to hold the top half of the day. After the close (about 4:30 PM ET) this list clears, and the ones that held move to the Launches table below, dated today.' : 'They are checked every 5 minutes from 9:30 AM ET. After the close this list clears: the day\'s launches that held at the close are in the Launches table below, dated that day (the evening scan, about 4:40 PM ET).');
+      (LIVE_ON ? live.length + ' of them are launching right now. "Grade so far" uses the volume pace and price so far; the close still has to hold the top half of the day. After the close (about 4:30 PM ET) this list clears, and the ones that held move to the Launches table below, dated today.' : 'They are checked every 5 minutes from 9:30 AM ET. After the close this list clears: the day\'s launches that held at the close are in the Launches table below, dated that day (the evening scan, about 4:25-4:35 PM ET).');
     const rsLive = ldocRS();
     live.forEach((r) => { r.gr = grBest(r.symbol); r.grank = r.gr ? r.gr.pct : null; r.rs = rsLive[r.symbol] ?? null; r.stx = launchStars(r.symbol); r.stars = r.stx ? r.stx.n : null; const ty = trendLast(r.symbol); r.trend_y = ty ? TR_N[ty.st] * 1000 + Math.min(ty.d || 0, 999) : null; });
     sortRows(lt, live, { key: 'grade', dir: 1 }, ['symbol', 'group'], 'grade');
