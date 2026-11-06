@@ -674,6 +674,8 @@ def news_of(sym, d, mcap, E, t_from, t_to, day):
                   reason=f"Reported {dt:%a %b} {dt.day}{when}: {old.get('why') or old.get('read') or 'see the Earnings tab'}; " +
                          (f"only routine filings since the last close ({', '.join(sorted({f['form'] for f in fs}))})" if fs else
                           "no new filing since the last close"))
+    elif routine and nw["catalyst"] == "Filing, not classified":   # a Form 4 / 144 / 10-Q isn't news (BE Nov 6: a Form 4)
+        nw.update(catalyst="No company news", reason=f"No news since the last close, only routine filings ({', '.join(sorted({f['form'] for f in fs}))})")
     return nw, er
 
 
@@ -709,7 +711,7 @@ def sector_moves(out, news, every, S):
         t, mem = best
         peers = sorted((s for s in mem if s != sym), key=lambda s: -((S.get(s) or {}).get("mcap_b") or 0))   # the best-known first
         newsy = [s for s in peers if s in own]
-        mine = ("; no SEC filing or company release since the last close" if r["catalyst"] == "No company news" else
+        mine = ("; " + r["reason"][:1].lower() + r["reason"][1:] if r["catalyst"] == "No company news" else
                 "; not at the SEC (no filings to check)" if r["catalyst"] == "Not at the SEC" else
                 f"; its own: {r['catalyst']}: {r['reason'][:140]}")      # AMD Nov 6: its Nov 3 report, MU a board retirement
         r["catalyst"] = "Sector move: " + t
