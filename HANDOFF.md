@@ -45,6 +45,14 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Episodic pivot alert: a volume pace of 3x+, was 4x (LIVE Nov 5 2026 ~8:50 PM ET, the user's "go live"; branch test/ep3x)
+
+- The user (Nov 5 evening): "change the rule for the episodic pivot: 3 rvol at least, everything else stays the same".
+  radar/alerts.py find() `ep = rv >= 3`, docs/index.html EPIV.rv 3, the Alerts tab's explanation, the rules workbook. The
+  power day keeps 4x. The EP otherwise: a 6%+ gap, the open over the 21-day closing high (below), over the 1-month high
+  and the 200 SMA. Nov 5's morning record (live_history.json, 97 movers 9:35-11:00): the same EPs at 3x as at 4x (CHYM
+  only). Regress: every example the same.
+
 ## Power day / EP alerts must open over the 21-day closing high (LIVE Nov 5 2026 ~8:25 PM ET, the user's "go live"; branch test/epopen)
 
 - **Why** (the user, Nov 5 evening: "the whole point is to gap up above it, meaning the opening price has to be above the
