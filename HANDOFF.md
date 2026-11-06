@@ -64,6 +64,18 @@ alone.
   rows too (EXTR Nov 6: "Sector move: AI Networking"). Nov 6: FLY "Space, 7 stocks (SPCX, RKLB, VSAT, LUNR, RDW, VOYG)";
   BE "Electrical Equipment, 18 ... only routine filings (4)"; AMD "AI Chips & CPUs ... its own: After earnings (Nov 3)";
   MU "Memory & Storage ... its own: a board retirement". Reasons from a release skip the SEC exhibit header (tidy()).
+- **Headlines** (the user, Nov 6: "Fly today gapped up bcs it had a news with AST", with Firefly's post: a $1.3B deal for
+  36 engines; the SEC had nothing yet, the code read "Sector move: Space"): codegrade.py headlines() = Alpaca's news API
+  (Benzinga: company press releases, Reuters / Dow Jones items, explainers; the ALPACA keys, now also in codegrade.yml)
+  for every gapper, last close to the run. best_headline(): its own (ticker or company name in the headline; not a
+  movers list, not a notice: inducement awards, a results date, a call; an opinion piece = minor), the biggest event
+  first (sale talk, FDA / trial, offering, deal, buyback, earnings, up / downgrade), the earliest of that kind. When the
+  SEC had nothing of its own (weak news) an event headline is the catalyst, "<kind> (headline)", flagged "headline only:
+  no SEC filing on it yet", news grade still C (no code grade changes); a minor one (explainer, price-target note) goes
+  in the sector move's reason. Nov 6 (codelive 9:18): 631 headlines for 139 of 239 gappers; 17 catalysts: FLY deal
+  (Benzinga 7:31 AM), EXTR sale talk (Reuters 9:03 AM), LRCX $25B buyback, BE Google power project, HIMS Lilly deal,
+  VSTM $100M ATM, GLW / LEU / XNDU upgrades ... radar-tools `news FROM TO SYM ...` = radar/probe_news.py (Alpaca vs
+  Yahoo; Yahoo's search had nothing for FLY).
 - **C (scanner News column)**: the Pre-market scanner's 2nd column: Claude's catalyst + reason when the 8:45 grading
   covered it today, else the code's "(code)" (rows, then news); reason in 2 lines, hover for all + the rule that kept it
   off the list, 📰 = the first source; "after 8:52" before the first code run; sortable.
