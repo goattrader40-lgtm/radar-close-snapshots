@@ -29,6 +29,11 @@ Two layers, then one combined grade:
         200; extension = the ATR multiple from the 50 SMA: 10x+ flagged "extended", 15x+ at most C. A 5-8% gap one grade lower;
         A+ only in a leading or turning-up group. The reversal is shown as "⤴ reversal" (not the ★ stars, not the
         Trend column's "Turn up").
+  NEWS ONLY (the user, Nov 6 2026): every other 5%+ gapper (prepare's gappers.json: the list's rules dropped it) gets
+        the same news lookup, no grade, under "news" in the output (with the rule that dropped it); a gap with no filing
+        while 3+ of its theme / industry gap 5%+ the same way reads "Sector move: <group>" (graded rows too).
+        Earnings reported before the last close (a report the morning before: VCEL Nov 5 2026) are not today's news:
+        with no new filing the gap reads "After earnings (<date>)", news C.
   GRADE (gap-ups) stage 2 / 3: A / B news -> A / B; stage 1 / 4 now over the 200 (★ turn-up, shorts caught off guard):
         A news A+, B news A; stage 1 / 4 still under the 200: W (laggard watch) on A / B news or an earnings report, else
         "—"; C and F as they are. Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200.
@@ -559,24 +564,7 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
         sym, d = r["symbol"], r["direction"]
         st = S.get(sym, {})
         mcap = st.get("mcap_b") or r.get("mcap_b")
-        try:
-            fs = filings(sym, t_from, t_to)
-        except Exception as ex:
-            fs = None
-            print("sec", sym, repr(ex)[:120])
-        texts = {}
-        for f in [f for f in (fs or []) if worth_reading(f)][:6]:
-            texts[f["acc"]] = release_text(f)
-        e = E.get(sym)
-        if e and not (e.get("date") >= t_from.date().isoformat()):
-            e = None
-        er = [f for f in (fs or []) if f["form"] in ("8-K", "6-K") and ("2.02" in (f.get("items") or "") or f["form"] == "6-K")]
-        if er and not e:
-            try:
-                e = earn_fields(sym, texts.get(er[0]["acc"], ("", ""))[1], day)
-            except Exception as ex:
-                print("earnings", sym, repr(ex)[:120])
-        nw = classify(fs, texts, d, mcap, e)
+        nw, er = news_of(sym, d, mcap, E, t_from, t_to, day)
         # the chart: the stage at the last close, then the gap at the pre-market price
         px, lo52 = r.get("pm_last"), st.get("low_52w")
         ol = round((px / lo52 - 1) * 100, 1) if lo52 and px else None
@@ -614,8 +602,101 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
                         star=sx[0], trend=sx[1], group_tier=sx[2],
                         levels=lv, claude=r.get("grade"), pm_last=px, over_low52=ol)
         print(f"{sym:6} {d:4} stage {stg} {('event ' + str(ev)) if ok else 'not eligible: ' + why:40} news {nw['news']} -> {fin:2} | Claude {r.get('grade')} | {nw['catalyst']}")
+    # every other 5%+ gapper (gappers.json from prepare: the ones the list's rules dropped, e.g. under the 50 EMA or the
+    # 30% over the 52-week low): its news only, no grade (the user, Nov 6 2026: "any gappers above 5%, their news"; FLY)
+    news, every = {}, []
+    gp = os.path.join(os.path.dirname(pm_path), "gappers.json")
+    if os.path.exists(gp):
+        try:
+            every = [g for g in json.load(open(gp)) if g.get("direction") in ("up", "down")]
+        except Exception as ex:
+            print("gappers:", repr(ex)[:120])
+    t0 = time.time()
+    for g in every:                                     # biggest gaps first (prepare sorts them)
+        sym, d = g["symbol"], g["direction"]
+        if sym in out:
+            continue
+        if time.time() - t0 > NEWS_BUDGET:
+            print(f"news: out of time after {len(news)} stocks, the rest have none this run")
+            break
+        nw, _ = news_of(sym, d, (S.get(sym) or {}).get("mcap_b") or g.get("mcap_b"), E, t_from, t_to, day)
+        news[sym] = dict(nw, direction=d, gap_pct=g.get("gap_pct"), pm_last=g.get("pm_last"), dropped=g.get("dropped") or "")
+        print(f"{sym:6} {d:4} news only ({g.get('dropped') or 'not on the list'}): {nw['news']} | {nw['catalyst']}")
+    sector_moves(out, news, every, S)
     json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "day": day,
-               "window": [t_from.isoformat(), t_to.isoformat()], "rows": out}, open(out_path, "w"), indent=0)
+               "window": [t_from.isoformat(), t_to.isoformat()], "rows": out, "news": news}, open(out_path, "w"), indent=0)
+
+
+NEWS_BUDGET = 480      # seconds for the news-only gappers (the job has 15 minutes; ~230 stocks on Nov 6 2026)
+NO_NEWS = ("No company news", "Filing, not classified", "Not at the SEC")
+
+
+def news_of(sym, d, mcap, E, t_from, t_to, day):
+    """the news behind one gap: the SEC filings accepted since the last close, their releases and the Earnings tab's
+    numbers -> (classify()'s dict, the earnings filings)"""
+    try:
+        fs = filings(sym, t_from, t_to)
+    except Exception as ex:
+        fs = None
+        print("sec", sym, repr(ex)[:120])
+    texts = {}
+    for f in [f for f in (fs or []) if worth_reading(f)][:6]:
+        texts[f["acc"]] = release_text(f)
+    e = old = E.get(sym)
+    last = t_from.date().isoformat()
+    if e and (e.get("date") < last or (e.get("date") == last and e.get("when") == "bmo")):
+        e = None                                        # reported before the last close, already in that close's price
+    else:                                               # (VCEL Nov 5 7 AM, +13.9% that day: Nov 6 is day 2, not news)
+        old = None
+    er = [f for f in (fs or []) if f["form"] in ("8-K", "6-K") and ("2.02" in (f.get("items") or "") or f["form"] == "6-K")]
+    if er and not e:
+        try:
+            e = earn_fields(sym, texts.get(er[0]["acc"], ("", ""))[1], day)
+        except Exception as ex:
+            print("earnings", sym, repr(ex)[:120])
+    nw = classify(fs, texts, d, mcap, e)
+    if old and nw["catalyst"] == "No company news":   # say so instead of "no news" (Claude's U Nov 6: "Day-2 after Q3 beat")
+        dt = datetime.date.fromisoformat(old["date"])
+        when = {"bmo": " before the open", "amc": " after the close"}.get(old.get("when"), "")
+        nw.update(catalyst=f"After earnings ({dt:%b} {dt.day})",
+                  reason=f"Reported {dt:%a %b} {dt.day}{when}: {old.get('why') or old.get('read') or 'see the Earnings tab'}; "
+                         "no new filing since the last close")
+    return nw, er
+
+
+def sector_moves(out, news, every, S):
+    """a gap with no filing since the close, while 3+ stocks of its theme or industry (itself included) gap 5%+ the
+    same way: "Sector move: <group>", the peers named, and those with their own news (the user, Nov 6 2026: ~60 chip and
+    AI-hardware names up 5-20% with no filings). Only the catalyst and the reason change, the news grade stays C."""
+    allr = {**news, **out}                              # the same dicts: the changes land in both
+    side = {g["symbol"]: g["direction"] for g in every}
+    for sym, r in out.items():
+        side.setdefault(sym, r["direction"])
+    themes = lambda sym: [t.strip() for t in str((S.get(sym) or {}).get("themes") or "").split(" | ") if t.strip()]
+    inds = lambda sym: [S[sym]["industry"]] if (S.get(sym) or {}).get("industry") else []
+    members = {}
+    for sym, d in side.items():
+        for t in themes(sym) + inds(sym):
+            members.setdefault((t, d), []).append(sym)
+    own = {s: r["catalyst"] for s, r in allr.items() if r.get("catalyst") not in NO_NEWS and not r["catalyst"].startswith("After earnings")}
+    for sym, r in allr.items():
+        if r.get("catalyst") != "No company news":
+            continue
+        best = None                                     # its theme with the most such gappers (the portal's groups: CRWV
+        for cands in (themes(sym), inds(sym)):          # Neoclouds, not Software), else its industry
+            m = max(((t, members.get((t, r["direction"]), [])) for t in cands), key=lambda x: len(x[1]), default=None)
+            if m and len(m[1]) >= 3:
+                best = m
+                break
+        if not best:
+            continue
+        t, mem = best
+        peers = sorted((s for s in mem if s != sym), key=lambda s: -((S.get(s) or {}).get("mcap_b") or 0))   # the best-known first
+        newsy = [s for s in peers if s in own]
+        r["catalyst"] = "Sector move: " + t
+        r["reason"] = (f"{len(mem)} {t} stocks gapping {r['direction']} 5%+ ({', '.join(peers[:6])}{', ...' if len(peers) > 6 else ''})" +
+                       (f"; with their own news: {', '.join(f'{s} ({own[s]})' for s in newsy[:3])}" if newsy else "") +
+                       "; no SEC filing or company release since the last close")
 
 
 def log(cg_path, log_path):

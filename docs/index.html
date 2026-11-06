@@ -168,6 +168,8 @@
   .tgr-grade.gF { background: var(--color-bad); color: var(--color-bg); border-color: var(--color-bad); }
   .tgr-src a { display: inline-block; max-width: 9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; color: var(--color-fg-muted); }
   .tgr-flags { color: var(--color-bad); }
+  #pml-table td.pml-news { min-width: 16rem; max-width: 26rem; }
+  .pml-why { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .tgr-filters { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm) var(--cds-gap-md); align-items: center; padding: var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-panel); }
   .tgr-f { display: inline-flex; align-items: center; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); white-space: nowrap; }
   .tgr-num { font: inherit; font-size: var(--cds-font-size-caption); width: 4.2rem; padding: 2px 4px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); font-variant-numeric: tabular-nums; }
@@ -642,13 +644,14 @@
         <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
       </div>
       <details class="tgr-legend tgr-more" data-key="pmlive"><summary>About this scanner</summary>
-      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. vs 200D and vs 50 EMA = the latest pre-market price vs the 200-day SMA and 50-day EMA as of yesterday's close. vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
+      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. vs 200D and vs 50 EMA = the latest pre-market price vs the 200-day SMA and 50-day EMA as of yesterday's close. vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day. News = why it gaps, for every stock gapping 5%+ up or down, whether or not it passes the graded list's rules: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's <span class="tgr-lbl">(code)</span> from the SEC filings since the last close and the Earnings tab (from about 8:52 AM ET, refreshed about 9:05 and 9:18; hover for the whole reason, 📰 opens the source). <span class="tgr-gm">Sector move: group</span> = no filing since the close while 3+ stocks of its theme or industry gap 5%+ the same way (the biggest names and those with their own news named; FLY Nov 6, 2026: 7 Space stocks up). News only: the stocks the list's rules drop get no grade.</p>
       </details>
       <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="pml-table">
           <thead><tr>
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="news_cat" title="Why it gaps, for every stock gapping 5%+ up or down: Claude's catalyst and reason when the 8:45 grading covered it, else the code grader's (code): the SEC filings since the last close and the Earnings tab; Sector move = no filing while 3+ stocks of its theme or industry gap 5%+ the same way. From the first code run (about 8:52 AM ET), refreshed at about 9:05 and 9:18">News</button></th>
             <th class="num"><button class="tgr-th" data-sort="pm_last">Pre-mkt price</button></th>
             <th class="num"><button class="tgr-th" data-sort="pm_chg">Pre-mkt chg</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="pm_gap">Pre-mkt gap</button></th>
@@ -2118,6 +2121,14 @@ defCalc('industry_perf', {
     const live = PML && PML.rows ? PML.rows : null;
     if (!live || !BASE) return [];
     const grades = new Map(rowsOf('premarket').filter((r) => r.graded === true || r.graded === 'true').map((r) => [r.symbol, r]));
+    /* the news behind each gap (the user, Nov 6 2026: "any gappers above 5%, their news"; FLY): Claude's when its
+       8:45 grading covered the stock today, else the code grader's (its graded list, then its news-only gappers) */
+    const cgOn = !!(CGR && CGR.day && CGR.day === PML.date);
+    const newsOf = (sym, g) => {
+      if (g && g.scan_date === PML.date && (g.catalyst || g.reason)) return { by: 'Claude', cat: g.catalyst || '', why: g.reason || '', flags: g.flags || '', src: String(g.sources || '').split(' ').filter(Boolean)[0] || '' };
+      const c = cgOn ? ((CGR.rows || {})[sym] || (CGR.news || {})[sym]) : null;
+      return c ? { by: 'code', cat: c.catalyst || '', why: c.reason || '', flags: c.flags || '', src: (c.sources || [])[0] || '', dropped: c.dropped || '' } : null;
+    };
     const out = [];
     BASE.stocks.forEach((r) => {
       const q = live[r.symbol]; if (!q) return;
@@ -2136,6 +2147,7 @@ defCalc('industry_perf', {
         below_low52: num(r.low_52w) && pm_last ? ((pm_last - num(r.low_52w)) / pm_last) * 100 : null,   /* TradingView: 52W low is X% below price */
         ep: Math.abs(pm_chg) >= 10 && adv && pm_vol / adv >= 0.25,
         grade: g ? g.grade : '', g_reason: g ? (g.catalyst ? g.catalyst + ': ' : '') + (g.reason || '') : '' }));
+      const last = out[out.length - 1]; last.news = newsOf(r.symbol, g); last.news_cat = last.news ? last.news.cat : '';
     });
     return out;
   };
@@ -2170,7 +2182,7 @@ defCalc('industry_perf', {
     $('#pml-count').textContent = PML ? String(rows.length) : '—';
     $('#pml-h').textContent = 'Pre-market scanner · ' + (PMF.dir === 'down' ? 'gap downs' : 'gap ups');
     const spec = S.sort['pml-table'] || { key: 'pm_vol', dir: -1 };
-    const txt = ['symbol', 'themes'].includes(spec.key);
+    const txt = ['symbol', 'themes', 'news_cat'].includes(spec.key);
     const val = (r) => (txt ? String(r[spec.key] || '') : num(r[spec.key]));
     rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
     markSort(table, spec);
@@ -2182,7 +2194,7 @@ defCalc('industry_perf', {
     const gm = [...by].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]);
     if (!gm.length) ml.append(h('span', 'tgr-lbl', PML ? 'none' : '—'));
     gm.forEach(([t, n], i) => { if (i) ml.append(h('span', 'tgr-sep', ' | ')); const b = h('button', 'tgr-chip', t + ' (' + n + ')'); b.type = 'button'; b.dataset.kind = 'theme'; b.dataset.name = t; ml.append(b); });
-    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 19; tr.append(td); tb.append(tr); }
+    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 20; tr.append(td); tb.append(tr); }
     const pctTxt = (x) => (x === null || x === undefined ? '—' : (x > 0 ? '+' : '') + Number(x).toFixed(2) + '%');
     rows.slice(0, LIST_MAX).forEach((r) => {
       const tr = h('tr');
@@ -2192,7 +2204,16 @@ defCalc('industry_perf', {
       if (r.ep) key.append(h('span', 'tgr-gm', 'EP'));
       starTag(key, launchStars(r.symbol));
       const c = (x, cls) => h('td', 'num ' + (cls || '') + ' ' + tone(x), pctTxt(x));
-      tr.append(key, h('td', 'num', fPrice(r.pm_last)), c(r.pm_chg), c(r.pm_gap, 'c3'), h('td', 'num', fVol(r.pm_vol)),
+      const nc = h('td', 'pml-news'), n = r.news;
+      if (n) {
+        nc.append(h('span', '', n.cat || '—'));
+        if (n.by === 'code') nc.append(h('span', 'tgr-lbl', ' (code)'));
+        if (n.src) { const l = h('a', '', ' 📰'); l.href = n.src; l.target = '_blank'; l.rel = 'noopener'; l.title = 'The source: ' + n.src; nc.append(l); }
+        if (n.why) nc.append(h('div', 'tgr-lbl pml-why', n.why));
+        nc.title = [(n.by === 'code' ? 'Code grader' : 'Claude (8:45 grading)') + ': ' + (n.cat || ''), n.why, n.flags ? 'Flags: ' + n.flags : '',
+          n.dropped ? 'Not on the graded list: ' + n.dropped + ' (news only, no grade)' : ''].filter(Boolean).join('\n');
+      } else nc.append(h('span', 'tgr-lbl', Math.abs(num(r.pm_chg) || 0) < 5 ? '' : cgOn ? '—' : 'after 8:52'));
+      tr.append(key, nc, h('td', 'num', fPrice(r.pm_last)), c(r.pm_chg), c(r.pm_gap, 'c3'), h('td', 'num', fVol(r.pm_vol)),
         h('td', 'num c3', g2.format(r.pm_dvol_m)), h('td', 'num c3', r.pm_pct_adv === null ? '—' : g1.format(r.pm_pct_adv) + '%'),
         h('td', 'num c3', r.gap_x_adr === null ? '—' : r.gap_x_adr.toFixed(2) + '×'), h('td', 'num c2', fPrice(r.price)), c(r.chg_1d, 'c2'),
         h('td', 'num c2', fVol(r.volume)), h('td', 'num c2', fX(r.rel_vol)), h('td', 'num c3', fAdr(r.adr_20)),
