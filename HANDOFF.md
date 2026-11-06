@@ -142,6 +142,23 @@ alone.
   price $5, cap $0.7B, avg vol 600K, $20M, ADR 4%, 52W low 30%) 23 pass, ticked 7 (LRCX, NET, AMAT, EXTR, FROG, SITM,
   MKSI); NET 290.99 vs PDH 252.44 = +15.3%, MRVL 147.10 vs 152.15 = -3.3% (dropped). Code defaults (0.5-5%): 116 -> 4.
 
+## Tables current all the time: the evening read always done, the new day at 5 AM, today's triggers live (LIVE Nov 6 2026 ~6:30 PM ET, the user's "go live"; branches test/scan425, test/newday)
+
+- The user (Nov 6): the Watchlist showed Thursday's read on Friday evening (XERS "Triggered today, day 1") while Launches
+  was current (your ✕ at 4:24 / 4:43 PM rebuilt Launches only; GitHub started the 4:40 scan at 5:16 PM). Agreed: (1) the
+  read of each close always done: the day job starts scanner.yml at 4:25 PM (input auto=1, the scheduled checks), the
+  4:40 schedule is the backup, and two early-morning times (~3:30 / 4:30 AM ET in winter) are a safety run that scans the
+  last close only when no evening run did ("no Claude here"); (2) from 5 AM a read from an earlier close shows for today
+  (Triggered today -> "Triggered Thu, Nov 5", "today" -> the date, events dated, a base's day count + sessions since);
+  (3) during the day, until the evening read, each buy-point trigger today shows on its Watchlist / Launches row with its
+  state at the latest check ("🔔 10:27 AM breakout over $41.42 · holding" / "↓ … back under since 11:24 AM"), a 3-SETUPS
+  row holding one in the triggered part; (4) the rest once a day. docs/index.html staleRead / forToday / liveTrigs /
+  trigText; the review times: after 4:40 PM, and pre-market 9:05-9:25 AM.
+- Open (the user agreed in the read, not built yet): the evening read counts a 3-SETUPS "Breakout" (the MSF engine's
+  breakout flag) only when the close held over its buy point (APPN Nov 5: over 54.12 at the open, closed 54.03 under it,
+  filed "Triggered today"); also the buy point after a launch (RRX / PPLI Nov 6: a level the launch already closed over came
+  back as a "1st breakout": RRX $166.20 vs its launch high $181.74, PPLI $41.42 under the base top $42.29).
+
 ## Earnings tab: Day 3, and the week's calendar folds away (LIVE Nov 6 2026 ~4:20 PM ET, the user's "go live"; branch test/earnday3)
 
 - The user (Nov 6): "add day 3" ("from the time earnings were reported it's the 3rd day: Day 2's logic, 1 more day") and
