@@ -97,6 +97,11 @@ alone.
   down: volume pace 3.6x, under 4x), WRBY's catalyst gap (its failed power day not shown twice), APP, PRKS (laggards);
   🎯 CERT, RPD, XERS, ACHC / ENOV gaps, ENOV's entries (over the $28.15 stop); ↩️ EAT, PRGO; the rest ↓ in 👀 (ELF
   $109.78, WRBY's base high, the confirmations whose pace fell under 2x, GCT's gap at 1.8x after 9:50 ...).
+- **Fix (LIVE Nov 5 ~9:05 PM ET, branch test/boxfix)**: a launch line hides under ⚡ only when the latest check found that
+  power day / EP holding (with no check yet, Nov 5 night, EWTX's and WRBY's catalyst gaps had vanished from 🚀). Nov 5's
+  record was made before the change, so its close check (the job's update_holding on the 4:10 PM prices; the retest lows
+  and opening ranges from the alerts' own texts, Yahoo being blocked in the session) was published into radar-data
+  alerts.json by hand that night (the user: "these alerts are just for today"): ELF ↓ 👀, WRBY / EWTX ↓, EPAM ↓ 🚀.
 - **Check Friday Nov 6 (the first live day)**: alerts.json gets hold / lost / back after 9:35; the boxes move within about 5
   minutes of a failure; the 1-minute chart tests (retest, entries) work live. Open: a power day replaces the stock's A
   launch alert, so a power day that steps down shows its own line in 🚀 (marked ↓).
