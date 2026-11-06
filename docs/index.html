@@ -1591,9 +1591,10 @@ defCalc('industry_perf', {
           /* GitHub's job checked it at the close by its own rule (the boxes' verdict): that decides */
           if (jh0) {
             const now0 = new Set((SRV && SRV.hold && SRV.hold.now) || []);
-            const down = !jh0.ok && (kind === 'power' || kind === 'ep') && ['launch', 'catalyst', 'stars', 'reversal', 'laggard'].some((k) => now0.has(sym + ':' + k));
-            parts.push({ ok: jh0.ok || down, kind: down ? 'launch' : kind, txt: name + (jh0.ok ? ': still meets its rule at the close' : ': stopped meeting its rule ' + jh0.lost.at + (jh0.lost.price ? ' (' + fPrice(jh0.lost.price) + ')' : ''))
-              + (down ? ' · down to a launch: still meets a launch\'s rules' : '') + (L ? ' · the 4:40 PM scan: a launch day (' + L.grade + (L.power ? ', power day' : '') + ')' : '') });
+            const asEp = !jh0.ok && kind === 'power' && now0.has(sym + ':ep');
+            const down = !jh0.ok && !asEp && (kind === 'power' || kind === 'ep') && ['launch', 'catalyst', 'stars', 'reversal', 'laggard'].some((k) => now0.has(sym + ':' + k));
+            parts.push({ ok: jh0.ok || down || asEp, kind: down ? 'launch' : asEp ? 'ep' : kind, txt: name + (jh0.ok ? ': still meets its rule at the close' : ': stopped meeting its rule ' + jh0.lost.at + (jh0.lost.price ? ' (' + fPrice(jh0.lost.price) + ')' : ''))
+              + (down ? ' · down to a launch: still meets a launch\'s rules' : '') + (asEp ? ' · still an episodic pivot (volume pace 3x+)' : '') + (L ? ' · the 4:40 PM scan: a launch day (' + L.grade + (L.power ? ', power day' : '') + ')' : '') });
             return;
           }
           if (L) { parts.push({ ok: true, kind, txt: name + ': closed as a launch day (' + L.grade + (L.power ? ', power day' : '') + (L.reversal ? ', reversal' : '') + (L.faded ? ', faded' : '') + ')' }); return; }
@@ -3519,7 +3520,11 @@ defCalc('industry_perf', {
       const k = lineKey(x), sym = symK(x), lost = !!lostOf(k);
       if (b === 'e') {
         if (!lost) return ['e', ''];
-        if (lSyms.has(sym) || downOne.get(sym) !== x) return ['', 'down-l'];   /* its 🚀 line stands for it */
+        if (downOne.get(sym) !== x) return ['', 'down-l'];
+        /* a power day that no longer meets its rules but still an EP's (EPAM Nov 5: volume pace 3.6x, under the power
+           day's 4x, over the EP's 3x): it stays in ⚡ */
+        if (LNOW.has(sym + ':ep') || LNOW.has(sym + ':power')) return ['e', 'ep'];
+        if (lSyms.has(sym)) return ['', 'down-l'];                   /* its 🚀 line stands for it */
         return launchNow(sym) ? ['l', 'down-l'] : ['h', 'down-h'];
       }
       if (b === 'l' && upSyms.has(sym)) return ['', 'up'];
@@ -3531,6 +3536,7 @@ defCalc('industry_perf', {
       if (!x.startsWith('🔔 ') || !'lepb'.includes(boxOf0(x) || 'x')) return '';
       const k = lineKey(x), l = lostOf(k), bk = backOf(k), st = place(x)[1], when = (v) => hm12(v.at) + (v.price ? ' (' + fPrice(v.price) + ')' : '');
       if (st === 'up') return ' · ↑ now in ⚡ Episodic pivots';
+      if (l && st === 'ep') return ' · no longer meets the power day rules since ' + when(l) + ', still meets an episodic pivot\'s (volume pace 3x+): stays in ⚡';
       if (l && st === 'down-l') return ' · ↓ no longer meets the power day / EP rules since ' + when(l) + ': down to 🚀 Launching now (still meets a launch\'s rules)';
       if (l) return ' · ↓ no longer holding since ' + when(l) + ': down to 👀 Heads-ups';
       return bk ? ' · ↑ holding again since ' + when(bk) + ': back in its box' : '';
