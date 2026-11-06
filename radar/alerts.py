@@ -789,7 +789,10 @@ def update_holding(state, found, live, doc, now):
                 del lost[key]
         elif key not in lost:
             lost[key] = {"at": t, "price": px}
-    state["hold"] = {"at": t, "keys": held}
+    # and every trigger its rules find right now, sent or not: a power day / EP that stops holding steps down to a launch
+    # when the stock still meets a launch's rules (EPAM Nov 5: volume pace 3.6x at the close, under 4x; still an A launch)
+    now_ = sorted({a[0] for a in found if is_trigger(a[0], a[1]) and not a[0].startswith(("grp:", "summary:"))})
+    state["hold"] = {"at": t, "keys": held, "now": now_}
 
 
 def send(topic, title, msg, prio, tvs):

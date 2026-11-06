@@ -1589,8 +1589,13 @@ defCalc('industry_perf', {
         if (EOD_LAUNCH.has(kind) || kind === 'ep') {
           const L = launched.get(sym), jh0 = eodJob(sym + ':' + kind);
           /* GitHub's job checked it at the close by its own rule (the boxes' verdict): that decides */
-          if (jh0) { parts.push({ ok: jh0.ok, kind, txt: name + (jh0.ok ? ': still meets its rule at the close' : ': stopped meeting its rule ' + jh0.lost.at + (jh0.lost.price ? ' (' + fPrice(jh0.lost.price) + ')' : ''))
-            + (L ? ' · the 4:40 PM scan: a launch day (' + L.grade + (L.power ? ', power day' : '') + ')' : '') }); return; }
+          if (jh0) {
+            const now0 = new Set((SRV && SRV.hold && SRV.hold.now) || []);
+            const down = !jh0.ok && (kind === 'power' || kind === 'ep') && ['launch', 'catalyst', 'stars', 'reversal', 'laggard'].some((k) => now0.has(sym + ':' + k));
+            parts.push({ ok: jh0.ok || down, kind: down ? 'launch' : kind, txt: name + (jh0.ok ? ': still meets its rule at the close' : ': stopped meeting its rule ' + jh0.lost.at + (jh0.lost.price ? ' (' + fPrice(jh0.lost.price) + ')' : ''))
+              + (down ? ' · down to a launch: still meets a launch\'s rules' : '') + (L ? ' · the 4:40 PM scan: a launch day (' + L.grade + (L.power ? ', power day' : '') + ')' : '') });
+            return;
+          }
           if (L) { parts.push({ ok: true, kind, txt: name + ': closed as a launch day (' + L.grade + (L.power ? ', power day' : '') + (L.reversal ? ', reversal' : '') + (L.faded ? ', faded' : '') + ')' }); return; }
           const pv = kind === 'ep' ? eodLevel('ep', text) : null;
           if (pv && close > pv) { parts.push({ ok: true, kind, txt: name + ': over its 1-month high ' + fPrice(pv) + ' (' + f1(100 * (close / pv - 1)) + '), not a launch day at the close' }); return; }
@@ -3284,7 +3289,7 @@ defCalc('industry_perf', {
           if (nowK.has(key)) { if (plost[key]) { pback[key] = { at: t, price: px }; delete plost[key]; } }
           else if (!plost[key]) plost[key] = { at: t, price: px };
         });
-        saveDay('plost', plost); saveDay('pback', pback);
+        saveDay('plost', plost); saveDay('pback', pback); saveDay('pnow', [...nowK].filter((k) => !k.startsWith('grp:')));
       });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX)); saveDay('gm', gm);
     }
@@ -3491,14 +3496,44 @@ defCalc('industry_perf', {
     const HOLD = { jk: new Set(((SRVd && SRVd.items) || []).map((it) => it.key)), lost: (SRVd && SRVd.lost) || {}, back: (SRVd && SRVd.back) || {},
       plost: loadDay('plost', '{}'), pback: loadDay('pback', '{}') };
     const lostOf = (k) => (HOLD.jk.has(k) ? HOLD.lost[k] : HOLD.plost[k]) || null, backOf = (k) => (HOLD.jk.has(k) ? HOLD.back[k] : HOLD.pback[k]) || null;
-    const boxOf = (x) => { const b = boxOf0(x); if (!b || !'lepb'.includes(b)) return b; if (!x.startsWith('🔔 ')) return 'h'; return lostOf(lineKey(x)) ? '' : b; };
+    /* the ladder (the user, Nov 5 2026: "it's like a ladder"): a Launches stock's power day / EP (⚡) that stops meeting its
+       rules steps down to 🚀 Launching now while it still meets a launch's rules (EPAM Nov 5: volume pace 3.6x, under the
+       power day's 4x; still an A launch), else to 👀; a launch, a pattern breakout or a pullback entry that stops holding
+       steps down to 👀 Heads-ups; each goes back up when it meets its rules again; a stock up in ⚡ shows only there */
+    const LNOW = new Set(((SRVd && SRVd.hold && SRVd.hold.now) || []).concat(loadDay('pnow', '[]')));
+    const LAUNCHK = ['launch', 'catalyst', 'stars', 'reversal', 'laggard'];
+    const launchNow = (sym) => LAUNCHK.some((k) => LNOW.has(sym + ':' + k));
+    const trigs = log.filter((x) => x.startsWith('🔔 ')), symK = (x) => lineKey(x).split(':')[0];
+    const upSyms = new Set(trigs.filter((x) => boxOf0(x) === 'e' && !lostOf(lineKey(x))).map(symK));          /* in ⚡ now */
+    const lSyms = new Set(trigs.filter((x) => boxOf0(x) === 'l' && !lostOf(lineKey(x))).map(symK));           /* in 🚀 now */
+    const downOne = new Map();                                    /* one stepped-down ⚡ line per stock: the newest */
+    trigs.filter((x) => boxOf0(x) === 'e' && lostOf(lineKey(x))).forEach((x) => { if (!downOne.has(symK(x))) downOne.set(symK(x), x); });
+    /* where a line sits now, and why (step: 'down-l' to 🚀, 'down-h' to 👀, 'up' shown in ⚡, '' its own box) */
+    const place = (x) => {
+      const b = boxOf0(x);
+      if (!b || !'lepb'.includes(b)) return [b, ''];
+      if (!x.startsWith('🔔 ')) return ['h', ''];                  /* a heads-up: 👀 */
+      const k = lineKey(x), sym = symK(x), lost = !!lostOf(k);
+      if (b === 'e') {
+        if (!lost) return ['e', ''];
+        if (lSyms.has(sym) || downOne.get(sym) !== x) return ['', 'down-l'];   /* its 🚀 line stands for it */
+        return launchNow(sym) ? ['l', 'down-l'] : ['h', 'down-h'];
+      }
+      if (b === 'l' && upSyms.has(sym)) return ['', 'up'];
+      return lost ? ['h', 'down-h'] : [b, ''];
+    };
+    const boxOf = (x) => place(x)[0];
     const hm12 = (hm) => { const [H, M] = String(hm).split(':').map(Number); return ((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'); };
     const holdNote = (x) => {
       if (!x.startsWith('🔔 ') || !'lepb'.includes(boxOf0(x) || 'x')) return '';
-      const k = lineKey(x), l = lostOf(k), bk = backOf(k);
-      return l ? ' · ✗ no longer holding since ' + hm12(l.at) + (l.price ? ' (' + fPrice(l.price) + ')' : '') + ': out of its box'
-        : bk ? ' · ↺ holding again since ' + hm12(bk.at) + (bk.price ? ' (' + fPrice(bk.price) + ')' : '') : '';
+      const k = lineKey(x), l = lostOf(k), bk = backOf(k), st = place(x)[1], when = (v) => hm12(v.at) + (v.price ? ' (' + fPrice(v.price) + ')' : '');
+      if (st === 'up') return ' · ↑ now in ⚡ Episodic pivots';
+      if (l && st === 'down-l') return ' · ↓ no longer meets the power day / EP rules since ' + when(l) + ': down to 🚀 Launching now (still meets a launch\'s rules)';
+      if (l) return ' · ↓ no longer holding since ' + when(l) + ': down to 👀 Heads-ups';
+      return bk ? ' · ↑ holding again since ' + when(bk) + ': back in its box' : '';
     };
+    /* the short tag on a stepped line in its box */
+    const boxTag = (x) => { const st = place(x)[1]; return st === 'down-l' || st === 'down-h' ? '↓ ' : ''; };   /* at the front: a long title is cut */
     const parse = (x) => {
       const i = x.lastIndexOf(TABMARK), full = (i >= 0 ? x.slice(0, i) : x).replace(/^🔔 /, '');
       const tm = /^(\d+):(\d\d) (AM|PM)/.exec(full), mn = tm ? (Number(tm[1]) % 12 + (tm[3] === 'PM' ? 12 : 0)) * 60 + Number(tm[2]) : 0;
@@ -3703,7 +3738,7 @@ defCalc('industry_perf', {
         const box = h('div', 'al-box' + (code === 'm' ? ' al-wide' : '')), hd = h('h3', '', icon + ' ' + name);
         hd.append(h('span', 'al-n', String(lines.length)));
         const list = h('ul', '');
-        lines.forEach((o) => list.append(lineEl(code === 'm' ? Object.assign({}, o, { tab: '' }) : o, o.head, o.star ? 'al-star' : '', code === 'm')));
+        lines.forEach((o) => list.append(lineEl(code === 'm' ? Object.assign({}, o, { tab: '' }) : o, boxTag(o.x) + o.head, o.star ? 'al-star' : '', code === 'm')));
         if (!lines.length) list.append(h('li', 'al-none', 'None yet'));
         box.append(hd, list); bx.append(box);
       });
