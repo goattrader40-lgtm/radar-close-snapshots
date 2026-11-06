@@ -100,10 +100,11 @@ def back(d, n=1):
 
 
 def reaction_days(now):
-    """t0 = today (the last trading day on a weekend or holiday), p1 / p2 = the 1 / 2 trading days before it.
-    Today's reactions = t0 before the open + p1 after the close; Day 2 = p1 before the open + p2 after the close."""
+    """t0 = today (the last trading day on a weekend or holiday), p1 / p2 / p3 = the 1 / 2 / 3 trading days before it.
+    Today's reactions = t0 before the open + p1 after the close; Day 2 = p1 before the open + p2 after the close; Day 3
+    (the user, Nov 6 2026) = p2 before the open + p3 after the close"""
     t0 = now.date() if trading(now.date()) else back(now.date())
-    return t0.isoformat(), back(t0).isoformat(), back(t0, 2).isoformat()
+    return t0.isoformat(), back(t0).isoformat(), back(t0, 2).isoformat(), back(t0, 3).isoformat()
 
 
 def nasdaq(day):
@@ -611,8 +612,8 @@ def main():
     now = datetime.datetime.now(NY)
     today = now.date().isoformat()
     days = week_days(now)
-    t0, p1, p2 = reaction_days(now)
-    extra = sorted({p1, p2} - set(days))            # last week's days the reaction views need (on a Monday / Tuesday)
+    t0, p1, p2, p3 = reaction_days(now)
+    extra = sorted({p1, p2, p3} - set(days))        # last week's days the reaction views need (on a Monday to Wednesday)
     S = {s["symbol"]: s for s in json.load(open(stocks_p))}
     prev = {}
     if prev_p and os.path.exists(prev_p):
@@ -837,7 +838,7 @@ def main():
         r["read"], r["points"], r["why"] = score(rr) if r.get("reported") else (None, None, None)
 
     out = {"built_at": now.isoformat(timespec="seconds"), "days": days, "today": today, "rules": RULES,
-           "react": {"t0": t0, "p1": p1, "p2": p2}, "extra_days": extra,
+           "react": {"t0": t0, "p1": p1, "p2": p2, "p3": p3}, "extra_days": extra,
            "n_calendar": len(cal), "rows": [rows[s] for s in syms], "errors": errors[:40]}
     json.dump(out, open(out_p, "w"), separators=(",", ":"), default=str)
     print(len(syms), "rows,", sum(1 for s in syms if rows[s].get("reported")), "reported,", len(errors), "errors")

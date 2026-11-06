@@ -201,6 +201,7 @@
   #ln-table td.ln-stage.open > div { display: block; }
   /* Earnings tab: the week grid (like a calendar card) and the results tables */
   .er-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  #er-week-card.er-min > :not(.tgr-cardhead) { display: none; }   /* the week's calendar folded (the user, Nov 6 2026) */
   .er-week { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); gap: 0; min-width: 760px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
   .er-day { border-left: 1px solid var(--color-border-line); display: grid; grid-template-rows: auto 1fr; min-width: 0; }
   .er-day:first-child { border-left: 0; }
@@ -1024,13 +1025,14 @@
       <div class="tgr-cardhead">
         <h2 id="er-h">Earnings this week</h2>
         <span class="tgr-lbl" id="er-time">—</span>
+        <button class="tgr-lite" id="er-min" type="button" aria-expanded="true" title="Hide or show the week's calendar (this browser remembers)">▾ Hide</button>
       </div>
       <p class="tgr-rule" id="er-rule">—</p>
       <div class="er-key" aria-label="Read colors"><span>Most liquid first, grouped by area (AI &amp; Semis, Software…); big chip = $1B+ a day. Chip: ticker · <span class="tgr-up">★</span> Top / <span class="tgr-up">S</span> Strong group · RS (green 97+); faded = under the 200-day SMA.</span><span class="er-sw r5"></span>Strong bullish <span class="er-sw r4"></span>Bullish <span class="er-sw r3"></span>Mixed <span class="er-sw r2"></span>Somewhat bearish <span class="er-sw r1"></span>Bearish <span class="er-sw r0"></span>Not reported yet</div>
       <div class="er-scroll"><div class="er-week" id="er-week"></div></div>
     </div>
     <div class="tgr-bar">
-      <span class="tgr-seg" data-k="erday" aria-label="Which days"><button data-v="all" aria-pressed="true">All week</button><button data-v="today" aria-pressed="false">Today's reactions</button><button data-v="day2" aria-pressed="false">Day 2</button></span>
+      <span class="tgr-seg" data-k="erday" aria-label="Which days"><button data-v="all" aria-pressed="true">All week</button><button data-v="today" aria-pressed="false">Today's reactions</button><button data-v="day2" aria-pressed="false">Day 2</button><button data-v="day3" aria-pressed="false">Day 3</button></span>
       <span class="tgr-lbl" id="er-react"></span>
       <span class="tgr-seg" data-k="ershow" aria-label="Which reports"><button data-v="all" aria-pressed="true">All</button><button data-v="rep" aria-pressed="false">Reported</button><button data-v="up" aria-pressed="false">Upcoming</button></span>
       <label class="tgr-f">Find <input class="tgr-num" id="er-q" type="search" style="width:6rem" placeholder="ticker" aria-label="Find a ticker"></label>
@@ -1048,7 +1050,7 @@
     <b>Results</b> come from the company's own press release (the SEC 8-K filed at release time): revenue, and the guidance read from its outlook text by fixed rules (raised / lowered / reaffirmed / given, and when it gives a revenue number, its midpoint vs the analysts' estimate and vs the same period a year ago). EPS is the adjusted figure from Yahoo or Nasdaq, the same basis as the estimate. Estimates are saved before the report; a stock first seen after its report (this first week) has no revenue estimate. When the rules can't tell, the cell says so: open the release (the 📄 link) to check.
     <b>The read</b> adds points: revenue beat +1 (2%+ beat +2) / miss −1 (−2), EPS beat +1 (10%+ +2) / miss −1 (−2), guidance raised +2, guide above the street +1 (+2 without a raise) / below −2, lowered −3 (one product's guide: raised +1 / lowered −1), revenue growth 25%+ +1 / shrinking −1, the move after the report +2%: +1, +5%: +2 (−2% −1, −5% −2). 6+ = <span class="er-read r5">Strong bullish</span> 3–5 = <span class="er-read r4">Bullish</span> 0–2 = <span class="er-read r3">Mixed</span> −1 to −3 = <span class="er-read r2">Somewhat bearish</span> −4 or less = <span class="er-read r1">Bearish</span>. Hover a read for its points.
     <b>Stock</b>: under the ticker, the report day: AM = before the open, PM = after the close (hover or long-press for the date and time). <b>Columns at the end</b>: vs 200D / vs 50 EMA = the pre-market price vs the 200-day SMA and 50-day EMA as of the last close; vs 20D high = vs the highest high of the previous 20 sessions (green "cleared" = above it: out of its 1-month base); Over 52W low = how far above the 52-week low. Group rank and RS as on Launches.
-    <b>Today's reactions</b> = the reports from the last session's after close and this morning's before open (the stocks reacting today); <b>Day 2</b> = the session before (the after-close reports of 2 sessions ago and yesterday's before-open ones): their second day after the report.
+    <b>Today's reactions</b> = the reports from the last session's after close and this morning's before open (the stocks reacting today); <b>Day 2</b> = the session before (the after-close reports of 2 sessions ago and yesterday's before-open ones): their second day after the report. <b>Day 3</b> = the session before that (the after-close reports of 3 sessions ago and the before-open ones of 2 sessions ago): their third day.
     <b>When</b>: every weekday from about 7:10 to 8:55 AM ET (final by 9:00 AM), after the close (4:50, 6:30 and 8:30 PM ET) for the after-close reports, and Sunday evening for the new week. GitHub can start a run a few minutes late.</p>
     </details>
   </section>
@@ -1377,6 +1379,15 @@ defCalc('industry_perf', {
   $('#g-reset').addEventListener('click', () => { Object.assign(F, PDEF); delete S.sort['g-table']; draw(); });
   const showTab = (tab) => { S.tab = tab; history.replaceState(null, '', '#' + tab); draw(); };
   document.querySelectorAll('.tgr-tab').forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab)));
+  /* the Earnings tab's week calendar: fold it away or open it (the user, Nov 6 2026: "so I can minimize this table or
+     expand it"); this browser remembers (localStorage radar-er-week-min) */
+  (() => {
+    const card = $('#er-week-card'), b = $('#er-min'); if (!card || !b) return;
+    const set = (min) => { card.classList.toggle('er-min', min); b.textContent = min ? '▸ Show the week' : '▾ Hide'; b.setAttribute('aria-expanded', String(!min)); };
+    let min = false; try { min = localStorage.getItem('radar-er-week-min') === '1'; } catch (e) { /* private window */ }
+    set(min);
+    b.addEventListener('click', () => { min = !card.classList.contains('er-min'); set(min); try { localStorage.setItem('radar-er-week-min', min ? '1' : '0'); } catch (e) { /* private window */ } });
+  })();
   /* your tab order (the user, Nov 6 2026: "make it so I can move these tabs around myself, left or right"): drag a tab to
      its new place (the same drag as the table columns); kept in this browser (localStorage radar-tab-order), like your
      table layouts; "↺ Tab order" at the end of the bar (shown once you moved one) puts them back */
@@ -4116,11 +4127,17 @@ defCalc('industry_perf', {
     /* Today's reactions = this morning's before-open reports + the last session's after-close ones; Day 2 = the session before */
     const RX = doc.react || {}, inWeek = new Set(doc.days);
     const after = (r) => r.when !== 'bmo';
+    /* Day 3 (the user, Nov 6 2026) = the session before Day 2's: p2 before the open + p3 after the close (a file from before
+       Nov 6 has no p3: the day before p2 among the days it holds) */
+    const allDays = [...new Set((doc.extra_days || []).concat(doc.days))].sort();
+    const p3 = RX.p3 || (RX.p2 && allDays.indexOf(RX.p2) > 0 ? allDays[allDays.indexOf(RX.p2) - 1] : null);
     const view = (r) => S.erday === 'today' ? (r.date === RX.t0 && r.when === 'bmo') || (r.date === RX.p1 && after(r))
-      : S.erday === 'day2' ? (r.date === RX.p1 && r.when === 'bmo') || (r.date === RX.p2 && after(r)) : inWeek.has(r.date);
+      : S.erday === 'day2' ? (r.date === RX.p1 && r.when === 'bmo') || (r.date === RX.p2 && after(r))
+      : S.erday === 'day3' ? (r.date === RX.p2 && r.when === 'bmo') || (!!p3 && r.date === p3 && after(r)) : inWeek.has(r.date);
     const lab = (d, w) => d ? erDay(d) + ' ' + w : '';
     $('#er-react').textContent = S.erday === 'today' ? lab(RX.p1, 'after close') + ' + ' + lab(RX.t0, 'before open')
-      : S.erday === 'day2' ? lab(RX.p2, 'after close') + ' + ' + lab(RX.p1, 'before open') + ' (their 2nd day)' : '';
+      : S.erday === 'day2' ? lab(RX.p2, 'after close') + ' + ' + lab(RX.p1, 'before open') + ' (their 2nd day)'
+      : S.erday === 'day3' ? (p3 ? lab(p3, 'after close') + ' + ' : '') + lab(RX.p2, 'before open') + ' (their 3rd day)' : '';
     let rows = doc.rows.filter((r) => (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && view(r));
     rows.sort((a, b) => (!!b.reported - !!a.reported) || (a.reported ? (b.report_at > a.report_at ? 1 : -1) : (a.report_at > b.report_at ? 1 : -1)) || erOf(b) - erOf(a));
     /* a recent listing without a 200-day SMA yet goes in the top table, marked "new" (LIFE Nov 2026) */
