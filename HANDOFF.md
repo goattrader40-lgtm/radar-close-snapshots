@@ -116,6 +116,15 @@ alone.
   price $5, cap $0.7B, avg vol 600K, $20M, ADR 4%, 52W low 30%) 23 pass, ticked 7 (LRCX, NET, AMAT, EXTR, FROG, SITM,
   MKSI); NET 290.99 vs PDH 252.44 = +15.3%, MRVL 147.10 vs 152.15 = -3.3% (dropped). Code defaults (0.5-5%): 116 -> 4.
 
+## Earnings tab: Day 3, and the week's calendar folds away (LIVE Nov 6 2026 ~4:20 PM ET, the user's "go live"; branch test/earnday3)
+
+- The user (Nov 6): "add day 3" ("from the time earnings were reported it's the 3rd day: Day 2's logic, 1 more day") and
+  "so I can minimize this table or expand it" (the week's calendar). Day 3 = p2 before the open + p3 after the close
+  (Fri Nov 6: Tue Nov 3 after close + Wed Nov 4 before open, 65 reports). radar/earnings.py reaction_days returns p3,
+  react.p3 in earnings.json, last week's days loaded for it (Monday to Wednesday; on a weekend 3 days); the page takes
+  the day before p2 among the file's days when a file has no p3. ▾ Hide / ▸ Show the week on the calendar card, kept per
+  browser (localStorage radar-er-week-min).
+
 ## Main tabs: drag to move them left or right (LIVE Nov 6 2026 ~3:50 PM ET, the user's "go live"; branch test/tabmove)
 
 - The user (Nov 6): "make it so I can move these tabs around myself, left or right" (the main tabs, not the tables).
