@@ -45,6 +45,36 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## End of day = today's buy-point triggers only (LIVE Nov 5 2026 ~7:50 PM ET, the user's "go live"; branch test/eodtrig)
+
+- **Why** (the user, Nov 5 evening: the 👥 end-of-day list "is made up stuff": "it can only aggregate whatever has been
+  triggered by our buy point rules; whatever from those triggers is still true at the end of day, show them"; "buy point
+  triggers from the Watchlist tab and the Launches tab"; "TENB any trigger buy point? NTSK there was no buy point"): the
+  old eodList took the pullback heads-ups (zone "in the retest zone", ema21zone "at the 21 EMA") and the scan's own
+  retest_today, all checked against the breakout level. Nov 5: 19 of its 22 names had no buy point (TENB, NTSK 9:35
+  heads-ups; OWL no alert at all; KOD "held" at $91.02 over the breakout level $38.73 while its alert was the 21 EMA $90.15).
+- **Now** (docs/index.html eodEntries / eodLevel / eodList / eodLines): today's buy-point triggers (EOD_KINDS) filed on
+  the Launches or Watchlist tab (tab code L / W: GitHub's alerts.json and the page's own log; no heads-ups, group moves,
+  pre-market grades; Launch laggards not), each checked at the close against the level its own alert named (read from
+  the alert's text): power day / catalyst / launch / ★ launching / reversal = the 4:40 PM scan put it on Launches dated
+  today (else the reason: under +5%, under the 200 SMA, under the base high its alerts named); an EP also over the
+  1-month high it named; breakout / 3-SETUPS / TREND / base high cleared / confirmed = the close over the level (within
+  0.5% = with caution); gap out of base over the base high, the 1- / 5-min entries over their opening range high;
+  retest over the level and the 21 EMA; push and breakout undercut & reclaim over their level; 21 EMA undercut / 21 EMA
+  + breakout level / 50 EMA undercut over that EMA at the close (the upper half of the day isn't checked: no day low in
+  the data); pop over its 10 & 21 EMA. Lines: "GCT ✓ HELD: gap out of base" (its failed triggers ✗ inside, click to
+  open), one "✗ Didn't hold at the close: N Launches / Watchlist stocks" line per tab, filed under the trigger's tab;
+  the pop-up "End of day: N of M triggered stocks still true". Rules workbook: "End of day (desktop, every device)".
+- **Nov 5 on it**: 15 held (power days ADMA, EPAM, MGNI, U, XERS; gap out of base ACHC $34.79 > $32.87, GCT, ENOV, all
+  three under their opening range entries; RPD $15.44 > $15.28, CERT, UPBD, AVAH, THC; retests EAT $212.66 > $206.43 and
+  its 21 EMA, PRGO), 20 didn't (Launches 18: ELF $109.85 < $110.00, APPN, PACS, SKY, ... CHYM +1.0%, EWTX +3.6%, PRKS
+  under its 200 SMA, WRBY $26.10 under its $27.00 base high; Watchlist 2: OLLI, WK). Display only: no regress or 2-year
+  check needed.
+- **Open**: the Launch laggards tab is left out (APP's laggard launch, the W crossings): the user's call. TREND triggers
+  are page-only, so they show only on the device that fired them (until they move into the job). Seen, not acted on: EAT
+  and PRGO got the job's 3:45 "RETEST HOLDING" while the evening scan's retest_today stayed False (each pullback's retest
+  was already tried: Nov 2 / Oct 27, once per pullback); OWL the other way (retest_today, no live alert).
+
 ## One line per alert, one open all day, trend on the line, code catalyst (LIVE Nov 5 2026 evening, the user's "go live"; branch test/epfix)
 
 - EPAM Nov 5: its power day showed twice (the page's 2:55 PM line, saved by the old version in 🚀, and the job's 9:35 AM in
