@@ -100,6 +100,7 @@
   .tgr-tab { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: var(--cds-pad-sm) var(--cds-pad-md); font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); cursor: pointer; display: inline-flex; gap: var(--cds-gap-xs); align-items: center; }
   .tgr-tab[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
   .tgr-tab.tab-drag { opacity: .45; }
+  .wl-live { font-weight: var(--cds-font-weight-medium); white-space: normal; }      /* a trigger today, live (Nov 6 2026) */
   .tgr-tab.tab-drop-l { box-shadow: inset 3px 0 0 var(--color-fg); }
   .tgr-tab.tab-drop-r { box-shadow: inset -3px 0 0 var(--color-fg); }
   .tgr-tab-reset { appearance: none; background: none; border: 0; margin-left: auto; padding: var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); cursor: pointer; }
@@ -2397,7 +2398,53 @@ defCalc('industry_perf', {
     const ord = WL_ORDER[list] || [];
     return ord.filter((x) => have.includes(x)).concat(have.filter((x) => !ord.includes(x)));
   };
-  const secName = (list, sec) => (list.startsWith('1-') && /^\d{4}-\d{2}-\d{2}$/.test(sec) ? fDate(sec) : sec);
+  /* the new day (the user, Nov 6 2026: "it should be ready around 5 AM: new day, everything new"; "at 9:35 it should reflect
+     everything that happened yesterday and apply it to today"): from 5 AM ET a read made at an earlier close is shown for
+     today: its "Triggered today" as triggered on its date, "today" in its texts as that date, its events (a launch, a
+     breakout, a retest held ...) dated, and a base's day count moved on by the sessions since (XERS "day 1" on Thu is
+     day 2 on Fri) */
+  const nyMin = () => { const p = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/New_York' }).split(':'); return Number(p[0]) * 60 + Number(p[1]); };
+  const staleRead = (d) => !!d && d < todayNY() && nyMin() >= 300;
+  const sessionsSince = (d) => { let n = 0; const end = Date.parse(todayNY() + 'T12:00:00Z'); for (let x = Date.parse(d + 'T12:00:00Z') + 864e5; x <= end; x += 864e5) { const wd = new Date(x).getUTCDay(); if (wd > 0 && wd < 6) n++; } return n; };
+  const shortD = (d) => new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
+  const EVENT_RE = /^(Launch day|Base breakout|Breakout|[^:]*breakout:|Pop out|Push out|Retest of|50 EMA undercut|21 EMA retest|21 EMA undercut)/;
+  const forToday = (txt, d) => {
+    if (!txt || !staleRead(d)) return txt;
+    const k = sessionsSince(d), sd = shortD(d);
+    const t = String(txt).replace(/\bday (\d+)\b/g, (m, n) => 'day ' + (Number(n) + k)).replace(/\btoday\b/g, sd);
+    return EVENT_RE.test(txt) ? sd + ': ' + t : t;
+  };
+  let WLD = null;                                     /* the Watchlist read's close (setups/latest.json date) */
+  const secName = (list, sec) => (list.startsWith('1-') && /^\d{4}-\d{2}-\d{2}$/.test(sec) ? fDate(sec)
+    : list === '3-SETUPS' && sec === 'Triggered today' && staleRead(WLD) ? 'Triggered ' + shortD(WLD) : sec);
+  /* the live trigger state in the tables (the user, Nov 6 2026: "if the state of a stock changed, the table should reflect
+     it, within 5 minutes; the only thing that changes is our triggers, the buy points"): today's buy-point triggers
+     (GitHub's record and this page's own log) with their state at the latest check (alerts.json lost / back; the page's
+     plost / pback), on the stock's Watchlist and Launches rows while their read is from an earlier close */
+  const hm12x = (hm) => { const [H, M] = String(hm).split(':').map(Number); return ((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'); };
+  const liveTrigs = () => {
+    const S0 = SRV && SRV.date === todayNY() ? SRV : null, out = new Map(), plost = loadDay('plost', '{}'), pback = loadDay('pback', '{}');
+    const jk = new Set(((S0 && S0.items) || []).map((it) => it.key));
+    const add = (key, time, text) => {
+      const [sym, kind] = String(key).split(':');
+      if (!sym || !kind || sym === 'grp' || sym === 'summary' || !EOD_KINDS.has(kind) || (kind === 'ema21' && !/UNDERCUT/.test(text))) return;
+      const arr = out.get(sym) || [];
+      if (arr.some((x) => x.key === key)) return;
+      const lost = jk.has(key) ? (S0.lost || {})[key] : plost[key], back = jk.has(key) ? (S0.back || {})[key] : pback[key];
+      arr.push({ key, kind, time, lost: lost || null, back: back || null, lvl: eodLevel(kind, text), name: EOD_NAME[kind] || kind });
+      out.set(sym, arr);
+    };
+    ((S0 && S0.items) || []).forEach((it) => { if (it.kind === 'trigger') add(it.key, it.time, (it.title || '') + ' — ' + (it.msg || '')); });
+    loadDay('log', '[]').forEach((x) => {
+      const i = x.lastIndexOf(TABMARK); if (i < 0 || !x.startsWith('🔔 ')) return;
+      const m = /^🔔 (\d+):(\d\d) (AM|PM)/.exec(x);
+      add(x.slice(i + 3), m ? String(Number(m[1]) % 12 + (m[3] === 'PM' ? 12 : 0)).padStart(2, '0') + ':' + m[2] : '', x.slice(0, i));
+    });
+    out.forEach((arr) => arr.sort((a, c) => (a.time < c.time ? -1 : 1)));
+    return out;
+  };
+  const trigText = (t) => (t.lost ? '↓ ' : '🔔 ') + hm12x(t.time) + ' ' + t.name + (t.lvl ? ' over ' + fPrice(t.lvl) : '')
+    + (t.lost ? ' · back under since ' + hm12x(t.lost.at) + (t.lost.price ? ' (' + fPrice(t.lost.price) + ')' : '') : t.back ? ' · holding again since ' + hm12x(t.back.at) : ' · holding');
   const p1 = (x, sign) => { const v = num(x); return v === null || isNaN(v) ? '—' : (sign && v > 0 ? '+' : '') + v.toFixed(1) + '%'; };
   const wlRows = (symMap) => {
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
@@ -2461,7 +2508,11 @@ defCalc('industry_perf', {
     const table = $('#wl-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
     setState('wl-table', ['setups']);
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
+    WLD = doc ? doc.date : null;
     const all = wlRows(symMap);
+    /* today's triggers on a read from an earlier close: a 3-SETUPS row holding one moves to the triggered part */
+    const LT = WLD && WLD < todayNY() ? liveTrigs() : new Map();
+    all.forEach((r) => { const ts = LT.get(r.symbol); r.lt = ts || null; if (S.wl === '3-SETUPS' && ts && ts.some((t) => !t.lost)) r.section = 'Triggered today'; });
     document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = b.dataset.v === 'TREND' ? (doc ? (S.wl === 'TREND' ? all.length : trendSrc(doc).length) : null) : doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
     $('#wl-time').textContent = doc ? 'Scan of the ' + fDate(doc.date) + ' close' : st('setups').status === 'error' ? 'Could not load the lists' : '—';
     const rules = wlRules(S.wl, doc && doc.settings), rbox = $('#wl-rules');
@@ -2532,10 +2583,14 @@ defCalc('industry_perf', {
         key.append(rm);
       }
       const gd = h('td', ''); if (r.grade) gd.append(h('span', 'tgr-grade g' + r.grade[0], r.grade)); else gd.textContent = '—';
-      const whyTd = h('td', 'c3' + (r.stage ? ' wl-why' : ' nw'), r.why || '');
-      if (r.stage) { const sl = h('div', 'tgr-lbl wl-stage', r.stage); whyTd.title = r.stage; whyTd.append(sl); }
-      const sec = (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
-      tr.append(key, h('td', 'nw', sec), gd, grStockCell(r.gr, r.symbol, false), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), trendCell(r.symbol), whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
+      const whyTd = h('td', 'c3' + (r.stage || r.lt ? ' wl-why' : ' nw'), r.why || '');
+      (r.lt || []).forEach((t) => whyTd.append(h('div', 'wl-live ' + (t.lost ? 'tgr-dn' : 'tgr-up'), trigText(t))));
+      const stg = forToday(r.stage, WLD);
+      if (stg) { const sl = h('div', 'tgr-lbl wl-stage', stg); whyTd.title = stg; whyTd.append(sl); }
+      const lt0 = (r.lt || []).find((t) => !t.lost) || (r.lt || [])[0];
+      const sec = lt0 ? (lt0.lost ? '↓ Triggered ' + hm12x(lt0.time) + ', back under' : '🔔 Triggered ' + hm12x(lt0.time))
+        : (r.setups && r.setups.length ? r.setups.join(' + ') : secName(S.wl, r.section || '')) + (r.last_hit ? ' (' + fDate(r.last_hit).replace(/, \d{4}$/, '') + ')' : '');
+      tr.append(key, h('td', 'nw' + (lt0 ? (lt0.lost ? ' tgr-dn' : ' tgr-up') : ''), sec), gd, grStockCell(r.gr, r.symbol, false), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), trendCell(r.symbol), whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), resCell(r, num(r.price)), h('td', 'num', fPrice(r.price)), pctCell(r.chg_1d, 0), h('td', 'num c2', fX(r.rel_vol)),
         h('td', 'num ' + tone(r.vs21e), p1(r.vs21e, true)), h('td', 'num ' + tone(r.vs50e), p1(r.vs50e, true)),
         h('td', 'c2', r.other), h('td', 'num c3', p1(r.adr_pct)), h('td', 'num c3 ' + tone(r.perf_1m_pct), p1(r.perf_1m_pct, true)),
@@ -2761,6 +2816,7 @@ defCalc('industry_perf', {
   const noRows = (tb, n, text) => { const tr = h('tr'); const td = h('td', 'tgr-lbl', text); td.colSpan = n; tr.append(td); tb.append(tr); };
   const drawLaunches = (symMap) => {
     const doc = st('launch').status === 'ok' ? st('launch').data : null;
+    const LTL = doc && doc.date < todayNY() ? liveTrigs() : new Map();      /* today's triggers on a read from an earlier close */
     /* launching today (live) */
     const lt = $('#ln-live-table'), ltb = lt.querySelector('tbody'); ltb.replaceChildren();
     const LAG = S.tab === 'laggards';
@@ -2884,8 +2940,9 @@ defCalc('industry_perf', {
         thm.append(h('div', '', i > 0 ? t0.slice(0, i) : t0), sub); thm.title = 'On the launch day: ' + t0;
       } else thm.textContent = (r.group || '—') + ' · ' + r.group_status;
       /* the stock's stage after the close (dry-up / consolidation, tight under the buy point, breakout, running, ...) */
-      const sttText = r.stage ? r.stage + (r.stage_since ? ' since ' + fDate(r.stage_since).replace(/, \d{4}$/, '') : '') : r.status === 'Riding' ? 'Above 21 EMA' : 'Below 21 EMA';
+      const sttText = r.stage ? forToday(r.stage, doc && doc.date) + (r.stage_since ? ' since ' + fDate(r.stage_since).replace(/, \d{4}$/, '') : '') : r.status === 'Riding' ? 'Above 21 EMA' : 'Below 21 EMA';
       const stt = h('td', 'ln-stage ' + (r.status === 'Riding' ? 'tgr-up' : 'tgr-dn'));
+      (LTL.get(r.symbol) || []).forEach((t) => stt.append(h('div', 'wl-live ' + (t.lost ? 'tgr-dn' : 'tgr-up'), trigText(t))));
       stt.append(h('div', '', sttText));
       stt.title = sttText + ' (' + (r.status === 'Riding' ? 'above' : 'below') + ' the 21 EMA at the close)';
       stt.addEventListener('click', () => stt.classList.toggle('open'));
