@@ -45,6 +45,34 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Power day / EP alerts must open over the 21-day closing high (LIVE Nov 5 2026 ~8:40 PM ET, the user's "go live"; branch test/epopen)
+
+- **Why** (the user, Nov 5 evening: "the whole point is to gap up above it, meaning the opening price has to be above the
+  21-day highest closing price to be eligible for an episodic pivot"; "it applies to both of them", the EP and the power
+  day): WRBY Nov 5 opened $25.93, under its 21-day closing high $26.52 (the code grader had it "not eligible: under the
+  21-day high close" at 9:18), and still fired a POWER DAY at 12:35 on a 1-cent pass of its $27.00 1-month high
+  ($27.01, +26.9%, 5.0x), then closed $26.10.
+- **Code**: scanner/launch.py saves each launch-watch stock's highest close of the last 21 sessions in launch.json
+  `watch_close_high_21d` (beside the watch rows; their layout unchanged; the same number as the code grader's hi21);
+  radar/alerts.py find() and docs/index.html lnLive (alerts only: the Launching today table lists as before) need
+  today's open over it for the power day and the EP. No number (a watch list from before) = not checked: it starts with
+  the Nov 6 4:40 PM scan, so Monday Nov 9's alerts (tonight's scan was not re-run: a dry build tonight got bars only
+  through Nov 4).
+- **Tested**: the job's find() on Nov 5 with the Nov 4 watch list: WRBY no power day; ADMA, EPAM, EWTX, MGNI, XERS, U
+  power days and CHYM's EP unchanged. WRBY then gets "A launch" at 12:35 (its own rules: allowed, the user). Regress:
+  every agreed example the same. radar-tools `launchdry KO` on the branch: 591 of 591 watch stocks got the number,
+  equal to the code grader's (WRBY 26.52, CHYM 30.46, ADMA 11.75, EPAM 143.80, EWTX 40.49). Rules workbook updated.
+
+## Next (agreed, not built; needs the user's "test it"): boxes hold only what still holds
+
+- The user (Nov 5 evening): a trigger goes into its box (🚀 / ⚡ / 🎯 / ↩️); when it stops meeting its own requirements
+  later in the day (all of them, volume too) it leaves the box (the log keeps it, noted "no longer holding" with the
+  time and price); when it meets them again it comes back. An alert that doesn't meet its buy requirements is a heads-up
+  (👀; "touched its buy point, back under" moves there). What didn't hold goes in the 👥 end-of-day report. **No rule
+  changes**: "whatever the rule is, it's the rule; you're only placing the right triggers in the right boxes" (the
+  retest: tests the breakout / base level and the 10 or 21 EMA, then back over the level, reclaiming that EMA). Idea:
+  each run the job already re-checks every rule on the latest prices; publish which keys still hold, the boxes follow.
+
 ## End of day = today's buy-point triggers only (LIVE Nov 5 2026 ~7:50 PM ET, the user's "go live"; branch test/eodtrig)
 
 - **Why** (the user, Nov 5 evening: the 👥 end-of-day list "is made up stuff": "it can only aggregate whatever has been
