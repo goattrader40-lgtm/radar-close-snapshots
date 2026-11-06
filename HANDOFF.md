@@ -71,6 +71,32 @@ alone.
   alerts; the Watchlist / Launches rows show today's triggers live during the day; at 5 AM Tuesday the "Triggered Mon,
   Nov 9" labels.
 
+## Status at the end of the session "Radar: pre-market news for every 5%+ gapper (Nov 6)" (Nov 6 2026 afternoon - evening)
+
+- **Live (each after the user's "go live")**, details in the two sections below: (1) the Pre-market scanner's **News**
+  column for every 5%+ gapper, up or down, whatever the list's rules: Claude's reason, else the code grader's (SEC
+  filings, the Earnings tab, the stock's own headline from Alpaca / Benzinga, "Sector move: <theme>", "After earnings
+  (date)") (~3:50 PM); (2) the fix for the empty scanner it caused (~4:10 PM: `cgOn` out of scope); (3) news-only runs
+  at 8:05 and 8:35 started by the day job (GitHub's backup only 8:00-8:44), pmnews.json; 9:05 = the code runs 8:45-9:20
+  (evening); (4) Nov 6's codegrade.json got that day's news by hand, its grades unchanged.
+- **Test branches**: test/pmnews, test/pmearly merged; nothing waiting. An every-5-minutes news version was built by
+  mistake and reverted (the user: "no need for every 5 min news").
+- **To confirm with the user**: a report from before the last close (VCEL Nov 5, 7 AM) now reads "After earnings",
+  news C, in the code grader (VCEL's Nov 6 code grade would be C, not B; the saved Nov 6 file kept B). It went live with
+  the user's "go live", but the other Nov 6 session recorded the user's "don't change anything" about VCEL. Claude's
+  8:45 grade is untouched. Ask whether to keep it.
+- **Open, offered, not decided**: (a) let event news keep a gapper on the scanner when a filter drops it (FLY Nov 6:
+  15% over its 52-week low, hidden at the user's 30%); (b) Claude's 8:45 grading also took VCEL's Nov 5 report as Nov 6
+  news (A): the same "before the last close" rule for the 8:45 task (its own session); (c) headline reads to watch: OBX
+  "To Present Updated Data" read as FDA / trial, analyst notes on gap-ups; posts on X (Firefly's own) aren't read, only
+  Benzinga's feed (FLY's deal was there at 7:31 AM).
+- **First things to check Monday Nov 9**: the day job's log "started codegrade.yml" at 8:05 and 8:35, radar-data's
+  "pre-market news" commits (pmnews.json), the News column filled by ~8:07; the 8:45 code run's log ("headlines: N for M
+  of K stocks", no "news: out of time"); a FLY-type press release shows as "(headline)".
+- **Lessons**: test a page change with the real live data files too, not only the new ones (the empty scanner); build
+  only what the user asked (the every-5-minutes version); explain before changing, in the user's words.
+- No new agreed reads (tools/examples.txt unchanged).
+
 ## Pre-market news at 8:05 and 8:35 too (LIVE Nov 6 2026 evening, the user's "go live"; branch test/pmearly)
 
 - The user (Nov 6): news at "805, 835 and 905" ("as long as gappers info is updated and news is pulled at 805 then 835
