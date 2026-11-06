@@ -638,10 +638,11 @@
         <label class="tgr-f">52W low ≥ <input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-pm="low52"> % below price</label>
         <label class="tgr-f"><input type="checkbox" data-pm="above200"> Above 200-day SMA</label>
         <label class="tgr-f"><input type="checkbox" data-pm="above50e"> Above 50-day EMA</label>
+        <label class="tgr-f"><input type="checkbox" data-pm="abovepdh"> Above prev-day high</label>
         <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
       </div>
       <details class="tgr-legend tgr-more" data-key="pmlive"><summary>About this scanner</summary>
-      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. vs 200D and vs 50 EMA = the latest pre-market price vs the 200-day SMA and 50-day EMA as of yesterday's close. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
+      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. vs 200D and vs 50 EMA = the latest pre-market price vs the 200-day SMA and 50-day EMA as of yesterday's close. vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day.</p>
       </details>
       <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
       <div class="tgr-scroll tall">
@@ -662,6 +663,7 @@
             <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="vs_50e" title="Pre-market price vs the 50-day EMA as of yesterday's close">vs 50 EMA</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_pdh" title="Pre-market price vs yesterday's high (regular hours)">vs PDH</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="below_low52" title="How far below the pre-market price the 52-week low is (TradingView's 'Low 52W below price by')">52W low below</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
             <th><button class="tgr-th" data-sort="themes">Themes</button></th>
@@ -2092,7 +2094,7 @@ defCalc('industry_perf', {
   };
 
   /* live pre-market scanner: your TradingView "premarket-1" screen as the defaults */
-  const PMDEF = { dir: 'up', chg_min: 0.5, chg_max: 5, price: 5, mcap_b: 0.7, avgvol_k: 600, dvol_m: 20, adr: 4, pmvol_k: null, low52: 30, above200: false, above50e: false };
+  const PMDEF = { dir: 'up', chg_min: 0.5, chg_max: 5, price: 5, mcap_b: 0.7, avgvol_k: 600, dvol_m: 20, adr: 4, pmvol_k: null, low52: 30, above200: false, above50e: false, abovepdh: false };
   const PMF = Object.assign({}, PMDEF);
   const syncPm = () => {
     document.querySelectorAll('#pml-filters [data-pm]').forEach((el) => {
@@ -2128,6 +2130,8 @@ defCalc('industry_perf', {
         vs_200: num(r.sma200) ? Math.round((pm_last / num(r.sma200) - 1) * 1000) / 10 : null,
         above_200: num(r.sma200) ? pm_last > num(r.sma200) : null,
         vs_50e: num(r.ema50) ? Math.round((pm_last / num(r.ema50) - 1) * 1000) / 10 : null,
+        vs_pdh: num(r.high_1d) && pm_last ? Math.round((pm_last / num(r.high_1d) - 1) * 1000) / 10 : null,   /* vs yesterday's high (stocks.json high_1d) */
+        above_pdh: num(r.high_1d) && pm_last ? pm_last > num(r.high_1d) : null,
         tv_dvol_m: adv && num(r.price) ? (adv * num(r.price)) / 1e6 : null,
         below_low52: num(r.low_52w) && pm_last ? ((pm_last - num(r.low_52w)) / pm_last) * 100 : null,   /* TradingView: 52W low is X% below price */
         ep: Math.abs(pm_chg) >= 10 && adv && pm_vol / adv >= 0.25,
@@ -2147,6 +2151,7 @@ defCalc('industry_perf', {
     if (p.pmvol_k !== null && r.pm_vol < p.pmvol_k * 1000) return false;
     if (p.above200 === true && r.above_200 === false) return false;
     if (p.above50e === true && r.vs_50e !== null && r.vs_50e <= 0) return false;
+    if (p.abovepdh === true && r.above_pdh === false) return false;
     if (p.low52 !== null && r.below_low52 !== null && r.below_low52 < p.low52) return false;
     return true;
   };
@@ -2177,7 +2182,7 @@ defCalc('industry_perf', {
     const gm = [...by].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]);
     if (!gm.length) ml.append(h('span', 'tgr-lbl', PML ? 'none' : '—'));
     gm.forEach(([t, n], i) => { if (i) ml.append(h('span', 'tgr-sep', ' | ')); const b = h('button', 'tgr-chip', t + ' (' + n + ')'); b.type = 'button'; b.dataset.kind = 'theme'; b.dataset.name = t; ml.append(b); });
-    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 18; tr.append(td); tb.append(tr); }
+    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 19; tr.append(td); tb.append(tr); }
     const pctTxt = (x) => (x === null || x === undefined ? '—' : (x > 0 ? '+' : '') + Number(x).toFixed(2) + '%');
     rows.slice(0, LIST_MAX).forEach((r) => {
       const tr = h('tr');
@@ -2193,6 +2198,7 @@ defCalc('industry_perf', {
         h('td', 'num c2', fVol(r.volume)), h('td', 'num c2', fX(r.rel_vol)), h('td', 'num c3', fAdr(r.adr_20)),
         h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null ? '—' : (r.vs_200 > 0 ? '+' : '') + r.vs_200.toFixed(1) + '%'),
         h('td', 'num c2 ' + tone(r.vs_50e), r.vs_50e === null ? '—' : (r.vs_50e > 0 ? '+' : '') + r.vs_50e.toFixed(1) + '%'),
+        h('td', 'num c2 ' + tone(r.vs_pdh), r.vs_pdh === null ? '—' : (r.vs_pdh > 0 ? '+' : '') + r.vs_pdh.toFixed(1) + '%'),
         h('td', 'num c2', r.below_low52 === null ? '—' : r.below_low52.toFixed(1) + '%'),
         h('td', 'num c3', fCap(r.mcap_b)), chipCell(r.themes, 'theme', ''));
       tb.append(tr);

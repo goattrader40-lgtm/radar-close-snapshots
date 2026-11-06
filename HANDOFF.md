@@ -45,6 +45,22 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Pre-market scanner: "Above prev-day high" filter + vs PDH column (LIVE Nov 6 2026 afternoon, the user's "go live"; branch test/pmpdh)
+
+- The user (Nov 6): "add premarket price above previous day high filter" / "pre above pdh".
+- **What**: a tick box "Above prev-day high" in the Pre-market scanner's filter row (next to Above 50-day EMA): keeps
+  only stocks whose latest pre-market price is over yesterday's regular-hours high (strictly above). Off by default
+  (PMDEF abovepdh false; Reset clears it; like the other pre-market filters it is not kept over a reload). A stock
+  without a PDH isn't dropped (same as the 200 / 50 boxes). New column "vs PDH" (after vs 50 EMA) = pre-market price vs
+  yesterday's high, %.
+- **How**: radar/pipeline.py writes `high_1d` on every stocks.json row = that session's high from `hl` (your close
+  snapshot / Yahoo daily bars), None when stale or when it is under the close (bad bar). The page reads `r.high_1d`
+  in pmRows (vs_pdh, above_pdh) and pmPass. **The first stocks.json with high_1d is the Nov 6 evening build**: until
+  then the column shows "—" and the box drops nothing. Rules sheet P3 updated.
+- Checked with the Nov 6 9:25 AM scan + the Nov 5 highs (close/latest.json): with the user's settings (Pre-mkt chg 10%+,
+  price $5, cap $0.7B, avg vol 600K, $20M, ADR 4%, 52W low 30%) 23 pass, ticked 7 (LRCX, NET, AMAT, EXTR, FROG, SITM,
+  MKSI); NET 290.99 vs PDH 252.44 = +15.3%, MRVL 147.10 vs 152.15 = -3.3% (dropped). Code defaults (0.5-5%): 116 -> 4.
+
 ## Episodic pivot alert: a volume pace of 3x+, was 4x (LIVE Nov 5 2026 ~8:50 PM ET, the user's "go live"; branch test/ep3x)
 
 - The user (Nov 5 evening): "change the rule for the episodic pivot: 3 rvol at least, everything else stays the same".

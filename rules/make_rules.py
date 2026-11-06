@@ -157,6 +157,7 @@ SHEETS.update({
 "P3 Pre-market scanner": (["Filter", "Your default"], [
  ["Direction", "Gap ups"], ["Pre-market change", "0.5% to 5%"], ["Price", "$5+"], ["Market cap", "$0.7B+"], ["Avg volume (20D)", "600K+"],
  ["Price x avg volume", "$20M+"], ["ADR", "4%+"], ["52-week low", "30%+ below price"], ["Above 200-day SMA", "off"], ["Above 50-day EMA", "off"],
+ ["Above prev-day high", "off (tick it to keep only stocks whose pre-market price is over yesterday's regular-hours high) (the user, Nov 6 2026)"],
  ["Updates", "Every 5 minutes, 7:00-9:29 AM ET"],
 ]),
 "G1 Gainers filter": (["Filter", "Your default"], [

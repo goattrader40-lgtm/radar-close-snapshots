@@ -209,6 +209,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | 52-week low | 30%+ below price |
 | Above 200-day SMA | off |
 | Above 50-day EMA | off |
+| Above prev-day high | off (tick it to keep only stocks whose pre-market price is over yesterday's regular-hours high) (the user, Nov 6 2026) |
 | Updates | Every 5 minutes, 7:00-9:29 AM ET |
 
 ## Gainers filter
