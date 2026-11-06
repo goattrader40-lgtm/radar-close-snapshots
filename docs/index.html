@@ -1506,31 +1506,126 @@ defCalc('industry_perf', {
     return ['RS ' + (rsV !== null && rsV !== undefined ? rsV : '—'), 'Trend ' + (t && t.st ? t.st + (t.d ? ' ' + t.d + 'd' : '') : '—'),
       'Group ' + (gB ? (gB.tier === 'Top' ? '★ Top ' : gB.tier === 'Strong' ? 'Strong ' : '') + String(gB.group).replace(/ · other$/, ' (other)').replace(/ · /g, ', ') + ' #' + gB.rank + '/' + gB.of : '—')];
   };
-  /* the end of the day (the user, Nov 5 2026: "end of day, which retest held or not: the ★★★, the retests, the breakouts, the
-     10 / 21 EMA pullbacks"): after the evening scan, each stock with a pullback-type alert today: its close vs the level it
-     pulled back to (the breakout level it retested, else the 21 EMA) */
-  const EOD_KINDS = /:(retest|zone|ema21|ema21bl|ema21zone|push|reclaimbo|reclaimbo2)$/;   /* the pullbacks (a touch of the buy point isn't one) */
-  const eodList = (ldoc, keys) => {
-    if (!ldoc || ldoc.date !== todayNY()) return [];
+  /* the end of the day (the user, Nov 6 2026: "it can only aggregate whatever has been triggered by our buy point rules;
+     whatever from those triggers is still true at the end of the day, show them", "buy point triggers from the Watchlist
+     tab and the Launches tab"): after the evening scan, today's buy-point triggers filed on the Launches and Watchlist tabs
+     (GitHub's record and this page's own log; no heads-ups, group moves or pre-market grades; Launch laggards not), each
+     checked at the close against the level its own alert named:
+     - a launch (power day, catalyst gap, A+/A launch, ★ launching, reversal): the launch-day rules at the close, i.e. the
+       4:40 PM scan put it on Launches dated today; an episodic pivot: that, or the close over the 1-month high it named
+     - a breakout (base top, flag / pennant line, 3-SETUPS, TREND, base high cleared, breakout confirmed): the close over its
+       level, within 0.5% over it = with caution (the leg rule)
+     - gap out of base: the gap over the base high; the 1- / 5-minute entries over their opening range high
+     - retest holding: over the breakout level and the 21 EMA; push: over its trigger; breakout undercut & reclaim: over the
+       breakout level; 21 / 50 EMA undercut & reclaim: over the 21 / 50 EMA at the close; the pop: over its 10 & 21 EMA
+     One line per stock with something still true; the ones with nothing left in one "didn't hold" line.
+     The list it replaced (Nov 5 2026) took the pullback heads-ups ("in the retest zone", "at the 21 EMA") and the scan's own
+     retest read: TENB, NTSK, KOD, OWL ... with no buy point that day, checked against the breakout level whatever the alert */
+  const EOD_TABS = new Set(['L', 'W']);
+  const EOD_LAUNCH = new Set(['power', 'catalyst', 'launch', 'stars', 'reversal']);
+  const EOD_KINDS = new Set(['power', 'catalyst', 'launch', 'stars', 'reversal', 'ep', 'breakout', 'confirm', 'basebreak', 'gapbase', 'gob1', 'gob5',
+    'pop', 's3', 'trend', 'retest', 'push', 'reclaimbo2', 'ema21', 'ema21bl', 'ema50']);
+  const EOD_PB = new Set(['retest', 'push', 'ema21', 'ema21bl', 'reclaimbo2']);     /* the pullback entries (★★★) */
+  const EOD_NAME = { gob1: 'gap out of base, the 1-min entry', gob5: 'gap out of base, the 5-min entry', gapbase: 'gap out of base', ep: 'episodic pivot',
+    breakout: 'breakout', s3: '3-SETUPS trigger', trend: 'TREND trigger', basebreak: 'base high cleared', confirm: 'breakout confirmed', retest: 'retest holding',
+    push: 'push', reclaimbo2: 'breakout undercut & reclaim', ema21: '21 EMA undercut & reclaim', ema21bl: '21 EMA retest + breakout level',
+    ema50: '50 EMA undercut & reclaim', pop: 'pop', power: 'power day', catalyst: 'catalyst gap', launch: 'launch', stars: '★ launching', reversal: 'reversal launch' };
+  /* today's alerts as { key, tab, text }: this page's log lines and GitHub's record (its tab as the Alerts tab files it) */
+  const eodEntries = (lines, items, ldoc) => (lines || []).map((x) => { const i = x.lastIndexOf(TABMARK); return i < 0 ? null : { key: x.slice(i + 3), tab: x.charAt(i + 1), text: x.slice(0, i) }; })
+    .concat((items || []).map((it) => ({ key: it.key, tab: (() => { try { return tabOfKey(it.key, ldoc, null); } catch (e) { return ''; } })(), text: (it.title || '') + ' — ' + (it.msg || '') })))
+    .filter(Boolean);
+  const eodLevel = (kind, t) => {
+    const at = (re) => { const m = re.exec(t); return m ? num(m[1].replace(/,/g, '')) : null; };
+    const P = '\\$([\\d,]+(?:\\.\\d+)?)';
+    if (kind === 'breakout' || kind === 's3' || kind === 'trend') return at(new RegExp('over (?:the (?:base top|buy point) )?' + P));
+    if (kind === 'confirm') return at(new RegExp('above the base top ' + P));
+    if (kind === 'gapbase') return at(new RegExp('over its base high ' + P));
+    if (kind === 'gob1') return at(new RegExp('over the 1-minute opening range high ' + P));
+    if (kind === 'gob5') return at(new RegExp('over the 5-minute opening range high ' + P));
+    if (kind === 'basebreak') return at(new RegExp('base high ' + P + ' cleared'));
+    if (kind === 'push') return at(new RegExp('over the trigger ' + P));
+    if (kind === 'retest' || kind === 'reclaimbo2') return at(new RegExp('breakout level ' + P));
+    if (kind === 'ep') return at(new RegExp('over its 1-month high ' + P));
+    if (kind === 'ema21' || kind === 'ema21bl') return at(new RegExp('21 EMA ' + P));
+    if (kind === 'ema50') return at(new RegExp('50 EMA ' + P));
+    if (kind === 'basehigh') return at(new RegExp('base high ' + P));
+    return null;
+  };
+  const eodList = (ldoc, entries) => {
+    if (!ldoc || ldoc.date !== todayNY()) return { held: [], lost: [] };
+    const today = todayNY();
     const rows = new Map(((ldoc.launches || []).concat(ldoc.laggards || [])).map((r) => [r.symbol, r]));
     (ldoc.setups3 || []).forEach((r) => { if (r.live && !rows.has(r.symbol)) rows.set(r.symbol, Object.assign({}, r.live, { symbol: r.symbol, tv: r.tv, s3: true })); });
-    const syms = new Set(keys.filter((k) => EOD_KINDS.test(k)).map((k) => k.split(':')[0]));
-    (ldoc.launches || []).forEach((r) => { if (r.retest_today) syms.add(r.symbol); });
-    const out = [];
-    syms.forEach((sym) => {
-      const r = rows.get(sym); if (!r) return;
-      const close = num(r.price), lvl = num(r.retest_level) || num(r.last_breakout_top), e21 = num(r.ema21);
-      const ref = lvl || e21; if (!close || !ref) return;
-      const held = close >= ref, emas = (r.retest_ema || []).join(' & ');
-      out.push({ sym, held, hc: held && hcReady(r), close, ref, what: lvl ? 'its breakout level' : 'its 21 EMA', emas, r });
+    const base = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x]));
+    const launched = new Map((ldoc.launches || []).filter((r) => r.date === today).map((r) => [r.symbol, r]));
+    /* the buy-point triggers, one per stock and kind (the page's and the job's copy of the same alert are one) */
+    const trig = new Map(), tabs = new Map();
+    entries.forEach((e) => {
+      const [sym, kind] = String(e.key).split(':');
+      if (!sym || !kind || sym === 'grp' || sym === 'summary' || !EOD_KINDS.has(kind) || !EOD_TABS.has(e.tab)) return;
+      if (kind === 'ema21' && !/UNDERCUT/.test(e.text)) return;               /* the 21 EMA retest alone is a heads-up */
+      if (!trig.has(sym)) trig.set(sym, new Map());
+      if (!trig.get(sym).has(kind)) trig.get(sym).set(kind, e.text);
+      if (tabs.get(sym) !== 'L') tabs.set(sym, e.tab);                      /* on both tabs: Launches (the Nov 4 rule) */
     });
-    return out.sort((a, c) => (c.hc - a.hc) || (c.held - a.held) || (a.sym < c.sym ? -1 : 1));
+    const f1 = (x) => (x > 0 ? '+' : '') + x.toFixed(1) + '%';
+    const held = [], lost = [];
+    trig.forEach((kinds, sym) => {
+      const r = rows.get(sym), b = base.get(sym) || {};
+      const close = num(r && r.price) !== null ? num(r.price) : num(b.price);
+      if (!close) return;
+      const parts = [];
+      const bh = [...kinds.values()].map((t) => eodLevel('basehigh', t)).find((v) => v);   /* the base high its launch alerts named */
+      kinds.forEach((text, kind) => {
+        const name = EOD_NAME[kind] || kind;
+        if (EOD_LAUNCH.has(kind) || kind === 'ep') {
+          const L = launched.get(sym);
+          if (L) { parts.push({ ok: true, kind, txt: name + ': closed as a launch day (' + L.grade + (L.power ? ', power day' : '') + (L.reversal ? ', reversal' : '') + (L.faded ? ', faded' : '') + ')' }); return; }
+          const pv = kind === 'ep' ? eodLevel('ep', text) : null;
+          if (pv && close > pv) { parts.push({ ok: true, kind, txt: name + ': over its 1-month high ' + fPrice(pv) + ' (' + f1(100 * (close / pv - 1)) + '), not a launch day at the close' }); return; }
+          const chg = num(b.chg_1d), sma = num(b.sma200);
+          parts.push({ ok: false, kind, txt: name + ': not a launch day at the close' + (chg !== null && chg < 5 ? ' (closed ' + f1(chg) + ', a launch day needs +5%)' : sma && close <= sma ? ' (closed under its 200 SMA ' + fPrice(sma) + ')'
+            : bh && close <= bh ? ' (closed under its base high ' + fPrice(bh) + ')' : ' (the 4:40 PM scan didn\'t read one)') });
+          return;
+        }
+        if (kind === 'pop') {
+          const e10 = num(r && r.ema10), e21 = num(r && r.ema21);
+          if (!e10 || !e21) return;
+          parts.push({ ok: close > e10 && close > e21, kind, txt: name + ': ' + (close > e10 && close > e21 ? 'over' : 'under') + ' its 10 & 21 EMA ' + fPrice(e10) + ' / ' + fPrice(e21) });
+          return;
+        }
+        /* the EMA reclaims: the EMA at the close (the scan's), else the one the alert named (the last close's) */
+        const emaNow = kind === 'ema21' || kind === 'ema21bl' ? num(r && r.ema21) : kind === 'ema50' ? num(r && r.ema50) : null;
+        const lvl = emaNow || eodLevel(kind, text);
+        if (!lvl) return;
+        const pct = 100 * (close / lvl - 1), over = close > lvl;
+        let ok = over, txt = name + ' ' + fPrice(lvl) + ': closed ' + f1(pct) + (over ? ' over' : ' under');
+        if (kind === 'retest') {                                              /* the retest rule: over the level and the 21 EMA */
+          const e21 = num(r && r.ema21);
+          if (e21) { ok = over && close > e21; txt += ', ' + (close > e21 ? 'over' : 'under') + ' the 21 EMA ' + fPrice(e21); }
+        }
+        if (ok && pct <= 0.5 && /^(breakout|s3|trend|basebreak|confirm)$/.test(kind)) txt += ' (within 0.5%: with caution)';
+        parts.push({ ok, kind, txt });
+      });
+      if (!parts.length) return;
+      const x = { sym, close, parts, r, tab: tabs.get(sym), hc: !!r && parts.some((p) => p.ok && EOD_PB.has(p.kind)) && hcReady(r) };
+      (parts.some((p) => p.ok) ? held : lost).push(x);
+    });
+    const by = (a, c) => (c.hc - a.hc) || (a.sym < c.sym ? -1 : 1);
+    return { held: held.sort(by), lost: lost.sort(by) };
   };
-  const eodLine = (x) => [x.sym + ':' + (x.held ? 'eodheld' : 'eodlost'),
-    (x.hc ? '★★★ ' : '') + x.sym + (x.held ? ' ✓ HELD at the close' : ' ✗ DID NOT HOLD at the close') + ' (after the close)',
-    'Closed ' + fPrice(x.close) + (x.held ? ' over ' : ' under ') + x.what + ' ' + fPrice(x.ref) + (x.emas ? ' (with the ' + x.emas + ')' : '')
-      + (x.hc ? ' · ★★★ ' + (x.r.group_tier_now === 'Top' ? '★ Top' : 'Strong') + ' group, RS ' + x.r.rs_now + ', Trend Up' : '')
-      + (x.held ? '' : ' · the pullback failed: no entry')];
+  /* the box lines: one per stock still true, and per tab one for the stocks with nothing left; each filed under the tab
+     its triggers were (the 4th item) */
+  const eodLines = (ev) => ev.held.map((x) => [x.sym + ':eodheld',
+    (x.hc ? '★★★ ' : '') + x.sym + ' ✓ HELD: ' + [...new Set(x.parts.filter((p) => p.ok).map((p) => EOD_NAME[p.kind] || p.kind))].join(' + ') + ' (after the close)',
+    'Closed ' + fPrice(x.close) + ' · ' + x.parts.filter((p) => p.ok).map((p) => '✓ ' + p.txt).concat(x.parts.filter((p) => !p.ok).map((p) => '✗ ' + p.txt)).join(' · ')
+      + (x.hc ? ' · ★★★ ' + (x.r.group_tier_now === 'Top' ? '★ Top' : 'Strong') + ' group, RS ' + x.r.rs_now + ', Trend Up' : ''), x.tab])
+    .concat([['L', 'Launches'], ['W', 'Watchlist']].map(([tb, nm]) => {
+      const ls = ev.lost.filter((x) => (x.tab || 'L') === tb);
+      return ls.length ? ['eod:eodlost' + tb, '✗ Didn\'t hold at the close: ' + ls.length + ' ' + nm + ' stocks (after the close)',
+        ls.map((x) => x.sym + ' ' + fPrice(x.close) + ' (' + x.parts.map((p) => p.txt).join('; ') + ')').join(' · '), tb] : null;
+    }).filter(Boolean));
+  const withTab = (line, tab) => { const i = line.lastIndexOf(TABMARK); return tab && i >= 0 ? line.slice(0, i + 1) + tab + line.slice(i + 2) : line; };
   const hcReady = (r) => { const tier = r.group_tier_now || '', t = trendOf(r.symbol); return (tier === 'Top' || tier === 'Strong') && num(r.rs_now) !== null && r.rs_now >= 80 && !!t && t.st === 'Up'; };
   const hcToday = (r) => !!(r.retest_today || r.push_today || r.ema21_today || r.breakout_reclaim_today);
   const HC_WHY = '★★★ HIGH CONVICTION: a pullback entry (retest held, push out of the 21 EMA, 21 EMA retest or undercut & reclaim, breakout undercut & reclaim) on a launch in a ★ Top / Strong group, RS 80+, Trend Up. Tested: +0.68R a trade on 169 (36% won, 40% ran 20%+), both halves positive, the only combination that beat the luck test. Buy near the close (3:45-4:00 PM), stop under the day\'s low';
@@ -3244,15 +3339,13 @@ defCalc('industry_perf', {
         log.unshift(logLine(new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }), it[1], it[2], it[0], ldoc));
       });
       safe('W alerts (evening)', () => {
-      /* the end of the day: which pullbacks held at the close; one pop-up with the names, the lines in the box */
+      /* the end of the day: which of today's buy-point triggers are still true at the close; one pop-up, the lines in the box */
       safe('End of day', () => {
-        const keys = log.map((x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? x.slice(i + 3) : ''; })
-          .concat(((SRV && SRV.date === todayNY() && SRV.items) || []).map((it) => it.key));
-        const ev = eodList(ldoc, keys), kEod = 'eod:' + todayNY();
-        if (ev.length && !sent.has(kEod)) {
+        const ev = eodList(ldoc, eodEntries(log, (SRV && SRV.date === todayNY() && SRV.items) || [], ldoc)), kEod = 'eod:' + todayNY();
+        if ((ev.held.length || ev.lost.length) && !sent.has(kEod)) {
           sent.add(kEod);
-          const held = ev.filter((x) => x.held).map((x) => (x.hc ? '★★★ ' : '') + x.sym), lost = ev.filter((x) => !x.held).map((x) => x.sym);
-          notify('End of day: ' + held.length + ' pullback' + (held.length === 1 ? '' : 's') + ' held', (held.length ? 'Held: ' + held.join(', ') : 'None held') + (lost.length ? ' · didn\'t hold: ' + lost.join(', ') : ''), null, 'summary:eod', 'End of day. ' + (held.length ? 'Held: ' + held.slice(0, 4).join(', ') : 'None held'));
+          const held = ev.held.map((x) => (x.hc ? '★★★ ' : '') + x.sym), lost = ev.lost.map((x) => x.sym), n = held.length + lost.length;
+          notify('End of day: ' + held.length + ' of ' + n + ' triggered stocks still true', (held.length ? 'Still true: ' + held.join(', ') : 'None still true') + (lost.length ? ' · didn\'t hold: ' + lost.join(', ') : ''), null, 'summary:eod', 'End of day. ' + (held.length ? 'Still true: ' + held.slice(0, 4).join(', ') : 'None still true'));
         }
       });
       /* a W name that closed over its 200 SMA today (the first close over since it was under) */
@@ -3324,10 +3417,9 @@ defCalc('industry_perf', {
       const srv = ((SRV && SRV.date === todayNY() && SRV.items) || []).filter((it) => !/^summary:/.test(it.key) && !haveK.has(it.key) && !haveS.has(sigOf('x · ' + it.title)))
         .map((it) => hcItem(it, lrow0.get(it.key.split(':')[0])))
         .map((it) => logLine(t12(it.time), it.title, it.msg, it.key, ldoc0, null)).filter((x) => !haveT.has(vis(x)));
-      /* the end of the day, after the evening scan: held / didn't hold, on every device */
-      const allKeys = log.map(keyOf).concat(((SRV && SRV.date === todayNY() && SRV.items) || []).map((it) => it.key));
+      /* the end of the day, after the evening scan: today's triggers still true at the close, on every device */
       const sc = ldoc0 && ldoc0.made_at ? new Date(ldoc0.made_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) : '4:30 PM';
-      eodList(ldoc0, allKeys).forEach((x) => { const [k, t, b] = eodLine(x); if (!haveK.has(k)) srv.push(logLine(sc, t, b, k, ldoc0, null)); });
+      eodLines(eodList(ldoc0, eodEntries(log, (SRV && SRV.date === todayNY() && SRV.items) || [], ldoc0))).forEach(([k, t, b, tb]) => { if (!haveK.has(k)) srv.push(withTab(logLine(sc, t, b, k, ldoc0, null), tb)); });
       if (srv.length) {
         const mnOf = (x) => { const m = /^(\d+):(\d\d) (AM|PM)/.exec(vis(x)); return m ? (Number(m[1]) % 12 + (m[3] === 'PM' ? 12 : 0)) * 60 + Number(m[2]) : 0; };
         log = log.concat(srv).map((x, i) => [x, i]).sort((a, c) => (mnOf(c[0]) - mnOf(a[0])) || (a[1] - c[1])).map((p) => p[0]);
