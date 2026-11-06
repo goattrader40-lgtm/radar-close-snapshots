@@ -534,8 +534,12 @@ def last_close_time(day):
     return datetime.datetime(p.year, p.month, p.day, 16, 0, tzinfo=NY)
 
 
-def live(pm_path, stocks_path, earn_path, out_path, asof=None):
+def live(pm_path, stocks_path, earn_path, out_path, asof=None, grade=True):
+    """grade=False (the 8:05 / 8:35 news runs, the user Nov 6 2026: news from 8:05): no grades, every 5%+ gapper's news
+    only, written to its own file (pmnews.json) so codegrade.json and its 8:45-9:25 pop-ups stay as they were"""
     rows = [r for r in json.load(open(pm_path)) if not r.get("placeholder") and r.get("direction") in ("up", "down")]
+    if not grade:
+        rows = []
     try:                                                # Claude's grade for the same stock, when it's posted
         cl = {x["symbol"]: x.get("grade") for x in json.load(open(os.path.join(os.path.dirname(pm_path), "claude_premarket.json")))
               if x.get("scan_date") == (rows[0].get("scan_date") if rows else None)}
@@ -565,7 +569,7 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
         E = {r["sym"]: r for r in ej.get("rows", []) if r.get("reported")}
     except Exception:
         pass
-    day = rows[0].get("scan_date") if rows else datetime.datetime.now(NY).date().isoformat()
+    day = rows[0].get("scan_date") if rows else gappers_day(pm_path) or datetime.datetime.now(NY).date().isoformat()
     t_to = datetime.datetime.fromisoformat(asof).replace(tzinfo=NY) if asof else datetime.datetime.now(NY)
     t_from = last_close_time(day)
     out = {}
@@ -638,8 +642,21 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None):
         print("headlines:", repr(ex)[:160])
     use_headlines({**news, **out}, H, S)
     sector_moves(out, news, every, S)
+    if not grade:                                       # the early news runs: pmnews.json, no rows
+        json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "day": day,
+                   "window": [t_from.isoformat(), t_to.isoformat()], "news": news}, open(out_path, "w"), indent=0)
+        return
     json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "day": day,
                "window": [t_from.isoformat(), t_to.isoformat()], "rows": out, "news": news}, open(out_path, "w"), indent=0)
+
+
+def gappers_day(pm_path):
+    """the scan date of prepare's gappers.json (the day when no stock passed the list's rules)"""
+    try:
+        g = json.load(open(os.path.join(os.path.dirname(pm_path), "gappers.json")))
+        return g[0].get("scan_date") if g else None
+    except Exception:
+        return None
 
 
 NEWS_BUDGET = 480      # seconds for the news-only gappers (the job has 15 minutes; ~230 stocks on Nov 6 2026)
@@ -865,7 +882,7 @@ def log(cg_path, log_path):
 if __name__ == "__main__":
     if sys.argv[1] == "log":
         log(sys.argv[2], sys.argv[3])
-    elif sys.argv[1] == "live":
+    elif sys.argv[1] in ("live", "news"):              # news = the early runs: no grades, pmnews.json
         a = [x for x in sys.argv[2:] if not x.startswith("--asof=")]
         asof = next((x.split("=", 1)[1] for x in sys.argv if x.startswith("--asof=")), None)
-        live(a[0], a[1], a[2], a[3], asof)
+        live(a[0], a[1], a[2], a[3], asof, grade=sys.argv[1] == "live")

@@ -1,13 +1,15 @@
 # The code grader (radar/codegrade.py): the pre-market gappers graded from SEC filings and the 50 / 200 chart, no
 # Claude, shown next to Claude's grade on the Pre-market tab for 1-2 weeks (the user's plan, Nov 4 2026).
-# Runs about 8:52, 9:05 and 9:18 AM ET on weekdays (each run re-grades with fresher pre-market prices; the
+# Runs about 8:52, 9:05 and 9:18 AM ET on weekdays (and 8:05 / 8:35 for the news only, pmnews.json) (each run re-grades with fresher pre-market prices; the
 # filings counted are those accepted from the last close up to the run, so nothing after the open).
 name: Code grader
 
 on:
   schedule:
     - cron: "52 12,13 * * 1-5"     # 8:52 AM ET (EDT / EST)
-    - cron: "5,18 13,14 * * 1-5"   # 9:05 / 9:18 AM ET
+    - cron: "5,18 13,14 * * 1-5"   # 9:05 / 9:18 AM ET (13:05 UTC is also 8:05 AM EST: the news run)
+    - cron: "5,35 12 * * 1-5"      # 8:05 / 8:35 AM EDT: the news runs (the user, Nov 6 2026: "805 835 905")
+    - cron: "35 13 * * 1-5"        # 8:35 AM EST
   workflow_dispatch:
 
 permissions:
@@ -33,7 +35,7 @@ jobs:
           ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
         run: |
           H=$(TZ=America/New_York date +%H); M=$(TZ=America/New_York date +%M); T=$((10#$H * 60 + 10#$M))
-          if [ "$GITHUB_EVENT_NAME" = "schedule" ] && { [ $T -lt 525 ] || [ $T -gt 569 ]; }; then echo "outside 8:45-9:29 ET: nothing to do"; exit 0; fi
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] && { [ $T -lt 480 ] || [ $T -gt 569 ]; }; then echo "outside 8:00-9:29 ET: nothing to do"; exit 0; fi
           git config user.name "radar-bot"; git config user.email "radar-bot@users.noreply.github.com"
           git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
           mkdir -p /tmp/rd /tmp/pm
@@ -42,6 +44,12 @@ jobs:
           git show origin/radar-data:premarket.json > /tmp/pm/claude_premarket.json 2>/dev/null || echo '[]' > /tmp/pm/claude_premarket.json
           git show origin/radar-data:codegrade_log.json > /tmp/rd/codegrade_log.json 2>/dev/null || echo '[]' > /tmp/rd/codegrade_log.json
           python3 radar/premarket_build.py prepare premarket/latest.json /tmp/rd/stocks.json /tmp/pm 8 4 --live=/tmp/rd/pmlive.json
+          if [ $T -lt 525 ]; then   # before 8:45 (the 8:05 / 8:35 runs): every 5%+ gapper's news only, in pmnews.json; the
+            # grades (codegrade.json) start at 8:45 as before, so the 8:45-9:25 code-grade pop-ups don't change
+            python3 radar/codegrade.py news /tmp/pm/rows.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/pmnews.json
+            python3 radar/publish.py "pre-market news $(TZ=America/New_York date +%F' '%H:%M)" /tmp/pmnews.json
+            exit 0
+          fi
           python3 radar/codegrade.py live /tmp/pm/rows.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/codegrade.json
           python3 radar/codegrade.py log /tmp/codegrade.json /tmp/rd/codegrade_log.json
           cp /tmp/rd/codegrade_log.json /tmp/codegrade_log.json

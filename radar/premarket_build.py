@@ -39,6 +39,8 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
     # Yahoo's pre-market bars carry none). Stocks only in the live file are added; ones only in the scan keep its numbers.
     if live_path and os.path.exists(live_path):
         lv = json.load(open(live_path))
+        if lv.get("date") and lv["date"] > (pm.get("date") or ""):   # before the 8:25 scan (the 8:05 / 8:35 news runs, the
+            pm = {"date": lv["date"], "saved_at": lv.get("saved_at", ""), "rows": []}   # user Nov 6 2026): the live scan alone
         if lv.get("date") == pm.get("date"):
             by = {g["symbol"]: g for g in pm.get("rows", [])}
             for sym, q in (lv.get("rows") or {}).items():
