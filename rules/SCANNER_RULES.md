@@ -107,7 +107,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | History | 200+ sessions (60+ for a new listing) |
 | 200 SMA range | From 60% under to 50% over its 200 SMA (28-50% over: power days only; under it: laggards or once it trades back over) |
 | Not launched | No launch in the last 20 sessions (those are followed on the Launches list) |
-| Rebuilt | Every evening at the 4:25 PM scan |
+| Rebuilt | Every evening at the 4:25 PM scan (a 4:30 AM safety run scans the last close if no evening run did) |
 | 5-minute checks | Live prices for all ~3,300 stocks (tables); the launch and laggard rules on the watch list |
 | 1-minute checks | 9:31-12:00 and 3:00-4:00: the watch list plus Launches, Launch laggards and the 50 EMA undercut list |
 
