@@ -3504,7 +3504,10 @@ defCalc('industry_perf', {
     const LAUNCHK = ['launch', 'catalyst', 'stars', 'reversal', 'laggard'];
     const launchNow = (sym) => LAUNCHK.some((k) => LNOW.has(sym + ':' + k));
     const trigs = log.filter((x) => x.startsWith('🔔 ')), symK = (x) => lineKey(x).split(':')[0];
-    const upSyms = new Set(trigs.filter((x) => boxOf0(x) === 'e' && !lostOf(lineKey(x))).map(symK));          /* in ⚡ now */
+    /* in ⚡ now: only a power day / EP the latest check found holding hides the stock's launch lines (no check yet today,
+       e.g. a record from before Nov 6: nothing is hidden; Nov 5 night EWTX's and WRBY's catalyst gaps vanished from 🚀) */
+    const HELD = new Set(((SRVd && SRVd.hold && SRVd.hold.keys) || []).concat(loadDay('pnow', '[]')));
+    const upSyms = new Set(trigs.filter((x) => boxOf0(x) === 'e' && HELD.has(lineKey(x))).map(symK));
     const lSyms = new Set(trigs.filter((x) => boxOf0(x) === 'l' && !lostOf(lineKey(x))).map(symK));           /* in 🚀 now */
     const downOne = new Map();                                    /* one stepped-down ⚡ line per stock: the newest */
     trigs.filter((x) => boxOf0(x) === 'e' && lostOf(lineKey(x))).forEach((x) => { if (!downOne.has(symK(x))) downOne.set(symK(x), x); });
