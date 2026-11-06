@@ -45,6 +45,18 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## One line per alert, one open all day, trend on the line, code catalyst (TEST ONLY Nov 5 2026 evening, branch test/epfix)
+
+- EPAM Nov 5: its power day showed twice (the page's 2:55 PM line, saved by the old version in 🚀, and the job's 9:35 AM in
+  ⚡) with different gaps. runAlerts skips an alert GitHub's job already sent (jobKeys); drawAlog matches a saved line
+  without a key by ticker + first words (sigOf) and keeps the earlier; a POWER DAY line is always in ⚡.
+- The gaps: fill_opens takes a mover's open from the first 1-minute bar (Yahoo's quote has none for NYSE stocks for ~10
+  min) and keeps it in /tmp/radar/out/opens.json, which a fresh job after the noon handover didn't have: it took Yahoo's
+  quote open ($156.19 vs $157.71). day.py publishes opens.json with live.json and load_opens() restores today's.
+- The strength line adds the Trend label (trendOf: "Trend Up 16d"); the opened alert drops the theme / rank / RS / group
+  bullets it repeats.
+- The Pre-market table's Catalyst and Reason: the code grader's "(code)" when Claude didn't grade the stock.
+
 ## RS + group on every alert; end-of-day held / didn't hold; ★★★ everywhere; search filters boxes (LIVE Nov 5 2026 ~5 PM, the user's "go live"; branch test/eodholds)
 
 - Every box line: "RS 88 · ★ Top Software #2/214" (strengthParts: launch.json group_rank.rs + grBest; ★ Top = top 3% of

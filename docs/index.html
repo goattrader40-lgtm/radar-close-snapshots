@@ -1965,7 +1965,10 @@ defCalc('industry_perf', {
       tr.append(key, gd, cgCell(r), starCell(r.stx), grStockCell(r.gr, r.symbol, true), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), pctCell(r.gap_pct, 0), h('td', 'num', fVol(r.pm_volume)), h('td', 'num', fDv(r.pm_dvol_m)),
         h('td', 'num c3', r.pm_vol_pct_adv === null || r.pm_vol_pct_adv === undefined ? '—' : g1.format(num(r.pm_vol_pct_adv)) + '%'),
         h('td', 'num c3', r.gap_x_adr === null || r.gap_x_adr === undefined ? '—' : num(r.gap_x_adr).toFixed(2) + '×'),
-        h('td', '', r.catalyst || ''), h('td', '', r.inflection || ''), h('td', 'num', r.inflection_score === null || r.inflection_score === undefined || r.inflection_score === '' ? '—' : String(r.inflection_score)), h('td', 'name', r.reason || ''), h('td', 'c2 tgr-flags', r.flags || ''),
+        /* Catalyst and Reason: Claude's, else the code grader's (the user, Nov 5 2026: "the catalyst column should have something") */
+        (() => { const td = h('td', '', r.catalyst || (r.cg && r.cg.catalyst) || ''); if (!r.catalyst && r.cg && r.cg.catalyst) td.append(h('span', 'tgr-lbl', ' (code)')); return td; })(),
+        h('td', '', r.inflection || ''), h('td', 'num', r.inflection_score === null || r.inflection_score === undefined || r.inflection_score === '' ? '—' : String(r.inflection_score)),
+        (() => { const td = h('td', 'name', r.reason || (r.cg && r.cg.reason) || ''); if (!r.reason && r.cg && r.cg.reason) td.append(h('span', 'tgr-lbl', ' (code)')); return td; })(), h('td', 'c2 tgr-flags', r.flags || ''),
         chipCell(r.themes, 'theme', 'c2'), h('td', 'num c3', fCap(r.mcap_b)),
         h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null || r.vs_200 === undefined ? '—' : (num(r.vs_200) > 0 ? '+' : '') + num(r.vs_200).toFixed(1) + '%'),
         h('td', 'num c2 ' + tone(r.vs_50e), r.vs_50e === null || r.vs_50e === undefined ? '—' : (num(r.vs_50e) > 0 ? '+' : '') + num(r.vs_50e).toFixed(1) + '%'), sx);

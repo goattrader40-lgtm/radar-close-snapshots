@@ -109,12 +109,15 @@ def live_once():
     if vp:
         open(os.path.join(OUT, "base_volprofile.json"), "w").write(vp)
         extra += ["--profile", os.path.join(OUT, "base_volprofile.json"), "--sipcal", os.path.join(OUT, "sipcal.json")]
+    load_opens()
     r = sh(sys.executable, os.path.join(HERE, "live.py"), os.path.join(OUT, "base_stocks.json"),
            os.path.join(OUT, "base_themes.json"), os.path.join(OUT, "live.json"), "--force", *extra, check=False)
     log("live:", (r.stdout or r.stderr).strip()[-300:])
     if r.returncode:
         return False
     files = [os.path.join(OUT, "live.json")]
+    if os.path.exists(os.path.join(OUT, "opens.json")):
+        files.append(os.path.join(OUT, "opens.json"))      # the day's opens, for a fresh job after the handover
     # phone alerts: launches and breakouts as they happen (radar/alerts.py; sent when NTFY_TOPIC is set)
     lj = main_file("setups/launch.json")
     if lj:
@@ -146,6 +149,24 @@ def load_alert_state():
     st = data_file("alerts.json")
     if st:
         open(p, "w").write(st)
+
+
+def load_opens():
+    """the day's opens (radar/live.py fill_opens: the movers' opens from the first 1-minute bar, kept for the day): this
+    job's own copy, else the radar-data branch's. A fresh job after the noon handover started with none and took Yahoo's
+    quote open instead (EPAM Nov 5 2026: gap +14.9% in the 9:35 alerts, +13.7% in the afternoon's): one open all day"""
+    p = os.path.join(OUT, "opens.json")
+    try:
+        if json.load(open(p)).get("date") == now().date().isoformat():
+            return
+    except Exception:
+        pass
+    st = data_file("opens.json")
+    try:
+        if st and json.loads(st).get("date") == now().date().isoformat():
+            open(p, "w").write(st)
+    except Exception:
+        pass
 
 
 def load_history():
@@ -184,6 +205,7 @@ def fast_once():
     if not all(os.path.exists(f) for f in need):
         return                                        # the first live update writes these
     out = os.path.join(OUT, "live_fast.json")
+    load_opens()
     r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, check=False)
     if r.returncode:
         log("fast:", (r.stderr or r.stdout).strip()[-300:])
