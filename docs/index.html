@@ -2251,7 +2251,7 @@ defCalc('industry_perf', {
         if (n.why) nc.append(h('div', 'tgr-lbl pml-why', n.why));
         nc.title = [(n.by === 'code' ? 'Code grader' : 'Claude (8:45 grading)') + ': ' + (n.cat || ''), n.why, n.flags ? 'Flags: ' + n.flags : '',
           n.dropped ? 'Not on the graded list: ' + n.dropped + ' (news only, no grade)' : ''].filter(Boolean).join('\n');
-      } else nc.append(h('span', 'tgr-lbl', Math.abs(num(r.pm_chg) || 0) < 5 ? '' : cgOn ? '—' : 'after 8:52'));
+      } else nc.append(h('span', 'tgr-lbl', Math.abs(num(r.pm_chg) || 0) < 5 ? '' : CGR && PML && CGR.day === PML.date ? '—' : 'after 8:52'));
       tr.append(key, nc, h('td', 'num', fPrice(r.pm_last)), c(r.pm_chg), c(r.pm_gap, 'c3'), h('td', 'num', fVol(r.pm_vol)),
         h('td', 'num c3', g2.format(r.pm_dvol_m)), h('td', 'num c3', r.pm_pct_adv === null ? '—' : g1.format(r.pm_pct_adv) + '%'),
         h('td', 'num c3', r.gap_x_adr === null ? '—' : r.gap_x_adr.toFixed(2) + '×'), h('td', 'num c2', fPrice(r.price)), c(r.chg_1d, 'c2'),

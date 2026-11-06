@@ -87,6 +87,11 @@ alone.
 - **Live**: merged to main Nov 6 ~3:50 PM ET; the first full run is the next trading day's 8:52 AM code run (codegrade.yml
   with the Alpaca keys). Nov 6's live codegrade.json stays the morning's (the user didn't ask to load the test run), so
   that day's News column only has the 15 graded stocks. Launches not rebuilt: no launch / scanner code touched.
+  **Broke the scanner for ~15 min on Nov 6 (fixed ~4:05 PM)**: the News cell used `cgOn` (defined only in pmRows), so a
+  5%+ row without news threw and the Pre-market scanner showed no rows at all (the user's screenshot: "71 stocks pass",
+  empty table). The tests had missed it because every 5%+ row had news in the test file. Now checked with the live
+  codegrade.json (no "news" key) and with none, on the user's settings, the defaults, gap downs and Reset: rows draw, no
+  page errors. Lesson: test a page change with the real live data files too, not only the new ones.
   **Check on the first live morning**: the 8:52 run's log ("headlines: N for M of K stocks", "news: out of time" must
   not appear), the News column for the 5%+ gappers, and that FLY-type press releases show as "(headline)".
 - Tested: dry run with SEC / Yahoo stubbed (this container can't reach them) + the page in Chromium with Nov 6's data;
