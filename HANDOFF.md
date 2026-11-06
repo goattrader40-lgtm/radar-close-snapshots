@@ -45,7 +45,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Pre-market: the news for every 5%+ gapper (TEST ONLY, branch test/pmnews, Nov 6 2026 afternoon; waiting for "go live")
+## Pre-market: the news for every 5%+ gapper (LIVE Nov 6 2026 ~3:50 PM ET, the user's "go live"; branch test/pmnews)
 
 - **Why** (the user, Nov 6: "why today in premarket gaps so companies news not there"; "i want to see any gappers above
   5% their news.. example $FLY wasnt there"; agreed to fixes A, B, C): the news came only from Claude's 8:45 list and the
@@ -84,6 +84,11 @@ alone.
   "After earnings (Nov 5)", news C (also when the only filings since are routine: VCEL's Form 144, GRAL's 10-Q).
   Nov 6: VCEL (reported Nov 5 7 AM, +13.9% that day; the code had it as A news -> code grade B, now C: the only one of
   the 15 code grades that changes) and ACMR. Claude's 8:45 grade also took VCEL's Nov 5 report as Nov 6 news (A).
+- **Live**: merged to main Nov 6 ~3:50 PM ET; the first full run is the next trading day's 8:52 AM code run (codegrade.yml
+  with the Alpaca keys). Nov 6's live codegrade.json stays the morning's (the user didn't ask to load the test run), so
+  that day's News column only has the 15 graded stocks. Launches not rebuilt: no launch / scanner code touched.
+  **Check on the first live morning**: the 8:52 run's log ("headlines: N for M of K stocks", "news: out of time" must
+  not appear), the News column for the 5%+ gappers, and that FLY-type press releases show as "(headline)".
 - Tested: dry run with SEC / Yahoo stubbed (this container can't reach them) + the page in Chromium with Nov 6's data;
   the real run: radar-tools `codelive 2026-11-06T09:18` on test/pmnews -> radar-data codegrade_test.json (239 gappers,
   15 graded + 224 news only, ~40 s of SEC reads; 149 sector moves, 6 after earnings, 14 no company news). Rules sheet:
