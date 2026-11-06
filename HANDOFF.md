@@ -45,6 +45,28 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Pre-market news at 8:05 and 8:35 too (LIVE Nov 6 2026 evening, the user's "go live"; branch test/pmearly)
+
+- The user (Nov 6): news at "805, 835 and 905" ("as long as gappers info is updated and news is pulled at 805 then 835
+  and 905 i should be ok"; "no need for every 5 min news"). 9:05 was already there (the code runs 8:45-9:20).
+- **8:05 / 8:35**: radar/day.py starts codegrade.yml at 8:05 and 8:35 (news_started, like the 8:45 code runs; a job
+  that starts later starts it once, for the latest slot); GitHub's schedule ("5,35 12" EDT / "5,35 13" EST) is the
+  backup, only 8:00-8:44 ET (a late backup doesn't become a grading run; the grading backups 8:52 / 9:05 / 9:18 run as
+  before; an earlier draft would have run news at 8:18 in winter through the "5,18 13,14" line: fixed before going live).
+- codegrade.yml started before 8:45 = news only: `codegrade.py news` (live(grade=False): every 5%+ gapper's news, no
+  grades) -> radar-data **pmnews.json**; codegrade.json and its 8:45-9:25 code-grade pop-ups are untouched (grades
+  written at 8:05 would have gone into the pop-up snapshot quietly and taken the 8:45 "grades are in" pop-up away).
+- premarket_build.py prepare: when premarket/latest.json is still yesterday's (before the 8:25 scan), the 5-minute live
+  scan alone (premarket_live.json): the 8:05 gappers are current. The normal 8:45 case is byte-identical.
+- The page: the News column takes the code grader's news (codegrade.json, from 8:45), else pmnews.json's (8:05 / 8:35)
+  for the day; "after 8:05" before the first run. The Graded gappers table and its code grades don't read pmnews.json.
+- An every-5-minutes version (a news run after each live scan) was built by mistake and reverted: the user didn't ask.
+- Tested: radar-tools `pmnews 2026-11-06T08:05` (-> pmnews_test.json: 239 gappers, FLY's 7:31 AM AST headline in,
+  EXTR's 9:03 AM one not yet); the run decisions for every cron line in EDT and EST and the day job's starts
+  (simulated); the page at 7:30 (no file: "after 8:05"), 8:10 (pmnews only) and now (codegrade.json), no page errors.
+  **Not testable before Monday**: the real 8:05 / 8:35 starts. Check Monday: the day job's log ("started
+  codegrade.yml" at 8:05 / 8:35), the runs' "pre-market news" commits on radar-data, the News column at ~8:07.
+
 ## Pre-market: the news for every 5%+ gapper (LIVE Nov 6 2026 ~3:50 PM ET, the user's "go live"; branch test/pmnews)
 
 - **Why** (the user, Nov 6: "why today in premarket gaps so companies news not there"; "i want to see any gappers above

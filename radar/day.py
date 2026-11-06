@@ -365,6 +365,7 @@ def day():
         except Exception as e:
             log("volume curves failed:", e)
     pm_started, snap_started, last_live, last_pm, cg_started = set(), None, None, None, set()
+    news_started = set()
     while True:
         t = now()
         if time.monotonic() - T0 > BUDGET:
@@ -392,6 +393,14 @@ def day():
         due = [slot for slot in ((8, 45), (8, 55), (9, 0), (9, 10), (9, 20)) if slot <= hm(t) < (9, 30)]
         if due and due[-1] not in cg_started:
             cg_started.update(due)
+            dispatch("codegrade.yml")
+        # the news at 8:05 and 8:35 (the user, Nov 6 2026: "805, 835 and 905"), right after that update's pre-market
+        # prices: codegrade.yml started before 8:45 runs in its news mode (every 5%+ gapper's news -> pmnews.json, no
+        # grades, so the 8:45-9:25 code-grade pop-ups don't change); 9:05's news comes with the code runs above. GitHub's
+        # own schedule for it (8:05 / 8:35) stays as a backup. A job that starts later starts it once, for the latest slot.
+        due = [slot for slot in ((8, 5), (8, 35)) if slot <= hm(t) < (8, 45)]
+        if due and due[-1] not in news_started:
+            news_started.update(due)
             dispatch("codegrade.yml")
         # live prices every 5 minutes, 9:30-4:10
         if (9, 30) <= hm(t) <= (16, 10):

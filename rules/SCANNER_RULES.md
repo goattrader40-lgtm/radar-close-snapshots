@@ -212,7 +212,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Above 50-day EMA | off |
 | Above prev-day high | off (tick it to keep only stocks whose pre-market price is over yesterday's regular-hours high) (the user, Nov 6 2026) |
 | Updates | Every 5 minutes, 7:00-9:29 AM ET |
-| News column | Why it gaps, for every 5%+ gapper: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's (code), from about 8:52 AM ET (refreshed ~9:05 / 9:18); 2 lines, hover for all, 📰 = the source (the user, Nov 6 2026) |
+| News column | Why it gaps, for every 5%+ gapper: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's (code): news-only runs at 8:05 and 8:35 AM ET, then the code runs at 8:45, 8:55, 9:00, 9:10 and 9:20; 'after 8:05' before the first; 2 lines, hover for all, 📰 = the source (the user, Nov 6 2026: '805, 835 and 905') |
 
 ## Gainers filter
 

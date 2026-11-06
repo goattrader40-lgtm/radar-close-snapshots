@@ -1,15 +1,17 @@
 # The code grader (radar/codegrade.py): the pre-market gappers graded from SEC filings and the 50 / 200 chart, no
 # Claude, shown next to Claude's grade on the Pre-market tab for 1-2 weeks (the user's plan, Nov 4 2026).
-# Runs about 8:52, 9:05 and 9:18 AM ET on weekdays (and 8:05 / 8:35 for the news only, pmnews.json) (each run re-grades with fresher pre-market prices; the
+# Runs about 8:52, 9:05 and 9:18 AM ET on weekdays (each run re-grades with fresher pre-market prices; the
 # filings counted are those accepted from the last close up to the run, so nothing after the open).
 name: Code grader
 
 on:
   schedule:
     - cron: "52 12,13 * * 1-5"     # 8:52 AM ET (EDT / EST)
-    - cron: "5,18 13,14 * * 1-5"   # 9:05 / 9:18 AM ET (13:05 UTC is also 8:05 AM EST: the news run)
-    - cron: "5,35 12 * * 1-5"      # 8:05 / 8:35 AM EDT: the news runs (the user, Nov 6 2026: "805 835 905")
-    - cron: "35 13 * * 1-5"        # 8:35 AM EST
+    - cron: "5,18 13,14 * * 1-5"   # 9:05 / 9:18 AM ET
+    # the news runs at 8:05 / 8:35 ET (the user, Nov 6 2026: "805, 835 and 905"; the Radar day job starts them on time,
+    # these are the backup): only 8:00-8:44 ET runs, so each line fires in one season (EDT 12 UTC, EST 13 UTC)
+    - cron: "5,35 12 * * 1-5"
+    - cron: "5,35 13 * * 1-5"
   workflow_dispatch:
 
 permissions:
@@ -30,12 +32,20 @@ jobs:
           python-version: "3.12"
       - name: Grade
         env:
+          SCHED: ${{ github.event.schedule }}
           SEC_UA: ${{ secrets.SEC_UA }}
           ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}     # headlines (Alpaca's news API) for the gappers the SEC has nothing on
           ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
         run: |
           H=$(TZ=America/New_York date +%H); M=$(TZ=America/New_York date +%M); T=$((10#$H * 60 + 10#$M))
-          if [ "$GITHUB_EVENT_NAME" = "schedule" ] && { [ $T -lt 480 ] || [ $T -gt 569 ]; }; then echo "outside 8:00-9:29 ET: nothing to do"; exit 0; fi
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+            case "$SCHED" in
+              "5,35 12 * * 1-5"|"5,35 13 * * 1-5")    # the news backups: 8:00-8:44 ET only (a late one doesn't become a grading run)
+                if [ $T -lt 480 ] || [ $T -ge 525 ]; then echo "news backup outside 8:00-8:44 ET: nothing to do"; exit 0; fi;;
+              *)                                       # the grading backups: as before
+                if [ $T -lt 525 ] || [ $T -gt 569 ]; then echo "outside 8:45-9:29 ET: nothing to do"; exit 0; fi;;
+            esac
+          fi
           git config user.name "radar-bot"; git config user.email "radar-bot@users.noreply.github.com"
           git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
           mkdir -p /tmp/rd /tmp/pm
