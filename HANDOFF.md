@@ -45,6 +45,34 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Pre-market: the news for every 5%+ gapper (TEST ONLY, branch test/pmnews, Nov 6 2026 afternoon; waiting for "go live")
+
+- **Why** (the user, Nov 6: "why today in premarket gaps so companies news not there"; "i want to see any gappers above
+  5% their news.. example $FLY wasnt there"; agreed to fixes A, B, C): the news came only from Claude's 8:45 list and the
+  code grader, both fed by premarket_build.py prepare, which drops gap-ups under the 50 EMA and stocks under 30% over the
+  52-week low (and the liquidity rules). Nov 6 had ~60 chip / AI-hardware names up 5-20% after a -10 to -22% day: 21 of the
+  23 on the user's 10%+ screen were under their 50 EMA, so no reason anywhere. FLY +12.7%: 18% over its 52-week low.
+- **A (news for all)**: prepare also writes gappers.json (every 5%+ gapper, up or down, before the rules, with the rule
+  that dropped it: "dropped"); codegrade.py live gives each one not on the list the same news lookup (news_of(): SEC
+  filings since the last close + the Earnings tab), no grade, under a new "news" key in codegrade.json (CGR.rows is
+  untouched, so the code-grade pop-ups don't see these). Budget 480 s (NEWS_BUDGET), biggest gaps first. Nov 6: 239
+  gappers, 15 on the list, 224 news only.
+- **B (sector move)**: no filing since the close while 3+ stocks of its theme (else its industry) gap 5%+ the same way ->
+  catalyst "Sector move: <theme>", reason "N <theme> stocks gapping up 5%+ (the biggest by market cap); with their own
+  news: ...; no SEC filing or company release since the last close". News grade stays C. Graded rows too (EXTR Nov 6:
+  "Sector move: AI Networking"). FLY Nov 6: "Sector move: Space, 7 Space stocks (SPCX, RKLB, VSAT, LUNR, RDW, VOYG)".
+- **C (scanner News column)**: the Pre-market scanner's 2nd column: Claude's catalyst + reason when the 8:45 grading
+  covered it today, else the code's "(code)" (rows, then news); reason in 2 lines, hover for all + the rule that kept it
+  off the list, 📰 = the first source; "after 8:52" before the first code run; sortable.
+- **Also on the branch (found while building, flagged to the user)**: an Earnings-tab report from before the last close
+  (date before it, or that day before the open) no longer counts as today's earnings news; with no new filing it reads
+  "After earnings (Nov 5)", news C. Nov 6: VCEL (reported Nov 5 7 AM, +13.9% that day; the code had it as A news -> B)
+  and ACMR. Claude's 8:45 grade also took VCEL's Nov 5 report as Nov 6 news (A).
+- Tested: dry run with SEC / Yahoo stubbed (this container can't reach them) + the page in Chromium with Nov 6's data;
+  the real run: radar-tools `codelive 2026-11-06T09:18` on test/pmnews -> radar-data codegrade_test.json. Rules sheet:
+  P1 "News for every 5%+ gapper", P3 "News column". No scanner / launch / alert rule touched (no regress needed),
+  except the code grade of a day-2 earnings gapper (above).
+
 ## Pre-market scanner: "Above prev-day high" filter + vs PDH column (LIVE Nov 6 2026 afternoon, the user's "go live"; branch test/pmpdh)
 
 - The user (Nov 6): "add premarket price above previous day high filter" / "pre above pdh".
