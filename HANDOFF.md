@@ -57,19 +57,24 @@ alone.
   filings since the last close + the Earnings tab), no grade, under a new "news" key in codegrade.json (CGR.rows is
   untouched, so the code-grade pop-ups don't see these). Budget 480 s (NEWS_BUDGET), biggest gaps first. Nov 6: 239
   gappers, 15 on the list, 224 news only.
-- **B (sector move)**: no filing since the close while 3+ stocks of its theme (else its industry) gap 5%+ the same way ->
-  catalyst "Sector move: <theme>", reason "N <theme> stocks gapping up 5%+ (the biggest by market cap); with their own
-  news: ...; no SEC filing or company release since the last close". News grade stays C. Graded rows too (EXTR Nov 6:
-  "Sector move: AI Networking"). FLY Nov 6: "Sector move: Space, 7 Space stocks (SPCX, RKLB, VSAT, LUNR, RDW, VOYG)".
+- **B (sector move)**: no news of its own today (none; only routine filings: Form 3/4/5, 144, 13G, 10-Q, S-8...;
+  earnings from before the last close; a board change on a gap-up: news C) while 3+ stocks of its theme gap 5%+ the same
+  way (its industry only for a stock with nothing at all) -> catalyst "Sector move: <theme>", reason "N <theme> stocks
+  gapping up 5%+ (the biggest by market cap); with their own news: ...; then its own item". News grade stays C. Graded
+  rows too (EXTR Nov 6: "Sector move: AI Networking"). Nov 6: FLY "Space, 7 stocks (SPCX, RKLB, VSAT, LUNR, RDW, VOYG)";
+  BE "Electrical Equipment, 18 ... only routine filings (4)"; AMD "AI Chips & CPUs ... its own: After earnings (Nov 3)";
+  MU "Memory & Storage ... its own: a board retirement". Reasons from a release skip the SEC exhibit header (tidy()).
 - **C (scanner News column)**: the Pre-market scanner's 2nd column: Claude's catalyst + reason when the 8:45 grading
   covered it today, else the code's "(code)" (rows, then news); reason in 2 lines, hover for all + the rule that kept it
   off the list, 📰 = the first source; "after 8:52" before the first code run; sortable.
 - **Also on the branch (found while building, flagged to the user)**: an Earnings-tab report from before the last close
   (date before it, or that day before the open) no longer counts as today's earnings news; with no new filing it reads
-  "After earnings (Nov 5)", news C. Nov 6: VCEL (reported Nov 5 7 AM, +13.9% that day; the code had it as A news -> B)
-  and ACMR. Claude's 8:45 grade also took VCEL's Nov 5 report as Nov 6 news (A).
+  "After earnings (Nov 5)", news C (also when the only filings since are routine: VCEL's Form 144, GRAL's 10-Q).
+  Nov 6: VCEL (reported Nov 5 7 AM, +13.9% that day; the code had it as A news -> code grade B, now C: the only one of
+  the 15 code grades that changes) and ACMR. Claude's 8:45 grade also took VCEL's Nov 5 report as Nov 6 news (A).
 - Tested: dry run with SEC / Yahoo stubbed (this container can't reach them) + the page in Chromium with Nov 6's data;
-  the real run: radar-tools `codelive 2026-11-06T09:18` on test/pmnews -> radar-data codegrade_test.json. Rules sheet:
+  the real run: radar-tools `codelive 2026-11-06T09:18` on test/pmnews -> radar-data codegrade_test.json (239 gappers,
+  15 graded + 224 news only, ~40 s of SEC reads; 149 sector moves, 6 after earnings, 14 no company news). Rules sheet:
   P1 "News for every 5%+ gapper", P3 "News column". No scanner / launch / alert rule touched (no regress needed),
   except the code grade of a day-2 earnings gapper (above).
 
