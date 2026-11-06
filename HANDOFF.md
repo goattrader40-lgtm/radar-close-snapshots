@@ -45,7 +45,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Power day / EP alerts must open over the 21-day closing high (LIVE Nov 5 2026 ~8:40 PM ET, the user's "go live"; branch test/epopen)
+## Power day / EP alerts must open over the 21-day closing high (LIVE Nov 5 2026 ~8:25 PM ET, the user's "go live"; branch test/epopen)
 
 - **Why** (the user, Nov 5 evening: "the whole point is to gap up above it, meaning the opening price has to be above the
   21-day highest closing price to be eligible for an episodic pivot"; "it applies to both of them", the EP and the power
