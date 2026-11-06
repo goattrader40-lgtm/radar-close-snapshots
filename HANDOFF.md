@@ -45,7 +45,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## One line per alert, one open all day, trend on the line, code catalyst (TEST ONLY Nov 5 2026 evening, branch test/epfix)
+## One line per alert, one open all day, trend on the line, code catalyst (LIVE Nov 5 2026 evening, the user's "go live"; branch test/epfix)
 
 - EPAM Nov 5: its power day showed twice (the page's 2:55 PM line, saved by the old version in 🚀, and the job's 9:35 AM in
   ⚡) with different gaps. runAlerts skips an alert GitHub's job already sent (jobKeys); drawAlog matches a saved line
