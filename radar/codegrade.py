@@ -705,6 +705,11 @@ RANK = ["Takeover / sale talk", "FDA / trial", "Offering", "Deal / contract", "B
         "Analyst downgrade", "In the news", "Analyst note"]
 WHY = re.compile(r"what'?s (?:going on|happening)|why is|here'?s why|trading (?:higher|lower)|shares (?:rise|jump|surge|soar|climb|rebound|fall|drop|slide|sink|tumble)|"
                  r"stock is (?:surging|soaring|rising|gaining|falling|sliding)|(?:rebounds?|rall(?:y|ies)|jumps?|surges?|soars?) (?:\d|after|on)", re.I)
+NOISE = re.compile(r"inducement|equity awards? to|announces? (?:the )?(?:date|dates|timing)\b|release date|(?:conference|earnings) call\b|webcast|"
+                   r"to (?:participate|host|ring)\b|investor (?:conference|day)|annual (?:general )?meeting|declares? (?:a |its )?(?:quarterly |regular )?dividend",
+                   re.I)                                # notices, not news (OCUL Nov 6: inducement awards; ACCV / KOPN: a results date)
+OPINION = re.compile(r"ahead of (?:its |the )?(?:q\d )?earnings|into earnings|before earnings|earnings preview|is it a buy|should you buy|"
+                     r"buy the dip|stocks? to buy|worth buying|time to buy", re.I)   # a view, not an event (NVDA Nov 6: "Ahead of Earnings: Is It a Buy?")
 MINOR = ("In the news", "Analyst note")                 # the stock's own, but no event: a sector move stays the label
 SUFFIX = re.compile(r"\b(?:inc|incorporated|corp|corporation|co|company|ltd|limited|plc|holdings?|group|n\.?v|s\.?a|se|ag|the|class [a-c])\b\.?", re.I)
 GENERIC = {"american", "first", "general", "united", "national", "global", "international", "applied", "advanced", "new", "digital",
@@ -754,9 +759,9 @@ def best_headline(sym, name, arts):
     got = []
     for n in arts:
         t = (n.get("headline") or "").strip()
-        if not t or LIST_ART.search(t) or not mentions(t, sym, name):
+        if not t or LIST_ART.search(t) or NOISE.search(t) or not mentions(t, sym, name):
             continue
-        kind = next((k for k, rx in KINDS if re.search(rx, t, re.I)), "In the news")
+        kind = "In the news" if OPINION.search(t) else next((k for k, rx in KINDS if re.search(rx, t, re.I)), "In the news")
         got.append((RANK.index(kind), n.get("created_at") or "", kind, t, n))
     if not got:
         return None
