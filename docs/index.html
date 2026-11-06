@@ -1526,7 +1526,7 @@ defCalc('industry_perf', {
   const EOD_KINDS = new Set(['power', 'catalyst', 'launch', 'stars', 'reversal', 'ep', 'breakout', 'confirm', 'basebreak', 'gapbase', 'gob1', 'gob5',
     'pop', 's3', 'trend', 'retest', 'push', 'reclaimbo2', 'ema21', 'ema21bl', 'ema50']);
   const EOD_PB = new Set(['retest', 'push', 'ema21', 'ema21bl', 'reclaimbo2']);     /* the pullback entries (★★★) */
-  const EOD_NAME = { gob1: 'gap out of base, the 1-min entry', gob5: 'gap out of base, the 5-min entry', gapbase: 'gap out of base', ep: 'episodic pivot',
+  const EOD_NAME = { gob1: '1-min entry (stop)', gob5: '5-min entry (stop)', gapbase: 'gap out of base', ep: 'episodic pivot',
     breakout: 'breakout', s3: '3-SETUPS trigger', trend: 'TREND trigger', basebreak: 'base high cleared', confirm: 'breakout confirmed', retest: 'retest holding',
     push: 'push', reclaimbo2: 'breakout undercut & reclaim', ema21: '21 EMA undercut & reclaim', ema21bl: '21 EMA retest + breakout level',
     ema50: '50 EMA undercut & reclaim', pop: 'pop', power: 'power day', catalyst: 'catalyst gap', launch: 'launch', stars: '★ launching', reversal: 'reversal launch' };
@@ -1540,8 +1540,7 @@ defCalc('industry_perf', {
     if (kind === 'breakout' || kind === 's3' || kind === 'trend') return at(new RegExp('over (?:the (?:base top|buy point) )?' + P));
     if (kind === 'confirm') return at(new RegExp('above the base top ' + P));
     if (kind === 'gapbase') return at(new RegExp('over its base high ' + P));
-    if (kind === 'gob1') return at(new RegExp('over the 1-minute opening range high ' + P));
-    if (kind === 'gob5') return at(new RegExp('over the 5-minute opening range high ' + P));
+    if (kind === 'gob1' || kind === 'gob5') return at(new RegExp('stop ' + P));      /* the entry holds while over its stop, the range's low */
     if (kind === 'basebreak') return at(new RegExp('base high ' + P + ' cleared'));
     if (kind === 'push') return at(new RegExp('over the trigger ' + P));
     if (kind === 'retest' || kind === 'reclaimbo2') return at(new RegExp('breakout level ' + P));
@@ -1550,6 +1549,15 @@ defCalc('industry_perf', {
     if (kind === 'ema50') return at(new RegExp('50 EMA ' + P));
     if (kind === 'basehigh') return at(new RegExp('base high ' + P));
     return null;
+  };
+  /* GitHub's job's verdict at the close for one of its triggers (its last check at or after 3:58 PM): { ok, lost }, else null */
+  const eodJob = (key) => {
+    const S0 = SRV && SRV.date === todayNY() ? SRV : null;
+    if (!S0 || !S0.hold || String(S0.hold.at) < '15:58' || !(S0.items || []).some((it) => it.key === key)) return null;
+    const l = (S0.lost || {})[key];
+    if (!l) return { ok: true, lost: null };
+    const [H, M] = String(l.at).split(':').map(Number);
+    return { ok: false, lost: { at: ((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), price: l.price } };
   };
   const eodList = (ldoc, entries) => {
     if (!ldoc || ldoc.date !== todayNY()) return { held: [], lost: [] };
@@ -1579,7 +1587,10 @@ defCalc('industry_perf', {
       kinds.forEach((text, kind) => {
         const name = EOD_NAME[kind] || kind;
         if (EOD_LAUNCH.has(kind) || kind === 'ep') {
-          const L = launched.get(sym);
+          const L = launched.get(sym), jh0 = eodJob(sym + ':' + kind);
+          /* GitHub's job checked it at the close by its own rule (the boxes' verdict): that decides */
+          if (jh0) { parts.push({ ok: jh0.ok, kind, txt: name + (jh0.ok ? ': still meets its rule at the close' : ': stopped meeting its rule ' + jh0.lost.at + (jh0.lost.price ? ' (' + fPrice(jh0.lost.price) + ')' : ''))
+            + (L ? ' · the 4:40 PM scan: a launch day (' + L.grade + (L.power ? ', power day' : '') + ')' : '') }); return; }
           if (L) { parts.push({ ok: true, kind, txt: name + ': closed as a launch day (' + L.grade + (L.power ? ', power day' : '') + (L.reversal ? ', reversal' : '') + (L.faded ? ', faded' : '') + ')' }); return; }
           const pv = kind === 'ep' ? eodLevel('ep', text) : null;
           if (pv && close > pv) { parts.push({ ok: true, kind, txt: name + ': over its 1-month high ' + fPrice(pv) + ' (' + f1(100 * (close / pv - 1)) + '), not a launch day at the close' }); return; }
@@ -1604,6 +1615,9 @@ defCalc('industry_perf', {
           const e21 = num(r && r.ema21);
           if (e21) { ok = over && close > e21; txt += ', ' + (close > e21 ? 'over' : 'under') + ' the 21 EMA ' + fPrice(e21); }
         }
+        /* GitHub's job checked it at the close by its whole rule (the boxes' verdict): that decides (Nov 5 2026) */
+        const jh = eodJob(sym + ':' + kind);
+        if (jh) { ok = jh.ok; if (jh.lost) txt += ' · stopped meeting its rule ' + jh.lost.at + (jh.lost.price ? ' (' + fPrice(jh.lost.price) + ')' : ''); }
         if (ok && pct <= 0.5 && /^(breakout|s3|trend|basebreak|confirm)$/.test(kind)) txt += ' (within 0.5%: with caution)';
         parts.push({ ok, kind, txt });
       });
@@ -3256,6 +3270,22 @@ defCalc('industry_perf', {
         if (String(it.key).startsWith('summary:') && it.kind === 'summary') return;      /* its names are in the log line by line */
         log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key, ldocA, launched));
       });
+      /* which of this page's own triggers still hold (the user, Nov 5 2026: a trigger that stops meeting its rule leaves its
+         box, and comes back when it meets it again); GitHub's job publishes the same for its own (alerts.json lost / back):
+         one found again by its rule at this check holds */
+      safe('Holding', () => {
+        const nowK = new Set(found.map(([k]) => k)), plost = loadDay('plost', '{}'), pback = loadDay('pback', '{}'), t = hm();
+        log.forEach((x) => {
+          const i = x.lastIndexOf(TABMARK);
+          if (!x.startsWith('🔔 ') || i < 0) return;
+          const key = x.slice(i + 3), b = x.charAt(i + 2);
+          if (!key || jobKeys.has(key) || !b || !'lepb'.includes(b) || key.startsWith('grp:')) return;
+          const q = LIVE && LIVE.rows ? LIVE.rows[symOf(key)] : null, px = q && q[0] ? Math.round(q[0] * 100) / 100 : null;
+          if (nowK.has(key)) { if (plost[key]) { pback[key] = { at: t, price: px }; delete plost[key]; } }
+          else if (!plost[key]) plost[key] = { at: t, price: px };
+        });
+        saveDay('plost', plost); saveDay('pback', pback);
+      });
       saveDay('sent', [...sent]); saveDay('log', log.slice(0, LOG_MAX)); saveDay('gm', gm);
     }
     /* ⏰ the pre-market grades (the user, Nov 4 2026: "anything changes, I get an alert in a pre-market box"): Claude's (the
@@ -3450,7 +3480,25 @@ defCalc('industry_perf', {
     const marked = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? TABNAME[x.charAt(i + 1)] : null; };
     const tabOf = (x) => (isGrp(x) ? '' : marked(x) || (isWl(x) ? 'Watchlist' : isLag(x) ? 'Launch laggards' : 'Launches'));
     /* a power day is always in the ⚡ box (a line saved before Nov 5 afternoon carries the 🚀 box) */
-    const boxOf = (x) => { const i = x.lastIndexOf(TABMARK), b = i >= 0 ? x.charAt(i + 2) : ''; return b === 'l' && /^[^—]* POWER DAY/.test(x.slice(0, i)) ? 'e' : b; };
+    const boxOf0 = (x) => { const i = x.lastIndexOf(TABMARK), b = i >= 0 ? x.charAt(i + 2) : ''; return b === 'l' && /^[^—]* POWER DAY/.test(x.slice(0, i)) ? 'e' : b; };
+    /* the boxes hold what holds (the user, Nov 5 2026: "whatever doesn't hold, it has to be taken from that box"; "if it
+       didn't fill its requirement to buy, it's a heads-up: in Heads-ups; when it fills it, back to the box it belongs to"):
+       a heads-up in 🚀 ⚡ 🎯 ↩️ (touched the buy point, back over the 50 EMA / the breakout level, the 9:50 volume check, the
+       21 EMA retest alone) shows in 👀; a trigger that no longer meets its own rule at the latest check (GitHub's job:
+       alerts.json lost; this page's own: plost) is in the log only, noted, until it meets it again (back) */
+    const lineKey = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? x.slice(i + 3) : ''; };
+    const SRVd = SRV && SRV.date === todayNY() ? SRV : null;
+    const HOLD = { jk: new Set(((SRVd && SRVd.items) || []).map((it) => it.key)), lost: (SRVd && SRVd.lost) || {}, back: (SRVd && SRVd.back) || {},
+      plost: loadDay('plost', '{}'), pback: loadDay('pback', '{}') };
+    const lostOf = (k) => (HOLD.jk.has(k) ? HOLD.lost[k] : HOLD.plost[k]) || null, backOf = (k) => (HOLD.jk.has(k) ? HOLD.back[k] : HOLD.pback[k]) || null;
+    const boxOf = (x) => { const b = boxOf0(x); if (!b || !'lepb'.includes(b)) return b; if (!x.startsWith('🔔 ')) return 'h'; return lostOf(lineKey(x)) ? '' : b; };
+    const hm12 = (hm) => { const [H, M] = String(hm).split(':').map(Number); return ((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'); };
+    const holdNote = (x) => {
+      if (!x.startsWith('🔔 ') || !'lepb'.includes(boxOf0(x) || 'x')) return '';
+      const k = lineKey(x), l = lostOf(k), bk = backOf(k);
+      return l ? ' · ✗ no longer holding since ' + hm12(l.at) + (l.price ? ' (' + fPrice(l.price) + ')' : '') + ': out of its box'
+        : bk ? ' · ↺ holding again since ' + hm12(bk.at) + (bk.price ? ' (' + fPrice(bk.price) + ')' : '') : '';
+    };
     const parse = (x) => {
       const i = x.lastIndexOf(TABMARK), full = (i >= 0 ? x.slice(0, i) : x).replace(/^🔔 /, '');
       const tm = /^(\d+):(\d\d) (AM|PM)/.exec(full), mn = tm ? (Number(tm[1]) % 12 + (tm[3] === 'PM' ? 12 : 0)) * 60 + Number(tm[2]) : 0;
@@ -3643,7 +3691,7 @@ defCalc('industry_perf', {
     const qq = q.replace(/[^A-Z0-9.\-]/g, ''), qre = new RegExp('· ' + qq.replace(/\./g, '\\.') + '\\b');
     const shown = q ? (qq ? log.filter((x) => (!isGrp(x) && symOfLine(x) === qq) || qre.test(x)) : []) : mine;
     /* the full log: each line opens its stock's chart; a trigger (the bell) is bold with a red dot */
-    shown.forEach((x) => { const o = parse(x); ul.append(lineEl(o, o.full, '', false, 'log')); });
+    shown.forEach((x) => { const o = parse(x); ul.append(lineEl(o, o.full + holdNote(x), '', false, 'log')); });
     /* the boxes, by kind (a line from before the boxes, Nov 5 2026, has no box: the log only) */
     const bx = $('#ln-alert-boxes');
     safe('Boxes', () => {

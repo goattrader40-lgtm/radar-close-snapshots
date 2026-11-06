@@ -730,6 +730,68 @@ def over_low52(sym, live, low):
     return q[0] >= lo * (1 + MIN_OVER_LOW52 / 100)
 
 
+def still_holds(key, title, found_keys, live, doc, memo):
+    """a trigger sent today still meets its own rule at this check (the user, Nov 5 2026: "whatever doesn't hold, it has
+    to be taken from that box"; "whatever the rule is, it's the rule"): find() finds it again on the latest prices (the
+    price, the levels and the volume pace it needs), then the same 1-minute chart tests main() runs before sending it"""
+    sym, kind = key.split(":", 1)
+    if (sym + ":ema21" if kind == "ema21bl" else key) not in found_keys:
+        return False
+    q = (live.get("rows") or {}).get(sym)
+    if not q or not q[0]:
+        return False
+    price, op = q[0], (q[5] if len(q) > 5 else None)
+
+    def got(name, fn):
+        if (name, sym) not in memo:
+            memo[(name, sym)] = fn(sym)
+        return memo[(name, sym)]
+    if kind == "retest":                     # the low in the zone as the pullback's low; over the 10 EMA unless it tested the 21
+        r_, lo_ = row_of(doc, sym), got("lo", chart_low_today)
+        z_ = r_.get("retest_zone") or [0, 0]
+        need_ = min(r_.get("retest_need_low") or 0, 1e9 if r_.get("retest_testing") else (r_.get("retest_low") or 1e9))
+        if not (lo_ and z_[0] <= lo_ <= min(z_[1], need_)):
+            return False
+        e10_, e21_, adr_ = r_.get("ema10") or 0, r_.get("ema21") or 0, r_.get("adr_pct") or 5.0
+        return price > e10_ or lo_ <= e21_ * (1 + adr_ / 400)
+    if kind in ("ema21", "ema21bl", "ema50"):  # the low under the EMA and the open, the price in the upper half of the day
+        r_ = (next((x for x in doc.get("ema50_undercut", []) if x["symbol"] == sym), {}) if kind == "ema50" else row_of(doc, sym))
+        e_ = r_.get("ema50" if kind == "ema50" else "ema21") or 0
+        lo_, hi_ = got("lo", chart_low_today), got("hi", chart_high_today)
+        if not (lo_ and hi_ and op and lo_ < e_ and lo_ < op and price - lo_ >= 0.5 * (hi_ - lo_)):
+            return False
+        return kind != "ema21bl" or bool(confluence_level(r_, price, lo_))
+    if kind == "reversal":                   # in the top half of today's range
+        lo_, hi_ = got("lo", chart_low_today), got("hi", chart_high_today)
+        return bool(lo_ and hi_ and price - lo_ >= 0.5 * (hi_ - lo_))
+    if kind in ("gob1", "gob5"):             # the opening range's high broken, the price over its low (the stop)
+        rg = gob_range(got("bars", gob_bars), 1 if kind == "gob1" else 5)
+        return bool(rg and rg[2] and price > rg[1])
+    return True
+
+
+def update_holding(state, found, live, doc, now):
+    """each run: today's triggers that still hold (state hold: the keys, at this time), the ones that stopped (lost: when
+    and the price) and the ones holding again after that (back); the portal's boxes show only what holds"""
+    found_keys, t, memo = {a[0] for a in found}, f"{now:%H:%M}", {}
+    lost, back, held, seen = state.setdefault("lost", {}), state.setdefault("back", {}), [], set()
+    for it in state.get("items", []):
+        key = it.get("key", "")
+        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "summary:")):
+            continue
+        seen.add(key)
+        q = (live.get("rows") or {}).get(key.split(":")[0])
+        px = round(q[0], 2) if q and q[0] else None
+        if still_holds(key, it.get("title", ""), found_keys, live, doc, memo):
+            held.append(key)
+            if key in lost:
+                back[key] = {"at": t, "price": px}
+                del lost[key]
+        elif key not in lost:
+            lost[key] = {"at": t, "price": px}
+    state["hold"] = {"at": t, "keys": held}
+
+
 def send(topic, title, msg, prio, tvs):
     req = urllib.request.Request(f"https://ntfy.sh/{topic}", data=msg.encode(), method="POST", headers={
         "Title": title.encode("ascii", "replace").decode(), "Priority": prio, "Tags": "chart_with_upwards_trend",
@@ -961,6 +1023,12 @@ def main():
         if key.endswith(":ema21bl"):
             state["sent"].append(key[:-2])
     state["sent"] = sorted(set(state["sent"]))
+    # which of today's triggers still hold (from 9:35, when find() runs): the portal moves the others out of their box
+    if not early:
+        try:
+            update_holding(state, found, live, doc, now)
+        except Exception as e:                      # never at the cost of the alerts
+            print(f"holding not updated: {e!r}", file=sys.stderr)
     json.dump(state, open(state_p, "w"), indent=1)
     print(f"alerts: {len(out_)} new, {len(state['sent'])} today" + ("" if topic else " (no NTFY_TOPIC: logged, not sent)"))
 
