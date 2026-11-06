@@ -63,15 +63,35 @@ alone.
   every agreed example the same. radar-tools `launchdry KO` on the branch: 591 of 591 watch stocks got the number,
   equal to the code grader's (WRBY 26.52, CHYM 30.46, ADMA 11.75, EPAM 143.80, EWTX 40.49). Rules workbook updated.
 
-## Next (agreed, not built; needs the user's "test it"): boxes hold only what still holds
+## Alert boxes hold only what still holds, like a ladder (LIVE Nov 5 2026 ~8:45 PM ET, the user's "go live"; branch test/boxhold)
 
-- The user (Nov 5 evening): a trigger goes into its box (🚀 / ⚡ / 🎯 / ↩️); when it stops meeting its own requirements
-  later in the day (all of them, volume too) it leaves the box (the log keeps it, noted "no longer holding" with the
-  time and price); when it meets them again it comes back. An alert that doesn't meet its buy requirements is a heads-up
-  (👀; "touched its buy point, back under" moves there). What didn't hold goes in the 👥 end-of-day report. **No rule
-  changes**: "whatever the rule is, it's the rule; you're only placing the right triggers in the right boxes" (the
-  retest: tests the breakout / base level and the 10 or 21 EMA, then back over the level, reclaiming that EMA). Idea:
-  each run the job already re-checks every rule on the latest prices; publish which keys still hold, the boxes follow.
+- **The user's rules** (Nov 5 evening): a trigger goes into its box (🚀 / ⚡ / 🎯 / ↩️); when it stops meeting its own
+  requirements later in the day (all of them, volume too) it leaves the box; when it meets them again it comes back. "It's
+  like a ladder": a Launches stock's power day / EP (⚡) that stops meeting its rules steps down to 🚀 Launching now while it
+  still meets a launch's rules, else to 👀; a launch, a pattern breakout (Watchlist or Launches) or a pullback entry that
+  fails steps down to 👀 Heads-ups; at the end of the day what didn't hold goes in the 👥 report of failures. An alert that
+  doesn't meet its buy requirements is a heads-up (👀: touched the buy point, the 9:50 volume check, back over a level, the
+  21 EMA retest alone). **No rule changes**: "whatever the rule is, it's the rule; you're only placing the right triggers in
+  the right boxes" (the retest: tests the breakout / base level and the 10 or 21 EMA, then back over the level, reclaiming
+  that EMA).
+- **Code**: radar/alerts.py `still_holds` / `update_holding` (main(), each run from 9:35): every trigger it sent today is
+  checked again with the same code that sent it: find() on the latest prices (levels, % up, volume pace), then the same
+  1-minute chart tests main() runs before sending (the retest's low in the zone and the 10 EMA / 21 EMA test, the 21 / 50
+  EMA reclaim's undercut and upper half, the reversal's top half, the 1- / 5-min entry: the range's high broken and the
+  price over its low, the stop). alerts.json: `hold` {at, keys, now: every trigger its rules find right now}, `lost`
+  {key: at, price}, `back`. docs/index.html drawAlog `place()`: the box each line sits in now; the page tracks its own
+  triggers (TREND) the same way (localStorage plost / pback / pnow). In a box a stepped line starts with ↓; the log says
+  what happened ("↓ no longer holding since 4:05 PM ($109.78): down to 👀 Heads-ups"). The end-of-day report uses the job's
+  verdict at the close (its last check at or after 3:58 PM): a power day that stepped down to a launch counts as held (as
+  a launch); the gap-out-of-base entries by their stop.
+- **Nov 5 replay at the close** (the Nov 4 watch list, Nov 5's alerts and 4:10 PM prices; Yahoo's chart is blocked in the
+  session, so the retest lows and opening ranges came from the alerts' own texts): ⚡ ADMA, MGNI, U, XERS; 🚀 EPAM (stepped
+  down: volume pace 3.6x, under 4x), WRBY's catalyst gap (its failed power day not shown twice), APP, PRKS (laggards);
+  🎯 CERT, RPD, XERS, ACHC / ENOV gaps, ENOV's entries (over the $28.15 stop); ↩️ EAT, PRGO; the rest ↓ in 👀 (ELF
+  $109.78, WRBY's base high, the confirmations whose pace fell under 2x, GCT's gap at 1.8x after 9:50 ...).
+- **Check Friday Nov 6 (the first live day)**: alerts.json gets hold / lost / back after 9:35; the boxes move within about 5
+  minutes of a failure; the 1-minute chart tests (retest, entries) work live. Open: a power day replaces the stock's A
+  launch alert, so a power day that steps down shows its own line in 🚀 (marked ↓).
 
 ## End of day = today's buy-point triggers only (LIVE Nov 5 2026 ~7:50 PM ET, the user's "go live"; branch test/eodtrig)
 
