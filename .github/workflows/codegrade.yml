@@ -11,12 +11,16 @@ on:
     - cron: "5,35 12 * * 1-5"      # 8:05 / 8:35 AM EDT: the news runs (the user, Nov 6 2026: "805 835 905")
     - cron: "35 13 * * 1-5"        # 8:35 AM EST
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "news = every 5%+ gapper's news only (pmnews.json; the Radar day job after each 5-minute scan), else the grades"
+        default: ""
 
 permissions:
   contents: write
 
 concurrency:
-  group: codegrade
+  group: codegrade-${{ inputs.mode == 'news' && 'news' || 'grade' }}   # the news runs queue on their own: one never cancels a grading run
   cancel-in-progress: false
 
 jobs:
@@ -30,6 +34,7 @@ jobs:
           python-version: "3.12"
       - name: Grade
         env:
+          MODE: ${{ inputs.mode }}
           SEC_UA: ${{ secrets.SEC_UA }}
           ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}     # headlines (Alpaca's news API) for the gappers the SEC has nothing on
           ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
@@ -44,7 +49,7 @@ jobs:
           git show origin/radar-data:premarket.json > /tmp/pm/claude_premarket.json 2>/dev/null || echo '[]' > /tmp/pm/claude_premarket.json
           git show origin/radar-data:codegrade_log.json > /tmp/rd/codegrade_log.json 2>/dev/null || echo '[]' > /tmp/rd/codegrade_log.json
           python3 radar/premarket_build.py prepare premarket/latest.json /tmp/rd/stocks.json /tmp/pm 8 4 --live=/tmp/rd/pmlive.json
-          if [ $T -lt 525 ]; then   # before 8:45 (the 8:05 / 8:35 runs): every 5%+ gapper's news only, in pmnews.json; the
+          if [ "$MODE" = "news" ] || [ $T -lt 525 ]; then   # a news run (every 5-minute scan, 7:00-9:25) or before 8:45: news only, pmnews.json; the
             # grades (codegrade.json) start at 8:45 as before, so the 8:45-9:25 code-grade pop-ups don't change
             python3 radar/codegrade.py news /tmp/pm/rows.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/pmnews.json
             python3 radar/publish.py "pre-market news $(TZ=America/New_York date +%F' '%H:%M)" /tmp/pmnews.json
