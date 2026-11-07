@@ -27,6 +27,16 @@ START = 0
 SHOW = ("LION", "DUOL", "RHI", "FA", "ELF", "ORKA", "ZETA", "TGTX", "FLS", "QLYS", "MANE", "IRON", "KNSA", "AMN")
 
 
+def high_day(st, bp, j):
+    """the day whose high is the buy point (the latest in the 130 sessions to day j), for finding it on the chart"""
+    if not bp:
+        return None
+    for k in range(j, max(0, j - 130) - 1, -1):
+        if abs(st.h[k] - bp) <= max(0.006, bp * 0.0005):
+            return st.dates[k]
+    return None
+
+
 def outcome(st, k, lvl):
     n = st.c.size
     e = max(float(st.o[k]), lvl)
@@ -75,8 +85,8 @@ def one(sym):
     pos = {d: k for k, d in enumerate(st.dates)}
     js = [pos[d] for d in CAL[START:] if d in pos]
     if not js or js[0] < 200:
-        return sym, [], {}
-    out, show = [], {}
+        return sym, [], {}, []
+    out, show, now = [], {}, []
     s3state = {0: [None, None, False, False], 1: [None, None, False, False]}
     trstate = [None, None]
     evs = sorted(EV.get(sym, []))
@@ -141,7 +151,7 @@ def one(sym):
                 bp, pat, f = rows.get((lst, v), (None, None, {}))
                 bp = float(bp) if bp and bp > st.c[j] else None
                 d = {"bp": round(bp, 2) if bp else None, "pat": pat, "base_day": f.get("base_day"), "depth": f.get("base_depth_pct"),
-                     "base_low": f.get("base_low_pct"), "top_date": f.get("buy_point_top_date")}
+                     "base_low": f.get("base_low_pct"), "top_date": f.get("buy_point_top_date") or high_day(st, bp, j)}
                 if bp and j + 1 < n:
                     d["hit"] = bool(st.h[j + 1] > bp)
                     if d["hit"]:
@@ -150,10 +160,12 @@ def one(sym):
             r["changed"] = r["old"]["bp"] != r["new"]["bp"]
             if j + 1 < n:
                 out.append(r)
+            elif st.dates[j] == CAL[-1]:
+                now.append(r)
             if sym in SHOW and st.dates[j] in (CAL[-1], CAL[-2]):
                 show[st.dates[j] + " " + lst] = r
     L["intact_top"] = 1
-    return sym, out, show
+    return sym, out, show, now
 
 
 def summ(rs, side):
@@ -183,8 +195,9 @@ def main():
         EV.setdefault(s, []).append(i)
     with multiprocessing.get_context("fork").Pool(os.cpu_count() or 2) as pool:
         res = pool.map(one, sorted(A), chunksize=8)
-    rows = [r for _, rs, _ in res for r in rs]
-    show = {s: sh for s, _, sh in res if sh}
+    rows = [r for _, rs, _, _ in res for r in rs]
+    show = {s: sh for s, _, sh, _ in res if sh}
+    now = [r for _, _, _, nw in res for r in nw]
     out = dict(made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), first=cal[START], last_read_scored=cal[-2],
                note=__doc__.split("\n\n")[0], lists={})
     for lst in ("Launches", "3-SETUPS", "TREND"):
@@ -194,6 +207,7 @@ def main():
                                  changed_old=summ(ch, "old"), changed_new=summ(ch, "new"))
     out["changed_rows"] = sorted([r for r in rows if r["changed"]], key=lambda r: (r["date"], r["list"], r["sym"]))
     out["show"] = show
+    out["now"] = sorted(now, key=lambda r: (r["list"], r["sym"]))
     json.dump(out, open(a_.out, "w"), indent=1, default=str)
     print(json.dumps(out["lists"], indent=1))
 
