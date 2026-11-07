@@ -78,7 +78,7 @@ is saved in alerts.json items (kind trigger / heads-up / summary, grouped) for t
 Nothing but the early heads-ups is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
 """
-import datetime, json, os, sys, urllib.request, zoneinfo
+import datetime, json, os, re, sys, urllib.request, zoneinfo
 
 NY = zoneinfo.ZoneInfo("America/New_York")
 MAX_PER_RUN = 8               # pushes a run: the triggers first, then heads-ups; the rest grouped into one
@@ -863,6 +863,21 @@ def main():
     # the cap on pushes comes AFTER today's 1-minute chart checks (below), so only alerts that passed them take a slot
     # (Nov 3 2026: 28 alerts at 3:46 PM, 6 of the first 8 failed their check and RPD's 21 EMA retest was folded unchecked)
     new += quiet
+    # one heads-up for one pullback (the user, Nov 6 2026: MANE at 9:35 got "at its 21 EMA in the base" and "pulling back to
+    # its breakout level" as two messages; "if it happens at the same time, one message"): when both come for a stock in
+    # the same run, one message names both levels; the 21 EMA one counts as sent (a later run doesn't send it alone)
+    zone_syms = {a_[0].split(":")[0] for a_ in new if a_[0].endswith(":zone") and a_[1] is not None}
+    for a_ in [a_ for a_ in new if a_[0].endswith(":ema21zone") and a_[1] is not None and a_[0].split(":")[0] in zone_syms]:
+        sym_ = a_[0].split(":")[0]
+        k_ = next(i_ for i_, b_ in enumerate(new) if b_[0] == f"{sym_}:zone")
+        key_, title_, msg_, prio_, tvs_ = new[k_]
+        lv_ = re.search(r"level (\$[\d,.]+(?:-\$[\d,.]+)?)", msg_)
+        e21_ = re.search(r"at the 21 EMA (\$[\d,.]+)", a_[2])
+        new[k_] = (key_, f"{sym_} retesting its breakout level {lv_.group(1) if lv_ else ''} and its 21 EMA {e21_.group(1) if e21_ else ''}".replace("  ", " "),
+                   msg_ + (f" · also at its 21 EMA {e21_.group(1)} (the last close's): the 21 EMA retest setup, its buy the close back over it,"
+                           " in the upper half of the day" if e21_ else ""), prio_, tvs_)
+        new.remove(a_)
+        state["sent"].append(a_[0])
     passed = []
     for key, title, msg, prio, tvs in new:
         if title is not None and key.endswith((":gapbase", ":gob1", ":gob5", ":gob950")):
