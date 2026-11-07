@@ -2,9 +2,11 @@
 """Pre-market gappers for Theme & Group Radar.
 
   prepare <premarket/latest.json> <stocks.json> <out_dir> [n_grade_up] [n_grade_down] [--live=premarket_live.json]
-      Keeps gaps of 5%+ up or down that pass the liquidity rules (market cap $700M+, 20-day average volume 700K+ shares,
-      20-day average $ volume $20M+, ADR% 3+) and sit 30%+ over the 52-week low at the pre-market price (gap-ups also over
-      the 50 EMA), adds ADR%, theme, the pre-market price vs the 200-day SMA
+      Keeps gaps of 5%+ up or down that pass your rules: premarket/rules.json, which the portal's boxes on the Graded
+      gappers list save (the user, Nov 7 2026); without it the defaults: market cap $700M+, 20-day average volume 700K+
+      shares, 20-day average $ volume $20M+, ADR% 3+, 30%+ over the 52-week low at the pre-market price, gap-ups also over
+      the 50 EMA. Claude's 8:45 grading and the code grader both run this, so they always use the same rules. It adds
+      ADR%, theme, the pre-market price vs the 200-day SMA
       and the 50-day EMA (both as of the last close), an EP badge, and writes
       <out_dir>/rows.json plus <out_dir>/to_grade.json (by pre-market $ volume: top 20 gap-ups and top 8 gap-downs),
       and <out_dir>/gappers.json: every 5%+ gapper before those rules, with the rule that dropped it ("dropped"), so the
@@ -20,6 +22,37 @@ import datetime, json, os, re, subprocess, sys, urllib.parse
 
 GAP_MIN, MCAP_MIN, AVGVOL_MIN, DVOL_MIN, ADR_MIN = 5.0, 0.7, 700_000, 20.0, 3.0
 LOW52_MIN = 30.0       # the pre-market price at least 30% over the 52-week low (the user, Nov 4 2026)
+# your rules for the graded list (the user, Nov 7 2026: "I want to adjust them myself"): the portal saves them to
+# premarket/rules.json on main; each value is checked against the same range the portal allows, and one that is missing
+# or out of range falls back to its default, so a typo can't empty the list. [default, lowest, highest]
+RULES = {"mcap_min_b": [MCAP_MIN, 0.1, 50], "avgvol_min_k": [AVGVOL_MIN / 1000, 50, 10000], "dvol_min_m": [DVOL_MIN, 1, 1000],
+         "adr_min": [ADR_MIN, 0, 20], "low52_min": [LOW52_MIN, 0, 200]}
+RULES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "premarket", "rules.json")
+
+
+def load_rules(path=RULES_FILE):
+    """your saved rules, checked: {mcap_min_b, avgvol_min_k, dvol_min_m, adr_min, low52_min, gapup_above_ema50, saved_at,
+    ignored (the values that were out of range or unreadable, with the default used instead)}"""
+    try:
+        doc = json.load(open(path))
+    except Exception:
+        doc = {}
+    out, bad = {}, []
+    for k, (d, lo, hi) in RULES.items():
+        v = num(doc.get(k)) if k in doc else d
+        if v is None or not (lo <= v <= hi):
+            bad.append(f"{k}={doc.get(k)!r}")
+            v = d
+        out[k] = v
+    e50 = doc.get("gapup_above_ema50", True)
+    out["gapup_above_ema50"] = e50 if isinstance(e50, bool) else True
+    out["saved_at"], out["ignored"] = doc.get("saved_at", ""), bad
+    return out
+
+
+def fmt(v):
+    """3.0 -> '3', 0.7 -> '0.7' (for the dropped reasons)"""
+    return f"{v:g}"
 EP_GAP = 10.0          # Qullamaggie: an episodic pivot gaps 10%+ on huge volume
 EP_PM_SHARE = 0.25     # proxy: pre-market volume already 25%+ of a normal full day
 
@@ -51,6 +84,8 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
                 g["pm_last"], g["gap_pct"], g["pm_volume"], g["pm_dvol"] = q[0], q[1], q[3], q[4]
             pm["rows"] = list(by.values())
             pm["saved_at"] = lv.get("saved_at") or pm.get("saved_at", "")
+    R = load_rules()
+    mcap_min, avgvol_min, dvol_min, adr_min, low52_min = R["mcap_min_b"], R["avgvol_min_k"] * 1000, R["dvol_min_m"], R["adr_min"], R["low52_min"]
     rows, every = [], []                          # every = all 5%+ gappers, for the news of each (the user, Nov 6 2026)
     for g in pm.get("rows", []):
         s = stocks.get(g["symbol"])
@@ -60,18 +95,18 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
         adr = num(s.get("adr_20"))
         lo52, px = num(s.get("low_52w")), num(g.get("pm_last"))
         e50x = num(s.get("ema50"))
-        if not (mcap and mcap >= MCAP_MIN):
-            why = f"market cap under ${MCAP_MIN}B"
-        elif not (avgv and avgv >= AVGVOL_MIN):
-            why = f"20-day average volume under {AVGVOL_MIN // 1000}K"
-        elif not (dv and dv >= DVOL_MIN):
-            why = f"20-day average $ volume under ${DVOL_MIN:.0f}M"
-        elif adr is not None and adr < ADR_MIN:   # ADR% 3+ (a stock with no ADR yet isn't dropped)
-            why = f"ADR under {ADR_MIN:.0f}%"
-        elif lo52 and px and px < lo52 * (1 + LOW52_MIN / 100):
-            why = f"under {LOW52_MIN:.0f}% over the 52-week low"   # the user, Nov 4 2026: under 30% over the 52-week low
+        if not (mcap and mcap >= mcap_min):
+            why = f"market cap under ${fmt(mcap_min)}B"
+        elif not (avgv and avgv >= avgvol_min):
+            why = f"20-day average volume under {fmt(avgvol_min / 1000)}K"
+        elif not (dv and dv >= dvol_min):
+            why = f"20-day average $ volume under ${fmt(dvol_min)}M"
+        elif adr is not None and adr < adr_min:   # ADR% 3+ (a stock with no ADR yet isn't dropped)
+            why = f"ADR under {fmt(adr_min)}%"
+        elif lo52 and px and px < lo52 * (1 + low52_min / 100):
+            why = f"under {fmt(low52_min)}% over the 52-week low"   # the user, Nov 4 2026: under 30% over the 52-week low
                                                   # (pre-market price) qualifies for nothing (no 52-week low yet isn't dropped)
-        elif g["gap_pct"] > 0 and e50x and px and px < e50x:
+        elif R["gapup_above_ema50"] and g["gap_pct"] > 0 and e50x and px and px < e50x:
             why = "gap-up under the 50 EMA"       # a gap-up under its 50 EMA in pre-market isn't eligible (the user, Nov 4 2026)
         else:
             why = ""
@@ -109,7 +144,9 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
                                 "mcap_b", "industry", "themes")} for r in pick]
     json.dump(todo, open(os.path.join(out, "to_grade.json"), "w"), indent=1)
     print(json.dumps({"scan_date": pm.get("date"), "scan_time": pm.get("saved_at"), "in_file": len(pm.get("rows", [])),
-                      "gapping_5": len(every), "pass_rules": len(rows), "to_grade": len(todo)}))
+                      "gapping_5": len(every), "pass_rules": len(rows), "to_grade": len(todo),
+                      "rules": {k: R[k] for k in list(RULES) + ["gapup_above_ema50", "saved_at"]},
+                      **({"rules_ignored": R["ignored"]} if R["ignored"] else {})}))
 
 
 # ───────── the safety lock on A / B grades (the user, Nov 4 2026: DUOL got an A while its reason said "exact revenue
