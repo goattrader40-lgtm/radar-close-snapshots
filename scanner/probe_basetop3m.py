@@ -31,6 +31,9 @@ def high_day(st, bp, j):
     """the day whose high is the buy point (the latest in the 130 sessions to day j), for finding it on the chart"""
     if not bp:
         return None
+    for k in range(max(0, j - 21), j + 1):             # a level of the last month: its first day (the inner base's top)
+        if abs(st.h[k] - bp) <= max(0.006, bp * 0.0005):
+            return st.dates[k]
     for k in range(j, max(0, j - 130) - 1, -1):
         if abs(st.h[k] - bp) <= max(0.006, bp * 0.0005):
             return st.dates[k]
@@ -67,7 +70,7 @@ def trend_bp(a, j, new):
     r = a.st.df.iloc[j]
     code = int(r.code)
     if not code or r.pivot != r.pivot:
-        return None, None
+        return None, None, None
     bp, pat = float(r.pivot), launch.msf.NAMES[code]
     if new:
         # only a level set by a poke moves: back to the high that poke went over (the month's highest high before it,
@@ -80,8 +83,8 @@ def trend_bp(a, j, new):
                 t = max(w, key=lambda k: st.h[k])
                 lvl = float(st.h[t])
                 if st.c[j] < lvl and st.c[t + 1:j + 1].max() <= lvl * (1 + L["caution_pct"] / 100):
-                    bp, pat = lvl, pat + " (intact top)"
-    return bp, pat
+                    return lvl, pat + " (intact top)", st.dates[t]
+    return bp, pat, high_day(a.st, bp, j)
 
 
 def one(sym):
@@ -147,8 +150,8 @@ def one(sym):
                     rows[("Launches", v)] = (f.get("buy_point"), f.get("pattern"), f)
         if trstate[0] is not None and trend_on(a, j) and not any(k[0] in ("Launches", "3-SETUPS") for k in rows):
             for v in (0, 1):
-                bp, pat = trend_bp(a, j, v)
-                rows[("TREND", v)] = (bp, pat, {})
+                bp, pat, td = trend_bp(a, j, v)
+                rows[("TREND", v)] = (bp, pat, {"buy_point_top_date": td})
         for lst in ("Launches", "3-SETUPS", "TREND"):
             if (lst, 0) not in rows and (lst, 1) not in rows:
                 continue
