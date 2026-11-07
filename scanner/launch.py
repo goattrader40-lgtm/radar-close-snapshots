@@ -791,9 +791,11 @@ def reach(a, j, top):
     leaving out the last 3), 0 if none. VEEV Oct 9 2026: 291.40 a 1-month high inside its base under 296.24, the
     6-month high (Aug 27)"""
     h = a.st.h
+    pk = pokes(a) if L["intact_top"] else np.zeros(h.size, dtype=bool)     # a poke over it doesn't count
     for span, m in ((120, 6), (63, 3), (21, 1)):
         lo, hi = max(0, j - span), j - 3
-        if hi > lo and top >= h[lo:hi].max() * 0.999:
+        w = h[lo:hi][~pk[lo:hi]] if hi > lo else h[lo:hi]
+        if w.size and top >= w.max() * 0.999:
             return m
     return 0
 
