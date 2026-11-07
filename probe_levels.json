@@ -1,0 +1,639 @@
+{
+ "made_at": "2026-10-28T20:33:25+00:00",
+ "first": "2025-08-19",
+ "last": "2026-10-28",
+ "launches": 1395,
+ "months": 14.3,
+ "entries_per_launch": {
+  "current": 1.94,
+  "new": 2.96
+ },
+ "baseline": {
+  "any day": {
+   "n": 41548,
+   "ran10": 49,
+   "ran20": 22,
+   "avg20": 1.3,
+   "fail5": 55
+  },
+  "any day above the 21 EMA": {
+   "n": 32412,
+   "ran10": 49,
+   "ran20": 21,
+   "avg20": 1.2,
+   "fail5": 54
+  },
+  "any day under the 21 EMA": {
+   "n": 9136,
+   "ran10": 51,
+   "ran20": 24,
+   "avg20": 1.4,
+   "fail5": 59
+  }
+ },
+ "current": {
+  "breakout": {
+   "n": 901,
+   "ran10": 47,
+   "ran20": 21,
+   "avg20": 0.9,
+   "fail5": 53
+  },
+  "breakout, grade A": {
+   "n": 151,
+   "ran10": 62,
+   "ran20": 34,
+   "avg20": 2.7,
+   "fail5": 48
+  },
+  "breakout, grade B": {
+   "n": 364,
+   "ran10": 50,
+   "ran20": 24,
+   "avg20": 1.6,
+   "fail5": 53
+  },
+  "breakout, grade C": {
+   "n": 386,
+   "ran10": 39,
+   "ran20": 14,
+   "avg20": -0.5,
+   "fail5": 54
+  },
+  "flag": {
+   "n": 146,
+   "ran10": 52,
+   "ran20": 29,
+   "avg20": 2.6,
+   "fail5": 47
+  },
+  "retest": {
+   "n": 1596,
+   "ran10": 47,
+   "ran20": 21,
+   "avg20": -0.0,
+   "fail5": 53
+  }
+ },
+ "new": {
+  "breakout": {
+   "n": 1635,
+   "ran10": 49,
+   "ran20": 22,
+   "avg20": 0.5,
+   "fail5": 58
+  },
+  "breakout by pattern: Ascending triangle": {
+   "n": 60,
+   "ran10": 52,
+   "ran20": 27,
+   "avg20": 5.2,
+   "fail5": 63
+  },
+  "breakout by pattern: Ascending triangle, grade A/B": {
+   "n": 19,
+   "ran10": 74,
+   "ran20": 47,
+   "avg20": 14.5,
+   "fail5": 53
+  },
+  "breakout by pattern: Ascending triangle, grade C": {
+   "n": 41,
+   "ran10": 41,
+   "ran20": 17,
+   "avg20": 0.7,
+   "fail5": 68
+  },
+  "breakout by pattern: Base breakout": {
+   "n": 98,
+   "ran10": 56,
+   "ran20": 20,
+   "avg20": 1.6,
+   "fail5": 62
+  },
+  "breakout by pattern: Base breakout, grade A/B": {
+   "n": 36,
+   "ran10": 61,
+   "ran20": 33,
+   "avg20": 6.0,
+   "fail5": 64
+  },
+  "breakout by pattern: Base breakout, grade C": {
+   "n": 62,
+   "ran10": 53,
+   "ran20": 13,
+   "avg20": -0.8,
+   "fail5": 61
+  },
+  "breakout by pattern: Bull flag": {
+   "n": 24,
+   "ran10": 67,
+   "ran20": 38,
+   "avg20": 4.2,
+   "fail5": 46
+  },
+  "breakout by pattern: Bull flag, grade A/B": {
+   "n": 15,
+   "ran10": 67,
+   "ran20": 27,
+   "avg20": 1.1,
+   "fail5": 40
+  },
+  "breakout by pattern: Bull flag, grade C": {
+   "n": 9,
+   "ran10": 67,
+   "ran20": 56,
+   "avg20": 9.4,
+   "fail5": 56
+  },
+  "breakout by pattern: Cup (no handle)": {
+   "n": 50,
+   "ran10": 46,
+   "ran20": 14,
+   "avg20": 1.0,
+   "fail5": 56
+  },
+  "breakout by pattern: Cup (no handle), grade A/B": {
+   "n": 14,
+   "ran10": 71,
+   "ran20": 14,
+   "avg20": 2.2,
+   "fail5": 57
+  },
+  "breakout by pattern: Cup (no handle), grade C": {
+   "n": 36,
+   "ran10": 36,
+   "ran20": 14,
+   "avg20": 0.4,
+   "fail5": 56
+  },
+  "breakout by pattern: Cup with handle": {
+   "n": 4,
+   "ran10": 50,
+   "ran20": 25,
+   "avg20": 4.3,
+   "fail5": 50
+  },
+  "breakout by pattern: Cup with handle, grade A/B": {
+   "n": 1,
+   "ran10": 100,
+   "ran20": 100,
+   "avg20": 11.5,
+   "fail5": 0
+  },
+  "breakout by pattern: Cup with handle, grade C": {
+   "n": 3,
+   "ran10": 33,
+   "ran20": 0,
+   "avg20": 2.0,
+   "fail5": 67
+  },
+  "breakout by pattern: Deep base breakout": {
+   "n": 4,
+   "ran10": 100,
+   "ran20": 75,
+   "avg20": 18.5,
+   "fail5": 50
+  },
+  "breakout by pattern: Deep base breakout, grade C": {
+   "n": 4,
+   "ran10": 100,
+   "ran20": 75,
+   "avg20": 18.5,
+   "fail5": 50
+  },
+  "breakout by pattern: Flat base": {
+   "n": 22,
+   "ran10": 14,
+   "ran20": 14,
+   "avg20": -9.3,
+   "fail5": 77
+  },
+  "breakout by pattern: Flat base, grade A/B": {
+   "n": 2,
+   "ran10": 0,
+   "ran20": 0,
+   "avg20": -11.7,
+   "fail5": 100
+  },
+  "breakout by pattern: Flat base, grade C": {
+   "n": 20,
+   "ran10": 15,
+   "ran20": 15,
+   "avg20": -9.0,
+   "fail5": 75
+  },
+  "breakout by pattern: High tight flag": {
+   "n": 66,
+   "ran10": 44,
+   "ran20": 23,
+   "avg20": -0.3,
+   "fail5": 70
+  },
+  "breakout by pattern: High tight flag, grade A/B": {
+   "n": 16,
+   "ran10": 50,
+   "ran20": 6,
+   "avg20": -1.7,
+   "fail5": 62
+  },
+  "breakout by pattern: High tight flag, grade C": {
+   "n": 50,
+   "ran10": 42,
+   "ran20": 28,
+   "avg20": 0.2,
+   "fail5": 72
+  },
+  "breakout by pattern: Pennant": {
+   "n": 1,
+   "ran10": 100,
+   "ran20": 100,
+   "avg20": 26.4,
+   "fail5": 0
+  },
+  "breakout by pattern: Pennant, grade A/B": {
+   "n": 1,
+   "ran10": 100,
+   "ran20": 100,
+   "avg20": 26.4,
+   "fail5": 0
+  },
+  "breakout by pattern: Qullamaggie breakout": {
+   "n": 312,
+   "ran10": 42,
+   "ran20": 15,
+   "avg20": -1.6,
+   "fail5": 56
+  },
+  "breakout by pattern: Qullamaggie breakout, grade A/B": {
+   "n": 86,
+   "ran10": 49,
+   "ran20": 21,
+   "avg20": 1.2,
+   "fail5": 53
+  },
+  "breakout by pattern: Qullamaggie breakout, grade C": {
+   "n": 226,
+   "ran10": 39,
+   "ran20": 13,
+   "avg20": -2.8,
+   "fail5": 57
+  },
+  "breakout by pattern: Tight flag": {
+   "n": 34,
+   "ran10": 56,
+   "ran20": 32,
+   "avg20": 3.7,
+   "fail5": 44
+  },
+  "breakout by pattern: Tight flag, grade A/B": {
+   "n": 15,
+   "ran10": 67,
+   "ran20": 33,
+   "avg20": 2.1,
+   "fail5": 27
+  },
+  "breakout by pattern: Tight flag, grade C": {
+   "n": 19,
+   "ran10": 47,
+   "ran20": 32,
+   "avg20": 4.9,
+   "fail5": 58
+  },
+  "breakout by pattern: no pattern named": {
+   "n": 960,
+   "ran10": 51,
+   "ran20": 24,
+   "avg20": 0.7,
+   "fail5": 57
+  },
+  "breakout by pattern: no pattern named, grade A/B": {
+   "n": 519,
+   "ran10": 52,
+   "ran20": 26,
+   "avg20": 0.5,
+   "fail5": 60
+  },
+  "breakout by pattern: no pattern named, grade C": {
+   "n": 441,
+   "ran10": 50,
+   "ran20": 21,
+   "avg20": 0.8,
+   "fail5": 54
+  },
+  "breakout only the new design has": {
+   "n": 856,
+   "ran10": 51,
+   "ran20": 23,
+   "avg20": 0.2,
+   "fail5": 61
+  },
+  "breakout the current design also had": {
+   "n": 779,
+   "ran10": 47,
+   "ran20": 21,
+   "avg20": 0.9,
+   "fail5": 54
+  },
+  "breakout, 1-year high": {
+   "n": 378,
+   "ran10": 46,
+   "ran20": 22,
+   "avg20": 1.1,
+   "fail5": 50
+  },
+  "breakout, MSF names a pattern": {
+   "n": 675,
+   "ran10": 46,
+   "ran20": 20,
+   "avg20": 0.3,
+   "fail5": 59
+  },
+  "breakout, MSF names no pattern": {
+   "n": 960,
+   "ran10": 51,
+   "ran20": 24,
+   "avg20": 0.7,
+   "fail5": 57
+  },
+  "breakout, MSF pattern pivot = this level": {
+   "n": 539,
+   "ran10": 45,
+   "ran20": 19,
+   "avg20": -0.2,
+   "fail5": 58
+  },
+  "breakout, base under the level 15-39 sessions": {
+   "n": 175,
+   "ran10": 55,
+   "ran20": 23,
+   "avg20": 1.9,
+   "fail5": 68
+  },
+  "breakout, base under the level 40+ sessions": {
+   "n": 1441,
+   "ran10": 48,
+   "ran20": 22,
+   "avg20": 0.3,
+   "fail5": 56
+  },
+  "breakout, base under the level under 15 sessions": {
+   "n": 19,
+   "ran10": 53,
+   "ran20": 26,
+   "avg20": 6.5,
+   "fail5": 58
+  },
+  "breakout, grade A": {
+   "n": 212,
+   "ran10": 58,
+   "ran20": 33,
+   "avg20": 2.5,
+   "fail5": 59
+  },
+  "breakout, grade B": {
+   "n": 512,
+   "ran10": 52,
+   "ran20": 23,
+   "avg20": 0.7,
+   "fail5": 58
+  },
+  "breakout, grade C": {
+   "n": 911,
+   "ran10": 46,
+   "ran20": 19,
+   "avg20": -0.1,
+   "fail5": 57
+  },
+  "breakout, not tight": {
+   "n": 1457,
+   "ran10": 50,
+   "ran20": 23,
+   "avg20": 0.9,
+   "fail5": 58
+  },
+  "breakout, tight 2+ days before": {
+   "n": 178,
+   "ran10": 46,
+   "ran20": 17,
+   "avg20": -2.4,
+   "fail5": 53
+  },
+  "ema21": {
+   "n": 997,
+   "ran10": 50,
+   "ran20": 25,
+   "avg20": 1.5,
+   "fail5": 47
+  },
+  "ema21, grade A": {
+   "n": 67,
+   "ran10": 61,
+   "ran20": 31,
+   "avg20": -1.5,
+   "fail5": 42
+  },
+  "ema21, grade B": {
+   "n": 257,
+   "ran10": 51,
+   "ran20": 30,
+   "avg20": 0.4,
+   "fail5": 50
+  },
+  "ema21, grade C": {
+   "n": 673,
+   "ran10": 48,
+   "ran20": 23,
+   "avg20": 2.2,
+   "fail5": 46
+  },
+  "failed (no entry)": {
+   "n": 1695
+  },
+  "line": {
+   "n": 681,
+   "ran10": 46,
+   "ran20": 19,
+   "avg20": 0.5,
+   "fail5": 42
+  },
+  "line (a flag / wedge pattern), grade A": {
+   "n": 29,
+   "ran10": 59,
+   "ran20": 24,
+   "avg20": 1.2,
+   "fail5": 59
+  },
+  "line (a flag / wedge pattern), grade B": {
+   "n": 157,
+   "ran10": 52,
+   "ran20": 20,
+   "avg20": 1.1,
+   "fail5": 37
+  },
+  "line (a flag / wedge pattern), grade C": {
+   "n": 495,
+   "ran10": 44,
+   "ran20": 18,
+   "avg20": 0.3,
+   "fail5": 43
+  },
+  "line, grade A": {
+   "n": 29,
+   "ran10": 59,
+   "ran20": 24,
+   "avg20": 1.2,
+   "fail5": 59
+  },
+  "line, grade B": {
+   "n": 157,
+   "ran10": 52,
+   "ran20": 20,
+   "avg20": 1.1,
+   "fail5": 37
+  },
+  "line, grade C": {
+   "n": 495,
+   "ran10": 44,
+   "ran20": 18,
+   "avg20": 0.3,
+   "fail5": 43
+  },
+  "no-pattern breakout": {
+   "n": 6,
+   "ran10": 67,
+   "ran20": 33,
+   "avg20": 14.0,
+   "fail5": 17
+  },
+  "no-pattern breakout, grade B": {
+   "n": 3,
+   "ran10": 33,
+   "ran20": 33,
+   "avg20": 29.4,
+   "fail5": 33
+  },
+  "no-pattern breakout, grade C": {
+   "n": 3,
+   "ran10": 100,
+   "ran20": 33,
+   "avg20": -9.2,
+   "fail5": 0
+  },
+  "pattern breakout": {
+   "n": 1629,
+   "ran10": 49,
+   "ran20": 22,
+   "avg20": 0.5,
+   "fail5": 58
+  },
+  "pattern breakout, grade A": {
+   "n": 212,
+   "ran10": 58,
+   "ran20": 33,
+   "avg20": 2.5,
+   "fail5": 59
+  },
+  "pattern breakout, grade B": {
+   "n": 509,
+   "ran10": 52,
+   "ran20": 23,
+   "avg20": 0.5,
+   "fail5": 58
+  },
+  "pattern breakout, grade C": {
+   "n": 908,
+   "ran10": 45,
+   "ran20": 19,
+   "avg20": -0.1,
+   "fail5": 58
+  },
+  "retest": {
+   "n": 737,
+   "ran10": 49,
+   "ran20": 22,
+   "avg20": 1.2,
+   "fail5": 56
+  },
+  "retest with the 21 EMA there too": {
+   "n": 548,
+   "ran10": 49,
+   "ran20": 22,
+   "avg20": 1.1,
+   "fail5": 56
+  },
+  "retest with the 21 EMA there too, grade A": {
+   "n": 21,
+   "ran10": 48,
+   "ran20": 24,
+   "avg20": 0.3,
+   "fail5": 43
+  },
+  "retest with the 21 EMA there too, grade B": {
+   "n": 73,
+   "ran10": 49,
+   "ran20": 15,
+   "avg20": 0.7,
+   "fail5": 53
+  },
+  "retest with the 21 EMA there too, grade C": {
+   "n": 454,
+   "ran10": 49,
+   "ran20": 23,
+   "avg20": 1.2,
+   "fail5": 57
+  },
+  "retest, 21 EMA not there": {
+   "n": 189,
+   "ran10": 47,
+   "ran20": 22,
+   "avg20": 1.4,
+   "fail5": 57
+  },
+  "retest, grade A": {
+   "n": 25,
+   "ran10": 48,
+   "ran20": 24,
+   "avg20": 1.4,
+   "fail5": 48
+  },
+  "retest, grade B": {
+   "n": 103,
+   "ran10": 48,
+   "ran20": 18,
+   "avg20": 0.3,
+   "fail5": 56
+  },
+  "retest, grade C": {
+   "n": 609,
+   "ran10": 49,
+   "ran20": 22,
+   "avg20": 1.3,
+   "fail5": 57
+  }
+ },
+ "same": {
+  "breakout days in both": 791
+ },
+ "rules": {
+  "peak_win": 5,
+  "peak_age": 5,
+  "peak_pull": 1.25,
+  "lookback": 250,
+  "merge": 0.5,
+  "bo_rv": 1.0,
+  "fail_days": 3,
+  "tight_move": 0.5,
+  "tight_body": 0.5,
+  "near": 1.0,
+  "retest_above": 0.25,
+  "retest_below": 1.0,
+  "run_adr": 4.0,
+  "gap": 5.0,
+  "gap_rv": 3.0,
+  "line_min": 5,
+  "line_max": 20,
+  "line_depth_min": 1.25,
+  "line_depth_max": 4.0
+ }
+}

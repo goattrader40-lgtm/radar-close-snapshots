@@ -1,0 +1,1505 @@
+{
+ "made_at": "2026-11-01T02:15:33+00:00",
+ "first": "2025-08-21",
+ "last": "2026-10-30",
+ "candidate_days": 55,
+ "with_news": 42,
+ "earnings": 30,
+ "launches": {
+  "current": 1465,
+  "catalyst_with_news": 38,
+  "catalyst_without_news": 12,
+  "current_absorbed": 1
+ },
+ "launch_day_orh": {
+  "current": {
+   "n": 1343,
+   "win": 45,
+   "avg": 4.7,
+   "med": -1.1,
+   "ran20": 28,
+   "ran50": 7,
+   "broke_orh_pct": 92
+  },
+  "catalyst_with_news": {
+   "n": 20,
+   "win": 15,
+   "avg": 0.1,
+   "med": -5.1,
+   "ran20": 10,
+   "ran50": 5,
+   "broke_orh_pct": 53
+  },
+  "catalyst_without_news": {
+   "n": 8,
+   "win": 0,
+   "avg": -4.8,
+   "med": -4.3,
+   "ran20": 0,
+   "ran50": 0,
+   "broke_orh_pct": 67
+  },
+  "absorbed": {
+   "n": 1,
+   "win": 0,
+   "avg": -2.9,
+   "med": -2.9,
+   "ran20": 0,
+   "ran50": 0,
+   "broke_orh_pct": 100
+  }
+ },
+ "buy_points": {
+  "current": {
+   "21 EMA undercut": {
+    "n": 101,
+    "ran10": 55,
+    "ran20": 25,
+    "fail5": 47,
+    "med20": -0.2
+   },
+   "all": {
+    "n": 3117,
+    "ran10": 49,
+    "ran20": 23,
+    "fail5": 42,
+    "med20": 0.1
+   },
+   "21 EMA undercut, volume under 1x": {
+    "n": 79,
+    "ran10": 59,
+    "ran20": 25,
+    "fail5": 43,
+    "med20": -0.1
+   },
+   "breakout": {
+    "n": 1099,
+    "ran10": 48,
+    "ran20": 22,
+    "fail5": 34,
+    "med20": -0.2
+   },
+   "breakout, 1x+ volume": {
+    "n": 809,
+    "ran10": 48,
+    "ran20": 23,
+    "fail5": 33,
+    "med20": -0.3
+   },
+   "breakout, caution (within 0.5%)": {
+    "n": 207,
+    "ran10": 44,
+    "ran20": 16,
+    "fail5": 45,
+    "med20": 0.9
+   },
+   "breakout, 0.5+ ADR over": {
+    "n": 425,
+    "ran10": 49,
+    "ran20": 24,
+    "fail5": 24,
+    "med20": -0.5
+   },
+   "retest": {
+    "n": 660,
+    "ran10": 49,
+    "ran20": 25,
+    "fail5": 49,
+    "med20": -0.0
+   },
+   "retest, 1x+ volume": {
+    "n": 223,
+    "ran10": 50,
+    "ran20": 26,
+    "fail5": 45,
+    "med20": -0.5
+   },
+   "flag": {
+    "n": 456,
+    "ran10": 52,
+    "ran20": 21,
+    "fail5": 39,
+    "med20": 0.6
+   },
+   "flag, 1x+ volume": {
+    "n": 115,
+    "ran10": 51,
+    "ran20": 24,
+    "fail5": 36,
+    "med20": 1.1
+   },
+   "flag, volume not dried up": {
+    "n": 120,
+    "ran10": 46,
+    "ran20": 18,
+    "fail5": 44,
+    "med20": -3.2
+   },
+   "flag, decisive (over 0.5%)": {
+    "n": 356,
+    "ran10": 55,
+    "ran20": 23,
+    "fail5": 36,
+    "med20": 0.8
+   },
+   "follow-through": {
+    "n": 93,
+    "ran10": 40,
+    "ran20": 15,
+    "fail5": 45,
+    "med20": 0.4
+   },
+   "follow-through, 1x+ volume": {
+    "n": 47,
+    "ran10": 43,
+    "ran20": 17,
+    "fail5": 49,
+    "med20": 0.1
+   },
+   "21 EMA retest": {
+    "n": 434,
+    "ran10": 49,
+    "ran20": 22,
+    "fail5": 46,
+    "med20": 0.9
+   },
+   "21 EMA retest, volume under 1x": {
+    "n": 328,
+    "ran10": 49,
+    "ran20": 23,
+    "fail5": 48,
+    "med20": 1.1
+   },
+   "flag, volume under 1x": {
+    "n": 341,
+    "ran10": 52,
+    "ran20": 20,
+    "fail5": 40,
+    "med20": 0.3
+   },
+   "flag, volume dried up the 2 days before": {
+    "n": 336,
+    "ran10": 54,
+    "ran20": 22,
+    "fail5": 37,
+    "med20": 1.8
+   },
+   "breakout, double": {
+    "n": 123,
+    "ran10": 49,
+    "ran20": 25,
+    "fail5": 29,
+    "med20": 2.1
+   },
+   "breakout, 0.5%+ but under 0.5 ADR": {
+    "n": 467,
+    "ran10": 49,
+    "ran20": 22,
+    "fail5": 37,
+    "med20": -0.7
+   },
+   "breakout, 3rd try (ascending triangle)": {
+    "n": 34,
+    "ran10": 56,
+    "ran20": 32,
+    "fail5": 29,
+    "med20": -2.5
+   },
+   "breakout, volume under 1x": {
+    "n": 290,
+    "ran10": 48,
+    "ran20": 19,
+    "fail5": 36,
+    "med20": -0.0
+   },
+   "retest, volume under 1x": {
+    "n": 437,
+    "ran10": 49,
+    "ran20": 24,
+    "fail5": 51,
+    "med20": 0.5
+   },
+   "flag, caution (within 0.5% over its line)": {
+    "n": 100,
+    "ran10": 41,
+    "ran20": 16,
+    "fail5": 49,
+    "med20": -0.9
+   },
+   "push": {
+    "n": 179,
+    "ran10": 51,
+    "ran20": 26,
+    "fail5": 49,
+    "med20": 1.6
+   },
+   "push, 1x+ volume": {
+    "n": 63,
+    "ran10": 56,
+    "ran20": 35,
+    "fail5": 48,
+    "med20": -1.8
+   },
+   "21 EMA retest, 1x+ volume": {
+    "n": 106,
+    "ran10": 47,
+    "ran20": 21,
+    "fail5": 41,
+    "med20": -0.5
+   },
+   "push, volume under 1x": {
+    "n": 116,
+    "ran10": 49,
+    "ran20": 22,
+    "fail5": 50,
+    "med20": 1.8
+   },
+   "21 EMA undercut, 1x+ volume": {
+    "n": 22,
+    "ran10": 41,
+    "ran20": 23,
+    "fail5": 59,
+    "med20": -1.6
+   },
+   "pop": {
+    "n": 95,
+    "ran10": 52,
+    "ran20": 20,
+    "fail5": 52,
+    "med20": -2.0
+   },
+   "pop, volume under 1x": {
+    "n": 72,
+    "ran10": 50,
+    "ran20": 21,
+    "fail5": 54,
+    "med20": -2.0
+   },
+   "follow-through, volume under 1x": {
+    "n": 46,
+    "ran10": 37,
+    "ran20": 13,
+    "fail5": 41,
+    "med20": 0.9
+   },
+   "pop, 1x+ volume": {
+    "n": 23,
+    "ran10": 57,
+    "ran20": 17,
+    "fail5": 43,
+    "med20": -2.3
+   },
+   "per_launch": 2.13,
+   "launches_with_one": 63
+  },
+  "catalyst_with_news": {
+   "21 EMA retest": {
+    "n": 15,
+    "ran10": 53,
+    "ran20": 33,
+    "fail5": 27,
+    "med20": 7.5
+   },
+   "all": {
+    "n": 98,
+    "ran10": 39,
+    "ran20": 16,
+    "fail5": 50,
+    "med20": -0.1
+   },
+   "21 EMA retest, volume under 1x": {
+    "n": 10,
+    "ran10": 50,
+    "ran20": 30,
+    "fail5": 30,
+    "med20": 6.4
+   },
+   "flag": {
+    "n": 20,
+    "ran10": 40,
+    "ran20": 15,
+    "fail5": 35,
+    "med20": -0.5
+   },
+   "flag, volume under 1x": {
+    "n": 15,
+    "ran10": 27,
+    "ran20": 7,
+    "fail5": 27,
+    "med20": -3.4
+   },
+   "flag, volume dried up the 2 days before": {
+    "n": 15,
+    "ran10": 33,
+    "ran20": 7,
+    "fail5": 33,
+    "med20": -0.6
+   },
+   "flag, decisive (over 0.5%)": {
+    "n": 19,
+    "ran10": 42,
+    "ran20": 16,
+    "fail5": 37,
+    "med20": -0.3
+   },
+   "breakout": {
+    "n": 27,
+    "ran10": 37,
+    "ran20": 15,
+    "fail5": 52,
+    "med20": -3.8
+   },
+   "breakout, 1x+ volume": {
+    "n": 19,
+    "ran10": 47,
+    "ran20": 21,
+    "fail5": 42,
+    "med20": 0.0
+   },
+   "breakout, 0.5%+ but under 0.5 ADR": {
+    "n": 13,
+    "ran10": 31,
+    "ran20": 0,
+    "fail5": 69,
+    "med20": -5.5
+   },
+   "breakout, volume under 1x": {
+    "n": 8,
+    "ran10": 12,
+    "ran20": 0,
+    "fail5": 75,
+    "med20": -10.5
+   },
+   "breakout, caution (within 0.5%)": {
+    "n": 5,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 80,
+    "med20": -2.4
+   },
+   "flag, caution (within 0.5% over its line)": {
+    "n": 1,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 0,
+    "med20": -13.6
+   },
+   "retest": {
+    "n": 19,
+    "ran10": 32,
+    "ran20": 16,
+    "fail5": 79,
+    "med20": -5.3
+   },
+   "retest, volume under 1x": {
+    "n": 14,
+    "ran10": 36,
+    "ran20": 14,
+    "fail5": 71,
+    "med20": -6.6
+   },
+   "pop": {
+    "n": 6,
+    "ran10": 50,
+    "ran20": 0,
+    "fail5": 67,
+    "med20": 3.9
+   },
+   "pop, volume under 1x": {
+    "n": 6,
+    "ran10": 50,
+    "ran20": 0,
+    "fail5": 67,
+    "med20": 3.9
+   },
+   "retest, 1x+ volume": {
+    "n": 5,
+    "ran10": 20,
+    "ran20": 20,
+    "fail5": 100,
+    "med20": 1.5
+   },
+   "21 EMA undercut": {
+    "n": 3,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 33,
+    "med20": -0.1
+   },
+   "21 EMA undercut, 1x+ volume": {
+    "n": 1,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 0,
+    "med20": 3.7
+   },
+   "breakout, 0.5+ ADR over": {
+    "n": 9,
+    "ran10": 67,
+    "ran20": 44,
+    "fail5": 11,
+    "med20": 1.8
+   },
+   "push": {
+    "n": 6,
+    "ran10": 50,
+    "ran20": 17,
+    "fail5": 50,
+    "med20": 2.2
+   },
+   "push, volume under 1x": {
+    "n": 4,
+    "ran10": 25,
+    "ran20": 25,
+    "fail5": 75,
+    "med20": -1.9
+   },
+   "push, 1x+ volume": {
+    "n": 2,
+    "ran10": 100,
+    "ran20": 0,
+    "fail5": 0,
+    "med20": 4.3
+   },
+   "21 EMA retest, 1x+ volume": {
+    "n": 5,
+    "ran10": 60,
+    "ran20": 40,
+    "fail5": 20,
+    "med20": 16.9
+   },
+   "flag, 1x+ volume": {
+    "n": 5,
+    "ran10": 80,
+    "ran20": 40,
+    "fail5": 60,
+    "med20": 16.7
+   },
+   "flag, volume not dried up": {
+    "n": 5,
+    "ran10": 60,
+    "ran20": 40,
+    "fail5": 40,
+    "med20": 8.8
+   },
+   "follow-through": {
+    "n": 2,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 50,
+    "med20": -0.2
+   },
+   "follow-through, volume under 1x": {
+    "n": 2,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 50,
+    "med20": -0.2
+   },
+   "21 EMA undercut, volume under 1x": {
+    "n": 2,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 50,
+    "med20": -14.4
+   },
+   "breakout, 3rd try (ascending triangle)": {
+    "n": 1,
+    "ran10": 100,
+    "ran20": 100,
+    "fail5": 0,
+    "med20": -6.4
+   },
+   "breakout, double": {
+    "n": 1,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 100,
+    "med20": -6.9
+   },
+   "per_launch": 2.58,
+   "launches_with_one": 79
+  },
+  "catalyst_without_news": {
+   "breakout": {
+    "n": 6,
+    "ran10": 33,
+    "ran20": 17,
+    "fail5": 50,
+    "med20": -10.7
+   },
+   "all": {
+    "n": 21,
+    "ran10": 33,
+    "ran20": 5,
+    "fail5": 67,
+    "med20": -11.2
+   },
+   "breakout, 1x+ volume": {
+    "n": 5,
+    "ran10": 40,
+    "ran20": 20,
+    "fail5": 40,
+    "med20": -10.4
+   },
+   "breakout, 0.5%+ but under 0.5 ADR": {
+    "n": 3,
+    "ran10": 33,
+    "ran20": 33,
+    "fail5": 33,
+    "med20": -10.4
+   },
+   "flag": {
+    "n": 3,
+    "ran10": 33,
+    "ran20": 0,
+    "fail5": 33,
+    "med20": -4.3
+   },
+   "flag, volume under 1x": {
+    "n": 3,
+    "ran10": 33,
+    "ran20": 0,
+    "fail5": 33,
+    "med20": -4.3
+   },
+   "flag, volume not dried up": {
+    "n": 1,
+    "ran10": 100,
+    "ran20": 0,
+    "fail5": 0,
+    "med20": -2.0
+   },
+   "flag, decisive (over 0.5%)": {
+    "n": 3,
+    "ran10": 33,
+    "ran20": 0,
+    "fail5": 33,
+    "med20": -4.3
+   },
+   "breakout, volume under 1x": {
+    "n": 1,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 100,
+    "med20": -11.1
+   },
+   "breakout, caution (within 0.5%)": {
+    "n": 1,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 100,
+    "med20": -11.1
+   },
+   "flag, volume dried up the 2 days before": {
+    "n": 2,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 50,
+    "med20": -18.7
+   },
+   "breakout, 0.5+ ADR over": {
+    "n": 2,
+    "ran10": 50,
+    "ran20": 0,
+    "fail5": 50,
+    "med20": -9.8
+   },
+   "retest": {
+    "n": 8,
+    "ran10": 25,
+    "ran20": 0,
+    "fail5": 75,
+    "med20": -11.0
+   },
+   "retest, 1x+ volume": {
+    "n": 2,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 50,
+    "med20": -12.5
+   },
+   "21 EMA retest": {
+    "n": 2,
+    "ran10": 50,
+    "ran20": 0,
+    "fail5": 100,
+    "med20": -19.2
+   },
+   "21 EMA retest, 1x+ volume": {
+    "n": 1,
+    "ran10": 100,
+    "ran20": 0,
+    "fail5": 100,
+    "med20": -20.7
+   },
+   "push": {
+    "n": 2,
+    "ran10": 50,
+    "ran20": 0,
+    "fail5": 100,
+    "med20": -20.8
+   },
+   "push, 1x+ volume": {
+    "n": 2,
+    "ran10": 50,
+    "ran20": 0,
+    "fail5": 100,
+    "med20": -20.8
+   },
+   "retest, volume under 1x": {
+    "n": 6,
+    "ran10": 33,
+    "ran20": 0,
+    "fail5": 83,
+    "med20": -9.4
+   },
+   "21 EMA retest, volume under 1x": {
+    "n": 1,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 100,
+    "med20": -17.6
+   },
+   "per_launch": 1.75,
+   "launches_with_one": 75
+  }
+ },
+ "by_base": {
+  "120 sessions": {
+   "n": 17,
+   "orh": {
+    "n": 10,
+    "win": 10,
+    "avg": 2.2,
+    "med": -5.1,
+    "ran20": 10,
+    "ran50": 10,
+    "broke_orh_pct": 59
+   },
+   "buy_points": {
+    "n": 54,
+    "ran10": 41,
+    "ran20": 17,
+    "fail5": 50,
+    "med20": -0.1
+   }
+  },
+  "63 sessions": {
+   "n": 8,
+   "orh": {
+    "n": 5,
+    "win": 40,
+    "avg": 1.9,
+    "med": -2.3,
+    "ran20": 20,
+    "ran50": 0,
+    "broke_orh_pct": 62
+   },
+   "buy_points": {
+    "n": 20,
+    "ran10": 25,
+    "ran20": 5,
+    "fail5": 50,
+    "med20": -3.6
+   }
+  },
+  "21 sessions": {
+   "n": 13,
+   "orh": {
+    "n": 5,
+    "win": 0,
+    "avg": -5.8,
+    "med": -5.2,
+    "ran20": 0,
+    "ran50": 0,
+    "broke_orh_pct": 38
+   },
+   "buy_points": {
+    "n": 24,
+    "ran10": 46,
+    "ran20": 25,
+    "fail5": 50,
+    "med20": 0.9
+   }
+  }
+ },
+ "rule_change_nov1": {
+  "before": 1406,
+  "now": 1465,
+  "added": 62,
+  "dropped": 3,
+  "reversal": 41,
+  "power": 21,
+  "power_faded": 15,
+  "launch_day_orh": {
+   "reversal": {
+    "n": 36,
+    "win": 67,
+    "avg": 13.3,
+    "med": 3.4,
+    "ran20": 47,
+    "ran50": 17,
+    "broke_orh_pct": 90
+   },
+   "power": {
+    "n": 15,
+    "win": 13,
+    "avg": -3.8,
+    "med": -5.6,
+    "ran20": 20,
+    "ran50": 0,
+    "broke_orh_pct": 71
+   },
+   "dropped": {
+    "n": 3,
+    "win": 67,
+    "avg": 25.8,
+    "med": 11.9,
+    "ran20": 67,
+    "ran50": 33,
+    "broke_orh_pct": 100
+   },
+   "all_now": {
+    "n": 1343,
+    "win": 45,
+    "avg": 4.7,
+    "med": -1.1,
+    "ran20": 28,
+    "ran50": 7,
+    "broke_orh_pct": 92
+   }
+  },
+  "buy_points": {
+   "reversal": {
+    "n": 86,
+    "ran10": 42,
+    "ran20": 24,
+    "fail5": 48,
+    "med20": -3.0
+   },
+   "power": {
+    "n": 56,
+    "ran10": 57,
+    "ran20": 27,
+    "fail5": 41,
+    "med20": -2.0
+   },
+   "dropped": {
+    "n": 10,
+    "ran10": 60,
+    "ran20": 30,
+    "fail5": 40,
+    "med20": -3.2
+   }
+  },
+  "examples": [
+   [
+    "2026-03-25",
+    "ARM",
+    "power",
+    9.9,
+    16.4,
+    6.1
+   ],
+   [
+    "2026-03-25",
+    "ELVN",
+    "power",
+    8.4,
+    14.1,
+    6.2
+   ],
+   [
+    "2026-03-30",
+    "SGML",
+    "power",
+    23.9,
+    14.0,
+    8.0
+   ],
+   [
+    "2026-03-31",
+    "AGIO",
+    "power",
+    13.9,
+    14.3,
+    4.7
+   ],
+   [
+    "2026-04-02",
+    "GSAT",
+    "power",
+    11.0,
+    13.4,
+    5.5
+   ],
+   [
+    "2026-04-08",
+    "LEVI",
+    "power",
+    14.9,
+    10.7,
+    4.4
+   ],
+   [
+    "2026-04-23",
+    "VC",
+    "reversal",
+    -2.0,
+    9.4,
+    3.0
+   ],
+   [
+    "2026-04-28",
+    "PII",
+    "reversal",
+    -3.6,
+    8.9,
+    2.2
+   ],
+   [
+    "2026-04-28",
+    "SANM",
+    "power",
+    9.0,
+    14.6,
+    4.5
+   ],
+   [
+    "2026-04-30",
+    "FTDR",
+    "reversal",
+    -1.5,
+    13.3,
+    2.4
+   ],
+   [
+    "2026-05-04",
+    "MIRM",
+    "reversal",
+    -7.3,
+    9.6,
+    3.5
+   ],
+   [
+    "2026-05-08",
+    "PTCT",
+    "power",
+    14.9,
+    14.3,
+    5.1
+   ],
+   [
+    "2026-05-22",
+    "NTAP",
+    "reversal",
+    -0.3,
+    12.4,
+    3.1
+   ],
+   [
+    "2026-05-28",
+    "MDB",
+    "power",
+    9.2,
+    10.6,
+    5.3
+   ],
+   [
+    "2026-06-02",
+    "LEGN",
+    "reversal",
+    -0.5,
+    42.2,
+    5.8
+   ],
+   [
+    "2026-06-09",
+    "ALHC",
+    "reversal",
+    -0.7,
+    25.1,
+    2.3
+   ],
+   [
+    "2026-06-17",
+    "HOOD",
+    "reversal",
+    -0.8,
+    8.8,
+    2.3
+   ],
+   [
+    "2026-06-25",
+    "KYMR",
+    "power",
+    8.9,
+    16.6,
+    4.6
+   ],
+   [
+    "2026-07-01",
+    "PRGS",
+    "reversal",
+    -1.5,
+    16.6,
+    3.9
+   ],
+   [
+    "2026-07-24",
+    "IP",
+    "reversal",
+    -0.4,
+    11.2,
+    2.4
+   ],
+   [
+    "2026-07-28",
+    "TRU",
+    "reversal",
+    -0.4,
+    8.5,
+    2.5
+   ],
+   [
+    "2026-07-29",
+    "NP",
+    "reversal",
+    -1.7,
+    10.1,
+    2.1
+   ],
+   [
+    "2026-08-04",
+    "ADEA",
+    "reversal",
+    -10.8,
+    12.3,
+    2.4
+   ],
+   [
+    "2026-08-05",
+    "DT",
+    "power",
+    12.7,
+    11.3,
+    4.5
+   ],
+   [
+    "2026-08-05",
+    "SKY",
+    "reversal",
+    -4.2,
+    10.7,
+    2.5
+   ],
+   [
+    "2026-08-05",
+    "TVTX",
+    "power",
+    10.7,
+    12.0,
+    4.8
+   ],
+   [
+    "2026-08-07",
+    "DV",
+    "power",
+    13.0,
+    12.8,
+    18.9
+   ],
+   [
+    "2026-08-07",
+    "TNDM",
+    "reversal",
+    -7.5,
+    19.1,
+    2.7
+   ],
+   [
+    "2026-08-26",
+    "BHVN",
+    "reversal",
+    -1.0,
+    17.9,
+    8.3
+   ],
+   [
+    "2026-09-01",
+    "NVAX",
+    "reversal",
+    -1.8,
+    8.0,
+    2.1
+   ],
+   [
+    "2026-09-02",
+    "CNH",
+    "reversal",
+    -0.3,
+    9.2,
+    2.6
+   ],
+   [
+    "2026-09-08",
+    "MLYS",
+    "reversal",
+    -0.6,
+    10.3,
+    2.8
+   ],
+   [
+    "2026-09-10",
+    "SWKS",
+    "reversal",
+    -0.6,
+    9.8,
+    2.0
+   ],
+   [
+    "2026-09-16",
+    "BBNX",
+    "reversal",
+    -3.2,
+    15.3,
+    6.7
+   ],
+   [
+    "2026-09-24",
+    "VCYT",
+    "reversal",
+    -0.4,
+    10.8,
+    2.1
+   ],
+   [
+    "2026-10-06",
+    "CEG",
+    "power",
+    8.8,
+    12.2,
+    4.4
+   ],
+   [
+    "2026-10-23",
+    "CART",
+    "reversal",
+    -0.6,
+    9.2,
+    5.1
+   ],
+   [
+    "2026-10-28",
+    "BEAM",
+    "reversal",
+    -1.2,
+    15.6,
+    2.9
+   ],
+   [
+    "2026-10-29",
+    "FLS",
+    "reversal",
+    -0.4,
+    11.9,
+    2.4
+   ],
+   [
+    "2026-10-30",
+    "GDDY",
+    "reversal",
+    -2.1,
+    10.7,
+    2.3
+   ]
+  ],
+  "dropped_examples": [
+   [
+    "2026-04-22",
+    "ARM",
+    2.6,
+    12.0
+   ],
+   [
+    "2026-06-22",
+    "KYMR",
+    2.7,
+    10.0
+   ],
+   [
+    "2026-06-01",
+    "MDB",
+    3.1,
+    20.4
+   ]
+  ]
+ },
+ "check": {
+  "GMAB 2026-08-07": [
+   "earnings",
+   "Genmab Raises FY2026 Sales Guidance from $4.065B-$4.395B to $4.325B-$4.525B vs $4.355B Est"
+  ],
+  "GMAB raw Aug 5-8": [
+   [
+    "2026-08-07T16:59:17Z",
+    "Guggenheim Maintains Buy on Genmab, Raises Price Target to $42",
+    [
+     "GMAB"
+    ]
+   ],
+   [
+    "2026-08-06T19:52:01Z",
+    "Genmab Raises FY2026 Sales Guidance from $4.065B-$4.395B to $4.325B-$4.525B vs $4.355B Est",
+    [
+     "GMAB"
+    ]
+   ]
+  ]
+ },
+ "examples": [
+  [
+   "2025-09-02",
+   "IDYA",
+   5.9,
+   3.8,
+   21,
+   "earnings",
+   "Servier And Ideaya Biosciences Announced An Exclusive License Agreement For Darovasertib For Rare Eye Cancer, Servier Obtains Rights For Dar"
+  ],
+  [
+   "2025-09-23",
+   "ONTO",
+   5.7,
+   5.1,
+   120,
+   "news",
+   "Jefferies Upgrades Onto Innovation to Buy, Raises Price Target to $170"
+  ],
+  [
+   "2025-09-30",
+   "PATH",
+   20.9,
+   6.5,
+   21,
+   "news",
+   "UiPath Partners With OpenAI To Develop ChatGPT Connector To Integrate Openai Frontier Models With Enterprise Customer Workflows"
+  ],
+  [
+   "2025-10-17",
+   "RVMD",
+   6.2,
+   8.9,
+   120,
+   "news",
+   "FDA Awards First-Ever National Priority Vouchers to Nine Sponsors"
+  ],
+  [
+   "2025-10-28",
+   "SWKS",
+   12.9,
+   5.8,
+   21,
+   "news",
+   "'Apple Supplier Skyworks Held Talks To Buy $8 Billion Rival Qorvo' - The Information"
+  ],
+  [
+   "2025-10-29",
+   "COCO",
+   9.8,
+   7.2,
+   120,
+   "earnings",
+   "Preview: Vita Coco's Earnings"
+  ],
+  [
+   "2025-11-05",
+   "FLYW",
+   8.5,
+   1.3,
+   120,
+   "earnings",
+   "Flywire Q3 EPS $0.23 Beats $0.19 Estimate, Sales $200.138M Beat $182.109M Estimate"
+  ],
+  [
+   "2025-11-06",
+   "LZ",
+   19.2,
+   7.4,
+   21,
+   "earnings",
+   "LegalZoom.com Q3 Adj. EPS $0.17 Misses $0.19 Estimate, Sales $190.158M Beat $183.252M Estimate"
+  ],
+  [
+   "2025-11-06",
+   "PCOR",
+   7.7,
+   10.6,
+   120,
+   "earnings",
+   "Procore Technologies Raises FY2025 Sales Guidance from $1.299B-$1.302B to $1.312B-$1.314B vs $1.302B Est"
+  ],
+  [
+   "2025-11-25",
+   "UPWK",
+   6.3,
+   6.1,
+   21,
+   "news",
+   "Upwork Inc. Will Replace Premier Inc. In The S&P SmallCap 600 Effective Prior To The Open Of Trading On Friday, November 28"
+  ],
+  [
+   "2025-12-19",
+   "WGO",
+   18.2,
+   8.4,
+   120,
+   "earnings",
+   "Winnebago Earnings Are Imminent; These Most Accurate Analysts Revise Forecasts Ahead Of Earnings Call"
+  ],
+  [
+   "2026-01-27",
+   "NET",
+   12.0,
+   8.8,
+   21,
+   "news",
+   "Cloudflare Shares Climb Over 3% After Key Trading Signal"
+  ],
+  [
+   "2026-02-18",
+   "ESI",
+   6.1,
+   4.3,
+   120,
+   "earnings",
+   "Element Solutions Q4 Adj. EPS $0.37 Beats $0.36 Estimate, Sales $676.200M Beat $628.980M Estimate"
+  ],
+  [
+   "2026-02-24",
+   "TARS",
+   7.1,
+   7.8,
+   21,
+   "earnings",
+   "Insights into Tarsus Pharmaceuticals Q4 Earnings"
+  ],
+  [
+   "2026-02-25",
+   "ACHC",
+   18.3,
+   21.4,
+   63,
+   "earnings",
+   "Acadia Healthcare Co Q4 Adj. EPS $0.07 Beats $0.06 Estimate, Sales $821.459M Beat $800.065M Estimate"
+  ],
+  [
+   "2026-02-25",
+   "REZI",
+   13.0,
+   14.4,
+   63,
+   "earnings",
+   "Resideo Technologies Q4 Adj. EPS $0.50 Misses $0.52 Estimate, Sales $1.895B Beat $1.888B Estimate"
+  ],
+  [
+   "2026-02-25",
+   "SUPN",
+   6.0,
+   5.7,
+   63,
+   "earnings",
+   "Supernus Pharmaceuticals Q4 EPS $(0.07) Beats $(0.16) Estimate, Sales $211.572M Beat $195.004M Estimate"
+  ],
+  [
+   "2026-02-26",
+   "VAC",
+   21.4,
+   16.7,
+   63,
+   "earnings",
+   "Marriott Vacations Q4 Adj. EPS $1.86 Beats $1.57 Estimate, Sales $1.323B Beat $1.294B Estimate"
+  ],
+  [
+   "2026-02-27",
+   "NATL",
+   8.8,
+   5.8,
+   120,
+   "earnings",
+   "NCR Atleos Q4 Adj. EPS $1.49 Beats $1.36 Estimate, Sales $1.152B Beat $1.147B Estimate"
+  ],
+  [
+   "2026-03-12",
+   "HIMX",
+   28.6,
+   10.7,
+   120,
+   "news",
+   "Hunterbrook Posted Article \"Himax: Stealth Supplier for NVIDIA's Optics Revolution\""
+  ],
+  [
+   "2026-04-29",
+   "WERN",
+   11.8,
+   5.8,
+   21,
+   "earnings",
+   "Werner Enterprises Q1 Adj. EPS $0.02 Beats $(0.05) Estimate, Sales $808.610M Miss $813.910M Estimate"
+  ],
+  [
+   "2026-04-30",
+   "INDV",
+   5.3,
+   7.7,
+   63,
+   "earnings",
+   "Indivior Q1 Adj. EPS $0.96 Beats $0.66 Estimate, Sales $317.000M Beat $272.840M Estimate"
+  ],
+  [
+   "2026-05-08",
+   "BIDU",
+   5.3,
+   0.8,
+   21,
+   "news",
+   "South China Post Reported Baidu Chip Unit Kunlunxin Eyes $14.7B Valuation In Hong Kong IPO"
+  ],
+  [
+   "2026-05-14",
+   "STAA",
+   21.7,
+   8.9,
+   120,
+   "earnings",
+   "Staar Surgical Q1 EPS $0.10 Beats $(0.06) Estimate, Sales $93.522M Beat $75.509M Estimate"
+  ],
+  [
+   "2026-05-14",
+   "VIK",
+   9.4,
+   5.5,
+   120,
+   "earnings",
+   "Viking Holdings Q1 Adj. EPS $(0.11) Beats $(0.12) Estimate, Sales $1.054B Beat $1.010B Estimate"
+  ],
+  [
+   "2026-07-01",
+   "GRND",
+   6.3,
+   9.2,
+   120,
+   "news",
+   "Morgan Stanley Upgrades Grindr to Overweight, Raises Price Target to $18"
+  ],
+  [
+   "2026-07-22",
+   "ARWR",
+   14.7,
+   19.0,
+   120,
+   "earnings",
+   "Arrowhead Pharmaceuticals Announces Topline Results For Phase 3 SHASTA-3 And SHASTA-4 Clinical Studies Of Plozasiran In Patients With Severe"
+  ],
+  [
+   "2026-07-24",
+   "THC",
+   18.1,
+   17.2,
+   63,
+   "earnings",
+   "Tenet Healthcare Q2 Adj. EPS $6.12 Beats $4.23 Estimate, Sales $5.628B Beat $5.430B Estimate"
+  ],
+  [
+   "2026-07-30",
+   "BAX",
+   17.4,
+   8.0,
+   120,
+   "earnings",
+   "Baxter Intl Q2 Adj. EPS $0.54 Beats $0.37 Estimate, Sales $2.960B Beat $2.795B Estimate"
+  ],
+  [
+   "2026-07-30",
+   "ST",
+   7.2,
+   4.3,
+   21,
+   "earnings",
+   "Sensata Technologies Sees Q3 Adj EPS $0.93-$0.97 vs $0.95 Est; Sees Sales $957.000M-$987.000M vs $969.242M Est"
+  ],
+  [
+   "2026-08-06",
+   "RDW",
+   14.2,
+   10.4,
+   21,
+   "earnings",
+   "Redwire Q2 EPS $(0.19) Misses $(0.15) Estimate, Sales $117.074M Beat $107.299M Estimate"
+  ],
+  [
+   "2026-08-07",
+   "CARG",
+   10.0,
+   7.2,
+   120,
+   "earnings",
+   "CarGurus Q2 Adj. EPS $0.66 Beats $0.61 Estimate, Sales $251.000M Beat $249.872M Estimate"
+  ],
+  [
+   "2026-08-07",
+   "FIGS",
+   35.2,
+   26.9,
+   21,
+   "earnings",
+   "FIGS Q2 EPS $0.15 Beats $0.07 Estimate, Sales $196.619M Beat $185.855M Estimate"
+  ],
+  [
+   "2026-08-11",
+   "RPD",
+   10.5,
+   15.2,
+   120,
+   "earnings",
+   "Rapid7 Q2 Adj. EPS $0.44 Beats $0.35 Estimate, Sales $210.883M Beat $208.248M Estimate"
+  ],
+  [
+   "2026-08-12",
+   "CRWV",
+   20.3,
+   19.3,
+   21,
+   "earnings",
+   "CoreWeave Q2 Adj. EPS $(1.03) Beats $(1.22) Estimate, Sales $2.575B Beat $2.560B Estimate"
+  ],
+  [
+   "2026-08-14",
+   "NU",
+   13.0,
+   9.3,
+   63,
+   "earnings",
+   "Nu Holdings Q2 EPS $0.22 Beats $0.20 Estimate, Sales $5.513B Beat $5.227B Estimate"
+  ],
+  [
+   "2026-09-08",
+   "PHVS",
+   16.2,
+   7.3,
+   120,
+   "earnings",
+   "Pharvaris Announces Statistically Significant And Clinically Meaningful Topline Results From Its CHAPTER-3 Pivotal Phase 3 Study Evaluating "
+  ],
+  [
+   "2026-10-23",
+   "CCI",
+   15.5,
+   9.1,
+   63,
+   "news",
+   "'One Of The Companies SpaceX Is In Talks With Is Crown Castle' - Bloomberg News"
+  ]
+ ]
+}

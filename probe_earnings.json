@@ -1,0 +1,1426 @@
+{
+ "built_at": "2026-11-03T09:09:20-05:00",
+ "nasdaq": {
+  "2026-11-02": {
+   "n": 153,
+   "sample": [
+    {
+     "eps": "$2.05",
+     "surprise": "3.54",
+     "time": "time-not-supplied",
+     "symbol": "AAPL",
+     "name": "Apple Inc.",
+     "marketCap": "$5,029,592,300,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$1.98",
+     "noOfEsts": "7"
+    },
+    {
+     "eps": "$0.32",
+     "surprise": "N/A",
+     "time": "time-not-supplied",
+     "symbol": "PLTR",
+     "name": "Palantir Technologies Inc.",
+     "marketCap": "$442,242,073,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.32",
+     "noOfEsts": "11"
+    },
+    {
+     "eps": "$4.21",
+     "surprise": "-3.44",
+     "time": "time-not-supplied",
+     "symbol": "VRTX",
+     "name": "Vertex Pharmaceuticals Incorporated",
+     "marketCap": "$141,654,245,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$4.36",
+     "noOfEsts": "5"
+    }
+   ]
+  },
+  "2026-11-03": {
+   "n": 274,
+   "sample": [
+    {
+     "lastYearRptDt": "11/04/2025",
+     "lastYearEPS": "$0.97",
+     "time": "time-after-hours",
+     "symbol": "AMD",
+     "name": "Advanced Micro Devices, Inc.",
+     "marketCap": "$824,073,390,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$1.68",
+     "noOfEsts": "13"
+    },
+    {
+     "lastYearRptDt": "11/04/2025",
+     "lastYearEPS": "$5.64",
+     "time": "time-after-hours",
+     "symbol": "AMGN",
+     "name": "Amgen Inc.",
+     "marketCap": "$251,939,914,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$5.74",
+     "noOfEsts": "9"
+    },
+    {
+     "lastYearRptDt": "11/04/2025",
+     "lastYearEPS": "$0.67",
+     "time": "time-after-hours",
+     "symbol": "ANET",
+     "name": "Arista Networks, Inc.",
+     "marketCap": "$212,970,390,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.99",
+     "noOfEsts": "9"
+    }
+   ]
+  },
+  "2026-11-04": {
+   "n": 478,
+   "sample": [
+    {
+     "lastYearRptDt": "11/05/2025",
+     "lastYearEPS": "$4.85",
+     "time": "time-not-supplied",
+     "symbol": "TM",
+     "name": "Toyota Motor Corp Ltd Ord",
+     "marketCap": "$255,087,084,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "",
+     "noOfEsts": "N/A"
+    },
+    {
+     "lastYearRptDt": "11/05/2025",
+     "lastYearEPS": "$0.15",
+     "time": "time-after-hours",
+     "symbol": "ARM",
+     "name": "Arm Holdings plc",
+     "marketCap": "$219,163,460,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.22",
+     "noOfEsts": "7"
+    },
+    {
+     "lastYearRptDt": "11/05/2025",
+     "lastYearEPS": "$3.22",
+     "time": "time-pre-market",
+     "symbol": "MCD",
+     "name": "McDonald's Corporation",
+     "marketCap": "$182,656,434,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$3.36",
+     "noOfEsts": "11"
+    }
+   ]
+  },
+  "2026-11-05": {
+   "n": 620,
+   "sample": [
+    {
+     "lastYearRptDt": "11/06/2025",
+     "lastYearEPS": "$1.61",
+     "time": "time-pre-market",
+     "symbol": "COP",
+     "name": "ConocoPhillips",
+     "marketCap": "$185,042,010,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$2.97",
+     "noOfEsts": "9"
+    },
+    {
+     "lastYearRptDt": "11/11/2025",
+     "lastYearEPS": "$0.35",
+     "time": "time-pre-market",
+     "symbol": "SONY",
+     "name": "Sony Group Corporation",
+     "marketCap": "$149,170,127,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.38",
+     "noOfEsts": "1"
+    },
+    {
+     "lastYearRptDt": "11/06/2025",
+     "lastYearEPS": "$0.28",
+     "time": "time-after-hours",
+     "symbol": "MNST",
+     "name": "Monster Beverage Corporation",
+     "marketCap": "$139,112,399,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.30",
+     "noOfEsts": "9"
+    }
+   ]
+  },
+  "2026-11-06": {
+   "n": 120,
+   "sample": [
+    {
+     "lastYearRptDt": "N/A",
+     "lastYearEPS": "N/A",
+     "time": "time-not-supplied",
+     "symbol": "BRK.A",
+     "name": "Berkshire Hathaway Inc.",
+     "marketCap": "$1,171,562,950,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "",
+     "noOfEsts": "1"
+    },
+    {
+     "lastYearRptDt": "11/01/2025",
+     "lastYearEPS": "$6.26",
+     "time": "time-not-supplied",
+     "symbol": "BRK.B",
+     "name": "Berkshire Hathaway Inc.",
+     "marketCap": "$1,171,562,950,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$5.91",
+     "noOfEsts": "2"
+    },
+    {
+     "lastYearRptDt": "11/07/2025",
+     "lastYearEPS": "$0.33",
+     "time": "time-pre-market",
+     "symbol": "ENB",
+     "name": "Enbridge Inc",
+     "marketCap": "$108,002,107,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.36",
+     "noOfEsts": "5"
+    }
+   ]
+  }
+ },
+ "nasdaq_secs": 13.8,
+ "yahoo": {
+  "AMD": {
+   "eps_history": [
+    {
+     "quarter": "2025-09-30",
+     "period": "-4q",
+     "epsActual": "1.2",
+     "epsEstimate": "1.18",
+     "surprisePercent": "2.10%"
+    },
+    {
+     "quarter": "2025-12-31",
+     "period": "-3q",
+     "epsActual": "1.53",
+     "epsEstimate": "1.32",
+     "surprisePercent": "15.53%"
+    },
+    {
+     "quarter": "2026-03-31",
+     "period": "-2q",
+     "epsActual": "1.37",
+     "epsEstimate": "1.29",
+     "surprisePercent": "5.82%"
+    },
+    {
+     "quarter": "2026-06-30",
+     "period": "-1q",
+     "epsActual": "1.66",
+     "epsEstimate": "1.61",
+     "surprisePercent": "3.21%"
+    }
+   ],
+   "trend": [
+    {
+     "period": "0q",
+     "end": "2026-09-30",
+     "eps_avg": 1.93991,
+     "eps_yago": 1.2,
+     "rev_avg": 13092087100,
+     "rev_yago": 9246000000,
+     "eps_7d_ago": 1.93463
+    },
+    {
+     "period": "+1q",
+     "end": "2026-12-31",
+     "eps_avg": 2.65322,
+     "eps_yago": 1.53,
+     "rev_avg": 16149569960,
+     "rev_yago": 10270000000,
+     "eps_7d_ago": 2.65332
+    },
+    {
+     "period": "0y",
+     "end": "2026-12-31",
+     "eps_avg": 7.61958,
+     "eps_yago": 4.17,
+     "rev_avg": 50999395930,
+     "rev_yago": 34639000000,
+     "eps_7d_ago": 7.61177
+    },
+    {
+     "period": "+1y",
+     "end": "2027-12-31",
+     "eps_avg": 16.01026,
+     "eps_yago": 7.61958,
+     "rev_avg": 89677644040,
+     "rev_yago": 50999395930,
+     "eps_7d_ago": 15.82324
+    }
+   ],
+   "calendar": {
+    "dates": [
+     "2026-11-03"
+    ],
+    "eps_avg": 1.93991,
+    "rev_avg": 13092087100,
+    "call": [
+     "2026-11-03"
+    ]
+   },
+   "fin_chart": [
+    {
+     "q": "3Q2025",
+     "rev": 9246000000
+    },
+    {
+     "q": "4Q2025",
+     "rev": 10270000000
+    },
+    {
+     "q": "1Q2026",
+     "rev": 10253000000
+    },
+    {
+     "q": "2Q2026",
+     "rev": 11536000000
+    }
+   ],
+   "quarterlyDilutedEPS": [
+    [
+     "2025-06-30",
+     0.54
+    ],
+    [
+     "2025-09-30",
+     0.75
+    ],
+    [
+     "2025-12-31",
+     0.92
+    ],
+    [
+     "2026-03-31",
+     0.84
+    ],
+    [
+     "2026-06-30",
+     1.38
+    ]
+   ],
+   "quarterlyTotalRevenue": [
+    [
+     "2025-06-30",
+     7685000000.0
+    ],
+    [
+     "2025-09-30",
+     9246000000.0
+    ],
+    [
+     "2025-12-31",
+     10270000000.0
+    ],
+    [
+     "2026-03-31",
+     10253000000.0
+    ],
+    [
+     "2026-06-30",
+     11536000000.0
+    ]
+   ],
+   "quote": {
+    "earningsTimestamp": 1793739600,
+    "earningsTimestampStart": 1793739600,
+    "isEarningsDateEstimate": false,
+    "earningsCallTimestampStart": 1793743200,
+    "preMarketPrice": 486.49,
+    "preMarketTime": 1793714944,
+    "marketCap": 762104643584
+   }
+  },
+  "SHOP": {
+   "eps_history": [
+    {
+     "quarter": "2025-09-30",
+     "period": "-4q",
+     "epsActual": "0.34",
+     "epsEstimate": "0.34",
+     "surprisePercent": "0.61%"
+    },
+    {
+     "quarter": "2025-12-31",
+     "period": "-3q",
+     "epsActual": "0.48",
+     "epsEstimate": "0.51",
+     "surprisePercent": "-5.71%"
+    },
+    {
+     "quarter": "2026-03-31",
+     "period": "-2q",
+     "epsActual": "0.36",
+     "epsEstimate": "0.33",
+     "surprisePercent": "8.56%"
+    },
+    {
+     "quarter": "2026-06-30",
+     "period": "-1q",
+     "epsActual": "0.42",
+     "epsEstimate": "0.4",
+     "surprisePercent": "5.05%"
+    }
+   ],
+   "trend": [
+    {
+     "period": "0q",
+     "end": "2026-09-30",
+     "eps_avg": 0.45981,
+     "eps_yago": 0.34,
+     "rev_avg": 3744370520,
+     "rev_yago": 2844000000,
+     "eps_7d_ago": 0.45955
+    },
+    {
+     "period": "+1q",
+     "end": "2026-12-31",
+     "eps_avg": 0.64961,
+     "eps_yago": 0.48,
+     "rev_avg": 4757978170,
+     "rev_yago": 3672000000,
+     "eps_7d_ago": 0.64597
+    },
+    {
+     "period": "0y",
+     "end": "2026-12-31",
+     "eps_avg": 1.91162,
+     "eps_yago": 1.43,
+     "rev_avg": 15256433660,
+     "rev_yago": 11556000000,
+     "eps_7d_ago": 1.91092
+    },
+    {
+     "period": "+1y",
+     "end": "2027-12-31",
+     "eps_avg": 2.45855,
+     "eps_yago": 1.91162,
+     "rev_avg": 19224710760,
+     "rev_yago": 15256433660,
+     "eps_7d_ago": 2.45637
+    }
+   ],
+   "calendar": {
+    "dates": [
+     "2026-11-03"
+    ],
+    "eps_avg": 0.45981,
+    "rev_avg": 3744370520,
+    "call": [
+     "2026-11-03"
+    ]
+   },
+   "fin_chart": [
+    {
+     "q": "3Q2025",
+     "rev": 2844000000
+    },
+    {
+     "q": "4Q2025",
+     "rev": 3672000000
+    },
+    {
+     "q": "1Q2026",
+     "rev": 3170000000
+    },
+    {
+     "q": "2Q2026",
+     "rev": 3583000000
+    }
+   ],
+   "quarterlyTotalRevenue": [
+    [
+     "2025-06-30",
+     2680000000.0
+    ],
+    [
+     "2025-09-30",
+     2844000000.0
+    ],
+    [
+     "2025-12-31",
+     3672000000.0
+    ],
+    [
+     "2026-03-31",
+     3170000000.0
+    ],
+    [
+     "2026-06-30",
+     3583000000.0
+    ]
+   ],
+   "quarterlyDilutedEPS": [
+    [
+     "2025-06-30",
+     0.69
+    ],
+    [
+     "2025-09-30",
+     0.2
+    ],
+    [
+     "2025-12-31",
+     0.569827
+    ],
+    [
+     "2026-03-31",
+     -0.446655
+    ],
+    [
+     "2026-06-30",
+     1.16
+    ]
+   ],
+   "quote": {
+    "earningsTimestamp": 1793712600,
+    "earningsTimestampStart": 1793712600,
+    "isEarningsDateEstimate": false,
+    "earningsCallTimestampStart": 1793712600,
+    "preMarketPrice": 131.45,
+    "preMarketTime": 1793714954,
+    "marketCap": 200999518208
+   }
+  },
+  "PLTR": {
+   "eps_history": [
+    {
+     "quarter": "2025-12-31",
+     "period": "-4q",
+     "epsActual": "0.25",
+     "epsEstimate": "0.23",
+     "surprisePercent": "8.60%"
+    },
+    {
+     "quarter": "2026-03-31",
+     "period": "-3q",
+     "epsActual": "0.33",
+     "epsEstimate": "0.28",
+     "surprisePercent": "18.08%"
+    },
+    {
+     "quarter": "2026-06-30",
+     "period": "-2q",
+     "epsActual": "0.41",
+     "epsEstimate": "0.35",
+     "surprisePercent": "18.51%"
+    },
+    {
+     "quarter": "2026-09-30",
+     "period": "-1q",
+     "epsActual": "0.44",
+     "epsEstimate": "0.41",
+     "surprisePercent": "8.09%"
+    }
+   ],
+   "trend": [
+    {
+     "period": "0q",
+     "end": "2026-12-31",
+     "eps_avg": 0.45953,
+     "eps_yago": 0.25,
+     "rev_avg": 2456439500,
+     "rev_yago": 1406802000,
+     "eps_7d_ago": 0.4634
+    },
+    {
+     "period": "+1q",
+     "end": "2027-03-31",
+     "eps_avg": 0.48371,
+     "eps_yago": 0.33,
+     "rev_avg": 2599214680,
+     "rev_yago": 1632583000,
+     "eps_7d_ago": 0.47667
+    },
+    {
+     "period": "0y",
+     "end": "2026-12-31",
+     "eps_avg": 1.61448,
+     "eps_yago": 0.75,
+     "rev_avg": 8220196770,
+     "rev_yago": 4475446000,
+     "eps_7d_ago": 1.62119
+    },
+    {
+     "period": "+1y",
+     "end": "2027-12-31",
+     "eps_avg": 2.3503,
+     "eps_yago": 1.61448,
+     "rev_avg": 12394063960,
+     "rev_yago": 8220196770,
+     "eps_7d_ago": 2.35568
+    }
+   ],
+   "calendar": {
+    "dates": [
+     "2027-02-01"
+    ],
+    "eps_avg": 0.45953,
+    "rev_avg": 2456439500,
+    "call": [
+     "2026-11-02"
+    ]
+   },
+   "fin_chart": [
+    {
+     "q": "4Q2025",
+     "rev": 1406802000
+    },
+    {
+     "q": "1Q2026",
+     "rev": 1632583000
+    },
+    {
+     "q": "2Q2026",
+     "rev": 1935464000
+    },
+    {
+     "q": "3Q2026",
+     "rev": 2313411000
+    }
+   ],
+   "quarterlyDilutedEPS": [
+    [
+     "2025-06-30",
+     0.13019
+    ],
+    [
+     "2025-09-30",
+     0.180263
+    ],
+    [
+     "2025-12-31",
+     0.24
+    ],
+    [
+     "2026-03-31",
+     0.34
+    ],
+    [
+     "2026-06-30",
+     0.41
+    ]
+   ],
+   "quarterlyTotalRevenue": [
+    [
+     "2025-06-30",
+     1003697000.0
+    ],
+    [
+     "2025-09-30",
+     1181092000.0
+    ],
+    [
+     "2025-12-31",
+     1406802000.0
+    ],
+    [
+     "2026-03-31",
+     1632583000.0
+    ],
+    [
+     "2026-06-30",
+     1935464000.0
+    ]
+   ],
+   "quote": {
+    "earningsTimestamp": 1793653200,
+    "earningsTimestampStart": 1801515600,
+    "isEarningsDateEstimate": true,
+    "earningsCallTimestampStart": 1793656800,
+    "preMarketPrice": 166.81,
+    "preMarketTime": 1793714967,
+    "marketCap": 428561432576
+   }
+  },
+  "AAPL": {
+   "eps_history": [
+    {
+     "quarter": "2025-12-31",
+     "period": "-4q",
+     "epsActual": "2.84",
+     "epsEstimate": "2.67",
+     "surprisePercent": "6.34%"
+    },
+    {
+     "quarter": "2026-03-31",
+     "period": "-3q",
+     "epsActual": "2.01",
+     "epsEstimate": "1.94",
+     "surprisePercent": "3.46%"
+    },
+    {
+     "quarter": "2026-06-30",
+     "period": "-2q",
+     "epsActual": "2.02",
+     "epsEstimate": "1.89",
+     "surprisePercent": "6.74%"
+    },
+    {
+     "quarter": "2026-09-30",
+     "period": "-1q",
+     "epsActual": "2.1",
+     "epsEstimate": "1.99",
+     "surprisePercent": "5.75%"
+    }
+   ],
+   "trend": [
+    {
+     "period": "0q",
+     "end": "2026-12-31",
+     "eps_avg": 2.91212,
+     "eps_yago": 2.84,
+     "rev_avg": 153064137540,
+     "rev_yago": 143756000000,
+     "eps_7d_ago": 2.89536
+    },
+    {
+     "period": "+1q",
+     "end": "2027-03-31",
+     "eps_avg": 2.23367,
+     "eps_yago": 2.01,
+     "rev_avg": 125201728040,
+     "rev_yago": 111184000000,
+     "eps_7d_ago": 2.22581
+    },
+    {
+     "period": "0y",
+     "end": "2027-09-30",
+     "eps_avg": 9.59021,
+     "eps_yago": 8.98,
+     "rev_avg": 526110651319,
+     "rev_yago": 478834000000,
+     "eps_7d_ago": 9.57532
+    },
+    {
+     "period": "+1y",
+     "end": "2028-09-30",
+     "eps_avg": 10.8295,
+     "eps_yago": 9.59021,
+     "rev_avg": 571661993480,
+     "rev_yago": 526110651319,
+     "eps_7d_ago": 10.84359
+    }
+   ],
+   "calendar": {
+    "dates": [
+     "2027-01-28"
+    ],
+    "eps_avg": 2.88462,
+    "rev_avg": 153064137540,
+    "call": [
+     "2026-11-02"
+    ]
+   },
+   "fin_chart": [
+    {
+     "q": "4Q2025",
+     "rev": 143756000000
+    },
+    {
+     "q": "1Q2026",
+     "rev": 111184000000
+    },
+    {
+     "q": "2Q2026",
+     "rev": 109417000000
+    },
+    {
+     "q": "3Q2026",
+     "rev": 114477000000
+    }
+   ],
+   "quarterlyDilutedEPS": [
+    [
+     "2025-06-30",
+     1.57
+    ],
+    [
+     "2025-09-30",
+     1.85
+    ],
+    [
+     "2025-12-31",
+     2.84
+    ],
+    [
+     "2026-03-31",
+     2.01
+    ],
+    [
+     "2026-06-30",
+     2.02
+    ]
+   ],
+   "quarterlyTotalRevenue": [
+    [
+     "2025-06-30",
+     94036000000.0
+    ],
+    [
+     "2025-09-30",
+     102466000000.0
+    ],
+    [
+     "2025-12-31",
+     143756000000.0
+    ],
+    [
+     "2026-03-31",
+     111184000000.0
+    ],
+    [
+     "2026-06-30",
+     109417000000.0
+    ]
+   ],
+   "quote": {
+    "earningsTimestamp": 1793653200,
+    "earningsTimestampStart": 1801170000,
+    "isEarningsDateEstimate": true,
+    "earningsCallTimestampStart": 1793656800,
+    "preMarketPrice": 324.8032,
+    "preMarketTime": 1793714965,
+    "marketCap": 4937503211520
+   }
+  },
+  "UBER": {
+   "eps_history": [
+    {
+     "quarter": "2025-09-30",
+     "period": "-4q",
+     "epsActual": "3.11",
+     "epsEstimate": "0.69",
+     "surprisePercent": "353.17%"
+    },
+    {
+     "quarter": "2025-12-31",
+     "period": "-3q",
+     "epsActual": "0.14",
+     "epsEstimate": "0.77",
+     "surprisePercent": "-81.94%"
+    },
+    {
+     "quarter": "2026-03-31",
+     "period": "-2q",
+     "epsActual": "0.13",
+     "epsEstimate": "0.71",
+     "surprisePercent": "-81.74%"
+    },
+    {
+     "quarter": "2026-06-30",
+     "period": "-1q",
+     "epsActual": "1.17",
+     "epsEstimate": "0.83",
+     "surprisePercent": "40.22%"
+    }
+   ],
+   "trend": [
+    {
+     "period": "0q",
+     "end": "2026-09-30",
+     "eps_avg": 0.90307,
+     "eps_yago": 3.11,
+     "rev_avg": 14673582540,
+     "rev_yago": 13467000000,
+     "eps_7d_ago": 0.90292
+    },
+    {
+     "period": "+1q",
+     "end": "2026-12-31",
+     "eps_avg": 0.99786,
+     "eps_yago": 0.14,
+     "rev_avg": 15540037220,
+     "rev_yago": 14366000000,
+     "eps_7d_ago": 0.99798
+    },
+    {
+     "period": "0y",
+     "end": "2026-12-31",
+     "eps_avg": 3.17488,
+     "eps_yago": 4.73,
+     "rev_avg": 57851819930,
+     "rev_yago": 52017000000,
+     "eps_7d_ago": 3.17527
+    },
+    {
+     "period": "+1y",
+     "end": "2027-12-31",
+     "eps_avg": 4.51334,
+     "eps_yago": 3.17488,
+     "rev_avg": 66730059460,
+     "rev_yago": 57851819930,
+     "eps_7d_ago": 4.5282
+    }
+   ],
+   "calendar": {
+    "dates": [
+     "2026-11-04"
+    ],
+    "eps_avg": 0.86742,
+    "rev_avg": 14673582540,
+    "call": [
+     "2026-11-04"
+    ]
+   },
+   "fin_chart": [
+    {
+     "q": "3Q2025",
+     "rev": 13467000000
+    },
+    {
+     "q": "4Q2025",
+     "rev": 14366000000
+    },
+    {
+     "q": "1Q2026",
+     "rev": 13203000000
+    },
+    {
+     "q": "2Q2026",
+     "rev": 14191000000
+    }
+   ],
+   "quarterlyTotalRevenue": [
+    [
+     "2025-06-30",
+     12651000000.0
+    ],
+    [
+     "2025-09-30",
+     13467000000.0
+    ],
+    [
+     "2025-12-31",
+     14366000000.0
+    ],
+    [
+     "2026-03-31",
+     13203000000.0
+    ],
+    [
+     "2026-06-30",
+     14191000000.0
+    ]
+   ],
+   "quarterlyDilutedEPS": [
+    [
+     "2025-06-30",
+     0.63
+    ],
+    [
+     "2025-09-30",
+     3.11
+    ],
+    [
+     "2025-12-31",
+     0.14
+    ],
+    [
+     "2026-03-31",
+     0.13
+    ],
+    [
+     "2026-06-30",
+     1.17
+    ]
+   ],
+   "quote": {
+    "earningsTimestamp": 1793799000,
+    "earningsTimestampStart": 1793799000,
+    "isEarningsDateEstimate": false,
+    "earningsCallTimestampStart": 1793797200,
+    "preMarketPrice": 66.9296,
+    "preMarketTime": 1793714922,
+    "marketCap": 136259182592
+   }
+  },
+  "PFE": {
+   "eps_history": [
+    {
+     "quarter": "2025-12-31",
+     "period": "-4q",
+     "epsActual": "0.66",
+     "epsEstimate": "0.57",
+     "surprisePercent": "16.18%"
+    },
+    {
+     "quarter": "2026-03-31",
+     "period": "-3q",
+     "epsActual": "0.75",
+     "epsEstimate": "0.72",
+     "surprisePercent": "3.93%"
+    },
+    {
+     "quarter": "2026-06-30",
+     "period": "-2q",
+     "epsActual": "0.77",
+     "epsEstimate": "0.68",
+     "surprisePercent": "12.87%"
+    },
+    {
+     "quarter": "2026-09-30",
+     "period": "-1q",
+     "epsActual": "0.87",
+     "epsEstimate": "0.74",
+     "surprisePercent": "18.26%"
+    }
+   ],
+   "trend": [
+    {
+     "period": "0q",
+     "end": "2026-12-31",
+     "eps_avg": 0.70613,
+     "eps_yago": 0.66,
+     "rev_avg": 16889128480,
+     "rev_yago": 17557000000,
+     "eps_7d_ago": 0.70554
+    },
+    {
+     "period": "+1q",
+     "end": "2027-03-31",
+     "eps_avg": 0.67714,
+     "eps_yago": 0.75,
+     "rev_avg": 14018050400,
+     "rev_yago": 14451000000,
+     "eps_7d_ago": 0.67714
+    },
+    {
+     "period": "0y",
+     "end": "2026-12-31",
+     "eps_avg": 2.96162,
+     "eps_yago": 3.22,
+     "rev_avg": 62232325600,
+     "rev_yago": 62579000000,
+     "eps_7d_ago": 2.95608
+    },
+    {
+     "period": "+1y",
+     "end": "2027-12-31",
+     "eps_avg": 2.88686,
+     "eps_yago": 2.96162,
+     "rev_avg": 59889350780,
+     "rev_yago": 62232325600,
+     "eps_7d_ago": 2.88409
+    }
+   ],
+   "calendar": {
+    "dates": [
+     "2026-11-03"
+    ],
+    "eps_avg": 0.70613,
+    "rev_avg": 16889128480,
+    "call": [
+     "2026-11-03"
+    ]
+   },
+   "fin_chart": [
+    {
+     "q": "4Q2025",
+     "rev": 17557000000
+    },
+    {
+     "q": "1Q2026",
+     "rev": 14451000000
+    },
+    {
+     "q": "2Q2026",
+     "rev": 15034000000
+    },
+    {
+     "q": "3Q2026",
+     "rev": 16583000000
+    }
+   ],
+   "quarterlyDilutedEPS": [
+    [
+     "2025-06-30",
+     0.51
+    ],
+    [
+     "2025-09-30",
+     0.62
+    ],
+    [
+     "2025-12-31",
+     -0.29
+    ],
+    [
+     "2026-03-31",
+     0.47
+    ],
+    [
+     "2026-06-30",
+     -0.04
+    ]
+   ],
+   "quarterlyTotalRevenue": [
+    [
+     "2025-06-30",
+     14653000000.0
+    ],
+    [
+     "2025-09-30",
+     16654000000.0
+    ],
+    [
+     "2025-12-31",
+     17557000000.0
+    ],
+    [
+     "2026-03-31",
+     14450000000.0
+    ],
+    [
+     "2026-06-30",
+     15034000000.0
+    ]
+   ],
+   "quote": {
+    "earningsTimestamp": 1793712600,
+    "earningsTimestampStart": 1793712600,
+    "isEarningsDateEstimate": false,
+    "earningsCallTimestampStart": 1793718000,
+    "preMarketPrice": 30.52,
+    "preMarketTime": 1793714930,
+    "marketCap": 174808989696
+   }
+  },
+  "AEHR": {
+   "eps_history": [
+    {
+     "quarter": "2025-08-31",
+     "period": "-4q",
+     "epsActual": "0.01",
+     "epsEstimate": "0",
+     "surprisePercent": "0.00%"
+    },
+    {
+     "quarter": "2025-11-30",
+     "period": "-3q",
+     "epsActual": "-0.04",
+     "epsEstimate": "-0.04",
+     "surprisePercent": "-9.08%"
+    },
+    {
+     "quarter": "2026-02-28",
+     "period": "-2q",
+     "epsActual": "-0.05",
+     "epsEstimate": "-0.07",
+     "surprisePercent": "28.57%"
+    },
+    {
+     "quarter": "2026-05-31",
+     "period": "-1q",
+     "epsActual": "0.11",
+     "epsEstimate": "-0.01",
+     "surprisePercent": "1,566.67%"
+    }
+   ],
+   "trend": [
+    {
+     "period": "0q",
+     "end": "2026-09-30",
+     "eps_avg": 0.12667,
+     "eps_yago": 0.01,
+     "rev_avg": 27533000,
+     "rev_yago": 10969000,
+     "eps_7d_ago": 0.12667
+    },
+    {
+     "period": "+1q",
+     "end": "2026-12-31",
+     "eps_avg": 0.23,
+     "eps_yago": -0.04,
+     "rev_avg": 38858000,
+     "rev_yago": 9884000,
+     "eps_7d_ago": 0.23
+    },
+    {
+     "period": "0y",
+     "end": "2027-06-30",
+     "eps_avg": 0.77,
+     "eps_yago": 0.03,
+     "rev_avg": 137787000,
+     "rev_yago": 50001000,
+     "eps_7d_ago": 0.77
+    },
+    {
+     "period": "+1y",
+     "end": "2028-06-30",
+     "eps_avg": 1.375,
+     "eps_yago": 0.77,
+     "rev_avg": 211850000,
+     "rev_yago": 137787000,
+     "eps_7d_ago": 1.375
+    }
+   ],
+   "calendar": {
+    "dates": [
+     "2026-11-02"
+    ],
+    "eps_avg": 0.12667,
+    "rev_avg": 27533000,
+    "call": [
+     "2026-11-02"
+    ]
+   },
+   "fin_chart": [
+    {
+     "q": "4Q2025",
+     "rev": 9884000
+    },
+    {
+     "q": "1Q2026",
+     "rev": 10313000
+    },
+    {
+     "q": "2Q2026",
+     "rev": 18835000
+    },
+    {
+     "q": "3Q2026",
+     "rev": 33007000
+    }
+   ],
+   "quarterlyTotalRevenue": [
+    [
+     "2025-05-31",
+     14089000.0
+    ],
+    [
+     "2025-08-31",
+     10969000.0
+    ],
+    [
+     "2025-11-30",
+     9884000.0
+    ],
+    [
+     "2026-02-28",
+     10313000.0
+    ],
+    [
+     "2026-05-31",
+     18835000.0
+    ]
+   ],
+   "quarterlyDilutedEPS": [
+    [
+     "2025-05-31",
+     -0.1
+    ],
+    [
+     "2025-08-31",
+     -0.07
+    ],
+    [
+     "2025-11-30",
+     -0.11
+    ],
+    [
+     "2026-02-28",
+     -0.1
+    ],
+    [
+     "2026-05-31",
+     0.04
+    ]
+   ],
+   "quote": {
+    "earningsTimestamp": 1793653200,
+    "earningsTimestampStart": 1793653200,
+    "isEarningsDateEstimate": false,
+    "earningsCallTimestampStart": 1793656800,
+    "preMarketPrice": 61.88,
+    "preMarketTime": 1793714963,
+    "marketCap": 1680986880
+   }
+  }
+ },
+ "yahoo_secs": 4.9,
+ "sec": {
+  "ua_from_secret": true,
+  "AMD": {
+   "filed": "2026-08-04T20:16:24.000Z",
+   "acc": "0000002488-26-000121",
+   "docs": [
+    "0000002488-26-000121-index-headers.html",
+    "0000002488-26-000121-index.html",
+    "0000002488-26-000121.txt",
+    "0000002488-26-000121-xbrl.zip",
+    "amd-20260804.htm",
+    "amd-20260804.xsd",
+    "amd-20260804_g1.jpg",
+    "amd-20260804_htm.xml",
+    "amd-20260804_lab.xml",
+    "amd-20260804_pre.xml",
+    "amdq22026earningsslidesf.htm",
+    "amdq22026earningsslidesf001.jpg"
+   ]
+  },
+  "SHOP": {
+   "filed": "2026-11-03T13:08:14.000Z",
+   "acc": "0001594805-26-000067",
+   "docs": [
+    "0001594805-26-000067-index-headers.html",
+    "0001594805-26-000067-index.html",
+    "0001594805-26-000067.txt",
+    "0001594805-26-000067-xbrl.zip",
+    "exhibit991pressreleaseq320.htm",
+    "FilingSummary.xml",
+    "MetaLinks.json",
+    "R1.htm",
+    "report.css",
+    "shop-20261103.htm",
+    "shop-20261103.xsd",
+    "shop-20261103_def.xml"
+   ],
+   "chars": 17928,
+   "guidance_snippets": [
+    "olidated Statements of Cash Flows for additional information on the presentation of cash flows in 2026 and 2025. 1 2026 Outlook The outlook that follows supersedes all prior financial outlook statements made by Shopify, constitutes forward-looking information within the meaning of applicable securities laws, is based on a number of assumptions, and is subject to a number of risks. Actual results could vary materially as a result of numerous factors, including certain risk factors, many of which ",
+    " Shopify&#8217;s control. Please see &#8220;Forward-looking Statements&#8221; at the end of this press release. For the fourth quarter of 2026, we expect&#58; &#8226; Revenue to grow at a low-thirties percentage rate on a year-over-year basis&#59; &#8226; Gross profit dollars to grow at a high-twenties percentage rate on a year-over-year basis&#59; &#8226; Operating expenses as a percentage of revenue to be 29% to 30%&#59; &#8226; Stock-based compensation to be $155 million&#59; and &#8226; Free",
+    "9; &#8226; Stock-based compensation to be $155 million&#59; and &#8226; Free cash flow margin to be consistent with the fourth quarter of 2025. Quarterly Conference Call Shopify&#8217;s management team will hold a conference call to discuss its third-quarter results today, November 3, 2026, at 8&#58;30 a.m. ET. The conference call will be webcast in the Investor Relations section of Shopify&#8217;s website at www.shopify.com&#47;investors&#47;events . An archived replay of the webcast will be av",
+    "ion (collectively, &#8220;forward-looking statements&#8221;), including statements related to Shopify&#8217;s financial outlook, such as expected revenue and expenses for the next fiscal quarter, Shopify's expectations regarding future investments in the business, and Shopify's expectations regarding the development of emerging technologies, including AI. These statements can be identified by words such as &#8220;will&#8221; and &#8220;expect&#8221; and are based on Shopify's current projections",
+    "in the forward-looking statements. These risks include, but are not limited to, the Company&#8217;s ability to maintain expected growth and manage expenses, the impact of changes in economic conditions and consumer spending in key markets such as the United States, Europe, and globally, the impact of measures that affect international trade, including tariffs, the adoption and impact of emerging technologies such as AI, our reliance on third-party providers to deliver services, a cyberattack or ",
+    "herently uncertain. The forward-looking statements are provided to give additional information about management&#8217;s expectations and beliefs and may not be appropriate for other purposes. Shopify undertakes no duty to publicly update or revise any forward-looking statements, except as may be required by law. Endnotes&#58; Gross Merchandise Volume, or GMV, represents the total dollar value of orders facilitated through the Shopify platform including certain apps and channels for which a reven"
+   ]
+  },
+  "PLTR": {
+   "filed": "2026-11-02T21:06:48.000Z",
+   "acc": "0001321655-26-000045",
+   "docs": [
+    "0001321655-26-000045-index-headers.html",
+    "0001321655-26-000045-index.html",
+    "0001321655-26-000045.txt",
+    "0001321655-26-000045-xbrl.zip",
+    "a2026q3ex991pressrelease.htm",
+    "FilingSummary.xml",
+    "MetaLinks.json",
+    "pltr-20261102.htm",
+    "pltr-20261102.xsd",
+    "pltr-20261102_htm.xml",
+    "pltr-20261102_lab.xml",
+    "pltr-20261102_pre.xml"
+   ],
+   "chars": 24829,
+   "guidance_snippets": [
+    "t Exhibit 99.1 Palantir Reports Q3 2026 U.S. Comm Revenue Growth of 148% Y&#47;Y and Revenue Growth of 96% Y&#47;Y&#59; Raises FY 2026 Revenue Guidance to 91% Y&#47;Y Growth and U.S. Comm Revenue Guidance to 143% Y&#47;Y, Crushing Consensus Expectations 11&#47;2&#47;2026 MIAMI &#8212; (BUSINESS WIRE) &#8212; Palantir Technologies Inc. (NASDAQ&#58;PLTR) today announced financial results for the third quarter ended September 30, 2026. &#8220;The Sovereign AI movement is imposing the most dramatic ",
+    " Common Stockholders $ 1,142,347 Adjusted EBITDA $ 1,433,886 62 % GAAP EPS, Diluted $ 0.44 Adjusted EPS, Diluted $ 0.44 Outlook For Q4 2026, we expect&#58; &#8226; Revenue of between $2.649 - $2.653 billion. &#8226; Adjusted income from operations of between $1.640 - $1.644 billion. For full year 2026&#58; &#8226; We are raising our revenue guidance to between $8.530 - $8.534 billion. &#8226; We are raising our U.S. commercial revenue guidance to in excess of $3.559 billion, representing a growt",
+    "$3.559 billion, representing a growth rate of at least 143%. &#8226; We are raising our adjusted income from operations guidance to between $5.245 - $5.249 billion. &#8226; We are raising our adjusted free cash flow guidance to between $4.8 - $5.0 billion. &#8226; And we continue to expect GAAP operating income and net income in each quarter of this year. CEO Letter Palantir CEO Alex Karp&#8217;s quarterly letter is available through Palantir&#8217;s website at https&#58;&#47;&#47;www.palantir.c",
+    "ill be held at 5&#58;00 PM ET today to discuss the results for our third quarter ended September 30, 2026 and financial outlook. The webcast can be accessed by registering online at https&#58;&#47;&#47;palantir.events&#47;palantirearnings-q32026. A replay of the webcast will be available at https&#58;&#47;&#47;investors.palantir.com following the event. An investor presentation, including supplemental financial information and reconciliations of certain non-GAAP measures to their nearest compara",
+    "the Private Securities Litigation Reform Act of 1995, including, but not limited to, statements regarding our financial outlook, product development and related timing, distribution, and pricing, expected benefits of and applications for our software platforms, business strategy, and plans (including strategy and plans relating to our Artificial Intelligence Platform (&#8220;AIP&#8221;) and Sovereign AI, and the accompanying sales and marketing efforts, sales force, partnerships, and customers),",
+    "omers), investments in our business, market trends and market size, opportunities (including growth opportunities), our expectations regarding our existing and potential investments in, and commercial contracts with, various entities, and our expectations regarding macroeconomic events. These forward-looking statements are made as of the date they were first issued and were based on current expectations, estimates, forecasts, and projections as well as the beliefs and assumptions of management. "
+   ]
+  },
+  "AAPL": {
+   "filed": "2026-11-02T21:30:23.000Z",
+   "acc": "0000320193-26-000024",
+   "docs": [
+    "0000320193-26-000024-index-headers.html",
+    "0000320193-26-000024-index.html",
+    "0000320193-26-000024.txt",
+    "0000320193-26-000024-xbrl.zip",
+    "a8-kex991q4202609262026.htm",
+    "aapl-20261102.htm",
+    "aapl-20261102.xsd",
+    "aapl-20261102_def.xml",
+    "aapl-20261102_g1.jpg",
+    "aapl-20261102_htm.xml",
+    "aapl-20261102_lab.xml",
+    "aapl-20261102_pre.xml"
+   ],
+   "chars": 11429,
+   "guidance_snippets": [
+    " EX-99.1 2 a8-kex991q4202609262026.htm EX-99.1 Document Exhibit 99.1 Apple reports fourth quarter results September quarter records for total company revenue, iPhone revenue, and EPS Services revenue reaches new all-time high CUPERTINO, CALIFORNIA &#8212; Apple &#174; today announced financial results for its fiscal 2026 fourth quarter ended September 26, 2026. The Company posted quarterly revenue of $114.5 billion, up 12 percent year over year. Company gross"
+   ]
+  },
+  "UBER": {
+   "filed": "2026-08-05T10:56:58.000Z",
+   "acc": "0001543151-26-000027",
+   "docs": [
+    "0001543151-26-000027-index-headers.html",
+    "0001543151-26-000027-index.html",
+    "0001543151-26-000027.txt",
+    "0001543151-26-000027-xbrl.zip",
+    "FilingSummary.xml",
+    "MetaLinks.json",
+    "R1.htm",
+    "report.css",
+    "Show.js",
+    "uber-20260805.htm",
+    "uber-20260805.xsd",
+    "uber-20260805_def.xml"
+   ]
+  },
+  "PFE": {
+   "filed": "2026-11-03T13:07:34.000Z",
+   "acc": "0000078003-26-000125",
+   "docs": [
+    "0000078003-26-000125-index-headers.html",
+    "0000078003-26-000125-index.html",
+    "0000078003-26-000125.txt",
+    "0000078003-26-000125-xbrl.zip",
+    "FilingSummary.xml",
+    "MetaLinks.json",
+    "pfe-20261103.htm",
+    "pfe-20261103.xsd",
+    "pfe-20261103_def.xml",
+    "pfe-20261103_htm.xml",
+    "pfe-20261103_lab.xml",
+    "pfe-20261103_pre.xml"
+   ],
+   "chars": 78960,
+   "guidance_snippets": [
+    " EX-99 2 pfe-9272026xex99.htm EX-99 Document Exhibit 99 Pfizer Reports Strong Third-Quarter 2026 Results And Raises 2026 Guidance &#9632; Focused Execution Drove 32% Operational Revenue Growth of Launched and Acquired Products (1) &#9632; Advancing Robust Late-Stage Pipeline with Multiple Key Catalysts Ahead &#9632; Raises 2026 Guidance (2) on Strong Year-to-Date Performance &#9632; Appoints Cecile Guegan Chief Financial Officer, Executive Vice President NEW YORK, Tuesday, November 3,",
+    "sday, November 3, 2026 &#8212; Pfizer Inc. (NYSE&#58; PFE) reported financial results for the third quarter of 2026 and raised its full-year 2026 guidance (2) for both Revenues and Adjusted (3) diluted EPS. EXECUTIVE COMMENTARY Dr. Albert Bourla, Chairman and CEO of Pfizer&#58; &#34;Pfizer had another strong quarter with commercial momentum and disciplined execution while advancing our strategy for creating long-term shareholder value. Our obesity program continued to advance and recent mileston",
+    "lestones in oncology, immunology and vaccines further demonstrate the potential of our pipeline. With a robust slate of expected catalysts ahead, I believe we're well positioned to deliver meaningful new medicines for patients and lasting value in the years ahead.&#34; Cecile Guegan, CFO and EVP of Pfizer&#58; &#8220;Our third-quarter results reflect strong commercial performance globally and continued operational discipline. This quarter, our non-COVID products delivered strong 7% operational r",
+    "e 32% year-over-year operational revenue growth from our launched and acquired products (1) . Today, we are raising our full-year 2026 Revenue and Adjusted diluted EPS guidance, reflecting our strong year-to-date performance and confidence in our business.&#8221; OVERALL RESULTS &#9632; Third-Quarter 2026 Revenues of $16.6 Billion, Relatively Flat Year-over-Year Operationally &#8211; Excluding Contributions from Comirnaty and Paxlovid, Revenues Grew 7% Operationally &#8211; Revenues of Launched ",
+    "erationally &#9632; Third-Quarter 2026 Reported (4) Diluted EPS of $0.56, and Adjusted (3) Diluted EPS of $0.87 &#9632; Raises Full-Year 2026 Revenue Guidance (2) by $1.5 billion at the Midpoint to a Range of $62.0 to $64.0 billion &#9632; Raises and Narrows Full-Year 2026 Adjusted (3) Diluted EPS Guidance to a Range of $2.95 to $3.05 &#9632; Recent Late-Stage Pipeline Progress Includes Eight Key Pivotal Study Starts, One Pivotal Readout and Two Regulatory Decisions - 1 - Some amounts in this pr",
+    "12%) 962 966 &#8212; (2%) TOTAL REVENUES $ 16,583 $ 16,654 &#8212; &#8212; $ 46,067 $ 45,022 2% 1% - 2 - 2026 FINANCIAL GUIDANCE (2) &#9632; Raises full-year 2026 Revenue guidance (2) by $1.5 billion at the midpoint to a range of $62.0 to $64.0 billion from $60.5 to $62.5 billion previously. &#9632; Raises and narrows full-year 2026 Adjusted (3) diluted EPS guidance (2) to a range of $2.95 to $3.05 from $2.80 to $3.00 previously. &#8211; Includes a one-time $650 million Acquired In-Process R&#38"
+   ]
+  },
+  "AEHR": {
+   "filed": "2026-11-02T21:21:31.000Z",
+   "acc": "0001654954-26-009385",
+   "docs": [
+    "0001654954-26-009385-index-headers.html",
+    "0001654954-26-009385-index.html",
+    "0001654954-26-009385.txt",
+    "0001654954-26-009385-xbrl.zip",
+    "aehr-20261102.xsd",
+    "aehr-20261102_cal.xml",
+    "aehr-20261102_def.xml",
+    "aehr-20261102_lab.xml",
+    "aehr-20261102_pre.xml",
+    "aehr_8k.htm",
+    "aehr_8k_htm.xml",
+    "aehr_ex991.htm"
+   ],
+   "chars": 21912,
+   "guidance_snippets": [
+    "t csiu@aehr.com tkehrli@pondel.com Aehr Test Systems Reports Record First Quarter Fiscal 2027 Revenue of $33.0 Million; Raises Full-Year Revenue Outlook to $150 Million, Triple Fiscal 2026 Revenue Strong Quarterly Bookings of $46.7 Million; Effective Backlog Reaches $109.3 Million FREMONT, Calif., November 2, 2026 &#8211; Aehr Test Systems (NASDAQ: AEHR), a leading provider of test and burn-in solutions for semiconductor devices used in artificial intelligence (AI), silicon photonics, data cente",
+    "ance, substantial backlog, and visibility into customer production requirements, we are raising our fiscal 2027 revenue outlook to $150 million, compared with our previous guidance range of $130 million to $150 million. We expect non-GAAP net income of at least 20% of revenue for fiscal year 2027. Aehr Test Systems Reports First Quarter Fiscal 2027 Financial Results November 2, 2026 Page 2 of 7 &#8220;Demand for our FOX&#8482; wafer-level burn-in (WLBI) solutions remains strong. Our lead AI proc",
+    "er&#8217;s benchmark. Installation is planned for early calendar 2027, with a decision regarding high-volume production anticipated within several months following installation and validation. We believe this customer represents one of the largest potential burn-in system opportunities Aehr has ever pursued, with significant potential across multiple product lines and manufacturing locations. &#8220;Our Sonoma high-power package-level burn-in (PLBI) business is also expanding rapidly. We are cur",
+    " completed qualification on Sonoma, and we have received follow-on orders to support initial production sampling and an anticipated production ramp in calendar 2027. Importantly, the customer forecasts that this second processor will ultimately reach higher production volumes than its first. We are also advancing evaluations with additional AI processor suppliers and hyperscale customers, creating opportunities for new production programs. &#8220;Another important development is the significant ",
+    "on the growing need for advanced semiconductor test and burn-in solutions over the next several years.&#8221; Financial Guidance For fiscal 2027 ending June 25, 2027, Aehr now expects: &#183; Revenue of $150 million, compared with its previous guidance range of $130 million to $150 million. &#183; Non-GAAP net income of at least 20% of revenue. The updated revenue outlook represents 200% growth over fiscal 2026. The increased outlook reflects Aehr's strong first quarter performance, substantial ",
+    "g first quarter performance, substantial backlog, increasing visibility into existing customer production programs, and anticipated production and delivery schedules. Aehr continues to pursue additional opportunities with existing and prospective customers that could support additional growth in fiscal 2027 and beyond. Aehr Test Systems Reports First Quarter Fiscal 2027 Financial Results November 2, 2026 Page 3 of 7 Management Conference Call and Webcast: Aehr Test Systems will host a conference"
+   ]
+  }
+ },
+ "sec_secs": 3.7
+}

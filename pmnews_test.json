@@ -1,0 +1,4136 @@
+{
+"built_at": "2026-11-06T17:22:14-05:00",
+"day": "2026-11-06",
+"window": [
+"2026-11-05T16:00:00-05:00",
+"2026-11-06T08:05:00-05:00"
+],
+"news": {
+"FROG": {
+"news": "A",
+"catalyst": "Earnings beat + raise",
+"reason": "revenue beat +8.3%; revenue +31% y/y (last q +29%: faster); guidance raised; guide +9.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1800667/000119312526449797/frog-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 28.65,
+"pm_last": 96.0,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "JFrog Q3 Adj. EPS $0.32 Beats $0.23 Estimate, Sales $179.170M Beat $165.887M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62951265/jfrog-q3-adj-eps-0-32-beats-0-23-estimate-sales-179-170m-beat-165-887m-estimate",
+"at": "Nov 5 4:13 PM ET"
+}
+},
+"NRDS": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1625278/000162527826000069/nrds-20261105.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -27.82,
+"pm_last": 8.25,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Nerdwallet Q3 EPS $0.23 Misses $0.36 Estimate, Sales $239.600M Miss $251.890M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950694/nerdwallet-q3-eps-0-23-misses-0-36-estimate-sales-239-600m-miss-251-890m-estimate",
+"at": "Nov 5 4:10 PM ET"
+}
+},
+"DKNG": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "revenue +16% y/y (last q -5%: faster); guidance raised; guide -3.1% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1883685/000188368526000039/q326-prx8kexx991.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 10,
+"direction": "down",
+"gap_pct": -26.62,
+"pm_last": 17.26,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "DraftKings Q3 Adj. EPS $(0.53) Misses $(0.39) Estimate, Sales $1.329B Miss $1.398B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62951814/draftkings-q3-adj-eps-0-53-misses-0-39-estimate-sales-1-329b-miss-1-398b-estimate",
+"at": "Nov 5 4:15 PM ET"
+}
+},
+"ETON": {
+"news": "A",
+"catalyst": "Earnings + raise",
+"reason": "revenue +158% y/y (last q +99%: faster); guidance raised; guide +16.9% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1710340/000143774926035258/eton20261104_8k.htm",
+"https://www.sec.gov/Archives/edgar/data/1710340/000171034026000006/eton-2026q332026xexx991.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 10,
+"direction": "up",
+"gap_pct": 23.78,
+"pm_last": 58.3639,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "FDA / trial",
+"title": "Eton Pharmaceuticals Announces Its ET-700 Zing Acetate Formulation Shows Lower Rate Of Drug Related Adverse Events In Pilot Trial Than GALZIN; No Serious Adverse Events Seen",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62952683/eton-pharmaceuticals-announces-its-et-700-zing-acetate-formulation-shows-lower-rate-of-drug-related-adverse-events-in-pilot-trial-than-galzin-no-series-adverse-events-seen",
+"at": "Nov 5 4:20 PM ET"
+}
+},
+"INDI": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +31% y/y (last q +24%: faster); guide +0.2% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1841925/000119312526449794/indi-ex99_1.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 6,
+"direction": "up",
+"gap_pct": 23.7,
+"pm_last": 1.67,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Deal / contract",
+"title": "Indie Semiconductor Says Its Radar Chipset Was Selected By One Of The Top Three North American Automakers",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/INDI",
+"at": "Nov 5 4:16 PM ET"
+}
+},
+"LASR": {
+"news": "B",
+"catalyst": "Earnings beat + raise",
+"reason": "revenue beat +8.2%; revenue +10% y/y (last q +34%: slower); guide +15.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1124796/000112479626000041/exhibit991-q32026.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "up",
+"gap_pct": 22.7,
+"pm_last": 36.0,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "nLight Q3 Adj. EPS $0.16 Beats $0.05 Estimate, Sales $73.763M Beat $68.150M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62951971/nlight-q3-adj-eps-0-16-beats-0-05-estimate-sales-73-763m-beat-68-150m-estimate",
+"at": "Nov 5 4:16 PM ET"
+}
+},
+"FIVN": {
+"news": "C",
+"catalyst": "Earnings beat",
+"reason": "revenue beat +1.3%; revenue +13% y/y (last q +10%: faster); guide +0.4% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1288847/000128884726000141/projectlanderpressreleas.htm",
+"https://www.sec.gov/Archives/edgar/data/1288847/000128884726000143/a093026ex991earningsrelease.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -20.88,
+"pm_last": 27.01,
+"dropped": "",
+"headline": {
+"kind": "Takeover / sale talk",
+"title": "Five9 Agrees To Acquire AI-Native Platform Level AI For ~$325M In Cash",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/m/26/11/62954683/five9-agrees-acquire-ai-native-platform-level-ai-325m-cash",
+"at": "Nov 5 4:37 PM ET"
+}
+},
+"IREN": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue -27% y/y",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1878848/000187884826000065/iren-20261105.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 19.24,
+"pm_last": 21.4986,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Deal / contract",
+"title": "IREN Revenue Backlog $20.3B, Up 22% Sequentially; Says Expanded Contract With Leading Frontier AI Lab After Quarter-End",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/IREN",
+"at": "Nov 5 4:29 PM ET"
+}
+},
+"NET": {
+"news": "A",
+"catalyst": "Earnings beat + raise",
+"reason": "revenue beat +5.8%; revenue +39% y/y (last q +36%: faster); guide +5.9% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1477333/000147733326000060/q326exhibit991.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 7,
+"direction": "up",
+"gap_pct": 18.59,
+"pm_last": 290.99,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Earnings",
+"title": "Cloudflare Q3 Adj. EPS $0.38 Beats $0.34 Estimate, Sales $782.513M Beat $738.532M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62951903/cloudflare-q3-adj-eps-0-38-beats-0-34-estimate-sales-782-513m-beat-738-532m-estimate",
+"at": "Nov 5 4:16 PM ET"
+}
+},
+"DIOD": {
+"news": "A",
+"catalyst": "Earnings + raise",
+"reason": "revenue +36% y/y (last q +22%: faster); guide +8.7% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/29002/000119312526450100/diod-ex99_1.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 10,
+"direction": "up",
+"gap_pct": 18.17,
+"pm_last": 80.7821,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "Diodes Q3 Adj. EPS $1.18 Beats $1.05 Estimate, Sales $532.587M Beat $509.998M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/DIOD",
+"at": "Nov 5 4:08 PM ET"
+}
+},
+"TILE": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +1% y/y (last q +5%: slower); guidance reaffirmed; guide -1.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/715787/000071578726000027/a991pressreleaseq32026.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -17.5,
+"pm_last": 31.2,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Deal / contract",
+"title": "Interface Q3 Adj. EBITDA $69.3M vs $66.2M YoY; Currency-Neutral Orders Up 0.8%, AMS Up 6.2%, EAAA Down 6.8%",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/TILE",
+"at": "5:40 AM ET"
+}
+},
+"TMDX": {
+"news": "A",
+"catalyst": "Earnings + raise",
+"reason": "revenue +41% y/y (last q +21%: faster); guidance raised; guide +1.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1756262/000119312526449729/tmdx-ex99_1.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 10,
+"direction": "up",
+"gap_pct": 16.48,
+"pm_last": 80.35,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "TransMedics Gr Q3 Adj. EPS $0.51 Beats $0.29 Estimate, Sales $203.005M Beat $177.584M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62949552/transmedics-gr-q3-adj-eps-0-51-beats-0-29-estimate-sales-203-005m-beat-177-584m-estimate",
+"at": "Nov 5 4:05 PM ET"
+}
+},
+"WK": {
+"news": "C",
+"catalyst": "Earnings beat",
+"reason": "revenue beat +0.6%; revenue +17% y/y (last q +19%: slower); guide -0.6% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1445305/000144530526000084/q32026exhibit991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -16.06,
+"pm_last": 71.7,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "Workiva Q3 Adj. EPS $0.72 Misses $0.80 Estimate, Sales $263.000M Beat $261.445M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950361/workiva-q3-adj-eps-0-72-misses-0-80-estimate-sales-263-000m-beat-261-445m-estimate",
+"at": "Nov 5 4:09 PM ET"
+}
+},
+"XRAY": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue -8% y/y (last q -4%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/818479/000081847926000285/dentsply8kq32026ex991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -15.66,
+"pm_last": 8.51,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Dentsply Sirona Q3 Adj. EPS $0.29 Misses $0.31 Estimate, Sales $836.000M Miss $862.001M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62948762/dentsply-sirona-q3-adj-eps-0-29-misses-0-31-estimate-sales-836-000m-miss-862-001m-estimate",
+"at": "Nov 5 4:02 PM ET"
+}
+},
+"NTRA": {
+"news": "C",
+"catalyst": "Earnings beat + raise",
+"reason": "revenue beat +12.2%; revenue +34% y/y (last q +38%: slower); guidance raised; guide +3.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1604821/000160482126000032/ntra-20260930xex991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -15.6,
+"pm_last": 307.0,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "Natera Raises FY2026 Sales Guidance from $2.850B-$2.910B to $3.005B-$3.035B vs $2.907B Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62951663/natera-raises-fy2026-sales-guidance-2-850b-2-910b-3-005b-3-035b-vs-2-907b-est",
+"at": "Nov 5 4:15 PM ET"
+}
+},
+"IRTC": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "revenue +15% y/y (last q +20%: slower); guidance raised; guide -1.5% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1388658/000138865826000093/irtcq32026ex991pressrelease.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "down",
+"gap_pct": -15.51,
+"pm_last": 110.0,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "iRhythm Technologies Q3 Adj. EPS $0.82 Beats $0.06 Estimate, Sales $221.592M Miss $222.451M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62951772/irhythm-technologies-q3-adj-eps-0-82-beats-0-06-estimate-sales-221-592m-miss-222-451m-estimate",
+"at": "Nov 5 4:15 PM ET"
+}
+},
+"BL": {
+"news": "B",
+"catalyst": "Earnings miss",
+"reason": "revenue miss -0.4%; revenue +8% y/y (last q +9%: same); guide -2.9% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1666134/000117184326007177/exh_991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -15.35,
+"pm_last": 28.5,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Buyback",
+"title": "BlackLine, Inc. Reports Third Quarter 2026 Financial Results and Announces Stock Buyback Increase",
+"source": "Fiscal.ai",
+"url": "https://www.globenewswire.com/news-release/2026/11/05/3397077/0/en/blackline-announces-third-quarter-financial-results.html",
+"at": "Nov 5 6:03 PM ET"
+}
+},
+"LRCX": {
+"news": "C",
+"catalyst": "Buyback (headline)",
+"reason": "Lam Research Announces $25 Billion Share Repurchase Authorization and Quarterly Dividend (Fiscal.ai Nov 5 4:32 PM ET); SEC: Filing, not classified: Filed since the close: 8-K 5.07,8.01,9.01. FREMONT, Calif. -- (PRNewswire) \u2013 November 5, 2026 \u2014 Lam ",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.prnewswire.com/news-releases/lam-research-corporation-announces-25-billion-share-repurchase-authorization-and-declares-quarterly-dividend-302931288.html",
+"https://www.sec.gov/Archives/edgar/data/707549/000070754926000057/lrcx_exx991xsharexrepurcha.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 14.72,
+"pm_last": 212.46,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Buyback",
+"title": "Lam Research Announces $25 Billion Share Repurchase Authorization and Quarterly Dividend",
+"source": "Fiscal.ai",
+"url": "https://www.prnewswire.com/news-releases/lam-research-corporation-announces-25-billion-share-repurchase-authorization-and-declares-quarterly-dividend-302931288.html",
+"at": "Nov 5 4:32 PM ET"
+}
+},
+"CLNE": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "revenue +6% y/y (last q +4%: faster); guidance raised",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1368265/000110465926123341/clne-ex99d1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 14.57,
+"pm_last": 1.73,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Clean Energy Fuels Q3 Adj. EPS $0.03 Beats $(0.03) Estimate, Sales $112.179M Beat $111.597M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950152/clean-energy-fuels-q3-adj-eps-0-03-beats-0-03-estimate-sales-112-179m-beat-111-597m-estimate",
+"at": "Nov 5 4:08 PM ET"
+}
+},
+"TEAM": {
+"news": "C",
+"catalyst": "Earnings beat",
+"reason": "revenue beat +3.4%; revenue +24% y/y (last q +28%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1650372/000165037226000049/ex991q1fy27.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -14.46,
+"pm_last": 156.794,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "Atlassian Q1 Adj. EPS $1.65 Beats $1.44 Estimate, Sales $1.772B Beat $1.711B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/TEAM",
+"at": "Nov 5 4:12 PM ET"
+}
+},
+"SITM": {
+"news": "C",
+"catalyst": "After earnings (Nov 4)",
+"reason": "Reported Wed Nov 4 after the close: revenue beat +3.4%, EPS beat +12.6%, revenue +257% y/y, +3.2% after hours; no new filing since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 14.25,
+"pm_last": 405.6,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "In the news",
+"title": "Seaport Global Upgrades SiTime to Buy From Neutral",
+"source": "Fiscal.ai",
+"url": "https://www.marketscreener.com/news/seaport-global-upgrades-sitime-to-buy-from-neutral-price-target-is-425-ce785fddd08af02d",
+"at": "7:32 AM ET"
+}
+},
+"EXTR": {
+"news": "C",
+"catalyst": "Sector move: AI Networking",
+"reason": "9 AI Networking stocks gapping up 5%+ (AVGO, ANET, MRVL, HPE, ALAB, CLS, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 14.2,
+"pm_last": 24.04,
+"dropped": ""
+},
+"PRAA": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1185348/000118534826000033/praa-20261105.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -13.81,
+"pm_last": 17.6,
+"dropped": "market cap under $0.7B"
+},
+"CIFR": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, HUT, RIOT, WULF, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); headline: What's Going On With Cipher Digital Stock Friday? (Benzinga 6:58 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/trading-ideas/movers/26/11/62971244/whats-going-on-with-cipher-digital-stock-friday"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 13.69,
+"pm_last": 6.31,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "In the news",
+"title": "What's Going On With Cipher Digital Stock Friday?",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/trading-ideas/movers/26/11/62971244/whats-going-on-with-cipher-digital-stock-friday",
+"at": "6:58 AM ET"
+}
+},
+"WULF": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1083301/000162828026071306/wulf-20261106.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 13.19,
+"pm_last": 11.41,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "TeraWulf Q3 EPS $(0.03) May Not Be Comparable To $(0.21) Estimate, Sales $76.230M Beat $61.790M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/WULF",
+"at": "7:01 AM ET"
+}
+},
+"FLY": {
+"news": "C",
+"catalyst": "Deal / contract (headline)",
+"reason": "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile To Provide Over 36 Rocket Engines (Benzinga 7:31 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/news/26/11/62972383/firefly-aerospace-inks-1-3b-agreement-ast-spacemobile-provide-over-36-rocket-engines"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 12.68,
+"pm_last": 17.1042,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Deal / contract",
+"title": "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile To Provide Over 36 Rocket Engines",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62972383/firefly-aerospace-inks-1-3b-agreement-ast-spacemobile-provide-over-36-rocket-engines",
+"at": "7:31 AM ET"
+}
+},
+"ABNB": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "guidance raised; guide +2.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1559720/000119312526449727/d437988dex991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 12.44,
+"pm_last": 191.3,
+"dropped": "ADR under 3%",
+"headline": {
+"kind": "Deal / contract",
+"title": "Airbnb Says In Nov, Entered Into An IP Sale & Transaction Agreement With A Recently Formed And Privately Held Artificial Intelligence Lab; Under Deal, AI Lab Bought Some IP From Co & Reimbursed For Some Expenses In Exchange For Cash Consideration Of $7.1M; Brian Chesky Is Founder Of, Holds A Controlling Equity Interest In, And Performs Services For AI Lab; Chief Technology Officer Ahmad Al-dahle Holds Equity Interest In & Performs Services For AI Lab",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62958868/airbnb-says-nov-entered-ip-sale-transaction-agreement-recently-formed-and-privately-held-artificial-",
+"at": "Nov 5 5:30 PM ET"
+}
+},
+"AXON": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "revenue +28% y/y (last q +35%: slower); guidance raised; guide -7.2% vs street",
+"flags": "dilution: 8-K",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1069183/000162828026071086/axon-20261105xex991.htm",
+"https://www.sec.gov/Archives/edgar/data/1069183/000162828026071150/axon-20261105xex991xprojec.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -12.43,
+"pm_last": 335.0,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Axon Enterprise Sees Q4 Sales $990.000M-$1.010B vs $1.061B Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62948722/axon-enterprise-sees-q4-sales-990-000m-1-010b-vs-1-061b-est",
+"at": "Nov 5 4:02 PM ET"
+}
+},
+"SLVM": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue -24% y/y (last q +2%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1856485/000119312526450635/d187335dex991.htm",
+"https://www.sec.gov/Archives/edgar/data/1856485/000185648526000041/sylvamoex9912026thirdquart.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "up",
+"gap_pct": 12.33,
+"pm_last": 37.16,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Deal / contract",
+"title": "Sylvamo Enters Put Option Agreement To Sell Its Europe Business, Including Uncoated Freesheet Paper Mills In France And Sweden, As Well As Forestry Operations; Terms Not Disclosed",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/m/26/11/62968833/sylvamo-enters-put-option-agreement-sell-its-europe-business-including-uncoated-freesheet-paper-mill",
+"at": "5:45 AM ET"
+}
+},
+"OMDA": {
+"news": "C",
+"catalyst": "Earnings + raise",
+"reason": "revenue -0% y/y (last q +43%: slower); guidance raised; guide +1.9% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1611115/000162828026070989/q3fy26pressrelease.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "down",
+"gap_pct": -12.3,
+"pm_last": 16.62,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "Omada Health Q3 EPS $0.10 Beats $0.02 Estimate, Sales $91.000M Beat $85.676M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62949066/omada-health-q3-eps-0-10-beats-0-02-estimate-sales-91-000m-beat-85-676m-estimate",
+"at": "Nov 5 4:03 PM ET"
+}
+},
+"PENG": {
+"news": "C",
+"catalyst": "Sector move: AI Networking",
+"reason": "9 AI Networking stocks gapping up 5%+ (AVGO, ANET, MRVL, HPE, ALAB, CLS, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 12.25,
+"pm_last": 41.78,
+"dropped": "gap-up under the 50 EMA"
+},
+"AEHR": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, ONTO, AMKR, ...); its own: After earnings (Nov 2): Reported Mon Nov 2 after the close: revenue beat +19.9%, EPS beat +121.0%, guidance raised, guide +8.9% vs street, revenue +201% y/y, +0.2% ",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 12.14,
+"pm_last": 55.13,
+"dropped": "gap-up under the 50 EMA"
+},
+"PAYC": {
+"news": "C",
+"catalyst": "After earnings (Nov 4)",
+"reason": "Reported Wed Nov 4 after the close: EPS beat +20.4%, guidance raised, +0.0% after hours; only routine filings since the last close (10-Q)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1590955/000119312526449828/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -12.0,
+"pm_last": 220.0,
+"dropped": "",
+"headline": {
+"kind": "Analyst note",
+"title": "Keybanc Maintains Overweight Rating and Raises Price Target for Paycom Software",
+"source": "Fiscal.ai",
+"url": "https://www.tradingview.com/news/tradingview:da49b0085ba35:0-keybanc-maintains-paycom-software-at-overweight-raises-price-target-to-297-from-295/",
+"at": "Nov 5 6:02 PM ET"
+}
+},
+"PSIX": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1137091/000162828026071095/psix-20261105.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.9,
+"pm_last": 40.1395,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "Power Solutions Intl Q3 Adj. EPS $1.30 Beats $0.92 Estimate, Sales $202.074M Beat $200.100M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/PSIX",
+"at": "Nov 5 4:18 PM ET"
+}
+},
+"APLD": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, HUT, RIOT, WULF, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); no news since the last close, only routine filings (8-K)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1144879/000114487926000063/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.86,
+"pm_last": 15.85,
+"dropped": "under 30% over the 52-week low"
+},
+"SNDK": {
+"news": "C",
+"catalyst": "Sector move: Memory & Storage",
+"reason": "4 Memory & Storage stocks gapping up 5%+ (MU, STX, WDC); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.6,
+"pm_last": 900.0,
+"dropped": "gap-up under the 50 EMA"
+},
+"KEEL": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, HUT, RIOT, WULF, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); headline: Goldman Sachs Initiates Coverage On Keel Infrastructure with Neutral Rating, Announces Price Target of $2 (Benzinga 5:07 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/news/26/11/62968307/goldman-sachs-initiates-coverage-keel-infrastructure-neutral-rating-announces-price-target-2"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.52,
+"pm_last": 1.84,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Analyst note",
+"title": "Goldman Sachs Initiates Coverage On Keel Infrastructure with Neutral Rating, Announces Price Target of $2",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62968307/goldman-sachs-initiates-coverage-keel-infrastructure-neutral-rating-announces-price-target-2",
+"at": "5:07 AM ET"
+}
+},
+"CRDO": {
+"news": "C",
+"catalyst": "Sector move: AI Networking",
+"reason": "9 AI Networking stocks gapping up 5%+ (AVGO, ANET, MRVL, HPE, ALAB, CLS, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.28,
+"pm_last": 125.0,
+"dropped": "gap-up under the 50 EMA"
+},
+"MXL": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, MTSI, TSEM, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.26,
+"pm_last": 49.3,
+"dropped": "gap-up under the 50 EMA"
+},
+"FORM": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, ONTO, AMKR, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.12,
+"pm_last": 79.74,
+"dropped": "gap-up under the 50 EMA"
+},
+"ICHR": {
+"news": "C",
+"catalyst": "Sector move: Semi Subsystems",
+"reason": "3 Semi Subsystems stocks gapping up 5%+ (MKSI, UCTT); its own: After earnings (Nov 2): Reported Mon Nov 2 after the close: revenue miss -0.4%, EPS beat +38.8%, guide -5.3% vs street, revenue +37% y/y, -2.7% after hours; no new ",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.1,
+"pm_last": 31.14,
+"dropped": "gap-up under the 50 EMA"
+},
+"COHR": {
+"news": "C",
+"catalyst": "Deal / contract (headline)",
+"reason": "Coherent Reports Fiscal Q1 2027 Results and Announces $20B Long-Term Agreement (Fiscal.ai Nov 5 6:01 PM ET); SEC: After earnings (Nov 4): Reported Wed Nov 4 after the close: revenue beat +2.8%, EPS beat +6.0%, guide +4.2% vs street, reven",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.tradingview.com/news/seekingalpha:a09809e5a094b:0-coherent-sinks-despite-strong-quarter-analysts-highlight-convincing-guidance/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.01,
+"pm_last": 188.33,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Deal / contract",
+"title": "Coherent Reports Fiscal Q1 2027 Results and Announces $20B Long-Term Agreement",
+"source": "Fiscal.ai",
+"url": "https://www.tradingview.com/news/seekingalpha:a09809e5a094b:0-coherent-sinks-despite-strong-quarter-analysts-highlight-convincing-guidance/",
+"at": "Nov 5 6:01 PM ET"
+}
+},
+"SHAZ": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, HUT, RIOT, WULF, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.94,
+"pm_last": 21.7,
+"dropped": "gap-up under the 50 EMA"
+},
+"ASX": {
+"news": "C",
+"catalyst": "Sector move: Semiconductors & Chip Equipment",
+"reason": "58 Semiconductors & Chip Equipment stocks gapping up 5%+ (NVDA, TSM, AVGO, SKHY, MU, AMD, ...); with their own news: LRCX (Buyback (headline)), DIOD (Earnings + raise), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.87,
+"pm_last": 32.94,
+"dropped": "gap-up under the 50 EMA"
+},
+"UI": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +40% y/y (last q +24%: faster)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1511737/000151173726000076/exhibit991-093026.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 9,
+"direction": "up",
+"gap_pct": 10.85,
+"pm_last": 570.0,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "Ubiquiti Q1 Adj. EPS $5.32 Beats $4.57 Estimate, Sales $1.026B Beat $977.448M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62972177/ubiquiti-q1-adj-eps-5-32-beats-4-57-estimate-sales-1-026b-beat-977-448m-estimate",
+"at": "7:25 AM ET"
+}
+},
+"DELL": {
+"news": "C",
+"catalyst": "Sector move: AI Servers & ODMs",
+"reason": "7 AI Servers & ODMs stocks gapping up 5%+ (HPE, P, CLS, FLEX, SMCI, SANM); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.84,
+"pm_last": 351.0,
+"dropped": "gap-up under the 50 EMA"
+},
+"KLAC": {
+"news": "C",
+"catalyst": "Sector move: Wafer Fab Equipment",
+"reason": "4 Wafer Fab Equipment stocks gapping up 5%+ (ASML, AMAT, LRCX); with their own news: LRCX (Buyback (headline)); no news since the last close, only routine filings (4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/319201/000119312526449752/",
+"https://www.sec.gov/Archives/edgar/data/319201/000119312526449753/",
+"https://www.sec.gov/Archives/edgar/data/319201/000119312526449756/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.79,
+"pm_last": 143.8,
+"dropped": "gap-up under the 50 EMA"
+},
+"MKSI": {
+"news": "C",
+"catalyst": "Sector move: Semi Subsystems",
+"reason": "3 Semi Subsystems stocks gapping up 5%+ (UCTT, ICHR); its own: After earnings (Nov 4): Reported Wed Nov 4 after the close: revenue beat +4.0%, EPS beat +14.6%, guide +6.2% vs street, revenue +43% y/y, +1.2% after hours; no new ",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.79,
+"pm_last": 195.8992,
+"dropped": "gap-up under the 50 EMA"
+},
+"AXTI": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, MTSI, TSEM, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.7,
+"pm_last": 40.65,
+"dropped": "gap-up under the 50 EMA"
+},
+"OKLO": {
+"news": "C",
+"catalyst": "Deal / contract (headline)",
+"reason": "Oklo Signs Agreement With U.S. Forged Rings To Reserve Domestic Manufacturing Capacity For Large Aurora Reactor Components; Initial Deliveries Expected In 2030 (Benzinga 7:29 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/quote/OKLO",
+"https://www.sec.gov/Archives/edgar/data/1849056/000214679026000025/",
+"https://www.sec.gov/Archives/edgar/data/1849056/000162828026071319/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.62,
+"pm_last": 21.24,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Deal / contract",
+"title": "Oklo Signs Agreement With U.S. Forged Rings To Reserve Domestic Manufacturing Capacity For Large Aurora Reactor Components; Initial Deliveries Expected In 2030",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/OKLO",
+"at": "7:29 AM ET"
+}
+},
+"SMR": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue -3% y/y (last q -99%: faster)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1822966/000182296626000089/pressreleasenuscale2026q.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 10,
+"direction": "up",
+"gap_pct": 10.53,
+"pm_last": 4.8302,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "NuScale Power Q3 EPS $(0.11) Beats $(0.26) Estimate, Sales $281.000K Miss $10.146M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/SMR",
+"at": "Nov 5 4:16 PM ET"
+}
+},
+"BE": {
+"news": "C",
+"catalyst": "Deal / contract (headline)",
+"reason": "Bloom Energy Scores Major Role In Google's 702-Megawatt Power Project (Benzinga 7:46 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/trading-ideas/movers/26/11/62973002/bloom-energy-scores-major-role-in-googles-702-megawatt-power-project",
+"https://www.sec.gov/Archives/edgar/data/1664703/000119312526450213/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.45,
+"pm_last": 185.0,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Deal / contract",
+"title": "Bloom Energy Scores Major Role In Google's 702-Megawatt Power Project",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/trading-ideas/movers/26/11/62973002/bloom-energy-scores-major-role-in-googles-702-megawatt-power-project",
+"at": "7:46 AM ET"
+}
+},
+"FNKO": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue +3% y/y (last q +7%: slower); guidance reaffirmed",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1704711/000170471126000051/ex-99111526.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -10.44,
+"pm_last": 5.49,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Funko Q3 Adj. EPS $0.16 Beats $0.10 Estimate, Sales $258.300M Beat $250.703M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950887/funko-q3-adj-eps-0-16-beats-0-10-estimate-sales-258-300m-beat-250-703m-estimate",
+"at": "Nov 5 4:11 PM ET"
+}
+},
+"CRSR": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "revenue +6% y/y (last q -2%: faster); guidance raised; guide -3.6% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1743759/000119312526449747/crsr-ex99_1.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 8,
+"direction": "down",
+"gap_pct": -10.16,
+"pm_last": 11.5,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Earnings",
+"title": "Corsair Gaming Q3 Adj. EPS $0.13 Beats $0.12 Estimate, Sales $367.025M Beat $336.563M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/CRSR",
+"at": "Nov 5 4:00 PM ET"
+}
+},
+"MRVL": {
+"news": "C",
+"catalyst": "Sector move: AI Networking",
+"reason": "9 AI Networking stocks gapping up 5%+ (AVGO, ANET, HPE, ALAB, CLS, CRDO, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.15,
+"pm_last": 147.1,
+"dropped": "gap-up under the 50 EMA"
+},
+"ALAB": {
+"news": "C",
+"catalyst": "Sector move: AI Networking",
+"reason": "9 AI Networking stocks gapping up 5%+ (AVGO, ANET, MRVL, HPE, CLS, CRDO, ...); its own: After earnings (Nov 3): Reported Tue Nov 3 after the close: revenue beat +6.2%, EPS beat +10.7%, guide +12.9% vs street, revenue +154% y/y, -2.1% after hours; no ne",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.14,
+"pm_last": 197.6705,
+"dropped": "gap-up under the 50 EMA"
+},
+"SEI": {
+"news": "C",
+"catalyst": "After earnings (Nov 4)",
+"reason": "Reported Wed Nov 4 after the close: revenue beat +24.6%, EPS beat +58.7%, guidance raised, guide -21.5% vs street, revenue +104% y/y, +0.9% after hours; no new filing since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.08,
+"pm_last": 55.5,
+"dropped": "gap-up under the 50 EMA"
+},
+"LITE": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, COHR, CIEN, MTSI, TSEM, FN, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); its own: After earnings (Nov 2): Reported Mon Nov 2 before the open: EPS beat +8.2%, revenue +136% y/y; no new filing since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.06,
+"pm_last": 560.9997,
+"dropped": "gap-up under the 50 EMA"
+},
+"UA": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1336917/000133691726000160/exhibit991-fiscal2027q2.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -10.06,
+"pm_last": 4.83,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Deal / contract",
+"title": "Under Armour Expects Increased Supply Chain Headwinds In FY27 Relating Middle East Conflict And Unfavorable FX Impacts",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/UAA",
+"at": "7:00 AM ET"
+}
+},
+"AMAT": {
+"news": "C",
+"catalyst": "Sector move: Wafer Fab Equipment",
+"reason": "4 Wafer Fab Equipment stocks gapping up 5%+ (ASML, LRCX, KLAC); with their own news: LRCX (Buyback (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 10.05,
+"pm_last": 351.34,
+"dropped": "gap-up under the 50 EMA"
+},
+"BTDR": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, HUT, RIOT, WULF, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.98,
+"pm_last": 5.84,
+"dropped": "under 30% over the 52-week low"
+},
+"SMTC": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, MTSI, TSEM, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.95,
+"pm_last": 100.65,
+"dropped": "gap-up under the 50 EMA"
+},
+"QNST": {
+"news": "C",
+"catalyst": "Analyst note (headline)",
+"reason": "B. Riley Raises Price Target on QuinStreet (Fiscal.ai Nov 5 5:32 PM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.marketscreener.com/news/b-riley-adjusts-price-target-on-quinstreet-to-27-from-24-keeps-buy-rating-ce785fdcd08ef027"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -9.94,
+"pm_last": 18.3,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Analyst note",
+"title": "B. Riley Raises Price Target on QuinStreet",
+"source": "Fiscal.ai",
+"url": "https://www.marketscreener.com/news/b-riley-adjusts-price-target-on-quinstreet-to-27-from-24-keeps-buy-rating-ce785fdcd08ef027",
+"at": "Nov 5 5:32 PM ET"
+}
+},
+"TSEM": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, MTSI, FN, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); its own: After earnings (Nov 2): Reported Mon Nov 2 before the open: EPS beat +7.8%, revenue +33% y/y; no new filing since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.93,
+"pm_last": 143.9997,
+"dropped": "gap-up under the 50 EMA"
+},
+"CIEN": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, MTSI, TSEM, FN, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.86,
+"pm_last": 253.48,
+"dropped": "gap-up under the 50 EMA"
+},
+"NBIS": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (CRWV, IREN, HUT, RIOT, WULF, GLXY, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); headline: Jim Cramer Raises Red Flags Over CoreWeave, IREN and Nebius Data Center Expansion: 'These Are What I Am Concerned About' (Benzinga 2:34 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/markets/equities/26/11/62967210/jim-cramer-raises-red-flags-over-coreweave-iren-and-nebius-data-center-expansion-these-are-what-i-am-concerned-about"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.85,
+"pm_last": 132.2291,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "In the news",
+"title": "Jim Cramer Raises Red Flags Over CoreWeave, IREN and Nebius Data Center Expansion: 'These Are What I Am Concerned About'",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/markets/equities/26/11/62967210/jim-cramer-raises-red-flags-over-coreweave-iren-and-nebius-data-center-expansion-these-are-what-i-am-concerned-about",
+"at": "2:34 AM ET"
+}
+},
+"STX": {
+"news": "C",
+"catalyst": "Sector move: Memory & Storage",
+"reason": "4 Memory & Storage stocks gapping up 5%+ (MU, SNDK, WDC); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.84,
+"pm_last": 512.44,
+"dropped": "gap-up under the 50 EMA"
+},
+"TER": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, Q, NVMI, ONTO, AMKR, VICR, ...); no news since the last close, only routine filings (4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/97210/000090445426000589/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.81,
+"pm_last": 233.6,
+"dropped": "gap-up under the 50 EMA"
+},
+"BKD": {
+"news": "B",
+"catalyst": "Earnings miss",
+"reason": "revenue miss -0.7%; revenue -12% y/y (last q -12%: same)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1332349/000133234926000070/bkd-20261106.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -9.8,
+"pm_last": 9.751,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Brookdale Senior Living Q3 EPS $(0.06) Misses $(0.03) Estimate, Sales $712.068M Miss $721.002M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62970122/brookdale-senior-living-q3-eps-0-06-misses-0-03-estimate-sales-712-068m-miss-721-002m-estimate",
+"at": "6:31 AM ET"
+}
+},
+"AMD": {
+"news": "C",
+"catalyst": "Sector move: AI Chips & CPUs",
+"reason": "8 AI Chips & CPUs stocks gapping up 5%+ (NVDA, TSM, AVGO, INTC, ARM, UMC, ...); headline: AMD Shares Rebound 7% Premarket After 17% Rout: Here's What's Happening (Benzinga 6:08 AM ET); its own: After earnings (Nov 3): Reported Tue Nov 3 after the close: revenue beat +2.2%, EPS beat +7.5%, guide +5.3% vs street, revenue +45% y/y, -0.7% after hours; no new f",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/markets/equities/26/11/62969487/amd-shares-jump-5-percent-premarket-after-strong-quarterly-results"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.77,
+"pm_last": 443.8915,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "In the news",
+"title": "AMD Shares Rebound 7% Premarket After 17% Rout: Here's What's Happening",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/markets/equities/26/11/62969487/amd-shares-jump-5-percent-premarket-after-strong-quarterly-results",
+"at": "6:08 AM ET"
+}
+},
+"ONTO": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, AMKR, VICR, ...); headline: Oppenheimer Maintains Buy Rating and $450 Price Target for Onto Innovation (Fiscal.ai Nov 5 6:01 PM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.moomoo.com/news/post/1003665863/oppenheimer-maintains-onto-innovation-ontous-with-buy-rating-maintains-target"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.71,
+"pm_last": 171.0,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Analyst note",
+"title": "Oppenheimer Maintains Buy Rating and $450 Price Target for Onto Innovation",
+"source": "Fiscal.ai",
+"url": "https://www.moomoo.com/news/post/1003665863/oppenheimer-maintains-onto-innovation-ontous-with-buy-rating-maintains-target",
+"at": "Nov 5 6:01 PM ET"
+}
+},
+"STLN": {
+"news": "C",
+"catalyst": "Earnings + raise",
+"reason": "revenue +24% y/y (last q +35%: slower); guidance raised; guide -0.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1799191/000107997326001430/ex99x1.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "down",
+"gap_pct": -9.55,
+"pm_last": 6.06,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Starling Oncology Q3 EPS $(0.13) Misses $(0.05) Estimate, Sales $169.767M Beat $169.047M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62952237/starling-oncology-q3-eps-0-13-misses-0-05-estimate-sales-169-767m-beat-169-047m-estimate",
+"at": "Nov 5 4:18 PM ET"
+}
+},
+"WDC": {
+"news": "C",
+"catalyst": "Sector move: Memory & Storage",
+"reason": "4 Memory & Storage stocks gapping up 5%+ (MU, SNDK, STX); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.42,
+"pm_last": 292.83,
+"dropped": "gap-up under the 50 EMA"
+},
+"P": {
+"news": "C",
+"catalyst": "Sector move: AI Servers & ODMs",
+"reason": "7 AI Servers & ODMs stocks gapping up 5%+ (DELL, HPE, CLS, FLEX, SMCI, SANM); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.29,
+"pm_last": 102.11,
+"dropped": "gap-up under the 50 EMA"
+},
+"WYFI": {
+"news": "C",
+"catalyst": "Sector move: IT Services",
+"reason": "8 IT Services stocks gapping up 5%+ (NBIS, IREN, CORZ, INOD, KEEL, VNET, ...); with their own news: IREN (Earnings), CORZ (Earnings (headline)), INOD (Earnings + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.23,
+"pm_last": 8.52,
+"dropped": "market cap under $0.7B"
+},
+"KRMN": {
+"news": "A",
+"catalyst": "Earnings beat + raise",
+"reason": "revenue beat +3.5%; revenue +66% y/y (last q +58%: faster); guidance raised; guide +2.1% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2040127/000119312526449899/krmn-ex99_1.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 8,
+"direction": "up",
+"gap_pct": 9.11,
+"pm_last": 35.0009,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Karman Holdings Q3 Adj. EPS $0.19 Beats $0.15 Estimate, Sales $201.623M Beat $194.697M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62952458/karman-holdings-q3-adj-eps-0-19-beats-0-15-estimate-sales-201-623m-beat-194-697m-estimate",
+"at": "Nov 5 4:19 PM ET"
+}
+},
+"MU": {
+"news": "C",
+"catalyst": "Sector move: Memory & Storage",
+"reason": "4 Memory & Storage stocks gapping up 5%+ (SNDK, STX, WDC); headline: Micron Technology Stock Is Surging Friday: What's Going On? (Benzinga 7:04 AM ET); its own: Executive change: Micron Announces Board of Directors Retirement BOISE, Idaho, Nov. 5, 2026 \u2014 Micron Technology, Inc. (Nasdaq: MU) today announced that Linnie",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/markets/tech/26/11/62971493/micron-technology-stock-is-surging-friday-whats-going-on",
+"https://www.sec.gov/Archives/edgar/data/723125/000110465926123389/tm2629062d1_ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.93,
+"pm_last": 715.01,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "In the news",
+"title": "Micron Technology Stock Is Surging Friday: What's Going On?",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/markets/tech/26/11/62971493/micron-technology-stock-is-surging-friday-whats-going-on",
+"at": "7:04 AM ET"
+}
+},
+"COHU": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, ONTO, AMKR, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.91,
+"pm_last": 38.01,
+"dropped": "gap-up under the 50 EMA"
+},
+"AMKR": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, ONTO, VICR, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.89,
+"pm_last": 33.2,
+"dropped": "under 30% over the 52-week low"
+},
+"ACMR": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, ONTO, AMKR, ...); its own: After earnings (Nov 5): Reported Thu Nov 5 before the open: revenue beat +18.4%, EPS beat +6.3%, guidance raised, guide +7.7% vs street, revenue +37% y/y, -0.4% aft",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.88,
+"pm_last": 42.8,
+"dropped": "gap-up under the 50 EMA"
+},
+"MTSI": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, TSEM, FN, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); headline: Truist Adjusts PT on MACOM Technology Solutions to $310 From $375, Keeps Buy Rating (Fiscal.ai 7:31 AM ET); its own: After earnings (Nov 5): Reported Thu Nov 5 before the open: revenue beat +1.1%, EPS beat +4.5%, guide +5.6% vs street, revenue +63% y/y, -0.3% after hours; no new f",
+"flags": "",
+"sources": [
+"https://www.marketscreener.com/news/truist-adjusts-pt-on-macom-technology-solutions-to-310-from-375-keeps-buy-rating-ce785fddd08cf022"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.88,
+"pm_last": 207.25,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "In the news",
+"title": "Truist Adjusts PT on MACOM Technology Solutions to $310 From $375, Keeps Buy Rating",
+"source": "Fiscal.ai",
+"url": "https://www.marketscreener.com/news/truist-adjusts-pt-on-macom-technology-solutions-to-310-from-375-keeps-buy-rating-ce785fddd08cf022",
+"at": "7:31 AM ET"
+}
+},
+"VTEX": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue +6% y/y (last q +10%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1793663/000119312526449717/vtex_3q26_pr_6k.htm",
+"https://www.sec.gov/Archives/edgar/data/1793663/000119312526449718/6k_df_e_mda_-_3q26.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -8.86,
+"pm_last": 3.6,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Vtex Q3 EPS $0.018 Misses $0.05 Estimate, Sales $63.380M Beat $63.317M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/VTEX",
+"at": "Nov 5 4:01 PM ET"
+}
+},
+"FPS": {
+"news": "C",
+"catalyst": "Sector move: Data Center Power & Cooling",
+"reason": "7 Data Center Power & Cooling stocks gapping up 5%+ (ETN, VRT, NVT, INIO, MOD, POWL); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.8,
+"pm_last": 19.78,
+"dropped": "under 30% over the 52-week low"
+},
+"SIMO": {
+"news": "C",
+"catalyst": "Sector move: Semiconductors & Chip Equipment",
+"reason": "58 Semiconductors & Chip Equipment stocks gapping up 5%+ (NVDA, TSM, AVGO, SKHY, MU, AMD, ...); with their own news: LRCX (Buyback (headline)), DIOD (Earnings + raise), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.79,
+"pm_last": 170.0,
+"dropped": "gap-up under the 50 EMA"
+},
+"CRWV": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, IREN, HUT, RIOT, WULF, GLXY, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); headline: CoreWeave Stock Gains Friday: What's Happening? (Benzinga 7:42 AM ET); no news since the last close, only routine filings (144)",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/trading-ideas/movers/26/11/62972937/coreweave-stock-gains-friday-whats-happening",
+"https://www.sec.gov/Archives/edgar/data/1769628/000195004726010733/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.77,
+"pm_last": 47.49,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "In the news",
+"title": "CoreWeave Stock Gains Friday: What's Happening?",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/trading-ideas/movers/26/11/62972937/coreweave-stock-gains-friday-whats-happening",
+"at": "7:42 AM ET"
+}
+},
+"VICR": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, ONTO, AMKR, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.7,
+"pm_last": 146.8503,
+"dropped": "gap-up under the 50 EMA"
+},
+"UMC": {
+"news": "C",
+"catalyst": "Sector move: AI Chips & CPUs",
+"reason": "8 AI Chips & CPUs stocks gapping up 5%+ (NVDA, TSM, AVGO, AMD, INTC, ARM, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.61,
+"pm_last": 14.5,
+"dropped": "gap-up under the 50 EMA"
+},
+"FSLY": {
+"news": "C",
+"catalyst": "After earnings (Nov 4)",
+"reason": "Reported Wed Nov 4 after the close: revenue beat +1.3%, EPS beat +43.4%, +1.4% after hours; no new filing since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.58,
+"pm_last": 16.7,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Analyst note",
+"title": "Analysts Adjust Price Targets for Fastly Following Q3 Earnings",
+"source": "Fiscal.ai",
+"url": "https://www.tradingview.com/news/tradingview:f09253c62b4d5:0-evercore-isi-group-maintains-fastly-at-outperform-lowers-price-target-to-24-from-32/",
+"at": "Nov 5 6:02 PM ET"
+}
+},
+"PANL": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +30% y/y (last q +19%: faster)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1606909/000162828026071148/q32026earningspressrelease.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 7,
+"direction": "up",
+"gap_pct": 8.41,
+"pm_last": 7.99,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Pangaea Logistics Solns Q3 Adj. EPS $0.52 Beats $0.39 Estimate, Sales $219.057M Beat $204.901M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/PANL",
+"at": "Nov 5 4:31 PM ET"
+}
+},
+"ARM": {
+"news": "C",
+"catalyst": "Sector move: AI Chips & CPUs",
+"reason": "8 AI Chips & CPUs stocks gapping up 5%+ (NVDA, TSM, AVGO, AMD, INTC, UMC, ...); headline: UBS Maintains Buy on ARM Holdings, Lowers Price Target to $270 (Benzinga Nov 5 8:32 PM ET); its own: After earnings (Nov 4): Reported Wed Nov 4 after the close: revenue beat +4.7%, EPS beat +9.3%, revenue +27% y/y, +2.6% after hours; no new filing since the last cl",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/news/26/11/62965085/ubs-maintains-buy-arm-holdings-lowers-price-target-270"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.4,
+"pm_last": 180.72,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Analyst note",
+"title": "UBS Maintains Buy on ARM Holdings, Lowers Price Target to $270",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62965085/ubs-maintains-buy-arm-holdings-lowers-price-target-270",
+"at": "Nov 5 8:32 PM ET"
+}
+},
+"GLXY": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, HUT, RIOT, WULF, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); no news since the last close, only routine filings (4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1859392/000191260926000011/",
+"https://www.sec.gov/Archives/edgar/data/1859392/000138061526000013/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.4,
+"pm_last": 14.07,
+"dropped": "under 30% over the 52-week low"
+},
+"FLEX": {
+"news": "C",
+"catalyst": "Sector move: AI Servers & ODMs",
+"reason": "7 AI Servers & ODMs stocks gapping up 5%+ (DELL, HPE, P, CLS, SMCI, SANM); no news since the last close, only routine filings (8-K)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/866374/000086637426000045/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.27,
+"pm_last": 72.25,
+"dropped": "gap-up under the 50 EMA"
+},
+"AEIS": {
+"news": "C",
+"catalyst": "Sector move: Electrical Equipment",
+"reason": "18 Electrical Equipment stocks gapping up 5%+ (ETN, VRT, BE, NVT, INIO, FPS, ...); with their own news: BE (Deal / contract (headline)), XE (Deal / contract (headline)), SMR (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.26,
+"pm_last": 200.99,
+"dropped": "under 30% over the 52-week low"
+},
+"VRT": {
+"news": "C",
+"catalyst": "Sector move: Data Center Power & Cooling",
+"reason": "7 Data Center Power & Cooling stocks gapping up 5%+ (ETN, NVT, INIO, FPS, MOD, POWL); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.24,
+"pm_last": 191.22,
+"dropped": "under 30% over the 52-week low"
+},
+"RIOT": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, HUT, WULF, GLXY, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); headline: Analysts Adjust Price Targets for Riot Platforms Following Q3 Earnings (Fiscal.ai Nov 5 6:02 PM ET); its own: After earnings (Nov 4): Reported Wed Nov 4 before the open: EPS beat +141.5%, +1.8% after hours; no new filing since the last close",
+"flags": "",
+"sources": [
+"https://www.marketscreener.com/news/chardan-raises-price-target-on-riot-platforms-to-32-from-27-50-keeps-buy-rating-ce785fdcd08ff62c"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.2,
+"pm_last": 15.97,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Analyst note",
+"title": "Analysts Adjust Price Targets for Riot Platforms Following Q3 Earnings",
+"source": "Fiscal.ai",
+"url": "https://www.marketscreener.com/news/chardan-raises-price-target-on-riot-platforms-to-32-from-27-50-keeps-buy-rating-ce785fdcd08ff62c",
+"at": "Nov 5 6:02 PM ET"
+}
+},
+"HNST": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "revenue -9% y/y (last q -11%: faster); guidance raised; guide +0.3% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1530979/000162828026071012/honestcoq3-26exhibit991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.19,
+"pm_last": 4.8035,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Buyback",
+"title": "The Honest Company Reports Third Quarter 2026 Financial Results and Announces New Share Repurchase Program",
+"source": "Fiscal.ai",
+"url": "https://www.manilatimes.net/2026/11/06/tmt-newswire/globenewswire/the-honest-company-reports-third-quarter-2026-results/2463495",
+"at": "Nov 5 5:32 PM ET"
+}
+},
+"OBIO": {
+"news": "B",
+"catalyst": "Offering / dilution",
+"reason": "Filed since the close: 424B5. ",
+"flags": "dilution: 424B5",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1814114/000110465926123304/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -8.19,
+"pm_last": 5.16,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Offering",
+"title": "Orchestra BioMed Announces Proposed Public Offering of Common Stock",
+"source": "Fiscal.ai",
+"url": "https://www.tradingview.com/news/seekingalpha:c018eb8e1094b:0-orchestra-biomed-launches-proposed-public-offering-shares-plunge/",
+"at": "Nov 5 5:32 PM ET"
+}
+},
+"CTGO": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.13,
+"pm_last": 16.09,
+"dropped": "market cap under $0.7B"
+},
+"GMED": {
+"news": "A",
+"catalyst": "Earnings + guide cut",
+"reason": "revenue -1% y/y (last q +6%: slower); guidance lowered; guide -3.4% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1237831/000162828026071042/gmed-q32026ex991.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 7,
+"direction": "down",
+"gap_pct": -8.12,
+"pm_last": 74.9,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Buyback",
+"title": "Globus Medical Announces $500M Increase To Share Buyback Program",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/GMED",
+"at": "Nov 5 4:09 PM ET"
+}
+},
+"DOCS": {
+"news": "C",
+"catalyst": "Earnings beat + raise",
+"reason": "revenue beat +2.5%; revenue +4% y/y (last q +7%: slower); guide +1.1% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1516513/000151651326000049/doximity-2026930xex991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -8.08,
+"pm_last": 30.5,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "Doximity Q2 Adj. EPS $0.36 Beats $0.35 Estimate, Sales $174.537M Beat $170.815M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/DOCS",
+"at": "Nov 5 4:02 PM ET"
+}
+},
+"TSM": {
+"news": "C",
+"catalyst": "Sector move: AI Chips & CPUs",
+"reason": "8 AI Chips & CPUs stocks gapping up 5%+ (NVDA, AVGO, AMD, INTC, ARM, UMC, ...); headline: Reported Earlier, 'Taiwan Imposes Short Selling Limit to Support Stock Market ' - Bloomberg (Benzinga 6:58 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/news/26/11/62971200/reported-earlier-taiwan-imposes-short-selling-limit-support-stock-market-bloomberg"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.0,
+"pm_last": 380.19,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "In the news",
+"title": "Reported Earlier, 'Taiwan Imposes Short Selling Limit to Support Stock Market ' - Bloomberg",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62971200/reported-earlier-taiwan-imposes-short-selling-limit-support-stock-market-bloomberg",
+"at": "6:58 AM ET"
+}
+},
+"PBYI": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue +8% y/y",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1401667/000143774926035279/pbyi20260901_8k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -7.88,
+"pm_last": 9.0,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Puma Biotechnology Q3 Adj. EPS $0.15 Beats $0.11 Estimate, Sales $55.100M Miss $57.424M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950797/puma-biotechnology-q3-adj-eps-0-15-beats-0-11-estimate-sales-55-100m-miss-57-424m-estimate",
+"at": "Nov 5 4:10 PM ET"
+}
+},
+"QNT": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "guidance raised; guide +7.9% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2110105/000162828026071000/q32026earningspressrelease.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.85,
+"pm_last": 32.16,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Quantinuum Q3 Adj. EPS $(0.46) Misses $(0.36) Estimate, Sales $9.100M Beat $8.048M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62949083/quantinuum-q3-adj-eps-0-46-misses-0-36-estimate-sales-9-100m-beat-8-048m-estimate",
+"at": "Nov 5 4:03 PM ET"
+}
+},
+"ETRA": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No news since the last close, only routine filings (4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2088082/000094787126000985/",
+"https://www.sec.gov/Archives/edgar/data/2088082/000094787126000986/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.81,
+"pm_last": 7.9243,
+"dropped": "market cap under $0.7B"
+},
+"ACLS": {
+"news": "C",
+"catalyst": "Sector move: Semiconductors & Chip Equipment",
+"reason": "58 Semiconductors & Chip Equipment stocks gapping up 5%+ (NVDA, TSM, AVGO, SKHY, MU, AMD, ...); with their own news: LRCX (Buyback (headline)), DIOD (Earnings + raise), LASR (Earnings beat + raise); no news since the last close, only routine filings (10-Q)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1113232/000110465926123333/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.78,
+"pm_last": 97.0,
+"dropped": "20-day average volume under 700K"
+},
+"HPE": {
+"news": "C",
+"catalyst": "Sector move: AI Networking",
+"reason": "9 AI Networking stocks gapping up 5%+ (AVGO, ANET, MRVL, ALAB, CLS, CRDO, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.77,
+"pm_last": 47.58,
+"dropped": "gap-up under the 50 EMA"
+},
+"NVMI": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, ONTO, AMKR, VICR, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.74,
+"pm_last": 302.0,
+"dropped": "20-day average volume under 700K"
+},
+"VSTM": {
+"news": "C",
+"catalyst": "Offering (headline)",
+"reason": "Verastem Oncology Files $100M At-The-Market Equity Offering Agreement With Cantor Fitzgerald (Benzinga Nov 5 5:37 PM ET); SEC: Filing, not classified: Filed since the close: 10-Q, 4, 8-K 7.01,9.01, S-3ASR, S-8. Delivering Novel Therapies for RAS/MAPK ",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/news/26/11/62959252/verastem-oncology-files-100m-market-equity-offering-agreement-cantor-fitzgerald",
+"https://www.sec.gov/Archives/edgar/data/1526119/000110465926123386/tm2628982d2_ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -7.68,
+"pm_last": 8.66,
+"dropped": "",
+"headline": {
+"kind": "Offering",
+"title": "Verastem Oncology Files $100M At-The-Market Equity Offering Agreement With Cantor Fitzgerald",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62959252/verastem-oncology-files-100m-market-equity-offering-agreement-cantor-fitzgerald",
+"at": "Nov 5 5:37 PM ET"
+}
+},
+"CLS": {
+"news": "C",
+"catalyst": "Sector move: AI Networking",
+"reason": "9 AI Networking stocks gapping up 5%+ (AVGO, ANET, MRVL, HPE, ALAB, CRDO, ...); no news since the last close, only routine filings (4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1030894/000119312526449851/",
+"https://www.sec.gov/Archives/edgar/data/1030894/000119312526449854/",
+"https://www.sec.gov/Archives/edgar/data/1030894/000119312526449857/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.67,
+"pm_last": 221.4,
+"dropped": "under 30% over the 52-week low"
+},
+"SBRA": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -7.66,
+"pm_last": 19.29,
+"dropped": "ADR under 3%"
+},
+"HYLN": {
+"news": "C",
+"catalyst": "Sector move: Auto Parts",
+"reason": "3 Auto Parts stocks gapping up 5%+ (MOD, AEVA); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.63,
+"pm_last": 2.82,
+"dropped": "market cap under $0.7B"
+},
+"CLSK": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, HUT, RIOT, WULF, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.57,
+"pm_last": 6.11,
+"dropped": "under 30% over the 52-week low"
+},
+"GLW": {
+"news": "C",
+"catalyst": "Analyst upgrade (headline)",
+"reason": "Fox Advisors Upgrades Corning to Outperform (Fiscal.ai Nov 5 5:32 PM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.marketscreener.com/news/fox-advisors-upgrades-corning-to-outperform-from-neutral-160-price-target-ce785fddd98eff23"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.56,
+"pm_last": 111.28,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Analyst upgrade",
+"title": "Fox Advisors Upgrades Corning to Outperform",
+"source": "Fiscal.ai",
+"url": "https://www.marketscreener.com/news/fox-advisors-upgrades-corning-to-outperform-from-neutral-160-price-target-ce785fddd98eff23",
+"at": "Nov 5 5:32 PM ET"
+}
+},
+"UCTT": {
+"news": "C",
+"catalyst": "Sector move: Semi Subsystems",
+"reason": "3 Semi Subsystems stocks gapping up 5%+ (MKSI, ICHR); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.53,
+"pm_last": 40,
+"dropped": "gap-up under the 50 EMA"
+},
+"HIMS": {
+"news": "C",
+"catalyst": "Deal / contract (headline)",
+"reason": "Eli Lilly and Hims & Hers Announce Agreement to Expand Access to Obesity Medications (Fiscal.ai 7:32 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.businesswire.com/newsroom/industry/technology"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.52,
+"pm_last": 25.87,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Deal / contract",
+"title": "Eli Lilly and Hims & Hers Announce Agreement to Expand Access to Obesity Medications",
+"source": "Fiscal.ai",
+"url": "https://www.businesswire.com/newsroom/industry/technology",
+"at": "7:32 AM ET"
+}
+},
+"TE": {
+"news": "C",
+"catalyst": "Sector move: Electrical Equipment",
+"reason": "18 Electrical Equipment stocks gapping up 5%+ (ETN, VRT, BE, NVT, INIO, AEIS, ...); with their own news: BE (Deal / contract (headline)), XE (Deal / contract (headline)), SMR (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.49,
+"pm_last": 2.44,
+"dropped": "under 30% over the 52-week low"
+},
+"INOD": {
+"news": "A",
+"catalyst": "Earnings + raise",
+"reason": "revenue +53% y/y (last q +58%: slower); guidance raised; guide -0.6% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/903651/000110465926123324/tm2628333d1_ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.48,
+"pm_last": 41.51,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Innodata Q3 EPS $0.29 Beats $0.17 Estimate, Sales $95.618M Beat $83.322M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/INOD",
+"at": "Nov 5 4:15 PM ET"
+}
+},
+"ATEN": {
+"news": "A",
+"catalyst": "Earnings + raise",
+"reason": "revenue +23% y/y (last q +16%: faster); guide +2.4% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1580808/000162828026071062/q3-26exx99111052026earning.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 8,
+"direction": "up",
+"gap_pct": 7.47,
+"pm_last": 24.3,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Earnings",
+"title": "A10 Networks Q3 Adj EPS $0.31 Beats $0.27 Estimate; Sales $91.55M Beat $83.88M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/ATEN",
+"at": "Nov 5 4:06 PM ET"
+}
+},
+"EVC": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1109116/000119312526449765/evc-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.44,
+"pm_last": 8.09,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Deal / contract",
+"title": "Entravision Communications To Sell WFTT-TV, Serving Tampa-St. Petersburg, Florida Market, For $30M In Cash; Carriage Agreement Ends At Closing",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/m/26/11/62958308/entravision-communications-sell-wftt-tv-serving-tampa-st-petersburg-florida-market-30m-cash-carriage",
+"at": "Nov 5 5:22 PM ET"
+}
+},
+"DY": {
+"news": "C",
+"catalyst": "Sector move: Data Center Builders & REITs",
+"reason": "5 Data Center Builders & REITs stocks gapping up 5%+ (PWR, FIX, MTZ, STRL); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.36,
+"pm_last": 206.9072,
+"dropped": "20-day average volume under 700K"
+},
+"FN": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, MTSI, TSEM, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.35,
+"pm_last": 314.5,
+"dropped": "under 30% over the 52-week low"
+},
+"DOCN": {
+"news": "C",
+"catalyst": "Sector move: AI Chips & CPUs",
+"reason": "8 AI Chips & CPUs stocks gapping up 5%+ (NVDA, TSM, AVGO, AMD, INTC, ARM, ...); its own: After earnings (Nov 3): Reported Tue Nov 3 before the open: EPS beat +41.8%, guidance raised, guide +4.8% vs street, revenue +40% y/y, -0.6% after hours; no new fil",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.29,
+"pm_last": 75.7759,
+"dropped": "gap-up under the 50 EMA"
+},
+"STRL": {
+"news": "C",
+"catalyst": "Sector move: Data Center Builders & REITs",
+"reason": "5 Data Center Builders & REITs stocks gapping up 5%+ (PWR, FIX, MTZ, DY); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.24,
+"pm_last": 262.03,
+"dropped": "under 30% over the 52-week low"
+},
+"XE": {
+"news": "C",
+"catalyst": "Deal / contract (headline)",
+"reason": "Fluor Selected By X-Energy To Provide Engineering, Design, And Project Management Services For The Cascade Small Modular Reactor Project In Washington; Undisclosed Contract Value To Be Booked In Q3 (Benzinga Nov 5 4:39 PM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/news/26/11/62954921/fluor-selected-x-energy-provide-engineering-design-and-project-management-services-cascade-small-mod"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.24,
+"pm_last": 9.6517,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Deal / contract",
+"title": "Fluor Selected By X-Energy To Provide Engineering, Design, And Project Management Services For The Cascade Small Modular Reactor Project In Washington; Undisclosed Contract Value To Be Booked In Q3",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62954921/fluor-selected-x-energy-provide-engineering-design-and-project-management-services-cascade-small-mod",
+"at": "Nov 5 4:39 PM ET"
+}
+},
+"ASML": {
+"news": "C",
+"catalyst": "Sector move: Wafer Fab Equipment",
+"reason": "4 Wafer Fab Equipment stocks gapping up 5%+ (AMAT, LRCX, KLAC); with their own news: LRCX (Buyback (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.23,
+"pm_last": 1454.8,
+"dropped": "gap-up under the 50 EMA"
+},
+"QMCO": {
+"news": "C",
+"catalyst": "Sector move: Computers & Hardware",
+"reason": "9 Computers & Hardware stocks gapping up 5%+ (DELL, SNDK, STX, WDC, P, SMCI, ...); with their own news: IONQ (Dilution / warning), PSQL (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.23,
+"pm_last": 14.68,
+"dropped": "market cap under $0.7B"
+},
+"RMBS": {
+"news": "C",
+"catalyst": "Sector move: Analog & Auto Semis",
+"reason": "6 Analog & Auto Semis stocks gapping up 5%+ (MPWR, STM, ON, LSCC, ALGM); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.2,
+"pm_last": 74.699,
+"dropped": "under 30% over the 52-week low"
+},
+"NVTS": {
+"news": "C",
+"catalyst": "Sector move: GaN & SiC Power",
+"reason": "3 GaN & SiC Power stocks gapping up 5%+ (VSH, WOLF); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.12,
+"pm_last": 8.42,
+"dropped": "under 30% over the 52-week low"
+},
+"LSCC": {
+"news": "C",
+"catalyst": "Sector move: Analog & Auto Semis",
+"reason": "6 Analog & Auto Semis stocks gapping up 5%+ (MPWR, STM, ON, RMBS, ALGM); its own: After earnings (Nov 2): Reported Mon Nov 2 after the close: EPS beat +30.0%, guide +14.3% vs street, revenue +118% y/y, -0.5% after hours; only routine filings sinc",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/855658/000143774926035328/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.1,
+"pm_last": 104.99,
+"dropped": "gap-up under the 50 EMA"
+},
+"WOLF": {
+"news": "C",
+"catalyst": "Sector move: GaN & SiC Power",
+"reason": "3 GaN & SiC Power stocks gapping up 5%+ (VSH, NVTS); its own: After earnings (Nov 4): Reported Wed Nov 4 after the close: revenue beat +3.3%, EPS miss -2.3%, guide +7.5% vs street, revenue -21% y/y, +0.2% after hours; only rou",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/895419/000089541926000081/",
+"https://www.sec.gov/Archives/edgar/data/895419/000119312526450120/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.07,
+"pm_last": 21.82,
+"dropped": "gap-up under the 50 EMA"
+},
+"EGY": {
+"news": "C",
+"catalyst": "Earnings + raise",
+"reason": "revenue +27% y/y (last q +84%: slower); guidance raised",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/894627/000089462726000058/ex-991q32026earningsrelease.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "down",
+"gap_pct": -7.06,
+"pm_last": 5.0,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "VAALCO Energy Q3 Adj. EPS $(0.10) Misses $0.12 Estimate, Sales $146.975M Beat $131.000M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62955850/vaalco-energy-q3-adj-eps-0-10-misses-0-12-estimate-sales-146-975m-beat-131-000m-estimate",
+"at": "Nov 5 4:49 PM ET"
+}
+},
+"FLUT": {
+"news": "C",
+"catalyst": "Sector move: Hospitality & Leisure",
+"reason": "4 Hospitality & Leisure stocks gapping down 5%+ (TXRH, DKNG, BJRI); with their own news: TXRH (Earnings), DKNG (Earnings + raise), BJRI (Earnings + raise); headline: UBS Maintains Buy on Flutter Entertainment, Lowers Price Target to $120 (Benzinga Nov 5 8:29 PM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/news/26/11/62965055/ubs-maintains-buy-flutter-entertainment-lowers-price-target-120"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -7.01,
+"pm_last": 77.09,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Analyst note",
+"title": "UBS Maintains Buy on Flutter Entertainment, Lowers Price Target to $120",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62965055/ubs-maintains-buy-flutter-entertainment-lowers-price-target-120",
+"at": "Nov 5 8:29 PM ET"
+}
+},
+"KLIC": {
+"news": "C",
+"catalyst": "Sector move: Semiconductors & Chip Equipment",
+"reason": "58 Semiconductors & Chip Equipment stocks gapping up 5%+ (NVDA, TSM, AVGO, SKHY, MU, AMD, ...); with their own news: LRCX (Buyback (headline)), DIOD (Earnings + raise), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.97,
+"pm_last": 64.0,
+"dropped": "20-day average volume under 700K"
+},
+"HSAI": {
+"news": "C",
+"catalyst": "Sector move: Electronic Components & Instruments",
+"reason": "15 Electronic Components & Instruments stocks gapping up 5%+ (GLW, KEYS, COHR, CLS, FLEX, MKSI, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.93,
+"pm_last": 13.73,
+"dropped": "under 30% over the 52-week low"
+},
+"UAA": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue -7% y/y (last q -3%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1336917/000133691726000160/exhibit991-fiscal2027q2.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.86,
+"pm_last": 5.169,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Deal / contract",
+"title": "Under Armour Expects Increased Supply Chain Headwinds In FY27 Relating Middle East Conflict And Unfavorable FX Impacts",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/UAA",
+"at": "7:00 AM ET"
+}
+},
+"AMBQ": {
+"news": "C",
+"catalyst": "Sector move: Semiconductors & Chip Equipment",
+"reason": "58 Semiconductors & Chip Equipment stocks gapping up 5%+ (NVDA, TSM, AVGO, SKHY, MU, AMD, ...); with their own news: LRCX (Buyback (headline)), DIOD (Earnings + raise), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.85,
+"pm_last": 37.58,
+"dropped": "20-day average volume under 700K"
+},
+"FIX": {
+"news": "C",
+"catalyst": "Sector move: Data Center Builders & REITs",
+"reason": "5 Data Center Builders & REITs stocks gapping up 5%+ (PWR, MTZ, STRL, DY); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.81,
+"pm_last": 1029.97,
+"dropped": "under 30% over the 52-week low"
+},
+"GH": {
+"news": "C",
+"catalyst": "Earnings beat + raise",
+"reason": "revenue beat +3.0%; revenue +36% y/y (last q +44%: slower); guidance raised; guide +0.4% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1576280/000157628026000043/gh-09302026xexhibit991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.8,
+"pm_last": 143.0,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "Guardant Health Q3 Adj. EPS $(0.29) Beats $(0.32) Estimate, Sales $360.975M Beat $350.358M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950253/guardant-health-q3-adj-eps-0-29-beats-0-32-estimate-sales-360-975m-beat-350-358m-estimate",
+"at": "Nov 5 4:08 PM ET"
+}
+},
+"MARA": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, HUT, RIOT, WULF, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.8,
+"pm_last": 6.28,
+"dropped": "under 30% over the 52-week low"
+},
+"CALY": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/837465/000083746526000025/modg-20261105.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.78,
+"pm_last": 17.0,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "Callaway Golf Q3 Adj. EPS $0.12 Beats $0.01 Estimate, Sales $436.900M Beat $428.273M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62952899/callaway-golf-q3-adj-eps-0-12-beats-0-01-estimate-sales-436-900m-beat-428-273m-estimate",
+"at": "Nov 5 4:21 PM ET"
+}
+},
+"CORZ": {
+"news": "C",
+"catalyst": "Earnings (headline)",
+"reason": "Core Scientific Reports Q3 2026 Financial Results and Strategic Pivot to Colocation (Fiscal.ai Nov 5 6:02 PM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.tradingview.com/news/stocktwits:d041eb290094b:0-core-scientific-s-ai-business-now-accounts-for-92-of-its-total-revenue-ceo-says-first-colocation-deal-nearing-full-delivery/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.77,
+"pm_last": 12.15,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Core Scientific Reports Q3 2026 Financial Results and Strategic Pivot to Colocation",
+"source": "Fiscal.ai",
+"url": "https://www.tradingview.com/news/stocktwits:d041eb290094b:0-core-scientific-s-ai-business-now-accounts-for-92-of-its-total-revenue-ceo-says-first-colocation-deal-nearing-full-delivery/",
+"at": "Nov 5 6:02 PM ET"
+}
+},
+"BHF": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +40% y/y (last q +104%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1685040/000168504026000035/q32026bhfearningspressrele.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "up",
+"gap_pct": 6.74,
+"pm_last": 43.87,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Brighthouse Finl Q3 Adj. EPS $3.68 Misses $5.18 Estimate, Sales $2.051B Miss $2.184B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62957639/brighthouse-finl-q3-adj-eps-3-68-misses-5-18-estimate-sales-2-051b-miss-2-184b-estimate",
+"at": "Nov 5 5:11 PM ET"
+}
+},
+"SANM": {
+"news": "C",
+"catalyst": "Sector move: AI Servers & ODMs",
+"reason": "7 AI Servers & ODMs stocks gapping up 5%+ (DELL, HPE, P, CLS, FLEX, SMCI); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.74,
+"pm_last": 139.01,
+"dropped": "under 30% over the 52-week low"
+},
+"PLPC": {
+"news": "C",
+"catalyst": "Sector move: Electrical Equipment",
+"reason": "18 Electrical Equipment stocks gapping up 5%+ (ETN, VRT, BE, NVT, INIO, AEIS, ...); with their own news: BE (Deal / contract (headline)), XE (Deal / contract (headline)), SMR (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.73,
+"pm_last": 269.0,
+"dropped": "20-day average volume under 700K"
+},
+"GMEX": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.73,
+"pm_last": 0.4696,
+"dropped": "market cap under $0.7B"
+},
+"VSH": {
+"news": "C",
+"catalyst": "Sector move: GaN & SiC Power",
+"reason": "3 GaN & SiC Power stocks gapping up 5%+ (NVTS, WOLF); its own: After earnings (Nov 4): Reported Wed Nov 4 before the open: revenue beat +1.6%, EPS beat +31.4%, -0.6% after hours; no new filing since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.72,
+"pm_last": 23.5,
+"dropped": "gap-up under the 50 EMA"
+},
+"FRVO": {
+"news": "C",
+"catalyst": "Analyst note (headline)",
+"reason": "Needham Initiates Coverage On Fervo Energy with Buy Rating, Announces Price Target of $17 (Benzinga 7:23 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/news/26/11/62972129/needham-initiates-coverage-fervo-energy-buy-rating-announces-price-target-17"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.71,
+"pm_last": 8.3128,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Analyst note",
+"title": "Needham Initiates Coverage On Fervo Energy with Buy Rating, Announces Price Target of $17",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62972129/needham-initiates-coverage-fervo-energy-buy-rating-announces-price-target-17",
+"at": "7:23 AM ET"
+}
+},
+"ANET": {
+"news": "C",
+"catalyst": "Sector move: AI Networking",
+"reason": "9 AI Networking stocks gapping up 5%+ (AVGO, MRVL, HPE, ALAB, CLS, CRDO, ...); headline: Arista Networks 10% Stockholder Andreas Bechtolsheim Proposes Sale of 260,000 Shares (Fiscal.ai Nov 5 10:01 PM ET); its own: After earnings (Nov 3): Reported Tue Nov 3 after the close: revenue beat +9.8%, EPS beat +11.2%, guide +9.8% vs street, revenue +59% y/y, -0.4% after hours; only ro",
+"flags": "",
+"sources": [
+"https://www.moomoo.com/news/flash/1003722534/form-144-arista-networks-anetus-10-stockholder-proposes-to-sell",
+"https://www.sec.gov/Archives/edgar/data/1596532/000195824426000698/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.62,
+"pm_last": 169.7647,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "In the news",
+"title": "Arista Networks 10% Stockholder Andreas Bechtolsheim Proposes Sale of 260,000 Shares",
+"source": "Fiscal.ai",
+"url": "https://www.moomoo.com/news/flash/1003722534/form-144-arista-networks-anetus-10-stockholder-proposes-to-sell",
+"at": "Nov 5 10:01 PM ET"
+}
+},
+"VCEL": {
+"news": "C",
+"catalyst": "After earnings (Nov 5)",
+"reason": "Reported Thu Nov 5 before the open: EPS beat +382.1%, guidance raised, guide +2.6% vs street, revenue +26% y/y, +0.1% after hours; only routine filings since the last close (144)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/887359/000195917326007797/",
+"https://www.sec.gov/Archives/edgar/data/887359/000195917326007798/",
+"https://www.sec.gov/Archives/edgar/data/887359/000195917326007800/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.61,
+"pm_last": 55.2025,
+"dropped": "",
+"headline": {
+"kind": "Analyst note",
+"title": "HC Wainwright & Co. Maintains Buy on Vericel, Raises Price Target to $75",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62971075/hc-wainwright-co-maintains-buy-vericel-raises-price-target-75",
+"at": "6:51 AM ET"
+}
+},
+"GRAL": {
+"news": "C",
+"catalyst": "After earnings (Nov 4)",
+"reason": "Reported Wed Nov 4 after the close: revenue miss -15.2%, EPS beat +257.9%, -1.2% after hours; only routine filings since the last close (10-Q)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1699031/000162828026071041/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.61,
+"pm_last": 126.9999,
+"dropped": ""
+},
+"PSQL": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2119292/000121390026116581/ea031109801ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.57,
+"pm_last": 4.38,
+"dropped": "20-day average volume under 700K"
+},
+"INTC": {
+"news": "C",
+"catalyst": "Sector move: AI Chips & CPUs",
+"reason": "8 AI Chips & CPUs stocks gapping up 5%+ (NVDA, TSM, AVGO, AMD, ARM, UMC, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.53,
+"pm_last": 55.66,
+"dropped": "gap-up under the 50 EMA"
+},
+"VECO": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, ONTO, AMKR, ...); its own: After earnings (Nov 4): Reported Wed Nov 4 after the close: revenue miss -1.8%, EPS miss -15.7%, guide +4.2% vs street, revenue +26% y/y, -0.6% after hours; no new ",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.53,
+"pm_last": 35.42,
+"dropped": "gap-up under the 50 EMA"
+},
+"AIP": {
+"news": "A",
+"catalyst": "Earnings + raise",
+"reason": "revenue +48% y/y (last q +46%: faster); guide +4.3% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1667011/000162828026071063/exhibit991q3fy268-k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.53,
+"pm_last": 16.97,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "Arteris Q3 Adj. EPS $(0.02) Beats $(0.04) Estimate, Sales $25.774M Beat $24.503M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950464/arteris-q3-adj-eps-0-02-beats-0-04-estimate-sales-25-774m-beat-24-503m-estimate",
+"at": "Nov 5 4:09 PM ET"
+}
+},
+"CYPH": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "7 Biotechnology stocks gapping up 5%+ (GRAL, VCEL, ABSI, ETON, OCUL, OBX); with their own news: ETON (Earnings + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.48,
+"pm_last": 2.63,
+"dropped": "market cap under $0.7B"
+},
+"STM": {
+"news": "C",
+"catalyst": "Sector move: Analog & Auto Semis",
+"reason": "6 Analog & Auto Semis stocks gapping up 5%+ (MPWR, ON, LSCC, RMBS, ALGM); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.44,
+"pm_last": 42.5,
+"dropped": "gap-up under the 50 EMA"
+},
+"MPWR": {
+"news": "C",
+"catalyst": "Sector move: Analog & Auto Semis",
+"reason": "6 Analog & Auto Semis stocks gapping up 5%+ (STM, ON, LSCC, RMBS, ALGM); no news since the last close, only routine filings (4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1280452/000121465926013798/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.43,
+"pm_last": 1204.16,
+"dropped": "gap-up under the 50 EMA"
+},
+"LUNR": {
+"news": "C",
+"catalyst": "Sector move: Space",
+"reason": "7 Space stocks gapping up 5%+ (SPCX, RKLB, VSAT, FLY, RDW, VOYG); with their own news: VSAT (Earnings), FLY (Deal / contract (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.38,
+"pm_last": 9.17,
+"dropped": "under 30% over the 52-week low"
+},
+"TU": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/868675/000110465926123585/tm2624784d1_ex99-1.htm",
+"https://www.sec.gov/Archives/edgar/data/868675/000110465926123586/tm2624784d2_ex99-1.htm",
+"https://www.sec.gov/Archives/edgar/data/868675/000110465926123589/tm2624784d3_ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.38,
+"pm_last": 8.81,
+"dropped": "ADR under 3%",
+"headline": {
+"kind": "Earnings",
+"title": "TELUS Q3 Adj. EPS $0.11 Misses $0.13 Estimate, Sales $3.592B Beat $3.570B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62971050/telus-q3-adj-eps-0-11-misses-0-13-estimate-sales-3-592b-beat-3-570b-estimate",
+"at": "6:50 AM ET"
+}
+},
+"VIAV": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, MTSI, TSEM, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); headline: UBS Maintains Neutral on Viavi Solutions, Lowers Price Target to $33 (Benzinga Nov 5 8:20 PM ET); its own: After earnings (Nov 4): Reported Wed Nov 4 after the close: revenue beat +3.2%, EPS beat +15.5%, guide +9.1% vs street, revenue +57% y/y, +0.1% after hours; only ro",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/news/26/11/62964947/ubs-maintains-neutral-viavi-solutions-lowers-price-target-33",
+"https://www.sec.gov/Archives/edgar/data/912093/000162828026071076/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.35,
+"pm_last": 27.97,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Analyst note",
+"title": "UBS Maintains Neutral on Viavi Solutions, Lowers Price Target to $33",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62964947/ubs-maintains-neutral-viavi-solutions-lowers-price-target-33",
+"at": "Nov 5 8:20 PM ET"
+}
+},
+"ALGM": {
+"news": "C",
+"catalyst": "Sector move: Analog & Auto Semis",
+"reason": "6 Analog & Auto Semis stocks gapping up 5%+ (MPWR, STM, ON, LSCC, RMBS); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.34,
+"pm_last": 28.5,
+"dropped": "under 30% over the 52-week low"
+},
+"CGBD": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1544206/000154420626000067/cgbd_2026930xex992.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.34,
+"pm_last": 10.2,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Buyback",
+"title": "Carlyle Secured Lending Extends Buyback Program Through November 11, 2027",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62957281/carlyle-secured-lending-extends-buyback-program-through-november-11-2027",
+"at": "Nov 5 5:08 PM ET"
+}
+},
+"JHX": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +10% y/y (last q +64%: slower); guidance reaffirmed; guide -4.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1159152/000162828026071067/ex991erq2fy27.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "down",
+"gap_pct": -6.31,
+"pm_last": 26.88,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "James Hardie Industries Q2 Adj. EPS $0.42 Beats $0.39 Estimate, Sales $1.428B Miss $1.469B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950381/james-hardie-industries-q2-adj-eps-0-42-beats-0-39-estimate-sales-1-428b-miss-1-469b-estimate",
+"at": "Nov 5 4:09 PM ET"
+}
+},
+"OUT": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue +9% y/y (last q +14%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1579877/000157987726000047/ex9913q26earningsrelease.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.28,
+"pm_last": 30.0,
+"dropped": "ADR under 3%",
+"headline": {
+"kind": "Earnings",
+"title": "Outfront Media Q3 EPS $0.36 Misses $0.39 Estimate, Sales $511.100M Beat $508.795M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/OUT",
+"at": "Nov 5 4:14 PM ET"
+}
+},
+"POWL": {
+"news": "C",
+"catalyst": "Sector move: Data Center Power & Cooling",
+"reason": "7 Data Center Power & Cooling stocks gapping up 5%+ (ETN, VRT, NVT, INIO, FPS, MOD); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.28,
+"pm_last": 132.91,
+"dropped": "gap-up under the 50 EMA"
+},
+"OBX": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "7 Biotechnology stocks gapping up 5%+ (GRAL, VCEL, ABSI, ETON, OCUL, CYPH); with their own news: ETON (Earnings + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.25,
+"pm_last": 10.2,
+"dropped": "20-day average volume under 700K"
+},
+"YELP": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue -1% y/y (last q +1%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1345016/000134501626000072/yelpq3-26ex991pressrelease.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.24,
+"pm_last": 19.24,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Yelp Q3 EPS $0.63 Beats $0.45 Estimate, Sales $370.919M Beat $368.879M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950189/yelp-q3-eps-0-63-beats-0-45-estimate-sales-370-919m-beat-368-879m-estimate",
+"at": "Nov 5 4:08 PM ET"
+}
+},
+"TNDM": {
+"news": "B",
+"catalyst": "Earnings beat",
+"reason": "revenue beat +6.7%; revenue +14% y/y (last q +6%: faster); guidance reaffirmed; guide +0.2% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1438133/000143813326000143/ex991-q3earningsrelease2026.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 6,
+"direction": "up",
+"gap_pct": 6.17,
+"pm_last": 19.1,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "Tandem Diabetes Care Q3 EPS $(0.10) Beats $(0.25) Estimate, Sales $283.690M Beat $265.922M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62949820/tandem-diabetes-care-q3-eps-0-10-beats-0-25-estimate-sales-283-690m-beat-265-922m-estimate",
+"at": "Nov 5 4:06 PM ET"
+}
+},
+"HUT": {
+"news": "C",
+"catalyst": "Sector move: Neoclouds & AI Hosting",
+"reason": "15 Neoclouds & AI Hosting stocks gapping up 5%+ (NBIS, CRWV, IREN, RIOT, WULF, GLXY, ...); with their own news: IREN (Earnings), WULF (Earnings), CORZ (Earnings (headline)); its own: After earnings (Nov 4): Reported Wed Nov 4 before the open: revenue miss -8.0%, EPS beat +44.2%, revenue -15% y/y, -0.4% after hours; no new filing since the last c",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.14,
+"pm_last": 48.77,
+"dropped": "gap-up under the 50 EMA"
+},
+"OCUL": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "7 Biotechnology stocks gapping up 5%+ (GRAL, VCEL, ABSI, ETON, OBX, CYPH); with their own news: ETON (Earnings + raise); no news since the last close, only routine filings (144)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1393434/000195004726010732/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.07,
+"pm_last": 6.82,
+"dropped": "20-day average $ volume under $20M"
+},
+"LEU": {
+"news": "C",
+"catalyst": "Analyst upgrade (headline)",
+"reason": "Roth Capital Upgrades Centrus Energy to Buy, Maintains Price Target to $115 (Benzinga 4:49 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/news/26/11/62968191/roth-capital-upgrades-centrus-energy-buy-maintains-price-target-115"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.05,
+"pm_last": 94.5,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Analyst upgrade",
+"title": "Roth Capital Upgrades Centrus Energy to Buy, Maintains Price Target to $115",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62968191/roth-capital-upgrades-centrus-energy-buy-maintains-price-target-115",
+"at": "4:49 AM ET"
+}
+},
+"VNET": {
+"news": "C",
+"catalyst": "Sector move: IT Services",
+"reason": "8 IT Services stocks gapping up 5%+ (NBIS, IREN, CORZ, INOD, KEEL, HIVE, ...); with their own news: IREN (Earnings), CORZ (Earnings (headline)), INOD (Earnings + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.03,
+"pm_last": 3.34,
+"dropped": "under 30% over the 52-week low"
+},
+"RKLB": {
+"news": "C",
+"catalyst": "Sector move: Space",
+"reason": "7 Space stocks gapping up 5%+ (SPCX, VSAT, FLY, LUNR, RDW, VOYG); with their own news: VSAT (Earnings), FLY (Deal / contract (headline)); headline: Rocket Lab Stock Pulls Out of a Nosedive Friday: What's Going On? (Benzinga 7:50 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/trading-ideas/movers/26/11/62973089/rocket-lab-stock-pulls-out-of-a-nosedive-friday-whats-going-on"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.0,
+"pm_last": 48.75,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "In the news",
+"title": "Rocket Lab Stock Pulls Out of a Nosedive Friday: What's Going On?",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/trading-ideas/movers/26/11/62973089/rocket-lab-stock-pulls-out-of-a-nosedive-friday-whats-going-on",
+"at": "7:50 AM ET"
+}
+},
+"IONQ": {
+"news": "F",
+"catalyst": "Dilution / warning",
+"reason": "F by rule: dilution: 8-K",
+"flags": "dilution: 8-K",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1824920/000119312526449779/ionq-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.98,
+"pm_last": 28.0635,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "IonQ Raises FY2026 Sales Guidance from $450.000M-$460.000M to $505.000M-$515.000M vs $455.173M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62950222/ionq-raises-fy2026-sales-guidance-450-000m-460-000m-505-000m-515-000m-vs-455-173m-est",
+"at": "Nov 5 4:08 PM ET"
+}
+},
+"SKM": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.98,
+"pm_last": 31.21,
+"dropped": "gap-up under the 50 EMA"
+},
+"NVT": {
+"news": "C",
+"catalyst": "Sector move: Data Center Power & Cooling",
+"reason": "7 Data Center Power & Cooling stocks gapping up 5%+ (ETN, VRT, INIO, FPS, MOD, POWL); its own: After earnings (Oct 30): Reported Fri Oct 30 before the open: EPS beat +8.9%, guidance raised, revenue +44% y/y; only routine filings since the last close (4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1720635/000089706926001895/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.96,
+"pm_last": 104.23,
+"dropped": "under 30% over the 52-week low"
+},
+"KEYS": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (TER, Q, NVMI, ONTO, AMKR, VICR, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.95,
+"pm_last": 276.07,
+"dropped": "gap-up under the 50 EMA"
+},
+"JKS": {
+"news": "C",
+"catalyst": "Sector move: Semiconductors & Chip Equipment",
+"reason": "58 Semiconductors & Chip Equipment stocks gapping up 5%+ (NVDA, TSM, AVGO, SKHY, MU, AMD, ...); with their own news: LRCX (Buyback (headline)), DIOD (Earnings + raise), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.93,
+"pm_last": 10.9,
+"dropped": "market cap under $0.7B"
+},
+"MNST": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue +16% y/y (last q +20%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/865752/000110465926123387/tm2629095d1_ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.92,
+"pm_last": 45.0,
+"dropped": "ADR under 3%",
+"headline": {
+"kind": "Earnings",
+"title": "Monster Beverage Q3 Adj. EPS $0.30, Inline, Sales $2.563B Beat $2.495B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62950683/monster-beverage-q3-adj-eps-0-30-inline-sales-2-563b-beat-2-495b-estimate",
+"at": "Nov 5 4:10 PM ET"
+}
+},
+"SMCI": {
+"news": "C",
+"catalyst": "Sector move: AI Servers & ODMs",
+"reason": "7 AI Servers & ODMs stocks gapping up 5%+ (DELL, HPE, P, CLS, FLEX, SANM); its own: After earnings (Nov 3): Reported Tue Nov 3 after the close: revenue beat +22.4%, EPS beat +46.6%, guide +17.1% vs street, revenue +297% y/y, -0.6% after hours; only",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1375365/000137536526000027/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.91,
+"pm_last": 28.68,
+"dropped": "gap-up under the 50 EMA"
+},
+"VST": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue -6% y/y",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1692819/000169281926000023/vistra-20261106.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.91,
+"pm_last": 119.63,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Vistra Q3 Sales $6.347B Beat $6.024B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62971565/vistra-q3-sales-6-347b-beat-6-024b-estimate",
+"at": "7:05 AM ET"
+}
+},
+"BJRI": {
+"news": "C",
+"catalyst": "Earnings + raise",
+"reason": "revenue +9% y/y (last q +6%: faster); guidance raised",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1013488/000117184326007180/exh_991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.9,
+"pm_last": 55.0,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "BJ's Restaurants Q3 Adj. EPS $0.33 Beats $0.16 Estimate, Sales $358.625M Beat $346.677M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62951548/bj-s-restaurants-q3-adj-eps-0-33-beats-0-16-estimate-sales-358-625m-beat-346-677m-estimate",
+"at": "Nov 5 4:14 PM ET"
+}
+},
+"EROC": {
+"news": "C",
+"catalyst": "Sector move: Electrical Equipment",
+"reason": "18 Electrical Equipment stocks gapping up 5%+ (ETN, VRT, BE, NVT, INIO, AEIS, ...); with their own news: BE (Deal / contract (headline)), XE (Deal / contract (headline)), SMR (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.88,
+"pm_last": 7.02,
+"dropped": "under 30% over the 52-week low"
+},
+"POET": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, MTSI, TSEM, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.88,
+"pm_last": 4.5103,
+"dropped": "under 30% over the 52-week low"
+},
+"SPCX": {
+"news": "C",
+"catalyst": "Sector move: Space",
+"reason": "7 Space stocks gapping up 5%+ (RKLB, VSAT, FLY, LUNR, RDW, VOYG); with their own news: VSAT (Earnings), FLY (Deal / contract (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.88,
+"pm_last": 130.89,
+"dropped": "under 30% over the 52-week low"
+},
+"XNDU": {
+"news": "C",
+"catalyst": "Analyst upgrade (headline)",
+"reason": "Morgan Stanley Upgrades Xanadu to Overweight (Fiscal.ai Nov 5 5:32 PM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.moomoo.com/options/XNDU261030C13500-US/news"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.88,
+"pm_last": 2.52,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Analyst upgrade",
+"title": "Morgan Stanley Upgrades Xanadu to Overweight",
+"source": "Fiscal.ai",
+"url": "https://www.moomoo.com/options/XNDU261030C13500-US/news",
+"at": "Nov 5 5:32 PM ET"
+}
+},
+"CEVA": {
+"news": "C",
+"catalyst": "Sector move: Semiconductors & Chip Equipment",
+"reason": "58 Semiconductors & Chip Equipment stocks gapping up 5%+ (NVDA, TSM, AVGO, SKHY, MU, AMD, ...); with their own news: LRCX (Buyback (headline)), DIOD (Earnings + raise), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.86,
+"pm_last": 26.0,
+"dropped": "20-day average volume under 700K"
+},
+"AVGO": {
+"news": "C",
+"catalyst": "Sector move: AI Networking",
+"reason": "9 AI Networking stocks gapping up 5%+ (ANET, MRVL, HPE, ALAB, CLS, CRDO, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.84,
+"pm_last": 308.56,
+"dropped": "under 30% over the 52-week low"
+},
+"VOYG": {
+"news": "C",
+"catalyst": "Sector move: Space",
+"reason": "7 Space stocks gapping up 5%+ (SPCX, RKLB, VSAT, FLY, LUNR, RDW); with their own news: VSAT (Earnings), FLY (Deal / contract (headline)); its own: After earnings (Nov 2): Reported Mon Nov 2 after the close: EPS miss -1.2%, guidance raised, revenue +125% y/y, +2.0% after hours; no new filing since the last clos",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.84,
+"pm_last": 21.5062,
+"dropped": "under 30% over the 52-week low"
+},
+"RDW": {
+"news": "C",
+"catalyst": "Sector move: Space",
+"reason": "7 Space stocks gapping up 5%+ (SPCX, RKLB, VSAT, FLY, LUNR, VOYG); with their own news: VSAT (Earnings), FLY (Deal / contract (headline)); headline: Piper Sandler Maintains Redwire at Neutral, Lowers Price Target to $8 (Fiscal.ai 7:32 AM ET); no news since the last close, only routine filings (10-Q)",
+"flags": "",
+"sources": [
+"https://www.tradingview.com/news/tradingview:5b520c60905a7:0-piper-sandler-maintains-redwire-at-neutral-lowers-price-target-to-8-from-11/",
+"https://www.sec.gov/Archives/edgar/data/1819810/000181981026000142/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.83,
+"pm_last": 6.54,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Analyst note",
+"title": "Piper Sandler Maintains Redwire at Neutral, Lowers Price Target to $8",
+"source": "Fiscal.ai",
+"url": "https://www.tradingview.com/news/tradingview:5b520c60905a7:0-piper-sandler-maintains-redwire-at-neutral-lowers-price-target-to-8-from-11/",
+"at": "7:32 AM ET"
+}
+},
+"FRMI": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No news since the last close, only routine filings (144, 4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2071778/000195824426000701/",
+"https://www.sec.gov/Archives/edgar/data/2071778/000090514826004667/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.82,
+"pm_last": 1.6191,
+"dropped": "under 30% over the 52-week low"
+},
+"IESC": {
+"news": "C",
+"catalyst": "Sector move: Construction & Engineering",
+"reason": "7 Construction & Engineering stocks gapping up 5%+ (PWR, FIX, MTZ, STRL, DY, AGX); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.78,
+"pm_last": 154.0,
+"dropped": "20-day average volume under 700K"
+},
+"SONO": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.76,
+"pm_last": 15.39,
+"dropped": "under 30% over the 52-week low"
+},
+"FLNC": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.7,
+"pm_last": 5.38,
+"dropped": "under 30% over the 52-week low"
+},
+"RCEL": {
+"news": "F",
+"catalyst": "Dilution / warning",
+"reason": "F by rule: going concern",
+"flags": "going concern",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1762303/000119312526449815/rcel-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.68,
+"pm_last": 16.57,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "AVITA Medical Raises FY2026 Sales Guidance from $86.000M-$89.000M to $92.000M-$94.000M vs $86.850M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/62950534/avita-medical-raises-fy2026-sales-guidance-86-000m-89-000m-92-000m-94-000m-vs-86-850m-est",
+"at": "Nov 5 4:09 PM ET"
+}
+},
+"ONDS": {
+"news": "C",
+"catalyst": "Sector move: Networking & Communications Equipment",
+"reason": "10 Networking & Communications Equipment stocks gapping up 5%+ (ANET, HPE, LITE, UI, CIEN, VSAT, ...); with their own news: UI (Earnings), VSAT (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.53,
+"pm_last": 4.77,
+"dropped": "under 30% over the 52-week low"
+},
+"ACCV": {
+"news": "C",
+"catalyst": "Sector move: Electrical Equipment",
+"reason": "18 Electrical Equipment stocks gapping up 5%+ (ETN, VRT, BE, NVT, INIO, AEIS, ...); with their own news: BE (Deal / contract (headline)), XE (Deal / contract (headline)), SMR (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.53,
+"pm_last": 10.5,
+"dropped": "20-day average $ volume under $20M"
+},
+"LWLG": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, MTSI, TSEM, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.51,
+"pm_last": 4.02,
+"dropped": "market cap under $0.7B"
+},
+"BW": {
+"news": "C",
+"catalyst": "Filing, not classified",
+"reason": "Filed since the close: 8-K 8.01. false 0001630805 DE OH 0001630805 2026-11-05 2026-11-05 0001630805 us-gaap:CommonStockMember 2026-11-05 2026-11-05 0001630805 BW:SeriesA7.75",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1630805/000110465926123442/tm2629007d1_8k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.49,
+"pm_last": 3.2701,
+"dropped": "market cap under $0.7B"
+},
+"ETN": {
+"news": "C",
+"catalyst": "Sector move: Data Center Power & Cooling",
+"reason": "7 Data Center Power & Cooling stocks gapping up 5%+ (VRT, NVT, INIO, FPS, MOD, POWL); headline: Rothschild & Co Redburn Adjusts Price Target on Eaton to $402 From $403 (Fiscal.ai Nov 5 10:02 PM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.marketscreener.com/news/rothschild-co-redburn-adjusts-price-target-on-eaton-to-402-from-403-ce785fdcdd80f620"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.49,
+"pm_last": 344.55,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Analyst note",
+"title": "Rothschild & Co Redburn Adjusts Price Target on Eaton to $402 From $403",
+"source": "Fiscal.ai",
+"url": "https://www.marketscreener.com/news/rothschild-co-redburn-adjusts-price-target-on-eaton-to-402-from-403-ce785fdcdd80f620",
+"at": "Nov 5 10:02 PM ET"
+}
+},
+"INIO": {
+"news": "C",
+"catalyst": "Sector move: Data Center Power & Cooling",
+"reason": "7 Data Center Power & Cooling stocks gapping up 5%+ (ETN, VRT, NVT, FPS, MOD, POWL); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.48,
+"pm_last": 14.06,
+"dropped": "under 30% over the 52-week low"
+},
+"RPAY": {
+"news": "C",
+"catalyst": "Sector move: Software",
+"reason": "23 Software stocks gapping up 5%+ (PANW, CRWD, NET, CRWV, RBRK, FROG, ...); with their own news: NET (Earnings beat + raise), FROG (Earnings beat + raise), AKAM (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.48,
+"pm_last": 4.81,
+"dropped": "market cap under $0.7B"
+},
+"KOPN": {
+"news": "C",
+"catalyst": "Sector move: Electronic Components & Instruments",
+"reason": "15 Electronic Components & Instruments stocks gapping up 5%+ (GLW, KEYS, COHR, CLS, FLEX, MKSI, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.45,
+"pm_last": 2.9,
+"dropped": "market cap under $0.7B"
+},
+"CRWD": {
+"news": "C",
+"catalyst": "Sector move: Cybersecurity",
+"reason": "6 Cybersecurity stocks gapping up 5%+ (PANW, NET, RBRK, FROG, S); with their own news: NET (Earnings beat + raise), FROG (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.43,
+"pm_last": 229.0,
+"dropped": "gap-up under the 50 EMA"
+},
+"NNE": {
+"news": "C",
+"catalyst": "Sector move: Nuclear & Uranium",
+"reason": "5 Nuclear & Uranium stocks gapping up 5%+ (OKLO, XE, SMR, LEU); with their own news: OKLO (Deal / contract (headline)), XE (Deal / contract (headline)), SMR (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.43,
+"pm_last": 10.153,
+"dropped": "market cap under $0.7B"
+},
+"CAMT": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, ONTO, AMKR, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.42,
+"pm_last": 96.9,
+"dropped": "20-day average volume under 700K"
+},
+"MOD": {
+"news": "C",
+"catalyst": "Sector move: Data Center Power & Cooling",
+"reason": "7 Data Center Power & Cooling stocks gapping up 5%+ (ETN, VRT, NVT, INIO, FPS, POWL); headline: Modine Announces New Presidents for Data Centers and Commercial HVAC Segments (Fiscal.ai Nov 5 6:02 PM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.prnewswire.com/news-releases/modine-names-new-presidents-for-data-centers-commercial-hvac-segments-302931230.html"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.42,
+"pm_last": 96.21,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "In the news",
+"title": "Modine Announces New Presidents for Data Centers and Commercial HVAC Segments",
+"source": "Fiscal.ai",
+"url": "https://www.prnewswire.com/news-releases/modine-names-new-presidents-for-data-centers-commercial-hvac-segments-302931230.html",
+"at": "Nov 5 6:02 PM ET"
+}
+},
+"Q": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, NVMI, ONTO, AMKR, VICR, ...); its own: After earnings (Nov 4): Reported Wed Nov 4 before the open: revenue beat +4.5%, EPS beat +20.8%, guidance raised, guide +2.8% vs street, +0.3% after hours; no new f",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.4,
+"pm_last": 116.0,
+"dropped": "gap-up under the 50 EMA"
+},
+"BELFB": {
+"news": "C",
+"catalyst": "Sector move: Electronic Components & Instruments",
+"reason": "15 Electronic Components & Instruments stocks gapping up 5%+ (GLW, KEYS, COHR, CLS, FLEX, MKSI, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.39,
+"pm_last": 206.51,
+"dropped": "20-day average volume under 700K"
+},
+"ARLO": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1736946/000173694626000070/arlo-20261105.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.33,
+"pm_last": 14.0495,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Arlo Technologies Q3 Adj. EPS $0.24 Beats $0.20 Estimate, Sales $149.177M Beat $144.930M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62951360/arlo-technologies-q3-adj-eps-0-24-beats-0-20-estimate-sales-149-177m-beat-144-930m-estimate",
+"at": "Nov 5 4:13 PM ET"
+}
+},
+"TTMI": {
+"news": "C",
+"catalyst": "Sector move: Optics & CPO",
+"reason": "15 Optics & CPO stocks gapping up 5%+ (GLW, LITE, COHR, CIEN, MTSI, TSEM, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)), LASR (Earnings beat + raise); headline: TTM Technologies Director Purchases Shares (Fiscal.ai Nov 5 6:01 PM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.tradingview.com/news/tradingview:a58d7329164cc:0-ttm-technologies-director-purchased-shares-worth-over-631k/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.32,
+"pm_last": 65.53,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "In the news",
+"title": "TTM Technologies Director Purchases Shares",
+"source": "Fiscal.ai",
+"url": "https://www.tradingview.com/news/tradingview:a58d7329164cc:0-ttm-technologies-director-purchased-shares-worth-over-631k/",
+"at": "Nov 5 6:01 PM ET"
+}
+},
+"EOSE": {
+"news": "C",
+"catalyst": "Sector move: Electrical Equipment",
+"reason": "18 Electrical Equipment stocks gapping up 5%+ (ETN, VRT, BE, NVT, INIO, AEIS, ...); with their own news: BE (Deal / contract (headline)), XE (Deal / contract (headline)), SMR (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.32,
+"pm_last": 1.98,
+"dropped": "market cap under $0.7B"
+},
+"PWR": {
+"news": "C",
+"catalyst": "Sector move: Data Center Builders & REITs",
+"reason": "5 Data Center Builders & REITs stocks gapping up 5%+ (FIX, MTZ, STRL, DY); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.31,
+"pm_last": 535.99,
+"dropped": "gap-up under the 50 EMA"
+},
+"HIVE": {
+"news": "C",
+"catalyst": "Sector move: IT Services",
+"reason": "8 IT Services stocks gapping up 5%+ (NBIS, IREN, CORZ, INOD, KEEL, VNET, ...); with their own news: IREN (Earnings), CORZ (Earnings (headline)), INOD (Earnings + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.3,
+"pm_last": 1.7164,
+"dropped": "market cap under $0.7B"
+},
+"ON": {
+"news": "C",
+"catalyst": "Sector move: Analog & Auto Semis",
+"reason": "6 Analog & Auto Semis stocks gapping up 5%+ (MPWR, STM, LSCC, RMBS, ALGM); its own: After earnings (Nov 2): Reported Mon Nov 2 after the close: EPS beat +2.4%, guide +1.4% vs street, -0.8% after hours; no new filing since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.28,
+"pm_last": 66.34,
+"dropped": "gap-up under the 50 EMA"
+},
+"INFQ": {
+"news": "C",
+"catalyst": "Sector move: Quantum Computing",
+"reason": "3 Quantum Computing stocks gapping up 5%+ (IONQ, QBTS); with their own news: IONQ (Dilution / warning); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.25,
+"pm_last": 7.82,
+"dropped": "under 30% over the 52-week low"
+},
+"AEVA": {
+"news": "C",
+"catalyst": "Sector move: Auto Parts",
+"reason": "3 Auto Parts stocks gapping up 5%+ (MOD, HYLN); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.22,
+"pm_last": 9.67,
+"dropped": "under 30% over the 52-week low"
+},
+"BRUN": {
+"news": "C",
+"catalyst": "Sector move: Software",
+"reason": "23 Software stocks gapping up 5%+ (PANW, CRWD, NET, CRWV, RBRK, FROG, ...); with their own news: NET (Earnings beat + raise), FROG (Earnings beat + raise), AKAM (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.22,
+"pm_last": 5.85,
+"dropped": "market cap under $0.7B"
+},
+"LPTH": {
+"news": "C",
+"catalyst": "Filing, not classified",
+"reason": "Filed since the close: 8-K 8.01,9.01. lpth20261104_8k.htm false 0000889971 0000889971 2026-10-30 2026-10-30 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 2054",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/889971/000143774926035272/lpth20261104_8k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.2,
+"pm_last": 6.47,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "In the news",
+"title": "LightPath Technologies Completes Sale of China Subsidiary",
+"source": "Fiscal.ai",
+"url": "https://www.newswire.com/news/lightpath-technologies-completes-divestiture-of-china-operations",
+"at": "Nov 5 5:32 PM ET"
+}
+},
+"PANW": {
+"news": "C",
+"catalyst": "Sector move: Cybersecurity",
+"reason": "6 Cybersecurity stocks gapping up 5%+ (CRWD, NET, RBRK, FROG, S); with their own news: NET (Earnings beat + raise), FROG (Earnings beat + raise); headline: Palo Alto Networks Joins Anthropic's Critical Infrastructure Defense Program (Fiscal.ai 8:01 AM ET); no news since the last close, only routine filings (4)",
+"flags": "",
+"sources": [
+"https://energydigital.com/news/can-anthropics-cyber-supergroup-protect-critical-utilities",
+"https://www.sec.gov/Archives/edgar/data/1327567/000149315226050251/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.19,
+"pm_last": 330.99,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "In the news",
+"title": "Palo Alto Networks Joins Anthropic's Critical Infrastructure Defense Program",
+"source": "Fiscal.ai",
+"url": "https://energydigital.com/news/can-anthropics-cyber-supergroup-protect-critical-utilities",
+"at": "8:01 AM ET"
+}
+},
+"SATL": {
+"news": "C",
+"catalyst": "Sector move: Networking & Communications Equipment",
+"reason": "10 Networking & Communications Equipment stocks gapping up 5%+ (ANET, HPE, LITE, UI, CIEN, VSAT, ...); with their own news: UI (Earnings), VSAT (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.19,
+"pm_last": 3.04,
+"dropped": "market cap under $0.7B"
+},
+"VSAT": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/797721/000119312526449775/d179648dex991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.15,
+"pm_last": 62.44,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Earnings",
+"title": "Viasat Q2 Adj. EPS $(0.32) Beats $(0.44) Estimate, Sales $1.180B Miss $1.202B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62952921/viasat-q2-adj-eps-0-32-beats-0-44-estimate-sales-1-180b-miss-1-202b-estimate",
+"at": "Nov 5 4:21 PM ET"
+}
+},
+"PLAB": {
+"news": "C",
+"catalyst": "Sector move: Semi Test & Packaging",
+"reason": "14 Semi Test & Packaging stocks gapping up 5%+ (KEYS, TER, Q, NVMI, ONTO, AMKR, ...); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.14,
+"pm_last": 26.81,
+"dropped": "gap-up under the 50 EMA"
+},
+"TXRH": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1289460/000162828026071018/txrh-20261104.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.1,
+"pm_last": 182.0,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Texas Roadhouse Q3 EPS $1.36 Misses $1.47 Estimate, Sales $1.573B Miss $1.584B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62949113/texas-roadhouse-q3-eps-1-36-misses-1-47-estimate-sales-1-573b-miss-1-584b-estimate",
+"at": "Nov 5 4:03 PM ET"
+}
+},
+"S": {
+"news": "C",
+"catalyst": "Sector move: Cybersecurity",
+"reason": "6 Cybersecurity stocks gapping up 5%+ (PANW, CRWD, NET, RBRK, FROG); with their own news: NET (Earnings beat + raise), FROG (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.09,
+"pm_last": 22.5,
+"dropped": "gap-up under the 50 EMA"
+},
+"MTZ": {
+"news": "C",
+"catalyst": "Sector move: Data Center Builders & REITs",
+"reason": "5 Data Center Builders & REITs stocks gapping up 5%+ (PWR, FIX, STRL, DY); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.08,
+"pm_last": 167.03,
+"dropped": "under 30% over the 52-week low"
+},
+"QBTS": {
+"news": "C",
+"catalyst": "Sector move: Quantum Computing",
+"reason": "3 Quantum Computing stocks gapping up 5%+ (IONQ, INFQ); with their own news: IONQ (Dilution / warning); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.08,
+"pm_last": 9.51,
+"dropped": "under 30% over the 52-week low"
+},
+"NVDA": {
+"news": "C",
+"catalyst": "Sector move: AI Chips & CPUs",
+"reason": "8 AI Chips & CPUs stocks gapping up 5%+ (TSM, AVGO, AMD, INTC, ARM, UMC, ...); headline: NVIDIA Enhances AI Chip Tracking in Southeast Asia (Fiscal.ai 7:32 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.marketscreener.com/news/nvidia-tightens-ai-chip-tracking-in-southeast-asia-amid-smuggling-concerns-ce785fd2d988f32d"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.07,
+"pm_last": 190.8,
+"dropped": "ADR under 3%",
+"headline": {
+"kind": "In the news",
+"title": "NVIDIA Enhances AI Chip Tracking in Southeast Asia",
+"source": "Fiscal.ai",
+"url": "https://www.marketscreener.com/news/nvidia-tightens-ai-chip-tracking-in-southeast-asia-amid-smuggling-concerns-ce785fd2d988f32d",
+"at": "7:32 AM ET"
+}
+},
+"AMPX": {
+"news": "C",
+"catalyst": "Sector move: Electrical Equipment",
+"reason": "18 Electrical Equipment stocks gapping up 5%+ (ETN, VRT, BE, NVT, INIO, AEIS, ...); with their own news: BE (Deal / contract (headline)), XE (Deal / contract (headline)), SMR (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.06,
+"pm_last": 7.89,
+"dropped": "under 30% over the 52-week low"
+},
+"COUR": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No news since the last close, only routine filings (10-Q, 4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1651562/000165156226000072/",
+"https://www.sec.gov/Archives/edgar/data/1651562/000092189526002941/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.04,
+"pm_last": 3.96,
+"dropped": "under 30% over the 52-week low"
+},
+"RBRK": {
+"news": "C",
+"catalyst": "Sector move: Cybersecurity",
+"reason": "6 Cybersecurity stocks gapping up 5%+ (PANW, CRWD, NET, FROG, S); with their own news: NET (Earnings beat + raise), FROG (Earnings beat + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.04,
+"pm_last": 111.1,
+"dropped": "gap-up under the 50 EMA"
+},
+"RXT": {
+"news": "C",
+"catalyst": "Sector move: Software",
+"reason": "23 Software stocks gapping up 5%+ (PANW, CRWD, NET, CRWV, RBRK, FROG, ...); with their own news: NET (Earnings beat + raise), FROG (Earnings beat + raise), AKAM (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.04,
+"pm_last": 2.5,
+"dropped": "market cap under $0.7B"
+},
+"AKAM": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue +6% y/y (last q +5%: faster); guide +0.2% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1086222/000108622226000097/exhibit991-q32026.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.03,
+"pm_last": 81.7536,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Akamai Techs Q3 Adj. EPS $1.77 Beats $1.67 Estimate, Sales $1.122B Beat $1.118B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/62948708/akamai-techs-q3-adj-eps-1-77-beats-1-67-estimate-sales-1-122b-beat-1-118b-estimate",
+"at": "Nov 5 4:02 PM ET"
+}
+},
+"ABSI": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "7 Biotechnology stocks gapping up 5%+ (GRAL, VCEL, ETON, OCUL, OBX, CYPH); with their own news: ETON (Earnings + raise); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.01,
+"pm_last": 9.86,
+"dropped": ""
+},
+"AGX": {
+"news": "C",
+"catalyst": "Sector move: Construction & Engineering",
+"reason": "7 Construction & Engineering stocks gapping up 5%+ (PWR, FIX, MTZ, STRL, IESC, DY); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.01,
+"pm_last": 274.35,
+"dropped": "20-day average volume under 700K"
+},
+"SKHY": {
+"news": "C",
+"catalyst": "Sector move: Semiconductors & Chip Equipment",
+"reason": "58 Semiconductors & Chip Equipment stocks gapping up 5%+ (NVDA, TSM, AVGO, MU, AMD, ASML, ...); with their own news: LRCX (Buyback (headline)), DIOD (Earnings + raise), LASR (Earnings beat + raise); headline: SK Hynix Shares Decline Amid Broader Semiconductor Market Sell-Off (Fiscal.ai 8:01 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.morningstar.com/news/dow-jones/202611063400/south-korea-tries-new-tactic-to-steady-kospi-after-ai-rout-deepens"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.01,
+"pm_last": 130.111,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "In the news",
+"title": "SK Hynix Shares Decline Amid Broader Semiconductor Market Sell-Off",
+"source": "Fiscal.ai",
+"url": "https://www.morningstar.com/news/dow-jones/202611063400/south-korea-tries-new-tactic-to-steady-kospi-after-ai-rout-deepens",
+"at": "8:01 AM ET"
+}
+},
+"BELFA": {
+"news": "C",
+"catalyst": "Sector move: Electronic Components & Instruments",
+"reason": "15 Electronic Components & Instruments stocks gapping up 5%+ (GLW, KEYS, COHR, CLS, FLEX, MKSI, ...); with their own news: GLW (Analyst upgrade (headline)), COHR (Deal / contract (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.0,
+"pm_last": 162.5,
+"dropped": "20-day average volume under 700K"
+},
+"FCEL": {
+"news": "C",
+"catalyst": "Sector move: Electrical Equipment",
+"reason": "18 Electrical Equipment stocks gapping up 5%+ (ETN, VRT, BE, NVT, INIO, AEIS, ...); with their own news: BE (Deal / contract (headline)), XE (Deal / contract (headline)), SMR (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.0,
+"pm_last": 9.3761,
+"dropped": "gap-up under the 50 EMA"
+},
+"LZM": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.0,
+"pm_last": 3.8,
+"dropped": "market cap under $0.7B"
+}
+}
+}
