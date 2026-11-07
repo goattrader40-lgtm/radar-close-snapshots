@@ -1038,6 +1038,8 @@
       <span class="tgr-lbl" id="er-react"></span>
       <span class="tgr-seg" data-k="ershow" aria-label="Which reports"><button data-v="all" aria-pressed="true">All</button><button data-v="rep" aria-pressed="false">Reported</button><button data-v="up" aria-pressed="false">Upcoming</button></span>
       <label class="tgr-f">Find <input class="tgr-num" id="er-q" type="search" style="width:6rem" placeholder="ticker" aria-label="Find a ticker"></label>
+      <span class="tgr-flt" data-f="er"></span>
+      <button class="tgr-lite" id="er-dl" type="button" title="Saves the stocks on screen (the days you picked, Reported / Upcoming, Find and your filters, in the tables' order) as a file for TradingView: Watchlist menu → Import list">Download for TradingView</button>
     </div>
     <div class="tgr-card" id="er-up-card">
       <div class="tgr-cardhead"><h2>Over the 200-day SMA <span class="tgr-lbl" id="er-up-n"></span></h2></div>
@@ -1053,6 +1055,7 @@
     <b>The read</b> adds points: revenue beat +1 (2%+ beat +2) / miss −1 (−2), EPS beat +1 (10%+ +2) / miss −1 (−2), guidance raised +2, guide above the street +1 (+2 without a raise) / below −2, lowered −3 (one product's guide: raised +1 / lowered −1), revenue growth 25%+ +1 / shrinking −1, the move after the report +2%: +1, +5%: +2 (−2% −1, −5% −2). 6+ = <span class="er-read r5">Strong bullish</span> 3–5 = <span class="er-read r4">Bullish</span> 0–2 = <span class="er-read r3">Mixed</span> −1 to −3 = <span class="er-read r2">Somewhat bearish</span> −4 or less = <span class="er-read r1">Bearish</span>. Hover a read for its points.
     <b>Stock</b>: under the ticker, the report day: AM = before the open, PM = after the close (hover or long-press for the date and time). <b>Columns at the end</b>: vs 200D / vs 50 EMA = the pre-market price vs the 200-day SMA and 50-day EMA as of the last close; vs 20D high = vs the highest high of the previous 20 sessions (green "cleared" = above it: out of its 1-month base); Over 52W low = how far above the 52-week low. Group rank and RS as on Launches.
     <b>Today's reactions</b> = the reports from the last session's after close and this morning's before open (the stocks reacting today); <b>Day 2</b> = the session before (the after-close reports of 2 sessions ago and yesterday's before-open ones): their second day after the report. <b>Day 3</b> = the session before that (the after-close reports of 3 sessions ago and the before-open ones of 2 sessions ago): their third day.
+    <b>Filters</b>: RS, Trend and <b>+ Filter</b> work as on the Watchlist and apply to both tables (and their counts): any column of the table (EPS and Revenue on the surprise %, Guidance on its word: raised, lowered, reaffirmed …) or anything else (Group rank, Themes, Stars, Launch grade, Watchlist list …); kept in this browser.
     <b>When</b>: every weekday from about 7:10 to 8:55 AM ET (final by 9:00 AM), after the close (4:50, 6:30 and 8:30 PM ET) for the after-close reports, and Sunday evening for the new week. GitHub can start a run a few minutes late.</p>
     </details>
   </section>
@@ -1786,7 +1789,7 @@ defCalc('industry_perf', {
   /* RS and Trend filters (the user, Nov 4 2026): one set for the Watchlist (all five lists), one for Launches and Launch
      laggards; kept in this browser. RS = at least that rank; Trend = any of the ticked ones ("—" = no trend label). */
   const TR_OPTS = ['Up', 'Turn up', 'Reclaim', 'Resting', 'Negative', '—'], FKEY = 'radar-filters';
-  const FLT = (() => { const d = () => ({ rs: 0, tr: [], gt: '', x: [] }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); const r = { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln), g: Object.assign(d(), o.g), pmu: Object.assign(d(), o.pmu), pmd: Object.assign(d(), o.pmd) }; Object.values(r).forEach((f) => { if (!Array.isArray(f.x)) f.x = []; }); return r; } catch (e) { return { wl: d(), ln: d(), g: d(), pmu: d(), pmd: d() }; } })();   /* x = your own filters (+ Filter); pmu / pmd = the pre-market scanner's gap ups / gap downs */
+  const FLT = (() => { const d = () => ({ rs: 0, tr: [], gt: '', x: [] }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); const r = { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln), g: Object.assign(d(), o.g), pmu: Object.assign(d(), o.pmu), pmd: Object.assign(d(), o.pmd), er: Object.assign(d(), o.er) }; Object.values(r).forEach((f) => { if (!Array.isArray(f.x)) f.x = []; }); return r; } catch (e) { return { wl: d(), ln: d(), g: d(), pmu: d(), pmd: d(), er: d() }; } })();   /* x = your own filters (+ Filter); pmu / pmd = the pre-market scanner's gap ups / gap downs */
   const saveFlt = () => { try { localStorage.setItem(FKEY, JSON.stringify(FLT)); } catch (e) { /* private window: not kept */ } };
   const trLabel = (sym) => { const x = trendOf(sym); return x && x.st ? x.st : '—'; };
   /* the group rank filter (Watchlist only, the user Nov 4 2026): '' all, 'top' = ★ Top only, 'ts' = Top or Strong (the stock's best group, as in the Group rank column) */
@@ -4246,7 +4249,9 @@ defCalc('industry_perf', {
     $('#er-react').textContent = S.erday === 'today' ? lab(RX.p1, 'after close') + ' + ' + lab(RX.t0, 'before open')
       : S.erday === 'day2' ? lab(RX.p2, 'after close') + ' + ' + lab(RX.p1, 'before open') + ' (their 2nd day)'
       : S.erday === 'day3' ? (p3 ? lab(p3, 'after close') + ' + ' : '') + lab(RX.p2, 'before open') + ' (their 3rd day)' : '';
-    let rows = doc.rows.filter((r) => (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && view(r));
+    let rows = doc.rows.filter((r) => (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && view(r)
+      && fltPass('er', r.sym, rsAll[r.sym]) && erXOk(FLT.er.x, r, rsAll));   /* RS, Trend and + Filter (the user, Nov 7 2026) */
+    { const cnt = XBOX.er && XBOX.er.querySelector('.xf-cnt'); if (cnt) cnt.textContent = (FLT.er.x || []).some(xfOn) || FLT.er.rs || FLT.er.tr.length ? '→ ' + rows.length + ' shown' : ''; }
     rows.sort((a, b) => (!!b.reported - !!a.reported) || (a.reported ? (b.report_at > a.report_at ? 1 : -1) : (a.report_at > b.report_at ? 1 : -1)) || erOf(b) - erOf(a));
     /* a recent listing without a 200-day SMA yet goes in the top table, marked "new" (LIFE Nov 2026) */
     [['er-up', (r) => r.vs200 === null || r.vs200 === undefined || r.vs200 >= 0], ['er-dn', (r) => r.vs200 !== null && r.vs200 !== undefined && r.vs200 < 0]].forEach(([id, f]) => {
@@ -4268,6 +4273,20 @@ defCalc('industry_perf', {
     });
   }
   $('#er-q').addEventListener('input', (e) => { S.erq = e.target.value; draw(); });
+  /* the Earnings tables as a TradingView import file (the user, Nov 7 2026): the stocks on screen, in the tables' order,
+     a ###section per table (Over / Under the 200-day SMA); the file is named after the days on screen */
+  $('#er-dl').addEventListener('click', () => {
+    const secs = [['Over the 200-day SMA', 'er-up-table'], ['Under the 200-day SMA', 'er-dn-table']].map(([n, id]) => [n,
+      [...new Set([...$('#' + id + ' tbody').children].filter((tr) => tr.dataset.sym && !tr.classList.contains('xf-off')).map((tr) => (SK(tr.dataset.sym) || {}).tv_symbol || tr.dataset.sym))]])
+      .filter(([, v]) => v.length);
+    if (!secs.length) { toast('No stocks to save.'); return; }
+    const name = 'Earnings ' + ({ today: 'reactions', day2: 'day 2', day3: 'day 3' }[S.erday] || 'week') + (S.ershow === 'rep' ? ' reported' : S.ershow === 'up' ? ' upcoming' : '');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([secs.map(([n, v]) => '###' + n + '\n' + v.join('\n')).join('\n') + '\n'], { type: 'text/plain' }));
+    a.download = name + ' ' + todayNY() + '.txt';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
 
   function draw() {
     syncControls();
@@ -4630,7 +4649,7 @@ defCalc('industry_perf', {
   const xfText = (list) => (list || []).filter((f) => !f.col && xfOn(f) && CAT.has(f.id)).map(xfDesc);
   /* the table's own columns (f.col): Gainers from the stock's row (so the counts and the theme / industry tables follow),
      the Watchlist and Launches from what the cell shows */
-  const XF_TBL = { wl: 'wl-table', ln: 'ln-table', g: 'g-table', pmu: 'pml-table', pmd: 'pml-table' };
+  const XF_TBL = { wl: 'wl-table', ln: 'ln-table', g: 'g-table', pmu: 'pml-table', pmd: 'pml-table', er: 'er-up-table' };
   const G_TEXT = new Set(['name', 'ind', 'themes', 'index']);
   const gField = (col, r) => (col === 'dvol' ? r[dvKey()] : col === 'ind' ? r[S.level] : r[col]);
   const xcRow = (list, r) => (list || []).every((f) => { if (!f.col || !xfOn(f)) return true; const v = gField(f.col, r); return f.t === 'text' ? txtOk(v, f) : numOk(num(v), f); });
@@ -4639,7 +4658,13 @@ defCalc('industry_perf', {
      value as the cell shows it (volumes in K, like the Pre-mkt vol box; News on its catalyst and reason), every other
      criterion by ticker from the catalog. The filtered stocks are left out before the list is cut, so the count, the
      group gaps and the rows all follow */
-  const XF_DATA = new Set(['g', 'pmu', 'pmd']);
+  const XF_DATA = new Set(['g', 'pmu', 'pmd', 'er']);
+  /* the Earnings tab (the user, Nov 7 2026: "I need filters here too"): RS, Trend and + Filter, one set for both tables.
+     Its own columns filter on the report's numbers: EPS and Revenue on the surprise %, Guidance on its word (raised,
+     lowered, reaffirmed, given, mixed); Read, Group rank and Trend pick from their values */
+  const ER_TEXT = new Set(['guide']), ER_NAME = { eps_surprise: 'EPS surprise %', rev_surprise: 'Revenue surprise %', move: 'Move %' };
+  const erField = (col, r, rsAll) => (col === 'guide' ? (r.guide && r.guide.dir && r.guide.dir !== 'none' ? r.guide.dir : '') : erVal(r, col, rsAll));
+  const erXOk = (list, r, rsAll) => (list || []).every((f) => { if (!f.col || !xfOn(f)) return true; const v = erField(f.col, r, rsAll); return f.t === 'text' ? txtOk(v, f) : numOk(num(v), f); });
   const PM_TEXT = new Set(['news_cat', 'themes']), PM_K = new Set(['pm_vol', 'volume']);
   const pmField = (col, r) => (col === 'news_cat' ? (r.news ? (r.news.cat || '') + ' ' + (r.news.why || '') : '')
     : PM_K.has(col) ? (num(r[col]) === null ? null : num(r[col]) / 1000) : r[col]);
@@ -4727,8 +4752,9 @@ defCalc('industry_perf', {
         let kind = 'num';
         if (k === 'g') kind = G_TEXT.has(key) ? 'text' : 'num';
         else if (k === 'pmu' || k === 'pmd') kind = PM_TEXT.has(key) ? 'text' : 'num';
+        else if (k === 'er') kind = ER_TEXT.has(key) ? 'text' : 'num';
         else { const tx = [...t.querySelectorAll('tbody tr')].filter((tr) => tr._sym).map((tr) => { const td = [...tr.children].find((c) => c._ck === key); return td ? td.textContent.trim() : ''; }).filter((x) => x && x !== '—'); kind = tx.length && tx.filter((x) => NUM_RE.test(x)).length >= tx.length * 0.7 ? 'num' : 'text'; }
-        const nm = colName(t, key).replace(/\s+/g, ' ') + ((k === 'pmu' || k === 'pmd') && PM_K.has(key) ? ', K' : '');   /* pre-market volumes in thousands, like the Pre-mkt vol box */
+        const nm = k === 'er' && ER_NAME[key] ? ER_NAME[key] : colName(t, key).replace(/\s+/g, ' ') + ((k === 'pmu' || k === 'pmd') && PM_K.has(key) ? ', K' : '');   /* pre-market volumes in thousands, like the Pre-mkt vol box */
         return { name: nm, add: { col: key, name: nm, t: kind, op: kind === 'text' ? 'has' : '>=', v: null }, kind };
       });
     };
