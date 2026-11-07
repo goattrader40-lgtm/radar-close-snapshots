@@ -86,7 +86,8 @@ MAX_TRIGGERS = 15             # triggers a run that always get their own push (a
 # the buys (the user, Nov 3 2026: "so it gets my attention"); everything else is a heads-up. The 21 EMA retest alone is a
 # heads-up (the user: "21 ema retest is not a strong sign by itself"); with the breakout level under it (ema21bl) a trigger
 TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "breakout", "retest", "reclaimbo2",
-            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep"}
+            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep", "back"}
+BACK_KINDS = {"breakout", "confirm", "basebreak", "s3", "pop"}   # pattern breakouts that get a "back over" alert
 
 
 def is_trigger(key, title=""):
@@ -110,7 +111,7 @@ def short(a):
 
 
 # a few words for each kind, for the group-move lines (RPD 21 EMA + breakout level 3:46)
-KIND_WORDS = {"retest": "retest holding", "zone": "in the retest zone", "ema21": "21 EMA retest", "ema21bl": "21 EMA + breakout level",
+KIND_WORDS = {"back": "back over its level", "retest": "retest holding", "zone": "in the retest zone", "ema21": "21 EMA retest", "ema21bl": "21 EMA + breakout level",
               "ema21zone": "at the 21 EMA", "breakout": "breakout", "touch": "touched the buy point", "confirm": "breakout confirmed",
               "power": "power day", "catalyst": "catalyst gap", "basebreak": "base high cleared", "launch": "launch",
               "reversal": "reversal launch", "laggard": "laggard launch", "reclaimbo": "back over its breakout level",
@@ -478,8 +479,11 @@ def find(live, doc, now=None):
                 push = bool(op and r.get("day_open") and r.get("ema10") and r.get("ema21")
                             and op > max(r["day_open"], r["price"], r["ema10"], r["ema21"]))
                 why += " · also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle)" if push else ""
-                out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
-                            f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x for the time of day"
+                # a short title (the user, Nov 7 2026: "the alert was too long; in a breakout I need the pattern name, the
+                # volume, the price point", "add base days"): LION BREAKOUT · Base top $13.17 · vol 3.5x · base 6 days
+                bday_ = r.get("base_day")
+                out.append((f"{sym}:breakout", f"{sym} BREAKOUT · {pat} ${bp:.2f} · vol {rv:.1f}x" + (f" · base {int(bday_)} days" if bday_ else ""),
+                            f"Grade {g} · ${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x for the time of day"
                             + (" (light)" if rv < 1 else "") + " · "
                             + (f"an entry in the base (still leg {nxt}), the base top is next" if flag else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else ""))
                             + ("" if "group_tier_now" in r else f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})")
@@ -776,10 +780,10 @@ def update_holding(state, found, live, doc, now):
     """each run: today's triggers that still hold (state hold: the keys, at this time), the ones that stopped (lost: when
     and the price) and the ones holding again after that (back); the portal's boxes show only what holds"""
     found_keys, t, memo = {a[0] for a in found}, f"{now:%H:%M}", {}
-    lost, back, held, seen = state.setdefault("lost", {}), state.setdefault("back", {}), [], set()
+    lost, back, held, seen, came = state.setdefault("lost", {}), state.setdefault("back", {}), [], set(), []
     for it in state.get("items", []):
         key = it.get("key", "")
-        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "summary:")):
+        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "summary:")) or key.endswith(":back"):
             continue
         seen.add(key)
         q = (live.get("rows") or {}).get(key.split(":")[0])
@@ -788,6 +792,7 @@ def update_holding(state, found, live, doc, now):
             held.append(key)
             if key in lost:
                 back[key] = {"at": t, "price": px}
+                came.append((key, it, lost[key]))
                 del lost[key]
         elif key not in lost:
             lost[key] = {"at": t, "price": px}
@@ -795,6 +800,33 @@ def update_holding(state, found, live, doc, now):
     # when the stock still meets a launch's rules (EPAM Nov 5: volume pace 3.6x at the close, under 4x; still an A launch)
     now_ = sorted({a[0] for a in found if is_trigger(a[0], a[1]) and not a[0].startswith(("grp:", "summary:"))})
     state["hold"] = {"at": t, "keys": held, "now": now_}
+    return came
+
+
+BACK_LEVEL = [r"over (?:the )?(?:base top|buy point|trigger) \$([\d,.]+)", r"above the base top \$([\d,.]+)", r"base high \$([\d,.]+) cleared",
+              r"over \$([\d,.]+)"]
+
+
+def back_alerts(state, came, live, now):
+    """the user, Nov 7 2026 (LION Nov 6: broke out at 10:27, back under at 10:31, back over at 10:40 with no alert): a pattern
+    breakout that slipped back under its level and holds again gets one short alert, once a day per stock"""
+    out, done = [], state.setdefault("back_sent", [])
+    for key, it, was in came:
+        sym, kind = key.split(":", 1)
+        if kind not in BACK_KINDS or sym in done:
+            continue
+        txt = (it.get("title") or "") + " — " + (it.get("msg") or "")
+        lvl = next((float(m.group(1).replace(",", "")) for p_ in BACK_LEVEL for m in [re.search(p_, txt)] if m), None)
+        q = (live.get("rows") or {}).get(sym)
+        if not lvl or not q or not q[0]:
+            continue
+        rv = q[4] if len(q) > 4 and q[4] is not None else None
+        done.append(sym)
+        out.append((f"{sym}:back", f"{sym} back over ${lvl:.2f}" + (f" · vol {rv:.1f}x" if rv is not None else ""),
+                    f"its {kind_words(key, it.get('title', ''))} of {it.get('time')} slipped back under at {was.get('at')}"
+                    f" ({'$' + format(was['price'], '.2f') if was.get('price') else ''}) and is back over ${lvl:.2f}: ${q[0]:.2f} ({q[1]:+.1f}%)"
+                    + (f" · vol {rv:.1f}x for the time of day" if rv is not None else ""), "high", it.get("tv") or sym))
+    return out
 
 
 def send(topic, title, msg, prio, tvs):
@@ -1046,7 +1078,19 @@ def main():
     # which of today's triggers still hold (from 9:35, when find() runs): the portal moves the others out of their box
     if not early:
         try:
-            update_holding(state, found, live, doc, now)
+            came = update_holding(state, found, live, doc, now) or []
+            for key, title, msg, prio, tvs in back_alerts(state, came, live, now):
+                it = {"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs, "kind": "trigger",
+                      "groups": _GROUPS.get(key.split(":")[0], [])}
+                if topic:
+                    try:
+                        send(topic, title, msg, prio, tvs)
+                    except Exception as e:
+                        print("alert not sent:", e, file=sys.stderr)
+                        continue
+                state.setdefault("items", []).append(it)
+                state.setdefault("log", []).append(f"{now:%H:%M} {title}: {msg}")
+                print(f"{now:%H:%M} {title}: {msg}")
         except Exception as e:                      # never at the cost of the alerts
             print(f"holding not updated: {e!r}", file=sys.stderr)
     json.dump(state, open(state_p, "w"), indent=1)

@@ -3193,8 +3193,9 @@ defCalc('industry_perf', {
           const gtxt = hasRank ? 'group ' + (tierNow === 'Top' ? '★ Top ' : tierNow === 'Strong' ? 'Strong ' : 'not top 10% ') + (r.group_rank_now || 'unranked') : 'theme ' + (lead ? 'leading' : (r.group_status_now || 'none').toLowerCase());
           const g = early && lead && build ? 'A' : early && (lead || build) ? 'B' : 'C';
           const why = (early ? (r.breakouts ? '2nd' : '1st') + ' breakout since the launch' : 'late (3rd+ breakout or 50+ sessions on)') + ', ' + gtxt + (build ? ', volume building' : '');
-          out.push([r.symbol + ':breakout', r.symbol + ' ' + g + ' breakout: ' + (r.pattern && !r.pattern.startsWith('Base forming') ? r.pattern : 'base'),
-            fPrice(price) + ' over ' + fPrice(bp) + (r.buy_point_top_date ? ' (top set ' + fDate(r.buy_point_top_date).replace(/, \d{4}$/, '') + ')' : '') + ' · ' + why + ' · ' + f1(chg) + vol + (rv < 1 ? ' (light)' : '') + ' · leg ' + nxt + (nxt >= 4 ? ' (late)' : ''), r.tv]);
+          /* a short title (the user, Nov 7 2026): LION BREAKOUT · Base top $13.17 · vol 3.5x · base 6 days; the grade in the text */
+          out.push([r.symbol + ':breakout', r.symbol + ' BREAKOUT · ' + (r.pattern && !r.pattern.startsWith('Base forming') ? r.pattern : 'base') + ' ' + fPrice(bp) + ' · vol ' + rv.toFixed(1) + 'x' + (r.base_day ? ' · base ' + r.base_day + ' days' : ''),
+            'Grade ' + g + ' · ' + fPrice(price) + ' over ' + fPrice(bp) + (r.buy_point_top_date ? ' (top set ' + fDate(r.buy_point_top_date).replace(/, \d{4}$/, '') + ')' : '') + ' · ' + why + ' · ' + f1(chg) + vol + (rv < 1 ? ' (light)' : '') + ' · leg ' + nxt + (nxt >= 4 ? ' (late)' : ''), r.tv]);
           return;
         }
         /* heads-up: a real gap up (2%+) on volume (1.2x+ for the time of day), within 2% under the buy point */
@@ -3246,10 +3247,10 @@ defCalc('industry_perf', {
      TRIGGERS: the 21 EMA retest alone is a heads-up ("not a strong sign by itself"), with the breakout level under it
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
-    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close']);
+    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close', 'back']);
   const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
   /* a few words per kind for the group-move lines (radar/alerts.py KIND_WORDS) */
-  const KIND_WORDS = { retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
+  const KIND_WORDS = { back: 'back over its level', retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
     breakout: 'breakout', touch: 'touched the buy point', confirm: 'breakout confirmed', power: 'power day', catalyst: 'catalyst gap', basebreak: 'base high cleared',
     launch: 'launch', reversal: 'reversal launch', laggard: 'laggard launch', reclaimbo: 'back over its breakout level', reclaimbo2: 'breakout undercut & reclaim',
     ema50back: 'back over the 50 EMA', ema50: '50 EMA undercut & reclaim', push: 'push', pop: 'pop', gapbase: 'gap out of base', gob1: 'gap out of base',
@@ -3284,6 +3285,22 @@ defCalc('industry_perf', {
   /* the words for one alert: the box, the stars, the ticker spelled out (KD -> "K D"); a group move: its group */
   const sayOf = (b) => {
     if (b.say) return b.say;
+    /* a pattern breakout (the user, Nov 7 2026: "in a breakout I need the pattern name, the volume, the price point in the
+       sound", "add base days"): "Pattern breakout, L I O N, Base top, 13.17, volume 3.5 times, base 6 days" */
+    if (b.box === 'p') {
+      const t = b.title + ' — ' + (b.body || ''), sp = (b.sym || '').split('').join(' ');
+      const vol = (/vol ([\d.]+)\s?[x×]/.exec(t) || [])[1];
+      const bk = / back over \$([\d,.]+)/.exec(b.title);
+      if (bk) return sp + ' back over ' + bk[1] + (vol ? ', volume ' + vol + ' times' : '');
+      const pat = /gap out of base: ([15])-min high/.test(b.title) ? 'gap out of base, ' + /gap out of base: ([15])-min/.exec(b.title)[1] + '-minute high'
+        : / GAP OUT OF BASE/.test(b.title) ? 'gap out of base' : / breakout confirmed/.test(b.title) ? 'breakout confirmed'
+        : / base high \$[\d,.]+ cleared/.test(b.title) ? 'base high cleared' : /pop out of the consolidation/.test(b.title) ? 'pop out of the consolidation'
+        : ((/BREAKOUT · (.+?) \$/.exec(b.title) || /trigger \(([^)]+)\)/.exec(b.title) || /: (.+?) trigger$/.exec(b.title) || / breakout: (.+)$/.exec(b.title) || [])[1] || '');
+      const lvl = (/ \$([\d,.]+) · vol/.exec(b.title) || (/gap out of base: [15]-min/.test(b.title) && /opening range high \$([\d,.]+)/.exec(b.body || ''))
+        || / base high \$([\d,.]+)/.exec(t) || /above the base top \$([\d,.]+)/.exec(b.body || '') || /over (?:the (?:base top|buy point|trigger) |its base high )?\$([\d,.]+)/.exec(b.body || '') || [])[1];
+      const base = (/base (\d+) days/.exec(t) || [])[1];
+      return 'Pattern breakout, ' + sp + (pat ? ', ' + pat.replace(/\s*\(trendline\)/, '') : '') + (lvl ? ', ' + lvl : '') + (vol ? ', volume ' + vol + ' times' : '') + (base ? ', base ' + base + ' days' : '');
+    }
     if (/ POWER DAY/.test(b.title)) { const n = (/^★+/.exec(b.title) || [''])[0].length; return 'Power day' + (n ? ', ' + STARS_SAY[Math.min(n, 3)] : '') + (b.sym ? ', ' + b.sym.split('').join(' ') : ''); }
     if (/ W (CROSSING THE 200|closed over its 200)/.test(b.title)) return 'W ' + (/CROSSING/.test(b.title) ? 'crossing' : 'closed over') + ' the two hundred, ' + (b.sym || '').split('').join(' ');
     if (b.box === 'g') { const m = / GROUP MOVE: ([^(]+)/.exec(b.title); return 'Group move' + (m ? ', ' + m[1].trim().replace(/&/g, 'and') : ''); }
@@ -3324,7 +3341,7 @@ defCalc('industry_perf', {
     } catch (e) { /* blocked */ }
     if (trig) {
       safe('Sounds', () => {
-        const b = { box: boxOfKey(key, title), title: String(title || ''), sym: tickerOfTitle(title), say: speak || '' };
+        const b = { box: boxOfKey(key, title), title: String(title || ''), sym: tickerOfTitle(title), say: speak || '', body: String(body || ''), key: String(key || '') };
         if (BELLS) BELLS.push(b); else announce([b]);
       });
       flash(String(key).split(':')[0]);
@@ -3357,7 +3374,7 @@ defCalc('industry_perf', {
   const BOXES = [['m', '⏰', 'Pre-market'], ['l', '🚀', 'Launching now'], ['p', '🎯', 'Pattern breakouts'], ['e', '⚡', 'Episodic pivots'],
     ['b', '↩️', 'Pullback entries'], ['h', '👀', 'Heads-ups'], ['g', '👥', 'Groups & news']];
   const BOX_OF = { power: 'e', catalyst: 'l', launch: 'l', stars: 'l', reversal: 'l', laggard: 'l',
-    breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
+    breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p', back: 'p',
     ep: 'e',
     retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b',
     early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', eodheld: 'g', eodlost: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g' };
@@ -3681,6 +3698,7 @@ defCalc('industry_perf', {
     /* where a line sits now, and why (step: 'down-l' to 🚀, 'down-h' to 👀, 'up' shown in ⚡, '' its own box) */
     const place = (x) => {
       const b = boxOf0(x);
+      if (/:back$/.test(lineKey(x))) return ['', ''];                  /* "back over": the log only (Nov 7 2026) */
       if (!b || !'lepb'.includes(b)) return [b, ''];
       if (!x.startsWith('🔔 ')) return ['h', ''];                  /* a heads-up: 👀 */
       const k = lineKey(x), sym = symK(x), lost = !!lostOf(k);
