@@ -72,6 +72,16 @@ jobs:
             python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/launch_dry.json --picks setups/picks.json --watchlist /tmp/wl/latest.json
             cp /tmp/wl/latest.json /tmp/setups_dry.json && python3 radar/publish.py "setups dry run" /tmp/setups_dry.json /tmp/launch_dry.json
           fi
+          if [ "${{ inputs.cmd }}" = "basetop3m" ]; then
+            # the 3-month check of the intact base top (scanner/probe_basetop3m.py, test): the old and the new rule on
+            # Launches, 3-SETUPS and TREND -> radar-data probe_basetop3m.json
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json
+            python3 scanner/probe_basetop3m.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_basetop3m.json || true
+            python3 radar/publish.py "base top 3-month check" /tmp/probe_basetop3m.json
+          fi
           if [ "${{ inputs.cmd }}" = "basetop" ]; then
             # the base-top check (the user, Nov 7 2026, LION: a poke over the base top that closed back under it is not
             # the base top): no rule change; the last 3 evening reads of Launches, 3-SETUPS and the TREND lists ->

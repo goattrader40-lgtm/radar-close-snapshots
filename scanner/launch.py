@@ -92,7 +92,8 @@ from screens import roll_mean  # noqa: E402
 L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
          near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5,
-         lag_rv=2, lag_under200=60)
+         lag_rv=2, lag_under200=60,
+         intact_top=1)     # the base top = the high nothing closed above since, a poke over it isn't (your rule, Nov 7 2026, LION)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -718,8 +719,28 @@ def base_top(a, j, span=120):
     lo, hi = max(0, j - span), j - 3
     if hi - lo < 10:
         return None, 0
+    if L["intact_top"]:
+        k = intact_top(a, lo, j)
+        return h[k], j - k
     k = lo + int(np.argmax(h[lo:hi]))
     return h[k], j - k
+
+
+def intact_top(a, lo, hi):
+    """the index of the base top in sessions lo .. hi-1 (your rule, Nov 7 2026, LION): the high no day has closed above
+    since. A day that went over it and closed back under it is a poke, not the top (LION: Oct 20's 12.88; Oct 22's
+    12.98, Oct 29's 13.17, Oct 30, Nov 4 and Nov 5 went over and closed under: a 13-day base, broken out Nov 6; ELF:
+    Oct 15's 116.20, Oct 16's 118.29 and Nov 4-6 closed under it). A close over the top is a new high, and so is a close
+    over the 1-month high (out of the smaller base) on a day that went over an older top and closed under it (DUOL Nov
+    4 2026: closed 161.27 over its 1-month high 153.56, its new high 175.56 is the top, not the Sep 1 162.51; RHI Oct
+    23: 47.14 over the Sep 1 46.02, closed 45.87 over its 1-month high 38.79). A bull flag inside the base is its own
+    trigger and changes nothing here (it closes under the top)"""
+    h, c = a.st.h, a.st.c
+    t = lo
+    for k in range(lo + 1, hi):
+        if h[k] > h[t] and c[k] > min(h[t], h[max(0, k - 21):k].max()):
+            t = k
+    return t
 
 
 def _adr(st, k):
@@ -734,7 +755,11 @@ def base_ok(a, j, span):
     if not top or age < L["leg_pause"]:
         return None
     k = j - age
-    if 100 * (1 - st.l[k:j].min() / top) < L["leg_adr"] * _adr(st, k):
+    # the pullback from the top: with the intact top from the day after it (a launch day's own low, LION Oct 20 2026's
+    # 10.60, is no pullback), from the base's highest point (a poke over the top counts for the depth: LION 13.17)
+    lows = st.l[k + 1:j] if L["intact_top"] else st.l[k:j]
+    ref = st.h[k:j].max() if L["intact_top"] else top
+    if not lows.size or 100 * (1 - lows.min() / ref) < L["leg_adr"] * _adr(st, k):
         return None
     # and the closes pulled back too, or chopped sideways (2+ down closes): a one-day dip in an advance is no base
     # (GMAB Sep 23-30 2026: the closes 2% under the top at most and every one higher than the day before; Sep 30's
@@ -821,8 +846,11 @@ def inner_base(a, j):
     st, c, h = a.st, a.st.c, a.st.h
     if j < 125:
         return None
-    big = j - 120 + int(np.argmax(h[j - 120:j]))
-    k = j - L["inner_span"] + int(np.argmax(h[j - L["inner_span"]:j]))
+    if L["intact_top"]:             # the intact highs, a poke over them is not the top (LION Nov 4 2026: 12.88, not 13.17)
+        big, k = intact_top(a, j - 120, j), intact_top(a, j - L["inner_span"], j)
+    else:
+        big = j - 120 + int(np.argmax(h[j - 120:j]))
+        k = j - L["inner_span"] + int(np.argmax(h[j - L["inner_span"]:j]))
     if j - big < L["inner_big"] or k == big or j - k < 2 or h[k] >= h[big]:
         return None
     down = int((c[k + 1:j] < c[k:j - 1]).sum())
@@ -1025,11 +1053,17 @@ def follow(a, i0, i, pick=False):
         cands.append((fl[3], ("Bull pennant" if fl[4] == "pennant" else "Bull flag") + " (trendline)", i - fl[0], fl[1]))
     if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
         cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
+    def depth(top, k):
+        """how deep the base is: from its top, or with the intact top from the base's highest point (a poke over the
+        top counts here) down to the lowest low after the top's day (LION Nov 5 2026: 13.17 down to 12.02, 8.7%)"""
+        if L["intact_top"] and k < i:
+            return 100 * (1 - st.l[k + 1:i + 1].min() / st.h[k:i + 1].max())
+        return 100 * (1 - st.l[k:i + 1].min() / top)
     for top, k in tops:
-        cands.append((top, "Base top", below_since(a, i + 1, top, k), 100 * (1 - st.l[k:i + 1].min() / top)))
+        cands.append((top, "Base top", below_since(a, i + 1, top, k), depth(top, k)))
     ib = inner_base(a, i + 1)
     if ib and c[i] < ib[0]:             # the inner base's high (APPN Oct 14 2026 night: 40.98 under its Aug 31 high 44.06)
-        cands.append((ib[0], "Inner base (last 20 days)", i + 1 - ib[1], 100 * (1 - st.l[ib[1]:i + 1].min() / ib[0])))
+        cands.append((ib[0], "Inner base (last 20 days)", i + 1 - ib[1], depth(ib[0], ib[1])))
     bp, pat, bdays, bdep = min(cands) if cands else (None, msf.NAMES[code] if code else "", r.cN if code else None, r.cDep if code else None)
     top_date = next((st.dates[k] for t, k in tops if bp is not None and t == bp), None)
     # the base's own length (the user, Nov 4 2026, ACN: Base day 9 but Base length 190): for a base top, the sessions since
@@ -1205,7 +1239,8 @@ def follow(a, i0, i, pick=False):
         if near:
             m0 = near[0]
             blen, bfrom = i - m0, st.dates[m0 + 1] if m0 + 1 <= i else st.dates[i]
-            bdeep = 100 * (1 - st.l[min(m0 + 1, i):i + 1].min() / bp)       # from the day after (not the gap day's own low)
+            ref = st.h[m0:i + 1].max() if L["intact_top"] else bp       # with the intact top: from the base's highest point
+            bdeep = 100 * (1 - st.l[min(m0 + 1, i):i + 1].min() / ref)      # from the day after (not the gap day's own low)
             bdeep_adr = bdeep / _adr(st, i)
     if blen is not None and blen < L["leg_pause"]:
         tight = 0                    # under a high set a few sessions ago there is no base yet (GMAB Sep 21 2026: 1 session)
