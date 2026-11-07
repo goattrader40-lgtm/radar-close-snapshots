@@ -72,6 +72,33 @@ jobs:
             python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/launch_dry.json --picks setups/picks.json --watchlist /tmp/wl/latest.json
             cp /tmp/wl/latest.json /tmp/setups_dry.json && python3 radar/publish.py "setups dry run" /tmp/setups_dry.json /tmp/launch_dry.json
           fi
+          if [ "${{ inputs.cmd }}" = "basetop" ]; then
+            # the base-top check (the user, Nov 7 2026, LION: a poke over the base top that closed back under it is not
+            # the base top): no rule change; the last 3 evening reads of Launches, 3-SETUPS and the TREND lists ->
+            # radar-data probe_basetop.json
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 80 origin +refs/heads/main:refs/remotes/origin/main
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            git show origin/radar-data:stocks.json > /tmp/stocks.json
+            ARGS=$(python3 - <<'PY'
+          import json, subprocess
+          def hist(path):
+              out = {}
+              for h in subprocess.run(["git", "log", "--format=%h", "origin/main", "--", path], capture_output=True, text=True).stdout.split():
+                  d = json.loads(subprocess.run(["git", "show", f"{h}:{path}"], capture_output=True, text=True).stdout)
+                  out.setdefault(d["date"], d)
+              return out
+          L, W = hist("setups/launch.json"), hist("setups/latest.json")
+          args = []
+          for day in sorted(set(L) & set(W))[-3:]:
+              json.dump(L[day], open(f"/tmp/l_{day}.json", "w")); json.dump(W[day], open(f"/tmp/w_{day}.json", "w"))
+              args.append(f"{day}=/tmp/l_{day}.json:/tmp/w_{day}.json")
+          print(" ".join(args))
+          PY
+          )
+            python3 scanner/probe_basetop.py /tmp/bars.json.gz /tmp/stocks.json /tmp/probe_basetop.json $ARGS
+            python3 radar/publish.py "base top check" /tmp/probe_basetop.json
+          fi
           case "$CMD" in launchdry\ *)
             # the launch build with test picks (not saved to main): python3 -c writes them added at this time yesterday
             pip install --quiet numba numpy pandas
