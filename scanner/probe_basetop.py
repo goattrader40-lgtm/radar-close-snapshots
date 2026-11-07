@@ -15,30 +15,25 @@ import json
 import sys
 
 TREND_ON = {"Up", "Turn up", "Reclaim", "Resting"}       # the page's TREND list (docs/index.html TREND_ON)
-SPAN = 120                                               # the engine's larger base (scanner/launch.py base_top)
+LOOK = 40                                                # the engine's smaller base, ~2 months (scanner/launch.py)
+SHOW = ("LION",)                                         # their bars in the output, to read the numbers
 
 
 def rule_level(bars, p, i):
-    """(level, its index) when day p's high was a poke, else None. Tops = days in the 120 sessions before i whose high
-    no close has gone over since (through day i), each lower than every earlier one (a later, higher one closed under an
-    earlier top: a poke)"""
-    lo = max(0, p - SPAN)
-    hi_close = -1.0
-    never = [False] * (i + 1)
-    for k in range(i, lo - 1, -1):                     # never closed above through day i
-        never[k] = k < i and bars[k][2] > hi_close
-        hi_close = max(hi_close, bars[k][4])
-    tops = []
-    for k in range(lo, i):
-        if never[k] and all(bars[k][2] < bars[t][2] for t in tops):
-            tops.append(k)
-    if p in tops or not never[p]:
-        return None
-    under = [t for t in tops if t < p and bars[t][2] < bars[p][2]]
-    if not under:
-        return None
-    t = max(under, key=lambda k: bars[k][2])
-    return bars[t][2], t
+    """(level, its index) when day p's high was a poke, else None: p went over the highest high of the 2 months
+    before it (40 sessions, the engine's smaller base) and closed back under it, and no close has gone over that high
+    since (through day i). That earlier high is the base top, unless it was a poke itself (LION: Oct 29's 13.17 over
+    the Oct 20-28 highs; a day in there that poked over Oct 20's 12.88 and closed under it is checked the same way)"""
+    lev = None
+    while True:
+        lo = max(0, p - LOOK)
+        if p - lo < 5:
+            return lev
+        t = lo + max(range(p - lo), key=lambda k: bars[lo + k][2])
+        T = bars[t][2]
+        if not (T < bars[p][2] and bars[p][4] < T and max(b[4] for b in bars[t + 1:i + 1]) < T):
+            return lev
+        lev, p = (T, t), t
 
 
 def day_of_high(bars, bp, i):
@@ -96,8 +91,11 @@ def main():
                    "bp_day": bars[p][0], "bp_day_close": round(bars[p][4], 2), "close": round(bars[i][4], 2),
                    "stage": (r.get("stage") or r.get("why") or "")[:140]}
             if rl:
+                rng = [100 * (b[2] / b[3] - 1) for b in bars[max(0, i - 19):i + 1] if b[3] > 0]
+                adr = sum(rng) / len(rng) if rng else 5.0
                 row.update(rule_level=round(rl[0], 2), rule_day=bars[rl[1]][0], rule_day_close=round(bars[rl[1]][4], 2),
-                           rule_age=i - rl[1] + 1, changes=True)
+                           rule_age=i - rl[1] + 1, changes=True, lower_pct=round(100 * (1 - rl[0] / bp), 2),
+                           lower_adr=round(100 * (1 - rl[0] / bp) / adr, 2))
             else:
                 row.update(rule_level=None, changes=False)
             nxt = bars[i + 1] if i + 1 < len(bars) else None
@@ -110,6 +108,7 @@ def main():
         ch = [x for x in rows if x["changes"]]
         out["reads"].append({"read_of": day, "checked": len(rows), "not_a_high": skipped, "changes": len(ch),
                              "rows": sorted(rows, key=lambda x: (not x["changes"], x["list"], x["sym"]))})
+    out["bars"] = {s: B[s][-30:] for s in SHOW if s in B}
     json.dump(out, open(out_p, "w"), indent=1)
     for rd in out["reads"]:
         print(f"read of {rd['read_of']}: {rd['checked']} buy points at a day's high, {rd['changes']} change; {rd['not_a_high']} not a day's high")
