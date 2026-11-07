@@ -181,6 +181,8 @@
   .tgr-f { display: inline-flex; align-items: center; gap: 4px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); white-space: nowrap; }
   .tgr-num { font: inherit; font-size: var(--cds-font-size-caption); width: 4.2rem; padding: 2px 4px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); font-variant-numeric: tabular-nums; }
   .tgr-num:focus-visible, .tgr-f input[type=checkbox]:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
+  .tgr-num.bad { border-color: var(--color-bad); color: var(--color-bad); }
+  #pmr-box .pmr-warn { color: var(--color-bad); }
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
   /* RS / Trend filters (Watchlist, Launches): the Trend picker is a small dropdown of tick boxes */
@@ -687,7 +689,19 @@
     <h2 class="tgr-sub" id="pmg-h">Graded gappers (5%+, top 8 up and 4 down by pre-market $ volume)</h2>
     <div class="tgr-bar"><span class="tgr-seg" data-k="pmdir"><button data-v="up" aria-pressed="true">Gap ups</button><button data-v="down" aria-pressed="false">Gap downs</button></span>
       <span class="tgr-seg" data-k="pmshow"><button data-v="ab" aria-pressed="true">A &amp; B only</button><button data-v="all" aria-pressed="false">Show all</button></span></div>
-    <p class="tgr-rule">Gapping 5%+ up or down before the open and passing your rules (market cap $700M+, 20-day average volume 700K+ shares, 20-day average $ volume $20M+, ADR 3%+). Scanned at <span class="em" id="pm-time">—</span> ET on <span class="em" id="pm-date">—</span><span id="pm-stale" hidden> (not today: today's list posts by 9:10 AM ET on weekdays)</span>.</p>
+    <p class="tgr-rule">Gapping 5%+ up or down before the open and passing your rules (<span id="pm-rule-txt">market cap $700M+, 20-day average volume 700K+ shares, 20-day average $ volume $20M+, ADR 3%+, 30%+ over the 52-week low, gap-ups over the 50 EMA</span>). Scanned at <span class="em" id="pm-time">—</span> ET on <span class="em" id="pm-date">—</span><span id="pm-stale" hidden> (not today: today's list posts by 9:10 AM ET on weekdays)</span>.</p>
+    <div class="tgr-filters" id="pmr-box" role="group" aria-label="Your rules for the graded list">
+      <span class="tgr-lbl" style="flex-basis:100%"><b>Your rules for this list</b>: saved in your repo, used by the 8:45 grading (Claude, top 8 up and 4 down) and the code grader (every stock that passes) from their next run</span>
+      <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0.1" max="50" data-pmr="mcap_min_b" aria-label="Minimum market cap, $ billions"> B</label>
+      <label class="tgr-f">Avg vol 20D ≥ <input class="tgr-num" type="number" inputmode="decimal" step="50" min="50" max="10000" data-pmr="avgvol_min_k" aria-label="Minimum 20-day average volume, thousands of shares"> K</label>
+      <label class="tgr-f">$ vol 20D ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="1" max="1000" data-pmr="dvol_min_m" aria-label="Minimum 20-day average $ volume, millions"> M</label>
+      <label class="tgr-f">ADR ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" max="20" data-pmr="adr_min" aria-label="Minimum ADR, %"> %</label>
+      <label class="tgr-f">52W low ≥ <input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" max="200" data-pmr="low52_min" aria-label="Pre-market price at least this % over the 52-week low"> % below price</label>
+      <label class="tgr-f"><input type="checkbox" data-pmr="gapup_above_ema50"> Gap-ups above the 50 EMA</label>
+      <button class="tgr-lite" id="pmr-save" type="button" disabled>Save for the next run</button>
+      <button class="tgr-lite" id="pmr-def" type="button">Back to the defaults</button>
+      <span class="tgr-lbl" id="pmr-msg" style="flex-basis:100%"></span>
+    </div>
     <details class="tgr-legend tgr-more" data-key="pmgrades"><summary>How the grades work (A / B / C / F, inflection, EP, group rank)</summary>
     <p class="tgr-note">Grade = how solid the news behind the gap is, from reading the actual filings, releases and earnings: <span class="tgr-grade gA">A</span> real fundamental change (earnings beat with raised guidance, big growth inflection, FDA approval, takeover), <span class="tgr-grade gB">B</span> decent (meaningful contract, partnership, index add), <span class="tgr-grade gC">C</span> weak (analyst call, sympathy move, hype, no clear news), <span class="tgr-grade gF">F</span> warning (offering or other dilution, promotional release, reverse split, unconfirmed news). For gap downs the grade means how real and lasting the bad news is: <span class="tgr-grade gA">A</span> serious damage (guidance cut, big miss, lost customer), <span class="tgr-grade gB">B</span> meaningful but contained, <span class="tgr-grade gC">C</span> weak or no real news (possible overreaction). Inflection = a change in the business trend: Turnaround (a decline reverses), Acceleration (growth speeds up), New business (a new product or customer that changes the company), Margin (profits jump on cost or mix), Deterioration (the trend breaks down); scored 1–10 for how big and how confirmed it is. The top 8 gap ups and top 4 gap downs by pre-market $ volume are graded, and only A and B grades show unless you pick Show all. If fewer stocks pass your rules, only those are researched; if none pass, nothing is. <span class="tgr-gm">EP</span> = gap of 10%+ with pre-market volume already 25%+ of a normal day (Qullamaggie's episodic pivot asks for a 10%+ gap on huge early volume). Gap ÷ ADR shows how big the gap is for that stock. vs 200D and vs 50 EMA = the pre-market price at scan time vs the 200-day SMA and 50-day EMA as of yesterday's close. Pre-market prices come from Yahoo's 5-minute bars at scan time; check live prints in TradingView. Group rank = the stock's best-ranked group (its themes and its industry) after yesterday's close: <span class="tgr-up">★ Top</span> = top 3% of its kind, <span class="tgr-up">Strong</span> = top 3–10%; it isn't part of the news grade (in 2 years it didn't change how many gaps faded on the day, but Top-group gaps ran 20%+ within 20 days 44% of the time vs 28–29% outside the top 10%). Under it: the group and the stock's place in it (its own 1-, 3- and 6-month moves vs the group's other stocks); <span class="tgr-gm">#1 in group</span> = the leader of a group of 5+ stocks (in a Top group these gaps ran 20%+ 61% of the time vs 41% for the rest of the group, but swung harder both ways).</p>
     </details>
@@ -2091,7 +2105,100 @@ defCalc('industry_perf', {
     rows.slice(0, LIST_MAX).forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'trend', 'rel_vol', 'price', 'adr_20', 'dvol', 'vs_200', 'vs_50e', 'mcap_b', 'avg_vol_30d', 'chg_1w', 'chg_1m', 'chg_3m', 'ind', 'themes', 'index'], symMap)));
   };
 
+  /* your rules for the graded list (the user, Nov 7 2026: "I want to be able to adjust them myself"; option 2): saved to
+     premarket/rules.json on main with your GitHub key (like the Follow button); radar/premarket_build.py reads them, so
+     Claude's 8:45 grading and the code grader always use the same rules. The script checks the same ranges as these
+     boxes and uses the default for a value out of range. Before you save, the boxes are tried on the latest pre-market
+     scan: how many pass, and which stocks Claude's top 8 up / 4 down would gain or lose (Nov 6: with the 50 EMA rule off,
+     MU, SNDK, AMD ... would take all 8 gap-up slots and FROG, VCEL, both A, would not be graded) */
+  const PMR_DEF = { mcap_min_b: 0.7, avgvol_min_k: 700, dvol_min_m: 20, adr_min: 3, low52_min: 30, gapup_above_ema50: true };
+  const PMR_LIM = { mcap_min_b: [0.1, 50, 'Mkt cap', '$', 'B'], avgvol_min_k: [50, 10000, 'Avg vol 20D', '', 'K'], dvol_min_m: [1, 1000, '$ vol 20D', '$', 'M'],
+    adr_min: [0, 20, 'ADR', '', '%'], low52_min: [0, 200, '52W low', '', '%'] };
+  let PMR = null, PMRE = null, PMR_DIRTY = false;   /* the saved file; the boxes; boxes changed and not saved */
+  const pmrSaved = () => { const o = Object.assign({}, PMR_DEF); Object.keys(PMR_LIM).forEach((k) => { const v = PMR ? num(PMR[k]) : null; if (v !== null && v >= PMR_LIM[k][0] && v <= PMR_LIM[k][1]) o[k] = v; }); if (PMR && typeof PMR.gapup_above_ema50 === 'boolean') o.gapup_above_ema50 = PMR.gapup_above_ema50; return o; };
+  const pmrBad = (R) => Object.keys(PMR_LIM).filter((k) => { const v = num(R[k]); return v === null || v < PMR_LIM[k][0] || v > PMR_LIM[k][1]; });
+  const pmrSame = (a, b) => Object.keys(PMR_DEF).every((k) => String(a[k]) === String(b[k]));
+  const pmrText = (R) => 'market cap $' + (R.mcap_min_b < 1 ? Math.round(R.mcap_min_b * 1000) + 'M' : R.mcap_min_b + 'B') + '+, 20-day average volume ' + R.avgvol_min_k + 'K+ shares, 20-day average $ volume $' + R.dvol_min_m + 'M+, ADR ' + R.adr_min + '%+, ' + R.low52_min + '%+ over the 52-week low' + (R.gapup_above_ema50 ? ', gap-ups over the 50 EMA' : '');
+  /* the same checks as radar/premarket_build.py prepare, on a row of the live scanner */
+  const pmrPass = (r, R) => {
+    if (Math.abs(num(r.pm_chg) || 0) < 5) return false;
+    const mcap = num(r.mcap_b), avgv = num(r.avg_vol_20) ?? num(r.avg_vol_30d), dv = num(r.dvol_20_m), adr = num(r.adr_20), lo = num(r.low_52w), px = num(r.pm_last), e50 = num(r.ema50);
+    if (!(mcap && mcap >= R.mcap_min_b) || !(avgv && avgv >= R.avgvol_min_k * 1000) || !(dv && dv >= R.dvol_min_m)) return false;
+    if (adr !== null && adr < R.adr_min) return false;
+    if (lo && px && px < lo * (1 + R.low52_min / 100)) return false;
+    if (R.gapup_above_ema50 && num(r.pm_chg) > 0 && e50 && px && px < e50) return false;
+    return true;
+  };
+  const nyHm = (t) => { const m = /T(\d\d):(\d\d)/.exec(String(t)); if (!m) return ''; const hh = +m[1]; return ((hh + 11) % 12 + 1) + ':' + m[2] + (hh < 12 ? ' AM' : ' PM'); };   /* saved_at is already New York time */
+  const pmrTop = (rows, dir, n) => rows.filter((r) => (dir === 'up' ? num(r.pm_chg) > 0 : num(r.pm_chg) < 0)).sort((a, b) => b.pm_dvol_m - a.pm_dvol_m).slice(0, n).map((r) => r.symbol);
+  const drawPmRules = () => {
+    if (!PMRE || !PMR_DIRTY) PMRE = pmrSaved();
+    const saved = pmrSaved(), bad = pmrBad(PMRE);
+    $('#pm-rule-txt').textContent = pmrText(saved);
+    document.querySelectorAll('#pmr-box [data-pmr]').forEach((el) => {
+      const k = el.dataset.pmr;
+      if (el.type === 'checkbox') el.checked = PMRE[k] === true;
+      else { if (el !== document.activeElement) el.value = PMRE[k] === null || PMRE[k] === undefined ? '' : String(PMRE[k]); el.classList.toggle('bad', bad.includes(k)); }
+    });
+    const msg = $('#pmr-msg'); msg.replaceChildren();
+    const line = (t, cls) => msg.append(h('div', cls || '', t));
+    if (bad.length) bad.forEach((k) => { const L = PMR_LIM[k]; line(L[2] + ' must be ' + L[3] + L[0] + ' to ' + L[3] + L[1] + ' ' + L[4] + ': fix it to save.', 'pmr-warn'); });
+    const changed = !pmrSame(PMRE, saved);
+    $('#pmr-save').disabled = !changed || !!bad.length;
+    line(changed ? 'Not saved yet: Save for the next run.' : PMR && PMR.saved_at ? 'Saved ' + fDate(PMR.saved_at) + ' ' + nyHm(PMR.saved_at) + ' ET: used from the next run (the 8:45 grading on weekdays; the code grader at 8:52, 9:05 and 9:18).' : 'Your defaults (nothing saved yet).');
+    /* the boxes on the latest pre-market scan */
+    const live = PML && BASE ? pmRows() : [];
+    if (live.length && !bad.length) {
+      const now = live.filter((r) => pmrPass(r, saved)), next = live.filter((r) => pmrPass(r, PMRE));
+      const cnt = (a, d) => a.filter((r) => (d === 'up' ? num(r.pm_chg) > 0 : num(r.pm_chg) < 0)).length;
+      line('On the latest pre-market scan (' + fDate(PML.date) + ', ' + fTime(PML.saved_at) + ' ET): ' + (changed ? 'these boxes pass about ' + cnt(next, 'up') + ' gap-ups and ' + cnt(next, 'down') + ' gap-downs (saved rules: ' + cnt(now, 'up') + ' and ' + cnt(now, 'down') + ').' : 'about ' + cnt(now, 'up') + ' gap-ups and ' + cnt(now, 'down') + ' gap-downs pass.'));
+      if (changed) {
+        const diff = [['up', 8, 'gap-ups'], ['down', 4, 'gap-downs']].map(([d, n, w]) => {
+          const a = pmrTop(now, d, n), b = pmrTop(next, d, n), add = b.filter((x) => !a.includes(x)), out = a.filter((x) => !b.includes(x));
+          return add.length || out.length ? 'Claude\'s top ' + n + ' ' + w + ' would change: ' + (add.length ? '+ ' + add.join(', ') : '') + (add.length && out.length ? ' · ' : '') + (out.length ? '− ' + out.join(', ') + ' (not graded by Claude; the code grader still grades them)' : '') : '';
+        }).filter(Boolean);
+        diff.forEach((t) => line(t, 'pmr-warn'));
+      }
+    }
+  };
+  document.querySelectorAll('#pmr-box [data-pmr]').forEach((el) => {
+    const k = el.dataset.pmr;
+    const set = () => { if (!PMRE) PMRE = pmrSaved(); if (el.type === 'checkbox') PMRE[k] = el.checked; else { const raw = el.value.trim(); PMRE[k] = raw === '' ? null : Number(raw); } PMR_DIRTY = true; drawPmRules(); };
+    el.addEventListener('change', set);
+    if (el.type !== 'checkbox') el.addEventListener('keydown', (e) => { if (e.key === 'Enter') el.blur(); });
+  });
+  $('#pmr-def').addEventListener('click', () => { PMRE = Object.assign({}, PMR_DEF); PMR_DIRTY = true; drawPmRules(); });
+  const savePmRules = async (R) => {
+    let key = ghKey() || await askKey();
+    if (!key) return false;
+    const url = 'https://api.github.com/repos/' + GH.owner + '/' + GH.repo + '/contents/premarket/rules.json';
+    const doc = Object.assign({}, R, { saved_at: nyIso(), by: 'portal' });
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const hd = { Authorization: 'Bearer ' + key, Accept: 'application/vnd.github+json' };
+      const g = await fetch(url + '?ref=main&t=' + Date.now(), { headers: hd, cache: 'no-store' });
+      if (g.status === 401) { dropKey(); key = await askKey(); if (!key) return false; continue; }
+      let sha;
+      if (g.ok) sha = (await g.json()).sha;
+      else if (g.status !== 404) throw new Error('GitHub answered ' + g.status);
+      const body = { message: 'Graded gappers rules: ' + pmrText(R) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
+      if (sha) body.sha = sha;
+      const p = await fetch(url, { method: 'PUT', headers: hd, body: JSON.stringify(body) });
+      if (p.ok) { PMR = doc; return true; }
+      if (p.status === 409 || p.status === 422) continue;
+      if (p.status === 401 || p.status === 403 || p.status === 404) { dropKey(); throw new Error('this key can\'t save to the repo. Make a new one: in step 3 pick radar-close-snapshots, in step 4 Contents: Read and write'); }
+      throw new Error('GitHub answered ' + p.status);
+    }
+    throw new Error('the file kept changing: try again');
+  };
+  $('#pmr-save').addEventListener('click', async () => {
+    const b = $('#pmr-save'); if (pmrBad(PMRE).length) return;
+    b.disabled = true; b.textContent = 'Saving…';
+    try { if (await savePmRules(Object.assign({}, PMRE))) { PMR_DIRTY = false; toast('Rules saved: the code grader uses them from its next run (8:52 / 9:05 / 9:18 on weekdays), the 8:45 grading from tomorrow morning.'); } }
+    catch (e) { toast('Not saved: ' + e.message + '.'); }
+    b.textContent = 'Save for the next run'; drawPmRules();
+  });
   const drawPremarket = (symMap) => {
+    drawPmRules();
     const table = $('#pm-table');
     setState('pm-table', ['premarket']);
     const all = rowsOf('premarket');
@@ -4885,6 +4992,7 @@ defCalc('industry_perf', {
           lastMain = Date.now();
           const [st2, ln2] = await Promise.all([getMain('setups/latest.json').catch(() => null), getMain('setups/launch.json').catch(() => null)]);
           PICKS = await getMain('setups/picks.json').catch(() => PICKS);
+          PMR = await getMain('premarket/rules.json').catch(() => PMR);
           const was = (D.setups && D.setups.data ? D.setups.data.made_at : '') + (D.launch && D.launch.data ? D.launch.data.made_at : '');
           if (st2) D.setups = { status: 'ok', data: st2 };
           if (ln2) D.launch = { status: 'ok', data: ln2 };
@@ -4900,6 +5008,7 @@ defCalc('industry_perf', {
       lastMain = Date.now();
       const [ln, lnbt] = await Promise.all([getMain('setups/launch.json').catch(() => null), getMain('setups/launch_backtest.json').catch(() => null)]);
       PICKS = await getMain('setups/picks.json').catch(() => PICKS);
+      PMR = await getMain('premarket/rules.json').catch(() => PMR);   /* your rules for the graded list (none saved yet = the defaults) */
       D.launch = ln ? { status: 'ok', data: ln } : (D.launch && D.launch.status === 'ok' ? D.launch : { status: 'error', data: null });
       if (lnbt) LNBT = lnbt;
       SRV = await getJson(sha, 'alerts.json').catch(() => SRV);
