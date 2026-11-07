@@ -70,11 +70,17 @@ def trend_bp(a, j, new):
         return None, None
     bp, pat = float(r.pivot), launch.msf.NAMES[code]
     if new:
-        st = a.st
-        t = launch.intact_top(a, max(0, j - 63), j + 1)
-        p = next((k for k in range(max(0, j - 130), j + 1) if abs(st.h[k] - bp) <= max(0.006, bp * 0.0005)), None)
-        if p is not None and p != t and st.h[p] > st.h[t] and st.h[t] > st.c[j]:
-            bp, pat = float(st.h[t]), pat + " (intact top)"
+        # only a level set by a poke moves: back to the high that poke went over (the month's highest high before it,
+        # leaving out pokes), if no close has gone over that high since and it is over the close
+        st, pk = a.st, launch.pokes(a)
+        p = next((k for k in range(j, max(0, j - 130) - 1, -1) if abs(st.h[k] - bp) <= max(0.006, bp * 0.0005)), None)
+        if p is not None and pk[p]:
+            w = [k for k in range(max(0, p - 21), p) if not pk[k]]
+            if w:
+                t = max(w, key=lambda k: st.h[k])
+                lvl = float(st.h[t])
+                if st.c[j] < lvl and st.c[t + 1:j + 1].max() <= lvl * (1 + L["caution_pct"] / 100):
+                    bp, pat = lvl, pat + " (intact top)"
     return bp, pat
 
 
