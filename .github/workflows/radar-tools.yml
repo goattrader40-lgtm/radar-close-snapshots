@@ -72,6 +72,31 @@ jobs:
             python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/launch_dry.json --picks setups/picks.json --watchlist /tmp/wl/latest.json
             cp /tmp/wl/latest.json /tmp/setups_dry.json && python3 radar/publish.py "setups dry run" /tmp/setups_dry.json /tmp/launch_dry.json
           fi
+          if [ "${{ inputs.cmd }}" = "launchhigh" ]; then
+            # the launch-day-high check (the user, Nov 7 2026, LION: "that day's high is the breakout level"): no rule
+            # change; the last 3 evening reads of Launches vs that level, and the next session's high -> radar-data
+            # probe_launchhigh.json
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            git fetch -q --depth 80 origin +refs/heads/main:refs/remotes/origin/main
+            ARGS=$(python3 - <<'PY'
+          import json, subprocess
+          seen, args = [], []
+          for h in subprocess.run(["git", "log", "--format=%h", "origin/main", "--", "setups/launch.json"], capture_output=True, text=True).stdout.split():
+              d = json.loads(subprocess.run(["git", "show", f"{h}:setups/launch.json"], capture_output=True, text=True).stdout)
+              if d["date"] in seen:
+                  continue
+              seen.append(d["date"])
+              p = f"/tmp/launch_{d['date']}.json"
+              json.dump(d, open(p, "w"))
+              args.append(f"{d['date']}={p}")
+              if len(seen) >= 3:
+                  break
+          print(" ".join(reversed(args)))
+          PY
+          )
+            python3 scanner/probe_launchhigh.py /tmp/bars.json.gz /tmp/probe_launchhigh.json $ARGS
+            python3 radar/publish.py "launch day high check" /tmp/probe_launchhigh.json
+          fi
           case "$CMD" in launchdry\ *)
             # the launch build with test picks (not saved to main): python3 -c writes them added at this time yesterday
             pip install --quiet numba numpy pandas
