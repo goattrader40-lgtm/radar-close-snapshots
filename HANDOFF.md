@@ -45,6 +45,23 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## One pullback heads-up; ✕ on the TREND list (LIVE Nov 6 2026 ~8 PM ET, the user's "go live"; branch test/wlfix)
+
+- The user (Nov 6 evening): MANE at 9:35 got "at its 21 EMA in the base" and "pulling back to its breakout level" as two
+  messages: "if it happens at the same time, one message". radar/alerts.py main(): when :zone and :ema21zone come for a
+  stock in the same run, one :zone message "MANE retesting its breakout level $130.90-$136.72 and its 21 EMA $130.11"
+  with both buy rules; :ema21zone counts as sent. The 3:45 PM trigger unchanged. Replayed MANE Fri 9:35.
+- The user: "anything I see off on the Watchlist I can delete from the TREND tab or the setups tab": a ✕ on TREND rows,
+  saved to setups/picks.json removed_trend {symbol: {added, at}}; the page reads picks.json from main (every device) and
+  leaves the stock off TREND and its TREND triggers until its added date is later (a feeder list again, or a new launch);
+  picks.yml skips the Launches rebuild when a save only changes removed_trend.
+- MANE Nov 6 (the user): the Launches status was right ("21 EMA retest in the base (entry)"); the user read Friday as an
+  undercut & reclaim, Claude pointed out the agreed rule needs 2 closes under (MANE had 1, Thu $128.60): the user, "let's
+  keep it as is". The 3:01 PM "C breakout: Bull flag" over $139.56 fired at the line (the agreed flag alert) and stepped
+  down at 3:49 ($138.73); the user hadn't seen it (the push went out: check the ntfy app). Root cause the user agreed to
+  look at later (not built): the alerts decide "triggered" with their own copy of the rules (radar/alerts.py, the page),
+  the engine (launch.py) at the close: names and conditions can differ (MANE's "+ BREAKOUT LEVEL", yesterday's 21 EMA).
+
 ## Status at the end of the session "Radar: work session (Nov 6)" (Nov 5 evening - Nov 6 2026 evening)
 
 - **Live (each after the user's "go live")**, details in the sections below: the end-of-day 👥 list = today's Launches /
