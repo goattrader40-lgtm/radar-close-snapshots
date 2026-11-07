@@ -2297,7 +2297,19 @@ defCalc('industry_perf', {
       if (seen.has(r.symbol)) return;
       seen.set(r.symbol, Object.assign({}, r, { section: n, why: (n === '3-SETUPS' && r.section ? r.section + ': ' : '') + (r.why || '') }));
     }));
-    return [...seen.values()].filter((r) => { const t = trendOf(r.symbol); return t && TREND_ON.has(t.st); });
+    const gone = trendGone();
+    return [...seen.values()].filter((r) => { const t = trendOf(r.symbol); return t && TREND_ON.has(t.st) && !(gone[r.symbol] !== undefined && (r.added || '') <= gone[r.symbol]); });
+  };
+  /* ✕ on the TREND list (the user, Nov 7 2026: "anything I see off on the Watchlist tab I can delete from the TREND tab or the
+     setups tab"): saved to setups/picks.json "removed_trend" {symbol: {added, at}}, read by every device; the stock is off
+     the TREND list and its TREND triggers until it comes on a feeder list again (or launches again): its added date later.
+     The TREND list is this page's own, so nothing gets rebuilt for it (Follow picks skips such a save) */
+  const TRGONE = 'radar-trend-removed';
+  const trendGone = () => {
+    const out = {};
+    Object.entries((PICKS && PICKS.removed_trend) || {}).forEach(([s, v]) => { if (v && v.added !== undefined) out[s] = v.added; });
+    try { Object.assign(out, JSON.parse(localStorage.getItem(TRGONE) || '{}')); } catch (e) { /* private window */ }
+    return out;
   };
   /* your picks: the Follow button saves the stock to setups/picks.json in your repo (with a GitHub key kept in this
      browser, made once per device); a GitHub job (Follow picks) then rebuilds the Launches list with it in a few
@@ -2354,7 +2366,8 @@ defCalc('industry_perf', {
       if (!(opt && opt.keepPick)) { if (on) doc.picks[sym] = { added: (opt && opt.added) || nyIso(), from: (opt && opt.from) || 'Watchlist ' + S.wl }; else delete doc.picks[sym]; }
       if (opt && opt.remove) { doc.removed = doc.removed || {}; doc.removed[sym] = { launch: opt.remove, at: nyIso() }; }
       if (opt && opt.removeSetup) { doc.removed_setups = doc.removed_setups || {}; doc.removed_setups[sym] = { added: opt.removeSetup, at: nyIso() }; }
-      const body = { message: (opt && opt.removeSetup ? 'Remove ' + sym + ' from 3-SETUPS' : opt && opt.remove ? 'Remove ' + sym + ' from Launches' : (on ? 'Follow ' : 'Stop following ') + sym) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
+      if (opt && opt.removeTrend !== undefined) { doc.removed_trend = doc.removed_trend || {}; doc.removed_trend[sym] = { added: opt.removeTrend, at: nyIso() }; }
+      const body = { message: (opt && opt.removeTrend !== undefined ? 'Remove ' + sym + ' from TREND' : opt && opt.removeSetup ? 'Remove ' + sym + ' from 3-SETUPS' : opt && opt.remove ? 'Remove ' + sym + ' from Launches' : (on ? 'Follow ' : 'Stop following ') + sym) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
       if (sha) body.sha = sha;
       const p = await fetch(url, { method: 'PUT', headers: hd, body: JSON.stringify(body) });
       if (p.ok) return true;
@@ -2388,6 +2401,17 @@ defCalc('industry_perf', {
       if (await savePick(r.symbol, pickedNow().has(r.symbol), { removeSetup: r.added, keepPick: true })) {
         const g = s3Gone(); g[r.symbol] = r.added; try { localStorage.setItem(S3GONE, JSON.stringify(g)); } catch (e) { /* private window */ }
         toast(r.symbol + ' removed from 3-SETUPS: it comes back only when it comes on 1-EP/GAP, 1-UPDAY or 2-POOL again.');
+      }
+    } catch (e) { toast('Not saved: ' + e.message + '.'); }
+    draw();
+  };
+  const removeTrend = async (r, btn) => {
+    btn.disabled = true; btn.textContent = 'Removing…';
+    try {
+      if (await savePick(r.symbol, pickedNow().has(r.symbol), { removeTrend: r.added || '', keepPick: true })) {
+        const g = (() => { try { return JSON.parse(localStorage.getItem(TRGONE) || '{}'); } catch (e) { return {}; } })();
+        g[r.symbol] = r.added || ''; try { localStorage.setItem(TRGONE, JSON.stringify(g)); } catch (e) { /* private window */ }
+        toast(r.symbol + ' removed from TREND on every device: it comes back only when it comes on 1-EP/GAP, 1-UPDAY or 2-POOL again (or launches again).');
       }
     } catch (e) { toast('Not saved: ' + e.message + '.'); }
     draw();
@@ -2575,6 +2599,12 @@ defCalc('industry_perf', {
         fb.title = fol ? 'On your Launches tab: click to stop following it' : 'Follow it on the Launches tab: buy points, breakouts and alerts like a launch';
         fb.addEventListener('click', () => followPick(r.symbol, !fol, fb));
         key.append(fb);
+      }
+      if (S.wl === 'TREND') {
+        const rmT = h('button', 'tgr-lite tgr-follow', '✕'); rmT.type = 'button'; rmT.title = 'Remove ' + r.symbol + ' from TREND (it comes back only when it comes on a feeder list again, or launches again)';
+        rmT.setAttribute('aria-label', rmT.title);
+        rmT.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from TREND?')) removeTrend(r, rmT); });
+        key.append(rmT);
       }
       if (S.wl === '3-SETUPS') {
         const rm = h('button', 'tgr-lite tgr-follow', '✕'); rm.type = 'button'; rm.title = 'Remove ' + r.symbol + ' from 3-SETUPS (it comes back only when it comes on a feeder list again)';
@@ -3198,9 +3228,10 @@ defCalc('industry_perf', {
        there. Nov 4 2026: PCOR, XNCR, RELY, LW, BRZE (PCOR and RELY also launched: those stay on Launches) */
     safe('TREND triggers', () => {
     const sdocT = st('setups').status === 'ok' ? st('setups').data : null, s3sym = new Set((doc.setups3 || []).map((r) => r.symbol));
-    const fol3 = new Set((doc.launches || []).concat(doc.laggards || []).map((r) => r.symbol)), seenT = new Set();
+    const fol3 = new Set((doc.launches || []).concat(doc.laggards || []).map((r) => r.symbol)), seenT = new Set(), goneT = trendGone();
     ['2-POOL', '1-UPDAY', '1-EP/GAP'].forEach((n) => ((sdocT && sdocT.lists && sdocT.lists[n]) || []).forEach((r) => {
       if (seenT.has(r.symbol) || fol3.has(r.symbol) || s3sym.has(r.symbol)) return;
+      if (goneT[r.symbol] !== undefined && (r.added || '') <= goneT[r.symbol]) return;     /* your ✕ on TREND (Nov 7 2026) */
       seenT.add(r.symbol);
       const t = trendLast(r.symbol); if (!t || !TREND_ON.has(t.st)) return;
       if (!r.buy_point || !(r.close < r.buy_point)) return;
@@ -4711,7 +4742,7 @@ defCalc('industry_perf', {
   let CGR = null;     /* the code grades (radar/codegrade.py, test next to Claude's) */
   let PMN = null;     /* the 8:05 / 8:35 news runs (radar/codegrade.py news -> pmnews.json): the News column before 8:45 */
   let CGL = null;     /* the code grader's daily log: its W (laggard watch) names for the W-crossed-the-200 alerts */
-  let GRPS = {}, SRV = null, LNBT = null, REV = null, EARN = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
+  let PICKS = null, GRPS = {}, SRV = null, LNBT = null, REV = null, EARN = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
   const REVOF = (sym) => (REV && REV.rows ? REV.rows[sym] : null);
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
   const nyNow = () => { const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value])); return { wd: p.weekday, m: Number(p.hour) * 60 + Number(p.minute) }; };
@@ -4790,6 +4821,7 @@ defCalc('industry_perf', {
         if (Date.now() - lastMain > 300000) {
           lastMain = Date.now();
           const [st2, ln2] = await Promise.all([getMain('setups/latest.json').catch(() => null), getMain('setups/launch.json').catch(() => null)]);
+          PICKS = await getMain('setups/picks.json').catch(() => PICKS);
           const was = (D.setups && D.setups.data ? D.setups.data.made_at : '') + (D.launch && D.launch.data ? D.launch.data.made_at : '');
           if (st2) D.setups = { status: 'ok', data: st2 };
           if (ln2) D.launch = { status: 'ok', data: ln2 };
@@ -4804,6 +4836,7 @@ defCalc('industry_perf', {
       D.setups = setups ? { status: 'ok', data: setups } : (D.setups && D.setups.status === 'ok' ? D.setups : { status: 'error', data: null });
       lastMain = Date.now();
       const [ln, lnbt] = await Promise.all([getMain('setups/launch.json').catch(() => null), getMain('setups/launch_backtest.json').catch(() => null)]);
+      PICKS = await getMain('setups/picks.json').catch(() => PICKS);
       D.launch = ln ? { status: 'ok', data: ln } : (D.launch && D.launch.status === 'ok' ? D.launch : { status: 'error', data: null });
       if (lnbt) LNBT = lnbt;
       SRV = await getJson(sha, 'alerts.json').catch(() => SRV);

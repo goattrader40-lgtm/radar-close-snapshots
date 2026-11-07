@@ -23,12 +23,33 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Only a TREND removal? (the TREND list is the portal's own; nothing to rebuild)
+        id: gate
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          go = True
+          if os.environ.get("GITHUB_EVENT_NAME") == "push":
+              old = subprocess.run(["git", "show", "HEAD~1:setups/picks.json"], capture_output=True, text=True)
+              try:
+                  a, b = json.loads(old.stdout), json.load(open("setups/picks.json"))
+                  a.pop("removed_trend", None); b.pop("removed_trend", None)
+                  go = a != b
+              except Exception:
+                  go = True
+          print("rebuild" if go else "only a TREND removal: no Launches rebuild")
+          open(os.environ["GITHUB_OUTPUT"], "a").write(f"go={'yes' if go else 'no'}\n")
+          PY
 
       - uses: actions/setup-python@v5
+        if: steps.gate.outputs.go == 'yes'
         with:
           python-version: "3.12"
 
       - name: Rebuild the Launches list with your picks
+        if: steps.gate.outputs.go == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
