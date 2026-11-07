@@ -16,7 +16,7 @@ import sys
 
 TREND_ON = {"Up", "Turn up", "Reclaim", "Resting"}       # the page's TREND list (docs/index.html TREND_ON)
 LOOK = 40                                                # the engine's smaller base, ~2 months (scanner/launch.py)
-SHOW = ("LION",)                                         # their bars in the output, to read the numbers
+SHOW = ("LION", "DUOL", "RHI", "FA", "ELF", "ORKA", "ZETA", "TGTX", "FLS", "QLYS")   # their bars in the output, to read the numbers
 
 
 def rule_level(bars, p, i):
@@ -108,7 +108,7 @@ def main():
         ch = [x for x in rows if x["changes"]]
         out["reads"].append({"read_of": day, "checked": len(rows), "not_a_high": skipped, "changes": len(ch),
                              "rows": sorted(rows, key=lambda x: (not x["changes"], x["list"], x["sym"]))})
-    out["bars"] = {s: B[s][-30:] for s in SHOW if s in B}
+    out["bars"] = {s: B[s][-80:] for s in SHOW if s in B}
     json.dump(out, open(out_p, "w"), indent=1)
     for rd in out["reads"]:
         print(f"read of {rd['read_of']}: {rd['checked']} buy points at a day's high, {rd['changes']} change; {rd['not_a_high']} not a day's high")
