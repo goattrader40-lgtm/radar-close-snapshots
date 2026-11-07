@@ -1052,8 +1052,11 @@ def follow(a, i0, i, pick=False):
     flag_bo = flag_day == i
     # tomorrow's base tops (the smaller and the larger base): buy points when above today's close
     tops = [b for b in (base_ok(a, i + 1, sp) for sp in L["base_spans"]) if b and c[i] < b[0]]
-    if len(tops) == 2 and max(tops)[0] <= min(tops)[0] * (1 + 0.5 * _adr(st, i) / 100):
+    if len(tops) == 2 and max(tops)[0] <= min(tops)[0] * (1 + 0.5 * _adr(st, i) / 100) \
+            and not (L["intact_top"] and abs(tops[0][1] - tops[1][1]) > 21):
         tops = [max(tops)]          # two highs within half an ADR are one level, the higher (CAI Oct 2026: 32.77 / 32.89)
+    # with the intact top, only highs of the same base (a month apart at most): LION Nov 5 2026, its Oct 20 12.88 is the
+    # base's top, the Aug 11 13.10 the bigger base's, above it
     # the buy point = the nearest trigger above today's close: your MSF pattern's pivot, the flag's trendline or
     # the base top (RPD Oct 23 2026 had closed just over its MSF pivot of 14.80; the base top trigger 15.02 is what
     # Oct 26 broke on 3.3x volume)
