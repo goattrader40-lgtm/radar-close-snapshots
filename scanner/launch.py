@@ -726,21 +726,36 @@ def base_top(a, j, span=120):
     return h[k], j - k
 
 
+def pokes(a):
+    """the days that went over the stock's highest high of the month before (its last 21 sessions, leaving out the
+    pokes) and closed back under it: a poke, not a new top (your rule, Nov 7 2026, LION: Oct 20's 12.88 stands; Oct 22's
+    12.98, Oct 29's 13.17, Oct 30, Nov 4 and Nov 5 went over it and closed under: pokes; a 13-day base, broken out Nov
+    6. ELF: Oct 15's 116.20; Oct 16's 118.29 and Nov 4-6 closed under it). A day that closes over that high is a new
+    high, its own high the top (DUOL Nov 4 2026: closed 161.27 over its 1-month high 153.56, its 175.56 is the top, not
+    the Sep 1 162.51; RHI Oct 23: 47.14, closed 45.87 over its 1-month high 38.79). Computed once per stock"""
+    p = getattr(a, "_pokes", None)
+    if p is None:
+        h, c = a.st.h, a.st.c
+        p = np.zeros(h.size, dtype=bool)
+        for k in range(1, h.size):
+            w = h[max(0, k - 21):k][~p[max(0, k - 21):k]]
+            if not w.size or h[k] <= w.max():
+                continue
+            # a close within 0.5% over it isn't over it yet (a breakout with caution, the engine's rule: ATRC Oct 27
+            # 2026 closed 61.51 over 61.48, CAI Oct 26 32.46 over 32.36; both broke out 2 days later)
+            if c[k] <= w.max() * (1 + L["caution_pct"] / 100):
+                p[k] = True
+        a._pokes = p
+    return p
+
+
 def intact_top(a, lo, hi):
-    """the index of the base top in sessions lo .. hi-1 (your rule, Nov 7 2026, LION): the high no day has closed above
-    since. A day that went over it and closed back under it is a poke, not the top (LION: Oct 20's 12.88; Oct 22's
-    12.98, Oct 29's 13.17, Oct 30, Nov 4 and Nov 5 went over and closed under: a 13-day base, broken out Nov 6; ELF:
-    Oct 15's 116.20, Oct 16's 118.29 and Nov 4-6 closed under it). A close over the top is a new high, and so is a close
-    over the 1-month high (out of the smaller base) on a day that went over an older top and closed under it (DUOL Nov
-    4 2026: closed 161.27 over its 1-month high 153.56, its new high 175.56 is the top, not the Sep 1 162.51; RHI Oct
-    23: 47.14 over the Sep 1 46.02, closed 45.87 over its 1-month high 38.79). A bull flag inside the base is its own
-    trigger and changes nothing here (it closes under the top)"""
-    h, c = a.st.h, a.st.c
-    t = lo
-    for k in range(lo + 1, hi):
-        if h[k] > h[t] and c[k] > min(h[t], h[max(0, k - 21):k].max()):
-            t = k
-    return t
+    """the index of the base top in sessions lo .. hi-1: the highest high that isn't a poke (pokes())"""
+    idx = np.arange(max(0, lo), hi)
+    idx = idx[~pokes(a)[idx]]
+    if not idx.size:
+        return max(0, lo) + int(np.argmax(a.st.h[max(0, lo):hi]))
+    return int(idx[int(np.argmax(a.st.h[idx]))])
 
 
 def _adr(st, k):
@@ -793,7 +808,8 @@ def top_tries(a, i, top, lo):
     h, l = st.h, st.l
     # the base of this top starts after any clearly higher high (VEEV Oct 2026: its Aug 27 high 296.24 is the bigger
     # base's, not a try of the 291.40 top)
-    over = [k for k in range(lo, i + 1) if h[k] > top * (1 + 0.25 * _adr(st, k) / 100)]
+    pk = pokes(a) if L["intact_top"] else np.zeros(h.size, dtype=bool)     # a poke over it is no higher high
+    over = [k for k in range(lo, i + 1) if h[k] > top * (1 + 0.25 * _adr(st, k) / 100) and not pk[k]]
     lo = over[-1] + 1 if over else lo
     tries = []
     for k in range(lo, i + 1):
@@ -828,7 +844,7 @@ def base_breakout(a, j, used=()):
         # inside a bigger base (a higher high in the last 3 months, 20+ sessions old) it has to be decisive, on 1x+ volume
         # (APPN Oct 9 2026 over its 1-month high 39.67, under the Aug 31 high 44.06: 0.2 ADR on 0.9x, no; VEEV Oct 9
         # over 291.40, under its Aug 27 high 296.24: 0.5 ADR on 1.2x)
-        m = j - 63 + int(np.argmax(st.h[j - 63:j])) if j >= 63 else None
+        m = (intact_top(a, j - 63, j) if L["intact_top"] else j - 63 + int(np.argmax(st.h[j - 63:j]))) if j >= 63 else None
         inside = m is not None and st.h[m] > top * 1.001 and j - m >= L["inner_big"]
         if inside and not (c[j] > top * (1 + 0.5 * _adr(st, j) / 100) and a.rv[j] >= 1):
             continue
