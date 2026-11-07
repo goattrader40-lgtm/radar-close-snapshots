@@ -567,6 +567,7 @@
       <div class="tgr-cardhead">
         <h2 id="g-list-h">Today's gainers</h2>
         <button class="tgr-pill" id="g-clear" hidden></button>
+        <button class="tgr-lite" id="g-dl" type="button" title="Saves the rows on screen (your filters, the theme or industry you picked, your sort) as a file for TradingView: Watchlist menu → Import list">Download for TradingView</button>
       </div>
       <p class="tgr-note" id="g-list-note">Sorted by today's gain. Rel vol = volume from 9:30 to now ÷ the 20-day average volume from 9:30 to the same time (after the close: full day ÷ 20-day average). $ vol = average daily price × volume. vs 200D = price vs its 200-day SMA; vs 50 EMA = price vs its 50-day EMA. Index shows S&amp;P 500 and Nasdaq-100 membership.</p>
       <div class="tgr-scroll tall">
@@ -2083,6 +2084,7 @@ defCalc('industry_perf', {
     const clr = $('#g-clear'); clr.hidden = !S.gsel; clr.textContent = S.gsel ? S.gsel.name + '  ×' : '';
     $('#g-list-h').textContent = (S.gsel ? 'Today’s ' + word.toLowerCase() + ' · ' + S.gsel.name : 'Today’s ' + word.toLowerCase()) + (rows.length > LIST_MAX ? ' (first ' + LIST_MAX + ' of ' + rows.length + ')' : '');
     sortStocks(rows, 'g-table', { key: 'chg_1d', dir: down ? 1 : -1 });
+    S.gShown = { name: word + (S.gsel ? ' ' + S.gsel.name : ''), rows: rows.slice(0, LIST_MAX) };   /* for Download for TradingView */
     rows.slice(0, LIST_MAX).forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'trend', 'rel_vol', 'price', 'adr_20', 'dvol', 'vs_200', 'vs_50e', 'mcap_b', 'avg_vol_30d', 'chg_1w', 'chg_1m', 'chg_3m', 'ind', 'themes', 'index'], symMap)));
   };
 
@@ -2701,6 +2703,19 @@ defCalc('industry_perf', {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob(['###' + name + '\n' + syms.join('\n') + '\n'], { type: 'text/plain' }));
     a.download = name + ' ' + todayNY() + '.txt';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  /* Gainers / Losers as a TradingView import file (the user, Nov 7 2026: "I need Download for TradingView here as well"):
+     the rows on screen in their order (a column you added and sorted on included), one ###Gainers (or ###Losers) section */
+  $('#g-dl').addEventListener('click', () => {
+    const G = S.gShown || { rows: [] }, tvOf = new Map(G.rows.map((r) => [r.symbol, r.tv_symbol || r.symbol]));
+    const syms = [...new Set([...$('#g-table tbody').children].filter((tr) => tr._sym && tvOf.has(tr._sym) && !tr.classList.contains('xf-off')).map((tr) => tvOf.get(tr._sym)))];
+    if (!syms.length) { toast('No rows to save.'); return; }
+    const name = G.name || 'Gainers';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['###' + name + '\n' + syms.join('\n') + '\n'], { type: 'text/plain' }));
+    a.download = name.replace(/[\\/:*?"<>|]+/g, '-') + ' ' + todayNY() + '.txt';
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
