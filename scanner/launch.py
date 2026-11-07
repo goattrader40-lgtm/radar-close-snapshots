@@ -737,6 +737,7 @@ def pokes(a):
     if p is None:
         h, c = a.st.h, a.st.c
         p = np.zeros(h.size, dtype=bool)
+        lv = np.full(h.size, np.nan)                # a new high: the level it broke (the month's high before it)
         for k in range(1, h.size):
             w = h[max(0, k - 21):k][~p[max(0, k - 21):k]]
             if not w.size or h[k] <= w.max():
@@ -745,17 +746,31 @@ def pokes(a):
             # 2026 closed 61.51 over 61.48, CAI Oct 26 32.46 over 32.36; both broke out 2 days later)
             if c[k] <= w.max() * (1 + L["caution_pct"] / 100):
                 p[k] = True
-        a._pokes = p
+            else:
+                lv[k] = w.max()
+        a._pokes, a._broke = p, lv
     return p
 
 
 def intact_top(a, lo, hi):
-    """the index of the base top in sessions lo .. hi-1: the highest high that isn't a poke (pokes())"""
+    """the index of the base top in sessions lo .. hi-1: the highest high that isn't a poke (pokes()). A new high of
+    the last 3 sessions whose breakout came back under the level it broke without advancing (1.25 ADRs) isn't the top
+    yet: the base stays valid (your rule, AEHR Feb 12 2026: back under 30.91, the top stays 31.84 until Feb 17; ACN
+    Nov 3 2026: Nov 2 closed over 259.39, Nov 3 back under it, the buy point stays 259.39)"""
+    st, c = a.st, a.st.c
+    p = pokes(a)
     idx = np.arange(max(0, lo), hi)
-    idx = idx[~pokes(a)[idx]]
-    if not idx.size:
-        return max(0, lo) + int(np.argmax(a.st.h[max(0, lo):hi]))
-    return int(idx[int(np.argmax(a.st.h[idx]))])
+    idx = idx[~p[idx]]
+    while idx.size:
+        t = int(idx[int(np.argmax(st.h[idx]))])
+        lvl = a._broke[t]
+        if t >= hi - 3 and lvl == lvl:
+            back = np.nonzero(c[t + 1:hi] < lvl)[0]
+            if back.size and c[t:t + 1 + back[0]].max() < lvl * (1 + 1.25 * _adr(st, t) / 100):
+                idx = idx[idx != t]
+                continue
+        return t
+    return max(0, lo) + int(np.argmax(st.h[max(0, lo):hi]))
 
 
 def _adr(st, k):
@@ -850,7 +865,10 @@ def base_breakout(a, j, used=()):
         inside = m is not None and st.h[m] > top * 1.001 and j - m >= L["inner_big"]
         if inside and not (c[j] > top * (1 + 0.5 * _adr(st, j) / 100) and a.rv[j] >= 1):
             continue
-        if (c[j] > dec and max(c[j - 3:j]) <= dec
+        # with the intact top, a close within 0.5% over it in the 3 days before (a breakout with caution that didn't
+        # follow through) doesn't make the breakout stale (ELF Oct 12 2026 closed 109.94 over 109.62, Oct 15 116.11)
+        fresh = top * (1 + L["caution_pct"] / 100) if L["intact_top"] else dec
+        if (c[j] > dec and max(c[j - 3:j]) <= fresh
                 and st.h[j - 3:j].max() < top * (1 + _adr(st, j - 1) / 100)):
             return b
     return inner_breakout(a, j, used)
@@ -1015,13 +1033,17 @@ def follow(a, i0, i, pick=False):
             if leg == 0 or j - last_leg >= L["leg_pause"]:
                 leg = 1 if j - last_new >= L["rest_days"] else leg + 1
                 last_leg, armed, thru_day = j, False, j
+            used.add(weak_bo[2])                          # followed through: that top is used now
             weak_bo = None
         if flag_go:                                       # an entry in the base: the leg and its level stay
             flag_day, fline, ftop, fshape = j, f[2], f[0], f[4]
             used_flags.add(f[0])
         if b:
             nbo += 1
-            used.add(b[1])                                # each base top gives at most one breakout
+            # each base top gives at most one breakout; with the intact top a breakout with caution doesn't use it up, a
+            # decisive close over it later is the breakout (ELF Oct 12 2026 0.29% over 109.62, Oct 15 closed 116.11)
+            if not (L["intact_top"] and c[j] <= b[0] * (1 + L["caution_pct"] / 100)):
+                used.add(b[1])
             inner_day = j if len(b) > 2 else inner_day
             b = b[:2]
             bo, lvl = (j, b[0], b[1]), b[0]
@@ -1032,7 +1054,7 @@ def follow(a, i0, i, pick=False):
             weak = bool(c[j] <= b[0] * (1 + L["caution_pct"] / 100))
             # its follow-through starts the leg (a leg runs from a breakout through the run and the pullback until the
             # next breakout: GMAB 2026 Aug 14 over the launch day's high, Oct 5 out of the 34.7 range, Oct 23)
-            weak_bo = (j, b[0]) if weak else None
+            weak_bo = (j, b[0], b[1]) if weak else None
             if not weak and (leg == 0 or j - last_leg >= L["leg_pause"]):  # breakouts a few days apart (Oct 22 / Oct 23) are one leg
                 # after a rest of 40+ sessions without a new high, the breakout starts a new run: leg 1 again
                 leg = 1 if j - last_new >= L["rest_days"] else leg + 1
