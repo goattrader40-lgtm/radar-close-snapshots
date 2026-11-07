@@ -652,7 +652,7 @@
         <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
       </div>
       <details class="tgr-legend tgr-more" data-key="pmlive"><summary>About this scanner</summary>
-      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. vs 200D and vs 50 EMA = the latest pre-market price vs the 200-day SMA and 50-day EMA as of yesterday's close. vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day. News = why it gaps, for every stock gapping 5%+ up or down, whether or not it passes the graded list's rules: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's <span class="tgr-lbl">(code)</span> from the SEC filings since the last close, the Earnings tab and, when the SEC has nothing, the stock's own headline <span class="tgr-lbl">(headline)</span>: Benzinga's feed through Alpaca, company press releases included (FLY Nov 6, 2026: "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile", 7:31 AM) (from about 8:05 AM ET: news runs at about 8:05 and 8:35, then the code grader at about 8:52, 9:05 and 9:18; hover for the whole reason, 📰 opens the source). <span class="tgr-gm">Sector move: group</span> = no news of its own (no filing, no event headline) while 3+ stocks of its theme or industry gap 5%+ the same way (the biggest names and those with their own news named; MU Nov 6, 2026: Memory &amp; Storage). News only: the stocks the list's rules drop get no grade.</p>
+      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. vs 200D and vs 50 EMA = the latest pre-market price vs the 200-day SMA and 50-day EMA as of yesterday's close. vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day. News = why it gaps, for every stock gapping 5%+ up or down, whether or not it passes the graded list's rules: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's <span class="tgr-lbl">(code)</span> from the SEC filings since the last close, the Earnings tab and, when the SEC has nothing, the stock's own headline <span class="tgr-lbl">(headline)</span>: Benzinga's feed through Alpaca, company press releases included (FLY Nov 6, 2026: "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile", 7:31 AM) (from about 8:05 AM ET: news runs at about 8:05 and 8:35, then the code grader at about 8:52, 9:05 and 9:18; hover for the whole reason, 📰 opens the source). <span class="tgr-gm">Sector move: group</span> = no news of its own (no filing, no event headline) while 3+ stocks of its theme or industry gap 5%+ the same way (the biggest names and those with their own news named; MU Nov 6, 2026: Memory &amp; Storage). News only: the stocks the list's rules drop get no grade. <strong>+ Filter</strong> (under the boxes) adds any other criterion, as on the Watchlist, Launches and Gainers: this table's columns (Pre-mkt vol and Vol in K) or anything else (RS, Trend, Group rank, Themes, Earnings date, Launch grade, Watchlist list …); one set for gap ups and one for gap downs, kept in this browser; Reset to my defaults removes them.</p>
       </details>
       <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
       <div class="tgr-scroll tall">
@@ -1785,7 +1785,7 @@ defCalc('industry_perf', {
   /* RS and Trend filters (the user, Nov 4 2026): one set for the Watchlist (all five lists), one for Launches and Launch
      laggards; kept in this browser. RS = at least that rank; Trend = any of the ticked ones ("—" = no trend label). */
   const TR_OPTS = ['Up', 'Turn up', 'Reclaim', 'Resting', 'Negative', '—'], FKEY = 'radar-filters';
-  const FLT = (() => { const d = () => ({ rs: 0, tr: [], gt: '', x: [] }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); const r = { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln), g: Object.assign(d(), o.g) }; Object.values(r).forEach((f) => { if (!Array.isArray(f.x)) f.x = []; }); return r; } catch (e) { return { wl: d(), ln: d(), g: d() }; } })();   /* x = your own filters (+ Filter) */
+  const FLT = (() => { const d = () => ({ rs: 0, tr: [], gt: '', x: [] }); try { const o = JSON.parse(localStorage.getItem(FKEY) || '{}'); const r = { wl: Object.assign(d(), o.wl), ln: Object.assign(d(), o.ln), g: Object.assign(d(), o.g), pmu: Object.assign(d(), o.pmu), pmd: Object.assign(d(), o.pmd) }; Object.values(r).forEach((f) => { if (!Array.isArray(f.x)) f.x = []; }); return r; } catch (e) { return { wl: d(), ln: d(), g: d(), pmu: d(), pmd: d() }; } })();   /* x = your own filters (+ Filter); pmu / pmd = the pre-market scanner's gap ups / gap downs */
   const saveFlt = () => { try { localStorage.setItem(FKEY, JSON.stringify(FLT)); } catch (e) { /* private window: not kept */ } };
   const trLabel = (sym) => { const x = trendOf(sym); return x && x.st ? x.st : '—'; };
   /* the group rank filter (Watchlist only, the user Nov 4 2026): '' all, 'top' = ★ Top only, 'ts' = Top or Strong (the stock's best group, as in the Group rank column) */
@@ -2230,8 +2230,12 @@ defCalc('industry_perf', {
         (PML.vol_asof ? ' · pre-mkt volume to ' + PML.vol_asof : '') +
         (PML.date === today ? '' : ' · runs 7:00–9:29 AM ET on trading days');
     }
-    const rows = pmRows().filter((r) => pmPass(r, PMF));
+    const xk = PMF.dir === 'down' ? 'pmd' : 'pmu';
+    const rows = pmRows().filter((r) => pmPass(r, PMF) && pmXOk(FLT[xk].x, r));
     $('#pml-count').textContent = PML ? String(rows.length) : '—';
+    /* + Filter: the set of the direction on screen; the count next to the chips */
+    ['pmu', 'pmd'].forEach((k) => { if (XBOX[k] && XBOX[k].parentElement) XBOX[k].parentElement.hidden = k !== xk; });
+    { const cnt = XBOX[xk] && XBOX[xk].querySelector('.xf-cnt'); if (cnt) cnt.textContent = (FLT[xk].x || []).some(xfOn) ? '→ ' + rows.length + ' shown' : ''; }
     $('#pml-h').textContent = 'Pre-market scanner · ' + (PMF.dir === 'down' ? 'gap downs' : 'gap ups');
     const spec = S.sort['pml-table'] || { key: 'pm_vol', dir: -1 };
     const txt = ['symbol', 'themes', 'news_cat'].includes(spec.key);
@@ -4611,15 +4615,25 @@ defCalc('industry_perf', {
   const xfText = (list) => (list || []).filter((f) => !f.col && xfOn(f) && CAT.has(f.id)).map(xfDesc);
   /* the table's own columns (f.col): Gainers from the stock's row (so the counts and the theme / industry tables follow),
      the Watchlist and Launches from what the cell shows */
-  const XF_TBL = { wl: 'wl-table', ln: 'ln-table', g: 'g-table' };
+  const XF_TBL = { wl: 'wl-table', ln: 'ln-table', g: 'g-table', pmu: 'pml-table', pmd: 'pml-table' };
   const G_TEXT = new Set(['name', 'ind', 'themes', 'index']);
   const gField = (col, r) => (col === 'dvol' ? r[dvKey()] : col === 'ind' ? r[S.level] : r[col]);
   const xcRow = (list, r) => (list || []).every((f) => { if (!f.col || !xfOn(f)) return true; const v = gField(f.col, r); return f.t === 'text' ? txtOk(v, f) : numOk(num(v), f); });
+  /* the pre-market scanner (the user, Nov 7 2026: "add something so I can add other filters here too, as I have on other
+     parts of the portal"): + Filter with one set for gap ups and one for gap downs. Its own columns filter on the row's
+     value as the cell shows it (volumes in K, like the Pre-mkt vol box; News on its catalyst and reason), every other
+     criterion by ticker from the catalog. The filtered stocks are left out before the list is cut, so the count, the
+     group gaps and the rows all follow */
+  const XF_DATA = new Set(['g', 'pmu', 'pmd']);
+  const PM_TEXT = new Set(['news_cat', 'themes']), PM_K = new Set(['pm_vol', 'volume']);
+  const pmField = (col, r) => (col === 'news_cat' ? (r.news ? (r.news.cat || '') + ' ' + (r.news.why || '') : '')
+    : PM_K.has(col) ? (num(r[col]) === null ? null : num(r[col]) / 1000) : r[col]);
+  const pmXOk = (list, r) => xfOk(list, r.symbol) && (list || []).every((f) => { if (!f.col || !xfOn(f)) return true; const v = pmField(f.col, r); return f.t === 'text' ? txtOk(v, f) : numOk(num(v), f); });
   const NUM_RE = /^(?:day\s+)?[+\-−]?\$?\d[\d,]*(?:\.\d+)?\s*(?:%|×|x|d)?$/i;
   const cellNum = (t) => { const m = /[+\-−]?\d[\d,]*(?:\.\d+)?/.exec(String(t)); return m ? Number(m[0].replace('−', '-').replace(/,/g, '')) : null; };
   const XHID = {};
   const xcApply = (t) => {
-    const k = Object.keys(XF_TBL).find((x) => XF_TBL[x] === t.id); if (!k || k === 'g') return;
+    const k = Object.keys(XF_TBL).find((x) => XF_TBL[x] === t.id); if (!k || XF_DATA.has(k)) return;
     const list = (FLT[k].x || []).filter((f) => f.col && xfOn(f));
     const tb = t.querySelector('tbody'), rows = [...tb.children].filter((tr) => tr._sym), hid = new Set();
     rows.forEach((tr) => {
@@ -4697,8 +4711,10 @@ defCalc('industry_perf', {
         if (XF_COLCAT[key]) return { name: colName(t, key), add: { id: XF_COLCAT[key], op: '>=', v: null }, kind: 'cat' };
         let kind = 'num';
         if (k === 'g') kind = G_TEXT.has(key) ? 'text' : 'num';
+        else if (k === 'pmu' || k === 'pmd') kind = PM_TEXT.has(key) ? 'text' : 'num';
         else { const tx = [...t.querySelectorAll('tbody tr')].filter((tr) => tr._sym).map((tr) => { const td = [...tr.children].find((c) => c._ck === key); return td ? td.textContent.trim() : ''; }).filter((x) => x && x !== '—'); kind = tx.length && tx.filter((x) => NUM_RE.test(x)).length >= tx.length * 0.7 ? 'num' : 'text'; }
-        return { name: colName(t, key).replace(/\s+/g, ' '), add: { col: key, name: colName(t, key).replace(/\s+/g, ' '), t: kind, op: kind === 'text' ? 'has' : '>=', v: null }, kind };
+        const nm = colName(t, key).replace(/\s+/g, ' ') + ((k === 'pmu' || k === 'pmd') && PM_K.has(key) ? ', K' : '');   /* pre-market volumes in thousands, like the Pre-mkt vol box */
+        return { name: nm, add: { col: key, name: nm, t: kind, op: kind === 'text' ? 'has' : '>=', v: null }, kind };
       });
     };
     const same = (a, b) => (a.col ? a.col === b.col : !b.col && a.id === b.id);
@@ -4736,6 +4752,8 @@ defCalc('industry_perf', {
   document.querySelectorAll('.tgr-flt[data-f]').forEach((box) => { const k = box.dataset.f; if (FLT[k]) xfRender[k] = xfBox(k, box); });
   { const gf = $('#g-filters'); if (gf) { const sp = h('span', 'tgr-flt'); sp.style.flexBasis = '100%'; gf.append(sp); xfRender.g = xfBox('g', sp); } }
   $('#g-reset').addEventListener('click', () => { FLT.g.x = []; saveFlt(); if (xfRender.g) xfRender.g(); draw(); });   /* Reset to my defaults also clears your added Gainers filters */
+  { const pf = $('#pml-filters'); if (pf) ['pmu', 'pmd'].forEach((k) => { const sp = h('span', 'tgr-flt'); sp.style.flexBasis = '100%'; sp.hidden = k !== (PMF.dir === 'down' ? 'pmd' : 'pmu'); pf.append(sp); xfRender[k] = xfBox(k, sp); }); }
+  $('#pml-reset').addEventListener('click', () => { FLT.pmu.x = []; FLT.pmd.x = []; saveFlt(); ['pmu', 'pmd'].forEach((k) => xfRender[k] && xfRender[k]()); draw(); });   /* and your added pre-market filters, both sets (the user, Nov 7 2026) */
 
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
