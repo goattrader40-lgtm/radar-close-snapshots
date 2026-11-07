@@ -1692,10 +1692,9 @@ defCalc('industry_perf', {
   };
   /* the box lines: one per stock still true, and per tab one for the stocks with nothing left; each filed under the tab
      its triggers were (the 4th item) */
-  const eodLines = (ev) => ev.held.map((x) => [x.sym + ':eodheld',
-    (x.hc ? '★★★ ' : '') + x.sym + ' ✓ HELD: ' + [...new Set(x.parts.filter((p) => p.ok).map((p) => EOD_NAME[p.kind] || p.kind))].join(' + ') + ' (after the close)',
-    'Closed ' + fPrice(x.close) + ' · ' + x.parts.filter((p) => p.ok).map((p) => '✓ ' + p.txt).concat(x.parts.filter((p) => !p.ok).map((p) => '✗ ' + p.txt)).join(' · ')
-      + (x.hc ? ' · ★★★ ' + (x.r.group_tier_now === 'Top' ? '★ Top' : 'Strong') + ' group, RS ' + x.r.rs_now + ', Trend Up' : ''), x.tab])
+  /* the end-of-day report: only what didn't hold (the user, Nov 7 2026: the boxes already show what held at the close, so
+     no ✓ HELD lines; one "✗ Didn't hold" line per tab, with each stock's close and the rule it missed) */
+  const eodLines = (ev) => []
     .concat([['L', 'Launches'], ['W', 'Watchlist']].map(([tb, nm]) => {
       const ls = ev.lost.filter((x) => (x.tab || 'L') === tb);
       return ls.length ? ['eod:eodlost' + tb, '✗ Didn\'t hold at the close: ' + ls.length + ' ' + nm + ' stocks (after the close)',
@@ -3568,7 +3567,7 @@ defCalc('industry_perf', {
         if ((ev.held.length || ev.lost.length) && !sent.has(kEod)) {
           sent.add(kEod);
           const held = ev.held.map((x) => (x.hc ? '★★★ ' : '') + x.sym), lost = ev.lost.map((x) => x.sym), n = held.length + lost.length;
-          notify('End of day: ' + held.length + ' of ' + n + ' triggered stocks still true', (held.length ? 'Still true: ' + held.join(', ') : 'None still true') + (lost.length ? ' · didn\'t hold: ' + lost.join(', ') : ''), null, 'summary:eod', 'End of day. ' + (held.length ? 'Still true: ' + held.slice(0, 4).join(', ') : 'None still true'));
+          notify('End of day: ' + lost.length + ' of ' + n + ' triggered stocks didn\'t hold', (lost.length ? 'Didn\'t hold: ' + lost.join(', ') : 'All held') + ' · the ones that held are in their boxes', null, 'summary:eod', 'End of day. ' + (lost.length ? lost.length + ' didn\'t hold' : 'All held'));
         }
       });
       /* a W name that closed over its 200 SMA today (the first close over since it was under) */
