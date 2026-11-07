@@ -45,6 +45,45 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status at the end of the session "Radar: TradingView import replaces my list (Nov 7)" (Sat Nov 7 2026)
+
+- **Live (each after the user's "go live")**:
+  1. **Pre-market scanner + Filter** (test/pmfilter): the Watchlist's + Filter under the scanner's boxes, one set for gap
+     ups (FLT.pmu) and one for gap downs (FLT.pmd), kept in the browser (radar-filters); the table's own columns filter
+     on the row's value as the cell shows it (Pre-mkt vol and Vol in K, News on catalyst + reason), any other criterion
+     from the column catalog by ticker; filtered before LIST_MAX, so the count and the group gaps follow. Reset to my
+     defaults also clears both sets. No RS / Trend dropdowns there (only + Filter, as agreed).
+  2. **Download for TradingView on Today's gainers / losers** (test/gdl): the rows on screen in their DOM order, one
+     ###Gainers (or ###Losers, or with the picked theme / industry) section, file "Gainers 2026-11-07.txt".
+  3. **Earnings tab: RS, Trend and + Filter** for both tables (FLT.er; the counts follow) and **Download for TradingView**
+     (a section per table, file "Earnings week|reactions|day 2|day 3 [reported|upcoming] DATE.txt") (test/erfilter).
+     EPS / Revenue filter on the surprise %, Guidance on its word (raised, lowered ...).
+  4. **Watchlist: "Section" reads "Added" on 1-UPDAY and 1-EP/GAP** (test/wladded): the label only (header select,
+     top-bar picker); the data and the TradingView file keep one ###section per added date. The far-right Added column
+     is unchanged (the user: "just change the name").
+  5. **Graded gappers: your rules in boxes** (test/pmrules, the user's "option 2"): Mkt cap, Avg vol 20D, $ vol 20D,
+     ADR, 52W low, "Gap-ups above the 50 EMA"; Save writes **premarket/rules.json** on main with the GitHub key (like
+     Follow). radar/premarket_build.py prepare reads it (load_rules: ranges mcap 0.1-50 B, avg vol 50-10,000 K, $ vol
+     1-1,000 M, ADR 0-20, 52W low 0-200; out of range or unreadable = the default, listed as rules_ignored in its JSON
+     line), so Claude's 8:45 task and the code grader (codegrade.yml) always use the same rules; the 8:45 task's prompt
+     is unchanged. No file saved yet = the old defaults; output checked byte-identical on Nov 6's scan. The page shows
+     the saved rules in the rule line (now all 6, incl. the 52-week low and the 50 EMA), refuses odd values, previews the
+     boxes on the latest live scan (counts, "about") and warns when Claude's top 8 up / 4 down would change (Nov 6 9:25
+     with the 50 EMA rule off: 85 gap-ups pass and MU, SNDK, AMD, TSM, INTC, MRVL, NBIS, BE take all 8 slots; FROG,
+     VCEL, both A, lose Claude's grade). Not changed: the gap 5% (it also gates the news for every gapper), the 8 / 4
+     counts, codegrade.py's own eligibility rules (30% over the 52-week low, ADR 3.5%, over the 50 EMA, 21-day high).
+     Rules workbook P1 updated.
+- **Answered, no change**: TradingView "Import list" names the list after the file, so 3-SETUPS.txt replaces the user's
+  own 3-SETUPS list (rename the file before importing; the user: "nothing needed"). 3-SETUPS is fed only by 1-EP/GAP,
+  1-UPDAY, 2-POOL (not TREND, not Launches). 2-POOL: 50 EMA reclaim / 2-closes-under deletes daily, Momentum + the 200
+  SMA / liquidity deletes on Friday's weekly refresh. RUN / ENPH / SEDG never on 1-UPDAY (RUN Nov 5 +12.3% on 3x volume
+  closed $9.87 < $10; ENPH / SEDG under the 50 EMA and under 30% over the 52-week low). Graded gappers table: Show all
+  = every stock of the 8:47 file with Claude's and the code grade (the user: both columns are intended); a stock that
+  passes only after 8:47 (Nov 6: JHX code B, DOCS, EXTR, ABSI) isn't in it.
+- **Test branches**: none waiting (test/pmfilter, gdl, erfilter, wladded, pmrules merged).
+- **First things to check Monday Nov 9**: the 8:45 task's prepare line prints "rules" (defaults unless the user saved);
+  if the user saved rules over the weekend, premarket/rules.json on main and the code grader's 8:52 run use them.
+
 ## One pullback heads-up; ✕ on the TREND list (LIVE Nov 6 2026 ~8 PM ET, the user's "go live"; branch test/wlfix)
 
 - The user (Nov 6 evening): MANE at 9:35 got "at its 21 EMA in the base" and "pulling back to its breakout level" as two
