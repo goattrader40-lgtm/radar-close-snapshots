@@ -754,7 +754,7 @@
       </div>
       <div class="tgr-bar">
         <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button><button data-v="TREND" aria-pressed="false" title="Every name on the four lists and on Launches in a trend now: Up, Turn up, Reclaim or Resting (live in the session)">TREND</button></span>
-        <label class="tgr-f"><span class="tgr-lbl">Section</span> <select class="tgr-search" id="wl-sec" aria-label="Section"></select></label>
+        <label class="tgr-f"><span class="tgr-lbl" id="wl-sec-lbl">Section</span> <select class="tgr-search" id="wl-sec" aria-label="Section"></select></label>
         <input class="tgr-search" id="wl-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
         <span class="tgr-flt" data-f="wl"></span>
         <button class="tgr-lite" id="wl-dl" type="button">Download for TradingView</button>
@@ -2551,7 +2551,11 @@ defCalc('industry_perf', {
     const rules = wlRules(S.wl, doc && doc.settings), rbox = $('#wl-rules');
     $('#wl-rules-sum').textContent = 'The rules of ' + S.wl;
     rbox.replaceChildren(...(rules || []).map(([k, v]) => { const p = h('div', ''); p.append(h('strong', '', k), document.createTextNode(v)); return p; }));
-    /* section picker */
+    /* section picker; on 1-UPDAY and 1-EP/GAP the section is the day the stock came on the list, so it reads "Added"
+       (the user, Nov 7 2026: "the name Section is just not correct naming"); the files for TradingView keep one
+       ###section per added day */
+    const secWord = S.wl.startsWith('1-') ? 'Added' : 'Section';
+    $('#wl-sec-lbl').textContent = secWord; $('#wl-sec').setAttribute('aria-label', secWord);
     const secs = wlSecs(S.wl, all);
     if (S.wlsec && !secs.includes(S.wlsec)) S.wlsec = '';
     const sel = $('#wl-sec');
@@ -2563,10 +2567,10 @@ defCalc('industry_perf', {
       sel.dataset.opts = S.wl + '\n' + want;
     }
     sel.value = S.wlsec;
-    const thSel = $('#wl-sec-th');
+    const thSel = $('#wl-sec-th'); thSel.setAttribute('aria-label', 'Show one ' + (secWord === 'Added' ? 'added day' : 'section'));
     if (thSel.dataset.opts !== sel.dataset.opts) {
       thSel.replaceChildren();
-      const o = h('option', '', 'Section: all (' + all.length + ')'); o.value = ''; thSel.append(o);
+      const o = h('option', '', secWord + ': all (' + all.length + ')'); o.value = ''; thSel.append(o);
       secs.forEach((x) => { const op = h('option', '', secName(S.wl, x) + ' (' + all.filter((r) => (r.section || '') === x).length + ')'); op.value = x; thSel.append(op); });
       thSel.dataset.opts = sel.dataset.opts;
     }
