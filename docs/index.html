@@ -1039,6 +1039,7 @@
       <span class="tgr-seg" data-k="ershow" aria-label="Which reports"><button data-v="all" aria-pressed="true">All</button><button data-v="rep" aria-pressed="false">Reported</button><button data-v="up" aria-pressed="false">Upcoming</button></span>
       <label class="tgr-f">Find <input class="tgr-num" id="er-q" type="search" style="width:6rem" placeholder="ticker" aria-label="Find a ticker"></label>
       <span class="tgr-flt" data-f="er"></span>
+      <button class="tgr-lite" id="er-dl" type="button" title="Saves the stocks on screen (the days you picked, Reported / Upcoming, Find and your filters, in the tables' order) as a file for TradingView: Watchlist menu → Import list">Download for TradingView</button>
     </div>
     <div class="tgr-card" id="er-up-card">
       <div class="tgr-cardhead"><h2>Over the 200-day SMA <span class="tgr-lbl" id="er-up-n"></span></h2></div>
@@ -4272,6 +4273,20 @@ defCalc('industry_perf', {
     });
   }
   $('#er-q').addEventListener('input', (e) => { S.erq = e.target.value; draw(); });
+  /* the Earnings tables as a TradingView import file (the user, Nov 7 2026): the stocks on screen, in the tables' order,
+     a ###section per table (Over / Under the 200-day SMA); the file is named after the days on screen */
+  $('#er-dl').addEventListener('click', () => {
+    const secs = [['Over the 200-day SMA', 'er-up-table'], ['Under the 200-day SMA', 'er-dn-table']].map(([n, id]) => [n,
+      [...new Set([...$('#' + id + ' tbody').children].filter((tr) => tr.dataset.sym && !tr.classList.contains('xf-off')).map((tr) => (SK(tr.dataset.sym) || {}).tv_symbol || tr.dataset.sym))]])
+      .filter(([, v]) => v.length);
+    if (!secs.length) { toast('No stocks to save.'); return; }
+    const name = 'Earnings ' + ({ today: 'reactions', day2: 'day 2', day3: 'day 3' }[S.erday] || 'week') + (S.ershow === 'rep' ? ' reported' : S.ershow === 'up' ? ' upcoming' : '');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([secs.map(([n, v]) => '###' + n + '\n' + v.join('\n')).join('\n') + '\n'], { type: 'text/plain' }));
+    a.download = name + ' ' + todayNY() + '.txt';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
 
   function draw() {
     syncControls();
