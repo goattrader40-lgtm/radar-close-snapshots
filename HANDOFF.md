@@ -49,6 +49,31 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status at the end of the session "Radar: auto session setup + slimmer handoff (Nov 8)" (Sun Nov 8 2026)
+
+- **Live (the user's "go live", branch test/harness; docs and tooling only, nothing in the scanner, alerts, portal,
+  jobs or rules)**: every session now sets itself up. **CLAUDE.md** (Claude Code loads it by itself): scheduled runs
+  skip the routine; the start routine (tag `project:radar`, "Radar: " title, read HANDOFF.md, 5 lines, wait); the
+  short commands and the ground rules word for word; where things are. **/start** and **/wrapup**
+  (.claude/commands/). **The handoff reminder** (Stop hook, .claude/hooks/handoff_reminder.py): once per new batch of
+  this session's code / data changes made after its last HANDOFF.md update; never twice in a row; silent on any
+  error (15 test situations passed, 0.05 s). **The handoff check** (.claude/scripts/handoff_check.py).
+- **HANDOFF.md slimmed** from 146 KB to 40 KB: 46 older status and LIVE sections moved unchanged, in order, to
+  HANDOFF_ARCHIVE.md (one-line index at the top). Check: 1,475 old lines, 0 lost, 0 in both files, 46 of 46 sections
+  byte for byte (also confirmed with sort / comm). The code grade section stays here until the Nov 18 check-in; the
+  open items of the moved sections have pointers in Open items.
+- **Tested end to end**: two throwaway sessions on test/harness, first message "hi" and "/start": both tagged and
+  titled themselves, read the handoff, gave the 5 lines and waited (archived afterwards).
+- **New way of working**: one status section per session (written right after each go live, completed by
+  /wrapup); no separate "LIVE …" sections; /wrapup moves everything older than the last 2 sessions to the archive
+  and runs the check.
+- **Left as is**: Open items' "Power day vs episodic pivot" still says "both need 4x pace"; the episodic pivot has
+  needed 3x since Nov 5 (the code, the portal and the rules workbook say 3x). Offered to correct the wording; the
+  user didn't ask for it.
+- **Test branches**: test/harness merged; nothing waiting.
+- **First thing to check next session**: it started by itself (tag, title, 5 lines) and read the 40 KB HANDOFF.md
+  in full.
+
 ## Status at the end of the session "Radar: TradingView import replaces my list (Nov 7)" (Sat Nov 7 2026)
 
 - **Live (each after the user's "go live")**:
