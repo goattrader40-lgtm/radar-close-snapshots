@@ -70,9 +70,19 @@ alone.
 - **Wording fixed (the user: "fix it, episodic pivot 3x, power 4x")**: Open items' "Power day vs episodic pivot"
   said "both need 4x pace"; it now reads power day 4x, episodic pivot 3x, as the code, the portal and the rules
   workbook have said since Nov 5 evening. Text only, no rule changed; the old line is in the archive (Lines replaced).
+- **Confirmed with the user (Nov 8)**: "Power day we have 4x and episodic pivot 3x": yes (radar/alerts.py power_rv 4,
+  ep rv >= 3; rules/SCANNER_RULES.md). No rule changed this session; no new agreed reads (tools/examples.txt unchanged).
+- **Answered, no change**: does the package make the process better? A lot better for starting / ending a session
+  and for the handoff's size; better, not perfect, for forgetting (replaying the user's examples stays the safety net).
+- **Good to know**: every push to main makes GitHub's own "pages-build-deployment" run (the Pages rebuild; not one of
+  the repo's jobs, harmless). A session started by another session reads its first message as a system notice: the
+  "hi" test session read only the top of the (then big) handoff; a session the user starts reads it in full.
+- **/wrapup (Nov 8)**: nothing older than the last 2 sessions (Nov 8, Nov 7) to move; the code grade section stays
+  until the Nov 18 check-in has run.
 - **Test branches**: test/harness merged; nothing waiting.
-- **First thing to check next session**: it started by itself (tag, title, 5 lines) and read the 40 KB HANDOFF.md
-  in full.
+- **First things to check next session**: it started by itself (tag, title, 5 lines) and read HANDOFF.md (42 KB) in
+  full; the handoff reminder speaks at most once per batch of changes. Monday Nov 9's market checks: see the Nov 7
+  status and Open items.
 
 ## Status at the end of the session "Radar: TradingView import replaces my list (Nov 7)" (Sat Nov 7 2026)
 
