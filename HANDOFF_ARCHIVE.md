@@ -1163,3 +1163,8 @@ and "the user types /wrapup":
 
 **End of every session** (the user pastes this):
 
+Also on Nov 8, the user had this Open items line corrected ("fix it, episodic pivot 3x, power 4x"): it said both need
+4x, written before the episodic pivot went to 3x on Nov 5 evening. It was:
+
+  6%+; both need 4x pace, over the 1-month high and the 200 SMA)? Asked twice, no answer: leave as is until the user says.
+

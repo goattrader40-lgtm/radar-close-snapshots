@@ -67,9 +67,9 @@ alone.
 - **New way of working**: one status section per session (written right after each go live, completed by
   /wrapup); no separate "LIVE …" sections; /wrapup moves everything older than the last 2 sessions to the archive
   and runs the check.
-- **Left as is**: Open items' "Power day vs episodic pivot" still says "both need 4x pace"; the episodic pivot has
-  needed 3x since Nov 5 (the code, the portal and the rules workbook say 3x). Offered to correct the wording; the
-  user didn't ask for it.
+- **Wording fixed (the user: "fix it, episodic pivot 3x, power 4x")**: Open items' "Power day vs episodic pivot"
+  said "both need 4x pace"; it now reads power day 4x, episodic pivot 3x, as the code, the portal and the rules
+  workbook have said since Nov 5 evening. Text only, no rule changed; the old line is in the archive (Lines replaced).
 - **Test branches**: test/harness merged; nothing waiting.
 - **First thing to check next session**: it started by itself (tag, title, 5 lines) and read the 40 KB HANDOFF.md
   in full.
@@ -384,7 +384,8 @@ brackets; some may be done or overtaken since, so check there before raising one
 
 New from Nov 5 (alerts / pre-market day, session_01PkbDakDe1EUNP5wQZf4wMH), all unanswered by the user:
 - **Power day vs episodic pivot**: drop the power day's +10% on the day, so the two differ only by the gap (8%+ vs
-  6%+; both need 4x pace, over the 1-month high and the 200 SMA)? Asked twice, no answer: leave as is until the user says.
+  6%+; the power day needs a 4x volume pace, the episodic pivot 3x since Nov 5 evening; both over the 1-month high and
+  the 200 SMA)? Asked twice, no answer: leave as is until the user says.
 - **FCF**: offered a backtest of whether free cash flow change y/y matters for gap-ups when growth is high. Not run.
 - **The official open** from Alpaca's SIP feed instead of the first 1-minute bar (the gap is now the same all day, but
   it can differ a little from TradingView's open). Offered, not decided.
