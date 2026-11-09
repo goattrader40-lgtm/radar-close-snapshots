@@ -25,7 +25,34 @@ from live import Yahoo, UA, HOLIDAYS  # noqa: E402
 
 NY = zoneinfo.ZoneInfo("America/New_York")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RULES = json.load(open(os.path.join(ROOT, "scanner", "settings.json")))["earnings"]
+DEF_RULES = json.load(open(os.path.join(ROOT, "scanner", "settings.json")))["earnings"]
+# your rules from the portal's Earnings tab (the user, Nov 9 2026: "make this part a filter so I can adjust whatever I
+# want on those criteria"): earnings/rules.json on main, saved by the tab's Save button with the GitHub key (like the
+# Graded gappers rules); a value out of range = the default; null = that rule off; none saved = scanner/settings.json
+RULES_FILE = os.path.join(ROOT, "earnings", "rules.json")
+ER_LIM = {"min_mcap": (0, 5e12), "min_dollar_vol_20d_millions": (0, 1e6), "min_avg_vol_20d": (0, 1e10), "min_price": (0, 1e5),
+          "min_adr": (0, 100), "min_pct_above_52w_low": (0, 1e4)}
+MAX_ROWS = 700          # looser rules: at most this many reports a week (the most liquid newcomers), so the run ends in time
+
+
+def load_rules(path=RULES_FILE):
+    R = dict(DEF_RULES)
+    try:
+        doc = json.load(open(path))
+    except Exception:
+        doc = {}
+    for k, (lo, hi) in ER_LIM.items():
+        if k in doc:
+            v = doc[k]
+            if v is None:
+                R[k] = None
+            elif isinstance(v, (int, float)) and not isinstance(v, bool) and lo <= v <= hi:
+                R[k] = float(v)
+    R["saved_at"] = doc.get("saved_at", "")
+    return R
+
+
+RULES = load_rules()
 SEC_UA = (os.environ.get("SEC_UA") or "").strip() or "radar-close-snapshots research"
 GV = 8          # the press-release reader's version: a change re-reads every release of the week
 MON = {m: i for i, m in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), 1)}
@@ -73,10 +100,11 @@ def pct(a, b):
 # ───────── who: your rules on the last close ─────────
 def passes(s):
     p, lo = s.get("price") or 0, s.get("low_52w")
-    return ((s.get("mcap_b") or 0) * 1e9 >= RULES["min_mcap"] and (s.get("avg_vol_20") or 0) >= RULES["min_avg_vol_20d"]
-            and (s.get("dvol_20_m") or 0) >= RULES["min_dollar_vol_20d_millions"] and p >= RULES["min_price"]
-            and (s.get("adr_20") or 0) >= RULES["min_adr"] and (s.get("mcap_b") or 0) * 1e9 <= RULES.get("max_mcap", 9e99)
-            and (not lo or p >= lo * (1 + RULES["min_pct_above_52w_low"] / 100)))
+    ok = lambda k, v: RULES.get(k) is None or v >= RULES[k]          # a rule set to null is off
+    return (ok("min_mcap", (s.get("mcap_b") or 0) * 1e9) and ok("min_avg_vol_20d", s.get("avg_vol_20") or 0)
+            and ok("min_dollar_vol_20d_millions", s.get("dvol_20_m") or 0) and ok("min_price", p)
+            and ok("min_adr", s.get("adr_20") or 0) and (s.get("mcap_b") or 0) * 1e9 <= (RULES.get("max_mcap") or 9e99)
+            and (RULES.get("min_pct_above_52w_low") is None or not lo or p >= lo * (1 + RULES["min_pct_above_52w_low"] / 100)))
 
 
 # ───────── calendar: Nasdaq, the week's days ─────────
@@ -655,6 +683,14 @@ def main():
     for sym, r in prev.items():                      # a date that moved out of the week drops the row
         if sym not in rows and r.get("reported"):
             rows[sym] = r                            # but a report already in stays for the week
+    capped = 0
+    if len(rows) > MAX_ROWS:                         # looser rules: the most liquid newcomers, the ones already in stay
+        new = sorted((s_ for s_ in rows if s_ not in prev), key=lambda s_: -((S.get(s_) or {}).get("dvol_20_m") or 0))
+        drop = new[max(0, MAX_ROWS - (len(rows) - len(new))):]
+        for s_ in drop:
+            del rows[s_]
+        capped = len(drop)
+        print(f"capped: {capped} newcomers left out (more than {MAX_ROWS} reports pass your rules)")
     syms = sorted(rows)
     print(len(cal), "on the calendar,", len(syms), "pass your rules")
 
@@ -837,7 +873,7 @@ def main():
         rr = dict(r, move=r.get("react_move"), move_after=r.get("react_move") is not None, move_kind=r.get("react_kind"))
         r["read"], r["points"], r["why"] = score(rr) if r.get("reported") else (None, None, None)
 
-    out = {"built_at": now.isoformat(timespec="seconds"), "days": days, "today": today, "rules": RULES,
+    out = {"built_at": now.isoformat(timespec="seconds"), "days": days, "today": today, "rules": RULES, "capped": capped,
            "react": {"t0": t0, "p1": p1, "p2": p2, "p3": p3}, "extra_days": extra,
            "n_calendar": len(cal), "rows": [rows[s] for s in syms], "errors": errors[:40]}
     json.dump(out, open(out_p, "w"), separators=(",", ":"), default=str)

@@ -184,6 +184,8 @@
   .tgr-num.bad { border-color: var(--color-bad); color: var(--color-bad); }
   #pmr-box .pmr-warn { color: var(--color-bad); }
   #mbo-box .pmr-warn { color: var(--color-bad); }
+  #err-box .pmr-warn { color: var(--color-bad); }
+  #err-box input.bad { border-color: var(--color-bad); }
   #mbo-box .mbo-time { width: 6.5rem; }
   #mbo-box input.bad { border-color: var(--color-bad); }
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
@@ -1073,6 +1075,18 @@
         <button class="tgr-lite" id="er-min" type="button" aria-expanded="true" title="Hide or show the week's calendar (this browser remembers)">▾ Hide</button>
       </div>
       <p class="tgr-rule" id="er-rule">—</p>
+      <div class="tgr-filters" id="err-box" role="group" aria-label="Your rules for the Earnings tab">
+        <span class="tgr-lbl" style="flex-basis:100%"><b>Your rules for this tab</b>: saved in your repo. Stricter rules show at once; looser ones bring in more reports from the next Earnings update (weekdays 7:10-8:55 AM about every 15 minutes, 4:50, 6:30 and 8:30 PM; Sunday 6 PM). Empty box = that rule off.</span>
+        <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-err="mcap_m" aria-label="Minimum market cap, $ millions"> M</label>
+        <label class="tgr-f">$ vol 20D ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-err="dvol_m" aria-label="Minimum 20-day average $ volume, millions"> M</label>
+        <label class="tgr-f">Avg vol 20D ≥ <input class="tgr-num" type="number" inputmode="decimal" step="50" min="0" data-err="avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K shares</label>
+        <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-err="price" aria-label="Minimum price, dollars"></label>
+        <label class="tgr-f">ADR ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-err="adr" aria-label="Minimum ADR, %"> %</label>
+        <label class="tgr-f">52W low ≥ <input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-err="low52" aria-label="Price at least this % over the 52-week low"> % below price</label>
+        <button class="tgr-lite" id="err-save" type="button" disabled>Save</button>
+        <button class="tgr-lite" id="err-def" type="button">Back to the defaults</button>
+        <span class="tgr-lbl" id="err-msg" style="flex-basis:100%"></span>
+      </div>
       <div class="er-key" aria-label="Read colors"><span>Most liquid first, grouped by area (AI &amp; Semis, Software…); big chip = $1B+ a day. Chip: ticker · <span class="tgr-up">★</span> Top / <span class="tgr-up">S</span> Strong group · RS (green 97+); faded = under the 200-day SMA.</span><span class="er-sw r5"></span>Strong bullish <span class="er-sw r4"></span>Bullish <span class="er-sw r3"></span>Mixed <span class="er-sw r2"></span>Somewhat bearish <span class="er-sw r1"></span>Bearish <span class="er-sw r0"></span>Not reported yet</div>
       <div class="er-scroll"><div class="er-week" id="er-week"></div></div>
     </div>
@@ -4494,6 +4508,94 @@ defCalc('industry_perf', {
     ['Group rank', 'The stock\'s best-ranked theme or industry after the last close'], ['RS', 'Market rank 1-99 after the last close (green 97+)'], ['Trend', 'Up / Turn up / Reclaim / Resting / Negative from the 5, 10, 21 and 50 EMA (live in the session); Nd = sessions in it'],
     ['vs 200D', 'Pre-market price vs the 200-day SMA'], ['vs 50 EMA', 'Pre-market price vs the 50-day EMA'], ['vs 20D high', 'Pre-market price vs the highest high of the previous 20 sessions'],
     ['Over 52W low', 'Pre-market price above the 52-week low']];
+  /* your rules for the Earnings tab (the user, Nov 9 2026: "this part, can you make it a filter so I can adjust whatever I
+     want on those criteria"): boxes like the Graded gappers rules, saved to earnings/rules.json on main with your GitHub
+     key; radar/earnings.py reads them at its next run (looser rules bring in more reports then; at most 700 a week, the
+     most liquid); this page applies the saved rules at once to the reports already on the list (stricter rules show now).
+     Empty box = that rule off. The defaults = scanner/settings.json "earnings" (Nov 3 2026) */
+  const ERR_DEF = { mcap_m: 700, dvol_m: 30, avgvol_k: 600, price: 10, adr: 3.5, low52: 30 };
+  const ERR_KEY = { mcap_m: ['min_mcap', 1e6], dvol_m: ['min_dollar_vol_20d_millions', 1], avgvol_k: ['min_avg_vol_20d', 1000], price: ['min_price', 1], adr: ['min_adr', 1], low52: ['min_pct_above_52w_low', 1] };
+  const ERR_NAME = { mcap_m: 'Mkt cap', dvol_m: '$ vol 20D', avgvol_k: 'Avg vol 20D', price: 'Price', adr: 'ADR', low52: '52W low' };
+  let ERS = null, ERE = null, ER_DIRTY = false;   /* the saved file; the boxes; boxes changed and not saved */
+  const errSaved = () => {
+    const o = Object.assign({}, ERR_DEF);
+    if (ERS) Object.entries(ERR_KEY).forEach(([k, [jk, mul]]) => { if (!(jk in ERS)) return; const v = ERS[jk]; if (v === null) o[k] = null; else if (Number.isFinite(Number(v)) && Number(v) >= 0) o[k] = Math.round(Number(v) / mul * 1000) / 1000; });
+    return o;
+  };
+  const errBad = (R) => Object.keys(ERR_DEF).filter((k) => R[k] !== null && (!Number.isFinite(Number(R[k])) || Number(R[k]) < 0));
+  const errSame = (a, b) => Object.keys(ERR_DEF).every((k) => String(a[k]) === String(b[k]));
+  const errText = (R) => { const x = [];
+    if (R.mcap_m !== null) x.push('market cap $' + (R.mcap_m >= 1000 ? R.mcap_m / 1000 + 'B' : R.mcap_m + 'M') + '+');
+    if (R.dvol_m !== null) x.push('20-day average $' + R.dvol_m + 'M+ traded');
+    if (R.avgvol_k !== null) x.push(R.avgvol_k + 'K+ shares a day');
+    if (R.price !== null) x.push('$' + R.price + '+');
+    if (R.adr !== null) x.push('ADR ' + R.adr + '%+');
+    if (R.low52 !== null) x.push(R.low52 + '%+ over the 52-week low');
+    return x.length ? x.join(', ') : 'no rules (every report on the calendar)'; };
+  /* a report on the list passes these rules (its numbers at the close it came on the list with, as the job checks them) */
+  const errOk = (r, R) => { const n = (v) => num(v);
+    if (R.mcap_m !== null && (n(r.mcap_b) ?? 0) * 1000 < R.mcap_m) return false;
+    if (R.dvol_m !== null && (n(r.dvol_20_m) ?? 0) < R.dvol_m) return false;
+    if (R.avgvol_k !== null && (n(r.avg_vol_20) ?? 0) < R.avgvol_k * 1000) return false;
+    if (R.price !== null && (n(r.close) ?? 0) < R.price) return false;
+    if (R.adr !== null && (n(r.adr) ?? 0) < R.adr) return false;
+    if (R.low52 !== null && n(r.low_52w) && n(r.close) && n(r.close) < n(r.low_52w) * (1 + R.low52 / 100)) return false;
+    return true; };
+  /* the list's own rules (the job's, at its last run) vs yours: a rule of yours looser than the list's = more reports at the next update */
+  const errLooser = (R, doc) => { const J = (doc && doc.rules) || {}; return Object.entries(ERR_KEY).some(([k, [jk, mul]]) => { const j = J[jk] === null || J[jk] === undefined ? null : Number(J[jk]) / mul; return j !== null && (R[k] === null || R[k] < j - 1e-9); }); };
+  const drawErRules = () => {
+    if (!$('#err-box')) return;
+    if (!ERE || !ER_DIRTY) ERE = errSaved();
+    const saved = errSaved(), bad = errBad(ERE), doc = EARN;
+    document.querySelectorAll('#err-box [data-err]').forEach((el) => { const k = el.dataset.err; if (el !== document.activeElement) el.value = ERE[k] === null || ERE[k] === undefined ? '' : String(ERE[k]); el.classList.toggle('bad', bad.includes(k)); });
+    const msg = $('#err-msg'); msg.replaceChildren();
+    const line = (t, cls) => msg.append(h('div', cls || '', t));
+    bad.forEach((k) => line(ERR_NAME[k] + ' must be a number of 0 or more (or empty: off): fix it to save.', 'pmr-warn'));
+    const changed = !errSame(ERE, saved);
+    $('#err-save').disabled = !changed || !!bad.length;
+    if (doc && doc.rows) {
+      const nNow = doc.rows.filter((r) => errOk(r, saved)).length, nBox = doc.rows.filter((r) => errOk(r, ERE)).length;
+      if (changed && !bad.length) line('These boxes: ' + nBox + ' of the ' + doc.rows.length + ' reports on the list now (saved rules: ' + nNow + ')' + (errLooser(ERE, doc) ? '; looser than the list\'s rules, so more reports come in at the next Earnings update' : '') + '.');
+      if (doc.capped) line('The last update left out ' + doc.capped + ' less liquid reports: at most 700 a week.', 'pmr-warn');
+    }
+    line(changed ? 'Not saved yet: Save, and the list follows (stricter at once, looser from the next update).' : ERS && ERS.saved_at ? 'Saved ' + fDate(ERS.saved_at) + ' ' + nyHm(ERS.saved_at) + ' ET.' : 'Your defaults (nothing saved yet).');
+  };
+  document.querySelectorAll('#err-box [data-err]').forEach((el) => {
+    const k = el.dataset.err;
+    el.addEventListener('change', () => { if (!ERE) ERE = errSaved(); const raw = el.value.trim(); ERE[k] = raw === '' ? null : Number(raw); ER_DIRTY = true; drawErRules(); });
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') el.blur(); });
+  });
+  $('#err-def').addEventListener('click', () => { ERE = Object.assign({}, ERR_DEF); ER_DIRTY = true; drawErRules(); });
+  const saveErRules = async (R) => {
+    let key = ghKey() || await askKey();
+    if (!key) return false;
+    const url = 'https://api.github.com/repos/' + GH.owner + '/' + GH.repo + '/contents/earnings/rules.json';
+    const doc = { saved_at: nyIso(), by: 'portal' };
+    Object.entries(ERR_KEY).forEach(([k, [jk, mul]]) => { doc[jk] = R[k] === null ? null : Number(R[k]) * mul; });
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const hd = { Authorization: 'Bearer ' + key, Accept: 'application/vnd.github+json' };
+      const g = await fetch(url + '?ref=main&t=' + Date.now(), { headers: hd, cache: 'no-store' });
+      if (g.status === 401) { dropKey(); key = await askKey(); if (!key) return false; continue; }
+      let sha;
+      if (g.ok) sha = (await g.json()).sha;
+      else if (g.status !== 404) throw new Error('GitHub answered ' + g.status);
+      const body = { message: 'Earnings tab rules: ' + errText(R) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
+      if (sha) body.sha = sha;
+      const p = await fetch(url, { method: 'PUT', headers: hd, body: JSON.stringify(body) });
+      if (p.ok) { ERS = doc; return true; }
+      if (p.status === 409 || p.status === 422) continue;
+      if (p.status === 401 || p.status === 403 || p.status === 404) { dropKey(); throw new Error('this key can\'t save to the repo. Make a new one: in step 3 pick radar-close-snapshots, in step 4 Contents: Read and write'); }
+      throw new Error('GitHub answered ' + p.status);
+    }
+    throw new Error('the file kept changing: try again');
+  };
+  $('#err-save').addEventListener('click', async () => {
+    const b = $('#err-save'); if (errBad(ERE).length) return;
+    b.disabled = true; b.textContent = 'Saving…';
+    try { if (await saveErRules(Object.assign({}, ERE))) { ER_DIRTY = false; toast('Earnings rules saved: stricter rules show now, looser ones bring in more reports from the next Earnings update.'); } }
+    catch (e) { toast('Not saved: ' + e.message + '.'); }
+    b.textContent = 'Save'; drawEarnings();
+  });
   function drawEarnings() {
     const doc = EARN, week = $('#er-week');
     ['er-up-table', 'er-dn-table'].forEach((id) => {
@@ -4509,9 +4611,11 @@ defCalc('industry_perf', {
     if (!doc || !doc.rows) { $('#er-time').textContent = 'Not built yet: the first run posts the list'; week.replaceChildren(); return; }
     const rsAll = ldocRS(), today = todayNY();
     $('#er-h').textContent = 'Earnings · week of ' + new Date(doc.days[0] + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    $('#er-time').textContent = 'Updated ' + fTime(doc.built_at) + ' ET ' + erDay(doc.built_at.slice(0, 10)) + ' · ' + doc.rows.length + ' of ' + doc.n_calendar + ' reports pass your rules';
+    const ERok = errSaved(), erIn = (r) => errOk(r, ERok);       /* your saved rules, on the reports already on the list */
+    $('#er-time').textContent = 'Updated ' + fTime(doc.built_at) + ' ET ' + erDay(doc.built_at.slice(0, 10)) + ' · ' + doc.rows.filter(erIn).length + ' of ' + doc.n_calendar + ' reports pass your rules';
+    safe('Earnings rules', drawErRules);
     const R = doc.rules || {};
-    $('#er-rule').textContent = 'Your rules: market cap $' + (R.min_mcap / 1e6) + 'M+, 20-day average $' + R.min_dollar_vol_20d_millions + 'M+ traded and ' + (R.min_avg_vol_20d / 1000) + 'K+ shares a day, $' + R.min_price + '+, ADR ' + R.min_adr + '%+, ' + R.min_pct_above_52w_low + '%+ over the 52-week low. Over / under the 200-day SMA on the pre-market price. Click a stock to find it in the tables.';
+    $('#er-rule').textContent = 'Your rules: ' + errText(ERok) + '. Over / under the 200-day SMA on the pre-market price. Click a stock to find it in the tables.';
     /* the week grid */
     week.replaceChildren();
     /* like the Earnings Whispers card (the user, Nov 3 2026): the most liquid, tradeable names first, each kept with its
@@ -4552,7 +4656,7 @@ defCalc('industry_perf', {
       const slots = h('div', 'er-slots');
       [['Before open', (r) => r.when === 'bmo'], ['After close', (r) => r.when !== 'bmo']].forEach(([lab, f]) => {
         const sl = h('div', 'er-slot'); sl.append(h('span', 'tgr-lbl', lab));
-        const list = groupSort(doc.rows.filter((r) => r.date === d && f(r)));
+        const list = groupSort(doc.rows.filter((r) => r.date === d && f(r) && erIn(r)));
         if (!list.length) sl.append(h('span', 'tgr-lbl', '—'));
         let lastArea = null;
         list.forEach((r) => {
@@ -4590,7 +4694,7 @@ defCalc('industry_perf', {
     $('#er-react').textContent = S.erday === 'today' ? lab(RX.p1, 'after close') + ' + ' + lab(RX.t0, 'before open')
       : S.erday === 'day2' ? lab(RX.p2, 'after close') + ' + ' + lab(RX.p1, 'before open') + ' (their 2nd day)'
       : S.erday === 'day3' ? (p3 ? lab(p3, 'after close') + ' + ' : '') + lab(RX.p2, 'before open') + ' (their 3rd day)' : '';
-    let rows = doc.rows.filter((r) => (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && view(r)
+    let rows = doc.rows.filter((r) => erIn(r) && (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && view(r)
       && fltPass('er', r.sym, rsAll[r.sym]) && erXOk(FLT.er.x, r, rsAll));   /* RS, Trend and + Filter (the user, Nov 7 2026) */
     { const cnt = XBOX.er && XBOX.er.querySelector('.xf-cnt'); if (cnt) cnt.textContent = (FLT.er.x || []).some(xfOn) || FLT.er.rs || FLT.er.tr.length ? '→ ' + rows.length + ' shown' : ''; }
     rows.sort((a, b) => (!!b.reported - !!a.reported) || (a.reported ? (b.report_at > a.report_at ? 1 : -1) : (a.report_at > b.report_at ? 1 : -1)) || erOf(b) - erOf(a));
@@ -5249,6 +5353,7 @@ defCalc('industry_perf', {
           PICKS = await getMain('setups/picks.json').catch(() => PICKS);
           PMR = await getMain('premarket/rules.json').catch(() => PMR);
           MBS = await getMain('alerts/morning.json').catch(() => MBS);
+          ERS = await getMain('earnings/rules.json').catch(() => ERS);
           const was = (D.setups && D.setups.data ? D.setups.data.made_at : '') + (D.launch && D.launch.data ? D.launch.data.made_at : '');
           if (st2) D.setups = { status: 'ok', data: st2 };
           if (ln2) D.launch = { status: 'ok', data: ln2 };
@@ -5266,6 +5371,7 @@ defCalc('industry_perf', {
       PICKS = await getMain('setups/picks.json').catch(() => PICKS);
       PMR = await getMain('premarket/rules.json').catch(() => PMR);   /* your rules for the graded list (none saved yet = the defaults) */
       MBS = await getMain('alerts/morning.json').catch(() => MBS);    /* your morning breakout settings (none saved yet = the defaults) */
+      ERS = await getMain('earnings/rules.json').catch(() => ERS);    /* your Earnings tab rules (none saved yet = the defaults) */
       D.launch = ln ? { status: 'ok', data: ln } : (D.launch && D.launch.status === 'ok' ? D.launch : { status: 'error', data: null });
       if (lnbt) LNBT = lnbt;
       SRV = await getJson(sha, 'alerts.json').catch(() => SRV);
