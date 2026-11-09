@@ -97,7 +97,7 @@ alone.
      left out while set. Tested in the browser (Gainers Nov 9 after the close: PDH under 197 / over 0, 21-day high over
      103 of 197 with fake highs, ORH over 131 with fake ranges, stack 10 > 21 > 50 97). The daily refresh was re-run by
      hand Nov 9 evening (radar-day mode daily) so close_high_21 is in Tue's stocks.json. Rules workbook G1 updated.
-  5. **Earnings tab: your rules in boxes** (3rd "go live" ~9:45 PM, branch test/earnrules, merge 41733ad; the user:
+  5. **Earnings tab: your rules in boxes** (3rd "go live" ~5:30 PM, branch test/earnrules, merge 41733ad; the user:
      "this part, can you make it a filter so I can adjust whatever I want on those criteria"). Boxes under "Your rules"
      (Mkt cap $M, $ vol 20D, Avg vol 20D K, Price, ADR, 52W low), Save -> **earnings/rules.json** on main (GitHub key,
      like the Graded gappers rules); radar/earnings.py load_rules reads it each run (job keys min_mcap,
