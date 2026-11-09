@@ -85,6 +85,18 @@ alone.
      gapper headlines: only VSAT changed (-> Deal / contract); IBRX, IMVT, ZURA, VIR, MLYS ... the same.
   Rules workbook: P1 "Earlier news", A1 "📈 Morning breakout" (+ Filter), triggers list. Agreed examples: the same.
   Launches not rebuilt (no launch / scanner code touched; the 4:40 PM scan rebuilds them anyway).
+  4. **+ Filter choices on every tab (Gainers & losers first): the morning breakout levels** (2nd "go live" ~5:00 PM,
+     branch test/gainerlevels, merge 0ed77e8; the user: "some criteria I asked aren't available here (Gainers), above
+     ORH, above PDH"; "two sets" (the alert keeps its own settings); "I go to filters, I find them, I choose them").
+     Catalog entries (also columns): **Yesterday's high (PDH)** (stocks.json high_1d, already there), **5-min opening
+     range high (ORH)** (new radar/levels.py: Yahoo's 5-minute chart for the stocks up 2%+ at each 5-minute live update
+     from 9:36, once a day per stock, up to 1,200 a run -> radar-data **levels.json**, run by day.py live_once,
+     load_levels after a handover), **21-day closing high** (new stocks.json **close_high_21**, radar/pipeline.py: the
+     highest close of the last 21 sessions incl. that close), **EMA stack (live)** (trendOf's EMAs + the 200 SMA: 10 over
+     21, 21 over 50, 50 over the 200 SMA, 10 > 21 > 50, 10 > 21 > 50 > 200). Each filter "Over it / Under it"; no value =
+     left out while set. Tested in the browser (Gainers Nov 9 after the close: PDH under 197 / over 0, 21-day high over
+     103 of 197 with fake highs, ORH over 131 with fake ranges, stack 10 > 21 > 50 97). The daily refresh was re-run by
+     hand Nov 9 evening (radar-day mode daily) so close_high_21 is in Tue's stocks.json. Rules workbook G1 updated.
 - **Replay (radar-tools `morning [key=value ...] [x:ID:OP:VALUE ...] [SYM ...]`, radar/probe_morning.py -> radar-data
   probe_morning.json; run it on the day, before the 4:06 PM refresh: it needs that morning's base stocks.json)**: Nov 9
   with the defaults: 24 alerts, 10 at 9:36-9:40 (CDNA 9:36 $83.57 +6.4%; SHAK, TEM, SDGR, M 9:37 ...). None of the
@@ -96,7 +108,9 @@ alone.
   fit with its theme. The news pull stays at 5%+ gappers (the user: "no"); no box changes it (4%: 122 gappers on Nov 9,
   3%: 242 = about the 480 s budget, 2%: 487 too many). Phone alerts for the morning breakouts: later.
 - **Test branches**: test/morningbo merged; nothing waiting.
-- **First things to check Tue Nov 10**: day.py's log has the fast checks within a minute with the extra ~480 quotes;
+- **First things to check Tue Nov 10**: radar-data levels.json from ~9:36 (the "levels:" log line, how long it takes
+  with 1,000+ movers) and the + Filter "5-min opening range high" on Gainers; stocks.json close_high_21 filled;
+  day.py's log has the fast checks within a minute with the extra ~480 quotes;
   9:35-9:45 the first 📈 alerts (alerts.json items :mbo, mbo_lv filled); the batch pop-up and its voice on the portal;
   the alerts' news line (no "not checked in time" flood); the 8:05 / 8:35 / 9:18 runs' "earlier news (...): N of M"
   log lines and the News column; whether the user saved settings (alerts/morning.json on main).
@@ -252,6 +266,7 @@ alone.
 | Live alerts (phone, ntfy) | radar/alerts.py (every 5 min, 1 min at the open/close via radar/fast.py), radar/eod_alerts.py (after the close; also the 3-SETUPS Ready list as one text file) |
 | Desktop alerts | the portal (docs/index.html) while it is open: launches, breakouts, and every 3-SETUPS trigger |
 | 📈 Morning breakouts (portal only) | radar/alerts.py check_morning (any stock, 9:35-10:30 by default); the user's settings and + Filters: alerts/morning.json on main (Alerts tab, Save); replay: radar-tools `morning` |
+| Opening ranges (+ Filter "ORH") | radar/levels.py from day.py's 5-minute live update, 9:36 on -> radar-data levels.json (stocks up 2%+) |
 | Data branch | `radar-data`: stocks.json, long_bars.json, probe_catalyst.json, alerts.json, gradelog.json |
 
 GitHub jobs: `scanner.yml` (4:40 PM ET: Watchlist + Launches), `picks.yml` "Follow picks" (rebuilds Launches; run it
