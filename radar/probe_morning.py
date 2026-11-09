@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Replay the morning breakout alert (radar/alerts.py, the user Nov 9 2026) on a day's 1-minute charts.
 
-  python3 radar/probe_morning.py <stocks.json> <volprofile.json> <earnings.json> <out.json> [--settings=FILE] [--day=YYYY-MM-DD] [SYM ...]
+  python3 radar/probe_morning.py <stocks.json> <volprofile.json> <earnings.json> <out.json> [--settings=FILE] [--day=YYYY-MM-DD] [key=value ...] [SYM ...]
+
+key=value: a setting changed for this replay only (above200=0 e10_e21=0 min_chg=4 ...; 0 / 1 for the tick boxes, "off" for a box left empty).
 
 stocks.json must be the base the live job used that morning (the last close before the day): run it on the day, before
 the 4:06 PM refresh. Every stock that can pass the settings' liquidity / ADR (with 30% room for the day's move on the
@@ -15,7 +17,7 @@ sessions' fundamental news). Writes {settings, fired: [...], per_minute: {...}, 
 """
 import concurrent.futures, datetime, json, os, sys, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from alerts import NY, load_morning, morning_static, morning_why_not, morning_alert, hhmm  # noqa: E402
+from alerts import NY, MORNING_DEF, load_morning, morning_static, morning_why_not, morning_alert, hhmm  # noqa: E402
 from live import rvol_at  # noqa: E402
 
 
@@ -40,10 +42,15 @@ def bars_2d(sym):
 
 
 def main():
-    a = [x for x in sys.argv[1:] if not x.startswith("--")]
+    a = [x for x in sys.argv[1:] if not x.startswith("--") and "=" not in x]
     stocks_p, prof_p, earn_p, out_p, watch = a[0], a[1], a[2], a[3], [s.upper() for s in a[4:]]
     opt = {x.split("=", 1)[0]: x.split("=", 1)[1] for x in sys.argv[1:] if x.startswith("--") and "=" in x}
     M = load_morning(opt.get("--settings"))
+    for x in sys.argv[1:]:
+        if "=" in x and not x.startswith("--"):
+            k, v = x.split("=", 1)
+            if k in M:
+                M[k] = (v == "1") if isinstance(MORNING_DEF.get(k), bool) else (None if v == "off" else v if k in ("start", "end") else float(v))
     day = datetime.date.fromisoformat(opt["--day"]) if "--day" in opt else datetime.datetime.now(NY).date()
     SL = json.load(open(stocks_p))
     S = {s["symbol"]: s for s in SL}
