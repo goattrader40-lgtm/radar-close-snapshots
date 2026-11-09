@@ -97,6 +97,17 @@ alone.
      left out while set. Tested in the browser (Gainers Nov 9 after the close: PDH under 197 / over 0, 21-day high over
      103 of 197 with fake highs, ORH over 131 with fake ranges, stack 10 > 21 > 50 97). The daily refresh was re-run by
      hand Nov 9 evening (radar-day mode daily) so close_high_21 is in Tue's stocks.json. Rules workbook G1 updated.
+  5. **Earnings tab: your rules in boxes** (3rd "go live" ~9:45 PM, branch test/earnrules, merge 41733ad; the user:
+     "this part, can you make it a filter so I can adjust whatever I want on those criteria"). Boxes under "Your rules"
+     (Mkt cap $M, $ vol 20D, Avg vol 20D K, Price, ADR, 52W low), Save -> **earnings/rules.json** on main (GitHub key,
+     like the Graded gappers rules); radar/earnings.py load_rules reads it each run (job keys min_mcap,
+     min_dollar_vol_20d_millions, min_avg_vol_20d, min_price, min_adr, min_pct_above_52w_low; out of range = default,
+     null = off; none saved = scanner/settings.json); MAX_ROWS 700 a week (the most liquid newcomers; "capped" in
+     earnings.json, shown on the tab). The page applies the saved rules at once to the reports on the list (grid,
+     tables, the count, the rule line) and previews unsaved boxes; looser rules add reports at the next run. Why the
+     Earnings Whispers names were missing (answered first): 18 not in the universe ($300M+ US common), the rest the
+     rules, most often 30% over the 52-week low (CEG 9%, NRG 11%, CRWV 14%, SE 6%, NU 7%); ASTS 17%, QBTS 26%, RGTI 28%
+     on Nov 6's close pass after Nov 9's rally (in from Tue's morning run). Rules workbook: new E1 sheet.
 - **Replay (radar-tools `morning [key=value ...] [x:ID:OP:VALUE ...] [SYM ...]`, radar/probe_morning.py -> radar-data
   probe_morning.json; run it on the day, before the 4:06 PM refresh: it needs that morning's base stocks.json)**: Nov 9
   with the defaults: 24 alerts, 10 at 9:36-9:40 (CDNA 9:36 $83.57 +6.4%; SHAK, TEM, SDGR, M 9:37 ...). None of the
