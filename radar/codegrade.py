@@ -727,7 +727,11 @@ KINDS = [("Analyst upgrade", r"\bupgrad"), ("Analyst downgrade", r"\bdowngrad"),
          ("Analyst note", r"\banalysts?\b|price target|\bmaintains\b|\breiterates\b|\binitiates\b"),
          ("Takeover / sale talk", r"\b(?:acquir\w*|buyout|takeover|take-private|explor\w* (?:a )?sale|strategic alternatives|to be acquired|merger|bid for|suitors?)\b"),
          ("Offering", r"\b(?:public offering|private placement|prices? .{0,30}offering|convertible notes|at-the-market)\b"),
-         ("FDA / trial", r"\b(?:FDA|approval|approved|clearance|phase [123i]+|trial|topline|data readout)\b"),
+         # FDA / trial: drug and device words; a "Phase 1" only with a trial / study / data word after it, and "approval" only
+         # with the FDA / EMA (VSAT Nov 9 2026: "Viasat Selected By NASA For Phase 1 Of Network Extension ..." is a contract,
+         # not a trial: the user, "VSAT is a space company, it has nothing to do with FDA")
+         ("FDA / trial", r"\b(?:FDA|EMA|topline|top-line|data readout|clinical|trials?|(?:primary|secondary) endpoints?|"
+                         r"phase [123i]+(?:/[123]+)?\b.{0,40}?\b(?:trials?|stud(?:y|ies)|data|results|readout))\b"),
          ("Buyback", r"\b(?:buyback|repurchase)\b"),
          ("Deal / contract", r"\b(?:agreement|deal|contract|orders?|award\w*|partnership|partners? with|collaborat\w*|selected|inks?|signs?|wins?|role in|supply)\b"),
          ("Earnings", r"\b(?:results|earnings|Q[1-4]|quarter|guidance|outlook)\b")]
