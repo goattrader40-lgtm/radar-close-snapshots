@@ -1,0 +1,10 @@
+{
+ "saved_at": "2026-11-09T17:31:23",
+ "by": "portal",
+ "min_mcap": 700000000,
+ "min_dollar_vol_20d_millions": 30,
+ "min_avg_vol_20d": 600000,
+ "min_price": 10,
+ "min_adr": 3.5,
+ "min_pct_above_52w_low": null
+}
