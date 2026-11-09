@@ -116,6 +116,14 @@ def live_once():
     if r.returncode:
         return False
     files = [os.path.join(OUT, "live.json")]
+    # the movers' 5-minute opening range, for the portal's + Filter "5-min opening range high (ORH)" (radar/levels.py;
+    # the user, Nov 9 2026), from 9:36
+    if (9, 36) <= hm(now()) < (16, 0):
+        load_levels()
+        r2 = sh(sys.executable, os.path.join(HERE, "levels.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "levels.json"), check=False)
+        log((r2.stdout or r2.stderr).strip()[-200:])
+        if r2.returncode == 0 and os.path.exists(os.path.join(OUT, "levels.json")):
+            files.append(os.path.join(OUT, "levels.json"))
     if os.path.exists(os.path.join(OUT, "opens.json")):
         files.append(os.path.join(OUT, "opens.json"))      # the day's opens, for a fresh job after the handover
     # phone alerts: launches and breakouts as they happen (radar/alerts.py; sent when NTFY_TOPIC is set)
@@ -149,6 +157,22 @@ def load_alert_state():
     st = data_file("alerts.json")
     if st:
         open(p, "w").write(st)
+
+
+def load_levels():
+    """today's opening ranges (radar/levels.py): this job's own copy, else the radar-data branch's (a fresh job after a handover)"""
+    p = os.path.join(OUT, "levels.json")
+    try:
+        if json.load(open(p)).get("date") == now().date().isoformat():
+            return
+    except Exception:
+        pass
+    st = data_file("levels.json")
+    try:
+        if st and json.loads(st).get("date") == now().date().isoformat():
+            open(p, "w").write(st)
+    except Exception:
+        pass
 
 
 def load_opens():
