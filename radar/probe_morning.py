@@ -4,6 +4,7 @@
   python3 radar/probe_morning.py <stocks.json> <volprofile.json> <earnings.json> <out.json> [--settings=FILE] [--day=YYYY-MM-DD] [key=value ...] [SYM ...]
 
 key=value: a setting changed for this replay only (above200=0 e10_e21=0 min_chg=4 ...; 0 / 1 for the tick boxes, "off" for a box left empty).
+x:ID:OP:VALUE adds a + Filter for this replay (x:hc21:is:Over_it, x:rs:>=:80, x:themes:has:space; "_" = a space).
 
 stocks.json must be the base the live job used that morning (the last close before the day): run it on the day, before
 the 4:06 PM refresh. Every stock that can pass the settings' liquidity / ADR (with 30% room for the day's move on the
@@ -17,7 +18,7 @@ sessions' fundamental news). Writes {settings, fired: [...], per_minute: {...}, 
 """
 import concurrent.futures, datetime, json, os, sys, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from alerts import NY, MORNING_DEF, load_morning, morning_static, morning_why_not, morning_alert, hhmm  # noqa: E402
+from alerts import NY, MORNING_DEF, MORNING_X, _MCTX, close_high_21, morning_x, x_fails, load_morning, morning_static, morning_why_not, morning_alert, hhmm  # noqa: E402
 from live import rvol_at  # noqa: E402
 
 
@@ -42,11 +43,17 @@ def bars_2d(sym):
 
 
 def main():
-    a = [x for x in sys.argv[1:] if not x.startswith("--") and "=" not in x]
+    a = [x for x in sys.argv[1:] if not x.startswith("--") and "=" not in x and not x.startswith("x:")]
     stocks_p, prof_p, earn_p, out_p, watch = a[0], a[1], a[2], a[3], [s.upper() for s in a[4:]]
     opt = {x.split("=", 1)[0]: x.split("=", 1)[1] for x in sys.argv[1:] if x.startswith("--") and "=" in x}
     M = load_morning(opt.get("--settings"))
     for x in sys.argv[1:]:
+        if x.startswith("x:") and x.count(":") >= 3:           # a + Filter for this replay
+            _, fid, op, v = x.split(":", 3)
+            v = v.replace("_", " ")
+            kind = (MORNING_X.get(fid) or (None, None))[1]
+            M["x"] = M.get("x", []) + morning_x({"x": [{"id": fid, "op": op, "v": float(v) if kind == "num" else v}]})
+            continue
         if "=" in x and not x.startswith("--"):
             k, v = x.split("=", 1)
             if k in M:
@@ -62,12 +69,22 @@ def main():
         E = {r["sym"]: r for r in json.load(open(earn_p)).get("rows", []) if r.get("reported")}
     except Exception:
         E = {}
+    try:                                                   # RS and the group rank (+ Filter), from tonight's launch.json
+        gr = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "setups", "launch.json"))).get("group_rank") or {}
+        _MCTX["rs"], _MCTX["gr"] = gr.get("rs") or {}, {(g.get("kind"), g.get("group")): g for g in gr.get("rows") or []}
+    except Exception as ex:
+        print("group rank:", repr(ex)[:120])
+    print("+ Filters:", M.get("x"))
     cands = sorted({s["symbol"] for s in SL if morning_static(s, M, slack=0.3)} | {w for w in watch if w in S})
     print(f"{len(cands)} stocks to read ({len(watch)} named)")
     with concurrent.futures.ThreadPoolExecutor(8) as ex:
         B = dict(zip(cands, ex.map(bars_2d, cands)))
     got = {s: b for s, b in B.items() if b}
     print(f"charts: {len(got)} of {len(cands)}")
+    HC = {}
+    if any(f["id"] == "hc21" for f in M.get("x") or []):   # the 21-day closing high, from the daily chart
+        with concurrent.futures.ThreadPoolExecutor(8) as ex:
+            HC = dict(zip(list(got), ex.map(lambda s_: close_high_21(s_, day), list(got))))
     s0, e0 = hhmm(M["start"], (9, 35)), hhmm(M["end"], (10, 30))
     minutes = []
     t = datetime.datetime(day.year, day.month, day.day, s0[0], s0[1], tzinfo=NY)
@@ -99,7 +116,7 @@ def main():
             rv = rvol_at(vol, m.timestamp(), prof.get(sym), st.get("avg_vol_20"))
             q = [price, round(100 * (price / prev_c - 1), 2), vol, m.timestamp(), rv, op]
             r = morning_why_not(st, q, M)
-            lv = {"pdh": pdh, "orh": orh, "orl": orl, "low": min(x[3] for x in known), "pd": pd.isoformat()}
+            lv = {"pdh": pdh, "orh": orh, "orl": orl, "low": min(x[3] for x in known), "pd": pd.isoformat(), "hc21": HC.get(sym)}
             if not r:
                 al = morning_alert(sym, st, q, lv, M)
                 if al:
@@ -109,7 +126,9 @@ def main():
                     if sym in why:
                         why[sym].append([f"{m:%H:%M}", "ALERT"])
                     break
-                r = f"not over yesterday's high ${pdh:.2f}" if M.get("over_pdh") and price <= pdh else f"not over the 5-min opening range high ${orh:.2f}"
+                r = (f"not over yesterday's high ${pdh:.2f}" if M.get("over_pdh") and price <= pdh else
+                     f"not over the 5-min opening range high ${orh:.2f}" if M.get("over_orh") and price <= orh else
+                     next((x_fails(f, st, q, lv) for f in M.get("x") or [] if f["id"] == "hc21" and x_fails(f, st, q, lv)), "levels"))
             if sym in why and r != last_reason:
                 why[sym].append([f"{m:%H:%M}", f"${price:.2f} ({q[1]:+.1f}%, vol {rv if rv is not None else '—'}x): {r}"])
             last_reason = r

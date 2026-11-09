@@ -1053,6 +1053,7 @@
         <label class="tgr-f"><input type="checkbox" data-mbo="e10_e21"> 10 EMA over the 21</label>
         <label class="tgr-f"><input type="checkbox" data-mbo="e21_e50"> 21 EMA over the 50</label>
         <label class="tgr-f"><input type="checkbox" data-mbo="e50_s200"> 50 EMA over the 200 SMA</label>
+        <span class="xf-box" id="mbo-xf" style="flex-basis:100%"></span>
         <button class="tgr-lite" id="mbo-save" type="button" disabled>Save</button>
         <button class="tgr-lite" id="mbo-def" type="button">Back to the defaults</button>
         <span class="tgr-lbl" id="mbo-msg" style="flex-basis:100%"></span>
@@ -2231,23 +2232,45 @@ defCalc('industry_perf', {
      defaults: 9:35-10:30, up 5%+, Rel vol 1+, over yesterday's high and the 5-minute opening range high, your Gainers
      tab's liquidity with ADR 4%+, 30% over the 52-week low, over the 200 SMA and the 50 EMA, 10 EMA over the 21, 21 over the 50 */
   const MBO_DEF = { on: true, start: '09:35', end: '10:30', min_chg: 5, min_rv: 1, over_pdh: true, over_orh: true, price: 5, mcap_b: 0.7, avgvol_k: 700,
-    dvol_m: 30, adr: 4, low52: 30, above200: true, above50: true, e10_e21: true, e21_e50: true, e50_s200: false };
+    dvol_m: 30, adr: 4, low52: 30, above200: true, above50: true, e10_e21: true, e21_e50: true, e50_s200: false, x: [] };
   const MBO_NUM = { min_chg: [0, 100, 'Up', '', '%'], min_rv: [0, 50, 'Rel vol', '', '×'], price: [0, 10000, 'Price', '$', ''], mcap_b: [0, 5000, 'Mkt cap', '$', 'B'],
     avgvol_k: [0, 100000, 'Avg vol 20D', '', 'K'], dvol_m: [0, 100000, '$ vol 20D', '$', 'M'], adr: [0, 50, 'ADR', '', '%'], low52: [0, 1000, '52W low', '', '%'] };
   const MBO_BOOL = ['on', 'over_pdh', 'over_orh', 'above200', 'above50', 'e10_e21', 'e21_e50', 'e50_s200'];
   let MBS = null, MBE = null, MB_DIRTY = false;   /* the saved file; the boxes; boxes changed and not saved */
+  /* + Filter (the user, Nov 9 2026: "add filter to that part so I can add other filters, let's say above the 21-day high;
+     add / delete filters as I have in other parts of the portal"): extra criteria on top of the boxes, the ones the job
+     can check for any stock (radar/alerts.py MORNING_X, the same ids); saved with the boxes. The 21-day high = the
+     highest close of the last 21 sessions (the user: "highest close"). A stock without a value for one that is set is left out */
+  const MBO_X = {
+    hc21: ['Over the 21-day closing high', 'cat', ['Over it', 'Under it'], 'The price over the highest close of the last 21 sessions (as your EP rule)'],
+    gap: ['Gap at the open %', 'num', null, 'Today\'s open vs yesterday\'s close'],
+    chg_1w: ['1W %', 'num', null, 'The % change over the last week, to yesterday\'s close'],
+    chg_1m: ['1M %', 'num', null, 'The % change over the last month, to yesterday\'s close'],
+    chg_3m: ['3M %', 'num', null, 'The % change over the last 3 months, to yesterday\'s close'],
+    off_hi52: ['% under the 52-week high', 'num', null, 'How far under its 52-week high the price is now (0 or less: at a new high)'],
+    vs200: ['% vs the 200 SMA', 'num', null, 'The price now vs the 200-day SMA (e.g. at most 28% over it)'],
+    vs50e: ['% vs the 50 EMA', 'num', null, 'The price now vs the 50-day EMA'],
+    trend: ['Trend', 'cat', ['Up', 'Turn up', 'Reclaim', 'Resting', 'Negative', '—'], 'The Trend column at the live price'],
+    grank: ['Group rank', 'cat', ['★ Top', 'Strong', '★ Top or Strong', 'Not in the top 10%'], 'The best-ranked of its themes and its industry, after the last close'],
+    rs: ['RS', 'num', null, 'Market rank 1-99 after the last close'],
+    themes: ['Themes', 'text', null, 'Its themes have this word'], industry: ['Industry', 'text', null, 'Its industry has this word'],
+    sector: ['Sector', 'text', null, 'Its sector has this word'] };
+  const mxOn = (f) => f.v !== null && f.v !== undefined && f.v !== '';
+  const mxOk = (f) => { const c = MBO_X[f.id]; if (!c) return false; return c[1] === 'cat' ? c[2].includes(f.v) || f.v === null : c[1] === 'num' ? f.v === null || Number.isFinite(Number(f.v)) : true; };
+  const mxDesc = (f) => { const c = MBO_X[f.id]; return c[0] + (c[1] === 'cat' ? ' is ' + f.v : c[1] === 'text' ? ' ' + ({ is: 'is', not: 'has no' }[f.op] || 'has') + ' "' + f.v + '"' : ' ' + (f.op === '<=' ? '≤' : '≥') + ' ' + f.v); };
   const tOk = (t) => /^\d\d:\d\d$/.test(String(t || ''));
   const mboSaved = () => {
-    const o = Object.assign({}, MBO_DEF);
+    const o = Object.assign({}, MBO_DEF, { x: [] });          /* (its own list: never the defaults' one) */
     if (!MBS) return o;
     Object.keys(MBO_NUM).forEach((k) => { if (!(k in MBS)) return; const v = MBS[k] === null ? null : num(MBS[k]); if (v === null || (v >= MBO_NUM[k][0] && v <= MBO_NUM[k][1])) o[k] = v; });
     MBO_BOOL.forEach((k) => { if (typeof MBS[k] === 'boolean') o[k] = MBS[k]; });
     ['start', 'end'].forEach((k) => { if (tOk(MBS[k])) o[k] = MBS[k]; });
+    o.x = (Array.isArray(MBS.x) ? MBS.x : []).filter((f) => f && MBO_X[f.id] && mxOk(f)).map((f) => Object.assign({}, f));
     return o;
   };
   const mboBad = (R) => Object.keys(MBO_NUM).filter((k) => R[k] !== null && (num(R[k]) === null || num(R[k]) < MBO_NUM[k][0] || num(R[k]) > MBO_NUM[k][1]))
     .concat(['start', 'end'].filter((k) => !tOk(R[k]) || R[k] < '09:30' || R[k] > '16:00')).concat(tOk(R.start) && tOk(R.end) && R.end < R.start ? ['end'] : []);
-  const mboSame = (a, b) => Object.keys(MBO_DEF).every((k) => String(a[k]) === String(b[k]));
+  const mboSame = (a, b) => Object.keys(MBO_DEF).every((k) => (k === 'x' ? JSON.stringify(a.x || []) === JSON.stringify(b.x || []) : String(a[k]) === String(b[k])));
   const t12 = (t) => { const [H, M] = String(t).split(':').map(Number); return ((H % 12) || 12) + ':' + String(M).padStart(2, '0'); };
   const mboText = (R) => {
     if (!R.on) return 'Off.';
@@ -2266,11 +2289,85 @@ defCalc('industry_perf', {
     if (R.above50) x.push('over the 50 EMA');
     const stk = [R.e10_e21 ? '10 > 21' : '', R.e21_e50 ? '21 > 50' : '', R.e50_s200 ? '50 EMA > 200 SMA' : ''].filter(Boolean);
     if (stk.length) x.push(stk.join(', '));
+    (R.x || []).filter(mxOn).forEach((f) => x.push(mxDesc(f)));
     return t12(st) + '-' + t12(R.end) + ' ET: ' + x.join(', ') + '.';
+  };
+  const mxChanged = () => { MB_DIRTY = true; drawMorning(); };
+  const mxRender = () => {
+    const box = $('#mbo-xf'); if (!box) return;
+    if (box.contains(document.activeElement)) return;               /* typing in a chip: leave it */
+    box.replaceChildren();
+    const L = (MBE.x = Array.isArray(MBE.x) ? MBE.x : []);
+    L.forEach((f, i) => {
+      const c = MBO_X[f.id]; if (!c) return;
+      const chip = h('span', 'xf-chip' + (mxOn(f) ? ' on' : '')); chip.title = c[3] + (c[1] === 'cat' ? '' : ' (empty box = off; a stock without a value is left out while it is set)');
+      chip.append(h('b', '', c[0]));
+      let inp;
+      if (c[1] === 'cat') {
+        chip.append(document.createTextNode(' is '));
+        inp = h('select', 'xf-in'); const o0 = h('option', '', 'any'); o0.value = ''; inp.append(o0);
+        c[2].forEach((o) => { const op = h('option', '', o); op.value = o; inp.append(op); });
+        inp.value = f.v || ''; inp.addEventListener('change', () => { f.v = inp.value || null; f.op = 'is'; inp.blur(); mxChanged(); });
+        chip.append(inp);
+      } else {
+        const opS = h('select', 'xf-op');
+        (c[1] === 'text' ? [['has', 'has'], ['is', 'is'], ['not', 'has no']] : [['>=', '≥'], ['<=', '≤']]).forEach(([v, t]) => { const o = h('option', '', t); o.value = v; opS.append(o); });
+        if (c[1] === 'text' && !['has', 'is', 'not'].includes(f.op)) f.op = 'has';
+        if (c[1] === 'num' && !['>=', '<='].includes(f.op)) f.op = '>=';
+        opS.value = f.op;
+        opS.addEventListener('change', () => { f.op = opS.value; opS.blur(); mxChanged(); });
+        inp = h('input', 'xf-in');
+        if (c[1] === 'text') { inp.type = 'text'; inp.placeholder = 'text'; inp.value = f.v || ''; inp.style.width = '7em'; inp.addEventListener('change', () => { f.v = inp.value.trim() || null; inp.blur(); mxChanged(); }); }
+        else { inp.type = 'number'; inp.step = 'any'; inp.inputMode = 'decimal'; inp.placeholder = 'value'; inp.value = mxOn(f) ? String(f.v) : ''; inp.style.width = '5.5em'; inp.addEventListener('change', () => { const raw = inp.value.trim(); f.v = raw === '' || !Number.isFinite(Number(raw)) ? null : Number(raw); inp.blur(); mxChanged(); }); }
+        chip.append(document.createTextNode(' '), opS, document.createTextNode(' '), inp);
+      }
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') inp.blur(); });
+      const x = h('button', 'xf-x', '✕'); x.type = 'button'; x.title = 'Remove this filter';
+      x.addEventListener('click', () => { x.blur(); L.splice(i, 1); mxChanged(); });
+      chip.append(x); box.append(chip);
+    });
+    const add = h('button', 'tgr-lite xf-add', '+ Filter'); add.type = 'button';
+    add.title = 'Add another criterion (21-day high, gap, RS, Trend, Group rank, 1W / 1M / 3M, vs the 200 SMA ...): then Save';
+    add.addEventListener('click', (e) => { e.stopPropagation(); mxMenu(add); });
+    box.append(add);
+  };
+  const mxMenu = (anchor) => {
+    closeMenu();
+    const L = (MBE.x = Array.isArray(MBE.x) ? MBE.x : []);
+    const m = h('div', 'col-menu'); menuEl = m;
+    const head = h('div', 'col-mh'); head.append(h('strong', '', 'Add a filter'), h('span', 'tgr-lbl', 'type to search, click to add'));
+    const cx = h('button', 'col-mb', '✕'); cx.type = 'button'; cx.addEventListener('click', closeMenu); head.append(cx); m.append(head);
+    const inp = h('input', 'tgr-search'); inp.type = 'search'; inp.placeholder = 'Search: 21-day high, gap, RS, trend, group…';
+    const res = h('div', 'col-res');
+    const fill = () => {
+      res.replaceChildren();
+      const q = inp.value.trim().toLowerCase();
+      const ids = Object.keys(MBO_X).filter((id) => (MBO_X[id][0] + ' ' + MBO_X[id][3] + ' ' + id).toLowerCase().includes(q));
+      ids.forEach((id) => {
+        const on = L.some((f) => f.id === id), b = h('button', 'col-item' + (on ? ' on' : ''), (on ? '✓ ' : '') + MBO_X[id][0]); b.type = 'button'; b.title = on ? 'Added: click to remove it' : MBO_X[id][3];
+        b.append(h('span', 'tgr-lbl', on ? ' added · click to remove' : ''));
+        b.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const j = L.findIndex((f) => f.id === id);
+          if (j >= 0) { L.splice(j, 1); mxChanged(); fill(); return; }
+          L.push({ id, op: MBO_X[id][1] === 'text' ? 'has' : MBO_X[id][1] === 'cat' ? 'is' : '>=', v: null }); closeMenu(); mxChanged();
+        });
+        res.append(b);
+      });
+      if (!ids.length) res.append(h('div', 'tgr-lbl', 'Nothing matches "' + inp.value + '".'));
+    };
+    inp.addEventListener('input', fill); fill();
+    m.append(inp, res); m.addEventListener('click', (e) => e.stopPropagation());
+    document.body.append(m);
+    const r = anchor.getBoundingClientRect(), w = Math.min(340, window.innerWidth - 16);
+    m.style.width = w + 'px'; m.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px';
+    const top = Math.min(r.bottom + 4, window.innerHeight - 160); m.style.top = top + 'px'; m.style.maxHeight = (window.innerHeight - top - 8) + 'px';
+    setTimeout(() => inp.focus(), 0);
   };
   const drawMorning = () => {
     if (!$('#mbo-box')) return;
     if (!MBE || !MB_DIRTY) MBE = mboSaved();
+    mxRender();
     const saved = mboSaved(), bad = mboBad(MBE);
     document.querySelectorAll('#mbo-box [data-mbo]').forEach((el) => {
       const k = el.dataset.mbo;
@@ -2284,6 +2381,7 @@ defCalc('industry_perf', {
     $('#mbo-save').disabled = !changed || !!bad.length;
     if (MBE.over_orh && MBE.start < '09:35') line('Starts at 9:35: the 5-minute opening range is complete then.');
     line('Now: ' + mboText(saved));
+    if (changed && !bad.length) line('After Save: ' + mboText(MBE));
     line(changed ? 'Not saved yet: Save, and the job uses them within 2 minutes.' : MBS && MBS.saved_at ? 'Saved ' + fDate(MBS.saved_at) + ' ' + nyHm(MBS.saved_at) + ' ET: the job uses them within 2 minutes.' : 'Your defaults (nothing saved yet).');
     const n = ((SRV && SRV.date === todayNY() && SRV.items) || []).filter((it) => /:mbo$/.test(it.key) && !/^mbatch/.test(it.key)).length;
     if (n) line('Today: ' + n + ' morning breakout' + (n > 1 ? 's' : '') + ' (the 📈 box below).');
@@ -2294,12 +2392,12 @@ defCalc('industry_perf', {
     el.addEventListener('change', set);
     if (el.type !== 'checkbox') el.addEventListener('keydown', (e) => { if (e.key === 'Enter') el.blur(); });
   });
-  $('#mbo-def').addEventListener('click', () => { MBE = Object.assign({}, MBO_DEF); MB_DIRTY = true; drawMorning(); });
+  $('#mbo-def').addEventListener('click', () => { MBE = Object.assign({}, MBO_DEF, { x: [] }); MB_DIRTY = true; drawMorning(); });
   const saveMorning = async (R) => {
     let key = ghKey() || await askKey();
     if (!key) return false;
     const url = 'https://api.github.com/repos/' + GH.owner + '/' + GH.repo + '/contents/alerts/morning.json';
-    const doc = Object.assign({}, R, { saved_at: nyIso(), by: 'portal' });
+    const doc = Object.assign({}, R, { x: (R.x || []).map((f) => ({ id: f.id, op: f.op, v: f.v })), saved_at: nyIso(), by: 'portal' });
     for (let attempt = 0; attempt < 4; attempt++) {
       const hd = { Authorization: 'Bearer ' + key, Accept: 'application/vnd.github+json' };
       const g = await fetch(url + '?ref=main&t=' + Date.now(), { headers: hd, cache: 'no-store' });
@@ -2320,7 +2418,7 @@ defCalc('industry_perf', {
   $('#mbo-save').addEventListener('click', async () => {
     const b = $('#mbo-save'); if (mboBad(MBE).length) return;
     b.disabled = true; b.textContent = 'Saving…';
-    try { if (await saveMorning(Object.assign({}, MBE))) { MB_DIRTY = false; toast('Morning breakout settings saved: the job uses them within 2 minutes.'); } }
+    try { if (await saveMorning(Object.assign({}, MBE, { x: (MBE.x || []).map((f) => Object.assign({}, f)) }))) { MB_DIRTY = false; toast('Morning breakout settings saved: the job uses them within 2 minutes.'); } }
     catch (e) { toast('Not saved: ' + e.message + '.'); }
     b.textContent = 'Save'; drawMorning();
   });

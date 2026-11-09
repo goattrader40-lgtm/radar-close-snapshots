@@ -815,6 +815,38 @@ MORNING_BOOL = ("on", "over_pdh", "over_orh", "above200", "above50", "e10_e21", 
 PAGE_ONLY = {"mbo"}             # kinds shown on the portal only (no phone push)
 MORNING_FETCH = 80              # new stocks' levels (yesterday's high, the opening range) read a run, the biggest movers first
 MORNING_NEWS_BUDGET = 35        # seconds a run for the alerts' news
+# + Filter (the user, Nov 9 2026: "add filter to that part so I can add other filters as well, let's say above the 21-day
+# high, so I can add / delete filters as I have in other parts of the portal"): extra criteria on top of the boxes, added
+# and deleted on the portal, saved with the boxes in alerts/morning.json ("x": [{id, op, v}]); a stock without a value
+# for one that is set is left out (as the portal's other + Filters). The 21-day high = the highest CLOSE of the last 21
+# sessions (the user: "highest close", like the EP rule). Only what this job can see for any stock.
+MORNING_X = {
+    "hc21": ("Over the 21-day closing high", "cat", ["Over it", "Under it"]),
+    "gap": ("Gap at the open %", "num", None), "chg_1w": ("1W %", "num", None), "chg_1m": ("1M %", "num", None),
+    "chg_3m": ("3M %", "num", None), "off_hi52": ("% under the 52-week high", "num", None),
+    "vs200": ("% vs the 200 SMA", "num", None), "vs50e": ("% vs the 50 EMA", "num", None),
+    "trend": ("Trend", "cat", ["Up", "Turn up", "Reclaim", "Resting", "Negative", "—"]),
+    "grank": ("Group rank", "cat", ["★ Top", "Strong", "★ Top or Strong", "Not in the top 10%"]),
+    "rs": ("RS", "num", None), "themes": ("Themes", "text", None), "industry": ("Industry", "text", None),
+    "sector": ("Sector", "text", None),
+}
+_MCTX = {"rs": {}, "gr": {}}     # RS and the group rank from tonight's launch.json (main() fills it)
+
+
+def morning_x(doc):
+    """the saved + Filter list, checked: unknown ids, bad operators or values are left out"""
+    out = []
+    for f in doc.get("x") or []:
+        if not isinstance(f, dict) or f.get("id") not in MORNING_X:
+            continue
+        kind, opts, v, op = MORNING_X[f["id"]][1], MORNING_X[f["id"]][2], f.get("v"), f.get("op")
+        if kind == "num" and op in (">=", "<=") and isinstance(v, (int, float)) and not isinstance(v, bool):
+            out.append({"id": f["id"], "op": op, "v": float(v)})
+        elif kind == "cat" and v in opts:
+            out.append({"id": f["id"], "op": "is", "v": v})
+        elif kind == "text" and op in ("has", "is", "not") and isinstance(v, str) and 0 < len(v.strip()) <= 60:
+            out.append({"id": f["id"], "op": op, "v": v.strip()})
+    return out[:20]
 
 
 def hhmm(s, d):
@@ -843,6 +875,7 @@ def load_morning(path):
     s = max(s, (9, 35) if M["over_orh"] else (9, 31))     # the 5-minute opening range is complete at 9:35
     e = min(max(e, s), (16, 0))
     M["start"], M["end"] = f"{s[0]:02d}:{s[1]:02d}", f"{e[0]:02d}:{e[1]:02d}"
+    M["x"] = morning_x(doc)
     M["saved_at"] = doc.get("saved_at", "")
     return M
 
@@ -859,6 +892,82 @@ def live_emas(st, price):
         return None
     mv = lambda e, n: e + (2 / (n + 1)) * (price - e)
     return mv(t[1], 10), mv(t[2], 21), mv(t[3], 50)
+
+
+def live_trend(st, p):
+    """the Trend column's label at the live price (docs/index.html trendOf, your rule Nov 3 2026), else the last close's"""
+    t = st.get("tr")
+    if not t or len(t) < 6 or any(x is None for x in t) or not p:
+        return st.get("trend") or "—"
+    e5, e10, e21, e50, e50b, c = t
+    mv = lambda e, n: e + (2 / (n + 1)) * (p - e)
+    E5, E10, E21, E50 = mv(e5, 5), mv(e10, 10), mv(e21, 21), mv(e50, 50)
+    base, stack = E10 > E21 > E50 and E50 > e50b, E10 > E21 > E50
+    lab = ("Negative" if p < E21 else "" if not base else "Reclaim" if c < e21 else "Turn up" if E5 > E10 and e5 <= e10
+           else "Up" if stack and p > E50 and E10 > e10 and E21 > e21 else "Resting" if stack else "")
+    return lab or "—"
+
+
+def best_tier(st):
+    """the best-ranked of the stock's themes and its industry group, as the portal's Group rank: Top / Strong / ''"""
+    gr = _MCTX["gr"]
+    c = [gr.get(("theme", t)) for t in str(st.get("themes") or "").split(" | ") if t] + [gr.get(("ind", st.get("group") or st.get("industry")))]
+    c = [g for g in c if g]
+    if not c:
+        return ""
+    b = sorted(c, key=lambda g: (-(min(g.get("pct") or 0, 89.9) if g.get("loose") else (g.get("pct") or 0)), g.get("rank") or 999))[0]
+    return b.get("tier") or ""
+
+
+def x_value(fid, st, q, lv=None):
+    """one + Filter criterion's value for a stock at the live quote (None = no value)"""
+    price, chg = q[0], q[1]
+    n = lambda k: st.get(k) if isinstance(st.get(k), (int, float)) else None
+    if fid == "hc21":
+        return (lv or {}).get("hc21")
+    if fid == "gap":
+        op = q[5] if len(q) > 5 else None
+        prev = price / (1 + chg / 100) if chg is not None and chg > -100 else None
+        return 100 * (op / prev - 1) if op and prev else None
+    if fid in ("chg_1w", "chg_1m", "chg_3m"):
+        return n(fid)
+    if fid == "off_hi52":
+        return 100 * (1 - price / n("high_52w")) if n("high_52w") else None
+    if fid == "vs200":
+        return 100 * (price / n("sma200") - 1) if n("sma200") else None
+    if fid == "vs50e":
+        return 100 * (price / n("ema50") - 1) if n("ema50") else None
+    if fid == "rs":
+        return _MCTX["rs"].get(st.get("symbol"))
+    if fid == "trend":
+        return live_trend(st, price)
+    if fid == "grank":
+        return best_tier(st)
+    return str(st.get(fid) or "")
+
+
+def x_fails(f, st, q, lv=None):
+    """'' when the stock passes this + Filter, else why not"""
+    name, kind, _ = MORNING_X[f["id"]]
+    v = x_value(f["id"], st, q, lv)
+    if kind == "num":
+        if v is None:
+            return f"no {name} value"
+        ok = v >= f["v"] if f["op"] == ">=" else v <= f["v"]
+        return "" if ok else f"{name} {v:.1f}, not {'≥' if f['op'] == '>=' else '≤'} {f['v']:g}"
+    if kind == "text":
+        a, b = str(v).lower(), f["v"].lower()
+        ok = a == b if f["op"] == "is" else b not in a if f["op"] == "not" else b in a
+        return "" if ok else f"{name} \"{v}\" ({f['op']} \"{f['v']}\")"
+    if f["id"] == "hc21":
+        if v is None:
+            return "no 21-day closing high"
+        over = q[0] > v
+        return "" if over == (f["v"] == "Over it") else f"{'under' if not over else 'over'} the 21-day closing high ${v:.2f}"
+    if f["id"] == "grank":
+        ok = {"★ Top": v == "Top", "Strong": v == "Strong", "★ Top or Strong": v in ("Top", "Strong")}.get(f["v"], v not in ("Top", "Strong"))
+        return "" if ok else f"group rank {v or 'not in the top 10%'}"
+    return "" if v == f["v"] else f"{name} {v}"
 
 
 def morning_static(st, M, slack=None):
@@ -917,6 +1026,11 @@ def morning_why_not(st, q, M):
             return "21 EMA not over the 50"
         if M.get("e50_s200") and sma and e50 <= sma:
             return "50 EMA not over the 200 SMA"
+    for f in M.get("x") or []:                             # your + Filters (the 21-day high: with the levels)
+        if f["id"] != "hc21":
+            why = x_fails(f, st, q)
+            if why:
+                return why
     return ""
 
 
@@ -948,6 +1062,21 @@ def morning_levels(sym, today=None):
         return None
 
 
+def close_high_21(sym, today=None):
+    """the highest close of the last 21 sessions before today, from Yahoo's daily chart, or None"""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=3mo&interval=1d"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            res = json.load(r)["chart"]["result"][0]
+        today = today or datetime.datetime.now(NY).date()
+        cl = [c for t, c in zip(res.get("timestamp") or [], res["indicators"]["quote"][0].get("close") or [])
+              if c and datetime.datetime.fromtimestamp(t, NY).date() < today]
+        return round(max(cl[-21:]), 4) if len(cl) >= 5 else None
+    except Exception:
+        return None
+
+
 def find_morning(live, S, M, now):
     """[(key, title, msg, prio, tv, sym, q)] the stocks whose live quote passes the criteria now (the levels come next)"""
     if not in_morning(M, now):
@@ -967,6 +1096,8 @@ def morning_alert(sym, st, q, lv, M):
     if M.get("over_pdh") and not (lv and lv.get("pdh") and price > lv["pdh"]):
         return None
     if M.get("over_orh") and not (lv and lv.get("orh") and price > lv["orh"]):
+        return None
+    if any(f["id"] == "hc21" and x_fails(f, st, q, lv) for f in M.get("x") or []):
         return None
     adr = st.get("adr_20") or 0
     over = [f"yesterday's high ${lv['pdh']:.2f}"] if M.get("over_pdh") and lv else []
@@ -1005,9 +1136,17 @@ def check_morning(cands, state, M, live, S, E, now, sent):
     import concurrent.futures
     lvs = state.setdefault("mbo_lv", {})
     todo = [s for s in cands if f"{s}:mbo" not in sent]
-    need = [s for s in todo if s not in lvs][:MORNING_FETCH]
+    before = set(lvs)                                       # levels read at an earlier check (their day's low is old)
+    hc = any(f["id"] == "hc21" for f in M.get("x") or [])     # the 21-day closing high only when a + Filter needs it
+    need = [s for s in todo if s not in lvs or (hc and "hc21" not in lvs[s])][:MORNING_FETCH]
+
+    def lev(s_):
+        lv_ = dict(lvs[s_]) if s_ in lvs else morning_levels(s_, now.date())
+        if lv_ and hc and "hc21" not in lv_:
+            lv_["hc21"] = close_high_21(s_, now.date())
+        return lv_
     with concurrent.futures.ThreadPoolExecutor(8) as ex:
-        got = dict(zip(need, ex.map(lambda s_: morning_levels(s_, now.date()), need)))
+        got = dict(zip(need, ex.map(lev, need)))
     final = (now.hour, now.minute) >= (9, 36)
     fired, recheck = [], []
     for sym in todo:
@@ -1017,7 +1156,7 @@ def check_morning(cands, state, M, live, S, E, now, sent):
         q = live["rows"][sym]
         a = morning_alert(sym, S[sym], q, lv, M)
         if a:
-            (recheck if sym not in got else fired).append((sym, a, lv))
+            (recheck if sym in before else fired).append((sym, a, lv))
         elif lv:
             print(f"{sym}:mbo: ${q[0]:.2f} not over yesterday's high {lv.get('pdh')} / the opening range high {lv.get('orh')} yet")
     if recheck:                                         # levels from an earlier check: the day's low now
@@ -1025,7 +1164,7 @@ def check_morning(cands, state, M, live, S, E, now, sent):
             fresh = dict(zip([r[0] for r in recheck], ex.map(lambda s_: morning_levels(s_, now.date()), [r[0] for r in recheck])))
         for sym, a, lv in recheck:
             if fresh.get(sym):
-                lv = dict(lv, low=fresh[sym]["low"])
+                lv = dict(lv, low=fresh[sym]["low"])     # (the 21-day closing high and the levels as they were)
                 a = morning_alert(sym, S[sym], live["rows"][sym], lv, M) or a
             fired.append((sym, a, lv))
     if not fired:
@@ -1090,6 +1229,9 @@ def main():
                 E_all = {r["sym"]: r for r in json.load(open(sys.argv[sys.argv.index("--earnings") + 1])).get("rows", []) if r.get("reported")}
             except Exception:
                 E_all = {}
+        gr_ = (doc.get("group_rank") or {})
+        _MCTX["rs"] = gr_.get("rs") or {}
+        _MCTX["gr"] = {(g.get("kind"), g.get("group")): g for g in gr_.get("rows") or []}
         mb_cands = find_morning(live, S_all, M, now)
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
     # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
