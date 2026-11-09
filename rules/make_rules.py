@@ -306,6 +306,12 @@ SHEETS["A2 Conviction stars"] = (["Star", "Rule", "Tested (Aug 2025 - Oct 2026, 
  ["Gapping up", "The Pre-market list shows only starred names gapping up in the pre-market scan (after the watch list's close; all of them before 7:00 AM): a launch opens up (5,492 of the 5,493 tested launch alerts). Any gap up counts: ★★ +0.54R on 0-2% gaps, +0.85R on 2-5%, -0.51R on 5%+ (28 trades); ★ +0.44R / +0.10R / +0.36R", "", ""],
  ["Where", "Pre-market tab: '★ Launch watch' (the evening scan's watch list, starred, Copy tickers) and a Stars column on the graded gappers; Launches tab: Stars and Trend (yesterday) on Launching today, ★★★ tags on Launches; desktop alerts with the stars stay on screen until clicked, with a tone. Phone alerts unchanged", "", ""],
 ])
+SHEETS["E1 Earnings tab"] = (["Item", "Rule"], [
+ ["Who shows (your rules)", "This week's reports (Nasdaq's calendar) for the stocks that pass your Earnings rules, checked on the last close before the stock first comes on the week's list (once on, it stays for the week): defaults (Nov 3 2026, scanner/settings.json) market cap $700M+, 20-day average $30M+ traded and 600K+ shares a day, price $10+, ADR 3.5%+, 30%+ over the 52-week low"],
+ ["Your rules in boxes (the user, Nov 9 2026)", "'This part, can you make it a filter so I can adjust whatever I want on those criteria': the Earnings tab's boxes (Mkt cap, $ vol 20D, Avg vol 20D, Price, ADR, 52W low), Save -> earnings/rules.json on main (GitHub key, like the Graded gappers rules); radar/earnings.py reads them at each run (out of range = the default, an empty box = that rule off). Stricter rules show at once on the page (it hides the reports already on the list that fail them); looser rules bring in more reports from the next Earnings update (weekdays 7:10-8:55 AM about every 15 min, 4:50, 6:30, 8:30 PM; Sunday 6 PM). At most 700 reports a week: past that, the less liquid newcomers are left out and the tab says how many. The boxes preview how many of the reports on the list they keep before you save"],
+ ["Why a big name can be missing (Nov 9 2026)", "Not in the portal's universe ($300M+ US common stocks: no closed-end funds) or one of your rules; most often the 30% over the 52-week low (CEG 9%, NRG 11%, CRWV 14%, SE 6%, NU 7% on Nov 6's close)"],
+ ["Also on the tab", "RS, Trend and + Filter for both tables (unchanged)"],
+])
 SHEETS["X1 Agreed examples"] = (["Ticker", "From", "To", "Launch / pick", "What you agreed"], _examples())
 
 SHEETS = dict(sorted(SHEETS.items(), key=lambda kv: ("LWBPGAETOX".index(kv[0][0]), kv[0])))
@@ -329,7 +335,7 @@ for name, (cols, rows) in SHEETS.items():
     ws.freeze_panes = "A2"; ws.row_dimensions[1].height = 30
 info = wb.create_sheet("About", 0)
 for line in ["Theme & Group Radar: scanner rules", "As of Nov 4, 2026. Source of truth: scanner/launch.py, scanner/settings.json, radar/ and the morning grading instructions.",
-             "L = Launches (L1-L9) · W = Watchlist (W1-W2) · B = Buy points, legs & status (B1-B2) · P = Pre-market (P1-P3) · G = Gainers (G1), Group rank (G2) · A = Alerts (A1) · O = Open items · X = Agreed examples",
+             "L = Launches (L1-L9) · W = Watchlist (W1-W2) · B = Buy points, legs & status (B1-B2) · P = Pre-market (P1-P3) · G = Gainers (G1), Group rank (G2) · A = Alerts (A1) · E = Earnings tab (E1) · O = Open items · X = Agreed examples",
              "Regenerate with: python3 rules/make_rules.py (any rule change updates it in the same commit)"]:
     info.append([line])
 info["A1"].font = Font(name="Arial", bold=True, size=14)
