@@ -92,7 +92,8 @@ from screens import roll_mean  # noqa: E402
 L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
          near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5,
-         lag_rv=2, lag_under200=60)
+         lag_rv=2, lag_under200=60,
+         ema21_under_adr=1.25, ema21_under_depth=20)   # the 21 EMA undercut & reclaim: the 2 closes under within 1.25 ADR, the pullback within 20% of the base high (Nov 9 2026, CRL)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -1099,14 +1100,18 @@ def follow(a, i0, i, pick=False):
         upper half of its range, over the 50 EMA, in the base (pulled back 1.25+ ADRs from its high, under it).
         "retest": the closes since the high held over it (a quarter ADR) and the 3 days before were no advance (a
         controlled pullback into it: VEEV Sep 15 2026 gapped down after 3 up days, no; Sep 21 yes; TTAN Oct 29, NTSK Oct 1,
-        ARM May 18). "undercut": the 2 days before closed under it, within half an ADR (momentum traders out after 2
+        ARM May 18). "undercut": the 2 days before closed under it, within 1.25 ADR (momentum traders out after 2
         closes under, a shakeout: SMCI Jun 23 & 26 2023, Jun 27 undercut & reclaim, Jun 28 its flag; APPN Sep 8-11 2026
-        closed 1.3 ADRs under: a breakdown, no)"""
+        closed 1.3 ADRs under: a breakdown, no), the reclaim's close within 20% of the base high (the user, Nov 9 2026:
+        CRL Nov 4 & 5 closed 0.39 / 1.09 ADR under the 21 EMA, Nov 6 down to 316.61 and closed 337.52 back over 331.38,
+        11% under its 379.63 high: an undercut & reclaim; it was half an ADR until then. SMCI Jun 27 2023 closed 22.62,
+        16% under its 27.02 high)"""
         ak, top = _adr(st, k), st.h[i0:k].max()
         if not (st.l[k] < a.e21[k] and st.l[k] < st.o[k] and c[k] > a.e21[k] and c[k] > a.e50[k] and c[k] < top
                 and c[k] - st.l[k] >= 0.5 * (st.h[k] - st.l[k]) and st.l[last_new:k + 1].min() <= top * (1 - 1.25 * ak / 100)):
             return None
-        if all(a.e21[m] * (1 - ak / 200) <= c[m] < a.e21[m] for m in (k - 2, k - 1)):
+        if all(a.e21[m] * (1 - L["ema21_under_adr"] * ak / 100) <= c[m] < a.e21[m] for m in (k - 2, k - 1)) \
+                and c[k] >= top * (1 - L["ema21_under_depth"] / 100):
             return "undercut"
         if (c[last_new:k] >= a.e21[last_new:k] * (1 - ak / 400)).all() and not all(c[m] > c[m - 1] for m in (k - 3, k - 2, k - 1)):
             return "retest"
@@ -1143,13 +1148,15 @@ def follow(a, i0, i, pick=False):
     reclaim50 = bool(i >= i0 + 3 and c[i - 2] < a.e50[i - 2] and c[i - 1] < a.e50[i - 1] and st.l[i] < a.e50[i] and st.l[i] < st.o[i]
                      and c[i] > a.e50[i] and c[i] - st.l[i] >= 0.5 * (st.h[i] - st.l[i]) and c[i] < st.h[i0:i].max())
     # tomorrow's 21 EMA setup (radar/alerts.py: the heads-up when it trades down to the 21 EMA, the alert from 3:45 PM
-    # when it holds back over it): "undercut" after 2 closes under it (today and yesterday, within half an ADR), "retest"
+    # when it holds back over it): "undercut" after 2 closes under it (today and yesterday, within 1.25 ADR; tomorrow's
+    # close back over it has to be within 20% of the base high too: ema21_floor), "retest"
     # while the closes held over it after a pullback that was no advance
-    ema21_watch = None
+    ema21_watch, ema21_floor = None, None
     if i - last_new >= 3 and not any(k > last_new for k in rdays) and not any(ema_back(k) for k in range(last_new + 4, i + 1)) \
             and c[i] < st.h[i0:i + 1].max() and c[i] > a.e50[i]:
-        if all(a.e21[m] * (1 - adr / 200) <= c[m] < a.e21[m] for m in (i - 1, i)):
-            ema21_watch = "undercut"
+        floor21 = st.h[i0:i + 1].max() * (1 - L["ema21_under_depth"] / 100)
+        if all(a.e21[m] * (1 - L["ema21_under_adr"] * adr / 100) <= c[m] < a.e21[m] for m in (i - 1, i)):
+            ema21_watch, ema21_floor = "undercut", fnum(floor21)
         elif (c[last_new:i + 1] >= a.e21[last_new:i + 1] * (1 - adr / 400)).all() and not all(c[m] > c[m - 1] for m in (i - 2, i - 1, i)) \
                 and c[i] <= a.e21[i] * (1 + 1.5 * adr / 100):
             ema21_watch = "retest"
@@ -1364,7 +1371,7 @@ def follow(a, i0, i, pick=False):
                       f"sets up a breakout undercut & reclaim")
     out = dict(
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo, top_tries=ntries, top_tries_note=tries_txt,
-        ema21_today=reclaim, ema21_watch=ema21_watch,
+        ema21_today=reclaim, ema21_watch=ema21_watch, ema21_floor=ema21_floor,
         breakout_caution=bool(bo and bo[0] == i and c[i] <= bo[1] * (1 + L["caution_pct"] / 100)),
         double_breakout="double breakout" in stage, flag_dry="volume dried up" in stage,
         # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
@@ -1425,7 +1432,7 @@ def follow(a, i0, i, pick=False):
     run_ = 100 * (c[i] / st.l[ms] - 1)
     out.update(momentum_start=st.dates[ms], momentum_start_low=fnum(st.l[ms]), run_from_start_pct=fnum(run_, 0), extended=bool(L["max_run_pct"] and run_ >= L["max_run_pct"]))
     if out["extended"]:
-        out.update(buy_point=None, to_buy_point_pct=None, pattern=None, retest_zone=None, ema21_watch=None, push_level=None, reclaim_level=None,
+        out.update(buy_point=None, to_buy_point_pct=None, pattern=None, retest_zone=None, ema21_watch=None, ema21_floor=None, push_level=None, reclaim_level=None,
                    gap_base_level=None, stage=out["stage"] + f" · EXTENDED: +{run_:.0f}% from its momentum start ({st.dates[ms]}, {st.l[ms]:.2f}), no buy points")
     return out
 
@@ -1666,7 +1673,7 @@ def s3_read(a, i0, last, was_in=False):
 
 
 # the follow() fields radar/alerts.py and the portal's desktop alerts read for a name's live entries (setups3 rows "live")
-S3_LIVE = ("adr_pct", "buy_point", "buy_point_top_date", "day_open", "price", "ema10", "ema21", "ema50", "ema21_watch",
+S3_LIVE = ("adr_pct", "buy_point", "buy_point_top_date", "day_open", "price", "ema10", "ema21", "ema50", "ema21_watch", "ema21_floor",
            "last_breakout_days_ago", "last_breakout_top", "last_breakout_date", "late", "leg", "pattern", "flag_shape",
            "push_level", "reclaim_level", "retest_away", "retest_level", "retest_level_wick", "retest_need_low", "retest_zone",
            "retest_from", "retest_tried", "retest_low", "retest_testing", "breakouts", "sessions", "vol_build",

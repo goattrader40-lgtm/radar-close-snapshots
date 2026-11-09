@@ -387,7 +387,7 @@ def find(live, doc, now=None):
             if w21 and e21 and (now.hour, now.minute) >= (9, 35):
                 kind = ("undercut & reclaim (2 closes under it: strong)" if w21 == "undercut" else "retest (a controlled pullback into it)")
                 tail21 = f" · {chg:+.1f}% · vol {rv:.1f}x · leg {r.get('leg')}" + since(r)
-                if price <= e21 * (1 + adr21 / 400) and price > (r.get("ema50") or 0):
+                if price <= e21 * (1 + adr21 / 400) and price > (r.get("ema50") or 0) and price >= (r.get("ema21_floor") or 0):
                     out.append((f"{sym}:ema21zone", f"{sym} at its 21 EMA in the base",
                                 f"${price:.2f} at the 21 EMA ${e21:.2f} (the last close's) · a 21 EMA {kind} setup: the buy is the close back"
                                 f" over it, in the upper half of the day" + tail21, "default", tvs))
@@ -938,6 +938,10 @@ def main():
             op_ = q_[5] if q_ and len(q_) > 5 else None
             if not (q_ and lo_ and hi_ and op_ and lo_ < e21_ and lo_ < op_ and q_[0] - lo_ >= 0.5 * (hi_ - lo_)):
                 print(f"{key}: today's low {lo_} / high {hi_} / open {op_}: no undercut and reclaim of the 21 EMA {e21_} yet, not sent")
+                continue
+            # the undercut & reclaim holds within 20% of the base high (the user, Nov 9 2026; scanner/launch.py ema21_floor)
+            if r_.get("ema21_floor") and q_[0] < r_["ema21_floor"]:
+                print(f"{key}: {q_[0]} under {r_['ema21_floor']} (20% under the base high), not sent")
                 continue
             msg += f" · today's low ${lo_:.2f} under it"
         if title is not None and key.endswith(":ema50"):

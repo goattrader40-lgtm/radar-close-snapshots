@@ -111,7 +111,7 @@ SHEETS.update({
  ["21 EMA retest", "5+ days into the base and 1.25+ ADRs off its high; controlled pullback (no advance the 3 days before, closes held over the 21 EMA)", "Low goes under the 21 EMA and under the open, close comes back over it in the upper half of the day; once per pullback", "No"],
  ["Retest held", "Once per breakout: after a real pullback, the low at the broken base top (bodies or wicks)", "Close back over the top and the 21 EMA (holding over the 10 EMA, or the low tested the 21 EMA and reclaimed it)", "No"],
  ["Breakout undercut & reclaim", "After a breakout, 2+ closes back under its level while holding over the 50 EMA", "The close back over the level, within 5 sessions", "No"],
- ["21 EMA undercut & reclaim", "2 closes under the 21 EMA by less than 0.5 ADR", "The close back over the 21 EMA (strong signal)", "No"],
+ ["21 EMA undercut & reclaim", "2 closes under the 21 EMA by at most 1.25 ADR (was 0.5 until Nov 9 2026: CRL Nov 6)", "The close back over the 21 EMA (strong signal), within 20% of the base high", "No"],
  ["Push out of the 21 EMA", "After a retest, a push out of the 21 EMA with a gap (not while still under a flag's falling line)", "The gap open", "No"],
  ["Double breakout", "The base top and a falling line inside the base broken the same day", "The base top", "Yes"],
  ["3rd try (ascending triangle)", "1st try = the base high, a 2nd try within 0.25 ADR of it after a real pullback, then a shallower pullback (higher lows)", "The base high on the 3rd try", "Yes"],
