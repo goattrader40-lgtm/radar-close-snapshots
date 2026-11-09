@@ -58,6 +58,7 @@ jobs:
           ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
           ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          SEC_UA: ${{ secrets.SEC_UA }}     # the morning breakout alerts' news (radar/codegrade.py stock_news)
         run: |
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"

@@ -183,6 +183,9 @@
   .tgr-num:focus-visible, .tgr-f input[type=checkbox]:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
   .tgr-num.bad { border-color: var(--color-bad); color: var(--color-bad); }
   #pmr-box .pmr-warn { color: var(--color-bad); }
+  #mbo-box .pmr-warn { color: var(--color-bad); }
+  #mbo-box .mbo-time { width: 6.5rem; }
+  #mbo-box input.bad { border-color: var(--color-bad); }
   .tgr-lite { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.8; cursor: pointer; }
   .tgr-lite:hover { border-color: var(--color-fg-muted); }
   /* RS / Trend filters (Watchlist, Launches): the Trend picker is a small dropdown of tick boxes */
@@ -1030,7 +1033,32 @@
       <details class="tgr-legend tgr-more" data-key="alerts"><summary>What pops up, and when</summary><p class="tgr-note" id="ln-alert-more"></p></details>
       <p class="tgr-note" id="ln-alert-note"></p>
       <p class="tgr-note" id="ln-alert-speed"></p>
-      <div class="al-filter"><span class="tgr-seg" id="al-filter" role="group" aria-label="Which tab's alerts"><button data-v="All" aria-pressed="true">All</button><button data-v="Launches" aria-pressed="false">Launches</button><button data-v="Watchlist" aria-pressed="false">Watchlist</button><button data-v="Launch laggards" aria-pressed="false">Laggards</button><button data-v="Pre-market" aria-pressed="false">Pre-market</button></span></div>
+      <details class="tgr-legend tgr-more" id="mbo-wrap" data-key="mbo" open><summary>📈 Morning breakouts: your settings</summary>
+      <div class="tgr-filters" id="mbo-box" role="group" aria-label="Morning breakout alert settings">
+        <span class="tgr-lbl" style="flex-basis:100%">Any stock trading over yesterday's high and the 5-minute opening range high, up on the day on volume, between the times below: GitHub's job checks every minute and the alert shows here (📈 box, sound and pop-up; no phone yet). One alert when one stock fires, one batch alert when several fire in the same minute. Each stock once a day. Saved in your repo: set them before 9:25 ET.</span>
+        <label class="tgr-f"><input type="checkbox" data-mbo="on"> On</label>
+        <label class="tgr-f">From <input class="tgr-num mbo-time" type="time" step="60" data-mbo="start" aria-label="Start, ET"> to <input class="tgr-num mbo-time" type="time" step="60" data-mbo="end" aria-label="End, ET"> ET</label>
+        <label class="tgr-f">Up ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" max="100" data-mbo="min_chg" aria-label="Minimum % up on the day"> %</label>
+        <label class="tgr-f">Rel vol ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" max="50" data-mbo="min_rv" aria-label="Minimum relative volume for the time of day"> ×</label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="over_pdh"> Over yesterday's high</label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="over_orh"> Over the 5-min opening range high</label>
+        <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-mbo="price" aria-label="Minimum price, dollars"></label>
+        <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-mbo="mcap_b" aria-label="Minimum market cap, $ billions"> B</label>
+        <label class="tgr-f">Avg vol 20D ≥ <input class="tgr-num" type="number" inputmode="decimal" step="50" min="0" data-mbo="avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K</label>
+        <label class="tgr-f">$ vol 20D ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-mbo="dvol_m" aria-label="Minimum 20-day average $ volume, millions"> M</label>
+        <label class="tgr-f">ADR ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" max="50" data-mbo="adr" aria-label="Minimum ADR, %"> %</label>
+        <label class="tgr-f">52W low ≥ <input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-mbo="low52" aria-label="Price at least this % over the 52-week low"> % below price</label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="above200"> Over the 200 SMA</label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="above50"> Over the 50 EMA</label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="e10_e21"> 10 EMA over the 21</label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="e21_e50"> 21 EMA over the 50</label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="e50_s200"> 50 EMA over the 200 SMA</label>
+        <button class="tgr-lite" id="mbo-save" type="button" disabled>Save</button>
+        <button class="tgr-lite" id="mbo-def" type="button">Back to the defaults</button>
+        <span class="tgr-lbl" id="mbo-msg" style="flex-basis:100%"></span>
+      </div>
+      </details>
+      <div class="al-filter"><span class="tgr-seg" id="al-filter" role="group" aria-label="Which tab's alerts"><button data-v="All" aria-pressed="true">All</button><button data-v="Launches" aria-pressed="false">Launches</button><button data-v="Watchlist" aria-pressed="false">Watchlist</button><button data-v="Launch laggards" aria-pressed="false">Laggards</button><button data-v="Pre-market" aria-pressed="false">Pre-market</button><button data-v="Morning" aria-pressed="false">Morning</button></span></div>
       <div class="al-boxes" id="ln-alert-boxes"></div>
       <ul class="tgr-alog" id="ln-alert-log"></ul>
     </div>
@@ -2196,6 +2224,105 @@ defCalc('industry_perf', {
     try { if (await savePmRules(Object.assign({}, PMRE))) { PMR_DIRTY = false; toast('Rules saved: the code grader uses them from its next run (8:52 / 9:05 / 9:18 on weekdays), the 8:45 grading from tomorrow morning.'); } }
     catch (e) { toast('Not saved: ' + e.message + '.'); }
     b.textContent = 'Save for the next run'; drawPmRules();
+  });
+  /* 📈 morning breakouts (the user, Nov 9 2026: "it has to be adjustable"; "I would adjust the criteria by 9:20-9:25"):
+     saved to alerts/morning.json on main with your GitHub key (like the Graded gappers rules); radar/alerts.py reads them
+     every 2 minutes (load_morning: the same ranges; out of range = the default). An empty box turns that filter off. The
+     defaults: 9:35-10:30, up 5%+, Rel vol 1+, over yesterday's high and the 5-minute opening range high, your Gainers
+     tab's liquidity with ADR 4%+, 30% over the 52-week low, over the 200 SMA and the 50 EMA, 10 EMA over the 21, 21 over the 50 */
+  const MBO_DEF = { on: true, start: '09:35', end: '10:30', min_chg: 5, min_rv: 1, over_pdh: true, over_orh: true, price: 5, mcap_b: 0.7, avgvol_k: 700,
+    dvol_m: 30, adr: 4, low52: 30, above200: true, above50: true, e10_e21: true, e21_e50: true, e50_s200: false };
+  const MBO_NUM = { min_chg: [0, 100, 'Up', '', '%'], min_rv: [0, 50, 'Rel vol', '', '×'], price: [0, 10000, 'Price', '$', ''], mcap_b: [0, 5000, 'Mkt cap', '$', 'B'],
+    avgvol_k: [0, 100000, 'Avg vol 20D', '', 'K'], dvol_m: [0, 100000, '$ vol 20D', '$', 'M'], adr: [0, 50, 'ADR', '', '%'], low52: [0, 1000, '52W low', '', '%'] };
+  const MBO_BOOL = ['on', 'over_pdh', 'over_orh', 'above200', 'above50', 'e10_e21', 'e21_e50', 'e50_s200'];
+  let MBS = null, MBE = null, MB_DIRTY = false;   /* the saved file; the boxes; boxes changed and not saved */
+  const tOk = (t) => /^\d\d:\d\d$/.test(String(t || ''));
+  const mboSaved = () => {
+    const o = Object.assign({}, MBO_DEF);
+    if (!MBS) return o;
+    Object.keys(MBO_NUM).forEach((k) => { if (!(k in MBS)) return; const v = MBS[k] === null ? null : num(MBS[k]); if (v === null || (v >= MBO_NUM[k][0] && v <= MBO_NUM[k][1])) o[k] = v; });
+    MBO_BOOL.forEach((k) => { if (typeof MBS[k] === 'boolean') o[k] = MBS[k]; });
+    ['start', 'end'].forEach((k) => { if (tOk(MBS[k])) o[k] = MBS[k]; });
+    return o;
+  };
+  const mboBad = (R) => Object.keys(MBO_NUM).filter((k) => R[k] !== null && (num(R[k]) === null || num(R[k]) < MBO_NUM[k][0] || num(R[k]) > MBO_NUM[k][1]))
+    .concat(['start', 'end'].filter((k) => !tOk(R[k]) || R[k] < '09:30' || R[k] > '16:00')).concat(tOk(R.start) && tOk(R.end) && R.end < R.start ? ['end'] : []);
+  const mboSame = (a, b) => Object.keys(MBO_DEF).every((k) => String(a[k]) === String(b[k]));
+  const t12 = (t) => { const [H, M] = String(t).split(':').map(Number); return ((H % 12) || 12) + ':' + String(M).padStart(2, '0'); };
+  const mboText = (R) => {
+    if (!R.on) return 'Off.';
+    const st = R.over_orh && R.start < '09:35' ? '09:35' : R.start, x = [];
+    if (R.min_chg !== null) x.push('up ' + R.min_chg + '%+');
+    if (R.min_rv !== null) x.push('Rel vol ' + R.min_rv + '×+');
+    if (R.over_pdh) x.push('over yesterday\'s high');
+    if (R.over_orh) x.push('over the 5-min opening range high');
+    if (R.price !== null) x.push('$' + R.price + '+');
+    if (R.mcap_b !== null) x.push('market cap $' + (R.mcap_b < 1 ? Math.round(R.mcap_b * 1000) + 'M' : R.mcap_b + 'B') + '+');
+    if (R.avgvol_k !== null) x.push(R.avgvol_k + 'K+ shares');
+    if (R.dvol_m !== null) x.push('$' + R.dvol_m + 'M+ a day');
+    if (R.adr !== null) x.push('ADR ' + R.adr + '%+');
+    if (R.low52 !== null) x.push(R.low52 + '%+ over the 52-week low');
+    if (R.above200) x.push('over the 200 SMA');
+    if (R.above50) x.push('over the 50 EMA');
+    const stk = [R.e10_e21 ? '10 > 21' : '', R.e21_e50 ? '21 > 50' : '', R.e50_s200 ? '50 EMA > 200 SMA' : ''].filter(Boolean);
+    if (stk.length) x.push(stk.join(', '));
+    return t12(st) + '-' + t12(R.end) + ' ET: ' + x.join(', ') + '.';
+  };
+  const drawMorning = () => {
+    if (!$('#mbo-box')) return;
+    if (!MBE || !MB_DIRTY) MBE = mboSaved();
+    const saved = mboSaved(), bad = mboBad(MBE);
+    document.querySelectorAll('#mbo-box [data-mbo]').forEach((el) => {
+      const k = el.dataset.mbo;
+      if (el.type === 'checkbox') el.checked = MBE[k] === true;
+      else { if (el !== document.activeElement) el.value = MBE[k] === null || MBE[k] === undefined ? '' : String(MBE[k]); el.classList.toggle('bad', bad.includes(k)); }
+    });
+    const msg = $('#mbo-msg'); msg.replaceChildren();
+    const line = (t, cls) => msg.append(h('div', cls || '', t));
+    bad.forEach((k) => { const L = MBO_NUM[k]; line(L ? L[2] + ' must be ' + L[3] + L[0] + ' to ' + L[3] + L[1] + ' ' + L[4] + ' (or empty: off): fix it to save.' : 'The times must be 9:30 to 4:00 PM, the end after the start: fix them to save.', 'pmr-warn'); });
+    const changed = !mboSame(MBE, saved);
+    $('#mbo-save').disabled = !changed || !!bad.length;
+    if (MBE.over_orh && MBE.start < '09:35') line('Starts at 9:35: the 5-minute opening range is complete then.');
+    line('Now: ' + mboText(saved));
+    line(changed ? 'Not saved yet: Save, and the job uses them within 2 minutes.' : MBS && MBS.saved_at ? 'Saved ' + fDate(MBS.saved_at) + ' ' + nyHm(MBS.saved_at) + ' ET: the job uses them within 2 minutes.' : 'Your defaults (nothing saved yet).');
+    const n = ((SRV && SRV.date === todayNY() && SRV.items) || []).filter((it) => /:mbo$/.test(it.key) && !/^mbatch/.test(it.key)).length;
+    if (n) line('Today: ' + n + ' morning breakout' + (n > 1 ? 's' : '') + ' (the 📈 box below).');
+  };
+  document.querySelectorAll('#mbo-box [data-mbo]').forEach((el) => {
+    const k = el.dataset.mbo;
+    const set = () => { if (!MBE) MBE = mboSaved(); if (el.type === 'checkbox') MBE[k] = el.checked; else if (el.type === 'time') MBE[k] = el.value || ''; else { const raw = el.value.trim(); MBE[k] = raw === '' ? null : Number(raw); } MB_DIRTY = true; drawMorning(); };
+    el.addEventListener('change', set);
+    if (el.type !== 'checkbox') el.addEventListener('keydown', (e) => { if (e.key === 'Enter') el.blur(); });
+  });
+  $('#mbo-def').addEventListener('click', () => { MBE = Object.assign({}, MBO_DEF); MB_DIRTY = true; drawMorning(); });
+  const saveMorning = async (R) => {
+    let key = ghKey() || await askKey();
+    if (!key) return false;
+    const url = 'https://api.github.com/repos/' + GH.owner + '/' + GH.repo + '/contents/alerts/morning.json';
+    const doc = Object.assign({}, R, { saved_at: nyIso(), by: 'portal' });
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const hd = { Authorization: 'Bearer ' + key, Accept: 'application/vnd.github+json' };
+      const g = await fetch(url + '?ref=main&t=' + Date.now(), { headers: hd, cache: 'no-store' });
+      if (g.status === 401) { dropKey(); key = await askKey(); if (!key) return false; continue; }
+      let sha;
+      if (g.ok) sha = (await g.json()).sha;
+      else if (g.status !== 404) throw new Error('GitHub answered ' + g.status);
+      const body = { message: 'Morning breakout settings: ' + mboText(R) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
+      if (sha) body.sha = sha;
+      const p = await fetch(url, { method: 'PUT', headers: hd, body: JSON.stringify(body) });
+      if (p.ok) { MBS = doc; return true; }
+      if (p.status === 409 || p.status === 422) continue;
+      if (p.status === 401 || p.status === 403 || p.status === 404) { dropKey(); throw new Error('this key can\'t save to the repo. Make a new one: in step 3 pick radar-close-snapshots, in step 4 Contents: Read and write'); }
+      throw new Error('GitHub answered ' + p.status);
+    }
+    throw new Error('the file kept changing: try again');
+  };
+  $('#mbo-save').addEventListener('click', async () => {
+    const b = $('#mbo-save'); if (mboBad(MBE).length) return;
+    b.disabled = true; b.textContent = 'Saving…';
+    try { if (await saveMorning(Object.assign({}, MBE))) { MB_DIRTY = false; toast('Morning breakout settings saved: the job uses them within 2 minutes.'); } }
+    catch (e) { toast('Not saved: ' + e.message + '.'); }
+    b.textContent = 'Save'; drawMorning();
   });
   const drawPremarket = (symMap) => {
     drawPmRules();
@@ -3379,14 +3506,14 @@ defCalc('industry_perf', {
      TRIGGERS: the 21 EMA retest alone is a heads-up ("not a strong sign by itself"), with the breakout level under it
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
-    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close']);
+    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close', 'mbo']);
   const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
   /* a few words per kind for the group-move lines (radar/alerts.py KIND_WORDS) */
   const KIND_WORDS = { retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
     breakout: 'breakout', touch: 'touched the buy point', confirm: 'breakout confirmed', power: 'power day', catalyst: 'catalyst gap', basebreak: 'base high cleared',
     launch: 'launch', reversal: 'reversal launch', laggard: 'laggard launch', reclaimbo: 'back over its breakout level', reclaimbo2: 'breakout undercut & reclaim',
     ema50back: 'back over the 50 EMA', ema50: '50 EMA undercut & reclaim', push: 'push', pop: 'pop', gapbase: 'gap out of base', gob1: 'gap out of base',
-    gob5: 'gap out of base', s3: '3-SETUPS trigger', trend: 'TREND trigger', ep: 'episodic pivot', w200: 'W crossing the 200', w200now: 'W over the 200', w200close: 'W closed over the 200', early: 'early gap', near: 'gapping to the buy point' };
+    gob5: 'gap out of base', s3: '3-SETUPS trigger', trend: 'TREND trigger', ep: 'episodic pivot', w200: 'W crossing the 200', w200now: 'W over the 200', w200close: 'W closed over the 200', early: 'early gap', near: 'gapping to the buy point', mbo: 'morning breakout' };
   const kindWords = (key, title) => { const k = String(key).split(':')[1] || ''; return k === 'ema21' && /UNDERCUT/.test(title || '') ? '21 EMA undercut & reclaim' : (KIND_WORDS[k] || k); };
   /* each box its own sound for a trigger (the user, Nov 4 2026), and a voice that says the box and the ticker ("Episodic
      pivot, C D W"); the browser plays them once you clicked on the page after opening it.
@@ -3395,9 +3522,10 @@ defCalc('industry_perf', {
      gentle rising notes (C, E, G) */
   let actx = null;
   const TONES = { e: [[660, 0], [990, 0.11], [1480, 0.22]], l: [[880, 0], [1320, 0.18]], p: [[1047, 0, 0.6]], b: [[784, 0], [587, 0.2]],
-    g: [[440, 0], [440, 0.22]], h: [[1568, 0, 0.2, 0.08]], m: [[523, 0], [659, 0.16], [784, 0.32, 0.5]] };
-  const BOX_SAY = { m: 'Pre-market', l: 'Launching now', p: 'Pattern breakout', e: 'Episodic pivot', b: 'Pullback entry', h: 'Heads up', g: 'Group move' };
-  const BOX_RANK = { e: 0, l: 1, p: 2, b: 3, g: 4, h: 5, m: 6 };
+    g: [[440, 0], [440, 0.22]], h: [[1568, 0, 0.2, 0.08]], m: [[523, 0], [659, 0.16], [784, 0.32, 0.5]],
+    o: [[784, 0], [1047, 0.14], [1319, 0.28], [1568, 0.42, 0.5]] };   /* 📈 Morning breakout: four quick rising notes */
+  const BOX_SAY = { m: 'Pre-market', l: 'Launching now', p: 'Pattern breakout', e: 'Episodic pivot', b: 'Pullback entry', h: 'Heads up', g: 'Group move', o: 'Morning breakout' };
+  const BOX_RANK = { e: 0, o: 1, l: 2, p: 3, b: 4, g: 5, h: 6, m: 7 };
   const chime = (box) => {
     try {
       actx = actx || new (window.AudioContext || window.webkitAudioContext)();
@@ -3420,6 +3548,7 @@ defCalc('industry_perf', {
     if (/ POWER DAY/.test(b.title)) { const n = (/^★+/.exec(b.title) || [''])[0].length; return 'Power day' + (n ? ', ' + STARS_SAY[Math.min(n, 3)] : '') + (b.sym ? ', ' + b.sym.split('').join(' ') : ''); }
     if (/ W (CROSSING THE 200|closed over its 200)/.test(b.title)) return 'W ' + (/CROSSING/.test(b.title) ? 'crossing' : 'closed over') + ' the two hundred, ' + (b.sym || '').split('').join(' ');
     if (b.box === 'g') { const m = / GROUP MOVE: ([^(]+)/.exec(b.title); return 'Group move' + (m ? ', ' + m[1].trim().replace(/&/g, 'and') : ''); }
+    if (/^MORNING BREAKOUTS \(/.test(b.title)) { const m = /\((\d+)\)/.exec(b.title); return 'Morning breakouts, ' + (m ? m[1] : 'several') + ' stocks'; }   /* the batch (the user, Nov 9 2026) */
     const n = (/^★+/.exec(b.title) || [''])[0].length;
     return BOX_SAY[b.box] + (n ? ', ' + STARS_SAY[Math.min(n, 3)] : '') + (b.sym ? ', ' + b.sym.split('').join(' ') : '');
   };
@@ -3477,6 +3606,7 @@ defCalc('industry_perf', {
   const tabOfKey = (key, doc, launched) => {
     const [sym, kind] = String(key).split(':'), on = (k) => !!doc && (doc[k] || []).some((r) => r.symbol === sym);
     if (kind === 'pmclaude' || kind === 'pmcode') return 'P';                       /* the pre-market grades */
+    if (kind === 'mbo') return 'O';                                                  /* the morning breakouts: any stock, their own filter */
     if (kind === 'w200' || kind === 'w200now' || kind === 'w200close') return 'G';   /* a W name: a laggard until it closes over the 200 */
     if (kind === 'laggard') return 'G';
     if (on('launches')) return 'L';
@@ -3487,13 +3617,13 @@ defCalc('industry_perf', {
     return on('setups3') ? 'W' : 'L';
   };
   /* the alert boxes (the user, Nov 4 2026), by what the alert is for; each alert in one box, set when it fires */
-  const BOXES = [['m', '⏰', 'Pre-market'], ['l', '🚀', 'Launching now'], ['p', '🎯', 'Pattern breakouts'], ['e', '⚡', 'Episodic pivots'],
+  const BOXES = [['m', '⏰', 'Pre-market'], ['o', '📈', 'Morning breakouts'], ['l', '🚀', 'Launching now'], ['p', '🎯', 'Pattern breakouts'], ['e', '⚡', 'Episodic pivots'],
     ['b', '↩️', 'Pullback entries'], ['h', '👀', 'Heads-ups'], ['g', '👥', 'Groups & news']];
   const BOX_OF = { power: 'e', catalyst: 'l', launch: 'l', stars: 'l', reversal: 'l', laggard: 'l',
     breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
     ep: 'e',
     retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b',
-    early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', eodheld: 'g', eodlost: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g' };
+    early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', eodheld: 'g', eodlost: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g', mbo: 'o' };
   const boxOfKey = (key, title) => {
     const [a, kind] = String(key).split(':'), t = String(title || '');
     if (a === 'grp' || / GROUP MOVE/.test(t) || /\(after the close\)/.test(t)) return 'g';            /* group moves, the after-close heads-ups */
@@ -3525,7 +3655,7 @@ defCalc('industry_perf', {
       const gm = loadDay('gm', '{}');
       const hm = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' });
       const addGm = (key, title, t) => { const sym = symOf(key); (grpOf.get(sym) || []).forEach((g) => { gm[g] = gm[g] || []; if (!gm[g].some((x) => x[0] === sym)) gm[g].push([sym, kindWords(key, title), t]); }); };
-      ((SRV && SRV.date === todayNY() && SRV.items) || []).forEach((it) => { if (!/^(summary|grp):/.test(it.key)) addGm(it.key, it.title, it.time); });
+      ((SRV && SRV.date === todayNY() && SRV.items) || []).forEach((it) => { if (!/^(summary|grp):/.test(it.key) && !/:mbo$/.test(it.key)) addGm(it.key, it.title, it.time); });   /* the morning breakouts aren't group moves */
       /* a theme and a group with the same stocks alerting are one move: the better-ranked one names it */
       const pctG = new Map(((ldocA && ldocA.group_rank && ldocA.group_rank.rows) || []).map((r) => [r.group, r.pct || 0]));
       const oneMove = (g) => { const ss = (gm[g] || []).map((x) => x[0]).sort().join(','); return !Object.keys(gm).some((h) => h !== g && (gm[h] || []).map((x) => x[0]).sort().join(',') === ss && ((pctG.get(h) || 0) > (pctG.get(g) || 0) || ((pctG.get(h) || 0) === (pctG.get(g) || 0) && h < g))); };
@@ -3573,6 +3703,7 @@ defCalc('industry_perf', {
         const [H, M] = it.time.split(':').map(Number);
         if (nm - (H * 60 + M) <= 10 && !it.grouped) notify(it.title, it.msg, it.tv, it.key);
         if (String(it.key).startsWith('summary:') && it.kind === 'summary') return;      /* its names are in the log line by line */
+        if (/^mbatch/.test(String(it.key))) return;                                      /* a morning breakouts batch: each stock has its line */
         log.unshift(logLine(((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'), it.title, it.msg, it.key, ldocA, launched));
       });
       /* which of this page's own triggers still hold (the user, Nov 5 2026: a trigger that stops meeting its rule leaves its
@@ -3721,7 +3852,7 @@ defCalc('industry_perf', {
       : alertsOn ? 'On: pop-ups while this page is open (a background tab is fine); triggers stay on screen until you close them, heads-ups fade. ' + (log.length ? 'Today:' : 'None yet today.')
       : 'Off. Turn on to get desktop pop-ups while this page is open.';
     /* the long explanation folds away (the user, Nov 4 2026: "make it so I can minimize it") */
-    $('#ln-alert-more').textContent = 'While this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each tab keeps its own triggers: the Watchlist tab the 3-SETUPS triggers and the TREND list\'s (a TREND stock, Trend Up / Turn up / Reclaim / Resting at the last close, trading over its buy point: on this page only), Launches the launches; a stock with both shows on Launches. The boxes sort each tab\'s alerts by kind as they fire: 🚀 Launching now (catalyst gap, A+/A launch, ★ launching, reversal, laggard), 🎯 Pattern breakouts (every pattern\'s buy point: base top, flags, pennants, flat base, cup, ascending triangle, gap out of base, base high cleared, 3-SETUPS and TREND triggers), ⚡ Episodic pivots (a volume pace of 3×+, a 6%+ gap, an open over the highest close of the last 21 sessions, over the 1-month high and the 200 SMA, from 9:35; the power days are here too, as POWER DAY: every power day is an EP; the EP alert stands for that stock\'s catalyst gap and A launch), ↩️ Pullback entries (retest holding, 21 EMA, undercut & reclaim, push, back over the 50 EMA, a touch of the buy point, ★★★), 👀 Heads-ups (early gaps, near the buy point, in the retest zone, at the 21 EMA), 👥 Groups & news (group moves, pre-market grades, after-close heads-ups); newest first, the most stars on top, click for the chart; every tab\'s alerts are on the 🔔 Alerts tab (the chips show one tab\'s; Launches and the Watchlist show their newest in a bar on top). Sounds: each box has its own for a trigger (⚡ three quick rising notes, 🚀 two rising, 🎯 one bell, ↩️ two falling, 👥 two low) and a voice says the box, the stars and the ticker ("Episodic pivot, C D W"; Voice: on / off; Test plays each sound with its name); several at once: each kind\'s sound once, then the first three read out (EPs first, then the most stars) and "and N more". ⏰ Pre-market (pop-ups 8:45-9:25 ET; outside it the lines go in quietly): Claude\'s grades (by about 8:58) and the code\'s (runs at 8:45, 8:55, 9:00, 9:10, 9:20; the first by about 8:48) as they arrive or change: a gap-up that becomes A+ / A / B, changes, or loses it, and Claude\'s A / B gap-downs; one pop-up per update (click: the Pre-market tab), a line per stock with both grades. W names (the code grade\'s laggard watch, kept 60 sessions): over the 200 SMA during the day = a heads-up, still over it from 3:50 PM = 🚀 W CROSSING THE 200, and the evening\'s "W closed over its 200 SMA". With your GitHub key in this browser (the Follow button\'s) the page checks every 20 seconds from 8:45 to 10:00 (else every 90). Click anywhere on the page once after opening it, or the browser keeps it silent. Each stock and kind once a day. Triggers (the buys) stay on the screen until you close them, chime, flash this tab and show bold with a red dot below; heads-ups fade, and in a flood they are grouped into one pop-up. Every alert has its own line below: click it for the chart. Starred alerts stay on screen until clicked, with a tone: ★★ / ★ = a starred stock launching (from yesterday\'s close: ★★ Top / Strong group under the 21 EMA, ★ Trend Up; buy over the 5-minute opening range high, stop its low); ★★★ HIGH CONVICTION = a retest, push or 21 EMA entry holding into the close on a launch in a Top / Strong group with RS 80+ and Trend Up (buy near the close, stop under the day\'s low).';
+    $('#ln-alert-more').textContent = 'While this page is open (a background tab is fine), it pops up the morning\'s pre-market grades (about 9:10 AM ET), power days, catalyst gaps (a neglected stock gapping over its 50 EMA & 200 SMA on earnings or news, and a 2nd pop-up when it clears its base high if it had not yet), A+/A launches, and for followed launches a gap-up of 2%+ on 1.2×+ volume to within 2% of the buy point, the breakout over it (graded A/B/C), a touch of it that fell back (traded over the buy point between two updates, back under now: not a breakout) and its confirmation, a pullback into the retest zone of its last breakout and, from 3:45 PM, the retest holding into the close, the push out of the 21 EMA with a gap after it; after the close, the heads-ups for tomorrow (tight closes under a buy point, a retest of a broken base top that held). The big gap-ups (catalyst gaps, power days, A+/A launches) and the followed launches\' breakouts are checked every minute by the GitHub job from 9:31 to 12:00 and 3:00 to 4:00 PM ET (every 5 minutes in between): an early heads-up from 9:31 for gaps of 5%+ with the gap\'s shape (its volume can\'t be read yet: the opening auction), then the alert from 9:35 when the volume confirms; this page picks them up within about 2 minutes (your phone, with ntfy set up, gets them at once). Each tab keeps its own triggers: the Watchlist tab the 3-SETUPS triggers and the TREND list\'s (a TREND stock, Trend Up / Turn up / Reclaim / Resting at the last close, trading over its buy point: on this page only), Launches the launches; a stock with both shows on Launches. The boxes sort each tab\'s alerts by kind as they fire: 🚀 Launching now (catalyst gap, A+/A launch, ★ launching, reversal, laggard), 🎯 Pattern breakouts (every pattern\'s buy point: base top, flags, pennants, flat base, cup, ascending triangle, gap out of base, base high cleared, 3-SETUPS and TREND triggers), ⚡ Episodic pivots (a volume pace of 3×+, a 6%+ gap, an open over the highest close of the last 21 sessions, over the 1-month high and the 200 SMA, from 9:35; the power days are here too, as POWER DAY: every power day is an EP; the EP alert stands for that stock\'s catalyst gap and A launch), ↩️ Pullback entries (retest holding, 21 EMA, undercut & reclaim, push, back over the 50 EMA, a touch of the buy point, ★★★), 👀 Heads-ups (early gaps, near the buy point, in the retest zone, at the 21 EMA), 👥 Groups & news (group moves, pre-market grades, after-close heads-ups); newest first, the most stars on top, click for the chart; every tab\'s alerts are on the 🔔 Alerts tab (the chips show one tab\'s; Launches and the Watchlist show their newest in a bar on top). Sounds: each box has its own for a trigger (⚡ three quick rising notes, 🚀 two rising, 🎯 one bell, ↩️ two falling, 👥 two low) and a voice says the box, the stars and the ticker ("Episodic pivot, C D W"; Voice: on / off; Test plays each sound with its name); several at once: each kind\'s sound once, then the first three read out (EPs first, then the most stars) and "and N more". ⏰ Pre-market (pop-ups 8:45-9:25 ET; outside it the lines go in quietly): Claude\'s grades (by about 8:58) and the code\'s (runs at 8:45, 8:55, 9:00, 9:10, 9:20; the first by about 8:48) as they arrive or change: a gap-up that becomes A+ / A / B, changes, or loses it, and Claude\'s A / B gap-downs; one pop-up per update (click: the Pre-market tab), a line per stock with both grades. W names (the code grade\'s laggard watch, kept 60 sessions): over the 200 SMA during the day = a heads-up, still over it from 3:50 PM = 🚀 W CROSSING THE 200, and the evening\'s "W closed over its 200 SMA". With your GitHub key in this browser (the Follow button\'s) the page checks every 20 seconds from 8:45 to 10:00 (else every 90). Click anywhere on the page once after opening it, or the browser keeps it silent. Each stock and kind once a day. Triggers (the buys) stay on the screen until you close them, chime, flash this tab and show bold with a red dot below; heads-ups fade, and in a flood they are grouped into one pop-up. Every alert has its own line below: click it for the chart. Starred alerts stay on screen until clicked, with a tone: ★★ / ★ = a starred stock launching (from yesterday\'s close: ★★ Top / Strong group under the 21 EMA, ★ Trend Up; buy over the 5-minute opening range high, stop its low); ★★★ HIGH CONVICTION = a retest, push or 21 EMA entry holding into the close on a launch in a Top / Strong group with RS 80+ and Trend Up (buy near the close, stop under the day\'s low). 📈 Morning breakouts (any stock, your settings above; 9:35-10:30 ET by default): over yesterday\'s high and the 5-minute opening range high, up 5%+ on Rel vol 1×+, with your liquidity, ADR, 52-week-low, 200 SMA, 50 EMA and EMA-stack rules; GitHub\'s job checks every minute and the alert says the stop (under the day\'s low), the risk and the news (today\'s, else the last 2 sessions\' fundamental news); one pop-up when one fires, one batch pop-up (four quick rising notes, "Morning breakouts, 4 stocks") when several fire in the same minute; this page only, no phone yet; the Morning filter shows them alone.';
   }
   /* today's alert log, or only one ticker's alerts (each line: "3:12 PM · LION C breakout: ... — ...") */
   /* the Alerts tab (the user, Nov 4 2026: "should we have a separate tab for alerts"): every tab's alerts in one place, the six
@@ -3731,6 +3862,7 @@ defCalc('industry_perf', {
   const AL_OPEN = new Set();       /* the box lines opened with a click (the user, Nov 5 2026: "click shows the message, then I go to TradingView") */
   try { ALF = localStorage.getItem('radar-alerts-filter') || 'All'; } catch (e) { ALF = 'All'; }
   function drawAlog(log) {
+    safe('Morning settings', drawMorning);       /* 📈 your settings, as saved (or the defaults) */
     const ul = $('#ln-alert-log'); ul.replaceChildren();
     /* GitHub's record of the day (alerts.json, the job's alerts) shown on every device, page open or not, alerts on or off
        (the user, Nov 5 2026: the phone's boxes were empty while 107 alerts had fired); this page's own alerts come from
@@ -3753,7 +3885,7 @@ defCalc('industry_perf', {
         if (lx && !haveK.has(it.key) && H * 60 + M < mn0(lx)) { later.add(lx); haveS.delete(sigOf('x · ' + it.title)); }
       });
       if (later.size) log = log.filter((x) => !later.has(x));
-      const srv = ((SRV && SRV.date === todayNY() && SRV.items) || []).filter((it) => !/^summary:/.test(it.key) && !haveK.has(it.key) && !haveS.has(sigOf('x · ' + it.title)))
+      const srv = ((SRV && SRV.date === todayNY() && SRV.items) || []).filter((it) => !/^(summary:|mbatch)/.test(it.key) && !haveK.has(it.key) && !haveS.has(sigOf('x · ' + it.title)))
         .map((it) => hcItem(it, lrow0.get(it.key.split(':')[0])))
         .map((it) => logLine(t12(it.time), it.title, it.msg, it.key, ldoc0, null)).filter((x) => !haveT.has(vis(x)));
       /* the end of the day, after the evening scan: today's triggers still true at the close, on every device */
@@ -3781,7 +3913,7 @@ defCalc('industry_perf', {
     const wlSet = new Set(((ldoc && ldoc.setups3) || []).map((r) => r.symbol).concat(sdoc ? trendSrc(sdoc).map((r) => r.symbol) : []));
     const isWl = (x) => { const sym = tabSym(x); return wlSet.has(sym) && !onLn.has(sym) && !isLag(x); };
     /* the tab set when the alert fired (tabOfKey) */
-    const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards', P: 'Pre-market' }, SHORT = { Launches: 'Launches', Watchlist: 'Watchlist', 'Launch laggards': 'Laggards', 'Pre-market': 'Pre-market' };
+    const TABNAME = { L: 'Launches', W: 'Watchlist', G: 'Launch laggards', P: 'Pre-market', O: 'Morning' }, SHORT = { Launches: 'Launches', Watchlist: 'Watchlist', 'Launch laggards': 'Laggards', 'Pre-market': 'Pre-market', Morning: 'Morning breakout' };
     const marked = (x) => { const i = x.lastIndexOf(TABMARK); return i >= 0 ? TABNAME[x.charAt(i + 1)] : null; };
     const tabOf = (x) => (isGrp(x) ? '' : marked(x) || (isWl(x) ? 'Watchlist' : isLag(x) ? 'Launch laggards' : 'Launches'));
     /* a power day is always in the ⚡ box (a line saved before Nov 5 afternoon carries the 🚀 box) */
@@ -4993,6 +5125,7 @@ defCalc('industry_perf', {
           const [st2, ln2] = await Promise.all([getMain('setups/latest.json').catch(() => null), getMain('setups/launch.json').catch(() => null)]);
           PICKS = await getMain('setups/picks.json').catch(() => PICKS);
           PMR = await getMain('premarket/rules.json').catch(() => PMR);
+          MBS = await getMain('alerts/morning.json').catch(() => MBS);
           const was = (D.setups && D.setups.data ? D.setups.data.made_at : '') + (D.launch && D.launch.data ? D.launch.data.made_at : '');
           if (st2) D.setups = { status: 'ok', data: st2 };
           if (ln2) D.launch = { status: 'ok', data: ln2 };
@@ -5009,6 +5142,7 @@ defCalc('industry_perf', {
       const [ln, lnbt] = await Promise.all([getMain('setups/launch.json').catch(() => null), getMain('setups/launch_backtest.json').catch(() => null)]);
       PICKS = await getMain('setups/picks.json').catch(() => PICKS);
       PMR = await getMain('premarket/rules.json').catch(() => PMR);   /* your rules for the graded list (none saved yet = the defaults) */
+      MBS = await getMain('alerts/morning.json').catch(() => MBS);    /* your morning breakout settings (none saved yet = the defaults) */
       D.launch = ln ? { status: 'ok', data: ln } : (D.launch && D.launch.status === 'ok' ? D.launch : { status: 'error', data: null });
       if (lnbt) LNBT = lnbt;
       SRV = await getJson(sha, 'alerts.json').catch(() => SRV);

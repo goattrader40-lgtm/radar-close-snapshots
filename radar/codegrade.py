@@ -645,7 +645,7 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None, grade=True):
     # report): its fundamental news of the last 2 sessions, if any (the user, Nov 9 2026: FLY's Nov 6 AST deal), biggest
     # gaps first; read before the sector moves relabel these rows, applied after them (today's read stays in the reason)
     allr = {**news, **out}
-    weak = sorted((s for s, r in allr.items() if weak_news(r) and not r["catalyst"].startswith("After earnings")),
+    weak = sorted((s for s, r in allr.items() if earlier_ok(r)),
                   key=lambda s: -abs(allr[s].get("gap_pct") or (next((g.get("gap_pct") for g in every if g["symbol"] == s), 0)) or 0))
     try:
         EN = earlier_news(weak, day, S) if weak else {}
@@ -897,6 +897,12 @@ def close_back(day, n):
     return t
 
 
+def earlier_ok(r):
+    """nothing of its own today: no news, routine filings, a board change; not "After earnings" (that names the report
+    already) and not a filing the code couldn't classify (AKAM Nov 9 2026: an 8-K offering convertible notes, today's news)"""
+    return weak_news(r) and not r["catalyst"].startswith("After earnings") and r["catalyst"] != "Filing, not classified"
+
+
 def earlier_window(day):
     """(from, to]: the news that came out for the last EARLIER_SESSIONS sessions (Mon Nov 9: Wed 4 PM - Fri 4 PM)"""
     return close_back(day, EARLIER_SESSIONS + 1), last_close_time(day)
@@ -994,7 +1000,7 @@ def stock_news(syms, S, E=None, now=None, budget=40):
         if hl and weak_news(nw) and hl["kind"] not in MINOR:
             nw.update(catalyst=hl["kind"] + " (headline)", reason=f"{hl['title']} ({hl['source']} {hl['at']})", sources=[hl["url"]] + (nw.get("sources") or [])[:2])
         x = None
-        if weak_news(nw) and not nw["catalyst"].startswith("After earnings"):
+        if earlier_ok(nw):
             x = earlier_one(sym, st.get("name"), st.get("mcap_b"), [n for n in H.get(sym) or [] if ts(n) <= w_to], w_from, w_to, day)
             if x:
                 use_earlier(nw, x)

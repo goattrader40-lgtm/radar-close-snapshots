@@ -86,7 +86,7 @@ MAX_TRIGGERS = 15             # triggers a run that always get their own push (a
 # the buys (the user, Nov 3 2026: "so it gets my attention"); everything else is a heads-up. The 21 EMA retest alone is a
 # heads-up (the user: "21 ema retest is not a strong sign by itself"); with the breakout level under it (ema21bl) a trigger
 TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "breakout", "retest", "reclaimbo2",
-            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep"}
+            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep", "mbo"}
 
 
 def is_trigger(key, title=""):
@@ -116,7 +116,8 @@ KIND_WORDS = {"retest": "retest holding", "zone": "in the retest zone", "ema21":
               "reversal": "reversal launch", "laggard": "laggard launch", "reclaimbo": "back over its breakout level",
               "reclaimbo2": "breakout undercut & reclaim", "ema50back": "back over the 50 EMA", "ema50": "50 EMA undercut & reclaim",
               "push": "push", "pop": "pop", "gapbase": "gap out of base", "gob1": "gap out of base", "gob5": "gap out of base",
-              "s3": "3-SETUPS trigger", "early": "early gap", "near": "gapping to the buy point", "ep": "episodic pivot"}
+              "s3": "3-SETUPS trigger", "early": "early gap", "near": "gapping to the buy point", "ep": "episodic pivot",
+              "mbo": "morning breakout"}
 
 
 def kind_words(key, title=""):
@@ -133,7 +134,7 @@ def group_moves(doc, state, alerts_now, now):
     loose = {r["group"] for r in (doc.get("group_rank") or {}).get("rows", []) if r.get("loose")}
     seen = {}
     past = [(it["key"], it.get("title"), it.get("time")) for it in state.get("items", [])
-            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:"))]
+            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:")) and not it["key"].endswith(":mbo")]
     for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now]:
         sym = key.split(":")[0]
         for g in _GROUPS.get(sym, []):
@@ -779,8 +780,8 @@ def update_holding(state, found, live, doc, now):
     lost, back, held, seen = state.setdefault("lost", {}), state.setdefault("back", {}), [], set()
     for it in state.get("items", []):
         key = it.get("key", "")
-        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "summary:")):
-            continue
+        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "summary:")) or key.endswith(":mbo"):
+            continue                                    # (a morning breakout stays in its box: a one-time morning call)
         seen.add(key)
         q = (live.get("rows") or {}).get(key.split(":")[0])
         px = round(q[0], 2) if q and q[0] else None
@@ -999,29 +1000,34 @@ def news_words(x):
 
 def check_morning(cands, state, M, live, S, E, now, sent):
     """the candidates whose levels are broken: [(key, title, msg, 'high', tv)], each stock once a day; the levels are
-    read once a day per stock (after 9:36 the opening range is final) and kept in alerts.json (mbo_lv)"""
+    read once a day per stock (after 9:36 the opening range is final) and kept in alerts.json (mbo_lv); a stock that
+    fires gets its day's low read again (the stop)"""
+    import concurrent.futures
     lvs = state.setdefault("mbo_lv", {})
     todo = [s for s in cands if f"{s}:mbo" not in sent]
-    fetched, fired = 0, []
+    need = [s for s in todo if s not in lvs][:MORNING_FETCH]
+    with concurrent.futures.ThreadPoolExecutor(8) as ex:
+        got = dict(zip(need, ex.map(lambda s_: morning_levels(s_, now.date()), need)))
+    final = (now.hour, now.minute) >= (9, 36)
+    fired, recheck = [], []
     for sym in todo:
-        lv = lvs.get(sym)
-        if not lv and fetched < MORNING_FETCH:
-            lv = morning_levels(sym, now.date())
-            fetched += 1
-            if lv and (now.hour, now.minute) >= (9, 36):
-                lvs[sym] = lv
+        lv = got.get(sym) or lvs.get(sym)
+        if got.get(sym) and final:
+            lvs[sym] = got[sym]
         q = live["rows"][sym]
         a = morning_alert(sym, S[sym], q, lv, M)
-        if a and sym in lvs and fetched < MORNING_FETCH:
-            fresh = morning_levels(sym, now.date())       # the day's low now (the stop), the levels as they were
-            fetched += 1
-            if fresh:
-                lv = dict(lvs[sym], low=fresh["low"])
-                a = morning_alert(sym, S[sym], q, lv, M)
         if a:
-            fired.append((sym, a, lv))
+            (recheck if sym not in got else fired).append((sym, a, lv))
         elif lv:
             print(f"{sym}:mbo: ${q[0]:.2f} not over yesterday's high {lv.get('pdh')} / the opening range high {lv.get('orh')} yet")
+    if recheck:                                         # levels from an earlier check: the day's low now
+        with concurrent.futures.ThreadPoolExecutor(8) as ex:
+            fresh = dict(zip([r[0] for r in recheck], ex.map(lambda s_: morning_levels(s_, now.date()), [r[0] for r in recheck])))
+        for sym, a, lv in recheck:
+            if fresh.get(sym):
+                lv = dict(lv, low=fresh[sym]["low"])
+                a = morning_alert(sym, S[sym], live["rows"][sym], lv, M) or a
+            fired.append((sym, a, lv))
     if not fired:
         return []
     try:
@@ -1070,6 +1076,21 @@ def main():
         return
     sent = set(state["sent"])
     low52_of(launch_p)                  # the stocks file: 52-week lows, 200 SMAs and each stock's groups (3-SETUPS tiers)
+    # the morning breakouts (any stock; the user's settings, alerts/morning.json): the stocks whose live quote passes now
+    M = load_morning(sys.argv[sys.argv.index("--morning") + 1]) if "--morning" in sys.argv else None
+    mb_cands, S_all, E_all = [], {}, {}
+    if M and not early and in_morning(M, now):
+        for name in ("base_stocks.json", "stocks.json"):
+            p = os.path.join(os.path.dirname(os.path.abspath(launch_p)), name)
+            if os.path.exists(p):
+                S_all = {s["symbol"]: s for s in json.load(open(p))}
+                break
+        if "--earnings" in sys.argv:
+            try:
+                E_all = {r["sym"]: r for r in json.load(open(sys.argv[sys.argv.index("--earnings") + 1])).get("rows", []) if r.get("reported")}
+            except Exception:
+                E_all = {}
+        mb_cands = find_morning(live, S_all, M, now)
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
     # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
     found = [a for a in found if over_low52(a[0].split(":")[0], live, low52_of(launch_p))]
@@ -1222,6 +1243,14 @@ def main():
             state["sent"].append(key)
             continue
         passed.append((key, title, msg, prio, tvs))
+    # the morning breakouts: the levels (yesterday's high, the 5-minute opening range) and the news, then their own
+    # alerts, apart from the caps and the group moves below (they don't take the other alerts' places)
+    mb = []
+    if mb_cands:
+        try:
+            mb = check_morning(mb_cands, state, M, live, S_all, E_all, now, sent)
+        except Exception as e:                      # never at the cost of the other alerts
+            print(f"morning breakouts: {e!r}", file=sys.stderr)
     # triggers (the buys) always get their own alert, up to MAX_TRIGGERS a run; the heads-ups fill what is left of
     # MAX_PER_RUN and the rest are grouped into one alert that still names each one, its kind and price. Every alert's
     # full text is saved in alerts.json either way, so the portal's log shows each one (grouped ones without a pop-up)
@@ -1261,6 +1290,14 @@ def main():
     if grouped:
         names = " · ".join(short(a) for a in grouped)
         out_.append(((f"summary:{now:%H%M}", f"{len(grouped)} more heads-ups (in the portal's alert log)", names, "default", ""), False))
+    # one alert when one fires, one batch when several fire in the same check (the user, Nov 9 2026): each stock still has
+    # its own line in the log (grouped: no pop-up of its own); the batch names them all
+    if len(mb) == 1:
+        out_.append((mb[0], False))
+    elif mb:
+        out_ += [(a, True) for a in mb]
+        out_.append(((f"mbatch{now:%H%M}:mbo", f"MORNING BREAKOUTS ({len(mb)}): " + ", ".join(a[0].split(":")[0] for a in mb),
+                      " · ".join(a[1].replace(" MORNING BREAKOUT", "") + " " + a[2].split(" · ")[0] for a in mb), "high", ""), False))
     for (key, title, msg, prio, tvs), is_grouped in out_:
         line = f"{now:%H:%M} {title}: {msg}"
         it = {"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs,
@@ -1269,7 +1306,7 @@ def main():
         if is_grouped:
             it["grouped"] = True
         state.setdefault("items", []).append(it)
-        if topic and not is_grouped:
+        if topic and not is_grouped and key.split(":", 1)[-1] not in PAGE_ONLY:     # the morning breakouts: the portal only
             try:
                 send(topic, title, msg, prio, tvs)
             except Exception as e:

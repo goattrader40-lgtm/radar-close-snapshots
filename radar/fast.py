@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
 """1-minute quotes for the stocks that can alert, between the 5-minute live updates.
 
-  python3 radar/fast.py <launch.json> <stocks.json> <volprofile.json> <sipcal.json> <out.json>
+  python3 radar/fast.py <launch.json> <stocks.json> <volprofile.json> <sipcal.json> <out.json> [--morning <settings.json>]
 
 The launch watch list (setups/launch.json, a few hundred stocks), so a big gap-up on volume (a catalyst gap, a power
 day, an A+/A launch) alerts within a minute instead of up to five (HRI crossed its 200 SMA between the 9:35 and the
 9:40 update on Oct 27, 2026), plus the launches being followed, for their breakouts (LION crossed its buy point at
 3:08 PM on Oct 29, 2026 and the 5-minute update saw it at 3:11). Writes live.json-shaped rows for those stocks only, Rel vol as radar/live.py works it out,
 with the volume correction the last live update measured (radar/sipcal.py). radar/alerts.py reads it like live.json.
+In the morning breakout window (radar/alerts.py, the user's settings: 9:35-10:30 by default) also every stock that can
+pass those settings (the liquidity and the ADR, the price rules on the last close with 30% room), so a morning breakout of
+any stock alerts within a minute (the user, Nov 9 2026: "usually they alert at 9:36-9:45").
 """
 import datetime, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sipcal  # noqa: E402
 from live import NY, Yahoo, fill_opens, rvol_at, yahoo_sym  # noqa: E402
+from alerts import load_morning, in_morning, morning_static  # noqa: E402
 
 
 def main():
@@ -25,7 +29,12 @@ def main():
         prof = json.load(open(prof_p))["rows"]
     except Exception:
         prof = {}
-    avg20 = {r["symbol"]: r.get("avg_vol_20") for r in json.load(open(stocks_p))}
+    SL = json.load(open(stocks_p))
+    avg20 = {r["symbol"]: r.get("avg_vol_20") for r in SL}
+    if "--morning" in sys.argv:                         # the morning breakout window: every stock that can pass the settings
+        M = load_morning(sys.argv[sys.argv.index("--morning") + 1])
+        if in_morning(M, now) or in_morning(M, now + datetime.timedelta(minutes=1)):
+            syms = sorted(set(syms) | {r["symbol"] for r in SL if morning_static(r, M, slack=0.3)})
     off = sipcal.saved(cal_p, now.date())
     ymap = {yahoo_sym(s): s for s in syms}
     y = Yahoo()
