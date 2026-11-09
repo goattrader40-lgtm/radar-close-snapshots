@@ -183,6 +183,14 @@ jobs:
             python3 radar/codegrade.py live /tmp/pm/rows.json /tmp/rd/stocks.json /tmp/rd/earnings.json /tmp/codegrade_test.json ${A:+--asof=$A}
             python3 radar/publish.py "code grader test" /tmp/codegrade_test.json;;
           esac
+          case "$CMD" in morning*)   # the morning breakout alert replayed on today's 1-minute charts ("morning FLY VSAT ...") -> probe_morning.json; before 4:06 PM
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && for f in stocks earnings volprofile; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
+            git show origin/main:alerts/morning.json > /tmp/rd/morning.json 2>/dev/null || git show HEAD:alerts/morning.json > /tmp/rd/morning.json 2>/dev/null || echo '{}' > /tmp/rd/morning.json
+            A=${CMD#morning}; A=${A# }
+            python3 radar/probe_morning.py /tmp/rd/stocks.json /tmp/rd/volprofile.json /tmp/rd/earnings.json /tmp/probe_morning.json --settings=/tmp/rd/morning.json $A
+            python3 radar/publish.py "morning breakout replay" /tmp/probe_morning.json;;
+          esac
           if [ "${{ inputs.cmd }}" = "runners" ]; then   # today's runners vs their 21-day closing high (test/codegrade) -> probe_runners.json
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
