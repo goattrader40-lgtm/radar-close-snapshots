@@ -526,7 +526,7 @@
       <label class="tgr-f">20-day avg volume ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-param="g_avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K shares</label>
       <button class="tgr-lite" id="g-reset" type="button">Reset to my defaults</button>
     </div>
-    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. Gap = today's open vs yesterday's close (off unless you fill it in; while it's set, a stock without an open yet is left out: Yahoo leaves an NYSE stock's open empty for its first ~10 minutes). Rel vol = today's volume ÷ the average of the last 20 trading days: during market hours by this time of day (volume from 9:30 to now vs the same stretch on those days), after the close the full day; it's rough in the first 5 minutes. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list.</p>
+    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. Gap = today's open vs yesterday's close (off unless you fill it in; while it's set, a stock without an open yet is left out: Yahoo leaves an NYSE stock's open empty for its first ~10 minutes). Rel vol = today's volume ÷ the average of the last 20 trading days: during market hours by this time of day (volume from 9:30 to now vs the same stretch on those days), after the close the full day; it's rough in the first 5 minutes. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list. <b>+ Filter</b> also has the morning breakout levels, each Over it / Under it: Yesterday's high (PDH), 5-min opening range high (ORH: from 9:36, for the stocks up 2%+), 21-day closing high (the highest close of the last 21 sessions) and EMA stack (live: 10 over 21, 21 over 50, 50 over the 200 SMA …); while one of these is set, a stock without its value is left out.</p>
     <div class="tgr-moves" id="g-moves"><span class="tgr-lbl">Group moves today (3+ tight members pass):</span> <span class="tgr-chips" id="g-moves-list"></span></div>
     <div class="tgr-bar">
       <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
@@ -4668,6 +4668,17 @@ defCalc('industry_perf', {
   const PGK = (s) => by('g', rowsOf('premarket'), (a) => { const t0 = todayNY(); return new Map(a.filter((x) => (x.graded === true || x.graded === 'true') && x.scan_date === t0 && x.grade).map((x) => [x.symbol, x])); }).get(s) || null;
   const PMK = (s) => (PML && PML.rows && PML.date === todayNY() ? PML.rows[s] || null : null);
   const pxOf = (s) => { const r = SK(s); return r ? num(r.price) : null; };
+  /* today's 5-minute opening range high (radar/levels.py -> radar-data levels.json, today only) */
+  const orhOf = (s) => { const d = LEV && LEV.date === todayNY() && LEV.rows ? LEV.rows[s] : null; return d ? num(d[0]) : null; };
+  /* the price over (true) / under (false) a level; null = no level or no price (left out while the filter is set) */
+  const overLvl = (s, lv) => { const p = pxOf(s), v = num(lv); return p !== null && v ? p > v : null; };
+  /* the EMA stack at the live price (trendOf's EMAs) and the 200 SMA: {a: 10 > 21, b: 21 > 50, c: 50 > 200, txt} */
+  const stackOf = (s) => {
+    const x = trendOf(s), r = SK(s); if (!x || !x.t || x.t.some((v) => v === null || v === undefined)) return null;
+    const [, e10, e21, e50] = x.t, sma = r ? num(r.sma200) : null;
+    const a = e10 > e21, b = e21 > e50, c = sma ? e50 > sma : null;
+    return { a, b, c, txt: '10 ' + (a ? '>' : '<') + ' 21 ' + (b ? '>' : '<') + ' 50' + (c === null ? '' : ' ' + (c ? '>' : '<') + ' 200') };
+  };
   const cell = (v, txt, cls, title) => { const td = h('td', cls || '', txt); if (title) td.title = title; return [v, td]; };
   const cNum = (v, txt, cls, title) => cell(v, txt, 'num' + (cls ? ' ' + cls : ''), title);
   const cPct = (v, sign) => { const x = num(v); return cNum(x, p1(x, sign), sign ? tone(x) : ''); };
@@ -4685,6 +4696,14 @@ defCalc('industry_perf', {
     ['gap', 'Gap', 'Price', 'Today\'s open vs yesterday\'s close (from the live quotes)', ['gap', 'gap_pct'], (s) => cPct((SK(s) || {}).gap_pct, true)],
     ['off52h', 'Off 52W high', 'Price', 'How far under its 52-week high now', ['off_high', 'off_52w_high_pct'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.high_52w) : null; return cNum(v, p1(v, true), tone(v), r && r.high_52w ? '52-week high ' + fPrice(r.high_52w) : ''); }],
     ['over52l', 'Over 52W low', 'Price', 'How far over its 52-week low now', ['over_low52', 'below_low52'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.low_52w) : null; return cNum(v, p1(v, true), '', r && r.low_52w ? '52-week low ' + fPrice(r.low_52w) : ''); }],
+    /* the morning breakout alert's levels as + Filter choices on every tab (the user, Nov 9 2026: "some criteria I asked for
+       aren't available here, I want them here: above ORH, above PDH"; "I go to filters, I find them, I choose them"):
+       the price now vs yesterday's high, today's 5-minute opening range high (radar/levels.py: the stocks up 2%+, from
+       9:36), the 21-day closing high (stocks.json close_high_21) and the EMA stack; as a filter "Over it / Under it" */
+    ['pdh', 'Yesterday\'s high (PDH)', 'Price', 'The price now vs yesterday\'s high (regular hours). As a filter: Over it / Under it', ['vs_pdh'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.high_1d) : null; return cNum(v, p1(v, true), tone(v), r && r.high_1d ? 'Yesterday\'s high ' + fPrice(r.high_1d) : 'No high for yesterday'); }],
+    ['orh', '5-min opening range high (ORH)', 'Price', 'The price now vs today\'s 9:30-9:35 high (from 9:36, for the stocks up 2%+ at a 5-minute update). As a filter: Over it / Under it', [], (s) => { const o = orhOf(s), v = o ? vsPct(pxOf(s), o) : null; return cNum(v, p1(v, true), tone(v), o ? '5-min opening range high ' + fPrice(o) : 'No opening range: from 9:36, for the stocks up 2%+'); }],
+    ['hc21', '21-day closing high', 'Price', 'The price now vs the highest close of the last 21 sessions (as the EP rule). As a filter: Over it / Under it', [], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.close_high_21) : null; return cNum(v, p1(v, true), tone(v), r && r.close_high_21 ? '21-day closing high ' + fPrice(r.close_high_21) : ''); }],
+    ['emastack', 'EMA stack (live)', 'Trend', 'The 10, 21 and 50 EMA at the live price (as the Trend column) and the 200 SMA: which is over which', [], (s) => { const k = stackOf(s); return cTxt(k ? k.txt : null); }],
     ['rel_vol', 'Rel vol', 'Volume', 'Relative volume at the time of day (live in the session)', ['rel_vol', 'rv', 'rv_today'], (s) => { const v = num((SK(s) || {}).rel_vol); return cNum(v, fX(v)); }],
     ['adr', 'ADR%', 'Volume', 'Average daily range of the last 20 sessions (red under 3.5%: a launch day needs 3.5%+)', ['adr', 'adr_20', 'adr_pct'], (s) => { const v = num((SK(s) || {}).adr_20); return cNum(v, fAdr(v), v !== null && v < 3.5 ? 'tgr-dn' : ''); }],
     ['dvol', '$ vol 20D $M', 'Volume', '20-day average $ volume, millions', ['dvol', 'dollar_vol_30d_m'], (s) => { const v = num((SK(s) || {}).dvol_20_m); return cNum(v, fDv(v)); }],
@@ -4969,6 +4988,11 @@ defCalc('industry_perf', {
     er_look: { k: 'cat', opts: ['Strong bullish', 'Bullish', 'Strong bullish or Bullish', 'Mixed', 'Somewhat bearish', 'Bearish', 'Bearish or Somewhat bearish'].map((o) => [o, (s) => { const e = EK(s); return !!(e && e.read) && o.split(' or ').map((x) => x.charAt(0).toUpperCase() + x.slice(1)).includes(e.read); }]) },
     pm_grade: { k: 'cat', opts: ['A', 'B', 'C', 'F', 'A or B'].map((o) => [o, (s) => { const g = PGK(s); return !!g && o.split(' or ').includes(g.grade); }]) },
     l_grade: { k: 'cat', opts: ['A+', 'A', 'B', 'C', 'A+ or A', 'A+, A or B'].map((o) => [o, (s) => { const r = LK(s); return !!(r && r.grade) && o.replace(', ', ' or ').split(' or ').includes(r.grade); }]) },
+    pdh: { k: 'cat', opts: [['Over it', (s) => overLvl(s, (SK(s) || {}).high_1d) === true], ['Under it', (s) => overLvl(s, (SK(s) || {}).high_1d) === false]] },
+    orh: { k: 'cat', opts: [['Over it', (s) => overLvl(s, orhOf(s)) === true], ['Under it', (s) => overLvl(s, orhOf(s)) === false]] },
+    hc21: { k: 'cat', opts: [['Over it', (s) => overLvl(s, (SK(s) || {}).close_high_21) === true], ['Under it', (s) => overLvl(s, (SK(s) || {}).close_high_21) === false]] },
+    emastack: { k: 'cat', opts: [['10 over 21', (s) => !!(stackOf(s) || {}).a], ['21 over 50', (s) => !!(stackOf(s) || {}).b], ['50 over the 200 SMA', (s) => (stackOf(s) || {}).c === true],
+      ['10 > 21 > 50', (s) => { const k = stackOf(s); return !!(k && k.a && k.b); }], ['10 > 21 > 50 > 200 SMA', (s) => { const k = stackOf(s); return !!(k && k.a && k.b && k.c === true); }]] },
     w_list: { k: 'cat', opts: ['3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'].map((o) => [o, (s) => { const w = WK(s); return !!w && w.lists.includes(o); }]).concat([['Not on the Watchlist', (s) => !WK(s)]]) },
   };
   const xfSpec = (id) => XF[id] || { k: 'num' };
@@ -5142,6 +5166,7 @@ defCalc('industry_perf', {
   let CGR = null;     /* the code grades (radar/codegrade.py, test next to Claude's) */
   let PMN = null;     /* the 8:05 / 8:35 news runs (radar/codegrade.py news -> pmnews.json): the News column before 8:45 */
   let CGL = null;     /* the code grader's daily log: its W (laggard watch) names for the W-crossed-the-200 alerts */
+  let LEV = null;     /* today's 5-minute opening ranges of the movers (radar/levels.py): the + Filter "5-min opening range high" */
   let PICKS = null, GRPS = {}, SRV = null, LNBT = null, REV = null, EARN = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
   const REVOF = (sym) => (REV && REV.rows ? REV.rows[sym] : null);
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };
@@ -5245,6 +5270,7 @@ defCalc('industry_perf', {
       if (lnbt) LNBT = lnbt;
       SRV = await getJson(sha, 'alerts.json').catch(() => SRV);
       EARN = await getJson(sha, 'earnings.json').catch(() => EARN);
+      LEV = await getJson(sha, 'levels.json').catch(() => LEV);
       CGL = await getJson(sha, 'codegrade_log.json').catch(() => CGL);
       PMN = await getJson(sha, 'pmnews.json').catch(() => PMN);
       CGR = await getJson(sha, 'codegrade.json').catch(() => CGR);     /* the code grades, next to Claude's (test) */     /* the Earnings tab (radar/earnings.py) */     /* the job's alerts, incl. its 1-minute gap-up checks */

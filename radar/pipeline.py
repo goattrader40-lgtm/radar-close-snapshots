@@ -664,6 +664,9 @@ for s, r in latest.items():
         "low_52w": rd(snap_val(s, "low_52w"), 4), "high_52w": rd(snap_val(s, "high_52w"), 4),
         # this session's regular-hours high: the pre-market scanner's "prev-day high" the next morning (the user, Nov 6 2026)
         "high_1d": None if stale or asof not in hl.get(s, {}) or hl[s][asof][0] < price * 0.999 else rd(hl[s][asof][0], 4),
+        # the highest close of the last 21 sessions (this one included): the next session's "21-day closing high" in
+        # + Filter (the user, Nov 9 2026: "highest close", as the EP rule)
+        "close_high_21": None if stale or len(adj) < 21 or None in adj[-21:] else rd(max(adj[-21:]), 4),
     })
 out.sort(key=lambda x: -x["mcap_b"])
 
