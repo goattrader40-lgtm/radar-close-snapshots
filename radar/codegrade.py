@@ -641,7 +641,20 @@ def live(pm_path, stocks_path, earn_path, out_path, asof=None, grade=True):
         H = {}
         print("headlines:", repr(ex)[:160])
     use_headlines({**news, **out}, H, S)
+    # nothing of its own today (none, routine filings, a board change; not "After earnings": that already names the
+    # report): its fundamental news of the last 2 sessions, if any (the user, Nov 9 2026: FLY's Nov 6 AST deal), biggest
+    # gaps first; read before the sector moves relabel these rows, applied after them (today's read stays in the reason)
+    allr = {**news, **out}
+    weak = sorted((s for s, r in allr.items() if earlier_ok(r)),
+                  key=lambda s: -abs(allr[s].get("gap_pct") or (next((g.get("gap_pct") for g in every if g["symbol"] == s), 0)) or 0))
+    try:
+        EN = earlier_news(weak, day, S) if weak else {}
+    except Exception as ex:
+        EN = {}
+        print("earlier news:", repr(ex)[:160])
     sector_moves(out, news, every, S)
+    for sym, x in EN.items():
+        use_earlier(allr[sym], x)
     if not grade:                                       # the early news runs: pmnews.json, no rows
         json.dump({"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "day": day,
                    "window": [t_from.isoformat(), t_to.isoformat()], "news": news}, open(out_path, "w"), indent=0)
@@ -714,7 +727,11 @@ KINDS = [("Analyst upgrade", r"\bupgrad"), ("Analyst downgrade", r"\bdowngrad"),
          ("Analyst note", r"\banalysts?\b|price target|\bmaintains\b|\breiterates\b|\binitiates\b"),
          ("Takeover / sale talk", r"\b(?:acquir\w*|buyout|takeover|take-private|explor\w* (?:a )?sale|strategic alternatives|to be acquired|merger|bid for|suitors?)\b"),
          ("Offering", r"\b(?:public offering|private placement|prices? .{0,30}offering|convertible notes|at-the-market)\b"),
-         ("FDA / trial", r"\b(?:FDA|approval|approved|clearance|phase [123i]+|trial|topline|data readout)\b"),
+         # FDA / trial: drug and device words; a "Phase 1" only with a trial / study / data word after it, and "approval" only
+         # with the FDA / EMA (VSAT Nov 9 2026: "Viasat Selected By NASA For Phase 1 Of Network Extension ..." is a contract,
+         # not a trial: the user, "VSAT is a space company, it has nothing to do with FDA")
+         ("FDA / trial", r"\b(?:FDA|EMA|topline|top-line|data readout|clinical|trials?|(?:primary|secondary) endpoints?|"
+                         r"phase [123i]+(?:/[123]+)?\b.{0,40}?\b(?:trials?|stud(?:y|ies)|data|results|readout))\b"),
          ("Buyback", r"\b(?:buyback|repurchase)\b"),
          ("Deal / contract", r"\b(?:agreement|deal|contract|orders?|award\w*|partnership|partners? with|collaborat\w*|selected|inks?|signs?|wins?|role in|supply)\b"),
          ("Earnings", r"\b(?:results|earnings|Q[1-4]|quarter|guidance|outlook)\b")]
@@ -770,15 +787,17 @@ def mentions(title, sym, name):
     return any(re.search(rf"(?<![A-Za-z]){re.escape(k)}(?![A-Za-z])", title, re.I) for k in keys)
 
 
-def best_headline(sym, name, arts):
+def best_headline(sym, name, arts, kinds=None):
     """its own headline (not a list of movers), the biggest kind of event first, the earliest of that kind (the release
-    before the "why is it moving" pieces) -> {kind, title, source, at, url} or None"""
+    before the "why is it moving" pieces) -> {kind, title, source, at, url, ts} or None; kinds: only those kinds"""
     got = []
     for n in arts:
         t = (n.get("headline") or "").strip()
         if not t or LIST_ART.search(t) or NOISE.search(t) or not mentions(t, sym, name):
             continue
         kind = "In the news" if OPINION.search(t) else next((k for k, rx in KINDS if re.search(rx, t, re.I)), "In the news")
+        if kinds and kind not in kinds:
+            continue
         got.append((RANK.index(kind), n.get("created_at") or "", kind, t, n))
     if not got:
         return None
@@ -789,7 +808,7 @@ def best_headline(sym, name, arts):
     when = datetime.datetime.fromisoformat(at.replace("Z", "+00:00")).astimezone(NY)
     return {"kind": kind, "title": t, "source": (n.get("source") or "news").capitalize(), "url": n.get("url") or "",
             "at": when.strftime("%-I:%M %p").replace("AM", "AM ET").replace("PM", "PM ET") if when.date() == datetime.datetime.now(NY).date()
-            else when.strftime("%b %-d %-I:%M %p ET")}
+            else when.strftime("%b %-d %-I:%M %p ET"), "ts": when.isoformat(timespec="minutes")}
 
 
 def use_headlines(allr, H, S):
@@ -858,6 +877,140 @@ def sector_moves(out, news, every, S):
         if hl and weak(r) and r["catalyst"] in ("No company news", "Not at the SEC"):
             r.update(catalyst=hl["kind"] + " (headline)", reason=f"{hl['title']} ({hl['source']} {hl['at']}); " + r["reason"][:1].lower() + r["reason"][1:],
                      sources=[hl["url"]] + (r.get("sources") or [])[:2])
+
+
+# ───────── earlier news: the last 2 sessions' fundamental news (the user, Nov 9 2026) ─────────
+# FLY on Nov 9 2026 ran +13% with nothing new of its own: its news was Fri Nov 6's $1.3B AST engine deal (Benzinga 7:31 AM).
+# "when gappers and no news, I need it to link to prior days' news"; "2 sessions is max"; "it has to be brand new
+# fundamental change as in FLY"; articles written after the move don't count. Fundamental = earnings, a takeover (signed
+# or talks), an FDA / trial result, a deal or contract, an offering (the code's own kinds; an executive change, analyst
+# notes, buybacks, buying a company, sector moves and routine filings don't count). The news grade and the code grade
+# don't change: the catalyst and the reason say "Earlier news (Fri Nov 6): ..." and keep today's read after "today:".
+EARLIER_SESSIONS = 2        # at most 2 sessions back: on Mon Nov 9, news from Wed Nov 4 4 PM to Fri Nov 6 4 PM
+EARLIER_BUDGET = 150        # seconds for the SEC part (the headlines are one call)
+FUND_SEC = ("Earnings", "Signed takeover", "FDA approval", "FDA rejection", "Failed trial", "Positive trial data",
+            "Contract / agreement", "Dilution / warning", "Offering / dilution")
+FUND_HL = ("Takeover / sale talk", "FDA / trial", "Offering", "Deal / contract", "Earnings")
+
+
+def close_back(day, n):
+    """the n-th last close (4 PM ET) before `day` (ISO): n=1 is the last close"""
+    t = last_close_time(day)
+    for _ in range(n - 1):
+        t = last_close_time(t.date().isoformat())
+    return t
+
+
+def earlier_ok(r):
+    """nothing of its own today: no news, routine filings, a board change; not "After earnings" (that names the report
+    already) and not a filing the code couldn't classify (AKAM Nov 9 2026: an 8-K offering convertible notes, today's news)"""
+    return weak_news(r) and not r["catalyst"].startswith("After earnings") and r["catalyst"] != "Filing, not classified"
+
+
+def earlier_window(day):
+    """(from, to]: the news that came out for the last EARLIER_SESSIONS sessions (Mon Nov 9: Wed 4 PM - Fri 4 PM)"""
+    return close_back(day, EARLIER_SESSIONS + 1), last_close_time(day)
+
+
+def sec_fundamental(sym, mcap, w_from, w_to, day):
+    """its SEC filings in (w_from, w_to] read like today's (classify): (the read, the filing time) when it is fundamental"""
+    fs = filings(sym, w_from, w_to)
+    if not fs:
+        return None
+    rd = [f for f in fs if worth_reading(f)][:4]
+    texts = {f["acc"]: release_text(f) for f in rd}
+    e = None
+    er = [f for f in fs if f["form"] in ("8-K", "6-K") and ("2.02" in (f.get("items") or "") or f["form"] == "6-K")]
+    if er:
+        try:
+            e = earn_fields(sym, texts.get(er[0]["acc"], ("", ""))[1], day)
+        except Exception as ex:
+            print("earlier earnings", sym, repr(ex)[:120])
+    nw = classify(fs, texts, "up", mcap, e)
+    if not nw["catalyst"].startswith(FUND_SEC):
+        return None
+    return nw, min(f["at"] for f in (rd or fs))
+
+
+def earlier_one(sym, name, mcap, arts, w_from, w_to, day, sec=True):
+    """one stock's fundamental news of the last 2 sessions: the SEC's read first (the primary source), else its own headline
+    of those kinds -> {label, date, kind, text, source, url, at} or None"""
+    got = None
+    if sec:
+        try:
+            got = sec_fundamental(sym, mcap, w_from, w_to, day)
+        except Exception as ex:
+            print("earlier sec", sym, repr(ex)[:120])
+    if got:
+        nw, at = got
+        return {"label": f"{at:%a %b} {at.day}", "date": at.date().isoformat(), "kind": nw["catalyst"], "text": nw["reason"],
+                "source": "SEC", "url": (nw.get("sources") or [""])[0], "at": f"{at:%b} {at.day} {at:%-I:%M %p} ET"}
+    hl = best_headline(sym, name, [n for n in arts or [] if w_from < datetime.datetime.fromisoformat((n.get("created_at") or "1970-01-01T00:00:00Z").replace("Z", "+00:00")) <= w_to], kinds=FUND_HL)
+    if not hl:
+        return None
+    at = datetime.datetime.fromisoformat(hl["ts"])
+    return {"label": f"{at:%a %b} {at.day}", "date": at.date().isoformat(), "kind": hl["kind"], "text": hl["title"],
+            "source": hl["source"], "url": hl["url"], "at": f"{at:%b} {at.day} {at:%-I:%M %p} ET"}
+
+
+def earlier_news(syms, day, S, budget=EARLIER_BUDGET):
+    """{sym: earlier_one(...)} for these stocks (biggest gaps first), the SEC part within the budget"""
+    w_from, w_to = earlier_window(day)
+    try:
+        H = headlines(syms, w_from, w_to)
+    except Exception as ex:
+        H = {}
+        print("earlier headlines:", repr(ex)[:160])
+    out, t0 = {}, time.time()
+    for sym in syms:
+        st = S.get(sym) or {}
+        x = earlier_one(sym, st.get("name"), st.get("mcap_b"), H.get(sym), w_from, w_to, day, sec=time.time() - t0 < budget)
+        if x:
+            out[sym] = x
+    print(f"earlier news ({w_from:%a %b %-d %H:%M} - {w_to:%a %b %-d %H:%M}): {len(out)} of {len(syms)} stocks")
+    return out
+
+
+def use_earlier(r, x):
+    """the row's catalyst and reason say the earlier news; today's read stays after "today:" (the grades don't change)"""
+    today = f"{r['catalyst']}: {r['reason'][:160]}"
+    r["earlier"] = x
+    r.update(catalyst=f"Earlier news ({x['label']}): {x['kind']}", reason=f"{x['text'][:220]} ({x['source']} {x['at']}); today: {today}",
+             sources=([x["url"]] if x.get("url") else []) + [u for u in r.get("sources") or [] if u != x.get("url")][:2])
+
+
+def stock_news(syms, S, E=None, now=None, budget=40):
+    """the news for a morning breakout alert (radar/alerts.py, the user Nov 9 2026): today's own (the SEC since the last
+    close, the Earnings tab, its own headline), else its fundamental news of the last 2 sessions ->
+    {sym: {catalyst, reason, url, earlier}}; stocks past the budget: {checked: False}"""
+    now = now or datetime.datetime.now(NY)
+    day = now.date().isoformat()
+    t_from = last_close_time(day)
+    w_from, w_to = earlier_window(day)
+    try:
+        H = headlines(syms, w_from, now)
+    except Exception as ex:
+        H = {}
+        print("alert headlines:", repr(ex)[:160])
+    ts = lambda n: datetime.datetime.fromisoformat((n.get("created_at") or "1970-01-01T00:00:00Z").replace("Z", "+00:00"))
+    out, t0 = {}, time.time()
+    for sym in syms:
+        if time.time() - t0 > budget:
+            out[sym] = {"checked": False}
+            continue
+        st = S.get(sym) or {}
+        nw, _ = news_of(sym, "up", st.get("mcap_b"), E or {}, t_from, now, day)
+        hl = best_headline(sym, st.get("name"), [n for n in H.get(sym) or [] if ts(n) > t_from])
+        if hl and weak_news(nw) and hl["kind"] not in MINOR:
+            nw.update(catalyst=hl["kind"] + " (headline)", reason=f"{hl['title']} ({hl['source']} {hl['at']})", sources=[hl["url"]] + (nw.get("sources") or [])[:2])
+        x = None
+        if earlier_ok(nw):
+            x = earlier_one(sym, st.get("name"), st.get("mcap_b"), [n for n in H.get(sym) or [] if ts(n) <= w_to], w_from, w_to, day)
+            if x:
+                use_earlier(nw, x)
+        out[sym] = {"checked": True, "catalyst": nw["catalyst"], "reason": nw["reason"], "url": (nw.get("sources") or [""])[0],
+                    "earlier": x, "weak": weak_news(nw) and not x}
+    return out
 
 
 def log(cg_path, log_path):

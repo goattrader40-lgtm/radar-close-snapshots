@@ -130,7 +130,7 @@ def live_once():
             files.append(hp)
         load_alert_state()
         r = sh(sys.executable, os.path.join(HERE, "alerts.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "launch.json"),
-               os.path.join(OUT, "alerts.json"), *premarket_args(), check=False)
+               os.path.join(OUT, "alerts.json"), *premarket_args(), *morning_args(), check=False)
         log((r.stdout or r.stderr).strip()[-600:])
         if r.returncode == 0 and os.path.exists(os.path.join(OUT, "alerts.json")):
             files.append(os.path.join(OUT, "alerts.json"))
@@ -184,6 +184,20 @@ def load_history():
     return p
 
 
+def morning_args():
+    """the morning breakout settings (alerts/morning.json on main, saved by the portal; none = the defaults) and the
+    Earnings tab (the alerts' news), as alerts.py arguments; re-read every 2 minutes (the user saves them before 9:25)"""
+    p, pe = os.path.join(OUT, "morning.json"), os.path.join(OUT, "earnings_now.json")
+    if not (os.path.exists(p) and time.time() - os.path.getmtime(p) < 120):
+        txt = main_file("alerts/morning.json")
+        open(p, "w").write(txt if txt else "{}")
+    if not (os.path.exists(pe) and time.time() - os.path.getmtime(pe) < 600):
+        txt = data_file("earnings.json")
+        if txt:
+            open(pe, "w").write(txt)
+    return ["--morning", p] + (["--earnings", pe] if os.path.exists(pe) else [])
+
+
 def premarket_args():
     """this morning's pre-market grades for the laggard launch alerts (news days), as alerts.py arguments"""
     p = os.path.join(OUT, "premarket_grades.json")
@@ -206,13 +220,14 @@ def fast_once():
         return                                        # the first live update writes these
     out = os.path.join(OUT, "live_fast.json")
     load_opens()
-    r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, check=False)
+    mo = morning_args()
+    r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, *mo[:2], check=False)
     if r.returncode:
         log("fast:", (r.stderr or r.stdout).strip()[-300:])
         return
     sh(sys.executable, os.path.join(HERE, "livelog.py"), out, need[0], load_history(), os.path.join(OUT, "sipcal.json"), check=False)   # the morning record
     load_alert_state()
-    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", *premarket_args(), check=False)
+    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", *premarket_args(), *mo, check=False)
     txt = (r.stdout or r.stderr).strip()
     if r.returncode == 0 and " 0 new," not in txt:
         log("fast:", txt[-600:])
