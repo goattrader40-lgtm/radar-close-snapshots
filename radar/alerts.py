@@ -939,9 +939,9 @@ def main():
             if not (q_ and lo_ and hi_ and op_ and lo_ < e21_ and lo_ < op_ and q_[0] - lo_ >= 0.5 * (hi_ - lo_)):
                 print(f"{key}: today's low {lo_} / high {hi_} / open {op_}: no undercut and reclaim of the 21 EMA {e21_} yet, not sent")
                 continue
-            # the undercut & reclaim holds within 20% of the base high (the user, Nov 9 2026; scanner/launch.py ema21_floor)
-            if r_.get("ema21_floor") and q_[0] < r_["ema21_floor"]:
-                print(f"{key}: {q_[0]} under {r_['ema21_floor']} (20% under the base high), not sent")
+            # today's low within 20% of the base high (the user, Nov 9 2026; scanner/launch.py ema21_floor)
+            if r_.get("ema21_floor") and lo_ < r_["ema21_floor"]:
+                print(f"{key}: today's low {lo_} under {r_['ema21_floor']} (20% under the base high), not sent")
                 continue
             msg += f" · today's low ${lo_:.2f} under it"
         if title is not None and key.endswith(":ema50"):
