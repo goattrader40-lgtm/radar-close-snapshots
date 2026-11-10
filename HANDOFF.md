@@ -49,26 +49,75 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Status of the session "Radar: full portal review (Nov 9)" (Nov 9 evening - Nov 10 2026; not wrapped up yet)
+## Status at the end of the session "Radar: full portal review (Nov 9)" (Nov 9 evening - Nov 10 2026)
 
-- **Nothing live changed.** A full review (the 2-year numbers, Nov 9's 164 alerts, the grade logs, all 8 tabs in a test
-  browser, `--regress`: every agreed example the same). The user agreed this order of work:
-  1. **Blind test** (built, branch claude/determined-mendel-2qy22q, tools/blindtest/): 20 random launches outside the 18
-     examples (seed 1109, Jun 1 - Sep 10 2026: PGY, REAL, AVNT, REPL, PBF, IBKR, THC, EGO, KBH, ALM, VIAV, IPGP, VGNT,
-     NRIX, ZETA, MPWR, FDS, NET, GLXY, MTSI), 95 reads, on a private page with charts and Right / Wrong / Not sure +
-     notes; the user pastes the answers into the chat. The wrong reads are the fix list (each fix: explain first).
-  2. **One rulebook**: the alert job and the page ask the scan's engine (launch.py) instead of their own copies
-     (MANE Nov 6, EAT / PRGO). 3. **"My level"**: the user's own base top on a row overrides the engine's (PPLI $42.29
-     vs $41.42); flat levels first; touches the Launches / Watchlist rows. 4. **Scorecard** with the user's Right / Wrong
-     per alert (the user: wrong reads would give wrong results, so after the blind test). 5. A red line on the page
-     when the alerts stop updating (the user doesn't use phone alerts). 6. A "Now" view.
-  Dropped: the alert diet (not about the reads).
-- **Decided on the open items (the user, Nov 10; none built yet, each still test first, then "go live")**:
-  **yes**: the "W crossed the 200" alert; show lone wolves (new launches not hidden); a double beat (revenue and EPS)
-  = B; one more news run ~9:25. **Dropped for good, don't ask again**: the momentum cutoff ("drop it... already told
-  Claude"), the power day's +10% question, HELE's 700K, the official open from Alpaca, the table layouts export /
-  import, the FCF backtest. **VCEL: don't change** (said again). After the blind test: the 10 / 21 EMA at the level
-  for a retest.
+- **Nothing live changed.** The user asked for a full review ("we had big mistakes about reading charts"). Measured:
+  the 2-year check (3,117 buy points: 23% ran 20%+, 42% failed, median +0.1% after 20 sessions), Nov 9's 164 alerts
+  (68 in the first 10 minutes; 89 triggers, 44 held at the close), the grade logs, all 8 tabs in a test browser (no
+  errors), `--regress` (every agreed example the same).
+- **The order of work the user agreed**: 1. the blind test (done, below), then fix the wrong reads; 2. **one
+  rulebook**: the alert job and the page ask the scan's engine (launch.py) instead of their own copies (MANE Nov 6,
+  EAT / PRGO); 3. **"My level"**: the user's own base top on a row overrides the engine's (PPLI $42.29 vs $41.42; flat
+  levels first; touches the Launches / Watchlist rows); 4. a **scorecard** with the user's Right / Wrong per alert
+  (the user: wrong reads would give wrong results, so after the reads are fixed); 5. a red line on the page when the
+  alerts stop updating (the user doesn't use phone alerts); 6. a "Now" view. Dropped: the alert diet.
+- **Decided on the open items (the user, Nov 10; none built, each still test first, then "go live")**: **yes**: the "W
+  crossed the 200" alert; show lone wolves (new launches not hidden); a double beat (revenue and EPS) = B; one more
+  news run ~9:25. **Dropped for good, don't ask again**: the momentum cutoff ("drop it... already told Claude"), the
+  power day's +10% question, HELE's 700K, the official open from Alpaca, the table layouts export / import, the FCF
+  backtest. **VCEL: don't change** (said again).
+- **Blind test** (tools/blindtest/: gen.py, template.html, **answers_2026-11-10.txt = the user's marks and notes word
+  for word, and their launch examples: read it first**; the page https://claude.ai/artifact/XcM4qPGwirYbvbS3HVTCko): 20
+  random launches outside the 18 examples (seed 1109, Jun 1 - Sep 10 2026), 95 reads. **23 right, 32 wrong, 5 not
+  sure, 35 unmarked; launch days 5 right of 20** (PGY, PBF, KBH, ZETA, FDS). The page did not apply the off-list rules
+  (Claude's mistake, told to the user): without those reads 19 right, 22 wrong. What the user said, by kind:
+  1. **The launch itself**: "has to be a clear launch to the upside", a clean trend; most of the 20 were "broken or
+     whiplash charts". "Didn't clear anything": the 8 plain "Launch day" reads (REPL, IBKR, EGO, VIAV, IPGP, MPWR, GLXY,
+     MTSI: each closed under its 1-month high) all rejected. Under the 50 EMA / EMAs not stacked (VIAV, MTSI, EGO).
+     Closing into resistance = an **attempt** (ALM Sep 8 19.12 over 19.06 with 19.64 above; THC Jul 2 under 206.48; REAL).
+     AVNT's launch was Aug 6, not Aug 7 (its ADR 3.4% on Aug 6, under the 3.5% minimum: likely why, not confirmed).
+  2. **Void**: "we don't consider anything below the 200 SMA"; a breakdown voids the chart (AVNT Sep 9); no tries of the
+     top after a failed breakout (PGY Aug 27 -> 28).
+  3. **50 EMA undercut & reclaim** only in a rising stock with rising EMAs (0 right of 4).
+  4. **A close barely over the top is an attempt, not a breakout** (PBF Aug 17 0.44%, VIAV Oct 2, THC Jul 7; PBF Aug 18's
+     follow-through +0.2% on 0.6x "weak longs"); PGY Aug 27 / IBKR Aug 25 marked right as attempts.
+  5. **A base needs at least 5 bars** (AVNT Aug 14, 3 bars after its Aug 11 high); **tight days must be near the high**
+     (PGY Aug 26, 3.5% under 23.22: too far; the agreed ANF Oct 15 was 2.1% under: the user's number still needed).
+  6. **Bull flag**: PGY's break was Aug 21 (the engine fired Aug 13, the stock drifted to 19.55 Aug 20); ZETA Sep 14 a
+     quiet consolidation, no flag; ZETA Aug 27's base breakout was also a flag with an earlier entry. Not worked on yet.
+  7. **Every name that applies** on a day (PGY Aug 3 launch + gap out of base; AVNT Aug 6 launch + gap out of base +
+     episodic pivot; THC Jul 24 launch + EP + base breakout; EGO Aug 5 launch + base breakout + new trend).
+  8. **"Clean"** (wicks, whiplash: VGNT, NRIX, FDS, ZETA): not measurable yet (50 EMA crossings and wick size don't
+     separate the user's good charts from the bad: PBF scores as choppy as AVNT). Needs more of the user's examples.
+- **The 6 proposals the user agreed ("agree with your proposals")**: (1) a launch must close clearly over its 1-month
+  high; (2) a close under the 200 SMA voids it; (3) "breakout with caution" becomes "breakout attempt", not a buy
+  point; (4) the 50 EMA reclaim only with the 50 EMA rising; (5) a base needs 5 bars after its high, tight days near
+  it; (6) show every name that applies.
+- **Test only, branch `test/cleanlaunch` (14e324d; scanner/launch.py + the rules workbook; NOT live)**: (2) as
+  `no_entry_under200`: no entry of any kind on a close under the 200 SMA (REAL Jul 2 2026, 11.58 under 12.04, no longer
+  "retest held"; laggards exempt; the off-list rule after 2 closes was already live since Nov 3); (4) `reclaim50_rising`
+  (the 50 EMA over its value 5 sessions before; all six blind-test reads gone, AEHR Mar 31 the same); (5, first half)
+  `tight_base_bars=5` (bars after the top's day). `--regress`: every entry the same; one status line differs (ACN Oct 6
+  2026, closed 193.40 under its 200 SMA 195.13: "Closed under the 200 SMA: no entry"), so tools/expected_reads.txt needs
+  a rewrite at go live (the user hasn't seen that line as "agreed"). 17 of the 95 blind-test reads change. No 2-year
+  check run on the branch yet. No new agreed reads in tools/examples.txt (the wrong reads aren't fixed yet).
+- **Proposal 1 measured, waiting for the user**: 2 years of regular launches (bars to Oct 23): kept (0.5%+ over the
+  1-month high, wicks) 776: ran 20%+ 24%, failed 24%, median -0.7%; removed 514: 27% / 32% / -2.5% (fewer failures, not
+  more runners). It removes two agreed launches (RPD Sep 14 2026, 12.79 vs 13.90; ATRC Jul 24, 35.04 vs 36.33; ZS Sep 14
+  only +0.4%). Claude's proposal, from the user's RHI Oct 23 (+21.7%, closed 45.87 under its 6-month high 46.70:
+  "launch attempt"): such a day is shown as a **"Launch attempt"**, watched, a launch once it clears.
+- **Questions the user still has to answer** (asked Nov 10, they wrapped up first): 1. launch attempt: yes / no (RPD
+  Sep 14 and ATRC Jul 24 would become attempts); 2. a power day at 3x instead of 4x (THC Jul 24, 3.8x); 3. drop the
+  50%-over-the-200-SMA limit for clean trends (XNCR); 4. PCOR Nov 5 and GKOS Oct 30: which dates (the data shows the day
+  before); 5. tight: how near the high (2.5%?); and DUOL (attempt?) / WING (which day).
+- **Still to build after the answers**: proposals 1, 3, 6, the tight distance, the bull flag reads (PGY, ZETA), then
+  the 2-year check on the branch (ask first: it changes what a launch is), a new blind test, then the rest of the order.
+- **Good to know**: tools/replay.py and the engine need `pip install numba numpy pandas` in a new container; the repo's
+  history/bars_2y.json.gz ends Oct 23 (fresh bars: radar-tools `long`; radar-data long_bars.json now has 143 symbols
+  incl. the blind-test 20 and the user's examples; a `long` run replaces the whole file, so pass every symbol again).
+  The session's own branch claude/determined-mendel-2qy22q = main after this wrap-up.
+- **First things to check next session**: the user's answers to the 5 questions; Tue Nov 10's first live morning of the
+  📈 morning breakouts (the Nov 9 section's list: nobody checked it in this session).
 
 ## Status at the end of the session "Radar: earlier news + morning breakout alert (Nov 9)" (Mon Nov 9 2026)
 
@@ -148,80 +197,6 @@ alone.
   log lines and the News column; whether the user saved settings (alerts/morning.json on main).
 - **Open (offered, not decided)**: news for stocks that move after the open (not only 5%+ gappers); one more news run
   ~9:25 for late gappers (TAC, ZLAB, GPCR Nov 9); the morning breakouts on the phone.
-
-## Status at the end of the session "Radar: auto session setup + slimmer handoff (Nov 8)" (Sun Nov 8 2026)
-
-- **Live (the user's "go live", branch test/harness; docs and tooling only, nothing in the scanner, alerts, portal,
-  jobs or rules)**: every session now sets itself up. **CLAUDE.md** (Claude Code loads it by itself): scheduled runs
-  skip the routine; the start routine (tag `project:radar`, "Radar: " title, read HANDOFF.md, 5 lines, wait); the
-  short commands and the ground rules word for word; where things are. **/start** and **/wrapup**
-  (.claude/commands/). **The handoff reminder** (Stop hook, .claude/hooks/handoff_reminder.py): once per new batch of
-  this session's code / data changes made after its last HANDOFF.md update; never twice in a row; silent on any
-  error (15 test situations passed, 0.05 s). **The handoff check** (.claude/scripts/handoff_check.py).
-- **HANDOFF.md slimmed** from 146 KB to 40 KB: 46 older status and LIVE sections moved unchanged, in order, to
-  HANDOFF_ARCHIVE.md (one-line index at the top). Check: 1,475 old lines, 0 lost, 0 in both files, 46 of 46 sections
-  byte for byte (also confirmed with sort / comm). The code grade section stays here until the Nov 18 check-in; the
-  open items of the moved sections have pointers in Open items.
-- **Tested end to end**: two throwaway sessions on test/harness, first message "hi" and "/start": both tagged and
-  titled themselves, read the handoff, gave the 5 lines and waited (archived afterwards).
-- **New way of working**: one status section per session (written right after each go live, completed by
-  /wrapup); no separate "LIVE …" sections; /wrapup moves everything older than the last 2 sessions to the archive
-  and runs the check.
-- **Wording fixed (the user: "fix it, episodic pivot 3x, power 4x")**: Open items' "Power day vs episodic pivot"
-  said "both need 4x pace"; it now reads power day 4x, episodic pivot 3x, as the code, the portal and the rules
-  workbook have said since Nov 5 evening. Text only, no rule changed; the old line is in the archive (Lines replaced).
-- **Confirmed with the user (Nov 8)**: "Power day we have 4x and episodic pivot 3x": yes (radar/alerts.py power_rv 4,
-  ep rv >= 3; rules/SCANNER_RULES.md). No rule changed this session; no new agreed reads (tools/examples.txt unchanged).
-- **Answered, no change**: does the package make the process better? A lot better for starting / ending a session
-  and for the handoff's size; better, not perfect, for forgetting (replaying the user's examples stays the safety net).
-- **Good to know**: every push to main makes GitHub's own "pages-build-deployment" run (the Pages rebuild; not one of
-  the repo's jobs, harmless). A session started by another session reads its first message as a system notice: the
-  "hi" test session read only the top of the (then big) handoff; a session the user starts reads it in full.
-- **/wrapup (Nov 8)**: nothing older than the last 2 sessions (Nov 8, Nov 7) to move; the code grade section stays
-  until the Nov 18 check-in has run.
-- **Test branches**: test/harness merged; nothing waiting.
-- **First things to check next session**: it started by itself (tag, title, 5 lines) and read HANDOFF.md (42 KB) in
-  full; the handoff reminder speaks at most once per batch of changes. Monday Nov 9's market checks: see the Nov 7
-  status and Open items.
-
-## Status at the end of the session "Radar: TradingView import replaces my list (Nov 7)" (Sat Nov 7 2026)
-
-- **Live (each after the user's "go live")**:
-  1. **Pre-market scanner + Filter** (test/pmfilter): the Watchlist's + Filter under the scanner's boxes, one set for gap
-     ups (FLT.pmu) and one for gap downs (FLT.pmd), kept in the browser (radar-filters); the table's own columns filter
-     on the row's value as the cell shows it (Pre-mkt vol and Vol in K, News on catalyst + reason), any other criterion
-     from the column catalog by ticker; filtered before LIST_MAX, so the count and the group gaps follow. Reset to my
-     defaults also clears both sets. No RS / Trend dropdowns there (only + Filter, as agreed).
-  2. **Download for TradingView on Today's gainers / losers** (test/gdl): the rows on screen in their DOM order, one
-     ###Gainers (or ###Losers, or with the picked theme / industry) section, file "Gainers 2026-11-07.txt".
-  3. **Earnings tab: RS, Trend and + Filter** for both tables (FLT.er; the counts follow) and **Download for TradingView**
-     (a section per table, file "Earnings week|reactions|day 2|day 3 [reported|upcoming] DATE.txt") (test/erfilter).
-     EPS / Revenue filter on the surprise %, Guidance on its word (raised, lowered ...).
-  4. **Watchlist: "Section" reads "Added" on 1-UPDAY and 1-EP/GAP** (test/wladded): the label only (header select,
-     top-bar picker); the data and the TradingView file keep one ###section per added date. The far-right Added column
-     is unchanged (the user: "just change the name").
-  5. **Graded gappers: your rules in boxes** (test/pmrules, the user's "option 2"): Mkt cap, Avg vol 20D, $ vol 20D,
-     ADR, 52W low, "Gap-ups above the 50 EMA"; Save writes **premarket/rules.json** on main with the GitHub key (like
-     Follow). radar/premarket_build.py prepare reads it (load_rules: ranges mcap 0.1-50 B, avg vol 50-10,000 K, $ vol
-     1-1,000 M, ADR 0-20, 52W low 0-200; out of range or unreadable = the default, listed as rules_ignored in its JSON
-     line), so Claude's 8:45 task and the code grader (codegrade.yml) always use the same rules; the 8:45 task's prompt
-     is unchanged. No file saved yet = the old defaults; output checked byte-identical on Nov 6's scan. The page shows
-     the saved rules in the rule line (now all 6, incl. the 52-week low and the 50 EMA), refuses odd values, previews the
-     boxes on the latest live scan (counts, "about") and warns when Claude's top 8 up / 4 down would change (Nov 6 9:25
-     with the 50 EMA rule off: 85 gap-ups pass and MU, SNDK, AMD, TSM, INTC, MRVL, NBIS, BE take all 8 slots; FROG,
-     VCEL, both A, lose Claude's grade). Not changed: the gap 5% (it also gates the news for every gapper), the 8 / 4
-     counts, codegrade.py's own eligibility rules (30% over the 52-week low, ADR 3.5%, over the 50 EMA, 21-day high).
-     Rules workbook P1 updated.
-- **Answered, no change**: TradingView "Import list" names the list after the file, so 3-SETUPS.txt replaces the user's
-  own 3-SETUPS list (rename the file before importing; the user: "nothing needed"). 3-SETUPS is fed only by 1-EP/GAP,
-  1-UPDAY, 2-POOL (not TREND, not Launches). 2-POOL: 50 EMA reclaim / 2-closes-under deletes daily, Momentum + the 200
-  SMA / liquidity deletes on Friday's weekly refresh. RUN / ENPH / SEDG never on 1-UPDAY (RUN Nov 5 +12.3% on 3x volume
-  closed $9.87 < $10; ENPH / SEDG under the 50 EMA and under 30% over the 52-week low). Graded gappers table: Show all
-  = every stock of the 8:47 file with Claude's and the code grade (the user: both columns are intended); a stock that
-  passes only after 8:47 (Nov 6: JHX code B, DOCS, EXTR, ABSI) isn't in it.
-- **Test branches**: none waiting (test/pmfilter, gdl, erfilter, wladded, pmrules merged).
-- **First things to check Monday Nov 9**: the 8:45 task's prepare line prints "rules" (defaults unless the user saved);
-  if the user saved rules over the weekend, premarket/rules.json on main and the code grader's 8:52 run use them.
 
 ## Code grade next to Claude's (LIVE Nov 4 2026 ~6:15 PM, the user's "go live"; branches test/codegrade, test/lag50)
 
@@ -463,6 +438,11 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 
 **Keep in this file until the Nov 18 check-in has run**: the section "Code grade next to Claude's (LIVE Nov 4)" (the
 Nov 11 and Nov 18 code-grade check-ins read HANDOFF.md); after that, /wrapup moves it to the archive.
+
+**Decided by the user on Nov 10 2026** (the status section "Radar: full portal review (Nov 9)": the yes list, the
+items dropped for good, VCEL): read it before raising any item below.
+- Moved to the archive on Nov 10: if the user saved Graded gappers rules, premarket/rules.json on main and the 8:45
+  task's prepare line prints "rules" (never checked) ["Radar: TradingView import replaces my list (Nov 7)"].
 
 **Still open in sections moved to HANDOFF_ARCHIVE.md on Nov 8** (pointers, not copies: the archive section is in
 brackets; some may be done or overtaken since, so check there before raising one):
