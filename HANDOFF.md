@@ -49,6 +49,31 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: alert sound volume (Nov 10)" (Mon Nov 9 ~10 PM ET; session_01PkbDajk82Xjo18w2YhHNfg)
+
+- **Live (the user's "go live", branch test/volvoice, merge f6f6a0b): the alert voice says the volume.** The user
+  (Nov 9 night): "I have requested to have volume part to be on alerts sound, today it was not". The request was Nov 6
+  ("in breakout i need pattern name volume price point in sound"; "agree add base days"), built then on
+  **test/brkvoice** (00a01be, 8a1dbcb) and never put live nor written here: lost until now. Nov 10: "I need volume for
+  launch day, breakouts, bull flags, gap out of base, EP, power"; "no need volume for pullbacks or retests"; "volume
+  low should say light". docs/index.html volSay / patternSay / sayOf / mbatchSay: the volume pace from the alert's text
+  ("vol 4.1x" -> "volume 4.1 times", whole from 10x, ", light" under 1x or when the text says light) for 🚀 Launching
+  now, ⚡ EP / power day, 🎯 Pattern breakout, 📈 Morning breakout; ↩️ pullbacks / retests, 👀, 👥, ⏰ unchanged. A
+  pattern breakout also says the pattern, the price point and the base's days ("Pattern breakout, M H K, Base top,
+  151.25, volume 4.1 times, base 5 days", MHK Nov 9 9:35); base days = the **Base length** column (trig_base_len), not
+  Base day (FLS Nov 9: Base day 52, base 5), added to the breakout alert text as " · base N days" (radar/alerts.py and
+  the page); 3-SETUPS rows have no base length (no base days). A morning breakouts batch: "Morning breakouts, 11 stocks.
+  I M V T, volume 20 times. B E, ... And 8 more". Test plays each box with a Nov 9 example. Rules workbook: the
+  "Triggers vs heads-ups" row. Replay of Nov 9's 86 trigger alerts: 64 voices change (only those boxes); `--regress`
+  the same; the page loads with no errors. No Launches rebuild (no scanner code touched).
+- **Still on test/brkvoice, agreed Nov 6, never live, not asked again** (rebuild on today's main if the user wants
+  them; the branch is 42+ commits behind): short breakout titles ("LION BREAKOUT · Base top $13.17 · vol 3.5x · base 6
+  days"), a "back over its level" alert after a breakout that slipped under and came back (LION Nov 6 10:40), the
+  end-of-day pop-up listing only what didn't hold. Unanswered since Nov 6: "then rest see where the volume is" = (a) a
+  follow-up alert later with the volume, or (b) an alert at a volume level?
+- Seen Nov 9 night: alerts/morning.json and premarket/rules.json are not saved on main (the morning breakouts run on
+  the defaults).
+
 ## Status at the end of the session "Radar: full portal review (Nov 9)" (Nov 9 evening - Nov 10 2026)
 
 - **Nothing live changed.** The user asked for a full review ("we had big mistakes about reading charts"). Measured:
