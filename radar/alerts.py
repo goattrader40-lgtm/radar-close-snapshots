@@ -479,9 +479,13 @@ def find(live, doc, now=None):
                 push = bool(op and r.get("day_open") and r.get("ema10") and r.get("ema21")
                             and op > max(r["day_open"], r["price"], r["ema10"], r["ema21"]))
                 why += " · also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle)" if push else ""
+                # the base's length (the user, Nov 6 2026: "add base days"; the portal's voice reads it out): the Base length
+                # column, sessions since the base's top at the last close (the top's day = day 1); not Base day, which counts
+                # from the leg's breakout when the stock isn't in a base (FLS Nov 9 2026: Base day 52, its base 5 days)
+                blen = int(round(r.get("trig_base_len") or 0))
                 out.append((f"{sym}:breakout", f"{sym} {g} breakout: {pat}",
                             f"${price:.2f} over the {what} · {why} · {chg:+.1f}% · vol {rv:.1f}x for the time of day"
-                            + (" (light)" if rv < 1 else "") + " · "
+                            + (" (light)" if rv < 1 else "") + (f" · base {blen} day{'' if blen == 1 else 's'}" if blen >= 1 else "") + " · "
                             + (f"an entry in the base (still leg {nxt}), the base top is next" if flag else f"would be leg {nxt}" + (" (late)" if nxt >= 4 else ""))
                             + ("" if "group_tier_now" in r else f" · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})")
                             + since(r), "high" if g == "A" else "default", tvs))
