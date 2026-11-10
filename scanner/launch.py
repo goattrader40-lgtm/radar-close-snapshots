@@ -92,7 +92,10 @@ from screens import roll_mean  # noqa: E402
 L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
          near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5,
-         lag_rv=2, lag_under200=60)
+         lag_rv=2, lag_under200=60,
+         # the blind test (the user, Nov 10 2026): no entry on a close under the 200 SMA; a 50 EMA reclaim only with the 50 EMA
+         # rising; a base (and tight days under it) needs 5 bars after its high
+         no_entry_under200=1, reclaim50_rising=1, tight_base_bars=5)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -1141,7 +1144,10 @@ def follow(a, i0, i, pick=False):
     # your OK Nov 1 2026), today the low under it and under the open, the close back over it in the upper half of the day,
     # in the base (AEHR Mar 31 2026: Mar 27 & 30 under 33.79 / 33.64, down to 33.00, closed 37.08 over 33.78)
     reclaim50 = bool(i >= i0 + 3 and c[i - 2] < a.e50[i - 2] and c[i - 1] < a.e50[i - 1] and st.l[i] < a.e50[i] and st.l[i] < st.o[i]
-                     and c[i] > a.e50[i] and c[i] - st.l[i] >= 0.5 * (st.h[i] - st.l[i]) and c[i] < st.h[i0:i].max())
+                     and c[i] > a.e50[i] and c[i] - st.l[i] >= 0.5 * (st.h[i] - st.l[i]) and c[i] < st.h[i0:i].max()
+                     # only in a rising stock (the user, Nov 10 2026: IPGP Jun 12, EGO Jul 22, MTSI Sep 24 2026, their 50 EMA
+                     # flat or falling: "this has to be a rising stock and EMAs"; AEHR Mar 31 2026: rising)
+                     and (not L["reclaim50_rising"] or a.e50[i] > a.e50[i - 5]))
     # tomorrow's 21 EMA setup (radar/alerts.py: the heads-up when it trades down to the 21 EMA, the alert from 3:45 PM
     # when it holds back over it): "undercut" after 2 closes under it (today and yesterday, within half an ADR), "retest"
     # while the closes held over it after a pullback that was no advance
@@ -1208,8 +1214,21 @@ def follow(a, i0, i, pick=False):
             bdeep = 100 * (1 - st.l[min(m0 + 1, i):i + 1].min() / bp)       # from the day after (not the gap day's own low)
             bdeep_adr = bdeep / _adr(st, i)
     if blen is not None and blen < L["leg_pause"]:
+        tight = 0
+    # a base has at least 5 bars after its high (the user, Nov 10 2026: AVNT Aug 14 2026, 3 bars after its Aug 11 high 46.64)
+    tk = next((k for t_, k in tops if nb is not None and t_ == nb), None)
+    if tight and tk is not None and i - tk < L["tight_base_bars"]:
         tight = 0                    # under a high set a few sessions ago there is no base yet (GMAB Sep 21 2026: 1 session)
     msf_pat = msf.NAMES[code] if code and msf.is_pat(code) else None
+    # no entry on a close under the 200 SMA (the user, Nov 10 2026: REAL Jul 2 2026 closed 11.58 under its 200 SMA 12.03 and
+    # read "retest held": "we don't consider anything below the 200 SMA"); a laggard launch starts under it and is exempt.
+    # A 2nd close under it takes the stock off the list (under200)
+    u200 = bool(L["no_entry_under200"] and i > i0 and not np.isnan(st.sma200[i]) and c[i] < st.sma200[i] and c[i0] > a.s200[i0])
+    if u200:
+        retest, retest_ema, reclaim, reclaim_bo, reclaim50, tight = False, [], None, False, False, 0
+        flag_bo = False
+        dry_day = None if dry_day == i else dry_day
+        push_day = None if push_day == i else push_day
     # the stock's stage after the close, the first that applies
     rest = 0
     while i - rest > i0 and resting(a, i - rest):
@@ -1301,6 +1320,8 @@ def follow(a, i0, i, pick=False):
     elif rest >= 3:
         since = st.dates[i - rest + 1]
         stage = f"Consolidation, surfing the 10 & 21 EMA on dry volume ({rest} days)" + (f", {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}" if c[i] < H * 0.99 else "")
+    elif u200:
+        stage = f"Closed under the 200 SMA {st.sma200[i]:.2f}: no entry (off the list at a 2nd close under it)"
     elif c[i] < a.e21[i]:
         stage = "Below the 21 EMA"
     elif tops:

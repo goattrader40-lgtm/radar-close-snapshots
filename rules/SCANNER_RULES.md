@@ -163,8 +163,10 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Status: In the base | Under the top, no close above the level its leg broke out of, or 1.25+ ADRs off its latest high |
 | Status: Consolidation (resting) | Surfing the 10 & 21 EMA on dry volume: closes within 1 ADR of both, above the 50 EMA, bodies 0.5 ADR or less, 5-day volume 0.85x or less of the 50-day |
 | Status: others | Tight under the buy point, breakout, running, retest that held |
-| tight x2 | 2+ tight days just under the buy point (within 1 ADR, bodies 0.5 ADR or less, sideways) |
+| tight x2 | 2+ tight days just under the buy point (within 1 ADR, bodies 0.5 ADR or less, sideways); the base needs 5 bars after its high (AVNT Aug 14 2026, 3 bars after its high: none) |
 | 50 EMA undercut list | 2 closes in a row under the 50 EMA: waits there for the reclaim next session; a 3rd close under takes it off |
+| 50 EMA undercut & reclaim entry | Only in a rising stock: the 50 EMA higher than 5 sessions before (AEHR Mar 31 2026 yes; IPGP Jun 12, EGO Jul 22, MTSI Sep 24 2026 no) |
+| Close under the 200 SMA | No entry of any kind that day (REAL Jul 2 2026 read a retest held at 11.58 under its 200 SMA 12.03); a 2nd close under takes it off the list. Laggard launches start under it and are exempt |
 
 ## Pre-market grading
 
