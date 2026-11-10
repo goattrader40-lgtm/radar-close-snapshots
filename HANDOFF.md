@@ -49,6 +49,27 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: full portal review (Nov 9)" (Nov 9 evening - Nov 10 2026; not wrapped up yet)
+
+- **Nothing live changed.** A full review (the 2-year numbers, Nov 9's 164 alerts, the grade logs, all 8 tabs in a test
+  browser, `--regress`: every agreed example the same). The user agreed this order of work:
+  1. **Blind test** (built, branch claude/determined-mendel-2qy22q, tools/blindtest/): 20 random launches outside the 18
+     examples (seed 1109, Jun 1 - Sep 10 2026: PGY, REAL, AVNT, REPL, PBF, IBKR, THC, EGO, KBH, ALM, VIAV, IPGP, VGNT,
+     NRIX, ZETA, MPWR, FDS, NET, GLXY, MTSI), 95 reads, on a private page with charts and Right / Wrong / Not sure +
+     notes; the user pastes the answers into the chat. The wrong reads are the fix list (each fix: explain first).
+  2. **One rulebook**: the alert job and the page ask the scan's engine (launch.py) instead of their own copies
+     (MANE Nov 6, EAT / PRGO). 3. **"My level"**: the user's own base top on a row overrides the engine's (PPLI $42.29
+     vs $41.42); flat levels first; touches the Launches / Watchlist rows. 4. **Scorecard** with the user's Right / Wrong
+     per alert (the user: wrong reads would give wrong results, so after the blind test). 5. A red line on the page
+     when the alerts stop updating (the user doesn't use phone alerts). 6. A "Now" view.
+  Dropped: the alert diet (not about the reads).
+- **Decided on the open items (the user, Nov 10; none built yet, each still test first, then "go live")**:
+  **yes**: the "W crossed the 200" alert; show lone wolves (new launches not hidden); a double beat (revenue and EPS)
+  = B; one more news run ~9:25. **Dropped for good, don't ask again**: the momentum cutoff ("drop it... already told
+  Claude"), the power day's +10% question, HELE's 700K, the official open from Alpaca, the table layouts export /
+  import, the FCF backtest. **VCEL: don't change** (said again). After the blind test: the 10 / 21 EMA at the level
+  for a retest.
+
 ## Status at the end of the session "Radar: earlier news + morning breakout alert (Nov 9)" (Mon Nov 9 2026)
 
 - **Live (the user's "go live" ~4:15 PM ET, branch test/morningbo, merge 76f36fe)**: first live morning Tue Nov 10
@@ -490,7 +511,7 @@ New from Nov 5 (alerts / pre-market day, session_01PkbDakDe1EUNP5wQZf4wMH), all 
    the report); the guidance reader's misses go in as fixes with a GV bump. Not done: revenue from the release's
    tables (SHOP-style releases give only growth up front: ≈ from growth), the prior quarter's growth (acceleration).
 
-1. **The momentum cutoff** (the user will say which rule): no buy points once the stock has run too far from its
+1. **The momentum cutoff: DROPPED by the user (Nov 10 2026, "drop it... already told Claude"); never raise it again.** (Was: the user will say which rule): no buy points once the stock has run too far from its
    momentum's start (the low of its last rest of 40+ sessions without a new 6-month high; AEHR: Nov 21 2025, 18.70).
    **A**: 300%+ from that start (2 years of buy points past it: -0.4 to -0.8R whatever the entry, both halves; blocks
    AEHR May-Jun 2026, SMCI Jul 12 - Aug 2023, but also the user's LIFE Oct 20-30 2026 at +335-368%). **B**: 300%+ and
