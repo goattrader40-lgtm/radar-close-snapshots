@@ -272,6 +272,70 @@ def gtext(w):
     return f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
 
 
+TREND_OK = ("Up", "Turn up", "Reclaim", "Resting")
+
+
+def trend_rows(doc, launch_p, wl_path=None):
+    """the TREND list's own names for the hold alert: on 2-POOL, 1-UPDAY or 1-EP/GAP (setups/latest.json) with Trend Up,
+    Turn up, Reclaim or Resting at the last close (stocks.json), not on Launches, Launch laggards or 3-SETUPS (those alert
+    from there) and not taken off the TREND list with its ✕ (setups/picks.json removed_trend). Each as a small row: the
+    last close, its 10 / 21 / 50 EMA (stocks.json tr), ADR, and how far under its 21-day closing high"""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    try:
+        wl = json.load(open(wl_path or os.path.join(root, "setups", "latest.json")))["lists"]
+    except Exception:
+        return []
+    try:
+        rem = json.load(open(os.path.join(root, "setups", "picks.json"))).get("removed_trend") or {}
+    except Exception:
+        rem = {}
+    S, d = {}, os.path.dirname(os.path.abspath(launch_p))
+    for name in ("base_stocks.json", "stocks.json"):
+        if os.path.exists(os.path.join(d, name)):
+            try:
+                S = {s["symbol"]: s for s in json.load(open(os.path.join(d, name)))}
+                break
+            except Exception:
+                pass
+    have = {x["symbol"] for x in doc.get("launches", []) + doc.get("laggards", []) + s3_rows(doc)}
+    out, seen = [], set()
+    for lst in ("2-POOL", "1-UPDAY", "1-EP/GAP"):
+        for w in wl.get(lst) or []:
+            s = w.get("symbol")
+            st = S.get(s) or {}
+            tr = st.get("tr") or []
+            if not s or s in have or s in seen or s in rem or st.get("trend") not in TREND_OK or len(tr) < 6 or not tr[5]:
+                continue
+            seen.add(s)
+            hi = st.get("close_high_21")
+            out.append({"symbol": s, "tv": w.get("tv") or st.get("tv_symbol") or s, "trend_list": lst, "ema10": tr[1], "ema21": tr[2],
+                        "ema50": tr[3], "adr_pct": st.get("adr_20") or w.get("adr_pct") or 5.0, "price": tr[5],
+                        "off_high_pct": round(100 * (1 - tr[5] / hi), 1) if hi else 0})
+    return out
+
+
+def ema_hold(sym, r, price, chg, rv, op, tvs, now):
+    """a tight day holding the 21 EMA or the 50 EMA into the close (the user, Nov 10 2026: "stock pulling back touching 21
+    ema but holds 21 ema, closes it.. day is tight day.. same for 50 ema"; on Launches, 3-SETUPS and the TREND list), from
+    3:45 PM: pulled back an ADR+ from its high, today's move and body each at most half an ADR, over the EMA at the last
+    close and now, within an ADR over it (the 21 EMA one also over the 50 EMA). Today's low at the EMA is checked on the
+    1-minute chart before it goes out (main). Both EMAs at once: one alert, keyed by the nearer (the higher) one"""
+    adr, e21 = r.get("adr_pct") or 5.0, r.get("ema21")
+    if (now.hour, now.minute) < (15, 45) or not op or (r.get("off_high_pct") or 0) < adr:
+        return None
+    prev_ = price / (1 + chg / 100)
+    if not (abs(chg) <= adr / 2 and abs(price - op) <= 0.5 * adr / 100 * prev_):
+        return None
+    hold_ = [(n_, e_) for n_, e_ in ((21, e21), (50, r.get("ema50")))
+             if e_ and (r.get("price") or 0) > e_ and e_ < price <= e_ * (1 + adr / 100) and (n_ == 50 or price > (r.get("ema50") or 0))]
+    if not hold_:
+        return None
+    hold_.sort(key=lambda x: -x[1])
+    return (f"{sym}:ema{hold_[0][0]}hold", f"{sym} {' & '.join(str(n) for n, e in hold_)} EMA HOLD on a tight day into the close",
+            f"${price:.2f} holding over the {' & '.join(f'{n} EMA ${e:.2f}' for n, e in hold_)} (the last close's) on a tight day ({chg:+.1f}%, ADR {adr:.1f}%)"
+            f" · the buy: at the close, if it holds over it · vol {rv:.1f}x" + (f" · leg {r.get('leg')}" if r.get("leg") is not None else "") + since(r), "high", tvs)
+
+
 def find(live, doc, now=None):
     """[(key, title, message, priority, tv symbol)] for everything that fires right now"""
     R, rows, out = doc["rules"], live["rows"], []
@@ -412,21 +476,10 @@ def find(live, doc, now=None):
                     out.append((f"{sym}:ema21", f"{sym} 21 EMA {'UNDERCUT & RECLAIM' if w21 == 'undercut' else 'RETEST'} holding into the close",
                                 f"back over the 21 EMA ${e21:.2f} (the last close's) at ${price:.2f}"
                                 f" · the buy: at the close, if it holds over it" + tail21, "high" if w21 == "undercut" else "default", tvs))
-            # a tight day holding the 21 EMA or the 50 EMA into the close (the user, Nov 10 2026): pulling back (under its
-            # high), today's move and body each at most half an ADR, the price over the EMA and within an ADR of it; today's
-            # low at the EMA is checked on the 1-minute chart before it goes out (main)
-            if (now.hour, now.minute) >= (15, 45) and op and (r.get("off_high_pct") or 0) >= adr21:      # pulled back an ADR+ from its high
-                prev_ = price / (1 + chg / 100)
-                if abs(chg) <= adr21 / 2 and abs(price - op) <= 0.5 * adr21 / 100 * prev_:
-                    # over the EMA at the last close too (it holds it), today within an ADR over it; the 21 EMA one over the 50 EMA
-                    hold_ = [(n_, e_) for n_, e_ in ((21, e21), (50, r.get("ema50")))
-                             if e_ and (r.get("price") or 0) > e_ and e_ < price <= e_ * (1 + adr21 / 100) and (n_ == 50 or price > (r.get("ema50") or 0))]
-                    if hold_:                       # both EMAs at once: one alert, named for the nearer one (the higher)
-                        n_, e_ = max(hold_, key=lambda x: x[1])
-                        both_ = " & ".join(f"{n} EMA ${e:.2f}" for n, e in sorted(hold_, key=lambda x: -x[1]))
-                        out.append((f"{sym}:ema{n_}hold", f"{sym} {' & '.join(str(n) for n, e in sorted(hold_, key=lambda x: -x[1]))} EMA HOLD on a tight day into the close",
-                                    f"${price:.2f} holding over the {both_} (the last close's) on a tight day ({chg:+.1f}%, ADR {adr21:.1f}%)"
-                                    f" · the buy: at the close, if it holds over it · vol {rv:.1f}x · leg {r.get('leg')}" + since(r), "high", tvs))
+            # a tight day holding the 21 EMA or the 50 EMA into the close (ema_hold)
+            h_ = ema_hold(sym, r, price, chg, rv, op, tvs, now)
+            if h_:
+                out.append(h_)
             # the breakout undercut & reclaim (the user's CAI Oct 9 2026): 2+ closes back under the breakout level, holding over the
             # 50 EMA; today back over it: a heads-up as it crosses, from 3:45 PM holding into the close (the buy: the close)
             rl = r.get("reclaim_level")
@@ -538,6 +591,14 @@ def find(live, doc, now=None):
             out.append((f"{sym}:ema50", f"{sym} 50 EMA UNDERCUT & RECLAIM holding into the close",
                         f"back over the 50 EMA ${e50:.2f} (the last close's) at ${price:.2f} after 2 closes under it ({dates})"
                         f" · the buy: at the close, if it holds over it" + tail50, "high", tvs))
+    # the TREND list's own names (the user, Nov 10 2026: the hold alert on "launches list, 3-setups and trend")
+    for r in doc.get("_trend_rows") or []:
+        q = rows.get(r["symbol"])
+        if not q or len(q) < 6 or q[4] is None or not q[0]:
+            continue
+        h_ = ema_hold(r["symbol"], r, q[0], q[1], q[4], q[5], r.get("tv") or r["symbol"], now)
+        if h_:
+            out.append(h_)
     # 3-SETUPS (Watchlist tab) on the phone too (the user, Nov 3 2026; the desktop had them): a name trading over its
     # trigger, any section, once a day; a name also on Launches / Launch laggards alerts from there
     followed = {r["symbol"] for r in doc.get("launches", []) + doc.get("laggards", [])}
@@ -664,11 +725,13 @@ def s3_rows(doc):
 
 def row_of(doc, sym):
     """a followed stock's row: Launches, Launch laggards, then 3-SETUPS"""
-    return next((x for x in doc.get("launches", []) + doc.get("laggards", []) + s3_rows(doc) if x["symbol"] == sym), {})
+    return next((x for x in doc.get("launches", []) + doc.get("laggards", []) + s3_rows(doc) + (doc.get("_trend_rows") or []) if x["symbol"] == sym), {})
 
 
 def since(r):
     """how the stock came to be followed: its launch, your Follow button, or the 3-SETUPS list"""
+    if r.get("trend_list"):
+        return f" · TREND list (from {r['trend_list']})"
     if r.get("s3"):
         return f" · 3-SETUPS {r.get('section') or ''} (from {r.get('source') or 'the watchlist'} {r.get('added') or ''})"
     return f" · your pick since {r['pick'][:10]}" if r.get("grade") == "You" else f" · launched {r['date']} ({r['grade']})"
@@ -1288,12 +1351,13 @@ def main():
         _MCTX["rs"] = gr_.get("rs") or {}
         _MCTX["gr"] = {(g.get("kind"), g.get("group")): g for g in gr_.get("rows") or []}
         mb_cands = find_morning(live, S_all, M, now)
+    doc["_trend_rows"] = trend_rows(doc, launch_p) if (now.hour, now.minute) >= (15, 45) else []
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
     # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
     found = [a for a in found if over_low52(a[0].split(":")[0], live, low52_of(launch_p))]
     # 3-SETUPS triggers only over the 200 SMA (the user, Nov 3 2026: ECHO's base top 100.90 under its 200 SMA 106.63)
     low52_of(launch_p)
-    s3syms = {x["symbol"] for x in s3_rows(doc)}
+    s3syms = {x["symbol"] for x in s3_rows(doc)} | {x["symbol"] for x in doc["_trend_rows"]}
     found = [a for a in found if not (a[0].endswith(":s3") or a[0].split(":")[0] in s3syms) or over_sma200(a[0].split(":")[0], live)]
     gbars = {}
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
