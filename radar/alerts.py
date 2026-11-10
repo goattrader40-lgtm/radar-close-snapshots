@@ -91,14 +91,14 @@ TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "
 # averaged -1.9%; retests without an EMA, pattern pivots lost):
 #   a breakout / 3-SETUPS trigger needs a volume pace of 1x+ ("let's do it 1x+"): under it a heads-up (bolight), the
 #     trigger when the pace gets there; 1.5x+ is tagged "strong volume"
-#   the alert shows the risk to the day's low; over 1 ADR away it steps down to a heads-up (bowide)
+#   the alert shows the risk to the day's low; over 0.7 ADR away (the user's maximum risk) it steps down to a heads-up (bowide)
 #   a retest of the breakout level is a trigger only with an EMA at it (10 / 21 / 50); alone a heads-up
 #   a pattern pivot stays a trigger (the user: "pattern pivot is the main important part of Qullamaggie / Zanger / O'Neil
 #     style trading: we don't want to mess with it")
 #   new, from 3:45 PM: a tight day that touched the 21 EMA (or the 50 EMA) and holds over it into the close (ema21hold /
 #     ema50hold): "stock pulling back touching 21 ema but holds 21 ema, closes it.. day is tight day.. same for 50 ema"
 #   every trigger says when earnings are within 5 sessions
-BO_MIN_PACE, BO_STRONG_PACE, BO_MAX_RISK_ADR, EARN_WARN_SESSIONS = 1.0, 1.5, 1.0, 5
+BO_MIN_PACE, BO_STRONG_PACE, BO_MAX_RISK_ADR, EARN_WARN_SESSIONS = 1.0, 1.5, 0.7, 5   # 0.7 ADR: the user's max risk (Nov 1 / Nov 10 2026)
 
 
 def is_trigger(key, title=""):

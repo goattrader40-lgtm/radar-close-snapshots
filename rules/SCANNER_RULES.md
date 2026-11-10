@@ -17,7 +17,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Type | Gap | Day's move | Volume (x 20-day avg) | Must clear 1-month (20-day) high? | Other conditions | Shown as |
 |---|---|---|---|---|---|---|
 | 1. Launch (regular) | Opened up (any gap) | +5%+, closes in the top half of the range | 1.5x+ | No (it is a grade ingredient: 'Base BO') | - | Type: Launch |
-| 2. Power day | 8%+ | +10%+ | 4x+ | YES (since Nov 2, 2026) | May start up to 50% over the 200 SMA; closing in the lower half but holding half the gap = 'faded' | Type: Power day |
+| 2. Power day | 8%+ | +10%+ | 3x+ (the user, Nov 10 2026; was 4x) | YES (since Nov 2, 2026) | May start up to 50% over the 200 SMA; closing in the lower half but holding half the gap = 'faded' | Type: Power day |
 | 3. Catalyst | 5%+ | Closes up (can be under +5% or below the top half) | 2x+ | YES (by the candle bodies) | Earnings that day / the evening before, or an A/B pre-market grade; closes over the prior day's high | Type: Catalyst |
 | 4. Reversal | Opened DOWN | +8%+, closes in the top half | 2x+ | YES | - | Type: Reversal |
 | 5. Delayed | - | A regular launch | - | No | Within 10 sessions after a faded 3%+ gap on 3x+ volume that held its base; graded with that gap day | Type: Delayed |
@@ -80,7 +80,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Launching today | Every 5 min, 9:30 AM-4:00 PM ET | Watch list stocks meeting the launch rules on live prices (volume = pace for the time of day) |
 | Laggards launching today | Every 5 min, 9:30 AM-4:00 PM ET | Under the 200 SMA, earnings/A-B news today, opened up, +5%+, 2x+ volume pace, over its 1-month high |
 | 1-minute checks | 9:31 AM-12:00 PM and 3:00-4:00 PM ET | Big gap-ups (catalyst gap, power day, A+/A launch) and the followed launches' breakouts |
-| Breakout alert | Every check | A followed launch (or a 3-SETUPS name) trading over its buy point, after closing under it the day before. A trigger on a volume pace of 1x+ (1.5x+: tagged strong volume); under 1x a heads-up "over its buy point on light volume", the trigger when the pace gets to 1x. The alert shows the risk to the day's low; over 1 ADR away it is a heads-up. Pattern pivots stay triggers |
+| Breakout alert | Every check | A followed launch (or a 3-SETUPS name) trading over its buy point, after closing under it the day before. A trigger on a volume pace of 1x+ (1.5x+: tagged strong volume); under 1x a heads-up "over its buy point on light volume", the trigger when the pace gets to 1x. The alert shows the risk to the day's low; over 0.7 ADR away (your maximum risk) it is a heads-up. Pattern pivots stay triggers |
 | Retest alert | From 3:45 PM | A retest of the breakout level holding into the close: a trigger with the 10 / 21 / 50 EMA at the level, alone a heads-up (the user, Nov 10 2026) |
 | 21 / 50 EMA hold on a tight day | From 3:45 PM | Pulled back 1+ ADR from its high; today's move and body each half an ADR or less; today's low at the EMA (half an ADR under it to a quarter ADR over it); over the EMA at the last close and now, within an ADR of it: a trigger, the buy at the close (the user, Nov 10 2026). Both EMAs at once = one alert. On Launches, 3-SETUPS and the TREND list (its 2-POOL / 1-UPDAY / 1-EP/GAP names with Trend Up, Turn up, Reclaim or Resting at the last close) |
 | Earnings warning | Every trigger | Says when the stock reports within 5 sessions (the Earnings tab's calendar) |
@@ -279,7 +279,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Every alert (phone and desktop) | Only when the price is at least 30% over the 52-week low at that moment (the user, Nov 3 2026); a stock without a 52-week low yet is not held back | Each live run (radar/alerts.py, the portal) |
 | Pre-market grades | The morning's graded gappers | About 9:05 AM ET |
 | Early heads-up | A 5%+ gap with a catalyst-gap / power-day / launch shape, before the volume can be read | 9:31-9:34, every minute |
-| Power day | Volume pace 4x+, 8%+ gap, up 10%+, over its 1-month high, above the 200 SMA (at most 50% over it); it has to open over the highest close of the last 21 sessions (the user, Nov 5 2026: WRBY opened 25.93 under its 26.52: no power day) | 1-minute and 5-minute checks |
+| Power day | Volume pace 3x+ (was 4x until Nov 10 2026), 8%+ gap, up 10%+, over its 1-month high, above the 200 SMA (at most 50% over it); it has to open over the highest close of the last 21 sessions (the user, Nov 5 2026: WRBY opened 25.93 under its 26.52: no power day) | 1-minute and 5-minute checks |
 | Episodic pivot | Volume pace 3x+ (the user, Nov 5 2026 evening; was 4x), 6%+ gap, over its 1-month high and the 200 SMA, and it opened over the highest close of the last 21 sessions (the user, Nov 5 2026: 'the whole point is to gap up above it'); a power day is one and alerts as the power day; in the ⚡ box with the power days | 1-minute and 5-minute checks |
 | Catalyst gap | A neglected stock (under its 50 EMA or 200 SMA at the last close) gaps 5%+ on earnings or news with pace 3x+ and trades above both | 1-minute and 5-minute checks |
 | Catalyst 2nd trigger | After a catalyst gap that hadn't cleared its base high: the base high cleared | Same |

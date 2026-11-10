@@ -913,7 +913,7 @@
         <span class="tgr-seg" data-k="lng" aria-label="Grades"><button data-v="all" aria-pressed="true">All grades</button><button data-v="AB" aria-pressed="false">A+, A &amp; B</button><button data-v="A" aria-pressed="false">A+ &amp; A</button></span>
         <span class="tgr-seg" data-k="lnst" aria-label="Status"><button data-v="all" aria-pressed="true">All</button><button data-v="riding" aria-pressed="false">Above 21 EMA</button><button data-v="base" aria-pressed="false">In a pattern</button></span>
         <select class="tgr-search" id="ln-type" aria-label="Launch type" style="max-width:11em"><option value="all">All types</option><option>Launch</option><option>Power day</option><option>Catalyst</option><option>Reversal</option><option>Delayed</option><option>Follower</option><option>Your pick</option></select>
-        <label class="tgr-f"><input type="checkbox" id="ln-wolf"> Show lone wolves</label>
+        <label class="tgr-f"><input type="checkbox" id="ln-wolf" checked> Show lone wolves</label>
         <span class="tgr-flt" data-f="ln"></span>
         <input class="tgr-search" id="ln-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
         <button class="tgr-lite" id="ln-dl" type="button" title="Saves the rows on screen (your filters applied) as a file for TradingView: Watchlist menu → Import list">Download for TradingView</button>
@@ -1225,7 +1225,7 @@ defCalc('industry_perf', {
 <script>
 (() => {
   /* ───────── state ───────── */
-  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'grp', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', gq: '', lng: 'all', lnst: 'all', lntype: 'all', lnwolf: false, erday: 'all', ershow: 'all', erq: '', sort: {} };
+  const S = { tlay: 'flat', pmdir: 'up', pmshow: 'ab', tab: 'groups', period: '1d', wt: 'med', level: 'grp', tset: 'all', dord: 'fit', sel: null, gsel: null, q: '', wl: '3-SETUPS', wlsec: '', wlq: '', lnq: '', gq: '', lng: 'all', lnst: 'all', lntype: 'all', lnwolf: true /* lone wolves shown, tagged (the user, Nov 10 2026) */, erday: 'all', ershow: 'all', erq: '', sort: {} };
   const band = (x) => (x === null || x === undefined || isNaN(x) ? '' : x >= 0.7 ? 'f1' : x >= 0.6 ? 'f2' : 'f3');
   const sband = (x) => (x === null || x === undefined || isNaN(x) ? 's3' : x >= 0.6 ? 's1' : x >= 0.45 ? 's2' : 's3');
   const fitMap = (scores) => {

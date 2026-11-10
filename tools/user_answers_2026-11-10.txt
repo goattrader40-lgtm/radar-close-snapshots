@@ -1,0 +1,39 @@
+# The user's answers to Claude's open questions (Nov 10 2026, pasted from the questions page), the user's words. With each:
+# what Claude understood. Read with tools/chart_examples.txt.
+#
+# [mark3] The blue arrows at lows: only marks that support held. NTSK: "august 26 is 50 ema pull and hold point.. september 2nd
+#   again 50 ema hold... and chart getting volatility squeeze towards high, every dip is shallower. 14th september breakout"
+# [entry5] Risk limit on a breakout alert: "0.7 ADR, my rule" ("it depends")            -> built on test/cleanlaunch
+# [entry6] Lone wolves: show them, tagged. "even though no theme, whole biotech sector was trending up"  -> built (shown by default)
+# [entry2] A stock gapping far over the line (NVDA Nov 11 2016): still buy over the 5-minute opening range high, however far.
+#   "that's the point of episodic pivot, we do have guardrails in place though.. its character change in a stock!!! earnings /
+#   fundamental news and etc!!! it means stock is getting rerated if it holds!!!!"
+# [entry3] SNDK Mar 18 2026 "fail": a close back under the line the next day.
+# [entry4] Tight days under a base high: "5ema/10ema has to be coming close to that area as well" (not a % distance: the short
+#   EMAs have caught up to the price under the high).
+# [list1] The quiet stocks (NVDA 2016, NFLX 2024, TWLO 2024, XYZ 2017, TSLA 2019): "they are megacaps... these are for chart buy,
+#   exit pattern purposes.., launch day episodic pivot purposes" -> the charts teach the PATTERN; the ADR minimum stays 3.5%.
+# [list6] "whole point of adr 3.5% or 4% is to buy stocks that would make big moves, that's all"; tight days squeeze the ADR ->
+#   no extra ADR test at the moment of the tight-day EMA hold alert.
+# [list2] A break under the EMAs ends the trade, the stock stays on watch: Yes. XYZ 2017: "its basing nicely holding its gap,
+#   shallow base, 20th april boom breakout!!!"
+# [list3] Dropped in a market fall: "its 2 closes. not only that, if 50 ema or 21 ema not trending up stock we not interested,
+#   one has to be going up... [AMD] 18th nov until january 13th 2026 wouldn't have been in our watchlist, its whipsaw movement..
+#   box movement no breakout..... yes you right april 8th is the day to get long.. agree with you on april 16th as well."
+#   -> Claude's reading, TO CONFIRM: off after 2 closes under the 50 EMA (today 3); on the list only while the 21 or the 50 EMA
+#   is rising; back on when that holds again and it breaks out (AMD Apr 8 and Apr 16 2026 are buy days).
+# [list4] "Launch attempt" (a launch-size day closing under a higher high): Yes. "atrc is more a buy point, its bull flag.. july
+#   27th is the buy day again breaking out"
+# [list5] Power day volume: "Make it 3x"                                                -> built on test/cleanlaunch
+# [list7] PCOR: Nov 4 breakout. GKOS: Oct 29.
+# [clean1] "xmtr no go... dell yes.. all examples I have been giving [are] all clean charts": AMD, DELL, MU, NIO, NTSK, NVDA,
+#   SHOP, SNDK, UBER, ARM.
+# [clean2] Would not trade: "most of ai ecosystem charts now its broken.. unless they do big big day, and gap up day / episodic
+#   pivot day to start new trend / new character.. see back in april exactly what happened to all of them.. choppy actions we
+#   want to avoid.. new trend up with episodic pivot / or clear up day (above 21ema and 50 ema.. its a go sign!!! check amd
+#   september 4th 8th move made new trend.. example mrvl march 6th new trend up with gap!!!"
+# [th1] Rank on tradable stocks: "with adr high, I usually stick with tech related field"
+# [th2] "Heating up" column: not understood -> explained again in chat, waiting.
+# [th3] Hand-built homes: Yes. "they have to be tightly move up and down same theme!!!!"
+# [th4] One map (merge duplicates): "I haven't seen what you asking, provide me info" -> explained again in chat, waiting.
+# [th5] Leader instead of lone wolf: Yes. [th6] Join at 0.6, leave under 0.45: Yes. [th7] Weekly new-pack finder: Yes.
