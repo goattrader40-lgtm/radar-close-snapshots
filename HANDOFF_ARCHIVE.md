@@ -6,6 +6,8 @@ and when something was decided. /wrapup adds newer sections at the top, under th
 
 ## Index (date · section)
 
+- Nov 8 2026 · Status at the end of the session "Radar: auto session setup + slimmer handoff (Nov 8)" (Sun Nov 8 2026)
+- Nov 7 2026 · Status at the end of the session "Radar: TradingView import replaces my list (Nov 7)" (Sat Nov 7 2026)
 - Nov 6 2026 · One pullback heads-up; ✕ on the TREND list (LIVE Nov 6 2026 ~8 PM ET, the user's "go live"; branch test/wlfix)
 - Nov 6 2026 · Status at the end of the session "Radar: work session (Nov 6)" (Nov 5 evening - Nov 6 2026 evening)
 - Nov 6 2026 · Status at the end of the session "Radar: pre-market news for every 5%+ gapper (Nov 6)" (Nov 6 2026 afternoon - evening)
@@ -53,6 +55,80 @@ and when something was decided. /wrapup adds newer sections at the top, under th
 - Nov 1 2026 · Status at the end of the session before (Nov 1 2026, evening)
 - Nov 1 2026 · Tests run on Nov 1 2026 (test/pb1h)
 - Nov 8 2026 · Lines replaced in HANDOFF.md on Nov 8 2026 (the Session routine now says /start and /wrapup)
+
+## Status at the end of the session "Radar: auto session setup + slimmer handoff (Nov 8)" (Sun Nov 8 2026)
+
+- **Live (the user's "go live", branch test/harness; docs and tooling only, nothing in the scanner, alerts, portal,
+  jobs or rules)**: every session now sets itself up. **CLAUDE.md** (Claude Code loads it by itself): scheduled runs
+  skip the routine; the start routine (tag `project:radar`, "Radar: " title, read HANDOFF.md, 5 lines, wait); the
+  short commands and the ground rules word for word; where things are. **/start** and **/wrapup**
+  (.claude/commands/). **The handoff reminder** (Stop hook, .claude/hooks/handoff_reminder.py): once per new batch of
+  this session's code / data changes made after its last HANDOFF.md update; never twice in a row; silent on any
+  error (15 test situations passed, 0.05 s). **The handoff check** (.claude/scripts/handoff_check.py).
+- **HANDOFF.md slimmed** from 146 KB to 40 KB: 46 older status and LIVE sections moved unchanged, in order, to
+  HANDOFF_ARCHIVE.md (one-line index at the top). Check: 1,475 old lines, 0 lost, 0 in both files, 46 of 46 sections
+  byte for byte (also confirmed with sort / comm). The code grade section stays here until the Nov 18 check-in; the
+  open items of the moved sections have pointers in Open items.
+- **Tested end to end**: two throwaway sessions on test/harness, first message "hi" and "/start": both tagged and
+  titled themselves, read the handoff, gave the 5 lines and waited (archived afterwards).
+- **New way of working**: one status section per session (written right after each go live, completed by
+  /wrapup); no separate "LIVE …" sections; /wrapup moves everything older than the last 2 sessions to the archive
+  and runs the check.
+- **Wording fixed (the user: "fix it, episodic pivot 3x, power 4x")**: Open items' "Power day vs episodic pivot"
+  said "both need 4x pace"; it now reads power day 4x, episodic pivot 3x, as the code, the portal and the rules
+  workbook have said since Nov 5 evening. Text only, no rule changed; the old line is in the archive (Lines replaced).
+- **Confirmed with the user (Nov 8)**: "Power day we have 4x and episodic pivot 3x": yes (radar/alerts.py power_rv 4,
+  ep rv >= 3; rules/SCANNER_RULES.md). No rule changed this session; no new agreed reads (tools/examples.txt unchanged).
+- **Answered, no change**: does the package make the process better? A lot better for starting / ending a session
+  and for the handoff's size; better, not perfect, for forgetting (replaying the user's examples stays the safety net).
+- **Good to know**: every push to main makes GitHub's own "pages-build-deployment" run (the Pages rebuild; not one of
+  the repo's jobs, harmless). A session started by another session reads its first message as a system notice: the
+  "hi" test session read only the top of the (then big) handoff; a session the user starts reads it in full.
+- **/wrapup (Nov 8)**: nothing older than the last 2 sessions (Nov 8, Nov 7) to move; the code grade section stays
+  until the Nov 18 check-in has run.
+- **Test branches**: test/harness merged; nothing waiting.
+- **First things to check next session**: it started by itself (tag, title, 5 lines) and read HANDOFF.md (42 KB) in
+  full; the handoff reminder speaks at most once per batch of changes. Monday Nov 9's market checks: see the Nov 7
+  status and Open items.
+
+## Status at the end of the session "Radar: TradingView import replaces my list (Nov 7)" (Sat Nov 7 2026)
+
+- **Live (each after the user's "go live")**:
+  1. **Pre-market scanner + Filter** (test/pmfilter): the Watchlist's + Filter under the scanner's boxes, one set for gap
+     ups (FLT.pmu) and one for gap downs (FLT.pmd), kept in the browser (radar-filters); the table's own columns filter
+     on the row's value as the cell shows it (Pre-mkt vol and Vol in K, News on catalyst + reason), any other criterion
+     from the column catalog by ticker; filtered before LIST_MAX, so the count and the group gaps follow. Reset to my
+     defaults also clears both sets. No RS / Trend dropdowns there (only + Filter, as agreed).
+  2. **Download for TradingView on Today's gainers / losers** (test/gdl): the rows on screen in their DOM order, one
+     ###Gainers (or ###Losers, or with the picked theme / industry) section, file "Gainers 2026-11-07.txt".
+  3. **Earnings tab: RS, Trend and + Filter** for both tables (FLT.er; the counts follow) and **Download for TradingView**
+     (a section per table, file "Earnings week|reactions|day 2|day 3 [reported|upcoming] DATE.txt") (test/erfilter).
+     EPS / Revenue filter on the surprise %, Guidance on its word (raised, lowered ...).
+  4. **Watchlist: "Section" reads "Added" on 1-UPDAY and 1-EP/GAP** (test/wladded): the label only (header select,
+     top-bar picker); the data and the TradingView file keep one ###section per added date. The far-right Added column
+     is unchanged (the user: "just change the name").
+  5. **Graded gappers: your rules in boxes** (test/pmrules, the user's "option 2"): Mkt cap, Avg vol 20D, $ vol 20D,
+     ADR, 52W low, "Gap-ups above the 50 EMA"; Save writes **premarket/rules.json** on main with the GitHub key (like
+     Follow). radar/premarket_build.py prepare reads it (load_rules: ranges mcap 0.1-50 B, avg vol 50-10,000 K, $ vol
+     1-1,000 M, ADR 0-20, 52W low 0-200; out of range or unreadable = the default, listed as rules_ignored in its JSON
+     line), so Claude's 8:45 task and the code grader (codegrade.yml) always use the same rules; the 8:45 task's prompt
+     is unchanged. No file saved yet = the old defaults; output checked byte-identical on Nov 6's scan. The page shows
+     the saved rules in the rule line (now all 6, incl. the 52-week low and the 50 EMA), refuses odd values, previews the
+     boxes on the latest live scan (counts, "about") and warns when Claude's top 8 up / 4 down would change (Nov 6 9:25
+     with the 50 EMA rule off: 85 gap-ups pass and MU, SNDK, AMD, TSM, INTC, MRVL, NBIS, BE take all 8 slots; FROG,
+     VCEL, both A, lose Claude's grade). Not changed: the gap 5% (it also gates the news for every gapper), the 8 / 4
+     counts, codegrade.py's own eligibility rules (30% over the 52-week low, ADR 3.5%, over the 50 EMA, 21-day high).
+     Rules workbook P1 updated.
+- **Answered, no change**: TradingView "Import list" names the list after the file, so 3-SETUPS.txt replaces the user's
+  own 3-SETUPS list (rename the file before importing; the user: "nothing needed"). 3-SETUPS is fed only by 1-EP/GAP,
+  1-UPDAY, 2-POOL (not TREND, not Launches). 2-POOL: 50 EMA reclaim / 2-closes-under deletes daily, Momentum + the 200
+  SMA / liquidity deletes on Friday's weekly refresh. RUN / ENPH / SEDG never on 1-UPDAY (RUN Nov 5 +12.3% on 3x volume
+  closed $9.87 < $10; ENPH / SEDG under the 50 EMA and under 30% over the 52-week low). Graded gappers table: Show all
+  = every stock of the 8:47 file with Claude's and the code grade (the user: both columns are intended); a stock that
+  passes only after 8:47 (Nov 6: JHX code B, DOCS, EXTR, ABSI) isn't in it.
+- **Test branches**: none waiting (test/pmfilter, gdl, erfilter, wladded, pmrules merged).
+- **First things to check Monday Nov 9**: the 8:45 task's prepare line prints "rules" (defaults unless the user saved);
+  if the user saved rules over the weekend, premarket/rules.json on main and the code grader's 8:52 run use them.
 
 ## One pullback heads-up; ✕ on the TREND list (LIVE Nov 6 2026 ~8 PM ET, the user's "go live"; branch test/wlfix)
 
