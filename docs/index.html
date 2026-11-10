@@ -1641,12 +1641,12 @@ defCalc('industry_perf', {
   const EOD_TABS = new Set(['L', 'W']);
   const EOD_LAUNCH = new Set(['power', 'catalyst', 'launch', 'stars', 'reversal']);
   const EOD_KINDS = new Set(['power', 'catalyst', 'launch', 'stars', 'reversal', 'ep', 'breakout', 'confirm', 'basebreak', 'gapbase', 'gob1', 'gob5',
-    'pop', 's3', 'trend', 'retest', 'push', 'reclaimbo2', 'ema21', 'ema21bl', 'ema50']);
-  const EOD_PB = new Set(['retest', 'push', 'ema21', 'ema21bl', 'reclaimbo2']);     /* the pullback entries (★★★) */
+    'pop', 's3', 'trend', 'retest', 'push', 'reclaimbo2', 'ema21', 'ema21bl', 'ema50', 'ema21hold', 'ema50hold']);
+  const EOD_PB = new Set(['retest', 'push', 'ema21', 'ema21bl', 'reclaimbo2', 'ema21hold', 'ema50hold']);     /* the pullback entries (★★★) */
   const EOD_NAME = { gob1: '1-min entry (stop)', gob5: '5-min entry (stop)', gapbase: 'gap out of base', ep: 'episodic pivot',
     breakout: 'breakout', s3: '3-SETUPS trigger', trend: 'TREND trigger', basebreak: 'base high cleared', confirm: 'breakout confirmed', retest: 'retest holding',
     push: 'push', reclaimbo2: 'breakout undercut & reclaim', ema21: '21 EMA undercut & reclaim', ema21bl: '21 EMA retest + breakout level',
-    ema50: '50 EMA undercut & reclaim', pop: 'pop', power: 'power day', catalyst: 'catalyst gap', launch: 'launch', stars: '★ launching', reversal: 'reversal launch' };
+    ema50: '50 EMA undercut & reclaim', ema21hold: '21 EMA hold (tight day)', ema50hold: '50 EMA hold (tight day)', pop: 'pop', power: 'power day', catalyst: 'catalyst gap', launch: 'launch', stars: '★ launching', reversal: 'reversal launch' };
   /* today's alerts as { key, tab, text }: this page's log lines and GitHub's record (its tab as the Alerts tab files it) */
   const eodEntries = (lines, items, ldoc) => (lines || []).map((x) => { const i = x.lastIndexOf(TABMARK); return i < 0 ? null : { key: x.slice(i + 3), tab: x.charAt(i + 1), text: x.slice(0, i) }; })
     .concat((items || []).map((it) => ({ key: it.key, tab: (() => { try { return tabOfKey(it.key, ldoc, null); } catch (e) { return ''; } })(), text: (it.title || '') + ' — ' + (it.msg || '') })))
@@ -1662,8 +1662,8 @@ defCalc('industry_perf', {
     if (kind === 'push') return at(new RegExp('over the trigger ' + P));
     if (kind === 'retest' || kind === 'reclaimbo2') return at(new RegExp('breakout level ' + P));
     if (kind === 'ep') return at(new RegExp('over its 1-month high ' + P));
-    if (kind === 'ema21' || kind === 'ema21bl') return at(new RegExp('21 EMA ' + P));
-    if (kind === 'ema50') return at(new RegExp('50 EMA ' + P));
+    if (kind === 'ema21' || kind === 'ema21bl' || kind === 'ema21hold') return at(new RegExp('21 EMA ' + P));
+    if (kind === 'ema50' || kind === 'ema50hold') return at(new RegExp('50 EMA ' + P));
     if (kind === 'basehigh') return at(new RegExp('base high ' + P));
     return null;
   };
@@ -1729,7 +1729,7 @@ defCalc('industry_perf', {
           return;
         }
         /* the EMA reclaims: the EMA at the close (the scan's), else the one the alert named (the last close's) */
-        const emaNow = kind === 'ema21' || kind === 'ema21bl' ? num(r && r.ema21) : kind === 'ema50' ? num(r && r.ema50) : null;
+        const emaNow = kind === 'ema21' || kind === 'ema21bl' || kind === 'ema21hold' ? num(r && r.ema21) : kind === 'ema50' || kind === 'ema50hold' ? num(r && r.ema50) : null;
         const lvl = emaNow || eodLevel(kind, text);
         if (!lvl) return;
         const pct = 100 * (close / lvl - 1), over = close > lvl;
@@ -3279,8 +3279,8 @@ defCalc('industry_perf', {
       ['Opens up and runs: ', 'opens above the day before\'s close and closes up ' + lr.min_chg + '%+ in the top half of its range, on ' + lr.min_rv + '×+ its 20-day average volume.'],
       ['Or a catalyst launch: ', 'a ' + lr.ep_gap + '%+ gap on earnings or news that closes up, still in the gap (over the day before\'s high), on ' + (lr.cat_rv || 2) + '×+ volume and over at least its 1-month base.'],
       ['Or a reversal day: ', 'opens under the day before\'s close, then closes up ' + (lr.rev_chg || 8) + '%+ in the top half of its range, on ' + (lr.rev_rv || 2) + '×+ volume and over its 1-month high (the previous 20 sessions\' highest high, wicks and bodies) (GDDY Oct 30, 2026). The phone alert fires during the day the moment it meets these; the close confirms it.'],
-      ['Trend: ', 'closes above the 200 SMA, at most ' + lr.max_ext200 + '% over it the day before; at least ' + lr.min_above_low52 + '% above the 52-week low.'],
-      ['Power day: ', 'volume ' + lr.power_rv + '×+, a ' + lr.power_gap + '%+ gap and a ' + lr.power_chg + '%+ day, closing over its 1-month high (the previous 20 sessions\' highest high); may start up to ' + lr.power_ext200 + '% over the 200 SMA and need not close in the top half if it holds half its gap.'],
+      ['Trend: ', 'closes above the 200 SMA' + (lr.max_ext200 < 1000 ? ', at most ' + lr.max_ext200 + '% over it the day before' : '') + '; at least ' + lr.min_above_low52 + '% above the 52-week low.'],
+      ['Power day: ', 'volume ' + lr.power_rv + '×+, a ' + lr.power_gap + '%+ gap and a ' + lr.power_chg + '%+ day, closing over its 1-month high (the previous 20 sessions\' highest high); ' + (lr.power_ext200 < 1000 ? 'may start up to ' + lr.power_ext200 + '% over the 200 SMA and ' : '') + 'need not close in the top half if it holds half its gap.'],
       ['Liquid: ', 'price $' + lqd.min_price + '+, a 20-day average of $' + lqd.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(lqd.min_avg_vol_20d) + '+ shares a day, ADR ' + lqd.min_adr + '%+.'],
       ['One at a time: ', 'another launch of the same stock within ' + lr.dedupe_days + ' sessions counts only after it closed under the 21 EMA, or when it grades higher.'],
       ['Your picks: ', 'the Follow button on the Watchlist tab; followed from the close you add them at, launch day or not.'],
@@ -3618,14 +3618,15 @@ defCalc('industry_perf', {
      TRIGGERS: the 21 EMA retest alone is a heads-up ("not a strong sign by itself"), with the breakout level under it
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
-    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close', 'mbo']);
-  const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : TRIGGERS.has(kind); };
+    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close', 'mbo', 'ema21hold', 'ema50hold']);
+  const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : kind === 'retest' ? / \+ /.test(title || '') /* with an EMA at the level (Nov 10 2026); alone a heads-up */ : TRIGGERS.has(kind); };
   /* a few words per kind for the group-move lines (radar/alerts.py KIND_WORDS) */
   const KIND_WORDS = { retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
     breakout: 'breakout', touch: 'touched the buy point', confirm: 'breakout confirmed', power: 'power day', catalyst: 'catalyst gap', basebreak: 'base high cleared',
     launch: 'launch', reversal: 'reversal launch', laggard: 'laggard launch', reclaimbo: 'back over its breakout level', reclaimbo2: 'breakout undercut & reclaim',
     ema50back: 'back over the 50 EMA', ema50: '50 EMA undercut & reclaim', push: 'push', pop: 'pop', gapbase: 'gap out of base', gob1: 'gap out of base',
-    gob5: 'gap out of base', s3: '3-SETUPS trigger', trend: 'TREND trigger', ep: 'episodic pivot', w200: 'W crossing the 200', w200now: 'W over the 200', w200close: 'W closed over the 200', early: 'early gap', near: 'gapping to the buy point', mbo: 'morning breakout' };
+    gob5: 'gap out of base', s3: '3-SETUPS trigger', trend: 'TREND trigger', ep: 'episodic pivot', w200: 'W crossing the 200', w200now: 'W over the 200', w200close: 'W closed over the 200', early: 'early gap', near: 'gapping to the buy point', mbo: 'morning breakout', bolight: 'over the buy point on light volume', bowide: 'breakout, the day\'s low far',
+    ema21hold: '21 EMA hold (tight day)', ema50hold: '50 EMA hold (tight day)' };
   const kindWords = (key, title) => { const k = String(key).split(':')[1] || ''; return k === 'ema21' && /UNDERCUT/.test(title || '') ? '21 EMA undercut & reclaim' : (KIND_WORDS[k] || k); };
   /* each box its own sound for a trigger (the user, Nov 4 2026), and a voice that says the box and the ticker ("Episodic
      pivot, C D W"); the browser plays them once you clicked on the page after opening it.
@@ -3734,7 +3735,7 @@ defCalc('industry_perf', {
   const BOX_OF = { power: 'e', catalyst: 'l', launch: 'l', stars: 'l', reversal: 'l', laggard: 'l',
     breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
     ep: 'e',
-    retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b',
+    retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b', ema21hold: 'b', ema50hold: 'b', bolight: 'h', bowide: 'h',
     early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', eodheld: 'g', eodlost: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g', mbo: 'o' };
   const boxOfKey = (key, title) => {
     const [a, kind] = String(key).split(':'), t = String(title || '');

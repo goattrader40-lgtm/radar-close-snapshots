@@ -89,10 +89,12 @@ import msf  # noqa: E402
 import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
-L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=50, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=28, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
+L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=4, power_gap=8, power_chg=10, power_ext200=10 ** 6, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=10 ** 6, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
          near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5,
          lag_rv=2, lag_under200=60,
+         # max_ext200 / power_ext200 = no limit (the user, Nov 10 2026: "it can be a launch.. I don't have any rule like that",
+         # "stocks can keep going up"; XNCR Nov 4 2026, 79% over its 200 SMA the day before; was 28% / 50% for a power day)
          # the blind test (the user, Nov 10 2026): no entry on a close under the 200 SMA; a 50 EMA reclaim only with the 50 EMA
          # rising; a base (and tight days under it) needs 5 bars after its high
          no_entry_under200=1, reclaim50_rising=1, tight_base_bars=5)
