@@ -94,75 +94,74 @@ alone.
   200 SMA rule: let through or leave out?; run the morning replay (5% and 3%) every day before 4:06 PM, scheduled or
   on request?; a longer alert window (ORKA / PRCH would have alerted in the afternoon)?
 
-## Status at the end of the session "Radar: full portal review (Nov 9)" (Nov 9 evening - Nov 10 2026)
+## Status at the end of the session "Radar: full portal review (Nov 9)" (Nov 9 evening - Nov 10 2026 evening)
 
-- **Nothing live changed.** The user asked for a full review ("we had big mistakes about reading charts"). Measured:
-  the 2-year check (3,117 buy points: 23% ran 20%+, 42% failed, median +0.1% after 20 sessions), Nov 9's 164 alerts
-  (68 in the first 10 minutes; 89 triggers, 44 held at the close), the grade logs, all 8 tabs in a test browser (no
-  errors), `--regress` (every agreed example the same).
-- **The order of work the user agreed**: 1. the blind test (done, below), then fix the wrong reads; 2. **one
-  rulebook**: the alert job and the page ask the scan's engine (launch.py) instead of their own copies (MANE Nov 6,
-  EAT / PRGO); 3. **"My level"**: the user's own base top on a row overrides the engine's (PPLI $42.29 vs $41.42; flat
-  levels first; touches the Launches / Watchlist rows); 4. a **scorecard** with the user's Right / Wrong per alert
-  (the user: wrong reads would give wrong results, so after the reads are fixed); 5. a red line on the page when the
-  alerts stop updating (the user doesn't use phone alerts); 6. a "Now" view. Dropped: the alert diet.
-- **Decided on the open items (the user, Nov 10; none built, each still test first, then "go live")**: **yes**: the "W
-  crossed the 200" alert; show lone wolves (new launches not hidden); a double beat (revenue and EPS) = B; one more
-  news run ~9:25. **Dropped for good, don't ask again**: the momentum cutoff ("drop it... already told Claude"), the
-  power day's +10% question, HELE's 700K, the official open from Alpaca, the table layouts export / import, the FCF
-  backtest. **VCEL: don't change** (said again).
-- **Blind test** (tools/blindtest/: gen.py, template.html, **answers_2026-11-10.txt = the user's marks and notes word
-  for word, and their launch examples: read it first**; the page https://claude.ai/artifact/XcM4qPGwirYbvbS3HVTCko): 20
-  random launches outside the 18 examples (seed 1109, Jun 1 - Sep 10 2026), 95 reads. **23 right, 32 wrong, 5 not
-  sure, 35 unmarked; launch days 5 right of 20** (PGY, PBF, KBH, ZETA, FDS). The page did not apply the off-list rules
-  (Claude's mistake, told to the user): without those reads 19 right, 22 wrong. What the user said, by kind:
-  1. **The launch itself**: "has to be a clear launch to the upside", a clean trend; most of the 20 were "broken or
-     whiplash charts". "Didn't clear anything": the 8 plain "Launch day" reads (REPL, IBKR, EGO, VIAV, IPGP, MPWR, GLXY,
-     MTSI: each closed under its 1-month high) all rejected. Under the 50 EMA / EMAs not stacked (VIAV, MTSI, EGO).
-     Closing into resistance = an **attempt** (ALM Sep 8 19.12 over 19.06 with 19.64 above; THC Jul 2 under 206.48; REAL).
-     AVNT's launch was Aug 6, not Aug 7 (its ADR 3.4% on Aug 6, under the 3.5% minimum: likely why, not confirmed).
-  2. **Void**: "we don't consider anything below the 200 SMA"; a breakdown voids the chart (AVNT Sep 9); no tries of the
-     top after a failed breakout (PGY Aug 27 -> 28).
-  3. **50 EMA undercut & reclaim** only in a rising stock with rising EMAs (0 right of 4).
-  4. **A close barely over the top is an attempt, not a breakout** (PBF Aug 17 0.44%, VIAV Oct 2, THC Jul 7; PBF Aug 18's
-     follow-through +0.2% on 0.6x "weak longs"); PGY Aug 27 / IBKR Aug 25 marked right as attempts.
-  5. **A base needs at least 5 bars** (AVNT Aug 14, 3 bars after its Aug 11 high); **tight days must be near the high**
-     (PGY Aug 26, 3.5% under 23.22: too far; the agreed ANF Oct 15 was 2.1% under: the user's number still needed).
-  6. **Bull flag**: PGY's break was Aug 21 (the engine fired Aug 13, the stock drifted to 19.55 Aug 20); ZETA Sep 14 a
-     quiet consolidation, no flag; ZETA Aug 27's base breakout was also a flag with an earlier entry. Not worked on yet.
-  7. **Every name that applies** on a day (PGY Aug 3 launch + gap out of base; AVNT Aug 6 launch + gap out of base +
-     episodic pivot; THC Jul 24 launch + EP + base breakout; EGO Aug 5 launch + base breakout + new trend).
-  8. **"Clean"** (wicks, whiplash: VGNT, NRIX, FDS, ZETA): not measurable yet (50 EMA crossings and wick size don't
-     separate the user's good charts from the bad: PBF scores as choppy as AVNT). Needs more of the user's examples.
-- **The 6 proposals the user agreed ("agree with your proposals")**: (1) a launch must close clearly over its 1-month
-  high; (2) a close under the 200 SMA voids it; (3) "breakout with caution" becomes "breakout attempt", not a buy
-  point; (4) the 50 EMA reclaim only with the 50 EMA rising; (5) a base needs 5 bars after its high, tight days near
-  it; (6) show every name that applies.
-- **Test only, branch `test/cleanlaunch` (14e324d; scanner/launch.py + the rules workbook; NOT live)**: (2) as
-  `no_entry_under200`: no entry of any kind on a close under the 200 SMA (REAL Jul 2 2026, 11.58 under 12.04, no longer
-  "retest held"; laggards exempt; the off-list rule after 2 closes was already live since Nov 3); (4) `reclaim50_rising`
-  (the 50 EMA over its value 5 sessions before; all six blind-test reads gone, AEHR Mar 31 the same); (5, first half)
-  `tight_base_bars=5` (bars after the top's day). `--regress`: every entry the same; one status line differs (ACN Oct 6
-  2026, closed 193.40 under its 200 SMA 195.13: "Closed under the 200 SMA: no entry"), so tools/expected_reads.txt needs
-  a rewrite at go live (the user hasn't seen that line as "agreed"). 17 of the 95 blind-test reads change. No 2-year
-  check run on the branch yet. No new agreed reads in tools/examples.txt (the wrong reads aren't fixed yet).
-- **Proposal 1 measured, waiting for the user**: 2 years of regular launches (bars to Oct 23): kept (0.5%+ over the
-  1-month high, wicks) 776: ran 20%+ 24%, failed 24%, median -0.7%; removed 514: 27% / 32% / -2.5% (fewer failures, not
-  more runners). It removes two agreed launches (RPD Sep 14 2026, 12.79 vs 13.90; ATRC Jul 24, 35.04 vs 36.33; ZS Sep 14
-  only +0.4%). Claude's proposal, from the user's RHI Oct 23 (+21.7%, closed 45.87 under its 6-month high 46.70:
-  "launch attempt"): such a day is shown as a **"Launch attempt"**, watched, a launch once it clears.
-- **Questions the user still has to answer** (asked Nov 10, they wrapped up first): 1. launch attempt: yes / no (RPD
-  Sep 14 and ATRC Jul 24 would become attempts); 2. a power day at 3x instead of 4x (THC Jul 24, 3.8x); 3. drop the
-  50%-over-the-200-SMA limit for clean trends (XNCR); 4. PCOR Nov 5 and GKOS Oct 30: which dates (the data shows the day
-  before); 5. tight: how near the high (2.5%?); and DUOL (attempt?) / WING (which day).
-- **Still to build after the answers**: proposals 1, 3, 6, the tight distance, the bull flag reads (PGY, ZETA), then
-  the 2-year check on the branch (ask first: it changes what a launch is), a new blind test, then the rest of the order.
-- **Good to know**: tools/replay.py and the engine need `pip install numba numpy pandas` in a new container; the repo's
-  history/bars_2y.json.gz ends Oct 23 (fresh bars: radar-tools `long`; radar-data long_bars.json now has 143 symbols
-  incl. the blind-test 20 and the user's examples; a `long` run replaces the whole file, so pass every symbol again).
-  The session's own branch claude/determined-mendel-2qy22q = main after this wrap-up.
-- **First things to check next session**: the user's answers to the 5 questions; Tue Nov 10's first live morning of the
-  📈 morning breakouts (the Nov 9 section's list: nobody checked it in this session).
+**Read first: tools/chart_examples.txt (the user's own marked-up charts: 51 buy days with dates, prices and the engine's read)
+and tools/user_answers_2026-11-10.txt (the user's answers, their words).** The user had explained the old leaders' charts
+to an earlier session (Oct 27, with screenshots) and it was never written down; they had to send them again ("most of
+these charts I already provided to Claude with entry points"). Never lose them again; never ask again for what those two
+files answer.
+
+- **Nothing went live in this session.** Everything below is on **`test/cleanlaunch`** (last commit 1067ea9; it does not
+  have main's later commits: Earnings Day 4, the alert voice: merge main in before any go live and re-test the page).
+- **The review** (the user: "we had big mistakes about reading charts"): the 2-year record (3,117 buy points: 23% ran
+  20%+, 42% failed, median +0.1%); Nov 9's 164 alerts (68 in the first 10 minutes); all 8 tabs load clean; `--regress` the same.
+- **Blind test 1** (20 random launches outside the 18 examples, seed 1109; tools/blindtest/answers_2026-11-10.txt): 23
+  right, 32 wrong of 60 marked; launch days 5 right of 20. The user: most were "broken or whiplash charts", "has to be a
+  clear launch to the upside". The page had not applied the off-list rules (Claude's mistake): without those 19 / 22.
+- **What separates the user's good launches from the rejected ones** (15 vs 15): nothing about the 40 days before; the
+  launch day itself: up 2+ ADRs, closed over its 1-month high, 2x+ volume: 13 of 15 liked, 0 of 15 rejected (2 years:
+  failures 23% vs 32%, runners the same). A guess from 30 charts, not a rule yet.
+- **The user's charts vs the engine** (tools/chart_examples.txt): 51 buy days: 29 match and on the list, 6 named but the
+  stock was off the list, 16 missed. 14 of the 22 not shown = the ADR rule on quiet megacaps (NVDA 2016, NFLX, TWLO, XYZ,
+  TSLA): **the user: those charts teach the pattern; the ADR minimum stays 3.5%** ("whole point of adr 3.5% or 4% is to buy
+  stocks that would make big moves"). Real gaps: stocks dropped in a market fall (MU, INTC, AMD spring 2026), bases longer
+  than 6 months (DELL 34-month, ARM 24-month), long falling ranges (INTC, 45 sessions), flags fired early (PGY Aug 13 vs the
+  user's Aug 21), a failed breakout not seen (SNDK Mar 18 2026: a close back under the line the next day).
+- **The user's markings** (confirmed): blue horizontal line = base top, blue falling line = flag line, **every pink mark on
+  a candle = a buy day**, red arrow = exit, blue arrows at lows = support held (not buys). EMAs on their charts: 5 / 10 / 21
+  / 50, black = the 200 SMA. "No interest up down this line" (U) = the middle of a range is dead ground.
+- **Built on test/cleanlaunch** (each agreed; rules workbook updated in the branch; `--regress`: every entry the same,
+  one status line differs: ACN Oct 6 2026 "Closed under the 200 SMA: no entry"):
+  1. launch.py: no entry on a close under the 200 SMA (REAL Jul 2 2026); the 50 EMA undercut & reclaim only with the 50 EMA
+     rising; tight days need a base of 5 bars after its high and not 4 higher closes in a row into the day (PGY Aug 26);
+     **no limit over the 200 SMA** for a launch (the user: "it can be a launch.. I don't have any rule like that"; was 28% /
+     50%; 2 years: +800 launches, ran 20%+ 32% vs 25%, failed 34% vs 26%); **power day 3x volume** (was 4x; THC Jul 24).
+  2. alerts.py: a breakout / 3-SETUPS trigger needs a **volume pace of 1x+** (under it a heads-up "on light volume", the
+     trigger when it gets there; 1.5x+ tagged strong volume); the alert shows the **risk to the day's low, over 0.7 ADR**
+     (the user's max risk) a heads-up; a **retest** triggers only with an EMA at the level; new **tight-day 21 / 50 EMA
+     hold** trigger from 3:45 PM on Launches, 3-SETUPS and the TREND list's own names; an **earnings-within-5-sessions**
+     warning on every trigger. **Pattern pivots stay triggers** (the user: "we don't want to mess with it").
+  3. docs/index.html: the new alert kinds; lone wolves shown by default, tagged.
+  Tested only on the day's live prices with a stand-in for the day's low (the 1-minute charts can't be reached from a
+  session): the real count of EMA-hold alerts needs a run on a market day. The earnings file had no upcoming rows (7 errors).
+- **Agreed, not built yet** (the build list, in this order; each on the test branch, then the proof below):
+  chart reading: the **"launch attempt"** label (a launch-size day closing under a higher high; model RHI Oct 23 2026;
+  RPD Sep 14 and ATRC Jul 24 become attempts; ACN Oct 1-8 is a delayed launch, not this); **off after 2 closes under the 50
+  EMA, on the list only while the 21 or the 50 EMA rises, back on when it breaks out of its box** (the user confirmed; AMD
+  Apr 8 / 16 2026); bases over 6 months; long falling ranges; a failed breakout marked; "breakout with caution" renamed
+  "breakout attempt"; every name on a launch day; flags that fire early; the scan naming the tight-day EMA hold; the one
+  rulebook (alerts and page ask launch.py). Themes: rank on tradable stocks (4+ for a tier); a **"Heating up" column** (the
+  last week + breadth) for theme, industry group and the stock's short-term RS ("I need that column for sure"); **one name
+  and rank where a theme and an industry group share three-quarters+ of their stocks** (about 15 pairs; the user: yes),
+  both kept where less; hand-built homes for the ~170 pack-less tradable stocks (the user: "they have to tightly move up
+  and down, same theme"); "leader" in place of lone wolf; join at 0.6 / leave under 0.45; a weekly new-pack finder.
+- **The proof before any go live**: `--regress`; the 51 chart buy days (today 29 reach the list); **blind test 2** (20 new
+  launches, seed 1110, the off-list rules applied, each chart also "would you trade it": tools/blindtest/gen2.py; the page
+  https://claude.ai/artifact/Dcg2NWr5mXTa58Vo6Hkyui: **the user's marks are pending**); the 2-year check (ask first: it
+  changes what a launch is).
+- **Decided on the older open items** (Nov 10): yes: "W crossed the 200" alert, a double beat = B, a news run ~9:25.
+  Dropped for good, don't ask again: the momentum cutoff, the power day's +10% question, HELE's 700K, the official open from
+  Alpaca, the layouts export / import, the FCF backtest. VCEL: don't change.
+- **Still wanted from the user**: about ten charts they would NOT trade (only XMTR so far: "most of AI ecosystem charts
+  now is broken"); a launch attempt that later launched; the blind test 2 marks. To study: AMD Sep 4-8 2026 and MRVL Mar 6
+  2026 (the user: new trends starting with a gap).
+- **Blocked, the user to decide**: saving the user's recovered words from the Oct 26 session into the repo was refused by
+  the permission system (copying another session's transcript into a public repo). Offered: Claude's own summary, or leave
+  them in that session (session_0182knZxEUS1BR5NUyEY19Yd, Oct 27 03:30 UTC onward). No answer yet.
+- **Good to know**: sessions before Oct 26 can't be reached; the engine and tools/replay.py need `pip install numba numpy
+  pandas`; history/bars_2y.json.gz ends Oct 23; radar-data long_bars.json holds ~155 symbols incl. every chart example
+  (a `long` run replaces the file: pass every symbol again); the questions page: https://claude.ai/artifact/9FgnKWPf31YCTDuyCHGDHG.
 
 ## Status at the end of the session "Radar: earlier news + morning breakout alert (Nov 9)" (Mon Nov 9 2026)
 

@@ -1,0 +1,64 @@
+# The user's answers to Claude's open questions (Nov 10 2026, pasted from the questions page), the user's words. With each:
+# what Claude understood. Read with tools/chart_examples.txt.
+#
+# [mark3] The blue arrows at lows: only marks that support held. NTSK: "august 26 is 50 ema pull and hold point.. september 2nd
+#   again 50 ema hold... and chart getting volatility squeeze towards high, every dip is shallower. 14th september breakout"
+# [entry5] Risk limit on a breakout alert: "0.7 ADR, my rule" ("it depends")            -> built on test/cleanlaunch
+# [entry6] Lone wolves: show them, tagged. "even though no theme, whole biotech sector was trending up"  -> built (shown by default)
+# [entry2] A stock gapping far over the line (NVDA Nov 11 2016): still buy over the 5-minute opening range high, however far.
+#   "that's the point of episodic pivot, we do have guardrails in place though.. its character change in a stock!!! earnings /
+#   fundamental news and etc!!! it means stock is getting rerated if it holds!!!!"
+# [entry3] SNDK Mar 18 2026 "fail": a close back under the line the next day.
+# [entry4] Tight days under a base high: "5ema/10ema has to be coming close to that area as well" (not a % distance: the short
+#   EMAs have caught up to the price under the high).
+# [list1] The quiet stocks (NVDA 2016, NFLX 2024, TWLO 2024, XYZ 2017, TSLA 2019): "they are megacaps... these are for chart buy,
+#   exit pattern purposes.., launch day episodic pivot purposes" -> the charts teach the PATTERN; the ADR minimum stays 3.5%.
+# [list6] "whole point of adr 3.5% or 4% is to buy stocks that would make big moves, that's all"; tight days squeeze the ADR ->
+#   no extra ADR test at the moment of the tight-day EMA hold alert.
+# [list2] A break under the EMAs ends the trade, the stock stays on watch: Yes. XYZ 2017: "its basing nicely holding its gap,
+#   shallow base, 20th april boom breakout!!!"
+# [list3] Dropped in a market fall: "its 2 closes. not only that, if 50 ema or 21 ema not trending up stock we not interested,
+#   one has to be going up... [AMD] 18th nov until january 13th 2026 wouldn't have been in our watchlist, its whipsaw movement..
+#   box movement no breakout..... yes you right april 8th is the day to get long.. agree with you on april 16th as well."
+#   -> Claude's reading, TO CONFIRM: off after 2 closes under the 50 EMA (today 3); on the list only while the 21 or the 50 EMA
+#   is rising; back on when that holds again and it breaks out (AMD Apr 8 and Apr 16 2026 are buy days).
+# [list4] "Launch attempt" (a launch-size day closing under a higher high): Yes. "atrc is more a buy point, its bull flag.. july
+#   27th is the buy day again breaking out"
+# [list5] Power day volume: "Make it 3x"                                                -> built on test/cleanlaunch
+# [list7] PCOR: Nov 4 breakout. GKOS: Oct 29.
+# [clean1] "xmtr no go... dell yes.. all examples I have been giving [are] all clean charts": AMD, DELL, MU, NIO, NTSK, NVDA,
+#   SHOP, SNDK, UBER, ARM.
+# [clean2] Would not trade: "most of ai ecosystem charts now its broken.. unless they do big big day, and gap up day / episodic
+#   pivot day to start new trend / new character.. see back in april exactly what happened to all of them.. choppy actions we
+#   want to avoid.. new trend up with episodic pivot / or clear up day (above 21ema and 50 ema.. its a go sign!!! check amd
+#   september 4th 8th move made new trend.. example mrvl march 6th new trend up with gap!!!"
+# [th1] Rank on tradable stocks: "with adr high, I usually stick with tech related field"
+# [th2] "Heating up" column: not understood -> explained again in chat, waiting.
+# [th3] Hand-built homes: Yes. "they have to be tightly move up and down same theme!!!!"
+# [th4] One map (merge duplicates): "I haven't seen what you asking, provide me info" -> explained again in chat, waiting.
+# [th5] Leader instead of lone wolf: Yes. [th6] Join at 0.6, leave under 0.45: Yes. [th7] Weekly new-pack finder: Yes.
+#
+# Follow-up (the user, Nov 10 2026, later):
+# [list3] Claude's reading CONFIRMED ("answer your question: correct"): off after 2 closes under the 50 EMA; on the list only
+#   while the 21 or the 50 EMA is rising; back on when that holds again and it breaks out. Added: "it has to break out of box
+#   or up down moving area [to a] new price point (meaning break out, usually its gap). january 15th amd was that attempt, it
+#   lived only few days, market wasn't ready.. its all probability.. when these align its very strong probability, april was
+#   clean one!!! market was cooperating as well!!!!"
+# [th2] "Heating up" column: "I need that column for sure", and it should rate the strength of the theme / industry group AND
+#   the RS of the stock (a short-term rank next to the 1/3/6-month one).
+# [th4] One map: the user asked "industry group is large group, theme is smaller isn't it?" -> explained; decision still open.
+# Tight days: the user gave many examples to earlier sessions (ANF Oct 15-16, CAI Oct 22-26, ARM Apr 14-16, SG before Oct 8;
+#   GMAB Oct 20-22 NOT tight: advancing). Measured Nov 10: the distance of the close, the 5 EMA and the 10 EMA to the base top
+#   does NOT separate PGY Aug 26 2026 ("too far": 0.53 ADR under the top, 5 EMA 0.90 ADR under) from the agreed ANF Oct 15 (0.59 /
+#   1.22) or ARM Apr 14 (0.57 / 1.23). PGY had been advancing 4 days in a row into Aug 26 (like GMAB): Claude's guess, to confirm.
+# ACN Oct 1 -> Oct 8 2026 (broke out on earnings, pulled back, held the previous breakout level, launched Oct 8): the user first
+#   gave it as a launch-attempt example, then corrected: "my acn example was delayed launch, my bad". It is the engine's existing
+#   "delayed" launch, NOT a model for the launch-attempt label. The launch-attempt model stays RHI Oct 23 2026 (+21.7%, closed
+#   45.87 under its 6-month high 46.70) and DUOL Nov 4 2026 (to confirm). Still wanted: a chart of an attempt that later launched.
+# [th4] One map: CONFIRMED ("yes... correct"): where a theme and an industry group share three-quarters or more of their stocks
+#   (Drug Distributors / Medical Distribution, Cruise Lines / Travel Services, Consumer Lending / Credit Services, Refiners,
+#   Quantum Computing, Memory & Storage, Hotel REITs, Cybersecurity: about 15 pairs) show one name (the theme's) and one rank;
+#   where they share less (Neoclouds, Nuclear & Uranium, Solar, AI Chips & CPUs, Optics & CPO, Gold Miners: about 24) keep both:
+#   the theme is the story, the industry group the business line.
+# Tight days: the user agreed Claude's logic: PGY Aug 26 2026 was advancing (4 higher closes in a row), not tight -> built on
+#   test/cleanlaunch (tight_adv_closes=4).
