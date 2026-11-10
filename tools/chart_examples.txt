@@ -19,7 +19,11 @@
 # Each line: symbol, the buy day found in the price data (split-adjusted, as the charts), what the chart shows | what the
 # engine said (Nov 10 2026, branch test/cleanlaunch, the $10 price floor off for the old split-adjusted prices).
 # MATCH = the engine names it and the stock was on the list · OFF = named, but the stock had been taken off the list ·
-# MISS = not named. Score: 50 buy days: 29 MATCH, 6 OFF, 15 MISS (4 of them also off the list).
+# MISS = not named. Score: 51 buy days: 29 MATCH, 6 OFF, 16 MISS (4 of them also off the list).
+# The chart dates are from the user's own file names (the folder screenshot, Nov 10 2026): amd april 2016, dell feb-july 2026,
+# mu sept 2025 / dec 2025 / april 22 2026, nflx oct 2023 - mar 2024, nio july 2020, ntsk sept 2026, nvda feb / may / jul / nov
+# 2016, shop jan 2017, sndk jan / april 2026, tsla dec 2019 - 2020, twlo feb - october 2018, twlo october 2024, uber may 2023 -
+# jan 2024, xyz feb - nov 2017, zm feb 2020.
 #
 AMD  2016-04-22  launch: earnings gap +52.3%, 13.9x, close 3.99            | MATCH  Launch day (A) power
 AMD  2016-05-18  breakout of the tight base's lower line 3.80, close 3.84   | MISS   "Tight under 3.99, the base high (2 days)"
@@ -44,6 +48,7 @@ XYZ  2017-05-22  breakout over 20.4, close 20.95                            | MI
 XYZ  2017-07-11  flag break, close 25.44                                    | MATCH  Launch day (C)
 XYZ  2017-09-08  base top 26.3 broken, close 26.53                          | MISS   off since Aug 24 2017 (ADR under 3.2%)
 XYZ  2017-10-02  breakout over 29, close 29.39                              | OFF    Base breakout (leg 3) over 29.00; off (ADR under 3.2%)
+TWLO 2024-10-31  earnings gap over the flat base top ~72, close 80.65 (+14.3%, 5.1x) | MISS   ADR 2.0% under the 3.5% minimum
 ZM   2020-02-03  launch: gap over the base top ~78 and the 200 SMA, 87.66   | MATCH  Launch day (A)
 NVDA 2016-02-18  launch: earnings gap, close 0.75                           | MISS   closed in the lower half of the day
 NVDA 2016-05-13  earnings gap over the base top 0.935, close 1.02 (+15.2%, 6.9x) | MISS   ADR 2.2% under the 3.5% minimum
@@ -55,7 +60,7 @@ SNDK 2026-03-18  breakout over ~730 that FAILED (the user's label), 753.69  | MA
 SNDK 2026-04-08  breakout over ~780, close 780.90                           | MATCH  Base breakout with caution over 777.60
 TSLA 2019-10-24  launch: earnings gap +17.7%, 3.9x, close 19.98             | MISS   ADR 3.2% under the 3.5% minimum
 TSLA 2019-12-16  base top 24 broken, close 25.43                            | OFF    Base breakout (leg 3) over 24.08; off (ADR under 3.2%)
-NFLX 2023-05-18  launch, close 37.13 (+9.2%, 4.0x)                          | OFF    Base breakout + double breakout over 36.15; off (ADR under 3.2%)
+NFLX 2023-10-19  launch: earnings gap +16.1%, 5.0x, close 40.18             | OFF    Breakout of the inner base; the stock was off (ADR under 3.2% since Apr 2023)
 NFLX 2024-01-24  earnings gap over the base top 50, close 54.49 (+10.7%, 5.8x) | MISS   ADR 2.5% under the 3.5% minimum
 NIO  2020-07-02  breakout over 8, close 9.38                                | MATCH  Breakout follow-through (leg 2)
 NIO  2020-08-25  breakout over 15.3, close 17.84                            | MATCH  Launch day (A)
@@ -74,11 +79,11 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 #
 # Lines without a pink buy day (levels only): EPAM (falling line ~128, zone 139.5-141, the Nov 5 2026 gap), APPN (base top
 # ~27.8, broken early Aug 2026), U (lower line ~32.3 broken in Aug 2026 = the launch, the big arrow; base top ~49.8), ACN
-# (zones ~195-198 and ~244-252, level 259), XMTR (base top ~114, a choppier chart: asked whether it is a "would not trade").
+# (zones ~195-198 and ~244-252, level 259), XMTR (base top ~114): a WOULD NOT TRADE chart (the user, Nov 10 2026: "yes I do agree"): choppy, wide swings, no tight rests.
 # OKTA (2026) and one unnamed chart: tops and support marks only.
 #
-# Why 21 buy days never reached the list: 13 the ADR rule (3.5% to launch, off under 3.2%: a tight quiet base has a low
-# 20-day ADR: NVDA 2016, XYZ 2017, TSLA 2019, NFLX 2023-24, UBER Nov 2023); 4 dropped in the market's spring 2026 fall (3 closes
+# Why 22 buy days never reached the list: 14 the ADR rule (3.5% to launch, off under 3.2%: a tight quiet base has a low
+# 20-day ADR: NVDA 2016, XYZ 2017, TSLA 2019, NFLX 2023-24, TWLO Oct 2024, UBER Nov 2023); 4 dropped in the market's spring 2026 fall (3 closes
 # under the 50 EMA: MU, INTC, AMD x2); 4 other (NVDA Feb 18 2016, AMD May 18 2016, NTSK Oct 15, SHOP Jan 5 2017).
 # Also missing in the engine: bases longer than 6 months (DELL 34-month, ARM 24-month), long falling ranges, a way back onto
 # the list for leaders after a market low, blow-off-top exits (the red arrows).
