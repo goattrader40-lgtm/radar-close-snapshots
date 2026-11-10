@@ -1091,7 +1091,7 @@
       <div class="er-scroll"><div class="er-week" id="er-week"></div></div>
     </div>
     <div class="tgr-bar">
-      <span class="tgr-seg" data-k="erday" aria-label="Which days"><button data-v="all" aria-pressed="true">All week</button><button data-v="today" aria-pressed="false">Today's reactions</button><button data-v="day2" aria-pressed="false">Day 2</button><button data-v="day3" aria-pressed="false">Day 3</button></span>
+      <span class="tgr-seg" data-k="erday" aria-label="Which days"><button data-v="all" aria-pressed="true">All week</button><button data-v="today" aria-pressed="false">Today's reactions</button><button data-v="day2" aria-pressed="false">Day 2</button><button data-v="day3" aria-pressed="false">Day 3</button><button data-v="day4" aria-pressed="false">Day 4</button></span>
       <span class="tgr-lbl" id="er-react"></span>
       <span class="tgr-seg" data-k="ershow" aria-label="Which reports"><button data-v="all" aria-pressed="true">All</button><button data-v="rep" aria-pressed="false">Reported</button><button data-v="up" aria-pressed="false">Upcoming</button></span>
       <label class="tgr-f">Find <input class="tgr-num" id="er-q" type="search" style="width:6rem" placeholder="ticker" aria-label="Find a ticker"></label>
@@ -1111,7 +1111,7 @@
     <b>Results</b> come from the company's own press release (the SEC 8-K filed at release time): revenue, and the guidance read from its outlook text by fixed rules (raised / lowered / reaffirmed / given, and when it gives a revenue number, its midpoint vs the analysts' estimate and vs the same period a year ago). EPS is the adjusted figure from Yahoo or Nasdaq, the same basis as the estimate. Estimates are saved before the report; a stock first seen after its report (this first week) has no revenue estimate. When the rules can't tell, the cell says so: open the release (the 📄 link) to check.
     <b>The read</b> adds points: revenue beat +1 (2%+ beat +2) / miss −1 (−2), EPS beat +1 (10%+ +2) / miss −1 (−2), guidance raised +2, guide above the street +1 (+2 without a raise) / below −2, lowered −3 (one product's guide: raised +1 / lowered −1), revenue growth 25%+ +1 / shrinking −1, the move after the report +2%: +1, +5%: +2 (−2% −1, −5% −2). 6+ = <span class="er-read r5">Strong bullish</span> 3–5 = <span class="er-read r4">Bullish</span> 0–2 = <span class="er-read r3">Mixed</span> −1 to −3 = <span class="er-read r2">Somewhat bearish</span> −4 or less = <span class="er-read r1">Bearish</span>. Hover a read for its points.
     <b>Stock</b>: under the ticker, the report day: AM = before the open, PM = after the close (hover or long-press for the date and time). <b>Columns at the end</b>: vs 200D / vs 50 EMA = the pre-market price vs the 200-day SMA and 50-day EMA as of the last close; vs 20D high = vs the highest high of the previous 20 sessions (green "cleared" = above it: out of its 1-month base); Over 52W low = how far above the 52-week low. Group rank and RS as on Launches.
-    <b>Today's reactions</b> = the reports from the last session's after close and this morning's before open (the stocks reacting today); <b>Day 2</b> = the session before (the after-close reports of 2 sessions ago and yesterday's before-open ones): their second day after the report. <b>Day 3</b> = the session before that (the after-close reports of 3 sessions ago and the before-open ones of 2 sessions ago): their third day.
+    <b>Today's reactions</b> = the reports from the last session's after close and this morning's before open (the stocks reacting today); <b>Day 2</b> = the session before (the after-close reports of 2 sessions ago and yesterday's before-open ones): their second day after the report. <b>Day 3</b> = the session before that (the after-close reports of 3 sessions ago and the before-open ones of 2 sessions ago): their third day. <b>Day 4</b> = the session before Day 3's (the after-close reports of 4 sessions ago and the before-open ones of 3 sessions ago): their fourth day.
     <b>Filters</b>: RS, Trend and <b>+ Filter</b> work as on the Watchlist and apply to both tables (and their counts): any column of the table (EPS and Revenue on the surprise %, Guidance on its word: raised, lowered, reaffirmed …) or anything else (Group rank, Themes, Stars, Launch grade, Watchlist list …); kept in this browser.
     <b>When</b>: every weekday from about 7:10 to 8:55 AM ET (final by 9:00 AM), after the close (4:50, 6:30 and 8:30 PM ET) for the after-close reports, and Sunday evening for the new week. GitHub can start a run a few minutes late.</p>
     </details>
@@ -4742,13 +4742,18 @@ defCalc('industry_perf', {
        Nov 6 has no p3: the day before p2 among the days it holds) */
     const allDays = [...new Set((doc.extra_days || []).concat(doc.days))].sort();
     const p3 = RX.p3 || (RX.p2 && allDays.indexOf(RX.p2) > 0 ? allDays[allDays.indexOf(RX.p2) - 1] : null);
+    /* Day 4 (the user, Nov 10 2026: "same logic") = the session before Day 3's: p3 before the open + p4 after the close (a
+       file from before Nov 10 has no p4: the latest report date before p3 among the reports it holds) */
+    const p4 = RX.p4 || (p3 ? [...new Set(doc.rows.map((r) => r.date))].filter((d) => d && d < p3).sort().pop() || null : null);
     const view = (r) => S.erday === 'today' ? (r.date === RX.t0 && r.when === 'bmo') || (r.date === RX.p1 && after(r))
       : S.erday === 'day2' ? (r.date === RX.p1 && r.when === 'bmo') || (r.date === RX.p2 && after(r))
-      : S.erday === 'day3' ? (r.date === RX.p2 && r.when === 'bmo') || (!!p3 && r.date === p3 && after(r)) : inWeek.has(r.date);
+      : S.erday === 'day3' ? (r.date === RX.p2 && r.when === 'bmo') || (!!p3 && r.date === p3 && after(r))
+      : S.erday === 'day4' ? (!!p3 && r.date === p3 && r.when === 'bmo') || (!!p4 && r.date === p4 && after(r)) : inWeek.has(r.date);
     const lab = (d, w) => d ? erDay(d) + ' ' + w : '';
     $('#er-react').textContent = S.erday === 'today' ? lab(RX.p1, 'after close') + ' + ' + lab(RX.t0, 'before open')
       : S.erday === 'day2' ? lab(RX.p2, 'after close') + ' + ' + lab(RX.p1, 'before open') + ' (their 2nd day)'
-      : S.erday === 'day3' ? (p3 ? lab(p3, 'after close') + ' + ' : '') + lab(RX.p2, 'before open') + ' (their 3rd day)' : '';
+      : S.erday === 'day3' ? (p3 ? lab(p3, 'after close') + ' + ' : '') + lab(RX.p2, 'before open') + ' (their 3rd day)'
+      : S.erday === 'day4' ? (p4 ? lab(p4, 'after close') + ' + ' : '') + lab(p3, 'before open') + ' (their 4th day)' : '';
     let rows = doc.rows.filter((r) => erIn(r) && (!q || r.sym.startsWith(q)) && (S.ershow === 'all' || (S.ershow === 'rep') === !!r.reported) && view(r)
       && fltPass('er', r.sym, rsAll[r.sym]) && erXOk(FLT.er.x, r, rsAll));   /* RS, Trend and + Filter (the user, Nov 7 2026) */
     { const cnt = XBOX.er && XBOX.er.querySelector('.xf-cnt'); if (cnt) cnt.textContent = (FLT.er.x || []).some(xfOn) || FLT.er.rs || FLT.er.tr.length ? '→ ' + rows.length + ' shown' : ''; }
@@ -4780,7 +4785,7 @@ defCalc('industry_perf', {
       [...new Set([...$('#' + id + ' tbody').children].filter((tr) => tr.dataset.sym && !tr.classList.contains('xf-off')).map((tr) => (SK(tr.dataset.sym) || {}).tv_symbol || tr.dataset.sym))]])
       .filter(([, v]) => v.length);
     if (!secs.length) { toast('No stocks to save.'); return; }
-    const name = 'Earnings ' + ({ today: 'reactions', day2: 'day 2', day3: 'day 3' }[S.erday] || 'week') + (S.ershow === 'rep' ? ' reported' : S.ershow === 'up' ? ' upcoming' : '');
+    const name = 'Earnings ' + ({ today: 'reactions', day2: 'day 2', day3: 'day 3', day4: 'day 4' }[S.erday] || 'week') + (S.ershow === 'rep' ? ' reported' : S.ershow === 'up' ? ' upcoming' : '');
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([secs.map(([n, v]) => '###' + n + '\n' + v.join('\n')).join('\n') + '\n'], { type: 'text/plain' }));
     a.download = name + ' ' + todayNY() + '.txt';
