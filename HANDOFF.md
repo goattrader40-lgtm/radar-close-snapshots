@@ -73,6 +73,26 @@ alone.
   follow-up alert later with the volume, or (b) an alert at a volume level?
 - Seen Nov 9 night: alerts/morning.json and premarket/rules.json are not saved on main (the morning breakouts run on
   the defaults).
+- **Live (Tue Nov 10 ~5:50 PM ET, the user's "go live", branch test/day4, merge 530e820): Earnings tab Day 4** (the
+  user: "add day 4 ... same logic"). Day 4 = p3 before the open + p4 after the close (Tue Nov 10: Wed Nov 4 after close
+  + Thu Nov 5 before open, 121 reports). radar/earnings.py reaction_days returns p4, extra days include it (Mon-Thu),
+  react.p4 in earnings.json; the page: a "Day 4" button, the date line "(their 4th day)", the help text; a file without
+  p4 takes the latest report date before p3. Today / Day 2 / Day 3 / All week the same as before (22 / 15 / 78 / 37).
+- **First live morning of the 📈 morning breakouts (Tue Nov 10)**: 3 alerts, TRAX 9:40 $52.36, TGTX 10:04 $66.87,
+  ZETA 10:06 $34.47; the replay (radar-tools `morning`, 536 read) found the same 3 and no others. To ~2 PM: none
+  stopped, best +4.6% / +1.7% / +2.6%, TRAX and TGTX back under their ORH (11:40, 1:00 PM). **The alerts came late**:
+  TRAX and TGTX broke the ORH and PDH at 9:37 at +2.8% / +2.9%, the +5% rule held them (alert $1.27 / $1.63 higher,
+  risk 7-10% to the day's low); ZETA was held by the 10 > 21 EMA rule (replay 10:19). Replay with min_chg=3: 6 alerts
+  (TRAX, TGTX 9:38, GPN 9:39, ZYME, SG, ZETA 10:19), about breakeven by 2 PM. Suggested: a week of both replays before
+  changing the 5% (the user's settings box). The user's afternoon list (ORKA, PRCH, RRC, GPN, CLF, EPAM, AR, HUM,
+  ARQT, RKLB) was not in the 9:35-10:30 window (moved later, Rel vol under 1x, ADR under 4%, under the 50 EMA / 200 SMA;
+  RKLB 22% under its 200 SMA, never +5%). The user's empty log mid-day came back by itself: the job's file had all 58
+  alerts and a fresh browser showed them (likely a tab chip other than All, or a page still loading on the phone).
+- **Test only, branch test/morningcheck (085e927)**: radar/probe_morning.py after_alert() adds to each replayed alert
+  how it went after (best high and when, stop hit, back under the ORH, last price, R). Waiting for the user's go.
+- **Open (asked Nov 10, no answer yet)**: a stock without a 200 SMA (a new listing: TRAX) passes the morning alert's
+  200 SMA rule: let through or leave out?; run the morning replay (5% and 3%) every day before 4:06 PM, scheduled or
+  on request?; a longer alert window (ORKA / PRCH would have alerted in the afternoon)?
 
 ## Status at the end of the session "Radar: full portal review (Nov 9)" (Nov 9 evening - Nov 10 2026)
 
