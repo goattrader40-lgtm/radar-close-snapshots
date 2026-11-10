@@ -42,6 +42,23 @@ def bars_2d(sym):
     return None
 
 
+def after_alert(tod, m, entry, stop, orh):
+    """how it went after the alert, on the day's 1-minute bars so far (the user, Nov 10 2026: "how accurate was it"):
+    bought at the alert's price, the stop under the day's low at the alert: the best high and when, the worst low, the
+    stop hit (and when), the first close back under the opening range high, the last price and its R"""
+    aft = [x for x in tod if x[0] >= m]
+    if not aft or not entry or not stop or entry <= stop:
+        return None
+    hi = max(aft, key=lambda x: x[2])
+    hit = next((x for x in aft if x[3] < stop), None)
+    under = next((x for x in aft if x[4] < orh), None)
+    last, risk = aft[-1], entry - stop
+    return {"high": round(hi[2], 2), "high_at": f"{hi[0]:%H:%M}", "max_pct": round(100 * (hi[2] / entry - 1), 2), "max_r": round((hi[2] - entry) / risk, 2),
+            "low": round(min(x[3] for x in aft), 2), "stop": round(stop, 2), "stopped_at": f"{hit[0]:%H:%M}" if hit else None,
+            "back_under_orh_at": f"{under[0]:%H:%M}" if under else None, "last": round(last[4], 2), "last_at": f"{last[0]:%H:%M}",
+            "last_pct": round(100 * (last[4] / entry - 1), 2), "last_r": round((last[4] - entry) / risk, 2)}
+
+
 def main():
     a = [x for x in sys.argv[1:] if not x.startswith("--") and "=" not in x and not x.startswith("x:")]
     stocks_p, prof_p, earn_p, out_p, watch = a[0], a[1], a[2], a[3], [s.upper() for s in a[4:]]
@@ -121,7 +138,7 @@ def main():
                 al = morning_alert(sym, st, q, lv, M)
                 if al:
                     fired[sym] = {"time": f"{m:%H:%M}", "price": round(price, 2), "chg": q[1], "rv": rv, "pdh": round(pdh, 2), "orh": round(orh, 2),
-                                  "low": round(lv["low"], 2), "title": al[0], "msg": al[1]}
+                                  "low": round(lv["low"], 2), "title": al[0], "msg": al[1], "after": after_alert(tod, m, price, lv["low"], orh)}
                     per_min.setdefault(f"{m:%H:%M}", []).append(sym)
                     if sym in why:
                         why[sym].append([f"{m:%H:%M}", "ALERT"])
