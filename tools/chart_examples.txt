@@ -1,0 +1,84 @@
+# The user's own marked-up charts (sent Nov 10 2026; the user: "most of these charts I already provided to Claude with entry
+# points, and explained in detail when building the engine": that was never written down, so they were lost. Never again:
+# this file is the record. Read it before proposing any change to launches, bases, flags or the list rules.)
+#
+# The markings, as Claude read them (NOT yet confirmed by the user: ask before relying on the last two):
+#   blue horizontal line = the top of a base (the level to break) · blue falling line = a flag line
+#   pink highlighted candle = the buy day · red arrow = the exit (a sharp break under the short EMAs, or a blow-off top)
+#   blue arrows at lows (NTSK, an unnamed chart) = support holding (a level, the 200 SMA, the 50 SMA)
+#   pink blobs at highs (OKTA, NTSK) = tops with fading momentum (least sure)
+# What the charts show the user trades: (1) a launch day: an earnings gap on huge volume out of a long flat base or off the
+# 200 SMA; (2) a tight, flat rest riding the rising short EMAs, small candles, quiet volume; (3) the break of that base top,
+# often with a gap and a volume spike (most pink candles); (4) flag breaks as the earlier entry in the run; (5) the staircase
+# repeats (XYZ 2017, NIO 2020: 5-6 steps). "Clean" = small candles in the rests, the price hugging the rising EMAs, volume
+# only on the launch and breakout days. U Nov 2026: "NO INTEREST UP DOWN THIS LINE" = the middle of a range is dead ground,
+# only its top matters. ACN: boxes = support / resistance zones. Four charts by another trader (INTC, ARM, DELL, AMD, spring
+# 2026) add: the stock makes higher lows while the market falls, the 9 > 21 > 50 EMA reclaim, undercut & reclaims, tight
+# flags surfing the 9 EMA, volume rising before the breakout, bought as the market turns.
+#
+# Each line: symbol, the buy day found in the price data (split-adjusted, as the charts), what the chart shows | what the
+# engine said (Nov 10 2026, branch test/cleanlaunch, the $10 price floor off for the old split-adjusted prices).
+# MATCH = the engine names it and the stock was on the list · OFF = named, but the stock had been taken off the list ·
+# MISS = not named. Score: 50 buy days: 29 MATCH, 6 OFF, 15 MISS (4 of them also off the list).
+#
+AMD  2016-04-22  launch: earnings gap +52.3%, 13.9x, close 3.99            | MATCH  Launch day (A) power
+AMD  2016-05-18  breakout of the tight base's lower line 3.80, close 3.84   | MISS   "Tight under 3.99, the base high (2 days)"
+AMD  2016-05-23  breakout over the launch day's high 4.02, close 4.04       | MATCH  Base breakout (leg 2) over 3.99
+AMD  2016-06-28  flag break, close 5.12 (+8.5%)                             | MATCH  Push out of the 21 EMA with a gap (not named a flag)
+AMD  2016-07-22  base top 5.52 broken with a gap, close 5.84 (+11.9%, 4.1x) | MATCH  Launch day (A) power
+DELL 2026-02-27  launch: earnings gap over the 34-month base, close 148.08  | MATCH  Launch day (A+) power (the 34-month base is not named: bases reach 6 months)
+DELL 2026-05-06  breakout over ~221, close 238.80                           | MATCH  Base breakout (leg 4) over 221.50
+DELL 2026-05-22  breakout over ~263, close 295.19                           | MATCH  Base breakout (leg 5) over 263.99
+MU   2025-09-05  base top ~128.5 broken, close 131.37                       | MATCH  Launch day (C)
+MU   2025-10-01  breakout over 170, close 182.15                            | MATCH  Base breakout (leg 2) over 170.45
+MU   2025-12-19  breakout after earnings over ~262, close 265.92            | MATCH  Base breakout with caution over 264.75
+MU   2026-04-22  base top ~471 broken, close 487.48                         | OFF    Base breakout over 471.34; off since Apr 7 (3 closes under the 50 EMA in the market's fall)
+TWLO 2018-02-14  launch: earnings gap off the 200 SMA, close 30.72          | MATCH  Launch day (A+) power
+TWLO 2018-05-09  gap over the base top 45, close 52.41                      | MATCH  Launch day (A) power
+TWLO 2018-08-07  earnings gap, close 75.10                                  | MATCH  Launch day (A) power
+UBER 2023-05-02  launch: earnings gap off the 200 SMA, close 36.52          | MATCH  Launch day (A)
+UBER 2023-11-02  launch out of the pullback, close 46.48                    | MISS   off since May 19 2023 (ADR under 3.2%)
+XYZ  2017-02-23  launch: earnings gap +14.0%, 9.9x, close 17.15             | MISS   ADR 3.0% under the 3.5% minimum
+XYZ  2017-04-20  base top 17.6 broken, close 17.71                          | MISS   not on the list (ADR 2.6%)
+XYZ  2017-05-22  breakout over 20.4, close 20.95                            | MISS   not on the list (ADR 2.9%)
+XYZ  2017-07-11  flag break, close 25.44                                    | MATCH  Launch day (C)
+XYZ  2017-09-08  base top 26.3 broken, close 26.53                          | MISS   off since Aug 24 2017 (ADR under 3.2%)
+XYZ  2017-10-02  breakout over 29, close 29.39                              | OFF    Base breakout (leg 3) over 29.00; off (ADR under 3.2%)
+ZM   2020-02-03  launch: gap over the base top ~78 and the 200 SMA, 87.66   | MATCH  Launch day (A)
+NVDA 2016-02-18  launch: earnings gap, close 0.75                           | MISS   closed in the lower half of the day
+NVDA 2016-05-13  earnings gap over the base top 0.935, close 1.02 (+15.2%, 6.9x) | MISS   ADR 2.2% under the 3.5% minimum
+NVDA 2016-07-07  breakout over 1.21, close 1.22                             | MISS   not on the list (ADR 2.3%)
+NVDA 2016-11-11  earnings gap over the base top 1.82, close 2.20 (+29.8%, 6.0x) | MISS   ADR 3.4% under the 3.5% minimum
+SHOP 2017-01-05  breakout of the 4-month flat base 4.55, close 4.77 (8.2x)  | OFF    Base breakout over 4.55; the stock was off the list
+SNDK 2026-01-06  base top ~285 broken, close 349.63 (+27.6%)                | MATCH  Launch day (A)
+SNDK 2026-03-18  breakout over ~730 that FAILED (the user's label), 753.69  | MATCH  Base breakout (leg 2) over 725.00 (the engine did not see it fail)
+SNDK 2026-04-08  breakout over ~780, close 780.90                           | MATCH  Base breakout with caution over 777.60
+TSLA 2019-10-24  launch: earnings gap +17.7%, 3.9x, close 19.98             | MISS   ADR 3.2% under the 3.5% minimum
+TSLA 2019-12-16  base top 24 broken, close 25.43                            | OFF    Base breakout (leg 3) over 24.08; off (ADR under 3.2%)
+NFLX 2023-05-18  launch, close 37.13 (+9.2%, 4.0x)                          | OFF    Base breakout + double breakout over 36.15; off (ADR under 3.2%)
+NFLX 2024-01-24  earnings gap over the base top 50, close 54.49 (+10.7%, 5.8x) | MISS   ADR 2.5% under the 3.5% minimum
+NIO  2020-07-02  breakout over 8, close 9.38                                | MATCH  Breakout follow-through (leg 2)
+NIO  2020-08-25  breakout over 15.3, close 17.84                            | MATCH  Launch day (A)
+NIO  2020-10-14  breakout over 22.3, close 26.50                            | MATCH  Launch day (A) power
+NIO  2020-10-29  flag break, close 31.99                                    | MATCH  Base breakout (leg 2) over 29.40 (not named a flag)
+NTSK 2026-09-14  launch through the base top ~14.9, close 17.00             | MATCH  Launch day (already an agreed example)
+NTSK 2026-10-06  breakout, close 19.64                                      | MATCH  Base breakout (leg 2) over 18.96
+NTSK 2026-10-15  pullback low at the 21 EMA, close 20.45                    | MISS   "Running (leg 2)" (the tight-day EMA hold alert on test/cleanlaunch is aimed at this)
+NTSK 2026-10-21  breakout, close 21.81                                      | MATCH  Base breakout (leg 3) over 21.30
+ZS   2026-09-14  launch off the 50 EMA / 200 SMA, close 191.73              | MATCH  Launch day (B) (already an agreed example)
+ZS   2026-09-28  retest of the 190 line, close 199.39                       | MATCH  Retest of the breakout level 190.00-190.97 held + 10 & 21 EMA
+ZS   2026-10-21  flag break, close 231.33                                   | MATCH  Bull flag breakout over 224.20
+INTC 2026-04-01  breakout of the 4-month falling range, close 48.03         | MISS   off since Mar 24 (3 closes under the 50 EMA); a 45-session falling range is no flag (max 22)
+AMD  2026-04-08  small base breakout, EMAs reclaimed, close 231.82          | MISS   off since Feb 27 (3 closes under the 50 EMA)
+AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OFF    Base breakout + double breakout over 266.96; off since Feb 27
+#
+# Lines without a pink buy day (levels only): EPAM (falling line ~128, zone 139.5-141, the Nov 5 2026 gap), APPN (base top
+# ~27.8, broken early Aug 2026), U (lower line ~32.3 broken in Aug 2026 = the launch, the big arrow; base top ~49.8), ACN
+# (zones ~195-198 and ~244-252, level 259), XMTR (base top ~114, a choppier chart: asked whether it is a "would not trade").
+# OKTA (2026) and one unnamed chart: tops and support marks only.
+#
+# Why 21 buy days never reached the list: 13 the ADR rule (3.5% to launch, off under 3.2%: a tight quiet base has a low
+# 20-day ADR: NVDA 2016, XYZ 2017, TSLA 2019, NFLX 2023-24, UBER Nov 2023); 4 dropped in the market's spring 2026 fall (3 closes
+# under the 50 EMA: MU, INTC, AMD x2); 4 other (NVDA Feb 18 2016, AMD May 18 2016, NTSK Oct 15, SHOP Jan 5 2017).
+# Also missing in the engine: bases longer than 6 months (DELL 34-month, ARM 24-month), long falling ranges, a way back onto
+# the list for leaders after a market low, blow-off-top exits (the red arrows).
