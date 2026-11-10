@@ -2,11 +2,13 @@
 # points, and explained in detail when building the engine": that was never written down, so they were lost. Never again:
 # this file is the record. Read it before proposing any change to launches, bases, flags or the list rules.)
 #
-# The markings, as Claude read them (NOT yet confirmed by the user: ask before relying on the last two):
+# The markings, as Claude read them (pink = buy day and red arrow = exit confirmed by the user; the blue arrows at lows not yet):
 #   blue horizontal line = the top of a base (the level to break) · blue falling line = a flag line
 #   pink highlighted candle = the buy day · red arrow = the exit (a sharp break under the short EMAs, or a blow-off top)
 #   blue arrows at lows (NTSK, an unnamed chart) = support holding (a level, the 200 SMA, the 50 SMA)
-#   pink blobs at highs (OKTA, NTSK) = tops with fading momentum (least sure)
+#   every pink mark on a candle is a buy day, a breakout / important day (the user, Nov 10 2026: "all pink blobs highlighted on
+#   candles are buy days (breakout important days)"), including the ones on OKTA (about Jun 1 and Jul 15 2026) and NTSK (about
+#   Jul 15 and Aug 14 2026) that Claude first misread as tops
 # What the charts show the user trades: (1) a launch day: an earnings gap on huge volume out of a long flat base or off the
 # 200 SMA; (2) a tight, flat rest riding the rising short EMAs, small candles, quiet volume; (3) the break of that base top,
 # often with a gap and a volume spike (most pink candles); (4) flag breaks as the earlier entry in the run; (5) the staircase
