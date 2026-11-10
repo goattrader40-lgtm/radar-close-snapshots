@@ -1,0 +1,100 @@
+The user's blind test answers (Nov 10 2026), in their words. Page: tools/blindtest (20 random launches, seed 1109).
+Format: #read date MARK: the user's note. NO MARK = no button pressed. NET: no answers.
+Score as marked: 23 right, 32 wrong, 5 not sure, 35 no mark (42% right). Launch days: 5 right of 20 (PGY, PBF, KBH, ZETA, FDS).
+Note: the page did not apply the off-list rules (2 closes under the 200 SMA, 3 under the 50 EMA, ADR under 3.2%); about 14
+of the marked reads would not have shown live (REAL from Jul 6, AVNT from Sep 3, IBKR from Aug 4, THC from Jul 14, EGO from
+Jun 22, VIAV from Sep 11, IPGP from Jun 9, MPWR from Jul 6, MTSI from Aug 20, ALM from Sep 15). Without them: 19 right, 22 wrong.
+
+PGY (launch 2026-08-03)
+  #1 08-03 RIGHT: this is gap out of base breakout + launch day, it was enter beginning of day
+  #2 08-13 WRONG (bull flag breakout over 20.97)
+  #3 08-19 RIGHT (21 EMA retest)   #4 08-20 RIGHT (retest of the breakout level)
+  #5 08-26 WRONG: its far from bases high (tight under 23.22, closed 22.41)
+  #6 08-27 RIGHT (base breakout with caution)
+  #7 09-08 WRONG: august 27th breakout didnt hold up it broke down next day (2 tries of the top 23.68)
+  MISSED: 21st august bull flag
+REAL (launch 2026-06-18)
+  #1 06-18 UNSURE: 2 month high was literally resistance there very close to 1 month high
+  #2 07-01 WRONG, #3 07-02 WRONG: its below 200sma, we dont consider anything below 200 sma, when its in our radar, closes
+     below 200sma 50 sma it gets voided. this launch was void, bcs it never advanced at all, it failed within 2-3 days
+  #4 07-23 WRONG: under 200 sma   #5 07-27 NO MARK: same   #6 07-30 WRONG: same   #7 08-03 WRONG: same issue
+  MISSED: real was range bound, wasnt advancing at all
+AVNT (launch 2026-08-07)
+  #1 08-07 UNSURE: its 2nd day of launch day happened in aug 6
+  #2 08-14 WRONG: in order to be named base it has to have at least 5 bars!!!!!!
+  #3 08-25 WRONG: just consolidation tight days (retest of the breakout level 42.65-43.96)
+  #4 09-09 WRONG: its breakdown of the technical upside, void this chart, going for more pullback consolidation period
+  #5 09-25 WRONG (50 EMA undercut & reclaim)
+  MISSED: august 6th was launch day + gap out of base pattern and breakout + episodic pivot due to earnings and volume
+     being over 200 rvol
+REPL (launch 2026-07-31)
+  #1 07-31 WRONG: didnt clear anything
+  #2-#4: this stock very illiquid, we dont need bother it, making 61% drawdown in 2-3 days and coming back, biotech
+     stock, not the look i trade (#3 08-10 WRONG, #2 and #4 no mark)
+PBF (launch 2026-06-29)
+  #1 06-29 RIGHT: and base breakout   #2 07-06 RIGHT: 2/3 month base breakout + its just continuation of launch day
+  #3 07-30 RIGHT: but failed next day   #4 08-07 RIGHT (21 EMA undercut & reclaim)
+  #5 08-17 UNSURE: this kind of close doesnt really count breakout, because it didnt go through breakout point, it stalled
+  #6 08-18 WRONG: its sign of weak longs (breakout follow-through)
+IBKR (launch 2026-07-01)
+  #1 07-01 WRONG: there is not really trend here its range bound action
+  #2 08-21 NO MARK: trend should be clean, 21 ema turned up, 50 going up; these stocks price all over the place
+  #3 08-25 RIGHT: attempt to get out of this range bound no mans land, which failed next day, not decisive bulls
+  MISSED: april 8th was new trend, 2 days following was testing it, april 13th start of new trend upside, 23 april
+     retesting the trend day, 30th april confirmation of trend, 28th april retest and reclaim
+THC (launch 2026-07-02)
+  #1 07-02 WRONG: explained in few examples already   #2 07-07 UNSURE: stalling of the trend
+  #3 07-24 RIGHT: launch + episodic pivot + base breakout all of them
+  #4 08-05 WRONG: its 1st try (read: the 3rd try)   #5 08-11 RIGHT (tight)
+  MISSED: not the best chart i want to even look at
+EGO (launch 2026-06-15)
+  #1 06-15 WRONG: its barely over 200 sma, nothing stack up on 10 ema 21 ema, this is bearish chart, launch day has to
+     have impact to the chart
+  #2 07-22 WRONG (50 EMA undercut & reclaim)
+  #3 08-05 RIGHT: launch day + base breakout + new trend start day, 10ema over 21 and stacking up
+KBH (launch 2026-06-24)  #1 RIGHT
+ALM (launch 2026-09-08)  #1 WRONG: it has to start new trend; 8th september was attempt to breakout the base
+VIAV (launch 2026-09-08)
+  #1 09-08 WRONG: under 50 sma   #2 10-02 WRONG: attempt to breakout, barely closed above
+  MISSED: 25 sept attempt to launch
+IPGP (launch 2026-06-02)
+  #1 WRONG: this is broken chart hasnt cleared anything hasnt changed any trend with this move
+  #2 06-12 WRONG: this has to be rising stock and emas in order to be undercut reclaim
+VGNT (launch 2026-08-04)  #1 WRONG, #2-#4 no mark: not clean chart, not really liquid either, too much wicks all over
+NRIX (launch 2026-06-25)  #1-#6 no mark: biotech, too much wicks, not clean chart; it has to be clean nice tidy start launch
+ZETA (launch 2026-08-04)
+  #1 08-04 RIGHT: launch day + gap out of base   #2 08-05 NO MARK: its second day, follow through + bigger base breakout
+  #3 08-27 RIGHT: + its bull flag which has earlier entry than base breakout
+  #4 09-08 RIGHT   #5 09-10 RIGHT (retests)
+  #6 09-14 WRONG: no bull flag there its just consolidation with low volume
+  #7 09-18 RIGHT: when it keeps coming back to 21 ema and retest, meaning it would break that down, bulls getting tired
+  #8 09-24 RIGHT   #9 09-25 WRONG: its under 21 ema (read: surfing the 10 & 21 EMA)
+  #10 09-28 UNSURE, #11 no mark, #12 09-30 RIGHT: its just under 21 ema, retest 50 ema and previous base high; open or
+     closing above these 2 tight days 28th and 29th september is sign upwards; but zeta is not clean chart, clean trend i need
+MPWR (launch 2026-06-30)  #1-#2 no mark: bad chart, range bound, no launch day nothing here
+FDS (launch 2026-07-28)
+  #1 RIGHT: not really clean chart wont trade this kind of chart, thats why 28th july failed
+  #2 07-31 NO MARK: no it was breakout retest!!!!!   #3 08-03 RIGHT   #4 08-04 RIGHT   #5 08-05 WRONG (push)
+  #6-#10 no mark; MISSED: too much going up and down its not clear trend
+GLXY (launch 2026-06-08)  #1 WRONG: it didnt clear anything
+MTSI (launch 2026-08-06)
+  #1 WRONG: under 50 ema   #2 09-24 WRONG: its more of a start of new trend from down trend
+  MISSED: october 1st launch, start of new trend
+The user, after sending: "most of these were broken chart, or whiplash charts!!! i dont really trade these kind of charts.
+has to be clear launch to upside."
+
+The user's examples of what a launch is (Nov 10 2026, their words; "some below 200sma but give you an idea"):
+  PGNY Nov 5, PCOR Nov 5, APP Nov 5, EPAM Nov 5, U Nov 5, VCEL Nov 5, KD Nov 4, CPRI Oct 30, GKOS Oct 30 (launch day, EP
+  day), UPBD Oct 29 (power day, launch day).
+  XNCR: clear launch attempt day because how much gap it had and held it; following days tightened up; Nov 3 breakout
+  attempt (closed above), next day burst, great trend. "If you see previous trend was clean, this would be clean as well."
+  RHI Oct 23: launch attempt due to where it held, would pay attention to the move the next days, right at resistance.
+  WING (no date given). DUOL (garbled: "october 28th"; big gap up day Nov 4, stalled at resistance, the top of another
+  2/3-month base: Claude read it as a launch attempt, not confirmed).
+  XERS buy points: Sep 25 base breakout attempt; Sep 26 (a Saturday: Sep 28) base breakout with volume (during the day:
+  5-min ORH + base breakout volume alert); Oct 2 retest of the breakout; Oct 19 base high breakout testing, pullback the
+  following days making an inside-base flag; Nov 5 after earnings episodic pivot burst, straight up the following days.
+Engine vs these (prices from Yahoo daily bars): launches PGNY, EPAM, U, VCEL, KD, CPRI, UPBD, XERS Nov 5 match. APP under
+its 200 SMA. Not launches in the engine: THC Jul 24 (3.8x, power needs 4x, closed at 22% of its range), XNCR Oct 26 / Nov 4
+(74-79% over the 200 SMA the day before, limit 50%), WING Oct 28 (under the 200 SMA). PCOR Nov 5 closed flat at its low
+75.60 and GKOS Oct 30 closed -2.0%: the dates don't match, asked.
