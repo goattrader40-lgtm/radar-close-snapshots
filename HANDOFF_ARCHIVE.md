@@ -6,6 +6,7 @@ and when something was decided. /wrapup adds newer sections at the top, under th
 
 ## Index (date · section)
 
+- Nov 9 2026 · Status at the end of the session "Radar: earlier news + morning breakout alert (Nov 9)" (Mon Nov 9 2026)
 - Nov 8 2026 · Status at the end of the session "Radar: auto session setup + slimmer handoff (Nov 8)" (Sun Nov 8 2026)
 - Nov 7 2026 · Status at the end of the session "Radar: TradingView import replaces my list (Nov 7)" (Sat Nov 7 2026)
 - Nov 6 2026 · One pullback heads-up; ✕ on the TREND list (LIVE Nov 6 2026 ~8 PM ET, the user's "go live"; branch test/wlfix)
@@ -55,6 +56,85 @@ and when something was decided. /wrapup adds newer sections at the top, under th
 - Nov 1 2026 · Status at the end of the session before (Nov 1 2026, evening)
 - Nov 1 2026 · Tests run on Nov 1 2026 (test/pb1h)
 - Nov 8 2026 · Lines replaced in HANDOFF.md on Nov 8 2026 (the Session routine now says /start and /wrapup)
+
+## Status at the end of the session "Radar: earlier news + morning breakout alert (Nov 9)" (Mon Nov 9 2026)
+
+- **Live (the user's "go live" ~4:15 PM ET, branch test/morningbo, merge 76f36fe)**: first live morning Tue Nov 10
+  (today's day job runs the old checkout).
+  1. **📈 Morning breakout alert** (the user: "a trigger for my alerts: any stock that has broken the PDH and the
+     opening range 5-min high, +5% for the day, at Rvol over 1"; "mainly for the morning session, I don't need it after
+     10:30"; "usually 9:36-9:45"; every number adjustable; base criteria = the Gainers tab's with ADR 4%+; "highest
+     close" for the 21-day high; "50 EMA"). radar/alerts.py check_morning, in the 5-minute and the 1-minute checks
+     (radar/fast.py adds every stock that can pass the settings to the 1-minute quotes in the window, ~480 with the
+     defaults); any stock, not only the followed lists. Defaults: 9:35-10:30, up 5%+, Rel vol 1+, over yesterday's
+     high and the 5-min opening range high (Yahoo 5-minute chart, read once a day per stock, kept in alerts.json
+     mbo_lv), $5+, $0.7B+, 700K+ shares, $30M+ a day, ADR 4%+, 30%+ over the 52-week low, over the 200 SMA and the 50
+     EMA, 10 EMA > 21 > 50 (EMAs at the live price, as the Trend column); 50 EMA > 200 SMA off. **+ Filter** adds /
+     deletes extra criteria (21-day closing high, gap at the open, 1W / 1M / 3M, % under the 52-week high, vs 200 SMA /
+     50 EMA, Trend, Group rank, RS, themes / industry / sector); a stock without a value for a set filter is left out.
+     Settings: Alerts tab "📈 Morning breakouts: your settings", Save -> **alerts/morning.json** on main (GitHub key,
+     like the Graded gappers rules); day.py re-reads it every 2 minutes; none saved = the defaults. The message: price,
+     % up, Rel vol, the two levels, the stop under the day's low (risk % and ADRs), ADR, vs 200, the EMA stack, theme,
+     news (codegrade.stock_news: today's own, else the last 2 sessions' fundamental news; 35 s a check, the rest "not
+     checked in time"). One alert when one fires, one batch item (key mbatchHHMM:mbo, "MORNING BREAKOUTS (n): ...")
+     when several fire in a check; each stock its own log line. **Portal only** (PAGE_ONLY: no ntfy), its own 📈 box,
+     sound (four rising notes), voice, the "Morning" filter (tab code O); not a group move, apart from the caps, not
+     re-checked for holding (stays in its box all day). Each stock once a day. radar-day.yml now passes SEC_UA.
+  2. **Earlier news for gappers with no news today** (the user: "when gappers and no news, link to prior days' news";
+     "2 sessions is max"; "brand new fundamental change as in FLY"; articles after the move: "no need"): codegrade.py
+     earlier_news / use_earlier: a 5%+ gapper whose own news today is weak (none, routine filings, a board change, an
+     analyst note; not "After earnings", not "Filing, not classified": AKAM Nov 9's 8-K convertible offering) gets its
+     fundamental news from the last 2 sessions (Mon: Wed 4 PM - Fri 4 PM): SEC read first (earnings, takeover, FDA /
+     trial, contract, offering / dilution), else its own headline of those kinds. "Earlier news (Thu Nov 5): Earnings +
+     raise: ... (SEC Nov 5 4:57 PM ET); today: <today's read>". Grades unchanged. Executive change doesn't count (the
+     user: "your call"). Nov 9 test (codelive 9:18): 9 of 61 (STLN, SLDB, AKAM -> fixed, UMC, KELYA, ALEC, TECK, CTMX, ZLAB).
+  3. **Headline reader: FDA / trial only on drug / device words** (the user: "VSAT is a space company, it has nothing
+     to do with FDA"): a "Phase 1" needs trial / study / data after it; "approval" only with the FDA / EMA. Nov 9's 46
+     gapper headlines: only VSAT changed (-> Deal / contract); IBRX, IMVT, ZURA, VIR, MLYS ... the same.
+  Rules workbook: P1 "Earlier news", A1 "📈 Morning breakout" (+ Filter), triggers list. Agreed examples: the same.
+  Launches not rebuilt (no launch / scanner code touched; the 4:40 PM scan rebuilds them anyway).
+  4. **+ Filter choices on every tab (Gainers & losers first): the morning breakout levels** (2nd "go live" ~5:00 PM,
+     branch test/gainerlevels, merge 0ed77e8; the user: "some criteria I asked aren't available here (Gainers), above
+     ORH, above PDH"; "two sets" (the alert keeps its own settings); "I go to filters, I find them, I choose them").
+     Catalog entries (also columns): **Yesterday's high (PDH)** (stocks.json high_1d, already there), **5-min opening
+     range high (ORH)** (new radar/levels.py: Yahoo's 5-minute chart for the stocks up 2%+ at each 5-minute live update
+     from 9:36, once a day per stock, up to 1,200 a run -> radar-data **levels.json**, run by day.py live_once,
+     load_levels after a handover), **21-day closing high** (new stocks.json **close_high_21**, radar/pipeline.py: the
+     highest close of the last 21 sessions incl. that close), **EMA stack (live)** (trendOf's EMAs + the 200 SMA: 10 over
+     21, 21 over 50, 50 over the 200 SMA, 10 > 21 > 50, 10 > 21 > 50 > 200). Each filter "Over it / Under it"; no value =
+     left out while set. Tested in the browser (Gainers Nov 9 after the close: PDH under 197 / over 0, 21-day high over
+     103 of 197 with fake highs, ORH over 131 with fake ranges, stack 10 > 21 > 50 97). The daily refresh was re-run by
+     hand Nov 9 evening (radar-day mode daily) so close_high_21 is in Tue's stocks.json. Rules workbook G1 updated.
+  5. **Earnings tab: your rules in boxes** (3rd "go live" ~5:30 PM, branch test/earnrules, merge 41733ad; the user:
+     "this part, can you make it a filter so I can adjust whatever I want on those criteria"). Boxes under "Your rules"
+     (Mkt cap $M, $ vol 20D, Avg vol 20D K, Price, ADR, 52W low), Save -> **earnings/rules.json** on main (GitHub key,
+     like the Graded gappers rules); radar/earnings.py load_rules reads it each run (job keys min_mcap,
+     min_dollar_vol_20d_millions, min_avg_vol_20d, min_price, min_adr, min_pct_above_52w_low; out of range = default,
+     null = off; none saved = scanner/settings.json); MAX_ROWS 700 a week (the most liquid newcomers; "capped" in
+     earnings.json, shown on the tab). The page applies the saved rules at once to the reports on the list (grid,
+     tables, the count, the rule line) and previews unsaved boxes; looser rules add reports at the next run. Why the
+     Earnings Whispers names were missing (answered first): 18 not in the universe ($300M+ US common), the rest the
+     rules, most often 30% over the 52-week low (CEG 9%, NRG 11%, CRWV 14%, SE 6%, NU 7%); ASTS 17%, QBTS 26%, RGTI 28%
+     on Nov 6's close pass after Nov 9's rally (in from Tue's morning run). Rules workbook: new E1 sheet.
+- **Replay (radar-tools `morning [key=value ...] [x:ID:OP:VALUE ...] [SYM ...]`, radar/probe_morning.py -> radar-data
+  probe_morning.json; run it on the day, before the 4:06 PM refresh: it needs that morning's base stocks.json)**: Nov 9
+  with the defaults: 24 alerts, 10 at 9:36-9:40 (CDNA 9:36 $83.57 +6.4%; SHAK, TEM, SDGR, M 9:37 ...). None of the
+  user's 5 examples: FLY under its 200 SMA ($26.86), COHR under its 200 ($296.42), VSAT under its 50 EMA ($69.60) with
+  Rel vol ~1.0, WRBY 10 EMA < 21 / 21 < 50, AOSL too thin (582K shares, $13M). With the 200 / 50 / stack off: 134
+  alerts; COHR 9:37, WRBY 9:39, VSAT 9:40, FLY 9:47 (AOSL never). Their news: FLY had weekend news (Sat Nov 7 6:43 PM,
+  NASA CLPS 2 vendor), VSAT 8:14 AM (NASA Phase 1 selection) — neither was a 5%+ gapper, so no News column.
+- **Answered, no change**: the green dot on a theme's names = passes the user's gainer filters today; 0.64 = the stock's
+  fit with its theme. The news pull stays at 5%+ gappers (the user: "no"); no box changes it (4%: 122 gappers on Nov 9,
+  3%: 242 = about the 480 s budget, 2%: 487 too many). Phone alerts for the morning breakouts: later.
+- **Test branches**: test/morningbo merged; nothing waiting.
+- **First things to check Tue Nov 10**: radar-data levels.json from ~9:36 (the "levels:" log line, how long it takes
+  with 1,000+ movers) and the + Filter "5-min opening range high" on Gainers; stocks.json close_high_21 filled;
+  day.py's log has the fast checks within a minute with the extra ~480 quotes;
+  9:35-9:45 the first 📈 alerts (alerts.json items :mbo, mbo_lv filled); the batch pop-up and its voice on the portal;
+  the alerts' news line (no "not checked in time" flood); the 8:05 / 8:35 / 9:18 runs' "earlier news (...): N of M"
+  log lines and the News column; whether the user saved settings (alerts/morning.json on main).
+- **Open (offered, not decided)**: news for stocks that move after the open (not only 5%+ gappers); one more news run
+  ~9:25 for late gappers (TAC, ZLAB, GPCR Nov 9); the morning breakouts on the phone.
 
 ## Status at the end of the session "Radar: auto session setup + slimmer handoff (Nov 8)" (Sun Nov 8 2026)
 
