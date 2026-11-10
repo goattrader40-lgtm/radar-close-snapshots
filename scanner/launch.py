@@ -98,7 +98,7 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # power_rv 3 (the user, Nov 10 2026: "make it 3x"; THC Jul 24 2026, an 18% gap, +17% on 3.8x, was missed; was 4)
          # the blind test (the user, Nov 10 2026): no entry on a close under the 200 SMA; a 50 EMA reclaim only with the 50 EMA
          # rising; a base (and tight days under it) needs 5 bars after its high
-         no_entry_under200=1, reclaim50_rising=1, tight_base_bars=5)
+         no_entry_under200=1, reclaim50_rising=1, tight_base_bars=5, tight_adv_closes=4)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -1204,6 +1204,10 @@ def follow(a, i0, i, pick=False):
     if tight >= 2 and 100 * (c[i] / c[i - tight + 1] - 1) < -0.1 * _adr(st, i):
         tight = 0
     if tight >= 2 and all(st.h[k] > st.h[k - 1] and st.l[k] > st.l[k - 1] and c[k] > c[k - 1] for k in range(i - tight + 1, i + 1)):
+        tight = 0
+    # nor after 4 higher closes in a row into today: the stock is advancing into its high, not resting under it (the user,
+    # Nov 10 2026: PGY Aug 26 2026, closes 20.24 -> 21.68 -> 21.82 -> 22.26 -> 22.41 under its 23.22 top, read "tight")
+    if tight >= 2 and i >= L["tight_adv_closes"] and all(c[k] > c[k - 1] for k in range(i - L["tight_adv_closes"] + 1, i + 1)):
         tight = 0
     # the base under the buy point, for the heads-up: since the stock first came within a quarter ADR of that high in
     # this leg (ANF: the Aug 26 gap day's 154.58, with the 155.22 of Sep 9 as the top: 35 sessions), how deep it went,

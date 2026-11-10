@@ -55,3 +55,10 @@
 #   gave it as a launch-attempt example, then corrected: "my acn example was delayed launch, my bad". It is the engine's existing
 #   "delayed" launch, NOT a model for the launch-attempt label. The launch-attempt model stays RHI Oct 23 2026 (+21.7%, closed
 #   45.87 under its 6-month high 46.70) and DUOL Nov 4 2026 (to confirm). Still wanted: a chart of an attempt that later launched.
+# [th4] One map: CONFIRMED ("yes... correct"): where a theme and an industry group share three-quarters or more of their stocks
+#   (Drug Distributors / Medical Distribution, Cruise Lines / Travel Services, Consumer Lending / Credit Services, Refiners,
+#   Quantum Computing, Memory & Storage, Hotel REITs, Cybersecurity: about 15 pairs) show one name (the theme's) and one rank;
+#   where they share less (Neoclouds, Nuclear & Uranium, Solar, AI Chips & CPUs, Optics & CPO, Gold Miners: about 24) keep both:
+#   the theme is the story, the industry group the business line.
+# Tight days: the user agreed Claude's logic: PGY Aug 26 2026 was advancing (4 higher closes in a row), not tight -> built on
+#   test/cleanlaunch (tight_adv_closes=4).
