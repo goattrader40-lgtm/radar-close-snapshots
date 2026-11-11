@@ -94,6 +94,14 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # The engine (test/cleanlaunch): Aug 12 "Launch day, cleared its 1-month base" (matches the user); Aug 14 "Breakout of the
 # falling range" over the line from its Jun 22 high 299.86 (a buy read on a chart the user would not trade: WRONG); it never
 # said the launch failed.
+# NVDA (sent Nov 11 2026, a daily chart 2026): WOULD NOT TRADE, example two (the user: "right side of chart not tradable after
+# May 14th... downtrending 21 ema, 50 ema messed up, up down whiplash"). The left side is clean: off the 200 SMA (black) in
+# April, a staircase over the rising EMAs to the May 14 2026 high 236.54. After it: lower highs, the 21 EMA turning down, the
+# 50 EMA flat and crossed again and again, the price chopping around an orange zone (~210-215) and back to the 200 SMA.
+# The prices, May 14 - Nov 10 2026: the close crossed the 21 EMA 23 times in 124 sessions; the 10 > 21 > 50 order broke and
+# came back 6 times; the 21 / 50 EMA changed direction (vs 5 sessions before) about 20 times. A range, no trend.
+# The engine: NVDA is not on the list (ADR 2.1-3.7%). On a stock with a higher ADR the new rising-EMA list rule would have
+# flipped it off and on again and again here: it has no "choppy, not tradable" read.
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
