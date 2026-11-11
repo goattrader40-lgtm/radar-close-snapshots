@@ -23,6 +23,30 @@ def get(url, headers=H, timeout=30):
         return json.load(r)
 
 
+STOCKS_URL = "https://raw.githubusercontent.com/goattrader40-lgtm/radar-close-snapshots/radar-data/stocks.json"
+
+
+def fallback_symbols(ex):
+    """Nasdaq's screener refused (Nov 10-11 2026: HTTP 403 on every try, no evening scan for the Nov 10 close): the
+    portal's own stock file of the last close (radar-data stocks.json: market cap and exchange for every stock the
+    day job follows) stands in, so the scan still runs. A few names only Nasdaq's list has are missed that day."""
+    print(f"could not download the {ex} list: using the portal's stocks.json instead")
+    caps, exch = {}, {}
+    try:
+        rows = get(STOCKS_URL, H, 60)
+    except Exception as e:
+        sys.exit(f"could not download the {ex} list, and the portal's stocks.json failed too: {e}")
+    for r in rows:
+        s, mc = (r.get("symbol") or "").strip(), float(r.get("mcap_b") or 0) * 1e9
+        if s and mc >= SETTINGS["standard"]["min_mcap"] and "^" not in s:
+            caps[s] = mc
+            exch[s] = (r.get("exchange") or "").upper()
+    if len(caps) < 1500:
+        sys.exit(f"could not download the {ex} list, and the portal's stocks.json has only {len(caps)} stocks")
+    print(f"FALLBACK LIST: {len(caps)} stocks from the portal's stocks.json")
+    return caps, exch
+
+
 def symbols():
     NH = dict(H, Origin="https://www.nasdaq.com", Referer="https://www.nasdaq.com/")
     caps, exch = {}, {}
@@ -37,7 +61,7 @@ def symbols():
                 print(f"{ex} list: attempt {attempt + 1} failed: {e}")
                 time.sleep(10)
         if not rows:
-            sys.exit(f"could not download the {ex} list")
+            return fallback_symbols(ex)
         for r in rows:
             try:
                 mc = float(r.get("marketCap") or 0)
