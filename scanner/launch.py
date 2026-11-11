@@ -98,7 +98,25 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # power_rv 3 (the user, Nov 10 2026: "make it 3x"; THC Jul 24 2026, an 18% gap, +17% on 3.8x, was missed; was 4)
          # the blind test (the user, Nov 10 2026): no entry on a close under the 200 SMA; a 50 EMA reclaim only with the 50 EMA
          # rising; a base (and tight days under it) needs 5 bars after its high
-         no_entry_under200=1, reclaim50_rising=1, tight_base_bars=5, tight_adv_closes=4)
+         no_entry_under200=1, reclaim50_rising=1, tight_base_bars=5, tight_adv_closes=4,
+         # the chart-reading review (the user, Nov 10-11 2026; tools/chart_examples.txt, tools/user_answers_2026-11-10.txt):
+         # launch attempt: a launch-size day closing under a higher high (RHI Oct 23 2026: +21.7%, closed 45.87 under its
+         #   6-month high 46.70; RPD Sep 14, ATRC Jul 24 2026 under their 1-month high); attempt_near = how close under a
+         #   3- / 6-month high, in ADRs ("right at resistance")
+         # list rules: off after 2 closes under the 50 EMA (was 3), on the list only while the 21 or the 50 EMA rises (vs 5
+         #   sessions ago), back on when that holds again and it breaks out (AMD Apr 8 / Apr 16 2026; "it has to break out of
+         #   box or up down moving area to a new price point")
+         # long falling range: a falling line from a high 23-70 sessions old (longer than a flag), broken with the 21 & 50 EMA
+         #   reclaimed (INTC Apr 1 2026: the line from its Jan 22 high, 48 sessions); 35-90 sessions: a flag ends at 22, and a
+         #   line a flag or a pop already covers is not read twice (VEEV Sep 30, APPN Oct 8, LIFE Oct 20 2026: 23-30 sessions)
+         # failed breakout: within 2 sessions a close back under the broken top AND under the breakout day's low, where your
+         #   stop is (SNDK Mar 18 2026 over 725.00, low 715.50; Mar 20 closed 709.71: "FAILED"; PGY Aug 27 -> 28: "failed next
+         #   day"). A quiet close just under the top is not one (CAI Sep 16 2026: 28.21 under 28.32, over the day's low; it ran)
+         # flag_fail_adr: a high that pokes this far over a flag's line and closes back under is a failed try and the line
+         #   stays (ARM Apr 10 2026, 1.0 ADR over); less redraws the line (PGY Aug 11 2026, 0.57 ADR over: its line then runs
+         #   through that high, the break is Aug 21, not Aug 13; was 0.5)
+         attempt=1, attempt_near=0.5, off50_closes=2, ema_rising=1, ema_rise_days=5, range_min=35, range_max=90, range_depth=8,
+         fail_days=2, flag_fail_adr=0.75, base_look=756)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -288,6 +306,14 @@ def group_status(A, groups, cal):
 
 
 GR_TOP, GR_STRONG = 0.97, 0.90   # group rank tiers: ★ Top group = top 3%, Strong = 3-10% (2-year test, Nov 2 2026)
+# the themes review (the user, Nov 10 2026; tools/user_answers_2026-11-10.txt th1-th4):
+GR_TIER_MIN = 4     # a group is ranked on its TRADABLE stocks (the launch list's liquidity and ADR 3.5%+: "with adr high") when
+                    # it has 4+ of them, and only then can it be ★ Top / Strong; with fewer: all its stocks, a rank, no tier
+GR_SAME = 0.75      # a theme and an industry group sharing three-quarters+ of their stocks (shared / all stocks of both) are
+                    # one pack: one name (the theme's) and one rank (Drug Distributors / Medical Distribution, Cruise Lines /
+                    # Travel Services, Quantum Computing, Memory & Storage, Cybersecurity ...; Neoclouds, Optics & CPO, Gold
+                    # Miners share less: both kept)
+GR_HOT, GR_HOT_BREADTH = 90, 60   # "Heating up": heat 90+ (the top 10% of its kind on the last week) with 60%+ of its stocks up
 
 
 def _pct_rank_need(v, need):
@@ -339,6 +365,20 @@ def group_rank(A, cal, stocks_rows, back=5):
         if k_:
             mem["ind:" + k_].append(s)
     names = sorted(g for g, ms in mem.items() if len(ms) >= 3)
+    # ranked on its tradable stocks when it has 4+ (the user, Nov 10 2026), else on all of them without a tier
+    trad = {g: [s for s in ms if A[s].liquid[-1]] for g, ms in mem.items()}
+    full = dict(mem)
+    mem = {g: (trad[g] if len(trad[g]) >= GR_TIER_MIN else ms) for g, ms in mem.items()}
+    thin = {g for g in names if len(trad[g]) < GR_TIER_MIN}
+    # one pack where a theme and an industry group hold nearly the same stocks: the industry group takes the theme's name
+    same = {}
+    for g in names:
+        if not g.startswith("ind:") or g.endswith(LOOSE):
+            continue
+        a_ = set(full[g])
+        best = max(((len(a_ & set(full[t])) / len(a_ | set(full[t])), t) for t in names if t.startswith("theme:")), default=(0, None))
+        if best[0] >= GR_SAME:
+            same[g] = best[1][6:]
     cols = [len(cal) - 1, len(cal) - 1 - back]
     calset = set(cal)
     ret = {}                                      # {symbol: {calendar day: (1M, 3M, 6M)}}
@@ -354,13 +394,13 @@ def group_rank(A, cal, stocks_rows, back=5):
             if i is None:
                 continue
             i += off
-            ret[s][k] = tuple(100 * (st.c[i] / st.c[i - n] - 1) if i >= n else np.nan for n in (21, 63, 126))
+            ret[s][k] = tuple(100 * (st.c[i] / st.c[i - n] - 1) if i >= n else np.nan for n in (21, 63, 126, 5))
     P = {}
     med = {}
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", RuntimeWarning)
         for k in cols:
-            M = np.array([np.nanmedian(np.array([ret[s][k] for s in mem[g] if s in ret and k in ret[s]] or [(np.nan,) * 3]), axis=0)
+            M = np.array([np.nanmedian(np.array([ret[s][k][:3] for s in mem[g] if s in ret and k in ret[s]] or [(np.nan,) * 3]), axis=0)
                           for g in names]).reshape(len(names), 3)
             med[k] = M
             P[k] = np.full(len(names), np.nan)
@@ -380,7 +420,7 @@ def group_rank(A, cal, stocks_rows, back=5):
             ms = [s for s in mem[g] if s in ret and cols[0] in ret[s]]
             if len(ms) < 3:
                 continue
-            X = np.array([ret[s][cols[0]] for s in ms], dtype=float).reshape(len(ms), 3)
+            X = np.array([ret[s][cols[0]][:3] for s in ms], dtype=float).reshape(len(ms), 3)
             sc = np.nanmean([_pct_rank_need(X[:, h], 3) for h in range(3)], axis=0)
             ok = [j for j in range(len(ms)) if not np.isnan(sc[j])]
             order[g] = [ms[j] for j in sorted(ok, key=lambda j: -sc[j])]
@@ -391,11 +431,38 @@ def group_rank(A, cal, stocks_rows, back=5):
     if len(ss) >= 5:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
-            X = np.array([ret[s][cols[0]] for s in ss], dtype=float).reshape(len(ss), 3)
+            X = np.array([ret[s][cols[0]][:3] for s in ss], dtype=float).reshape(len(ss), 3)
             pr = _pct_rank_need(np.nanmean([_pct_rank_need(X[:, h], 5) for h in range(3)], axis=0), 5)
         rs = {s: int(min(99, max(1, math.floor(100 * pr[j])))) for j, s in enumerate(ss) if not np.isnan(pr[j])}
+    # "Heating up" (the user, Nov 10 2026: "I need that column for sure": the strength of the theme / industry group now, and
+    # a short-term RS of the stock next to the 1/3/6-month one). Group heat = its stocks' median 1-week move and its breadth
+    # (the share of them up on the week), each ranked among the groups of its kind, averaged and ranked again, 1-99.
+    # Stock RS 1W-1M = its own 1-week and 1-month move ranked the same way against every stock
+    heat, wk, br = {}, {}, {}
+    rsw = {}
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        for kind in ("theme:", "ind:"):
+            gs_ = [g for g in names if g.startswith(kind)]
+            w_, b_ = [], []
+            for g in gs_:
+                x = np.array([ret[s][cols[0]][3] for s in mem[g] if s in ret and cols[0] in ret[s]], dtype=float)
+                x = x[~np.isnan(x)]
+                w_.append(float(np.median(x)) if x.size >= 3 else np.nan)
+                b_.append(100 * float((x > 0).mean()) if x.size >= 3 else np.nan)
+            if not gs_:
+                continue
+            hp = _pct_rank(np.nanmean([_pct_rank(np.array(w_)), _pct_rank(np.array(b_))], axis=0))
+            for g, h_, a1, a2 in zip(gs_, hp, w_, b_):
+                if not np.isnan(h_):
+                    heat[g], wk[g], br[g] = int(min(99, max(1, math.floor(100 * h_)))), a1, a2
+        if len(ss) >= 5:
+            X = np.array([(ret[s][cols[0]][3], ret[s][cols[0]][0]) for s in ss], dtype=float).reshape(len(ss), 2)
+            pw = _pct_rank_need(np.nanmean([_pct_rank_need(X[:, h], 5) for h in range(2)], axis=0), 5)
+            rsw = {s: int(min(99, max(1, math.floor(100 * pw[j])))) for j, s in enumerate(ss) if not np.isnan(pw[j])}
     out = {"asof": cal[-1], "back_sessions": back, "top_pct": round(100 * (1 - GR_TOP)), "strong_pct": round(100 * (1 - GR_STRONG)),
-           "leader_min_stocks": 5, "rows": [], "_rs": rs}
+           "leader_min_stocks": 5, "rows": [], "_rs": rs, "_rsw": rsw, "tier_min_tradable": GR_TIER_MIN, "same_share": GR_SAME,
+           "hot_heat": GR_HOT, "hot_breadth": GR_HOT_BREADTH}
     for kind, label in (("theme:", "themes"), ("ind:", "industries")):
         rows = [j for j, g in enumerate(names) if g.startswith(kind)]
         rk = {}
@@ -410,8 +477,13 @@ def group_rank(A, cal, stocks_rows, back=5):
             m = med[cols[0]][j]
             out["rows"].append(dict(group=names[j][len(kind):], kind=kind[:-1], rank=rk[cols[0]][j], of=len(rk[cols[0]]),
                                     pct=round(100 * float(p), 1), loose=names[j].endswith(LOOSE),
-                                    tier="" if names[j].endswith(LOOSE) else "Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else "",
-                                    rank_before=rk[cols[1]].get(j), members=len(mem[names[j]]),
+                                    tier="" if names[j].endswith(LOOSE) or names[j] in thin else "Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else "",
+                                    rank_before=rk[cols[1]].get(j), members=len(full[names[j]]),
+                                    # the themes review (Nov 2026): its tradable stocks (4+ for a tier), the theme it is one
+                                    # pack with, and its heat (the last week + breadth)
+                                    tradable=len(trad[names[j]]), thin=names[j] in thin, same_as=same.get(names[j]),
+                                    heat=heat.get(names[j]), week=fnum(wk.get(names[j]), 1), breadth=fnum(br.get(names[j]), 0),
+                                    hot=bool(heat.get(names[j], 0) >= GR_HOT and (br.get(names[j]) or 0) >= GR_HOT_BREADTH),
                                     median_1m=fnum(m[0], 1), median_3m=fnum(m[1], 1), median_6m=fnum(m[2], 1),
                                     order=" ".join(order.get(names[j], []))))
     out["rows"].sort(key=lambda r: (r["kind"], r["rank"]))
@@ -482,6 +554,9 @@ def best_ranks(grank, stocks_rows):
     if not grank:
         return {}
     by = {(r["kind"], r["group"]): r for r in grank["rows"]}
+    for r in grank["rows"]:                       # an industry group that is one pack with a theme: the theme's name and rank
+        if r.get("same_as") and by.get(("theme", r["same_as"])):
+            by[("ind", r["group"])] = by[("theme", r["same_as"])]
     ug = uses_groups(stocks_rows)
     out = {}
     for r in stocks_rows:
@@ -672,7 +747,7 @@ def flag_line(a, t, upto):
             s = sk
             continue
         line = h[t] + s * (k - t)
-        if h[k] > line and not (c[k] <= line and h[k] - line > 0.5 * _adr(st, k) / 100 * line):
+        if h[k] > line and not (c[k] <= line and h[k] - line > L["flag_fail_adr"] * _adr(st, k) / 100 * line):
             s = max(s, sk)
     return s
 
@@ -849,14 +924,26 @@ def inner_breakout(a, j, used=()):
     return None
 
 
+def months_txt(a, j, level, k):
+    """'a 6-month high' for a base top, by how long nothing traded over it: 7+ months are named by that length (bases over 6
+    months), 'or more' when nothing in the data was higher"""
+    n = below_since(a, j, level, k)
+    m = n // 21
+    whole = not (a.st.h[max(0, k - L["base_look"]):k] > level).any()
+    if m < 7:
+        return "a 6-month high"
+    return f"{'an' if m in (8, 11, 18) else 'a'} {m}-month high" + (" or more: nothing higher in the data" if whole else "")
+
+
 def below_since(a, j, level, k):
     """the base's length on day j: sessions since anything last traded above `level` before its top was set on
     day k (RPD: 13.87, set Oct 12 2026, last exceeded Aug 11; 14.80, set Aug 11, last exceeded in January)"""
     h = a.st.h
-    for m in range(k - 1, max(-1, k - 253), -1):
+    look = L["base_look"]
+    for m in range(k - 1, max(-1, k - look - 1), -1):
         if h[m] > level:
             return j - m - 1
-    return j - max(0, k - 252)
+    return j - max(0, k - look)
 
 
 def resting(a, k):
@@ -893,6 +980,66 @@ def pop_level(a, k):
     return max(st.o[k], st.c[k], a.e10[k], a.e21[k])
 
 
+def attempt_of(a, i):
+    """a launch attempt (the user, Nov 10 2026): a launch-size day that closes under a higher high. (level, months, its
+    index) or None. Under its 1-month high (the highest high of the previous 20 sessions: it cleared nothing yet; RPD Sep
+    14 2026, +24% but 8% under its Aug 27 high; ATRC Jul 24 2026), or right under a 3- or 6-month high, within half an ADR
+    (RHI Oct 23 2026: +21.7%, closed 45.87, 1.8% under its 6-month high 46.70: "launch attempt due to where it held ...
+    right at resistance"). The launch is the close over that high. ACN Oct 1 -> 8 2026 is a delayed launch, not this"""
+    if not L["attempt"]:
+        return None
+    st = a.st
+    c, h = st.c, st.h
+    if i >= 20:
+        k = i - 20 + int(np.argmax(h[i - 20:i]))
+        if c[i] <= h[k]:
+            return float(h[k]), 1, k
+    for n, m in ((120, 6), (63, 3)):
+        if i >= n:
+            k = i - n + int(np.argmax(h[i - n:i]))
+            if h[k] * (1 - L["attempt_near"] * _adr(st, i) / 100) <= c[i] <= h[k]:
+                return float(h[k]), m, k
+    return None
+
+
+def base_months(a, i):
+    """how long the base a close cleared is, in months of 21 sessions: the sessions since a candle body (the higher of open
+    and close) was last over today's close (bases over 6 months, the user's charts: SHOP Jan 5 2017 out of a 19-month
+    base, NIO Jul 2 2020 16 months, AMD Apr 22 2016 19 months). (months, True when nothing in the data was higher)"""
+    st = a.st
+    lo = max(0, i - L["base_look"])
+    top = np.maximum(st.o[lo:i], st.c[lo:i])
+    over = np.flatnonzero(top >= st.c[i])
+    n = i - (lo + int(over[-1])) - 1 if over.size else i - lo
+    return n // 21, not over.size
+
+
+def range_break(a, j):
+    """a long falling range broken (the user's INTC chart, Apr 1 2026: "breakout of the 4-month falling range"): the highest
+    high of the last 90 sessions is 35+ sessions old (longer than a flag), the line from it through the lower highs falls,
+    and today closes over it from under it the day before, over the 21 and the 50 EMA, in the top half of the day on 1x+
+    volume; the range held over the 200 SMA and is at most 8 ADRs deep (a range, not a collapse). Returns (top index, line
+    today) or None. INTC: the line from Jan 22's 54.60 through Mar 16's 49.17, at 47.35 on Apr 1; closed 48.03"""
+    st = a.st
+    c, h, l = st.c, st.h, st.l
+    if j < L["range_max"] + 5 or not (c[j] > c[j - 1] and c[j] > a.e21[j] and c[j] > a.e50[j] and a.clpos[j] >= 0.5 and a.rv[j] >= 1):
+        return None
+    t = j - L["range_max"] + int(np.argmax(h[j - L["range_max"]:j]))
+    if j - t < L["range_min"]:
+        return None
+    s1, s0 = flag_line(a, t, j - 1), flag_line(a, t, j - 2)
+    if s1 is None or s0 is None or s1 >= 0:
+        return None
+    line, prev = h[t] + s1 * (j - t), h[t] + s0 * (j - 1 - t)
+    lo = float(l[t + 1:j].min())
+    if not (c[j] > line and c[j - 1] <= prev) or 100 * (1 - lo / h[t]) > L["range_depth"] * _adr(st, t):
+        return None
+    k_lo = t + 1 + int(np.argmin(l[t + 1:j]))
+    if not np.isnan(st.sma200[k_lo]) and lo < st.sma200[k_lo]:
+        return None
+    return t, float(line)
+
+
 def follow(a, i0, i, pick=False):
     """what happened from the launch close (i0) to bar i: status, gain, exit signal, current base and pattern.
     pick: a stock you follow from the Watchlist tab, from the close you added it at (i0): no launch day, and its top
@@ -904,7 +1051,7 @@ def follow(a, i0, i, pick=False):
     # undercut tab; the next session has to close back over it (the reclaim: AEHR Mar 31 2026 after Mar 27 & 30), a 3rd
     # close under takes it off the list
     off50 = next((k for k in range(i0 + 3, i + 1) if all(c[m] < a.e50[m] for m in (k - 2, k - 1, k))), None)
-    under50 = bool(i >= i0 + 2 and c[i] < a.e50[i] and c[i - 1] < a.e50[i - 1] and off50 is None)
+    under50 = bool(i >= i0 + 2 and c[i] < a.e50[i] and c[i - 1] < a.e50[i - 1] and (off50 is None or not pick))
     r = st.df.iloc[i]
     code = int(r.code)
 
@@ -942,6 +1089,25 @@ def follow(a, i0, i, pick=False):
     inner_day = None                                        # the day of the last inner base breakout
     lvl = H                                                 # the level the leg broke out of: the launch day's high, then the base top
     nbo = 0                                                 # breakouts since the launch (for the grade: the 1st and 2nd work best)
+    # the launch attempt (the user, Nov 10 2026): the launch day closed under a higher high; the close over it confirms it
+    att = attempt_of(a, i0) if not pick else None
+    att_conf = next((k for k in range(i0 + 1, i + 1) if c[k] > att[0]), None) if att else None
+    # the list rules (the user, Nov 10 2026: "its 2 closes. not only that, if 50 ema or 21 ema not trending up stock we not
+    # interested, one has to be going up"; "it has to break out of box or up down moving area [to a] new price point"):
+    # off after 2 closes in a row under the 50 EMA, or when neither the 21 nor the 50 EMA is rising (vs 5 sessions ago);
+    # back on the day it breaks out (a base or flag breakout, a falling range broken, a launch-size day, the 50 EMA undercut
+    # & reclaim) with the close over the 50 EMA and one of the two EMAs rising again. AMD 2026: off Feb 27, back Apr 8.
+    # Not for your picks (the Follow button): they stay until you remove them
+    rd = L["ema_rise_days"]
+    rising = lambda k: bool(a.e21[k] > a.e21[k - rd] or a.e50[k] > a.e50[k - rd])
+
+    def r50(k):
+        """the 50 EMA undercut & reclaim on day k (see reclaim50 below)"""
+        return bool(k >= i0 + 3 and c[k - 2] < a.e50[k - 2] and c[k - 1] < a.e50[k - 1] and st.l[k] < a.e50[k] and st.l[k] < st.o[k]
+                    and c[k] > a.e50[k] and c[k] - st.l[k] >= 0.5 * (st.h[k] - st.l[k]) and c[k] < st.h[i0:k].max()
+                    and (not L["reclaim50_rising"] or a.e50[k] > a.e50[k - 5]))
+    off_since, off_why, back_day, back_from = None, None, None, None
+    failed, rng_day, rng = None, None, None                 # the last failed breakout (day, top, breakout day); the falling range broken
     for j in range(i0 + 1, i + 1):
         if not dry_done and dry_armed(a, j - 1, H):
             lv = pop_level(a, j - 1)
@@ -999,6 +1165,27 @@ def follow(a, i0, i, pick=False):
                 if leg == 1 and j - last_new >= L["rest_days"]:
                     rested = j
                 last_leg, armed = j, False
+        # a failed breakout (the user's SNDK chart, Mar 18 2026 "FAILED"; PGY Aug 27 -> 28 2026: "breakout didn't hold up it
+        # broke down next day"): within 2 sessions of the breakout day the close is back under the broken top (its wicks: the
+        # line) and under the breakout day's low (your stop). The level is no retest level any more and the top can break again
+        if bo and not b and 1 <= j - bo[0] <= L["fail_days"] and c[j] < bo[1] and c[j] < st.l[bo[0]] and (failed is None or failed[2] != bo[0]):
+            failed = (j, bo[1], bo[0])
+            used.discard(bo[2])
+            rlv, weak_bo = None, None
+        rg = range_break(a, j)
+        if rg:
+            rng_day, rng = j, rg
+        if not pick:
+            if off_since is None:
+                if j >= i0 + L["off50_closes"] and all(c[m] < a.e50[m] for m in range(j - L["off50_closes"] + 1, j + 1)):
+                    off_since, off_why = j, f"{L['off50_closes']} closes in a row under the 50 EMA"
+                # (not in the 5 sessions after it came back: out of a range the EMAs are flat and only start to turn)
+                elif L["ema_rising"] and not rising(j) and (back_day is None or j - back_day > rd):
+                    off_since, off_why = j, "neither the 21 nor the 50 EMA is rising"
+            # the way back: the breakout day closes over the 21 and the 50 EMA, which turns them up that day (INTC Apr 1
+            # 2026: out of its falling range, both EMAs still a little under their level of 5 sessions before)
+            elif c[j] > a.e50[j] and c[j] > a.e21[j] and (b or flag_go or thru_day == j or rg or r50(j) or a.candidate(j)):
+                back_day, back_from, off_since, off_why = j, off_since, None, None
         if st.h[j] > H:
             H, last_new, armed, dry_done = st.h[j], j, True, False
     hi = st.h[i0:i + 1].max()
@@ -1146,11 +1333,9 @@ def follow(a, i0, i, pick=False):
     # the 50 EMA undercut & reclaim (an entry, like the 21 EMA one): the 2 closes before under the 50 EMA (no depth limit,
     # your OK Nov 1 2026), today the low under it and under the open, the close back over it in the upper half of the day,
     # in the base (AEHR Mar 31 2026: Mar 27 & 30 under 33.79 / 33.64, down to 33.00, closed 37.08 over 33.78)
-    reclaim50 = bool(i >= i0 + 3 and c[i - 2] < a.e50[i - 2] and c[i - 1] < a.e50[i - 1] and st.l[i] < a.e50[i] and st.l[i] < st.o[i]
-                     and c[i] > a.e50[i] and c[i] - st.l[i] >= 0.5 * (st.h[i] - st.l[i]) and c[i] < st.h[i0:i].max()
-                     # only in a rising stock (the user, Nov 10 2026: IPGP Jun 12, EGO Jul 22, MTSI Sep 24 2026, their 50 EMA
-                     # flat or falling: "this has to be a rising stock and EMAs"; AEHR Mar 31 2026: rising)
-                     and (not L["reclaim50_rising"] or a.e50[i] > a.e50[i - 5]))
+    # only in a rising stock (the user, Nov 10 2026: IPGP Jun 12, EGO Jul 22, MTSI Sep 24 2026, their 50 EMA flat or falling:
+    # "this has to be a rising stock and EMAs"; AEHR Mar 31 2026: rising)
+    reclaim50 = r50(i)
     # tomorrow's 21 EMA setup (radar/alerts.py: the heads-up when it trades down to the 21 EMA, the alert from 3:45 PM
     # when it holds back over it): "undercut" after 2 closes under it (today and yesterday, within half an ADR), "retest"
     # while the closes held over it after a pullback that was no advance
@@ -1236,6 +1421,14 @@ def follow(a, i0, i, pick=False):
         flag_bo = False
         dry_day = None if dry_day == i else dry_day
         push_day = None if push_day == i else push_day
+    # off the list (2 closes under the 50 EMA, or neither EMA rising): no entries until it breaks out again
+    off_now = off_since is not None
+    if off_now:
+        retest, retest_ema, reclaim, reclaim_bo, reclaim50, tight = False, [], None, False, False, 0
+        flag_bo = False
+        dry_day = None if dry_day == i else dry_day
+        push_day = None if push_day == i else push_day
+    range_bo = bool(rng_day == i and not off_now)
     # the stock's stage after the close, the first that applies
     rest = 0
     while i - rest > i0 and resting(a, i - rest):
@@ -1244,7 +1437,16 @@ def follow(a, i0, i, pick=False):
     bday = None                       # the base's day as the status counts it, from the day of its high
     if i == i0 and not pick:
         cb = {120: "6-month", 63: "3-month", 21: "1-month"}.get(a.cleared(i))
-        stage = "Launch day" + (f", cleared its {cb} base" if cb else "")
+        if a.cleared(i) == 120:        # a base over 6 months is named by its length (SHOP Jan 5 2017: 19 months)
+            bm, whole = base_months(a, i)
+            cb = (f"{bm}-month" if bm >= 7 else cb) if not whole else None
+            if whole:
+                stage_long = f", a new high: cleared everything in the data ({bm} months)"
+        stage = "Launch day" + (f", cleared its {cb} base" if cb else "") + (stage_long if a.cleared(i) == 120 and cb is None else "")
+        if att:
+            # a launch-size day that closed under a higher high: an attempt, the launch is the close over it
+            stage = (f"Launch attempt: a launch-size day ({a.chg[i]:+.1f}% on {a.rv[i]:.1f}x), closed {c[i]:.2f}, {100 * (1 - c[i] / att[0]):.1f}% under "
+                     f"its {att[1]}-month high {att[0]:.2f} ({st.dates[att[2]]}): the launch is a close over it")
     elif bo and bo[0] == i and inner_day == i:
         ov = (c[i] / bo[1] - 1) * 100 / _adr(st, i)
         stage = f"Breakout of the inner base (leg {leg}), the last 20 days' high {bo[1]:.2f}, closed {ov:.1f} ADR over it" \
@@ -1255,9 +1457,10 @@ def follow(a, i0, i, pick=False):
         ov = (c[i] / bo[1] - 1) * 100 / _adr(st, i)
         pc = 100 * (c[i] / bo[1] - 1)
         rm = reach(a, i, bo[1])
-        hi_txt = f"the base high {bo[1]:.2f}" + (f" (a {rm}-month high)" if rm else "")
+        # a top nothing traded over for 7+ months is named by that length (bases over 6 months)
+        hi_txt = f"the base high {bo[1]:.2f}" + (f" ({months_txt(a, i, bo[1], bo[2]) if rm == 6 else f'a {rm}-month high'})" if rm else "")
         stage = (f"Base breakout (leg {leg}), closed {pc:.1f}% ({ov:.1f} ADR) over {hi_txt}" if pc > L["caution_pct"] else
-                 f"Base breakout with caution ({f'leg {leg + 1} if it follows through' if leg == 0 or i - last_leg >= L['leg_pause'] else f'leg {leg}'}): "
+                 f"Base breakout attempt ({f'leg {leg + 1} if it follows through' if leg == 0 or i - last_leg >= L['leg_pause'] else f'leg {leg}'}): "
                  f"closed {pc:.2f}% over {hi_txt}, within {L['caution_pct']}%: not decisive") \
             + (f", on light volume ({a.rv[i]:.2f}x)" if a.rv[i] < 1 else "")
         kb, dbl = bo[2], False
@@ -1298,7 +1501,7 @@ def follow(a, i0, i, pick=False):
         fname = "Bull pennant" if fshape == "pennant" else "Bull flag"
         stage = (f"{fname} breakout: closed over its falling line {fline:.2f} and the 10 & 21 EMA, an entry in the base (leg {leg})"
                  if c[i] > fline * (1 + L["caution_pct"] / 100) else
-                 f"{fname} breakout with caution: closed {100 * (c[i] / fline - 1):.2f}% over its falling line {fline:.2f}, within "
+                 f"{fname} breakout attempt: closed {100 * (c[i] / fline - 1):.2f}% over its falling line {fline:.2f}, within "
                  f"{L['caution_pct']}%, and over the 10 & 21 EMA, an entry in the base (leg {leg}): the line is the next trigger again") \
             + (f", the volume dried up the 2 days before ({a.rv[i - 2]:.2f}x, {a.rv[i - 1]:.2f}x)" if max(a.rv[i - 2], a.rv[i - 1]) < 1 else "") \
             + ((" · closed under the 50 EMA during the flag (" + ", ".join(st.dates[k] for k in u50) + "): you judge the grade")
@@ -1321,6 +1524,9 @@ def follow(a, i0, i, pick=False):
         stage = (f"21 EMA retest in the base (entry): dipped to {st.l[i]:.2f} under the 21 EMA {a.e21[i]:.2f}, closed {c[i]:.2f} back over it"
                  if reclaim == "retest" else
                  f"21 EMA undercut & reclaim (entry, strong): 2 closes under the 21 EMA, today down to {st.l[i]:.2f}, closed {c[i]:.2f} back over {a.e21[i]:.2f}")
+    elif range_bo:
+        stage = (f"Breakout of the falling range: closed {c[i]:.2f} over the line {rng[1]:.2f} from its {st.dates[rng[0]]} high {st.h[rng[0]]:.2f} "
+                 f"({i - rng[0]} sessions of lower highs) and over the 21 & 50 EMA, on {a.rv[i]:.1f}x volume (leg {leg})")
     elif tight >= 2:
         stage = f"Tight under {tlv:.2f}, the base high ({tight} days)" + (
             f" · base {blen} sessions, {bdeep:.0f}% deep ({bdeep_adr:.1f} ADRs)" + (f", {msf_pat}" if msf_pat else "") if blen else "")
@@ -1379,7 +1585,19 @@ def follow(a, i0, i, pick=False):
                 tries_txt = (f"the {nth} try of its {str(rm_) + '-month' if rm_ else 'smaller'} base's top {tb:.2f} today (tried "
                              f"{', '.join([st.dates[kt]] + [st.dates[k] for k in tr[1:-1]])}), {above}: a heads-up")
                 stage += " · " + tries_txt
-    if reclaim_level:
+    if off_now:
+        stage = (f"Off the list since {st.dates[off_since]}: {off_why}. Back on when it breaks out (a base, a flag, a falling range, "
+                 f"a launch-size day) over the 50 EMA with the 21 or the 50 EMA rising")
+    elif back_day == i:
+        stage += f" · BACK ON THE LIST (off since {st.dates[back_from]})"
+    if range_bo and not stage.startswith("Breakout of the falling range"):
+        stage += f" · also out of its falling range: over the line {rng[1]:.2f} from its {st.dates[rng[0]]} high {st.h[rng[0]]:.2f} ({i - rng[0]} sessions)"
+    if failed and failed[0] == i:
+        stage += (f" · FAILED BREAKOUT: closed {c[i]:.2f} back under {failed[1]:.2f}, {i - failed[2]} session{'s' if i - failed[2] > 1 else ''} after "
+                  f"breaking out ({st.dates[failed[2]]}); the top is the trigger again")
+    if att and att_conf == i:
+        stage += f" · confirms the launch attempt of {st.dates[i0]}: closed over {att[0]:.2f}"
+    if reclaim_level and not off_now:
         stage += (f" · under its breakout level {rlv[1]:.2f} since {st.dates[m_now]} ({i - m_now + 1} closes), holding over the 50 EMA: "
                   f"a breakout undercut & reclaim setup, the buy is a close back over it")
     elif m_now is not None and i - m_now <= 4:
@@ -1394,6 +1612,16 @@ def follow(a, i0, i, pick=False):
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo, top_tries=ntries, top_tries_note=tries_txt,
         ema21_today=reclaim, ema21_watch=ema21_watch,
         breakout_caution=bool(bo and bo[0] == i and c[i] <= bo[1] * (1 + L["caution_pct"] / 100)),
+        # the chart-reading review (Nov 2026): the launch attempt and its level, the list state, a failed breakout, a
+        # falling range broken
+        launch_attempt=fnum(att[0]) if att else None, launch_attempt_months=att[1] if att else None,
+        launch_attempt_high_date=st.dates[att[2]] if att else None,
+        launch_attempt_confirmed=st.dates[att_conf] if att_conf is not None else None,
+        off_now=off_now, off_since=st.dates[off_since] if off_now else None, off_why=off_why,
+        back_on=st.dates[back_day] if back_day is not None else None, back_on_today=bool(back_day == i),
+        failed_breakout=st.dates[failed[0]] if failed else None, failed_breakout_today=bool(failed and failed[0] == i),
+        failed_breakout_top=fnum(failed[1]) if failed else None,
+        range_breakout_today=range_bo, range_line=fnum(rng[1]) if range_bo else None,
         double_breakout="double breakout" in stage, flag_dry="volume dried up" in stage,
         # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
         # Flat base, Cup with handle, ... or Base forming (no pattern yet))
@@ -1424,7 +1652,9 @@ def follow(a, i0, i, pick=False):
         status=status, first_exit=st.dates[exit_k] if exit_k is not None else None,
         exit_gain_pct=fnum(100 * (c[exit_k] / c[i0] - 1), 1) if exit_k is not None else None,
         lost_50ema=st.dates[out50] if out50 is not None else None,
-        off_50ema=st.dates[off50] if off50 is not None else None, ema50_under2=under50, ema50_today=reclaim50,
+        off_50ema=st.dates[off50] if off50 is not None else None,
+        # the 50 EMA undercut tab: its 2nd close under the 50 EMA today (the day the new rule takes it off the list)
+        ema50_under2=bool(under50 if pick else (off_now and off_since == i and off_why.startswith(str(L["off50_closes"])))), ema50_today=reclaim50,
         ema50_under_dates=[st.dates[i - 1], st.dates[i]] if under50 else None,
         ema50_under_adr=[fnum(100 * (c[m] / a.e50[m] - 1) / _adr(st, m), 1) for m in (i - 1, i)] if under50 else None,
         price=fnum(c[i]), chg_today_pct=fnum(a.chg[i], 1), rel_vol_today=fnum(a.rv[i], 1),
@@ -1882,18 +2112,20 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         if k is not None and a.gap[k] >= L["ep_gap"]:
             CATALYST_DAYS[(s, d)] = w
 
+    off_watch = []
+
     def build(s, i, k, gs, gn, leader, lagg=False):
         """a launch's row for the list, or None when it is off the list"""
         a = A[s]
         last = len(a.st.dates) - 1
         if a.st.dates[last] != today or a.st.dates[i] <= (removed or {}).get(s, ""):    # removed by you (✕), with any older launch of it
             return None
-        # off the list: 3 closes in a row under the 50 EMA (after 2 it waits in the 50 EMA undercut tab for the reclaim:
-        # your rule, Nov 1 2026), 62 sessions from its highest point without a new high, or its ADR (20 days) now under
-        # 3.2% (a launch day needs 3.5%+; TECH Jun 25 2026, a buyout-like 19% gap, then 0.2%)
-        c_, e50_ = a.st.c, a.e50
-        if (np.any((c_[i + 3:last + 1] < e50_[i + 3:last + 1]) & (c_[i + 2:last] < e50_[i + 2:last]) & (c_[i + 1:last - 1] < e50_[i + 1:last - 1]))
-                or stale(a, i, last) or a.st.adr[last] < L["off_adr"]):
+        # off the list: 62 sessions from its highest point without a new high, or its ADR (20 days) now under 3.2% (a launch
+        # day needs 3.5%+; TECH Jun 25 2026, a buyout-like 19% gap, then 0.2%); and (the user, Nov 10 2026) after 2 closes in a
+        # row under the 50 EMA or while neither the 21 nor the 50 EMA rises, until it breaks out again (follow: off_now). The
+        # day of the 2nd close under the 50 EMA it shows in the 50 EMA undercut tab (the reclaim the next session is the
+        # 50 EMA undercut & reclaim entry and puts it back: AEHR Mar 31 2026)
+        if stale(a, i, last) or a.st.adr[last] < L["off_adr"]:
             return None
         # off while its last 2 closes are under the 200 SMA (your rule, Nov 3 2026, "only while under": back on the
         # list the first close it is over it again, ACN-type dips don't throw a launch out for good); not for a
@@ -1901,7 +2133,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         if not lagg and under200(a, max(i, last - L["off_200"]), last):
             return None
         f = follow(a, i, last)
-        if f["off_50ema"]:
+        if f["off_now"] and not f["ema50_under2"]:
+            off_watch.append([s, a.st.dates[i], f["off_since"], f["off_why"]])    # waiting for its way back (not shown yet)
             return None
         r = launch_row(s, a, i, gs, gn, S)
         r.update(f)
@@ -2074,7 +2307,9 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50", "low_52w", "group rank now (★ Top / Strong, place in it)", "RS now"],
-               launches=rows, ema50_undercut=under50, laggards=lag, watch=watch, watch_close_high_21d=watch_hc21, groups=[g for g in G if g["status"] != "Not trending"],
+               launches=rows, ema50_undercut=under50, laggards=lag,
+               # off the list by the 50 EMA / rising-EMA rule, still inside 62 sessions of their high: back on at a breakout
+               off_watch=sorted({x[0]: x for x in sorted(off_watch, key=lambda x: x[1])}.values()), watch=watch, watch_close_high_21d=watch_hc21, groups=[g for g in G if g["status"] != "Not trending"],
                catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()),
                news_days=sorted([s, d, w] for (s, d), w in NEWS_DAYS.items()),
                # 3-SETUPS for the live alerts (desktop: every trigger; phone: Ready only); kept from the evening scan when
@@ -2194,6 +2429,7 @@ def main():
         ghist = rank_history(A, cal, stocks_rows, full=True)[2:]
         grank = group_rank(A, cal, stocks_rows)
         rsmap = grank.pop("_rs", {})
+        grank["rs_week"] = grank.pop("_rsw", {})  # the short-term RS (1 week and 1 month) next to it (the user, Nov 10 2026)
         grank["rs"] = rsmap                       # every stock's RS, for the Watchlist column (the user, Nov 3 2026)
         gbest = best_ranks(grank, stocks_rows)
         for s_, v_ in rsmap.items():

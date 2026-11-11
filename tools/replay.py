@@ -19,7 +19,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scanner"))
 import launch  # noqa: E402
 
-SIGNALS = ("Launch day", "breakout", "Breakout", "Retest", "Tight", "Pop", "Flag", "Bull flag", "Bull pennant", "Pennant", "Push", "21 EMA retest", "21 EMA undercut", "50 EMA undercut", "try of")
+SIGNALS = ("Launch day", "breakout", "Breakout", "Retest", "Tight", "Pop", "Flag", "Bull flag", "Bull pennant", "Pennant", "Push", "21 EMA retest", "21 EMA undercut", "50 EMA undercut", "try of", "Launch attempt", "BACK ON", "FAILED", "confirms the launch")
 EXAMPLES = os.path.join(ROOT, "tools", "examples.txt")
 EXPECTED = os.path.join(ROOT, "tools", "expected_reads.txt")
 
@@ -49,7 +49,7 @@ def walk(A, sym, d0, d1, pick, every=False):
     out = [f"{sym} from {d0}" + (" (pick)" if pick else " (launch)")]
     for j in range(i0, i1 + 1):
         f = launch.follow(a, i0, j, pick=pick)
-        if every or j == i0 or any(w in f["stage"] for w in SIGNALS):
+        if every or j == i0 or any(w in f["stage"] for w in SIGNALS) or (f.get("off_since") == st.dates[j]):
             out.append(f"  {st.dates[j]} c {st.c[j]:.2f} | leg {f['leg']} | {f['stage']} | next buy point {f['buy_point']} {f['pattern']}")
     return out
 
