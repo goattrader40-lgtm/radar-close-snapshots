@@ -646,7 +646,7 @@ for s, r in latest.items():
         "rel_vol": rd(vol / avg20) if (avg20 and vol) else None,   # full day vs the previous 20 sessions' average
         "avg_vol_20": None if avg20_next is None else int(avg20_next),
         "adr_20": rd(adr), "dvol_10_m": rd(dv10 / 1e6, 1) if dv10 else None, "dvol_20_m": rd(dv20 / 1e6, 1) if dv20 else None,
-        "sma200": rd(sma), "above_200": above, "vs_200": rd((price / sma - 1) * 100, 1) if sma and not stale else None,
+        "sma200": rd(sma), "c200": rd(snap_val(s, "c200")), "above_200": above, "vs_200": rd((price / sma - 1) * 100, 1) if sma and not stale else None,
         "ema50": rd(e50), "vs_50e": rd((price / e50 - 1) * 100, 1) if e50 else None,
         # your Trend at this close and the sessions in it; tr = [5, 10, 21, 50 EMA, the 50 EMA 4 sessions back, close]
         "trend": tr_st, "trend_days": tr_d, "tr": tr_e,

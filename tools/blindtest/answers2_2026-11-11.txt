@@ -1,0 +1,87 @@
+# Blind test 2: the user's marks (sent Nov 11 2026), their words, unchanged. 20 new launches (seed 1110, tools/blindtest/gen2.py),
+# the off-list rules applied, each chart also marked "would you trade it" (CHART: CLEAN / MAYBE / NOTCLEAN).
+# Each read: #n date MARK[: the user's comment] | the engine's read (cut short by the page).
+RADAR BLIND TEST 2
+ZBIO (launch 2026-07-01)
+  CHART: NOTCLEAN
+  #1 2026-07-01 RIGHT | Launch day, cleared its 3-month base
+  #2 2026-07-20 RIGHT | Base breakout (leg 2), closed 2.3% (0.3 ADR) over the base high 30.00
+  #3 2026-08-11 UNSURE: half right you see moving very wiki there..and that days range is too big..bipharma is not the main theme i trade anyways fyi,unless chart is very clean | 21 EMA retest in the base (entry): dipped to 30.71 under the 21 EMA 30
+PRGS (launch 2026-07-01)
+  CHART: MAYBE: itsnot really advanign good 21ema adn 50as you see end of august 21ema and 50 ema stalls!!!
+  #1 2026-07-01 RIGHT: in our conversations as i said,usually real good luanches starts with gap ups!!and character change os stock | Launch day, cleared its 3-month base
+  #2 2026-07-17 RIGHT: not really it stalled at breakotu level, 24th july is a good buy point!!!and the the day after that...this stocsk charts not that clean,but still trnedings!!! | Base breakout with caution (leg 2 if it follows through): closed 0.12%
+  #3 2026-07-29 RIGHT: july 27th was a bull flag wasnt it!!! | Base breakout (leg 2), closed 3.7% (0.7 ADR) over the base high 41.19
+  #4 2026-08-10 RIGHT | Base breakout with caution (leg 3 if it follows through): closed 0.12%
+  #5 2026-08-13 RIGHT: not a buy points | Breakout follow-through (leg 3): opened over the day before's close, c
+  #6 2026-08-26 RIGHT | Retest of the breakout level 42.71-43.24 (bodies-wicks) held + conflue
+  #7 2026-08-27 RIGHT | Base breakout with caution (leg 4 if it follows through): closed 0.29%
+SLG (launch 2026-06-09)
+  CHART: MAYBE
+  #1 2026-06-09 WRONG: jun9th was follow through days of prior movent started may21st..so its not character change at all its jsut advancing  | Launch day, cleared its 6-month base
+  #2 2026-06-18 WRONG: we check last 1month/2month/3month righ side of the chart ro retestsspecially its jsut started advancing... | Retest of the breakout level 48.99-49.55 (bodies-wicks) held + conflue
+  #3 2026-06-23 UNSURE | Retest of the breakout level 48.99-49.55 (bodies-wicks) held + conflue
+  #4 2026-06-25 RIGHT: this fits better / | Retest of the breakout level 48.99-49.55 (bodies-wicks) held + conflue
+  #5 2026-06-26 UNSURE | Bull pennant breakout: closed over its falling line 50.97 and the 10 &
+  #6 2026-06-29 RIGHT | Base breakout (leg 2), closed 0.8% (0.2 ADR) over the base high 52.53
+  #7 2026-07-13 RIGHT | Taken OFF the list: ADR 3.2%, under 3.2%. No more reads or alerts for
+DV (launch 2026-08-07)
+  CHART: NOTCLEAN
+  #1 2026-08-07 WRONG | Launch day, cleared its 6-month base
+  #2 2026-08-14 WRONG | Taken OFF the list: ADR 3.0%, under 3.2%. No more reads or alerts for
+ALMS (launch 2026-06-12)
+  CHART: MAYBE: between 1 and 2 yes..its void after that it made lower high on july 21st... you see after that day its downtrending line from highs.it woudl have been buy after it breaks otu of that downtrending line ,july-july 21st and onwards downtrending loer high trend line....
+  #1 2026-06-12 RIGHT | Launch day
+  #2 2026-07-15 RIGHT | Bull flag breakout: closed over its falling line 28.57 and the 10 & 21
+  #3 2026-08-11 WRONG: that day was broken down.. daysys prior today already shown signs of distrbutions..50ema 21 ema couldnt advance at all..and making lower hights  .... | Pop out of the consolidation (entry in base)
+ALHC (launch 2026-06-09)
+  CHART: NOTCLEAN
+  #1 2026-06-09 RIGHT: but its not a stock i would want to do,character doesnt change  | Launch day, cleared its 1-month base
+  #2 2026-06-26 WRONG: bcs another bases high already resistance level!!!! | Base breakout (leg 2), closed 2.0% (0.3 ADR) over the base high 22.74
+  #3 2026-07-27 NO MARK: i would have taken july 27th after huge drop.!!!same issue its biteach health care stocks..not not trendign they bounc back whiplach too much... | Taken OFF the list: 3 closes in a row under the 50 EMA. No more reads
+CNH (launch 2026-09-02)
+  CHART: MAYBE
+  #1 2026-09-02 WRONG: its jsut continution of move started on august 20th... | Launch day, cleared its 6-month base
+  #2 2026-09-15 WRONG: there is no bull flag there | Bull flag breakout: closed over its falling line 13.88 and the 10 & 21
+  #3 2026-09-28 WRONG: sept 24th was breakdown of consolidation happened  sept4-23rd. lower highs downtrending line... | 21 EMA retest in the base (entry): dipped to 12.96 under the 21 EMA 13
+  #4 2026-10-09 WRONG | Taken OFF the list: 3 closes in a row under the 50 EMA. No more reads
+RMBS (launch 2026-06-18)
+  #1 2026-06-18 WRONG: since june 3rd its lower high downtrendin trend line,unless it breks that upside no trade here,meanign new trend new launch day,alignmend of emas | Launch day
+PAYC (launch 2026-08-06)
+  CHART: MAYBE: i prefer higher lows and higher high,clean moves .ocotebr 15th was breakout...
+  #1 2026-08-06 RIGHT | Launch day, cleared its 6-month base
+  #2 2026-09-11 WRONG: luanch day was intact... | Taken OFF the list: ADR 2.9%, under 3.2%. No more reads or alerts for
+MP (launch 2026-08-14)
+  CHART: NOTCLEAN
+  #1 2026-08-14 WRONG: there is no movemebnt nothing real that day broken chart,launch day has to change caracter of the stocks trend, | Launch day, cleared its 1-month base
+  #2 2026-08-19 WRONG | Taken OFF the list: 2 closes in a row under the 200 SMA. No more reads
+VAL (launch 2026-08-10)
+  CHART: NOTCLEAN
+CRSP (launch 2026-07-02)
+  CHART: NOTCLEAN
+CRSR (launch 2026-08-07)
+  CHART: NOTCLEAN: some stocks they are not tradebale unless
+COMP (launch 2026-06-18)
+  CHART: NOTCLEAN
+BZ (launch 2026-08-26)
+  CHART: NOTCLEAN
+  #1 2026-08-26 RIGHT | Launch day, cleared its 6-month base
+FCX (launch 2026-08-21)
+  CHART: NOTCLEAN: range stocks
+NCNO (launch 2026-08-27)
+  CHART: NOTCLEAN
+ALAB (launch 2026-09-04)
+  CHART: NOTCLEAN: look left side fo this chart thats where was the cleanr chart,tradeable...
+  #1 2026-09-04 WRONG: barely clsoed 50ema/still udner main resitance  points of 20 days... | Launch day
+  #2 2026-09-10 NO MARK: invalid | Taken OFF the list: 3 closes in a row under the 50 EMA. No more reads
+SMTC (launch 2026-08-17)
+  CHART: NOTCLEAN: see left side chart thats how it supposed to be!!!or launch day gets out of range bounts as on your number 1,but ti fialed!!!!
+  #1 2026-08-17 RIGHT | Launch day, cleared its 1-month base
+  #2 2026-08-21 WRONG: next day was gone.. | Taken OFF the list: 3 closes in a row under the 50 EMA. No more reads
+LITE (launch 2026-08-12)
+  #1 2026-08-12 WRONG: its continuation day... | Launch day, cleared its 1-month base
+  #2 2026-08-25 RIGHT | Bull flag breakout with caution: closed 0.10% over its falling line 88
+  #3 2026-09-08 RIGHT | Pop out of the consolidation (entry in base)
+  #4 2026-09-16 RIGHT | 50 EMA undercut & reclaim (entry): 2 closes under the 50 EMA (2026-09-
+  #5 2026-10-01 RIGHT | Base breakout (leg 2), closed 1.9% (0.3 ADR) over the base high 1026.7
+  MISSED: every higher low in the base is a go sign 1st 24th july then sept 3rd and sept 15th... 1st doesnt count 2nd 3rd was great entry points!!!!!    my notes#MSOT OF THESE STOCKS WAS NTO GOOD ,and mainy it wasnt liqquid stocsk,trending stocsk or themes,mostly was up down moves...... i will get you ten charts and other requeist you have...

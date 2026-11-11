@@ -49,6 +49,60 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: pre-market scanner vs EMA columns (Nov 11)" (Wed Nov 11 2026 morning; session_01PkbDajamht2fhC31vMGzcy)
+
+- **Live (the user's "test it and go live", branch test/pmvs21, merge f7da91b): the pre-market comparisons carry
+  their own names, and the 21 EMA is there.** The user (Nov 11, a screenshot of the scanner at 8:40): "this numbers are
+  yesterdays closing numbers comparison not premarket"; "i need pre mkt vs 21 premkt vs50 and pre mkt vs200". Found:
+  vs 200D / vs 50 EMA on the scanner were already on the pre-market price; the "vs 21 EMA" the user had added with
+  + add is a catalog column on the regular-hours price (yesterday's close before the open), and its 21 EMA came from
+  launch.json's watch list (one day old that morning, see below). docs/index.html only:
+  1. Pre-market scanner (pml-table): **Pre-mkt vs 21 EMA** (new, key vs_21e), **Pre-mkt vs 50 EMA** (was vs 50 EMA),
+     **Pre-mkt vs 200 SMA** (was vs 200D), in that order after ADR%; the same keys (vs_50e, vs_200), so saved layouts
+     and filters keep working; the new column lands after ADR% in a saved layout. The 21 EMA = stocks.json tr[2]
+     (e21Of: the last close's, 3,211 of 3,313 stocks). INTC Nov 11 9:15: $61.45 = -19.9% / -31.4% / -29.5%.
+  2. Graded gappers: the two headers renamed the same way (the numbers as before). The Earnings tab's vs 200D /
+     vs 50 EMA were left as they are (its layout keys come from the header text: a rename would reset a saved layout).
+  3. Column list / + Filter (every table): new "Pre-mkt vs 21 EMA / 50 EMA / 200 SMA" in the Pre-market group
+     (pm_vs21, pm_vs50, pm_vs200: today's scan only); **vs 21 EMA** (vs21e) now reads stocks.json tr[2] first, so it
+     works for every stock (Gainers too) and is never a day old; the descriptions of vs 21 EMA / vs 50 EMA / vs 200D
+     say: regular-hours price, live during the session, yesterday's close before the open.
+  **Market hours** (the user: "make sure during market hours i would have filters to compare market hr price to
+  21ema/50 ema and 200 sma"): + Filter -> vs 21 EMA / vs 50 EMA / vs 200D, "≥ 0" = over it, on Gainers, Watchlist,
+  Launches, Earnings (the price is live in the session; the averages are the last close's). Tested with Playwright on
+  the 9:15 scan against main's page: the same 71 rows, no page errors, a saved layout kept; the three filters on
+  Gainers / Watchlist / Launches (16 / 51 / 122 rows). Rules workbook: a row in "P3 Pre-market scanner". No scanner
+  code touched: no `--regress`, no Launches rebuild.
+- **Not offered tick box**: "Above 21-day EMA" next to the scanner's two tick boxes was offered, not answered (the
+  + Filter on Pre-mkt vs 21 EMA ≥ 0 does the same).
+- **Live (the user's "go live", Nov 11 ~10:15 AM ET, branch test/scanfallback, merge 8f4bd6a): the evening scan no
+  longer dies when Nasdaq refuses its stock list.** The scan had failed since Tue Nov 10 4:34 PM ET (scanner.yml runs
+  38-41: 4:34 PM, 5:16 PM and both early-morning safety runs): scanner/fetch.py symbols() got "HTTP Error 403:
+  Forbidden" from Nasdaq's screener (api.nasdaq.com), so setups/latest.json and setups/launch.json stayed at Nov 9
+  (the user: "big problem"). Now fallback_symbols(): when an exchange's list fails 3 times, market cap and exchange
+  come from radar-data stocks.json (the day job's file: 2,744 stocks over $700M on Nov 11; all 159 Launches and 298
+  Watchlist names in it, 1 of 723 launch-watch names missing, CSIQ); the log prints "FALLBACK LIST". Tested here on
+  the fallback step only (Yahoo can't be reached from a session). picks.yml (Follow picks, safe in market hours:
+  launch.py drops the unfinished day) run at 10:15 AM rebuilt Launches as of the Nov 10 close (saved 10:19, commit 8dbb707: 153 launches, 745 on the
+  launch watch list, 1 new launch Nov 10: EMBJ; not checked whether Nasdaq answered or the fallback was used). The Watchlist lists (run.py) can't be rebuilt in market hours (run.py would
+  take today's unfinished day as a close): the 4:25 PM scan processes Nov 10 and Nov 11 together. The job logs can be
+  read from a session with the GitHub tools (get_job_logs). Why Nasdaq: its screener is the scan's only source of
+  the full US stock list with market cap and exchange (Yahoo gives the bars).
+- **Live (the user's "go live", Nov 11 ~10:40 AM ET, branch test/livema): built on the user's "test it", then:
+  the pre-market columns renamed again, "Pre vs 21", "Pre vs 50", "Pre vs 200" (the user: "its too long"; scanner,
+  Graded gappers, the column list; the Pre-mkt names above are gone). The scanner's own vs PDH is the pre-market
+  price vs yesterday's high: kept as it is. First check after the Nov 11 close: stocks.json has c200 (the close
+  snapshot and the nightly build were changed blind) and vs 200 SMA moves in the Nov 12 session.** (Nov 11: "vs 200d-change to sma. and during
+  hours it has to use dynamic one meaning todays 21ema already different than yesterdays same for 50ema and 200 sma"):
+  "vs 200D" renamed "vs 200 SMA" (Gainers, Earnings, the column list); during the session vs 21 EMA / vs 50 EMA /
+  vs 200 SMA use today's moving averages: applyLive puts ema21_now / ema50_now / sma200_now on the live rows (EMA =
+  the last close's + 2/(n+1) x (price - it), as trendOf; the 200 SMA + (price - c200) / 200, c200 = the close that
+  drops out, added to snapshot.yml and pipeline.py: in stocks.json from the first close after go live, until then the
+  200 SMA stays the last close's); maOf(sym) serves the column list / + Filter, Gainers' columns and its Above 200 SMA
+  / Above 50 EMA boxes, the Watchlist's vs 21 EMA / vs 50 EMA. Not changed: alerts, Launches, the Trend label, the
+  Earnings tab's numbers, the ETF columns. Tested live at 10:10 AM against main's page (MU $793.10: vs 50 EMA -13.0%
+  -> -12.5%; no page errors; row counts the same). All tabs load with no page errors after merging main.
+
 ## Status of the session "Radar: alert sound volume (Nov 10)" (Mon Nov 9 ~10 PM ET; session_01PkbDajk82Xjo18w2YhHNfg)
 
 - **Live (the user's "go live", branch test/volvoice, merge f6f6a0b): the alert voice says the volume.** The user
@@ -88,6 +142,11 @@ alone.
   ARQT, RKLB) was not in the 9:35-10:30 window (moved later, Rel vol under 1x, ADR under 4%, under the 50 EMA / 200 SMA;
   RKLB 22% under its 200 SMA, never +5%). The user's empty log mid-day came back by itself: the job's file had all 58
   alerts and a fresh browser showed them (likely a tab chip other than All, or a page still loading on the phone).
+- **Live (Wed Nov 11, the user's "go live", branch test/tabtitle, 032d222): the browser tab's title names the page's
+  tab** (the user: "even though I'm in the Watchlist tab the browser tab still shows Theme & Group Radar"):
+  "Watchlist · Theme & Group Radar", the name from the selected tab's button without its icon (pageTitle(), set in
+  syncControls on every draw, not while the alert flash shows "🔔 TICKER"; the flash goes back to it). Tested on the
+  merged page (with the Nov 11 pre-market columns): all 8 tabs, a reload, a link to #watchlist; no errors.
 - **Test only, branch test/morningcheck (085e927)**: radar/probe_morning.py after_alert() adds to each replayed alert
   how it went after (best high and when, stop hit, back under the ORH, last price, R). Waiting for the user's go.
 - **Open (asked Nov 10, no answer yet)**: a stock without a 200 SMA (a new listing: TRAX) passes the morning alert's
@@ -159,6 +218,20 @@ files answer.
 - **Blocked, the user to decide**: saving the user's recovered words from the Oct 26 session into the repo was refused by
   the permission system (copying another session's transcript into a public repo). Offered: Claude's own summary, or leave
   them in that session (session_0182knZxEUS1BR5NUyEY19Yd, Oct 27 03:30 UTC onward). No answer yet.
+- **Raised by the user Nov 11, analysed, AGREED, to build first in the next session**: "the pre-market graders have a flaw: the most important thing happened [in] semis and it hasn't done anything
+  related to it". Nov 11's 8:35 scan: 138 stocks gapping up 5%+, **83 of them semis / AI** (Optics & CPO 15, Semi Test &
+  Packaging 13, Neoclouds 13, AI Networking 7 ...). Both graders grade on a company's own news only, so every one read C
+  ("Chip-sector sympathy" / "Sector move: ..."); neither looked for or stated WHY the whole area moved. And the biggest
+  gappers were not on the graded list at all: CRWV +15.6%, NBIS +13.2%, COHR, LITE, STX, MRVL, SNDK, WDC, MU, DELL were
+  still 8-31% under their 50 EMA after the gap (SNDK -31%, MRVL -23%, DELL -22%), so the user's Nov 4 rule (gap-ups under
+  the 50 EMA are dropped) removed them; the graded ones (AMD, ANET, MPWR, WOLF, LSCC, ENTG) were the few over it. **The user accepted both
+  proposals (Nov 11: "agree with you... I accept your proposal"); not built: test branch first, then "go live"**: (1) a **theme event line** at the top of the Pre-market tab when many stocks of one area gap together: the
+  area, the count, the leaders, and the market / sector news behind it (the 8:45 task searches for it once); (2) a
+  **"theme bounce" list** for such a day: each gapper with its distance to the 21 and 50 EMA, so the first to reclaim both
+  (the user's "go sign": AMD Sep 4-8 2026, MRVL Mar 6 2026) stands out; grades unchanged. Answered: unticking "Gap-ups above the 50 EMA" in the Graded gappers rules puts those stocks on the
+  list (Claude then grades the most liquid first; the megacaps take the slots; they still read C without company news; the code
+  grader's own chart rules still say not eligible). Claude could not confirm the
+  news itself (the user: an OpenAI / Anthropic meeting, South Korea chip exports) from the data.
 - **Good to know**: sessions before Oct 26 can't be reached; the engine and tools/replay.py need `pip install numba numpy
   pandas`; history/bars_2y.json.gz ends Oct 23; radar-data long_bars.json holds ~155 symbols incl. every chart example
   (a `long` run replaces the file: pass every symbol again); the questions page: https://claude.ai/artifact/9FgnKWPf31YCTDuyCHGDHG.
