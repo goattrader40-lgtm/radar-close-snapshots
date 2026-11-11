@@ -121,6 +121,11 @@ alone.
   ARQT, RKLB) was not in the 9:35-10:30 window (moved later, Rel vol under 1x, ADR under 4%, under the 50 EMA / 200 SMA;
   RKLB 22% under its 200 SMA, never +5%). The user's empty log mid-day came back by itself: the job's file had all 58
   alerts and a fresh browser showed them (likely a tab chip other than All, or a page still loading on the phone).
+- **Live (Wed Nov 11, the user's "go live", branch test/tabtitle, 032d222): the browser tab's title names the page's
+  tab** (the user: "even though I'm in the Watchlist tab the browser tab still shows Theme & Group Radar"):
+  "Watchlist · Theme & Group Radar", the name from the selected tab's button without its icon (pageTitle(), set in
+  syncControls on every draw, not while the alert flash shows "🔔 TICKER"; the flash goes back to it). Tested on the
+  merged page (with the Nov 11 pre-market columns): all 8 tabs, a reload, a link to #watchlist; no errors.
 - **Test only, branch test/morningcheck (085e927)**: radar/probe_morning.py after_alert() adds to each replayed alert
   how it went after (best high and when, stop hit, back under the ORH, last price, R). Waiting for the user's go.
 - **Open (asked Nov 10, no answer yet)**: a stock without a 200 SMA (a new listing: TRAX) passes the morning alert's
