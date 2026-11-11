@@ -132,6 +132,25 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # The engine (test/cleanlaunch) gave FIVE buy reads in it, all WRONG by the user's read: May 18 and May 19 "Retest of the
 # breakout level held", Jun 2 "Base breakout" over 413.00, Jun 22 "Launch attempt", Jun 29 "21 EMA retest in the base".
 # With NVDA (after May 14 2026): the engine has no "choppy, not tradable" read.
+# COHR, the tradable part (sent Nov 11 2026, a daily chart Feb - Apr 2026, with the user's BUY DAYS in words). The user: "only
+# tradable Feb 17th after earnings, then 23rd Feb breakout... after that it was surfing 21 ema up down, its not tradable, its
+# just consolidating.. only day it would be buy would be 2 times retest of previous breakout... and 31st March 50 ema undercut
+# reclaim, as you can see stock was not going nowhere and it wasn't breaking down either from its recent high of March 2nd...
+# and then April 10th buy breakout.. and then 30th April retest of breakout and 21 ema as well as undercut 21 ema... 3-4
+# confluence!!!! strong ..... rule of thumb: higher high every time getting closer to each other, it means uptrend bulls
+# getting tired, its slowly dying trend.... you could see May 11 breakout and June 3rd...."
+# The engine (test/cleanlaunch, bars to Oct 23; COHR is not in long_bars.json yet: fetch it, then these become lines):
+#   Feb 17 2026 after earnings (the data: 219.96, +1.3%; the big day near it is Feb 20, +6.8% to 248.18)   MISS  no launch in February, not on the list
+#   Feb 23 2026 breakout (255.00 high, close 248.89)                                                        MISS  not on the list
+#   March: 2 retests of the previous breakout (dates not given)                                             MISS  no retest read; Mar 18 "Bull pennant breakout" (not the user's)
+#   Mar 31 2026 50 EMA undercut & reclaim (low 220.20, +8.4%, closed 238.21 over the 50 EMA 235.70)         MISS  the engine wants 2 closes under the 50 EMA first; it read Apr 2 "21 EMA undercut & reclaim"
+#   Apr 10 2026 breakout (+8.2%, closed 307.50)                                                             MATCH Base breakout over 300.20
+#   Apr 30 2026 retest of the breakout + the 21 EMA + undercut of the 21 EMA (closed 319.71)                same day, other name: "Bull flag breakout over 317.28"
+#   May 11 2026 breakout (+13.3%, closed 379.69)                                                            MATCH Launch day
+#   Jun 3 2026 (high 440.00)                                                                                the engine: Jun 2 "Base breakout over 413.00"
+# THE DYING TREND (the user's rule of thumb): each new high closer to the last one. COHR's highs: 300.20 (Mar 4) -> 364.80
+# (Apr 22, +21.5%) -> 413.00 (May 13, +13.2%) -> 440.00 (Jun 3, +6.5%): the steps shrink; after Jun 3 the chart is the
+# not-tradable part above. Not in the engine.
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
