@@ -85,6 +85,7 @@ jobs:
                               "close": round(c, 4), "prev_close": round(b[-2][3], 4), "volume": v,
                               "high": round(h, 4), "low": round(l, 4),
                               "sma200": round(avg(closes[-200:]), 4) if len(closes) >= 200 else None,
+                              "c200": round(closes[-200], 4) if len(closes) >= 200 else None,   # the close that drops out of the 200 SMA next session (the portal's live 200 SMA)
                               "adr_20": round(avg(rng) * 100, 3) if len(rng) >= 15 else None,
                               "dvol_10": round(avg(dv[-10:])) if len(dv) >= 8 else None,
                               "dvol_20": round(avg(dv[-20:])) if len(dv) >= 16 else None,
