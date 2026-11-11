@@ -148,6 +148,19 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 #   Apr 30 2026 retest of the breakout + the 21 EMA + undercut of the 21 EMA (closed 319.71)                same day, other name: "Bull flag breakout over 317.28"
 #   May 11 2026 breakout (+13.3%, closed 379.69)                                                            MATCH Launch day
 #   Jun 3 2026 (high 440.00)                                                                                the engine: Jun 2 "Base breakout over 413.00"
+# CORRECTIONS (the user, Nov 11 2026, later): "Feb 17th was buy day not launch,, it was retest 21 ema push and its retest of its
+# breakout happened on Feb 6th... I mistyped, Feb 20th not Feb 23rd.... March 9th is retest... March 31st it could be 1 not
+# 2..... there is April 8th as well, breakout of downtrending line, bull [flag]!!! April 30th I missed bull flag too... May 11
+# breakout too..." -> the user's COHR buy days, final:
+#   Feb 6 2026   the breakout the later retest refers to (+8.8% on 1.2x, closed 227.68)   the engine: no launch (volume under 1.5x), so COHR was not on the list in February
+#   Feb 17 2026  retest of the 21 EMA + push, the retest of the Feb 6 breakout (low 204.57, the 21 EMA 213.85, closed 219.96)   MISS  (followed from Feb 6 the engine reads Feb 13 "21 EMA retest" and Feb 18 "Bull flag breakout": near, not the day)
+#   Feb 20 2026  breakout (+6.8%, closed 248.18)                 MATCH if followed: "Base breakout attempt over 247.15"; not on the list
+#   Mar 9 2026   retest (+7.0%, closed 252.32)                   the engine: "Launch attempt" that day; followed from Feb 6: Mar 5 "Retest held", Mar 10 "Push": near, not the day
+#   Mar 31 2026  50 EMA undercut & reclaim after ONE close under it (Mar 30 closed 219.65 under 235.59; Mar 31 closed 238.21)   MISS  the engine needs 2 closes under
+#   Apr 8 2026   breakout of the downtrending line, a bull flag (+10.5%, an 8.7% gap, closed 281.79)   MISS  the top (Mar 4) is 24 sessions back: past a flag's 22, short of the falling range's 35
+#   Apr 10 2026  breakout                                        MATCH Base breakout over 300.20
+#   Apr 30 2026  bull flag + retest of the breakout + the 21 EMA MATCH Bull flag breakout over 317.28
+#   May 11 2026  breakout                                        MATCH (Launch day / Base breakout over 364.80)
 # THE DYING TREND (the user's rule of thumb): each new high closer to the last one. COHR's highs: 300.20 (Mar 4) -> 364.80
 # (Apr 22, +21.5%) -> 413.00 (May 13, +13.2%) -> 440.00 (Jun 3, +6.5%): the steps shrink; after Jun 3 the chart is the
 # not-tradable part above. Not in the engine.
