@@ -105,4 +105,5 @@
 #   is [a bull flag], agree with March 5th.. March 9th is reclaim 21 and undercut reclaim breakout, and first pullback of
 #   March 6th. Change it: one close is ok for undercut reclaim" -> agreed reads: Feb 13 21 EMA retest, Feb 17 a buy day too,
 #   Feb 18 bull flag breakout, Mar 5 retest held; Mar 9 = the reclaim of the 21 EMA and of the breakout level after the first
-#   pullback day (Mar 6). BUILT on test/cleanlaunch: the 21 and the 50 EMA undercut & reclaim after ONE close under (was 2).
+#   pullback day (Mar 6). BUILT on test/cleanlaunch: the 50 EMA undercut & reclaim after ONE close under (was 2). The 21 EMA one stays at 2
+#   for now: with 1 the agreed ANF Oct 1 2026 read moves to Sep 25 and it adds ATRC Oct 5, APPN Sep 23 2026 (to ask).
