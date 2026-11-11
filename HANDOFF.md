@@ -58,7 +58,7 @@ ALAB, MU, COHR May-June, CAI before Aug 6) and their answers, in their words, ea
 for what those two files answer. tools/blindtest/answers2_2026-11-11.txt: the blind test 2 marks (22 right, 17 wrong, 3
 unsure; launch days 7 / 7; 13 of 18 charts "not clean").
 
-- **Nothing went live in this session.** Everything is on **`test/cleanlaunch`** (last commit 1096495). It has main up to
+- **Nothing went live in this session.** Everything is on **`test/cleanlaunch`** (the chart-reading code as of 1096495; later commits are examples and handoff only). It has main up to
   1dd16e4; main moved on since (the Earnings calendar's Yahoo fallback, c3ebfb1: it touched radar/theme_adds.json and
   rules/make_rules.py, which this branch changed too). **Before any go live: merge main in, re-run
   `python3 rules/make_rules.py`, `--regress`, and re-test the page.** tools/expected_reads.txt was NOT rewritten (the
@@ -125,6 +125,12 @@ unsure; launch days 7 / 7; 13 of 18 charts "not clean").
   to the last, then the EMAs roll over (COHR +21.5 / +13.2 / +6.5%, AXTI +48.7 / +6.8%); **a gap over the 21 EMA is a
   go even in a downtrend, as a short swing** (AXTI Jul 31, Sep 17 2026: 2-week runs); a trend that lasts needs a higher
   low, then a higher high; the day the uptrend breaks ends the trade (ALAB, MU Oct 8 2026).
+- **AGREED, to build first next session (the user's go, Nov 11 2026, APPN: "you can add this as a buy point in base, very
+  strong one")**: **the 2nd higher low in the base**. After a violent drop to the 50 EMA that holds (the 1st low: APPN Sep
+  10 2026, 33.28 over its 50 EMA 32.93), the stock "would try to make a 2nd higher low": the day(s) it does and holds the
+  50 EMA are a buy point in the base (APPN Sep 28 2026 low 33.35, closed 35.02 over the 50 EMA 34.54; Sep 29). Then the
+  base builds (~30-35 bars) and breaks out (Oct 15). The engine has no read there. Also from this chart: APPN's launch is
+  Aug 6 2026 for the user (Aug 7 too: volume + gap); the engine says Aug 7. Test branch first, `--regress`, show, wait.
 - **Asked of the user (they will "compile and provide all at once")**: go live or not; the 135-row list (keep the way
   back, or only on a base breakout / launch-size day); 3-5 more charts each of: dying trends (and ones that kept going),
   follow-through days, launches under the 200 SMA, launches on light volume, gap-over-the-21-EMA swings, choppy charts;
