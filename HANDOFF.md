@@ -75,12 +75,30 @@ alone.
   code touched: no `--regress`, no Launches rebuild.
 - **Not offered tick box**: "Above 21-day EMA" next to the scanner's two tick boxes was offered, not answered (the
   + Filter on Pre-mkt vs 21 EMA ≥ 0 does the same).
-- **Found, not fixed (told the user): the evening scan has failed since Tue Nov 10 4:34 PM ET** (scanner.yml runs
-  38-41, the 4:34 PM day-job run, 5:16 PM, and both early-morning safety runs): scanner/fetch.py symbols() gets
-  "HTTP Error 403: Forbidden" from Nasdaq's screener (api.nasdaq.com), 3 tries each. setups/latest.json and
-  setups/launch.json are still dated Nov 9: the Watchlist, Launches and the launch watch list on Nov 11 are Monday's.
-  stocks.json (the day job) is fine. Proposed: fall back to the last saved symbol list when Nasdaq refuses. Waiting
-  for the user's go. The job logs can be read from a session with the GitHub tools (get_job_logs).
+- **Live (the user's "go live", Nov 11 ~10:15 AM ET, branch test/scanfallback, merge 8f4bd6a): the evening scan no
+  longer dies when Nasdaq refuses its stock list.** The scan had failed since Tue Nov 10 4:34 PM ET (scanner.yml runs
+  38-41: 4:34 PM, 5:16 PM and both early-morning safety runs): scanner/fetch.py symbols() got "HTTP Error 403:
+  Forbidden" from Nasdaq's screener (api.nasdaq.com), so setups/latest.json and setups/launch.json stayed at Nov 9
+  (the user: "big problem"). Now fallback_symbols(): when an exchange's list fails 3 times, market cap and exchange
+  come from radar-data stocks.json (the day job's file: 2,744 stocks over $700M on Nov 11; all 159 Launches and 298
+  Watchlist names in it, 1 of 723 launch-watch names missing, CSIQ); the log prints "FALLBACK LIST". Tested here on
+  the fallback step only (Yahoo can't be reached from a session). picks.yml (Follow picks, safe in market hours:
+  launch.py drops the unfinished day) started at 10:15 AM to rebuild Launches as of the Nov 10 close: **check its
+  result below / in the next session**. The Watchlist lists (run.py) can't be rebuilt in market hours (run.py would
+  take today's unfinished day as a close): the 4:25 PM scan processes Nov 10 and Nov 11 together. The job logs can be
+  read from a session with the GitHub tools (get_job_logs). Why Nasdaq: its screener is the scan's only source of
+  the full US stock list with market cap and exchange (Yahoo gives the bars).
+- **Test only, branch test/livema (81e4ab2), the user's "test it"** (Nov 11: "vs 200d-change to sma. and during
+  hours it has to use dynamic one meaning todays 21ema already different than yesterdays same for 50ema and 200 sma"):
+  "vs 200D" renamed "vs 200 SMA" (Gainers, Earnings, the column list); during the session vs 21 EMA / vs 50 EMA /
+  vs 200 SMA use today's moving averages: applyLive puts ema21_now / ema50_now / sma200_now on the live rows (EMA =
+  the last close's + 2/(n+1) x (price - it), as trendOf; the 200 SMA + (price - c200) / 200, c200 = the close that
+  drops out, added to snapshot.yml and pipeline.py: in stocks.json from the first close after go live, until then the
+  200 SMA stays the last close's); maOf(sym) serves the column list / + Filter, Gainers' columns and its Above 200 SMA
+  / Above 50 EMA boxes, the Watchlist's vs 21 EMA / vs 50 EMA. Not changed: alerts, Launches, the Trend label, the
+  Earnings tab's numbers, the ETF columns. Tested live at 10:10 AM against main's page (MU $793.10: vs 50 EMA -13.0%
+  -> -12.5%; no page errors; row counts the same). Waiting for the user's "go live" (merge main in first: another
+  session edits docs/index.html today).
 
 ## Status of the session "Radar: alert sound volume (Nov 10)" (Mon Nov 9 ~10 PM ET; session_01PkbDajk82Xjo18w2YhHNfg)
 
