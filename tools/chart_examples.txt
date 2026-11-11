@@ -170,6 +170,19 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # The prices: Aug 6 2026 +21.6% on 2.8x, a 15.5% gap, closed 20.00, still under the 200 SMA; Aug 7 +13.7%, over it.
 # The engine: the launch is Aug 7 (it needs a close over the 200 SMA; an agreed example with that date). A launch under the
 # 200 SMA is the Launch laggards path (earnings or graded news that day, 2x+ volume, over the 50 EMA and its 1-month high).
+# AXTI (sent Nov 11 2026, a daily chart Jun - Nov 2026): a downtrend since Jun 2 2026 with two short SWING trades in it. The
+# user: "since Jun 2nd. It had a July 31st attempt which could have been tradable only few days, it fails.. as you see 31st
+# July gap up above 21 ema!!! next day is confirmation.. then 2 weeks run.. then fail!!! Another small timeframe to trade
+# could have been again Sept 17th gap up above 21 ema... and 2 weeks run again... so over and over again gap above 21 ema
+# sounds like a go, even on downtrending stocks, but they don't [stay] long lived (its ok, its more a swing trade here)... in
+# order to [have a] bigger trend form, it has to have higher low formed then higher high, that trend is more sustainable!!!!"
+# The prices: Jul 31 2026 a 42.1% gap, opened 66.71 over the 21 EMA 55.15, closed 60.43 (+28.7% on 3.4x, under the 50 EMA
+# 66.79); Aug 3 +13.6% (the confirmation); high 97.79 on Aug 17 (+62% in 11 sessions); first close back under the 21 EMA
+# Aug 21. Sep 17 2026 a 5.6% gap, opened 67.91 over the 21 EMA 64.48, closed 67.75 (0.9x); high 88.36 on Oct 6 (+30% in 13
+# sessions); back under the 21 EMA Oct 8.
+# The engine: MISSED both. Jul 31 is no launch (closed in the lower half of the day and under the 50 EMA; its only launch is
+# Aug 7); Sep 17 is none either (0.9x volume). It has no "gap over the 21 EMA" swing read and no higher-low-then-higher-high
+# test for a trend that lasts.
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
