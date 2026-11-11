@@ -114,6 +114,16 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # attempt; Oct 6 base breakout over 377.87; Oct 8 FAILED BREAKOUT (the new rule: matches the user's day); off the list Oct 13
 # (2 closes under the 50 EMA), still off Oct 23. Differences: the user's start is Sep 17 (the close back over the 21 EMA), the
 # engine's Sep 21; the user stops trading it Oct 8, the engine takes it off Oct 13.
+# MU (sent Nov 11 2026, a daily chart Oct - Nov 2026): WOULD NOT TRADE, example four, two stretches. The user: "same here MU,
+# clear breakdown of uptrend October 8th and 9th. Since then no buy, stock popping up to going-down emas and rejecting it is
+# sign of downtrend as well... plus Jun 25th 2026 - August 11th wasn't tradable either, downtrending emas, plus lower highs."
+# The prices: Oct 7 closed 1088.00; Oct 8 -4.8% to 1035.84, under the 10 and 21 EMA; Oct 9 1029.00; Nov 10 714.00, under the
+# 200 SMA (760), the 10 / 21 / 50 EMA falling in order above it. Jun 25 2026 +15.7% to 1213.56 (the top), then lower highs to
+# 868.52 on Aug 11, the 21 and 50 EMA both falling by then.
+# The engine (test/cleanlaunch): no buy read in either stretch (matches); but it keeps MU on the list until its 2nd close
+# under the 50 EMA: off Jul 17 (the user: from Jun 25) and off Oct 13 (the user: from Oct 8-9).
+# The pattern in ALAB and MU, Oct 8 2026: the day the uptrend breaks (a decisive close under the 10 and 21 EMA after a top or a
+# failed breakout) ends the trade; after it every pop up to the falling EMAs that gets rejected confirms the downtrend.
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
