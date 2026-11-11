@@ -103,6 +103,20 @@ alone.
   Earnings tab's numbers, the ETF columns. Tested live at 10:10 AM against main's page (MU $793.10: vs 50 EMA -13.0%
   -> -12.5%; no page errors; row counts the same). All tabs load with no page errors after merging main.
 
+- **Live (the user's "go live", Nov 11 midday, branch test/pmthemes): the Pre-market scanner's group gaps and Themes
+  column.** The user: "when i click those themes it takes me to themes tab, when i click i want it in same table just
+  show me those tickers"; "i know for fact that klic, simo belongs to semi ecosystem" (their Themes cell was empty);
+  "do b, next time no theme show industry group your fix a". docs/index.html drawPmLive: (1) a click on a group-gap
+  chip sets S.pmsel and keeps the table on the stocks that chip counts (the chip dark, a "Showing X: n of N · show
+  all" button; a second click clears; the row chips in the Themes column still open the Groups tab); (2) a stock in no
+  theme shows its industry group in grey (stocks.json group), or its broad industry "· other" when it has no tight
+  group (2,262 of 3,313 stocks have no theme, 1,704 of them no group either), and counts for its group's chip at
+  fit 0.7+; (3) radar/theme_adds.json: KLIC, ASX -> Semi Test & Packaging, SIMO -> Memory & Storage. Tested on the
+  Nov 11 9:25 scan: Cybersecurity (13) -> 13 rows on the same tab, 205 back on show all; 114 theme rows, 91 grey
+  labels, 0 blank; no page errors. **To check after the next theme build**: whether KLIC, ASX, SIMO passed the 0.6
+  tracking test (and the AI & Semis SEMI_FLOOR) and show in their themes; SITM and FSLY got no theme (the user to say).
+  Only the scanner's Themes column has the fallback (not Gainers, Graded gappers or the column list).
+
 ## Status of the session "Radar: alert sound volume (Nov 10)" (Mon Nov 9 ~10 PM ET; session_01PkbDajk82Xjo18w2YhHNfg)
 
 - **Live (the user's "go live", branch test/volvoice, merge f6f6a0b): the alert voice says the volume.** The user
