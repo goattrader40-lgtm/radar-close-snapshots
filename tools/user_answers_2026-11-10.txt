@@ -107,3 +107,12 @@
 #   Feb 18 bull flag breakout, Mar 5 retest held; Mar 9 = the reclaim of the 21 EMA and of the breakout level after the first
 #   pullback day (Mar 6). BUILT on test/cleanlaunch: the 50 EMA undercut & reclaim after ONE close under (was 2). The 21 EMA one stays at 2
 #   for now: with 1 the agreed ANF Oct 1 2026 read moves to Sep 25 and it adds ATRC Oct 5, APPN Sep 23 2026 (to ask).
+# Nov 11 2026, the user on Claude's open questions: ANF Sep 25 or Oct 1: "what you think?" -> Claude: keep Oct 1 (the Sep 25
+#   reclaim came on 0.6x volume and the stock closed back under the 21 EMA the next 3 days; Oct 1 led into the agreed Oct 5
+#   pop), so the 21 EMA undercut & reclaim stays at 2 closes. CAI: "Aug 6th is launch day even though its under 200 sma".
+#   "You can test things... I'll send you more not trade charts." -> BUILT on test/cleanlaunch: the hold after a launch /
+#   attempt and "did not hold"; no falling-range breakout in the 5 sessions after a launch; the falling range from 23
+#   sessions (COHR Apr 8); a failed breakout takes the stock off the list. NOT built, measured and dropped: "choppy" by
+#   crossings of the 21 EMA (the clean charts AEHR, NTSK, ZS, ANF, APPN cross it as often as the bad ones) and "off on a close
+#   under the 10 and 21 EMA" (it hits AEHR Mar 26, ZS Oct 16, GMAB Sep 10, CAI Oct 1 / 6 before their agreed buy days). Not
+#   built, too few examples: the dying trend, a launch on under 1.5x volume (COHR Feb 6), a launch under the 200 SMA (CAI Aug 6).

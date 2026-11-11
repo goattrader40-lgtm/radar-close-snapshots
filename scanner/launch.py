@@ -115,11 +115,20 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # flag_fail_adr: a high that pokes this far over a flag's line and closes back under is a failed try and the line
          #   stays (ARM Apr 10 2026, 1.0 ADR over); less redraws the line (PGY Aug 11 2026, 0.57 ADR over: its line then runs
          #   through that high, the break is Aug 21, not Aug 13; was 0.5)
-         attempt=1, attempt_near=0.5, attempt_pop_pct=1, off50_closes=2, ema_rising=1, ema_rise_days=5, range_min=35, range_max=90, range_depth=8,
+         attempt=1, attempt_near=0.5, attempt_pop_pct=1, off50_closes=2, ema_rising=1, ema_rise_days=5, range_min=23, range_max=90, range_depth=8, range_after_launch=5, hold_days=10, off_failed_bo=1,
          fail_days=2, flag_fail_adr=0.75, base_look=756,
          # one close under is enough for the 50 EMA undercut & reclaim (the user, Nov 11 2026: "change it, one
          # close is ok for undercut reclaim"; COHR Mar 31 2026: Mar 30 closed 219.65 under its 50 EMA 235.59, Mar 31 down to
          # 220.20 and closed 238.21 back over it; was 2 closes)
+         # tested Nov 11 2026 (the user: "you can test things"), from the would-not-trade charts:
+         # range_min 23 (was 35): a falling line 23-34 sessions old was read by nothing, a flag ends at 22 (COHR Apr 8 2026, the
+         #   line from its Mar 4 high, 24 sessions); range_after_launch: no falling-range breakout in the 5 sessions after a
+         #   launch day (NBIS Aug 14 2026, two sessions after its Aug 12 launch, which failed)
+         # hold_days: in the 10 sessions after a launch or an attempt the status names the hold (pulled back, every close over
+         #   the 21 EMA, the 10 > 21 > 50 EMA all rising: AEHR Feb 12-19 2026) and the day it did not hold (the first close
+         #   under the 21 EMA: NBIS Aug 20 2026)
+         # off_failed_bo: a failed breakout takes the stock off the list that day (ALAB Oct 8 2026: "October 8th - now not
+         #   tradable"), back by the usual way back
          undercut_closes=1,
          # the 21 EMA undercut & reclaim stays at 2 closes for now: with 1 the agreed ANF Oct 1 2026 read moves to Sep 25 (to
          # ask the user)
@@ -1035,7 +1044,9 @@ def range_break(a, j):
     today) or None. INTC: the line from Jan 22's 54.60 through Mar 16's 49.17, at 47.35 on Apr 1; closed 48.03"""
     st = a.st
     c, h, l = st.c, st.h, st.l
-    if j < L["range_max"] + 5 or not (c[j] > c[j - 1] and c[j] > a.e21[j] and c[j] > a.e50[j] and a.clpos[j] >= 0.5 and a.rv[j] >= 1):
+    if j < L["range_max"] + 5 or not (c[j] > c[j - 1] and c[j] > a.e21[j] and c[j] > a.e50[j] and a.clpos[j] >= 0.5
+                                       # 1x+ volume, or a day up a full ADR (COHR Apr 8 2026: +10.5%, an 8.7% gap, on 0.8x)
+                                       and (a.rv[j] >= 1 or a.chg[j] >= _adr(st, j))):
         return None
     t = j - L["range_max"] + int(np.argmax(h[j - L["range_max"]:j]))
     if j - t < L["range_min"]:
@@ -1185,7 +1196,9 @@ def follow(a, i0, i, pick=False):
             failed = (j, bo[1], bo[0])
             used.discard(bo[2])
             rlv, weak_bo = None, None
-        rg = range_break(a, j)
+            if L["off_failed_bo"] and not pick and off_since is None:
+                off_since, off_why = j, "a failed breakout"
+        rg = range_break(a, j) if (pick or j - i0 > L["range_after_launch"]) else None
         if rg:
             rng_day, rng = j, rg
         if not pick:
@@ -1599,6 +1612,20 @@ def follow(a, i0, i, pick=False):
                 tries_txt = (f"the {nth} try of its {str(rm_) + '-month' if rm_ else 'smaller'} base's top {tb:.2f} today (tried "
                              f"{', '.join([st.dates[kt]] + [st.dates[k] for k in tr[1:-1]])}), {above}: a heads-up")
                 stage += " · " + tries_txt
+    # the hold after a launch or an attempt (the user, Nov 11 2026: "after launch it pulls back, tests most recent gap / base
+    # and holds it, while 10 ema / 21 and 50 emas getting aligned beautifully rising up"; AEHR Feb 12-19 2026): in the first
+    # 10 sessions, pulled back 1.25+ ADRs from its high, every close since the launch over the 21 EMA, the 10 > 21 > 50 EMA
+    # and each higher than the day before. The day it does not hold = the first close under the 21 EMA (NBIS Aug 20 2026)
+    hold = bool(not pick and 1 <= i - i0 <= L["hold_days"] and stage.startswith(("In the base", "Running", "Consolidation"))
+                and st.l[i0 + 1:i + 1].min() <= st.h[i0:i + 1].max() * (1 - 1.25 * adr / 100) and (c[i0 + 1:i + 1] >= a.e21[i0 + 1:i + 1]).all()
+                and a.e10[i] > a.e21[i] > a.e50[i] and a.e10[i] > a.e10[i - 1] and a.e21[i] > a.e21[i - 1] and a.e50[i] > a.e50[i - 1])
+    if hold:
+        stage = (f"Holding after the launch {'attempt' if att else 'day'} (day {i - i0}): {100 * (1 - c[i] / st.h[i0:i + 1].max()):.0f}% under its high "
+                 f"{st.h[i0:i + 1].max():.2f}, every close over the 21 EMA ({a.e21[i]:.2f}), the 10 > 21 > 50 EMA all rising"
+                 + (f": the launch is a close over {att[0]:.2f}" if att and att_conf is None else ""))
+    not_held = bool(not pick and exit_k == i and i - i0 <= L["hold_days"])
+    if not_held:
+        stage += f" · the launch {'attempt ' if att else ''}did not hold: closed {c[i]:.2f} under the 21 EMA {a.e21[i]:.2f}, {i - i0} sessions after it"
     if off_now:
         stage = (f"Off the list since {st.dates[off_since]}: {off_why}. Back on when it breaks out (a base, a flag, a falling range, "
                  f"a launch-size day) over the 50 EMA with the 21 or the 50 EMA rising")
@@ -1636,6 +1663,7 @@ def follow(a, i0, i, pick=False):
         failed_breakout=st.dates[failed[0]] if failed else None, failed_breakout_today=bool(failed and failed[0] == i),
         failed_breakout_top=fnum(failed[1]) if failed else None,
         range_breakout_today=range_bo, range_line=fnum(rng[1]) if range_bo else None,
+        launch_hold=hold, launch_not_held_today=not_held,
         double_breakout="double breakout" in stage, flag_dry="volume dried up" in stage,
         # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
         # Flat base, Cup with handle, ... or Base forming (no pattern yet))

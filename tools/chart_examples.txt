@@ -164,6 +164,12 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # THE DYING TREND (the user's rule of thumb): each new high closer to the last one. COHR's highs: 300.20 (Mar 4) -> 364.80
 # (Apr 22, +21.5%) -> 413.00 (May 13, +13.2%) -> 440.00 (Jun 3, +6.5%): the steps shrink; after Jun 3 the chart is the
 # not-tradable part above. Not in the engine.
+# CAI (sent Nov 11 2026, a daily chart to early Aug 2026): WOULD NOT TRADE until Aug 6 2026, example seven (the user: "CAI not to
+# trade chart until August 6th"; and on the launch: "Aug 6th is launch day even though its under 200 sma"). The chart: months
+# of lower highs and lower lows under the falling 10 / 21 / 50 EMA and the falling 200 SMA (black), then the gap of Aug 6.
+# The prices: Aug 6 2026 +21.6% on 2.8x, a 15.5% gap, closed 20.00, still under the 200 SMA; Aug 7 +13.7%, over it.
+# The engine: the launch is Aug 7 (it needs a close over the 200 SMA; an agreed example with that date). A launch under the
+# 200 SMA is the Launch laggards path (earnings or graded news that day, 2x+ volume, over the 50 EMA and its 1-month high).
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
