@@ -83,6 +83,17 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # ~27.8, broken early Aug 2026), U (lower line ~32.3 broken in Aug 2026 = the launch, the big arrow; base top ~49.8), ACN
 # (zones ~195-198 and ~244-252, level 259), XMTR (base top ~114): a WOULD NOT TRADE chart (the user, Nov 10 2026: "yes I do agree"): choppy, wide swings, no tight rests.
 # OKTA (2026) and one unnamed chart: tops and support marks only.
+# NBIS (sent Nov 11 2026, a daily chart Jun - Oct 2026): WOULD NOT TRADE, example one (the user: "wouldn't have traded this,
+# August 12th was a launch day, it failed after 3 days... after launch day 2-3 days later stock needs to have the things you
+# correctly identified to have follow through otherwise it would fail": the pullback that holds the gap / base while the 10 /
+# 21 / 50 EMA line up and rise, as AEHR Feb 12-19 2026). The chart: wide swings since June, the 10 / 21 / 50 EMA crossing each
+# other, blue lines at a support level (~185-190) and a box top (~255) in September-October, the 200 SMA (black) far under.
+# The prices: Aug 12 +34.1% on 2.6x, a 17.0% gap (earnings), closed 259.20, the 21 EMA still under the 50 EMA; Aug 14 closed
+# 277.68; Aug 17 -3.2%, Aug 18 -7.6% (248.43, under the launch day's close), Aug 19 gapped down 6.5% and closed 223.90, under
+# the gap day's open 226.00: the gap was gone a week after it. No hold, no tight rest.
+# The engine (test/cleanlaunch): Aug 12 "Launch day, cleared its 1-month base" (matches the user); Aug 14 "Breakout of the
+# falling range" over the line from its Jun 22 high 299.86 (a buy read on a chart the user would not trade: WRONG); it never
+# said the launch failed.
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86

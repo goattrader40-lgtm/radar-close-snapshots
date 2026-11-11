@@ -87,3 +87,11 @@
 #   number separates these 4 from the agreed launches (how far the stock had already run, the gap size, a big day in the 15
 #   sessions before: each also hits CAI / APPN / VEEV Aug 7 2026). The user's own test is fundamental: did something change
 #   (earnings, news, a gap). NOT built; the engine still reads Jan 16 as a launch attempt.
+# After "agree with you" on the follow-through reading (Nov 11 2026): three versions of a follow-through rule were tried on the
+#   user's examples and NOT built: the best caught 4 of 6 follow-through days and hit 6 of 36 liked launches; in the liked
+#   ones the earlier big day was still under the 200 SMA (CAI Aug 6 -> 7, PRGS Jun 26 -> Jul 1 2026); and over 2 years the
+#   days it marked ran 20%+ more often than the other launches (34% vs 26%). Open question to the user: CAI's launch, Aug 6
+#   or Aug 7 2026?
+# NBIS Aug 12 2026 (the user's first WOULD NOT TRADE chart, tools/chart_examples.txt): a launch day that failed. The rule in
+#   the user's words: "after launch day 2-3 days later stock needs to have the things you correctly identified to have follow
+#   through otherwise it would fail".
