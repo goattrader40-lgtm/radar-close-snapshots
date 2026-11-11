@@ -117,6 +117,22 @@ alone.
   tracking test (and the AI & Semis SEMI_FLOOR) and show in their themes; SITM and FSLY got no theme (the user to say).
   Only the scanner's Themes column has the fallback (not Gainers, Graded gappers or the column list).
 
+- **Live (the user's "go live", Nov 11 ~3:30 PM ET, branch test/earncal, merge 4398262): the Earnings tab no longer
+  goes blank when Nasdaq refuses its calendar.** The user's screenshot (Nov 11): only Monday in the week's tables,
+  "329 of 0 reports". Cause: api.nasdaq.com/api/calendar/earnings answered 403 for every day from about Nov 9 evening
+  (earnings.json errors; the job doesn't fail), and only reports already read were kept. radar/earnings.py: when a
+  day's Nasdaq call fails, Yahoo's v7 quote (earningsTimestamp / earningsTimestampStart) is asked for every stock that
+  passes the rules or is in the file, and a date on a failed day puts it on the calendar; a name already on a failed
+  day stays; the fiscal quarter comes from Yahoo's estimates (yahoo_fq: the 0q quarter if it ended before the report
+  day, else the one before), before / after the open from Yahoo's report time. Test build (radar-tools `earntest`,
+  3:08 PM): 215 reports from Yahoo; Mon 41, Tue 15, Wed 7, Thu 19, Fri 0; all 41 new rows with a quarter and an EPS
+  estimate, the 18 reported ones read (AZTA Strong bullish, CRWV Bullish, EMBJ Somewhat bearish). Limits told to the
+  user: Friday 0 (none passing, or no Yahoo date yet: unknown); Yahoo can move a date to next quarter soon after a
+  report, so a past day can be short. Rules workbook: the two "second source" notes. The first "go live" push was
+  refused by the session's safety check ("fix it" was not taken as a go): the user then said "go live".
+  **Check next session**: the live earnings.json after the dispatch at ~3:30 PM and the 4:50 PM run; whether Nasdaq
+  answers again (then its rows win).
+
 ## Status of the session "Radar: alert sound volume (Nov 10)" (Mon Nov 9 ~10 PM ET; session_01PkbDajk82Xjo18w2YhHNfg)
 
 - **Live (the user's "go live", branch test/volvoice, merge f6f6a0b): the alert voice says the volume.** The user
