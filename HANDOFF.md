@@ -49,6 +49,39 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: pre-market scanner vs EMA columns (Nov 11)" (Wed Nov 11 2026 morning; session_01PkbDajamht2fhC31vMGzcy)
+
+- **Live (the user's "test it and go live", branch test/pmvs21, merge f7da91b): the pre-market comparisons carry
+  their own names, and the 21 EMA is there.** The user (Nov 11, a screenshot of the scanner at 8:40): "this numbers are
+  yesterdays closing numbers comparison not premarket"; "i need pre mkt vs 21 premkt vs50 and pre mkt vs200". Found:
+  vs 200D / vs 50 EMA on the scanner were already on the pre-market price; the "vs 21 EMA" the user had added with
+  + add is a catalog column on the regular-hours price (yesterday's close before the open), and its 21 EMA came from
+  launch.json's watch list (one day old that morning, see below). docs/index.html only:
+  1. Pre-market scanner (pml-table): **Pre-mkt vs 21 EMA** (new, key vs_21e), **Pre-mkt vs 50 EMA** (was vs 50 EMA),
+     **Pre-mkt vs 200 SMA** (was vs 200D), in that order after ADR%; the same keys (vs_50e, vs_200), so saved layouts
+     and filters keep working; the new column lands after ADR% in a saved layout. The 21 EMA = stocks.json tr[2]
+     (e21Of: the last close's, 3,211 of 3,313 stocks). INTC Nov 11 9:15: $61.45 = -19.9% / -31.4% / -29.5%.
+  2. Graded gappers: the two headers renamed the same way (the numbers as before). The Earnings tab's vs 200D /
+     vs 50 EMA were left as they are (its layout keys come from the header text: a rename would reset a saved layout).
+  3. Column list / + Filter (every table): new "Pre-mkt vs 21 EMA / 50 EMA / 200 SMA" in the Pre-market group
+     (pm_vs21, pm_vs50, pm_vs200: today's scan only); **vs 21 EMA** (vs21e) now reads stocks.json tr[2] first, so it
+     works for every stock (Gainers too) and is never a day old; the descriptions of vs 21 EMA / vs 50 EMA / vs 200D
+     say: regular-hours price, live during the session, yesterday's close before the open.
+  **Market hours** (the user: "make sure during market hours i would have filters to compare market hr price to
+  21ema/50 ema and 200 sma"): + Filter -> vs 21 EMA / vs 50 EMA / vs 200D, "≥ 0" = over it, on Gainers, Watchlist,
+  Launches, Earnings (the price is live in the session; the averages are the last close's). Tested with Playwright on
+  the 9:15 scan against main's page: the same 71 rows, no page errors, a saved layout kept; the three filters on
+  Gainers / Watchlist / Launches (16 / 51 / 122 rows). Rules workbook: a row in "P3 Pre-market scanner". No scanner
+  code touched: no `--regress`, no Launches rebuild.
+- **Not offered tick box**: "Above 21-day EMA" next to the scanner's two tick boxes was offered, not answered (the
+  + Filter on Pre-mkt vs 21 EMA ≥ 0 does the same).
+- **Found, not fixed (told the user): the evening scan has failed since Tue Nov 10 4:34 PM ET** (scanner.yml runs
+  38-41, the 4:34 PM day-job run, 5:16 PM, and both early-morning safety runs): scanner/fetch.py symbols() gets
+  "HTTP Error 403: Forbidden" from Nasdaq's screener (api.nasdaq.com), 3 tries each. setups/latest.json and
+  setups/launch.json are still dated Nov 9: the Watchlist, Launches and the launch watch list on Nov 11 are Monday's.
+  stocks.json (the day job) is fine. Proposed: fall back to the last saved symbol list when Nasdaq refuses. Waiting
+  for the user's go. The job logs can be read from a session with the GitHub tools (get_job_logs).
+
 ## Status of the session "Radar: alert sound volume (Nov 10)" (Mon Nov 9 ~10 PM ET; session_01PkbDajk82Xjo18w2YhHNfg)
 
 - **Live (the user's "go live", branch test/volvoice, merge f6f6a0b): the alert voice says the volume.** The user
