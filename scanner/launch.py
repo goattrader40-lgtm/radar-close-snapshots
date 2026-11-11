@@ -116,7 +116,11 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          #   stays (ARM Apr 10 2026, 1.0 ADR over); less redraws the line (PGY Aug 11 2026, 0.57 ADR over: its line then runs
          #   through that high, the break is Aug 21, not Aug 13; was 0.5)
          attempt=1, attempt_near=0.5, attempt_pop_pct=1, off50_closes=2, ema_rising=1, ema_rise_days=5, range_min=35, range_max=90, range_depth=8,
-         fail_days=2, flag_fail_adr=0.75, base_look=756)
+         fail_days=2, flag_fail_adr=0.75, base_look=756,
+         # one close under is enough for an undercut & reclaim of the 21 or the 50 EMA (the user, Nov 11 2026: "change it, one
+         # close is ok for undercut reclaim"; COHR Mar 31 2026: Mar 30 closed 219.65 under its 50 EMA 235.59, Mar 31 down to
+         # 220.20 and closed 238.21 back over it; was 2 closes)
+         undercut_closes=1)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -1109,7 +1113,7 @@ def follow(a, i0, i, pick=False):
 
     def r50(k):
         """the 50 EMA undercut & reclaim on day k (see reclaim50 below)"""
-        return bool(k >= i0 + 3 and c[k - 2] < a.e50[k - 2] and c[k - 1] < a.e50[k - 1] and st.l[k] < a.e50[k] and st.l[k] < st.o[k]
+        return bool(k >= i0 + 1 + L["undercut_closes"] and all(c[k - m] < a.e50[k - m] for m in range(1, L["undercut_closes"] + 1)) and st.l[k] < a.e50[k] and st.l[k] < st.o[k]
                     and c[k] > a.e50[k] and c[k] - st.l[k] >= 0.5 * (st.h[k] - st.l[k]) and c[k] < st.h[i0:k].max()
                     and (not L["reclaim50_rising"] or a.e50[k] > a.e50[k - 5]))
     off_since, off_why, back_day, back_from = None, None, None, None
@@ -1305,7 +1309,7 @@ def follow(a, i0, i, pick=False):
         if not (st.l[k] < a.e21[k] and st.l[k] < st.o[k] and c[k] > a.e21[k] and c[k] > a.e50[k] and c[k] < top
                 and c[k] - st.l[k] >= 0.5 * (st.h[k] - st.l[k]) and st.l[last_new:k + 1].min() <= top * (1 - 1.25 * ak / 100)):
             return None
-        if all(a.e21[m] * (1 - ak / 200) <= c[m] < a.e21[m] for m in (k - 2, k - 1)):
+        if all(a.e21[m] * (1 - ak / 200) <= c[m] < a.e21[m] for m in range(k - L["undercut_closes"], k)):
             return "undercut"
         if (c[last_new:k] >= a.e21[last_new:k] * (1 - ak / 400)).all() and not all(c[m] > c[m - 1] for m in (k - 3, k - 2, k - 1)):
             return "retest"
@@ -1348,7 +1352,7 @@ def follow(a, i0, i, pick=False):
     ema21_watch = None
     if i - last_new >= 3 and not any(k > last_new for k in rdays) and not any(ema_back(k) for k in range(last_new + 4, i + 1)) \
             and c[i] < st.h[i0:i + 1].max() and c[i] > a.e50[i]:
-        if all(a.e21[m] * (1 - adr / 200) <= c[m] < a.e21[m] for m in (i - 1, i)):
+        if all(a.e21[m] * (1 - adr / 200) <= c[m] < a.e21[m] for m in range(i - L["undercut_closes"] + 1, i + 1)):
             ema21_watch = "undercut"
         elif (c[last_new:i + 1] >= a.e21[last_new:i + 1] * (1 - adr / 400)).all() and not all(c[m] > c[m - 1] for m in (i - 2, i - 1, i)) \
                 and c[i] <= a.e21[i] * (1 + 1.5 * adr / 100):
@@ -1524,12 +1528,13 @@ def follow(a, i0, i, pick=False):
         lv_txt = f"{rlv[1]:.2f}" if rlv[2] <= rlv[1] * 1.001 else f"{rlv[1]:.2f}-{rlv[2]:.2f} (bodies-wicks)"
         stage = f"Retest of the breakout level {lv_txt} held" + (" + confluence: " + " & ".join(retest_ema) if retest_ema else "")
     elif reclaim50:
-        stage = (f"50 EMA undercut & reclaim (entry): 2 closes under the 50 EMA ({st.dates[i - 2]}, {st.dates[i - 1]}), today down to "
+        n50 = next((m for m in range(1, 30) if not c[i - m] < a.e50[i - m]), 30) - 1
+        stage = (f"50 EMA undercut & reclaim (entry): {n50} close{'s' if n50 > 1 else ''} under the 50 EMA ({', '.join(st.dates[i - m] for m in range(min(n50, 3), 0, -1))}), today down to "
                  f"{st.l[i]:.2f}, closed {c[i]:.2f} back over {a.e50[i]:.2f} in the upper half of the day")
     elif reclaim:
         stage = (f"21 EMA retest in the base (entry): dipped to {st.l[i]:.2f} under the 21 EMA {a.e21[i]:.2f}, closed {c[i]:.2f} back over it"
                  if reclaim == "retest" else
-                 f"21 EMA undercut & reclaim (entry, strong): 2 closes under the 21 EMA, today down to {st.l[i]:.2f}, closed {c[i]:.2f} back over {a.e21[i]:.2f}")
+                 f"21 EMA undercut & reclaim (entry, strong): {(n21 := next((m for m in range(1, 30) if not c[i - m] < a.e21[i - m]), 30) - 1)} close{'s' if n21 > 1 else ''} under the 21 EMA, today down to {st.l[i]:.2f}, closed {c[i]:.2f} back over {a.e21[i]:.2f}")
     elif range_bo:
         stage = (f"Breakout of the falling range: closed {c[i]:.2f} over the line {rng[1]:.2f} from its {st.dates[rng[0]]} high {st.h[rng[0]]:.2f} "
                  f"({i - rng[0]} sessions of lower highs) and over the 21 & 50 EMA, on {a.rv[i]:.1f}x volume (leg {leg})")
