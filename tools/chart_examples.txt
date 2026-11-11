@@ -191,6 +191,13 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # Feb 10 on a failed breakout); Mar 9 21 EMA retest; Mar 11 base breakout over 47.03; Apr 2 retest of 46.32-47.03 held + the 21
 # & 50 EMA; Apr 8 breakout undercut & reclaim; Apr 16 base breakout over 71.49; Apr 28 retest of 68.44-71.49 held + the 21
 # EMA; Apr 30 push; May 1 base breakout over 90.10; May 21 bull flag breakout; May 22 base breakout over 134.00.
+# AXTI, the dying trend (sent Nov 11 2026, a daily chart May - June 2026; the user: "dying trend, see, higher highs getting
+# slower, [that is] why emas rolling over"). The second example of the rule of thumb after COHR.
+# The prices: new highs 90.10 (Apr 22) -> 134.00 (May 13, +48.7% in 15 sessions) -> 143.16 (May 26, only +6.8% in 8 sessions);
+# the 10 and 21 EMA both turned down on May 29 (close 103.16), the 10 EMA crossed under the 21 EMA on Jun 8. COHR the same
+# way: +21.5%, +13.2%, +6.5%, then the 10 and 21 EMA both falling from Jun 9 2026.
+# In both: the last new high gained under 7% over the one before, less than half of the step before it, and the short EMAs
+# rolled over within 3-4 sessions of it. Not in the engine.
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
