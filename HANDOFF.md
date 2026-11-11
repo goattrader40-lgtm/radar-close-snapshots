@@ -218,18 +218,19 @@ files answer.
 - **Blocked, the user to decide**: saving the user's recovered words from the Oct 26 session into the repo was refused by
   the permission system (copying another session's transcript into a public repo). Offered: Claude's own summary, or leave
   them in that session (session_0182knZxEUS1BR5NUyEY19Yd, Oct 27 03:30 UTC onward). No answer yet.
-- **Raised by the user Nov 11, analysed, nothing changed (explain first; the next session's first topic if the user wants
-  it)**: "the pre-market graders have a flaw: the most important thing happened [in] semis and it hasn't done anything
+- **Raised by the user Nov 11, analysed, AGREED, to build first in the next session**: "the pre-market graders have a flaw: the most important thing happened [in] semis and it hasn't done anything
   related to it". Nov 11's 8:35 scan: 138 stocks gapping up 5%+, **83 of them semis / AI** (Optics & CPO 15, Semi Test &
   Packaging 13, Neoclouds 13, AI Networking 7 ...). Both graders grade on a company's own news only, so every one read C
   ("Chip-sector sympathy" / "Sector move: ..."); neither looked for or stated WHY the whole area moved. And the biggest
   gappers were not on the graded list at all: CRWV +15.6%, NBIS +13.2%, COHR, LITE, STX, MRVL, SNDK, WDC, MU, DELL were
   still 8-31% under their 50 EMA after the gap (SNDK -31%, MRVL -23%, DELL -22%), so the user's Nov 4 rule (gap-ups under
-  the 50 EMA are dropped) removed them; the graded ones (AMD, ANET, MPWR, WOLF, LSCC, ENTG) were the few over it. Proposed,
-  not agreed: (1) a **theme event line** at the top of the Pre-market tab when many stocks of one area gap together: the
+  the 50 EMA are dropped) removed them; the graded ones (AMD, ANET, MPWR, WOLF, LSCC, ENTG) were the few over it. **The user accepted both
+  proposals (Nov 11: "agree with you... I accept your proposal"); not built: test branch first, then "go live"**: (1) a **theme event line** at the top of the Pre-market tab when many stocks of one area gap together: the
   area, the count, the leaders, and the market / sector news behind it (the 8:45 task searches for it once); (2) a
   **"theme bounce" list** for such a day: each gapper with its distance to the 21 and 50 EMA, so the first to reclaim both
-  (the user's "go sign": AMD Sep 4-8 2026, MRVL Mar 6 2026) stands out; grades unchanged. Claude could not confirm the
+  (the user's "go sign": AMD Sep 4-8 2026, MRVL Mar 6 2026) stands out; grades unchanged. Answered: unticking "Gap-ups above the 50 EMA" in the Graded gappers rules puts those stocks on the
+  list (Claude then grades the most liquid first; the megacaps take the slots; they still read C without company news; the code
+  grader's own chart rules still say not eligible). Claude could not confirm the
   news itself (the user: an OpenAI / Anthropic meeting, South Korea chip exports) from the data.
 - **Good to know**: sessions before Oct 26 can't be reached; the engine and tools/replay.py need `pip install numba numpy
   pandas`; history/bars_2y.json.gz ends Oct 23; radar-data long_bars.json holds ~155 symbols incl. every chart example
