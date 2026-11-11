@@ -660,7 +660,7 @@
         <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
       </div>
       <details class="tgr-legend tgr-more" data-key="pmlive"><summary>About this scanner</summary>
-      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. vs 200D and vs 50 EMA = the latest pre-market price vs the 200-day SMA and 50-day EMA as of yesterday's close. vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day. News = why it gaps, for every stock gapping 5%+ up or down, whether or not it passes the graded list's rules: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's <span class="tgr-lbl">(code)</span> from the SEC filings since the last close, the Earnings tab and, when the SEC has nothing, the stock's own headline <span class="tgr-lbl">(headline)</span>: Benzinga's feed through Alpaca, company press releases included (FLY Nov 6, 2026: "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile", 7:31 AM) (from about 8:05 AM ET: news runs at about 8:05 and 8:35, then the code grader at about 8:52, 9:05 and 9:18; hover for the whole reason, 📰 opens the source). <span class="tgr-gm">Sector move: group</span> = no news of its own (no filing, no event headline) while 3+ stocks of its theme or industry gap 5%+ the same way (the biggest names and those with their own news named; MU Nov 6, 2026: Memory &amp; Storage). News only: the stocks the list's rules drop get no grade. <strong>+ Filter</strong> (under the boxes) adds any other criterion, as on the Watchlist, Launches and Gainers: this table's columns (Pre-mkt vol and Vol in K) or anything else (RS, Trend, Group rank, Themes, Earnings date, Launch grade, Watchlist list …); one set for gap ups and one for gap downs, kept in this browser; Reset to my defaults removes them.</p>
+      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Pre-mkt vs 21 EMA, Pre-mkt vs 50 EMA and Pre-mkt vs 200 SMA = the latest pre-market price vs the 21-day EMA, 50-day EMA and 200-day SMA as of yesterday's close (a column added from the list named vs 21 EMA, vs 50 EMA or vs 200D uses the regular-hours price: yesterday's close before the open, live during the session). vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day. News = why it gaps, for every stock gapping 5%+ up or down, whether or not it passes the graded list's rules: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's <span class="tgr-lbl">(code)</span> from the SEC filings since the last close, the Earnings tab and, when the SEC has nothing, the stock's own headline <span class="tgr-lbl">(headline)</span>: Benzinga's feed through Alpaca, company press releases included (FLY Nov 6, 2026: "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile", 7:31 AM) (from about 8:05 AM ET: news runs at about 8:05 and 8:35, then the code grader at about 8:52, 9:05 and 9:18; hover for the whole reason, 📰 opens the source). <span class="tgr-gm">Sector move: group</span> = no news of its own (no filing, no event headline) while 3+ stocks of its theme or industry gap 5%+ the same way (the biggest names and those with their own news named; MU Nov 6, 2026: Memory &amp; Storage). News only: the stocks the list's rules drop get no grade. <strong>+ Filter</strong> (under the boxes) adds any other criterion, as on the Watchlist, Launches and Gainers: this table's columns (Pre-mkt vol and Vol in K) or anything else (RS, Trend, Group rank, Themes, Earnings date, Launch grade, Watchlist list …); one set for gap ups and one for gap downs, kept in this browser; Reset to my defaults removes them.</p>
       </details>
       <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
       <div class="tgr-scroll tall">
@@ -680,8 +680,9 @@
             <th class="num c2"><button class="tgr-th" data-sort="volume">Vol</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="rel_vol">Rel vol</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
-            <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
-            <th class="num c2"><button class="tgr-th" data-sort="vs_50e" title="Pre-market price vs the 50-day EMA as of yesterday's close">vs 50 EMA</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_21e" title="The latest pre-market price vs the 21-day EMA as of yesterday's close">Pre-mkt vs 21 EMA</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_50e" title="The latest pre-market price vs the 50-day EMA as of yesterday's close">Pre-mkt vs 50 EMA</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_200" title="The latest pre-market price vs the 200-day SMA as of yesterday's close">Pre-mkt vs 200 SMA</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="vs_pdh" title="Pre-market price vs yesterday's high (regular hours)">vs PDH</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="below_low52" title="How far below the pre-market price the 52-week low is (TradingView's 'Low 52W below price by')">52W low below</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
@@ -732,8 +733,8 @@
             <th class="c2">Red flags</th>
             <th class="c2">Themes</th>
             <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
-            <th class="num c2"><button class="tgr-th" data-sort="vs_200">vs 200D</button></th>
-            <th class="num c2"><button class="tgr-th" data-sort="vs_50e" title="Pre-market price vs the 50-day EMA as of yesterday's close">vs 50 EMA</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_200" title="Pre-market price at the scan vs the 200-day SMA as of yesterday's close">Pre-mkt vs 200 SMA</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="vs_50e" title="Pre-market price at the scan vs the 50-day EMA as of yesterday's close">Pre-mkt vs 50 EMA</button></th>
             <th class="c2">Sources</th>
           </tr></thead>
           <tbody></tbody>
@@ -1556,6 +1557,8 @@ defCalc('industry_perf', {
      rising), Resting (10 > 21 > 50, the 10 or 21 not rising); the positive ones need 10 > 21 > 50 and the 50 higher
      than 5 sessions ago. The nightly build gives it at the close (stocks.json trend, trend_days, tr); during the session
      the EMAs move on with the live price: today's EMA = the last close's + 2/(n+1) x (price - it). */
+  /* the 21 EMA of the last close: stocks.json tr = [5, 10, 21, 50 EMA, the 50 EMA 5 sessions ago, close], every stock with a trend */
+  const e21Of = (r) => (r && Array.isArray(r.tr) ? num(r.tr[2]) : null);
   const TR_N = { Up: 5, 'Turn up': 4, Reclaim: 3, Resting: 2, '': 1, Negative: 0 };
   const TR_CLS = { Up: 't-up', 'Turn up': 't-turn', Reclaim: 't-reclaim', Resting: 't-rest', Negative: 't-neg' };
   let TRS = null, TRSsrc;
@@ -2544,6 +2547,7 @@ defCalc('industry_perf', {
         vs_200: num(r.sma200) ? Math.round((pm_last / num(r.sma200) - 1) * 1000) / 10 : null,
         above_200: num(r.sma200) ? pm_last > num(r.sma200) : null,
         vs_50e: num(r.ema50) ? Math.round((pm_last / num(r.ema50) - 1) * 1000) / 10 : null,
+        vs_21e: e21Of(r) ? Math.round((pm_last / e21Of(r) - 1) * 1000) / 10 : null,   /* the pre-market price vs the last close's 21 EMA (the user, Nov 11 2026) */
         vs_pdh: num(r.high_1d) && pm_last ? Math.round((pm_last / num(r.high_1d) - 1) * 1000) / 10 : null,   /* vs yesterday's high (stocks.json high_1d) */
         above_pdh: num(r.high_1d) && pm_last ? pm_last > num(r.high_1d) : null,
         tv_dvol_m: adv && num(r.price) ? (adv * num(r.price)) / 1e6 : null,
@@ -2624,8 +2628,9 @@ defCalc('industry_perf', {
         h('td', 'num c3', g2.format(r.pm_dvol_m)), h('td', 'num c3', r.pm_pct_adv === null ? '—' : g1.format(r.pm_pct_adv) + '%'),
         h('td', 'num c3', r.gap_x_adr === null ? '—' : r.gap_x_adr.toFixed(2) + '×'), h('td', 'num c2', fPrice(r.price)), c(r.chg_1d, 'c2'),
         h('td', 'num c2', fVol(r.volume)), h('td', 'num c2', fX(r.rel_vol)), h('td', 'num c3', fAdr(r.adr_20)),
-        h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null ? '—' : (r.vs_200 > 0 ? '+' : '') + r.vs_200.toFixed(1) + '%'),
+        h('td', 'num c2 ' + tone(r.vs_21e), r.vs_21e === null ? '—' : (r.vs_21e > 0 ? '+' : '') + r.vs_21e.toFixed(1) + '%'),
         h('td', 'num c2 ' + tone(r.vs_50e), r.vs_50e === null ? '—' : (r.vs_50e > 0 ? '+' : '') + r.vs_50e.toFixed(1) + '%'),
+        h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null ? '—' : (r.vs_200 > 0 ? '+' : '') + r.vs_200.toFixed(1) + '%'),
         h('td', 'num c2 ' + tone(r.vs_pdh), r.vs_pdh === null ? '—' : (r.vs_pdh > 0 ? '+' : '') + r.vs_pdh.toFixed(1) + '%'),
         h('td', 'num c2', r.below_low52 === null ? '—' : r.below_low52.toFixed(1) + '%'),
         h('td', 'num c3', fCap(r.mcap_b)), chipCell(r.themes, 'theme', ''));
@@ -4873,9 +4878,9 @@ defCalc('industry_perf', {
     ['dvol', '$ vol 20D $M', 'Volume', '20-day average $ volume, millions', ['dvol', 'dollar_vol_30d_m'], (s) => { const v = num((SK(s) || {}).dvol_20_m); return cNum(v, fDv(v)); }],
     ['avgvol', 'Avg vol 20D', 'Volume', '20-day average volume, shares', ['avg_vol_30d'], (s) => { const v = num((SK(s) || {}).avg_vol_20); return cNum(v, fVol(v)); }],
     ['mcap', 'Mkt cap $B', 'Company', 'Market cap, $ billions', ['mcap_b'], (s) => { const v = num((SK(s) || {}).mcap_b); return cNum(v, fCap(v)); }],
-    ['vs200', 'vs 200D', 'Moving averages', 'Price vs the 200-day SMA (live)', ['vs_200', 'vs200'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.sma200) ?? num(r.vs_200) : null; return cNum(v, p1(v, true), tone(v)); }],
-    ['vs50e', 'vs 50 EMA', 'Moving averages', 'Price vs the 50-day EMA at the last close (live)', ['vs_50e', 'vs50e', 'vs50'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.ema50) ?? num(r.vs_50e) : null; return cNum(v, p1(v, true), tone(v)); }],
-    ['vs21e', 'vs 21 EMA', 'Moving averages', 'Price vs the 21-day EMA at the last close (live; stocks on Launches, the Watchlist or the launch watch list)', ['vs21e'], (s) => { const d = LDOC(), w = d && d.watch ? d.watch[s] : null, e21 = num((LK(s) || {}).ema21) ?? num(((WK(s) || {}).row || {}).ema21) ?? (w ? num(w[3]) : null), v = e21 ? vsPct(pxOf(s), e21) : null; return cNum(v, p1(v, true), tone(v)); }],
+    ['vs200', 'vs 200D', 'Moving averages', 'Regular-hours price vs the 200-day SMA of the last close: live during the session, yesterday\'s close before the open (before the open use Pre-mkt vs 200 SMA)', ['vs_200', 'vs200'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.sma200) ?? num(r.vs_200) : null; return cNum(v, p1(v, true), tone(v)); }],
+    ['vs50e', 'vs 50 EMA', 'Moving averages', 'Regular-hours price vs the 50-day EMA of the last close: live during the session, yesterday\'s close before the open (before the open use Pre-mkt vs 50 EMA)', ['vs_50e', 'vs50e', 'vs50'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.ema50) ?? num(r.vs_50e) : null; return cNum(v, p1(v, true), tone(v)); }],
+    ['vs21e', 'vs 21 EMA', 'Moving averages', 'Regular-hours price vs the 21-day EMA of the last close: live during the session, yesterday\'s close before the open (before the open use Pre-mkt vs 21 EMA)', ['vs21e'], (s) => { const d = LDOC(), w = d && d.watch ? d.watch[s] : null, e21 = e21Of(SK(s)) ?? num((LK(s) || {}).ema21) ?? num(((WK(s) || {}).row || {}).ema21) ?? (w ? num(w[3]) : null), v = e21 ? vsPct(pxOf(s), e21) : null; return cNum(v, p1(v, true), tone(v)); }],
     ['name', 'Company', 'Company', 'Company name', ['name'], (s) => { const r = SK(s); return cell(r ? r.name : null, r ? r.name : '—', 'name'); }],
     ['sector', 'Sector', 'Company', 'Sector', [], (s) => cTxt((SK(s) || {}).sector)],
     ['industry', 'Industry', 'Company', 'Industry (detailed)', ['ind'], (s) => { const r = SK(s) || {}; return cTxt(r.industry_detail || r.industry); }],
@@ -4896,6 +4901,10 @@ defCalc('industry_perf', {
     ['pm_chg', 'Pre-mkt chg', 'Pre-market', 'The latest pre-market price vs yesterday\'s close (7:00-9:29 AM ET)', ['pm_chg'], (s) => cPct((PMK(s) || [])[1], true)],
     ['pm_gap', 'Pre-mkt gap', 'Pre-market', 'The first pre-market trade vs yesterday\'s close', ['pm_gap'], (s) => cPct((PMK(s) || [])[2], true)],
     ['pm_dvol', 'PM $ vol $M', 'Pre-market', 'Pre-market $ volume so far, millions', ['pm_dvol_m'], (s) => { const v = num((PMK(s) || [])[4]); return cNum(v, fDv(v)); }],
+    /* the latest pre-market price vs the last close's averages (the user, Nov 11 2026): today's scan only, 7:00-9:29 AM ET */
+    ['pm_vs21', 'Pre-mkt vs 21 EMA', 'Pre-market', 'The latest pre-market price vs the 21-day EMA of yesterday\'s close (7:00-9:29 AM ET)', ['vs_21e'], (s) => { const q = PMK(s), v = q ? vsPct(num(q[0]), e21Of(SK(s))) : null; return cNum(v, p1(v, true), tone(v)); }],
+    ['pm_vs50', 'Pre-mkt vs 50 EMA', 'Pre-market', 'The latest pre-market price vs the 50-day EMA of yesterday\'s close (7:00-9:29 AM ET)', [], (s) => { const q = PMK(s), r = SK(s), v = q && r ? vsPct(num(q[0]), r.ema50) : null; return cNum(v, p1(v, true), tone(v)); }],
+    ['pm_vs200', 'Pre-mkt vs 200 SMA', 'Pre-market', 'The latest pre-market price vs the 200-day SMA of yesterday\'s close (7:00-9:29 AM ET)', [], (s) => { const q = PMK(s), r = SK(s), v = q && r ? vsPct(num(q[0]), r.sma200) : null; return cNum(v, p1(v, true), tone(v)); }],
     ['l_date', 'Launched', 'Launches', 'Its launch day (stocks on Launches / Launch laggards)', ['date'], (s) => { const r = LK(s); return cell(r ? r.date : null, r ? fDate(r.date).replace(/, \d{4}$/, '') + (r._lag ? ' (laggard)' : '') : '—', 'nw'); }],
     ['l_grade', 'Launch grade', 'Launches', 'The launch grade', ['grade'], (s) => { const r = LK(s); const td = h('td', 'nw', r && r.grade ? '' : '—'); if (r && r.grade) td.append(h('span', 'tgr-grade g' + String(r.grade).replace('+', ''), r.grade)); return cNode(r && r.grade ? ({ 'A+': 5, A: 4, B: 3, C: 2 }[r.grade] || 1) : null, td); }],
     ['l_status', 'Launch status', 'Launches', 'Its Launches status (hover for the full read)', ['stage'], (s) => { const r = LK(s); return cell(r ? r.status || null : null, r ? r.status || '—' : '—', 'nw', r ? r.stage || '' : ''); }],
