@@ -198,6 +198,21 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # way: +21.5%, +13.2%, +6.5%, then the 10 and 21 EMA both falling from Jun 9 2026.
 # In both: the last new high gained under 7% over the one before, less than half of the step before it, and the short EMAs
 # rolled over within 3-4 sessions of it. Not in the engine.
+# APPN (sent Nov 11 2026, a daily chart Aug - Nov 2026): a CLEAN chart with a NEW BUY POINT, the 2nd higher low in the base. The
+# user: "6th Aug launch, 7th I would consider launch because of volume plus gap up... advanced [to the] 31st August high...
+# consolidated... as you [see] its not like in COHR's chart.. it violently dropped to 50 ema 10th September, held it back..
+# usually it means it would try to make 2nd higher low, which it did Sept 28th 29th... another buy point.. because its higher
+# low, 2nd!!! (you can add this as a buy point in base, very strong one buy point).. and then consolidation base build up
+# almost 30-35 bars.. then next leg up... breakout.. pullback again, bull flag formation.. and now its flagging to breakout
+# again...."
+# The prices: Aug 6 2026 +1.5% on 2.1x (low 25.85, closed 30.41, over the 200 SMA 28.04); Aug 7 +13.9%, a 3.9% gap, 1.7x,
+# closed 34.64; the high 44.06 on Aug 31; the 1st low Sep 10 (33.28, the 50 EMA 32.93: held over it); the 2nd, higher low Sep
+# 28 (33.35, closed 35.02 over the 50 EMA 34.54) and Sep 29 (low 34.49, closed 35.33); the base Aug 31 - Oct 14 = 32 sessions;
+# Oct 15 +14.0% on 1.7x, closed 43.82; Nov 10 closed 51.76 over the 10 EMA 50.57.
+# The engine (test/cleanlaunch): launch Aug 7 (the user: Aug 6, and Aug 7 too); Sep 28-29 the 2nd higher low: MISS, no read
+# (NOT BUILT yet: the user's go is given, "you can add this as a buy point in base"); Oct 8 "Breakout of the falling range"
+# (not marked by the user); Oct 15 breakout MATCH ("Breakout of the inner base over 40.98"); Nov 4 "Bull flag breakout
+# attempt" over 49.75 (the user: flagging, the breakout still to come).
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
