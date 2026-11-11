@@ -88,7 +88,11 @@ alone.
   take today's unfinished day as a close): the 4:25 PM scan processes Nov 10 and Nov 11 together. The job logs can be
   read from a session with the GitHub tools (get_job_logs). Why Nasdaq: its screener is the scan's only source of
   the full US stock list with market cap and exchange (Yahoo gives the bars).
-- **Test only, branch test/livema (81e4ab2), the user's "test it"** (Nov 11: "vs 200d-change to sma. and during
+- **Live (the user's "go live", Nov 11 ~10:40 AM ET, branch test/livema): built on the user's "test it", then:
+  the pre-market columns renamed again, "Pre vs 21", "Pre vs 50", "Pre vs 200" (the user: "its too long"; scanner,
+  Graded gappers, the column list; the Pre-mkt names above are gone). The scanner's own vs PDH is the pre-market
+  price vs yesterday's high: kept as it is. First check after the Nov 11 close: stocks.json has c200 (the close
+  snapshot and the nightly build were changed blind) and vs 200 SMA moves in the Nov 12 session.** (Nov 11: "vs 200d-change to sma. and during
   hours it has to use dynamic one meaning todays 21ema already different than yesterdays same for 50ema and 200 sma"):
   "vs 200D" renamed "vs 200 SMA" (Gainers, Earnings, the column list); during the session vs 21 EMA / vs 50 EMA /
   vs 200 SMA use today's moving averages: applyLive puts ema21_now / ema50_now / sma200_now on the live rows (EMA =
@@ -97,8 +101,7 @@ alone.
   200 SMA stays the last close's); maOf(sym) serves the column list / + Filter, Gainers' columns and its Above 200 SMA
   / Above 50 EMA boxes, the Watchlist's vs 21 EMA / vs 50 EMA. Not changed: alerts, Launches, the Trend label, the
   Earnings tab's numbers, the ETF columns. Tested live at 10:10 AM against main's page (MU $793.10: vs 50 EMA -13.0%
-  -> -12.5%; no page errors; row counts the same). Waiting for the user's "go live" (merge main in first: another
-  session edits docs/index.html today).
+  -> -12.5%; no page errors; row counts the same). All tabs load with no page errors after merging main.
 
 ## Status of the session "Radar: alert sound volume (Nov 10)" (Mon Nov 9 ~10 PM ET; session_01PkbDajk82Xjo18w2YhHNfg)
 
