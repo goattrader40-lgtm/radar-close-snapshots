@@ -183,6 +183,14 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # The engine: MISSED both. Jul 31 is no launch (closed in the lower half of the day and under the 50 EMA; its only launch is
 # Aug 7); Sep 17 is none either (0.9x volume). It has no "gap over the 21 EMA" swing read and no higher-low-then-higher-high
 # test for a trend that lasts.
+# AXTI, the clean part (the user, Nov 11 2026, in words): "beautiful chart, AXTI, especially after earnings gap up (you see gap up,
+# and breakout of base, new high.... Feb 20th.. consistent higher highs higher lows, breakout of base, pullback back to base...
+# hold at 21 ema..." A WOULD TRADE: Feb 20 2026 to the end of May 2026.
+# The prices: Feb 20 2026 +24.7% on 2.3x, an 8.5% gap, closed 29.68 over its old high 28.65; then steps up to 143.16 on May 26.
+# The engine (test/cleanlaunch) matches it step by step: Feb 20 "Base breakout over 28.65 · BACK ON THE LIST" (it had gone off
+# Feb 10 on a failed breakout); Mar 9 21 EMA retest; Mar 11 base breakout over 47.03; Apr 2 retest of 46.32-47.03 held + the 21
+# & 50 EMA; Apr 8 breakout undercut & reclaim; Apr 16 base breakout over 71.49; Apr 28 retest of 68.44-71.49 held + the 21
+# EMA; Apr 30 push; May 1 base breakout over 90.10; May 21 bull flag breakout; May 22 base breakout over 134.00.
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
