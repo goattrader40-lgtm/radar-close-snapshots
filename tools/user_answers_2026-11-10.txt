@@ -62,3 +62,20 @@
 #   the theme is the story, the industry group the business line.
 # Tight days: the user agreed Claude's logic: PGY Aug 26 2026 was advancing (4 higher closes in a row), not tight -> built on
 #   test/cleanlaunch (tight_adv_closes=4).
+#
+# Nov 11 2026 (the session "Radar: full portal review, build"), the user's words:
+# GMAB Aug 7 2026: "is gap out of base breakout and launch and episodic pivot, I would consider it because it popped out of
+#   consolidation line, creating new base new move" -> a LAUNCH, not an attempt (built: a close over every candle body of the
+#   last 6 months and within 1% of the old wick high is no attempt). "Similar move for AEHR but it didn't clear, didn't
+#   create itself new trend new price movement, however stock pulled back and held it.., would consider it attempt / launch.
+#   AEHR April 2nd is bull flag breakout, 6th April is base breakout."
+# A LAUNCH ATTEMPT THAT LATER LAUNCHED (the example Claude had asked for): "AEHR could be real example of one or two launch
+#   attempts that later became real launches... basically what it means after launch it pulls back, tests most recent gap /
+#   base and holds it, while 10 ema / 21 and 50 emas getting aligned beautifully rising up."
+#   -> In the price data (Claude's reading, to confirm): attempt 1 Jan 16 2026 (+8.6%, closed 28.81 under its 3-month high
+#   29.71); attempt 2 Feb 11 2026 (+26.2% on 4.5x, an 18.6% gap, high 37.49, closed 33.85 under its 6-month high 34.35). Then
+#   the pullback: Feb 12-19 closes 27.89 - 30.27, the low 26.00 on Feb 17, holding the base under the gap (Feb 10's high 27.75)
+#   and the 10 / 21 EMA (27.7-28.6 / 27.0-27.7), the 10 > 21 > 50 EMA all rising every day. The real launch: Feb 20 (33.60) -
+#   Feb 24 (39.23, +14.3%, the close over 34.35). Not a rule yet: the engine marks Feb 24 "confirms the launch attempt".
+# DOCU Aug-Nov 2026: a clean chart the user would trade (tools/chart_examples.txt). Still to come from the user: the
+#   not-to-trade charts and more launch attempts.
