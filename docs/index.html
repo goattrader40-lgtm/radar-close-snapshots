@@ -1402,6 +1402,7 @@ defCalc('industry_perf', {
       else if (el !== document.activeElement) el.value = p[k] === null || p[k] === undefined ? '' : String(p[k]);
     });
     document.querySelectorAll('.tgr-tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === S.tab)));
+    if (!/^🔔/.test(document.title)) document.title = pageTitle();      /* not while it flashes an alert's ticker */
     $('#groups').hidden = S.tab !== 'groups';
     $('#gainers').hidden = S.tab !== 'gainers';
     $('#premarket').hidden = S.tab !== 'premarket';
@@ -1440,6 +1441,13 @@ defCalc('industry_perf', {
     }
   });
   $('#g-reset').addEventListener('click', () => { Object.assign(F, PDEF); delete S.sort['g-table']; draw(); });
+  /* the browser tab's title starts with the page's tab (the user, Nov 11 2026: "even though I'm in the Watchlist tab the
+     browser tab still shows Theme & Group Radar; I want it to show the tab's name so I don't get confused"):
+     "Watchlist · Theme & Group Radar"; the name as on the tab's button, without its icon */
+  function pageTitle() {
+    const b = document.querySelector('.tgr-tab[data-tab="' + S.tab + '"]'), n = b ? b.textContent.replace(/^[^A-Za-z]+/, '').trim() : '';
+    return (n ? n + ' · ' : '') + 'Theme & Group Radar';
+  }
   const showTab = (tab) => { S.tab = tab; history.replaceState(null, '', '#' + tab); draw(); };
   document.querySelectorAll('.tgr-tab').forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab)));
   /* the Earnings tab's week calendar: fold it away or open it (the user, Nov 6 2026: "so I can minimize this table or
@@ -3726,17 +3734,16 @@ defCalc('industry_perf', {
     setTimeout(() => say(words), 700 + 800 * (kinds.length - 1));
   };
   document.addEventListener('click', () => { if (actx && actx.state === 'suspended') actx.resume(); });
-  /* the tab's title flashes the trigger's ticker until you look at the page */
-  const baseTitle = document.title;
+  /* the tab's title flashes the trigger's ticker until you look at the page, then shows the page's tab again */
   let flashT = null, flashSyms = [];
   const flash = (sym) => {
     if (!document.hidden) return;
     if (!flashSyms.includes(sym)) flashSyms.push(sym);
     if (flashT) return;
     let on = false;
-    flashT = setInterval(() => { on = !on; document.title = on ? '🔔 ' + flashSyms.join(' ') : baseTitle; }, 900);
+    flashT = setInterval(() => { on = !on; document.title = on ? '🔔 ' + flashSyms.join(' ') : pageTitle(); }, 900);
   };
-  document.addEventListener('visibilitychange', () => { if (!document.hidden && flashT) { clearInterval(flashT); flashT = null; flashSyms = []; document.title = baseTitle; } });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && flashT) { clearInterval(flashT); flashT = null; flashSyms = []; document.title = pageTitle(); } });
   const showLog = () => { window.focus(); showTab('alerts'); };
   const notify = (title, body, tvs, key, speak) => {
     const trig = isTrigger(key, title), sum = String(key).startsWith('summary:');
