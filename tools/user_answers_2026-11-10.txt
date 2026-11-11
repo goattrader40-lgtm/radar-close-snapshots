@@ -95,3 +95,9 @@
 # NBIS Aug 12 2026 (the user's first WOULD NOT TRADE chart, tools/chart_examples.txt): a launch day that failed. The rule in
 #   the user's words: "after launch day 2-3 days later stock needs to have the things you correctly identified to have follow
 #   through otherwise it would fail".
+# On Claude's "launch failed" proposal (a close back under the gap day's open within 5 sessions), the user, Nov 11 2026: "no,
+#   you saw in GMAB, AEHR it would possibly pull back, test its base, if it holds then it's ok, you did accurately identify
+#   it." -> a pullback after a launch is NORMAL: it may give the gap back and test the base under it; it is fine while that
+#   base holds (AEHR Feb 12 2026 closed 27.89, under the gap day's low 31.70, held the base at ~27.75 and the 10 / 21 EMA,
+#   then launched Feb 24). The proposal as written would have called AEHR failed: WITHDRAWN. A launch fails when the test
+#   does not hold: NBIS closed under its 21 EMA on Aug 20 2026 (220.11 vs 222.72) and under its 50 EMA on Aug 24.
