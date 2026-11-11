@@ -608,6 +608,40 @@
 
   <!-- ───────── Tab 3: pre-market gappers ───────── -->
   <section class="tgr-page" id="premarket" role="tabpanel" aria-labelledby="tab-premarket" hidden>
+    <div class="tgr-card tgr-hc" id="pme-card" hidden>
+      <div class="tgr-cardhead">
+        <h2 id="pme-h">Theme event</h2>
+        <span class="tgr-lbl" id="pme-time">—</span>
+      </div>
+      <p class="tgr-note" id="pme-line"></p>
+      <p class="tgr-note" id="pme-why"></p>
+      <div id="pme-bounce">
+        <div class="tgr-copybar"><b>Theme bounce list</b><span class="tgr-seg" id="pme-show" aria-label="Which stocks of the event"><button data-v="turn" aria-pressed="true">Under an EMA at the last close</button><button data-v="all" aria-pressed="false">All of the event</button></span><button class="tgr-lite" id="pme-copy" type="button">Copy tickers shown</button><span class="tgr-lbl" id="pme-count"></span></div>
+        <details class="tgr-legend tgr-more" data-key="pmevent"><summary>What the theme event and the bounce list are</summary>
+        <p class="tgr-note">A theme event = many stocks of one area gapping together before the open: 8 or more tradable stocks of an area (market cap $700M+, 700K+ shares and $20M+ a day, ADR 3%+), and at least 30% of that area, up or down 5%+ in the latest pre-market scan (Nov 11, 2026: 93 semis / AI stocks, 63 of the 83 in AI &amp; Semis). An area = a family of themes (AI &amp; Semis, AI Infrastructure, Software, Energy …). The news line is the market or sector news behind the move, searched once by the 8:45 grading; a company's own news stays in the News column below. The graded list is not changed: a stock with no news of its own still reads C there, and gap-ups under the 50 EMA stay off it. <b>The bounce list</b> shows every gapper of the event with its distance to the 21 and the 50 EMA (as of the last close), so the first to get back over both stands out (your go sign: AMD Sep 4-8, 2026, MRVL Mar 6, 2026). <span class="tgr-gm">✔ over both</span> = under its 21 or 50 EMA at the last close and over both at the pre-market price; next come the ones over the 21 EMA and nearest to the 50, then the ones still under both. The sign is only real when the day closes over both; before the open this is a watch list, not a buy list. "All of the event" adds the stocks that were already over both EMAs.</p>
+        </details>
+        <div class="tgr-scroll tall">
+          <table class="tgr-table" id="pme-table">
+            <thead><tr>
+              <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+              <th><button class="tgr-th" data-sort="rank" title="✔ over both = under its 21 or 50 EMA at the last close, over both at the pre-market price (the go sign once the day closes there). Then: over the 21 EMA, nearest to the 50 first; then under both, nearest to the 21 first">Read</button></th>
+              <th class="num"><button class="tgr-th" data-sort="pm_chg">Pre-mkt chg</button></th>
+              <th class="num"><button class="tgr-th" data-sort="pm_last">Pre-mkt price</button></th>
+              <th class="num"><button class="tgr-th" data-sort="vs_21e" title="The latest pre-market price vs the 21-day EMA as of the last close">Pre vs 21</button></th>
+              <th class="num"><button class="tgr-th" data-sort="vs_50e" title="The latest pre-market price vs the 50-day EMA as of the last close">Pre vs 50</button></th>
+              <th class="num c2"><button class="tgr-th" data-sort="vs_200" title="The latest pre-market price vs the 200-day SMA as of the last close">Pre vs 200</button></th>
+              <th class="num c2"><button class="tgr-th" data-sort="c_vs21" title="The last close vs its 21-day EMA: where it stood before the gap">Close vs 21</button></th>
+              <th class="num c2"><button class="tgr-th" data-sort="c_vs50" title="The last close vs its 50-day EMA: where it stood before the gap">Close vs 50</button></th>
+              <th class="num c2"><button class="tgr-th" data-sort="pm_dvol_m">PM $ vol $M</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
+              <th><button class="tgr-th" data-sort="themes">Themes</button></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     <div class="tgr-card tgr-hc" id="pms-card">
       <div class="tgr-cardhead">
         <h2 id="pms-h">★ Launch watch: today's starred names</h2>
@@ -2589,6 +2623,81 @@ defCalc('industry_perf', {
     if (p.low52 !== null && r.below_low52 !== null && r.below_low52 < p.low52) return false;
     return true;
   };
+  /* Theme event + theme bounce list (the user, Nov 11 2026: "the most important thing happened [in] semis and it hasn't
+     done anything related to it"). The events come with the live scan (radar/theme_event.py via pmlive.py: 8+ tradable
+     stocks and 30%+ of an area gapping 5%+ together); the news behind it from the 8:45 grading (pm_event.json). The
+     bounce list: each gapper's distance to the 21 and 50 EMA, the first to reclaim both first (AMD Sep 4-8 2026, MRVL
+     Mar 6 2026). Nothing here changes the grades or the graded list. */
+  let PMESHOW = 'turn';
+  const pmeRead = (r) => {
+    const o21 = r.vs_21e === null ? null : r.vs_21e > 0, o50 = r.vs_50e === null ? null : r.vs_50e > 0;
+    const was = (r.c_vs21 !== null && r.c_vs21 <= 0) || (r.c_vs50 !== null && r.c_vs50 <= 0);
+    const pc = (x) => Math.abs(x).toFixed(1) + '%';
+    if (o21 === null || o50 === null) return { rank: 4000, txt: 'No 21 / 50 EMA yet', cls: 'tgr-lbl' };
+    if (o21 && o50) return was ? { rank: 0 + Math.min(r.vs_21e, r.vs_50e) / 1000, txt: '✔ over both', go: true } : { rank: 3000 - r.pm_chg, txt: 'Already over both', cls: 'tgr-lbl' };
+    if (o21) return { rank: 1000 - r.vs_50e, txt: 'Over the 21, ' + pc(r.vs_50e) + ' under the 50' };
+    if (o50) return { rank: 1500 - r.vs_21e, txt: 'Over the 50, ' + pc(r.vs_21e) + ' under the 21' };
+    return { rank: 2000 - r.vs_21e, txt: 'Under both: ' + pc(r.vs_21e) + ' to the 21, ' + pc(r.vs_50e) + ' to the 50' };
+  };
+  const drawPmEvent = (all) => {
+    const card = $('#pme-card'), today = todayNY();
+    const evs = PML && PML.date === today && Array.isArray(PML.events) ? PML.events : [];
+    card.hidden = !evs.length;
+    if (!evs.length) return;
+    const by = new Map(all.map((r) => [r.symbol, r]));
+    const pct = (x) => (x > 0 ? '+' : '') + Number(x).toFixed(1) + '%';
+    $('#pme-time').textContent = 'Scan at ' + fTime(PML.saved_at) + ' ET';
+    const ln = $('#pme-line'); ln.replaceChildren();
+    evs.forEach((e, i) => {
+      if (i) ln.append(h('br'));
+      ln.append(h('b', e.dir === 'up' ? 'tgr-up' : 'tgr-dn', e.n + ' stocks gapping ' + e.dir + ' 5%+'), ' in ' +
+        e.areas.map((a) => a.name + ' (' + a.n + ' of ' + a.of + ')').join(' and ') + '. ');
+      if (e.themes && e.themes.length) {
+        ln.append('Themes: ');
+        e.themes.forEach((t, j) => { if (j) ln.append(', '); const b = h('button', 'tgr-chip', t.name); b.type = 'button'; b.dataset.kind = 'theme'; b.dataset.name = t.name; ln.append(b, ' ' + t.n + ' of ' + t.of); });
+        ln.append('. ');
+      }
+      ln.append('Leaders by pre-market $ volume: ');
+      (e.leaders || []).forEach((x, j) => { if (j) ln.append(', '); const a = h('a', 'tgr-tk', x); const r = by.get(x); a.href = tv((r && r.tv_symbol) || x); a.target = TVTAB; ln.append(a); if (r) ln.append(h('span', tone(r.pm_chg), ' ' + pct(r.pm_chg))); });
+      ln.append('.');
+    });
+    const why = $('#pme-why'); why.replaceChildren();
+    if (PMEV && PMEV.day === today && PMEV.why) {
+      why.append(h('b', '', 'Why: '), PMEV.why);
+      (PMEV.sources || []).forEach((u) => { if (!/^https:\/\//.test(u)) return; const l = h('a', '', ' 📰'); l.href = u; l.target = '_blank'; l.rel = 'noopener'; l.title = 'The source: ' + u; why.append(l); });
+      why.append(h('span', 'tgr-lbl', ' (Claude, the 8:45 grading' + (PMEV.time ? ', ' + PMEV.time + ' ET' : '') + ')'));
+    } else why.append(h('span', 'tgr-lbl', 'Why: the market / sector news behind it comes with the 8:45 grading (by about 9:05 AM ET). Each stock\'s own news is in the News column below.'));
+    const up = evs.find((e) => e.dir === 'up');
+    $('#pme-bounce').hidden = !up;
+    if (!up) return;
+    $('#pme-show').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === PMESHOW)));
+    const cv = (px, m) => (num(px) && m ? Math.round((num(px) / m - 1) * 1000) / 10 : null);
+    let rows = up.symbols.map((x) => by.get(x)).filter(Boolean).map((r) => { const o = Object.assign({}, r, { c_vs21: cv(r.price, e21Of(r)), c_vs50: cv(r.price, num(r.ema50)) }); o.read = pmeRead(o); o.rank = o.read.rank; return o; });
+    const nAll = rows.length, nGo = rows.filter((r) => r.read.go).length;
+    if (PMESHOW === 'turn') rows = rows.filter((r) => r.read.rank < 3000);
+    $('#pme-count').textContent = rows.length + ' of ' + nAll + ' shown · ' + nGo + ' over both EMAs now that were not at the last close';
+    const table = $('#pme-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
+    const spec = S.sort['pme-table'] || { key: 'rank', dir: 1 };
+    const txt = ['symbol', 'themes'].includes(spec.key);
+    const val = (r) => (txt ? String(r[spec.key] || '') : num(r[spec.key]));
+    rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
+    markSort(table, spec);
+    card.dataset.syms = rows.map((r) => r.symbol).join(',');
+    const pc = (x, cls) => h('td', 'num ' + (cls || '') + ' ' + tone(x), x === null || x === undefined ? '—' : pct(x));
+    rows.forEach((r) => {
+      const tr = h('tr'), key = h('td', 'key');
+      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = TVTAB; key.append(a);
+      if (r.grade) { const gb = h('span', 'tgr-grade g' + r.grade, r.grade); gb.style.marginLeft = '5px'; gb.title = r.g_reason; key.append(gb); }
+      const rd = h('td', r.read.cls || '');
+      if (r.read.go) rd.append(h('span', 'tgr-gm', r.read.txt)); else rd.textContent = r.read.txt;
+      if (r.read.go) rd.firstChild.style.marginLeft = '0';
+      tr.append(key, rd, pc(r.pm_chg), h('td', 'num', fPrice(r.pm_last)), pc(r.vs_21e), pc(r.vs_50e), pc(r.vs_200, 'c2'), pc(r.c_vs21, 'c2'), pc(r.c_vs50, 'c2'),
+        h('td', 'num c2', g2.format(r.pm_dvol_m)), h('td', 'num c3', fAdr(r.adr_20)), h('td', 'num c3', fCap(r.mcap_b)), chipCell(r.themes, 'theme', ''));
+      tb.append(tr);
+    });
+  };
+  $('#pme-show').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { PMESHOW = b.dataset.v; draw(); } });
+  $('#pme-copy').addEventListener('click', () => { const t = ($('#pme-card').dataset.syms || '').split(',').filter(Boolean); if (t.length && navigator.clipboard) navigator.clipboard.writeText(t.join(',')).then(() => { $('#pme-count').textContent = t.length + ' tickers copied'; }).catch(() => {}); });
   const drawPmLive = (symMap) => {
     syncPm();
     const table = $('#pml-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
@@ -2601,7 +2710,9 @@ defCalc('industry_perf', {
         (PML.date === today ? '' : ' · runs 7:00–9:29 AM ET on trading days');
     }
     const xk = PMF.dir === 'down' ? 'pmd' : 'pmu';
-    const rows = pmRows().filter((r) => pmPass(r, PMF) && pmXOk(FLT[xk].x, r));
+    const allPm = pmRows();
+    drawPmEvent(allPm);
+    const rows = allPm.filter((r) => pmPass(r, PMF) && pmXOk(FLT[xk].x, r));
     $('#pml-count').textContent = PML ? String(rows.length) : '—';
     /* + Filter: the set of the direction on screen; the count next to the chips */
     ['pmu', 'pmd'].forEach((k) => { if (XBOX[k] && XBOX[k].parentElement) XBOX[k].parentElement.hidden = k !== xk; });
@@ -5352,6 +5463,7 @@ defCalc('industry_perf', {
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
   let CGR = null;     /* the code grades (radar/codegrade.py, test next to Claude's) */
+  let PMEV = null;    /* the news behind today's theme event (the 8:45 grading -> pm_event.json) */
   let PMN = null;     /* the 8:05 / 8:35 news runs (radar/codegrade.py news -> pmnews.json): the News column before 8:45 */
   let CGL = null;     /* the code grader's daily log: its W (laggard watch) names for the W-crossed-the-200 alerts */
   let LEV = null;     /* today's 5-minute opening ranges of the movers (radar/levels.py): the + Filter "5-min opening range high" */
@@ -5471,6 +5583,7 @@ defCalc('industry_perf', {
       LEV = await getJson(sha, 'levels.json').catch(() => LEV);
       CGL = await getJson(sha, 'codegrade_log.json').catch(() => CGL);
       PMN = await getJson(sha, 'pmnews.json').catch(() => PMN);
+      PMEV = await getJson(sha, 'pm_event.json').catch(() => PMEV);
       CGR = await getJson(sha, 'codegrade.json').catch(() => CGR);     /* the code grades, next to Claude's (test) */     /* the Earnings tab (radar/earnings.py) */     /* the job's alerts, incl. its 1-minute gap-up checks */
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {

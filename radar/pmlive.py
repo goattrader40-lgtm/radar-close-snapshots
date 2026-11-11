@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Live pre-market scanner for Theme & Group Radar (every 5 minutes, 7:00-9:29 AM ET).
 
-  python3 radar/pmlive.py <stocks.json> <out premarket_live.json>
+  python3 radar/pmlive.py <stocks.json> <out premarket_live.json> [themes.json]
 
 For every stock in stocks.json with a $300M+ market cap and 300K+ shares a day, today's pre-market 5-minute bars
 (4:00-9:30 AM ET) from Yahoo give, the way TradingView's screener defines them:
@@ -20,6 +20,8 @@ The price is the newest of three: Yahoo's 5-minute bars, Yahoo's quote (preMarke
 5%+ gappers by 9:00 that the 9:25 scan still showed at their 8:29 / 8:24 prices), so the quote is what keeps it current.
 Writes {"saved_at", "date", "scanned", "vol_asof", "rows": {SYM: [pm_last, pm_chg, pm_gap, pm_vol, pm_dvol, pm_high, pm_low, "HH:MM"]}}
 for every stock that has traded pre-market today. The portal applies your filters on top.
+With themes.json it adds "events": the theme events of this scan (radar/theme_event.py: many stocks of one area gapping
+5%+ together; the user, Nov 11 2026), which the portal shows as the event line and the theme bounce list.
 """
 import os
 import concurrent.futures as cf, datetime, json, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
@@ -174,8 +176,18 @@ def main():
         row[5], row[6] = round(max(row[5], px), 4), round(min(row[6], px), 4)
         if s in vols:
             row[3], row[4] = int(vols[s][0]), round(vols[s][1])
+    events = []
+    if len(sys.argv) > 3:                                         # the theme events of this scan (never stops the scan)
+        try:
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            import theme_event
+            events = theme_event.find(stocks, got, json.load(open(sys.argv[3])))
+            for e in events:
+                print(theme_event.line(e, got), file=sys.stderr)
+        except Exception as e:
+            print(f"theme events: {e}", file=sys.stderr)
     json.dump({"saved_at": now.isoformat(timespec="seconds"), "date": now.date().isoformat(), "scanned": len(syms),
-               "vol_asof": vol_asof.strftime("%H:%M") if vol_asof else None, "vol_source": "alpaca sip" if vols else "none", "quotes": len(quotes),
+               "events": events, "vol_asof": vol_asof.strftime("%H:%M") if vol_asof else None, "vol_source": "alpaca sip" if vols else "none", "quotes": len(quotes),
                "rows": got}, open(out_p, "w"), separators=(",", ":"))
     print(json.dumps({"saved_at": now.isoformat(timespec="seconds"), "scanned": len(syms), "with_premarket": len(got),
                       "with_volume": sum(1 for r in got.values() if r[3]), "yahoo_quotes": len(quotes), "vol_asof": vol_asof.strftime("%H:%M") if vol_asof else None,

@@ -326,7 +326,12 @@ def pm_once():
         return False
     p = os.path.join(OUT, "pm_stocks.json")
     open(p, "w").write(txt)
-    r = sh(sys.executable, os.path.join(HERE, "pmlive.py"), p, os.path.join(OUT, "premarket_live.json"), check=False)
+    th = data_file("themes.json")                                  # for the theme events (radar/theme_event.py)
+    extra = []
+    if th:
+        open(os.path.join(OUT, "pm_themes.json"), "w").write(th)
+        extra = [os.path.join(OUT, "pm_themes.json")]
+    r = sh(sys.executable, os.path.join(HERE, "pmlive.py"), p, os.path.join(OUT, "premarket_live.json"), *extra, check=False)
     log("pre-market:", (r.stdout or r.stderr).strip()[-300:])
     if r.returncode:
         return False
