@@ -49,6 +49,94 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status at the end of the session "Radar: full portal review, build (Nov 11)" (Wed Nov 11 2026 afternoon - evening; session_01PkbDajNX1kVmKBSagSkYW9)
+
+**Read first, before anything else: tools/chart_examples.txt and tools/user_answers_2026-11-10.txt ON THE BRANCH
+test/cleanlaunch** (`git show origin/test/cleanlaunch:tools/chart_examples.txt`): the user's 51 marked buy days, and from
+this session their clean charts (DOCU, AXTI Feb 20 - May, COHR's buy days), their 7 would-not-trade charts (XMTR, NBIS, NVDA,
+ALAB, MU, COHR May-June, CAI before Aug 6) and their answers, in their words, each with the engine's read. Never ask again
+for what those two files answer. tools/blindtest/answers2_2026-11-11.txt: the blind test 2 marks (22 right, 17 wrong, 3
+unsure; launch days 7 / 7; 13 of 18 charts "not clean").
+
+- **Nothing went live in this session.** Everything is on **`test/cleanlaunch`** (last commit 1096495). It has main up to
+  1dd16e4; main moved on since (the Earnings calendar's Yahoo fallback, c3ebfb1: it touched radar/theme_adds.json and
+  rules/make_rules.py, which this branch changed too). **Before any go live: merge main in, re-run
+  `python3 rules/make_rules.py`, `--regress`, and re-test the page.** tools/expected_reads.txt was NOT rewritten (the
+  replay differs on ~100 lines by design; the user agreed some of them, not all: see "the proof" below).
+- **1. Pre-market: theme event line + theme bounce list** (the user's Nov 11 "I accept your proposal"; built, tested on
+  the Nov 11 9:25 scan). radar/theme_event.py: an AREA (a theme category of themes.json, else the sector) has an event when
+  8+ of its tradable stocks (market cap $700M+, 700K+ shares and $20M+ a day, ADR 3%+; no 50 EMA / 52-week-low rule) and
+  30%+ of them move 5%+ the same way; pmlive.py puts `events` into premarket_live.json (day.py passes themes.json);
+  premarket_build.py prepare writes theme_event.json, finish takes an optional 3rd file (event_news.json: {"why",
+  "sources"}) -> pm_event.json. The page (docs/index.html): the card "Theme event" at the top of the Pre-market tab and
+  the bounce list under it (Pre vs 21 / 50 / 200, Close vs 21 / 50; "✔ over both" first). Nov 11: 93 stocks, AI & Semis
+  63 of 83, AI Infrastructure 30 of 62; 7 back over both EMAs (ENTG, AVGO, PLAB, AMD, ANET, WOLF, LSCC). Grades and the
+  graded list unchanged. **At go live the 8:45 task (trig_01EhkhyMeC5yC4H4sFxsqUVQ) needs one more step**: read
+  /root/pm/out/theme_event.json; when it is not empty, search once for the market / sector news behind it, write
+  /root/pm/event_news.json, pass it as the 3rd argument of `finish`, and publish /root/pm/out/pm_event.json too.
+- **2. Chart reading, built in scanner/launch.py** (settings in `L`, each with the user's example in the comment):
+  - **Launch attempt**: a launch-size day closing under its 1-month high (RPD Sep 14, ATRC Jul 24 2026), or within half an
+    ADR under a 3- / 6-month high (RHI Oct 23 2026, AEHR Feb 11 2026: the user, "attempt / launch"); not when it closed
+    over every candle body of 6 months and within 1% of the wick high (**GMAB Aug 7 2026 stays a launch**: "gap out of
+    base breakout and launch and episodic pivot... popped out of consolidation line"). The close over the high reads
+    "confirms the launch attempt" (AEHR Feb 24). **AEHR Jan 16 2026 is NOT an attempt** (the user: "follow through day,
+    nothing fundamentally changed"); the engine still reads it as one.
+  - **List rules**: off after 2 closes under the 50 EMA (was 3), or while neither the 21 nor the 50 EMA is higher than 5
+    sessions before, or the day a base breakout fails; back on the day it breaks out (base, flag, follow-through, falling
+    range, launch-size day, 50 EMA undercut & reclaim) closing over the 21 and 50 EMA: "BACK ON THE LIST" (AMD Apr 8 /
+    16, INTC Apr 1, MU Apr 22 2026; AXTI Feb 20 2026). Not for picks. launch.json gets `off_watch`. **The list grows: 97
+    -> 135 rows on the Oct 23 data** (41 came back, 3 left): the user asked what it means, was told, has not decided.
+  - **Long bases** named by their length ("cleared its 19-month base", "a 21-month high"); **falling range** 23-90
+    sessions broken over the 21 & 50 EMA on 1x+ volume or a full-ADR day, not in the 5 sessions after a launch (INTC Apr 1,
+    AMD Apr 8, COHR Apr 8 2026; NBIS Aug 14 gone); **failed breakout** (back under the top and the breakout day's low
+    within 2 sessions: SNDK Mar 20, PGY Aug 28, ALAB Oct 8 2026); "breakout with caution" -> **"breakout attempt"**; the
+    **flag line** redrawn by a poke under 0.75 ADR (PGY's flag is Aug 21, not Aug 13); **50 EMA undercut & reclaim after
+    ONE close under** (the user: "change it, one close is ok"; COHR Mar 31 2026; the 21 EMA one stays at 2: ANF Oct 1
+    kept, Claude's view, the user asked "what you think?"); **the hold** in the 10 sessions after a launch / attempt
+    ("Holding after the launch": AEHR Feb 12-19, ALAB Sep 24 - Oct 2 2026) and "the launch did not hold" (first close
+    under the 21 EMA: NBIS Aug 20 2026).
+  - tools/chart_check.py: the 51 chart buy days, **29 -> 34 named and on the list**. radar/alerts.py and the alert texts
+    are untouched (they still say "with caution").
+- **3. Themes, built** (launch.py group_rank + the page): ranked on **tradable stocks, 4+ for a tier** (28 of 99 themes,
+  53 of 217 groups; tiers 10 -> 7 and 20 -> 9); **Heating up** column (heat 1-99 = the group's median 1-week move + the
+  share up on the week; 🔥 = 90+ with 60%+ up) on Themes and Industry groups, "Heating up" and "RS 1W-1M" in the column
+  list; **one pack** where a theme and an industry group share 75%+ (15 pairs: the group shows the theme's name and
+  rank); **homes**: of 343 pack-less tradable stocks 25 track a pack at 0.6+, 11 added by hand where the business matches
+  (theme_adds.json: XNCR KYMR PTCT BAX HGV OSPN STEP BRKR; industry_groups.json: PDFS, KBR, AMTM, STEP); no new pack
+  found among the rest.
+- **The proof so far**: `--regress`: no agreed read lost except by design (AEHR Feb 11 -> attempt, ATRC Oct 30 off on a
+  failed breakout, wording); new unjudged reads: VEEV Sep 30, APPN Oct 8 2026 (falling range), SMCI Aug 10 2023 and NBIS
+  Aug 25 2026 (50 EMA reclaim after one close; NBIS is a would-not-trade chart). **The 2-year check** (the user: "that's
+  fine"; run on GitHub and, like for like, in the session: the branch this morning vs with these rules, 2,200 launches):
+  all buy points 5,037 -> 5,086, ran 20%+ 26% / 26%, failed 43% / 43%; flags 689 -> 674 (25 -> 26% ran); the new falling
+  range 104: 31% ran, 47% failed, median -3.7%. It stops at the 2nd close under the 50 EMA: the way back is not measured.
+  scanner/probe_catalyst.py now counts "Bull flag / Bull pennant breakout" again (its flag rows were empty since Nov 1).
+  All 8 tabs load with no page error (the Oct 23 launch file and the Nov 11 scan).
+- **Tested and NOT built** (don't repeat): a follow-through-day rule (3 versions: best caught 4 of 6, hit 6 of 36 liked
+  launches; the days it marked ran 20%+ MORE often, 34% vs 26%); "launch failed" on a close under the gap day's open
+  (the user: "no... it would possibly pull back, test its base, if it holds then it's ok": AEHR Feb 12); "choppy" by
+  crossings of the 21 EMA (clean charts cross as often); "off on a close under the 10 and 21 EMA" (hits AEHR Mar 26, ZS
+  Oct 16, GMAB Sep 10, CAI Oct 1 / 6 before agreed buys).
+- **The user's new rules of thumb, not in the engine**: a launch must change the stock's character, not continue a move
+  (SLG Jun 9, CNH Sep 2, LITE Aug 12, AEHR Jan 16; the AI stocks: lows Mar 9 / Mar 30 2026, the character-change day Apr
+  8, then follow-through days); no launch under a falling line of lower highs (RMBS Jun 18, ALAB Sep 4); another base's
+  high above is resistance (ALHC Jun 26); **CAI's launch is Aug 6 2026 even under the 200 SMA** (the engine: Aug 7);
+  a strong day after earnings on under 1.5x volume can start it (COHR Feb 6); **the dying trend**: each new high closer
+  to the last, then the EMAs roll over (COHR +21.5 / +13.2 / +6.5%, AXTI +48.7 / +6.8%); **a gap over the 21 EMA is a
+  go even in a downtrend, as a short swing** (AXTI Jul 31, Sep 17 2026: 2-week runs); a trend that lasts needs a higher
+  low, then a higher high; the day the uptrend breaks ends the trade (ALAB, MU Oct 8 2026).
+- **Asked of the user (they will "compile and provide all at once")**: go live or not; the 135-row list (keep the way
+  back, or only on a base breakout / launch-size day); 3-5 more charts each of: dying trends (and ones that kept going),
+  follow-through days, launches under the 200 SMA, launches on light volume, gap-over-the-21-EMA swings, choppy charts;
+  VEEV Sep 30 and APPN Oct 8 2026 right or wrong; NBIS Aug 25 2026 (assumed wrong).
+- **First things next session**: fetch the new example stocks' history (`long` with EVERY symbol again plus DOCU COHR
+  AXTI ALAB NBIS CAI: a `long` run replaces the file), then add the agreed COHR / AXTI / DOCU reads to tools/examples.txt;
+  DOCU's flag line Oct 26 - Nov 11 is unchecked (the bars here ended Oct 23).
+- **Good to know**: a session can't run probe_catalyst.py whole (no Alpaca keys: it hangs on the news step); its
+  buy_points() alone runs in ~25 minutes on history/bars_2y.json.gz. Playwright needs `proxy: {server: HTTPS_PROXY, bypass:
+  'localhost,127.0.0.1'}` to load the local page. The engine needs `pip install numba numpy pandas`; history/bars_2y.json.gz
+  ends Oct 23; sessions before Oct 26 can't be reached.
+
 ## Status of the session "Radar: pre-market scanner vs EMA columns (Nov 11)" (Wed Nov 11 2026 morning; session_01PkbDajamht2fhC31vMGzcy)
 
 - **Live (the user's "test it and go live", branch test/pmvs21, merge f7da91b): the pre-market comparisons carry
