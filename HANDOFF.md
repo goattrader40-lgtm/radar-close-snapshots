@@ -83,8 +83,8 @@ alone.
   come from radar-data stocks.json (the day job's file: 2,744 stocks over $700M on Nov 11; all 159 Launches and 298
   Watchlist names in it, 1 of 723 launch-watch names missing, CSIQ); the log prints "FALLBACK LIST". Tested here on
   the fallback step only (Yahoo can't be reached from a session). picks.yml (Follow picks, safe in market hours:
-  launch.py drops the unfinished day) started at 10:15 AM to rebuild Launches as of the Nov 10 close: **check its
-  result below / in the next session**. The Watchlist lists (run.py) can't be rebuilt in market hours (run.py would
+  launch.py drops the unfinished day) run at 10:15 AM rebuilt Launches as of the Nov 10 close (saved 10:19, commit 8dbb707: 153 launches, 745 on the
+  launch watch list, 1 new launch Nov 10: EMBJ; not checked whether Nasdaq answered or the fallback was used). The Watchlist lists (run.py) can't be rebuilt in market hours (run.py would
   take today's unfinished day as a close): the 4:25 PM scan processes Nov 10 and Nov 11 together. The job logs can be
   read from a session with the GitHub tools (get_job_logs). Why Nasdaq: its screener is the scan's only source of
   the full US stock list with market cap and exchange (Yahoo gives the bars).
