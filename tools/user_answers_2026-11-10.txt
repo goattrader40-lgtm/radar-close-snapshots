@@ -79,3 +79,11 @@
 #   Feb 24 (39.23, +14.3%, the close over 34.35). Not a rule yet: the engine marks Feb 24 "confirms the launch attempt".
 # DOCU Aug-Nov 2026: a clean chart the user would trade (tools/chart_examples.txt). Still to come from the user: the
 #   not-to-trade charts and more launch attempts.
+# CORRECTION (the user, Nov 11 2026, later): "Jan 16th wrong, it was follow through day!! nothing fundamentally changed there...
+#   your rest of read is correct.. then it did sideways downtrending lower high bull flag, then April 2nd breakout of bull
+#   flag... April 6th breakout of base." -> AEHR has ONE attempt, Feb 11 2026; Jan 16 2026 (+8.6% on 1.7x, a 3.1% gap) was a
+#   FOLLOW-THROUGH DAY of the move that started Jan 9 (+15.9% on 5.4x, a 5.3% gap), not a launch and not an attempt. The same
+#   point as blind test 2 (SLG Jun 9, CNH Sep 2, LITE Aug 12 2026: "continuation", "no character change"). Measured Nov 11: no
+#   number separates these 4 from the agreed launches (how far the stock had already run, the gap size, a big day in the 15
+#   sessions before: each also hits CAI / APPN / VEEV Aug 7 2026). The user's own test is fundamental: did something change
+#   (earnings, news, a gap). NOT built; the engine still reads Jan 16 as a launch attempt.
