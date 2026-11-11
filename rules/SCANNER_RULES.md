@@ -102,7 +102,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 
 | Item | Rule |
 |---|---|
-| Universe | Every US stock with a market cap of $700M+ (Nasdaq's list; 2 years of daily bars) |
+| Universe | Every US stock with a market cap of $700M+ (Nasdaq's list; when Nasdaq refuses it, the portal's own stock file of the last close, Nov 11 2026; 2 years of daily bars) |
 | Liquid | Price $10+, 20-day avg $ volume $20M+, 700K+ shares a day (20-day avg), ADR 3.5%+ |
 | History | 200+ sessions (60+ for a new listing) |
 | 200 SMA range | From 60% under to 50% over its 200 SMA (28-50% over: power days only; under it: laggards or once it trades back over) |
