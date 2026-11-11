@@ -124,6 +124,14 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # under the 50 EMA: off Jul 17 (the user: from Jun 25) and off Oct 13 (the user: from Oct 8-9).
 # The pattern in ALAB and MU, Oct 8 2026: the day the uptrend breaks (a decisive close under the 10 and 21 EMA after a top or a
 # failed breakout) ends the trade; after it every pop up to the falling EMAs that gets rejected confirms the downtrend.
+# COHR (sent Nov 11 2026, a daily chart mid-May - end of June 2026): WOULD NOT TRADE, example five (the user: "these part not
+# tradable"). The chart: wide candles up and down, the price whipping through the 5 / 10 / 21 EMA, no tight rest, going
+# sideways over a rising 50 EMA; ATR 9.7%.
+# The prices, May 18 - Jun 30 2026 (30 sessions): 362.83 -> 394.47 between 335.48 and 440.00; the close crossed the 10 EMA 13
+# times and the 21 EMA 6 times; the ADR rose from 7.7% to 10.2%.
+# The engine (test/cleanlaunch) gave FIVE buy reads in it, all WRONG by the user's read: May 18 and May 19 "Retest of the
+# breakout level held", Jun 2 "Base breakout" over 413.00, Jun 22 "Launch attempt", Jun 29 "21 EMA retest in the base".
+# With NVDA (after May 14 2026): the engine has no "choppy, not tradable" read.
 # DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
 # clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
 # ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
