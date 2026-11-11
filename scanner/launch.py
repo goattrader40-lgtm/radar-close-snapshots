@@ -115,7 +115,7 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # flag_fail_adr: a high that pokes this far over a flag's line and closes back under is a failed try and the line
          #   stays (ARM Apr 10 2026, 1.0 ADR over); less redraws the line (PGY Aug 11 2026, 0.57 ADR over: its line then runs
          #   through that high, the break is Aug 21, not Aug 13; was 0.5)
-         attempt=1, attempt_near=0.5, off50_closes=2, ema_rising=1, ema_rise_days=5, range_min=35, range_max=90, range_depth=8,
+         attempt=1, attempt_near=0.5, attempt_pop_pct=1, off50_closes=2, ema_rising=1, ema_rise_days=5, range_min=35, range_max=90, range_depth=8,
          fail_days=2, flag_fail_adr=0.75, base_look=756)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
@@ -998,6 +998,12 @@ def attempt_of(a, i):
         if i >= n:
             k = i - n + int(np.argmax(h[i - n:i]))
             if h[k] * (1 - L["attempt_near"] * _adr(st, i) / 100) <= c[i] <= h[k]:
+                # not when it popped out of the consolidation line (the user, Nov 11 2026: GMAB Aug 7 2026 "is gap out of
+                # base breakout and launch and episodic pivot ... it popped out of consolidation line, creating new base new
+                # move"): the close over every candle body of the last 6 months and within 1% of that wick high (31.25 vs
+                # 31.41). RHI closed 1.8% under its high, AEHR Feb 11 2026 never cleared the 6-month bodies: attempts
+                if a.cleared(i) == BASES[0] and c[i] >= h[k] * (1 - L["attempt_pop_pct"] / 100):
+                    continue
                 return float(h[k]), m, k
     return None
 
