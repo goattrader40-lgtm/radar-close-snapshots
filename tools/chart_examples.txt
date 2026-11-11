@@ -83,6 +83,14 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # ~27.8, broken early Aug 2026), U (lower line ~32.3 broken in Aug 2026 = the launch, the big arrow; base top ~49.8), ACN
 # (zones ~195-198 and ~244-252, level 259), XMTR (base top ~114): a WOULD NOT TRADE chart (the user, Nov 10 2026: "yes I do agree"): choppy, wide swings, no tight rests.
 # OKTA (2026) and one unnamed chart: tops and support marks only.
+# DOCU (sent Nov 11 2026, a daily chart Aug - Nov 2026; the user: "one more example of clean move, stock I want to trade after
+# clearing 200 sma / 5ema / 10ema / 21 ema and 50 ema"): a CLEAN chart, a WOULD TRADE. It crossed its 200 SMA (the black line,
+# ~55) at the end of July, then stepped up in order over the rising 5 / 10 / 21 / 50 EMA: small rests, each low higher, to ~86
+# (Oct 26). Marked: a blue horizontal line at 65.53 (the base top of mid-August, broken Aug 31) and a blue falling line from
+# the Oct 26 high through the lower highs to ~79.6 on Nov 11, the price at the line (79.63) with the 21 EMA 78.52 right under:
+# a flag forming, the buy is the break of that line. No pink buy day marked.
+# The engine (test/cleanlaunch, bars to Oct 23): launch Aug 13 (64.09, cleared its 6-month base), base breakouts Aug 31 over
+# 65.25, Sep 15 over 70.40, Oct 14 over 74.06, a bull flag breakout Oct 1 over 68.12; on the list the whole way.
 #
 # Why 22 buy days never reached the list: 14 the ADR rule (3.5% to launch, off under 3.2%: a tight quiet base has a low
 # 20-day ADR: NVDA 2016, XYZ 2017, TSLA 2019, NFLX 2023-24, TWLO Oct 2024, UBER Nov 2023); 4 dropped in the market's spring 2026 fall (3 closes
