@@ -129,6 +129,11 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          #   under the 21 EMA: NBIS Aug 20 2026)
          # off_failed_bo: a failed breakout takes the stock off the list that day (ALAB Oct 8 2026: "October 8th - now not
          #   tradable"), back by the usual way back
+         # the 2nd higher low in the base (the user, Nov 11 2026, APPN: "it violently dropped to 50 ema 10th September, held it
+         #   back.. usually it means it would try to make 2nd higher low, which it did Sept 28th 29th... another buy point..
+         #   you can add this as a buy point in base, very strong one"): hl2_drop = how deep the 1st low is under the base's
+         #   high, in ADRs; hl2_gap = sessions between the two lows; hl2_bounce = the bounce between them, in ADRs
+         hl2=1, hl2_drop=2.5, hl2_gap=5, hl2_bounce=1.25,
          undercut_closes=1,
          # the 21 EMA undercut & reclaim stays at 2 closes for now: with 1 the agreed ANF Oct 1 2026 read moves to Sep 25 (to
          # ask the user)
@@ -1362,6 +1367,29 @@ def follow(a, i0, i, pick=False):
     # only in a rising stock (the user, Nov 10 2026: IPGP Jun 12, EGO Jul 22, MTSI Sep 24 2026, their 50 EMA flat or falling:
     # "this has to be a rising stock and EMAs"; AEHR Mar 31 2026: rising)
     reclaim50 = r50(i)
+
+    def hl2_on(k, t):
+        """the 2nd higher low in the base on day k (the base's high on day t): the 1st low came 2.5+ ADRs under the high, down
+        to the 50 EMA (within an ADR of it) and every close since held over the 50 EMA; the stock bounced 1.25+ ADRs; 5+
+        sessions later today's low is at or over the 1st low, tests the 50 EMA (down to a quarter ADR over it) and the close
+        is back over the 50 EMA in the upper half of the day, the 50 EMA rising. APPN 2026: the high 44.06 Aug 31, the 1st
+        low 33.28 Sep 10 (the 50 EMA 32.93), the 2nd low 33.35 Sep 28, closed 35.02 over the 50 EMA 34.54. Returns the 1st
+        low's day or None"""
+        if not L["hl2"] or k - t < L["hl2_gap"] + 3:
+            return None
+        ak = _adr(st, k)
+        k1 = t + 1 + int(np.argmin(st.l[t + 1:k]))
+        l1 = st.l[k1]
+        if (k - k1 < L["hl2_gap"] or l1 > st.h[t] * (1 - L["hl2_drop"] * ak / 100) or l1 > a.e50[k1] * (1 + ak / 100)
+                or (c[k1:k] <= a.e50[k1:k]).any() or st.h[k1 + 1:k].max() < l1 * (1 + L["hl2_bounce"] * ak / 100)):
+            return None
+        if not (l1 <= st.l[k] <= a.e50[k] * (1 + ak / 400) and c[k] > a.e50[k] and c[k] - st.l[k] >= 0.5 * (st.h[k] - st.l[k])
+                and c[k] < st.h[t] and a.e50[k] > a.e50[k - 5]):
+            return None
+        return k1
+    hl2_k1 = hl2_on(i, last_new) if i - last_new >= 8 else None
+    if hl2_k1 is not None and any(hl2_on(x, last_new) is not None for x in range(hl2_k1 + L["hl2_gap"], i)):
+        hl2_k1 = None                                       # once per base: the first day it holds
     # tomorrow's 21 EMA setup (radar/alerts.py: the heads-up when it trades down to the 21 EMA, the alert from 3:45 PM
     # when it holds back over it): "undercut" after 2 closes under it (today and yesterday, within half an ADR), "retest"
     # while the closes held over it after a pullback that was no advance
@@ -1449,6 +1477,8 @@ def follow(a, i0, i, pick=False):
         push_day = None if push_day == i else push_day
     # off the list (2 closes under the 50 EMA, or neither EMA rising): no entries until it breaks out again
     off_now = off_since is not None
+    if off_now or u200:
+        hl2_k1 = None
     if off_now:
         retest, retest_ema, reclaim, reclaim_bo, reclaim50, tight = False, [], None, False, False, 0
         flag_bo = False
@@ -1543,6 +1573,9 @@ def follow(a, i0, i, pick=False):
     elif retest:
         lv_txt = f"{rlv[1]:.2f}" if rlv[2] <= rlv[1] * 1.001 else f"{rlv[1]:.2f}-{rlv[2]:.2f} (bodies-wicks)"
         stage = f"Retest of the breakout level {lv_txt} held" + (" + confluence: " + " & ".join(retest_ema) if retest_ema else "")
+    elif hl2_k1 is not None:
+        stage = (f"2nd higher low in the base (entry, strong): the 1st low {st.l[hl2_k1]:.2f} ({st.dates[hl2_k1]}) held the 50 EMA, "
+                 f"today's low {st.l[i]:.2f} is higher and tested the 50 EMA {a.e50[i]:.2f}, closed {c[i]:.2f} back over it")
     elif reclaim50:
         n50 = next((m for m in range(1, 30) if not c[i - m] < a.e50[i - m]), 30) - 1
         stage = (f"50 EMA undercut & reclaim (entry): {n50} close{'s' if n50 > 1 else ''} under the 50 EMA ({', '.join(st.dates[i - m] for m in range(min(n50, 3), 0, -1))}), today down to "
@@ -1663,7 +1696,7 @@ def follow(a, i0, i, pick=False):
         failed_breakout=st.dates[failed[0]] if failed else None, failed_breakout_today=bool(failed and failed[0] == i),
         failed_breakout_top=fnum(failed[1]) if failed else None,
         range_breakout_today=range_bo, range_line=fnum(rng[1]) if range_bo else None,
-        launch_hold=hold, launch_not_held_today=not_held,
+        launch_hold=hold, launch_not_held_today=not_held, higher_low2_today=hl2_k1 is not None,
         double_breakout="double breakout" in stage, flag_dry="volume dried up" in stage,
         # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
         # Flat base, Cup with handle, ... or Base forming (no pattern yet))
