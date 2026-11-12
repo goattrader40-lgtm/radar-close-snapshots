@@ -191,6 +191,12 @@ jobs:
             python3 radar/probe_morning.py /tmp/rd/stocks.json /tmp/rd/volprofile.json /tmp/rd/earnings.json /tmp/probe_morning.json --settings=/tmp/rd/morning.json $A
             python3 radar/publish.py "morning breakout replay" /tmp/probe_morning.json;;
           esac
+          if [ "${{ inputs.cmd }}" = "double7" ]; then   # a study: Connors' Double 7s on trending 4%+ ADR index stocks -> radar-data probe_double7.json
+            pip install --quiet numpy
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
+            python3 scanner/probe_double7.py --stocks /tmp/rd/stocks.json --out /tmp/probe_double7.json && python3 radar/publish.py "double 7s study" /tmp/probe_double7.json
+          fi
           if [ "${{ inputs.cmd }}" = "runners" ]; then   # today's runners vs their 21-day closing high (test/codegrade) -> probe_runners.json
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
