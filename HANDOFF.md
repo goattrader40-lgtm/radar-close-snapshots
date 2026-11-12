@@ -49,6 +49,69 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: full portal review, build continued (Nov 12)" (Wed Nov 11 2026 evening - night ET; session_01PkbDajtNcuGe22aVKWcF77)
+
+**Read first, as before: tools/chart_examples.txt and tools/user_answers_2026-11-10.txt ON THE BRANCH test/cleanlaunch**: this
+session added about 40 more of the user's charts in their words (the launch is the FIRST day, the rest is follow-through;
+climax tops; dying trends; the walk through the live Launches list of Nov 5-9), each with the engine's read and every test.
+
+- **LIVE (the user, Nov 12 2026: "regarding themes, premarket things tasks get them live if you already tested it"; branch
+  test/themespm = main + only these pieces, commit 70eb9fa, pushed ~10:30 PM ET Nov 11; Launches rebuilt 10:31 PM, 12a57fc):**
+  1. **Themes**: themes and industry groups ranked on their TRADABLE stocks, 4+ for a ★ Top / Strong tier (launch.py group_rank:
+     GR_TIER_MIN, `thin`); the **Heating up** column (heat 1-99, 🔥 = 90+ with 60%+ up) on Themes and Industry groups, "Heating
+     up" and "RS 1W-1M" in the column list (launch.json group_rank rows: heat, week, breadth, hot; rs_week); **one pack** where a
+     theme and an industry group share 75%+ (same_as: the group shows the theme's name and rank); the homes (theme_adds.json:
+     XNCR KYMR PTCT BAX HGV OSPN STEP BRKR; industry_groups.json: PDFS, KBR, AMTM, STEP). After the rebuild (Nov 11 close): 4
+     themes and 4 industry groups hold a tier (★ Top: IT Services & Consulting; IT Consulting & Outsourcing, Software: Vertical
+     & Industry, Software: Finance & Banking), 50 themes / 139 groups under 4 tradable stocks, 14 one-pack pairs, Launches 148 +
+     6 laggards as before. **This changes which Launches rows carry ★ Top / Strong** (the tier feeds the stars and the grade).
+  2. **Pre-market: the Theme event card and the theme bounce list** (radar/theme_event.py, pmlive.py, day.py,
+     premarket_build.py, the page). An event shows when the live scan finds one (8+ tradable stocks and 30%+ of an area
+     gapping 5%+ the same way).
+  Checked before the push: `--regress` 0 differences on that branch (no launch read changed), the group rank on 2 years of
+  bars, all 8 tabs with the live data and with the new rank, no page error. Rules workbook: 6 rows (theme event, bounce list,
+  tradable rank, Heating up, one pack, homes).
+- **NOT DONE, the user has to do it: the 8:45 task's instructions.** update_trigger from this session was refused ("a
+  routine's instructions can be changed only from the conversation the routine posts into"). Until then the event card shows
+  without the news line ("why"). The text to paste into the 8:45 conversation was given to the user in this session (4
+  additions: rm event_news.json in step 1; theme_event.json in step 4; a new step 6b that searches once for the news behind the
+  event and writes /root/pm/event_news.json; the 3rd argument of `finish` and pm_event.json in the publish). **First check next
+  session**: whether the user did it, and whether the Nov 12 morning scan and grading ran clean (premarket_live.json has
+  "events"; the Heating up column filled).
+- **NOT LIVE, on `test/cleanlaunch` (main merged in at 0a1c4ad, then more commits; the chart-reading work):** everything of
+  the Nov 11 session plus, from this one (settings at the end of `L` in scanner/launch.py, each with the user's example):
+  - **a. Falling range only on a big day (1 ADR+) or a 2%+ gap** (the user: VEEV Sep 30 and APPN Oct 8 2026 "nothing to do with
+    falling range", "just building base up"): those two are gone; INTC Apr 1, AMD Apr 8, COHR Apr 8, MRVL Aug 4 2026 stay.
+  - **b. First day (a launch under the 200 SMA)**: the day before under the 21 or 50 EMA, today over both, up 5%+ on 1.3x+,
+    under the 200 SMA, with a 5%+ gap or a close over its 1-month high; later launch-size days are tagged "a follow-through
+    day of the launch" and do not replace it (move_ended). GLOB Oct 1 (was Oct 22), FLY Nov 6, APP Nov 5, CAI Aug 6, REAL Oct
+    15, PCOR Oct 5 2026. **OPEN: it dates ATRC Jun 26 2026; the user said Jul 24** ("bull flag plus break out of 200 sma"; Jun
+    18 "range bound day").
+  - **c. CLIMAX RISK tag** (a tag only): an 8%+ gap, 90%+ over the 200 SMA, closed in the lower half (APP, HOOD Feb 13 2025).
+  - **d. Pop over the 21 EMA** (a short swing entry; MRVL Sep 4 / Sep 16 2026; the user on its 8 extra reads: "yes they look
+    good").
+  - **Launch attempt zone 1.5 ADRs** under a 3- / 6-month high (was 0.5): WRBY, ITT, RLAY Nov 9 2026 read "attempt". The user
+    then took WRBY and VSAT back ("was launch but failed my bad... i did hindsight"): **to re-judge whether 1.5 stays**.
+  - **Start day** (the user: "as long as it did breakthrough 21/50 changed the tide that day with volume its the start day",
+    "usually gap up", "above 1 rvol for sure", minimums unchanged): NOT a launch rule (tested as one: 2,200 -> 3,345 launches in
+    2 years, ANF Aug 3 2026 and ATRC Jul 24 lost). Built as **"start <date>" under the launch date** and a **Start days
+    table** under the Launches list (launch.json trend_start..., start_days; the user: "test it 1 and 2 both makes sense").
+  - **The full-market test build** (radar-tools `launchdry AAPL` on the branch, Nov 11 close, no news tags): **219 launches
+    (live 148)**, 7 in the 50 EMA tab, 190 off the list waiting, 41 first-day launches, 27 attempts, 50 rows with a start
+    line, **72 start days (34 not on Launches)**.
+  - `--regress` on the branch: 209 lines differ from tools/expected_reads.txt (NOT rewritten); the 2-year numbers of each
+    idea are in tools/chart_examples.txt ("THE TEST of a-d", "THE START-DAY TEST").
+- **Still to do before the chart reading can go live**: the alerts (radar/alerts.py) know none of it and still say "with
+  caution"; the user's decisions (the Launches list 148 -> 219, ATRC, the attempt zone, d's reads); rewrite
+  tools/expected_reads.txt once agreed; merge main again and re-test the page.
+- **Not replayed** (no bars fetched): CDW Oct 8, DLTR Oct 14, ENOV Oct 13 / Nov 4, RAL, "KTS" Oct 13 and "PPLI" Sep 25 / Nov 3
+  2026 (the last two tickers to confirm). The user's modest first days no rule catches: TREX, LYFT, POOL, SMG, TOST Oct 15,
+  FBIN, PAR, VCEL Nov 4, XERS Sep 17, VERX Oct 1, PGNY Oct 7 (most were under the ADR / liquidity / price minimums that day,
+  which the user keeps). Claude's reading, not confirmed: their days cluster on Oct 8 and Oct 14-15 2026, weak Nasdaq days.
+- **Good to know**: `git diff main..branch` split by hunks and `git apply` is how the themes / pre-market pieces were taken
+  out of the branch (tools: none saved). A `long` run replaces the file: the list is now 175 symbols (the 161 + BETA FLY GLOB
+  MRVL WRBY FBIN PAR VSAT ITT RLAY).
+
 ## Status at the end of the session "Radar: full portal review, build (Nov 11)" (Wed Nov 11 2026 afternoon - evening; session_01PkbDajNX1kVmKBSagSkYW9)
 
 **Read first, before anything else: tools/chart_examples.txt and tools/user_answers_2026-11-10.txt ON THE BRANCH
