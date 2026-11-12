@@ -438,3 +438,5 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 #   under it), still under the 50 EMA 173.40 and 18% under the 200 SMA 205.37; ADR 2.7%. Live and the test branch: launch Nov 4
 #   2026 (B, +5.8% on 1.6x, closed 219.26). MISS: 14 sessions and 30% later (ADR under 3.5%; closed under the 50 EMA). Like
 #   SMG: a strong day back over the 21 EMA only, from deep under the 50 EMA and the 200 SMA, on the weak Nasdaq day Oct 15.
+# PPLI (as the user typed it; the ticker to confirm): "ppli 25th september then 3 november.. 1st one failed..." -> two launch
+#   days: Sep 25 2026 (it failed) and Nov 3 2026. Not replayed yet (fetch with CDW, DLTR, ENOV, KTS and RAL).
