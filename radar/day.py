@@ -446,11 +446,10 @@ def day():
         if due and due[-1] not in news_started:
             news_started.update(due)
             dispatch("codegrade.yml")
-        # the Earnings tab (earnings.yml) at 7:05, 7:30, 8:00, 8:30, 8:50 and 9:10, each a few minutes before a news or
-        # code-grader run so they read fresh results (the user, Nov 12 2026: "we had 805 835 855 905": GitHub's own
-        # schedule ran once a morning Nov 5-12, 8:10-8:57; one run takes about a minute). GitHub's schedule stays as a
-        # backup. A job that starts later starts it once, for the latest slot that's due.
-        due = [slot for slot in ((7, 5), (7, 30), (8, 0), (8, 30), (8, 50), (9, 10)) if slot <= hm(t) < (9, 30)]
+        # the Earnings tab (earnings.yml) at 7:05, 7:35, 8:35, 8:50 and 9:05 (the user's times, Nov 12 2026: "705 735 835
+        # 850 905"; GitHub's own schedule ran once a morning Nov 5-12, 8:10-8:57; one run takes about a minute). GitHub's
+        # schedule stays as a backup. A job that starts later starts it once, for the latest slot that's due.
+        due = [slot for slot in ((7, 5), (7, 35), (8, 35), (8, 50), (9, 5)) if slot <= hm(t) < (9, 30)]
         if due and due[-1] not in er_started:
             er_started.update(due)
             dispatch("earnings.yml")
