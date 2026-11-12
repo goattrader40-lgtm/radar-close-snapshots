@@ -109,7 +109,7 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   FBIN, PAR, VCEL Nov 4, XERS Sep 17, VERX Oct 1, PGNY Oct 7 (most were under the ADR / liquidity / price minimums that day,
   which the user keeps). Claude's reading, not confirmed: their days cluster on Oct 8 and Oct 14-15 2026, weak Nasdaq days.
 - **Good to know**: `git diff main..branch` split by hunks and `git apply` is how the themes / pre-market pieces were taken
-  out of the branch (tools: none saved). A `long` run replaces the file: the list is now 175 symbols (the 161 + BETA FLY GLOB
+  out of the branch (tools: none saved). A `long` run replaces the file: the list is now 171 symbols (the 161 + BETA FLY GLOB
   MRVL WRBY FBIN PAR VSAT ITT RLAY).
 
 ## Status at the end of the session "Radar: full portal review, build (Nov 11)" (Wed Nov 11 2026 afternoon - evening; session_01PkbDajNX1kVmKBSagSkYW9)
