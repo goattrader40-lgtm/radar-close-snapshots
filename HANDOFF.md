@@ -49,6 +49,39 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: Earnings reader fix + pre-market grading (Nov 4)" (Nov 4 - Thu Nov 12 2026; session_01PkbDakDe1EUNP5wQZf4wMH)
+
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~1:05 PM ET, branch test/earnrev, merge 7037cc8): three Earnings tab fixes.**
+  The user (Nov 12): "WHY REV GROWTH MISSING FROM AVEX?" ... "it could have compared last q at least"; NBIS empty at 8:46
+  AM; "we had 805 835 855 905 didnt we" (the tab's updates were on GitHub's own timer).
+  1. **Revenue from Yahoo's earnings chart** (radar/earnings.py Y.summary(chart=True), per()): when neither the SEC release
+     nor Yahoo's revenue history has the new quarter, the earnings chart's newest quarter is used, only when the chart's
+     quarter before it equals last quarter's saved revenue (rev_prev, within 0.5%). rev_src "Yahoo (earnings chart)".
+     Nov 12 13:04 build: NBIS $980.8M (+8.1% beat, q/q +68.4%, +571% y/y), ABSI $0.30M (-47.7%, q/q -4.4%, -19.6% y/y),
+     QNT $9.1M (q/q +13.2%), FRVO $0.1M (q/q +2.7%). AVEX was already filled by the other session's news-feed reading
+     (late_reports, "news headline": $189.7M, q/q -6.0%). 25 reported rows still have no revenue (mostly drug developers).
+  2. **Guidance from the headline when the release has none** (headline_guide, step 4b): a report whose SEC release has no
+     guidance in it, or one out with no release read when the news feed gave none, takes it from pmnews.json's earnings
+     headline (Benzinga: Raises / Lowers / Affirms / Narrows / Sees ... Guidance; a from-to range read by its numbers).
+     guide.src = "headline"; the page shows "· from the headline". NBIS: "Affirms FY2026 Sales Guidance of $3.0-3.4B vs
+     $3.372B Est" -> Reaffirmed, -5.1% vs street (its 6-K, read at 9:22 AM, had no guidance). It overlaps the other
+     session's hl_read / late_reports (same day, merged at da7d0aa): theirs reads reports with NO filing from the whole news
+     feed; this one fills a release without guidance. Two headline parsers now (hl_read and headline_guide): could be one.
+  3. **The day job starts the Earnings update at 7:05, 7:35, 8:35, 8:50 and 9:05 AM ET** (the user's times; radar/day.py
+     er_started; GitHub's own schedule stays as a backup; Nov 5-12 it ran 1-2 real morning builds a day, Nov 12 only 8:12).
+     **First check Fri Nov 13**: earnings.yml workflow_dispatch runs at those times and earnings.json built_at follows.
+  Tested: radar-tools `earntest` on main vs the branch (386 rows, 0 errors, 5 rows changed as above); the page with the
+  new file (AVEX / NBIS rows, no page errors); the slot logic simulated (a job starting at 8:12 runs 8:12, 8:35, 8:50, 9:05).
+- **Report only, no change (Nov 11 one-week check, code grade vs Claude, Nov 5-11 gap-ups)**: code A 3 names, avg +13.5%
+  to Nov 11 (XERS +35.9%, MGNI +12.3%, APPN -7.8%); code B (5) no better than C (16), both +2.8%; Claude A +7.2% > B +3.5% > C
+  +0.9%, Claude's B held 5/9 vs code B 1/5. Where both gave letters and differed (6): code right 3 (PTON, U, TLN), Claude 2
+  (EPAM, IMVT), 1 mixed (VCEL). The bigger gap is coverage: the code's best (XERS, MGNI, AZTA) were never on Claude's list;
+  Claude's best (FROG A +15.6%, TMDX B +16.6%) were cut by the code's filters. Stars: no edge yet (10 names). The Nov 18
+  check runs as scheduled (trig_01WtAUrPCquRNbDPyqbm3Nc2's sibling); outcomes from close/latest.json's git history.
+- Answered, no change (Nov 12 morning): FIGR's news was that morning's Q3 release (SEC 6:47 AM); "Pre-mkt gap" is the first
+  pre-market trade vs the close (TradingView's definition), so a stock with news after 4 AM shows a small gap and a big change
+  (FIGR +0.83% vs +9.18%); offered to rename / hide it, not answered.
+
 ## Status of the session "Radar: full portal review, build continued (Nov 12)" (Wed Nov 11 2026 evening - night ET; session_01PkbDajtNcuGe22aVKWcF77)
 
 **Read first, as before: tools/chart_examples.txt and tools/user_answers_2026-11-10.txt ON THE BRANCH test/cleanlaunch**: this
