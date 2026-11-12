@@ -331,5 +331,5 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # until Aug 7) · MISS 1 (FLY Nov 6) · a CLIMAX TOP read as a launch 3 (APP and HOOD Feb 13 2025, MRVL Jun 2 2026).
 # What the late / missed ones have in common: the first day came UNDER THE 200 SMA (GLOB, FLY, APP Nov 5) or on LIGHT
 # VOLUME (HOOD 1.1x, APP May 2 2025 0.8x, GLOB Oct 8 0.9x) or with a low ADR out of a quiet base (PGNY 3.0%, SPOT 3.3%).
-# What the climax tops have in common: the gap day came after 6-7 months of uptrend, 120-160% over the 200 SMA, and closed
+# What the climax tops have in common: the gap day came after 6-7 months of uptrend, 120-190% over the 200 SMA (APP 163%, HOOD 124%, MRVL 190%), and closed
 # in the lower half of its range (APP 0.30, HOOD 0.46 of the range; MRVL Jun 2 closed at its high, the reversal came Jun 3-5).
