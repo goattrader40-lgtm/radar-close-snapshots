@@ -410,3 +410,9 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 #   3.3x, closed 165.70. Live: launch Nov 5 (the episodic pivot). The test branch with the first day: launch Oct 1 2026 (a first
 #   day under the 200 SMA), Nov 5 a follow-through day: the user's "not original" MATCHES, the day (Oct 1, not Oct 8 / 19) not
 #   confirmed by the user.
+# TREX: "trex 15th october". Oct 15 2026: +4.1% on 1.2x, closed 46.21 back over the 21 / 50 EMA (44.52 / 44.74; the day before
+#   closed 44.37 under the 50 EMA) and over its 1-month high 45.54, over the 200 SMA 42.51; ADR 3.1%. Live and the test branch:
+#   launch Nov 4 2026 (A, +14.3% on 3.2x, closed 57.15). MISS (up under 5%, ADR under 3.5%, over its 200 SMA).
+# A THREAD in the user's earlier days (Claude's reading, to confirm): TREX Oct 15, REAL Oct 15, PAR Oct 15, FBIN Oct 22, VCEL Nov
+#   4 2026 each closed back over the 21 and 50 EMA AND over the 1-month high the same day, whatever the size of the day (+4% to
+#   +16%) and the volume (1.2x to 3.2x). Three of them are Oct 15 2026.
