@@ -76,8 +76,9 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
      reported before the open, its 6-K reached the SEC at 9:22 AM, after the last morning run, so the tab said "reports Thu"
      until the evening). radar/earnings.py takes radar-data pmnews.json as a 4th argument: a row whose report time has passed
      with no filing read gets `out_headline` (the pre-market news headline: title, at, source, url) and the page shows "Out ·
-     not read yet" + that headline where it said "reports Thu". earnings.yml also runs at 9:20 AM and hourly 10:00 AM - 2:00
-     PM ET (window 7:00 AM - 3:05 PM). Tested: radar-tools `earntest` on the branch (386 rows, 0 errors, NBIS read), the page
+     not read yet" + that headline where it said "reports Thu". earnings.yml also runs at 9:10 and 9:20 AM ET (window 7:00 - 9:40 AM); the hourly
+     runs to 2:00 PM were taken out the same day, a34ae1f (the user: "no need to 2pm... i need those by market open after that
+     not interested"). Tested: radar-tools `earntest` on the branch (386 rows, 0 errors, NBIS read), the page
      with NBIS simulated at 7:15; the first live run 11:41 AM: 0 errors. Not built (offered): reading the release from the
      wire (GlobeNewswire / Business Wire) when the filing is missing; HBM (no filing, no headline) still reads "reports Thu".
   2. **+ Filter wording** (the user: "it should be ORH 5min above or not"): the three level filters read "Above the 5-min
