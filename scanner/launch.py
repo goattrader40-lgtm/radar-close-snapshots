@@ -115,7 +115,7 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # flag_fail_adr: a high that pokes this far over a flag's line and closes back under is a failed try and the line
          #   stays (ARM Apr 10 2026, 1.0 ADR over); less redraws the line (PGY Aug 11 2026, 0.57 ADR over: its line then runs
          #   through that high, the break is Aug 21, not Aug 13; was 0.5)
-         attempt=1, attempt_near=1.5, attempt_pop_pct=1, off50_closes=2, ema_rising=1, ema_rise_days=5, range_min=23, range_max=90, range_depth=8, range_after_launch=5, hold_days=10, off_failed_bo=1,
+         attempt=1, attempt_near=1.5, attempt_pop_pct=1, off50_closes=2, ema_rising=1, ema_rise_days=1, ema_grace=2, ema_grace_under=5, range_min=23, range_max=90, range_depth=8, range_after_launch=5, hold_days=10, off_failed_bo=1,
          fail_days=2, flag_fail_adr=0.75, base_look=756,
          # one close under is enough for the 50 EMA undercut & reclaim (the user, Nov 11 2026: "change it, one
          # close is ok for undercut reclaim"; COHR Mar 31 2026: Mar 30 closed 219.65 under its 50 EMA 235.59, Mar 31 down to
@@ -1236,6 +1236,7 @@ def follow(a, i0, i, pick=False):
     # from (the user: "then testing gap holding up": GLOB Oct 2-7 2026 closed 35.10-35.75, under its still-falling EMAs, over
     # the 34.70 it gapped from)
     first0 = bool(not pick and a.first_day(i0) and not a.regular(i0))
+    under0 = bool(not pick and c[i0] < a.e50[i0])
     att = attempt_of(a, i0) if not pick and not first0 else None
     att_conf = next((k for k in range(i0 + 1, i + 1) if c[k] > att[0]), None) if att else None
     # the list rules (the user, Nov 10 2026: "its 2 closes. not only that, if 50 ema or 21 ema not trending up stock we not
@@ -1326,11 +1327,20 @@ def follow(a, i0, i, pick=False):
         if not pick:
             if off_since is None and first0 and j - i0 <= L["hold_days"] and c[j] >= c[i0 - 1]:
                 pass
+            # a launch that closed UNDER its 50 EMA (a gap up out of a drop: AMD Nov 6 2026 launched at 449.04 with its 50 EMA
+            # at 533, closed over it Nov 11; NET Nov 9, ANET Nov 6): no list rule until it has closed over the 50 EMA once,
+            # 5 sessions at most (the user, Nov 12 2026: "you gotta give a day or 2 so 21 ema and 50 ema start rising")
+            elif off_since is None and under0 and j - i0 <= L["ema_grace_under"] and not (c[i0 + 1:j] > a.e50[i0 + 1:j]).any():
+                pass
             elif off_since is None:
                 if j >= i0 + L["off50_closes"] and all(c[m] < a.e50[m] for m in range(j - L["off50_closes"] + 1, j + 1)):
                     off_since, off_why = j, f"{L['off50_closes']} closes in a row under the 50 EMA"
                 # (not in the 5 sessions after it came back: out of a range the EMAs are flat and only start to turn)
-                elif L["ema_rising"] and not rising(j) and (back_day is None or j - back_day > rd):
+                # rising = today's EMA over yesterday's, and a launch gets 2 sessions before the test starts (the user, Nov 12
+                # 2026: "you gotta give a day or 2 so 21 ema and 50 ema start rising,, when i say rising means todays bigger
+                # than yesterday"; AMD launched Nov 6 2026, NET Nov 9, ANET Nov 6 and were taken off the next session on the
+                # old test, vs 5 sessions before: "net amd anet is new leaders")
+                elif L["ema_rising"] and not rising(j) and j - i0 > L["ema_grace"] and (back_day is None or j - back_day > L["ema_grace"]):
                     off_since, off_why = j, "neither the 21 nor the 50 EMA is rising"
             # the way back: the breakout day closes over the 21 and the 50 EMA, which turns them up that day (INTC Apr 1
             # 2026: out of its falling range, both EMAs still a little under their level of 5 sessions before)
@@ -1792,7 +1802,7 @@ def follow(a, i0, i, pick=False):
         stage = (f"Holding after the launch {'attempt' if att else 'day'} (day {i - i0}): {100 * (1 - c[i] / st.h[i0:i + 1].max()):.0f}% under its high "
                  f"{st.h[i0:i + 1].max():.2f}, every close over the 21 EMA ({a.e21[i]:.2f}), the 10 > 21 > 50 EMA all rising"
                  + (f": the launch is a close over {att[0]:.2f}" if att and att_conf is None else ""))
-    not_held = bool(not pick and exit_k == i and i - i0 <= L["hold_days"])
+    not_held = bool(not pick and exit_k == i and i - i0 <= L["hold_days"] and c[i0] >= a.e21[i0])    # (a launch from under the 21 EMA has nothing to hold yet)
     if not_held:
         stage += f" · the launch {'attempt ' if att else ''}did not hold: closed {c[i]:.2f} under the 21 EMA {a.e21[i]:.2f}, {i - i0} sessions after it"
     # a launch-size day after the launch is its follow-through, not a new launch (the user, Nov 11 2026: "rest was just follow
