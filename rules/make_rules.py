@@ -297,7 +297,7 @@ SHEETS["E1 Earnings tab"] = (["Item", "Rule"], [
  ["Out, no filing yet (the user, Nov 12 2026, NBIS)", "A report that is out (its time has passed) with no SEC filing to read yet shows 'Out · not read yet' and the pre-market news headline (pmnews.json: source and time) where it said 'reports Thu'; the numbers and the read come when the filing arrives (a foreign company files its 6-K hours after the release)"],
 ])
 SHEETS["T1 Trend column"] = (["Trend", "Rule (checked in this order, first match wins)"], [
- ["Base rule (the positive ones)", "10 EMA > 21 EMA > 50 EMA and the 50 EMA higher than 5 sessions ago (the user, Nov 3 2026)"],
+ ["Base rule (the positive ones)", "10 EMA > 21 EMA > 50 EMA and the 50 EMA higher than the day before (the user, Nov 12 2026: \"50 ema rising means today higher than yesterday not 5 days ago\"; was 5 sessions ago since Nov 3). During the session: the 50 EMA at the live price vs the last close's"],
  ["1 Negative", "Price under the 21 EMA"],
  ["2 Reclaim", "Price back over the 21 EMA after a close under it, with the base rule"],
  ["3 Turn up", "The 5 EMA crosses over the 10 EMA that day, with the base rule"],
