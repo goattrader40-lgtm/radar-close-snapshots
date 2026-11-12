@@ -416,3 +416,7 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # A THREAD in the user's earlier days (Claude's reading, to confirm): TREX Oct 15, REAL Oct 15, PAR Oct 15, FBIN Oct 22, VCEL Nov
 #   4 2026 each closed back over the 21 and 50 EMA AND over the 1-month high the same day, whatever the size of the day (+4% to
 #   +16%) and the volume (1.2x to 3.2x). Three of them are Oct 15 2026.
+# PCOR: "pcor original launch 5th october.. 4th november is episodic pivot breakout". Oct 5 2026: a 5.4% gap, +6.3% on 1.9x,
+#   closed 54.18 back over the 21 / 50 EMA (52.71 / 53.31), 1% under the 200 SMA 54.75. Nov 4 2026: a 6.0% gap, +19.7% on 2.9x,
+#   closed 75.60. Live: launch Nov 4 (B). The test branch with the first day: launch Oct 5 2026, Nov 4 "a follow-through day
+#   of the 2026-10-05 launch" (MATCH).
