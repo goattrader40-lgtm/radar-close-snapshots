@@ -1340,7 +1340,9 @@ def follow(a, i0, i, pick=False):
                 # 2026: "you gotta give a day or 2 so 21 ema and 50 ema start rising,, when i say rising means todays bigger
                 # than yesterday"; AMD launched Nov 6 2026, NET Nov 9, ANET Nov 6 and were taken off the next session on the
                 # old test, vs 5 sessions before: "net amd anet is new leaders")
-                elif L["ema_rising"] and not rising(j) and j - i0 > L["ema_grace"] and (back_day is None or j - back_day > L["ema_grace"]):
+                # 2 sessions in a row (the user, Nov 12 2026: "2 close under both emas would take it off!!!!": an EMA is over the
+                # day before's exactly when the close is over it, so one such day is one close under both the 21 and the 50 EMA)
+                elif L["ema_rising"] and not rising(j) and not rising(j - 1) and j - i0 > L["ema_grace"] and (back_day is None or j - back_day > L["ema_grace"]):
                     off_since, off_why = j, "neither the 21 nor the 50 EMA is rising"
             # the way back: the breakout day closes over the 21 and the 50 EMA, which turns them up that day (INTC Apr 1
             # 2026: out of its falling range, both EMAs still a little under their level of 5 sessions before)
