@@ -648,8 +648,20 @@ def score(r):
 
 
 # ───────── the build ─────────
+NEWS = {}
+
+
 def main():
     stocks_p, prev_p, out_p = sys.argv[1], sys.argv[2], sys.argv[3]
+    global NEWS
+    NEWS = {}
+    if len(sys.argv) > 4:                    # today's pre-market news (radar-data pmnews.json), for reports out without a filing
+        try:
+            pn = json.load(open(sys.argv[4]))
+            if pn.get("day") == datetime.datetime.now(NY).date().isoformat():
+                NEWS = pn.get("news") or {}
+        except Exception:
+            NEWS = {}
     now = datetime.datetime.now(NY)
     today = now.date().isoformat()
     days = week_days(now)
@@ -883,6 +895,16 @@ def main():
         r["eps_oneoff"] = bool(re.search(r"one-time (?:income[- ])?tax benefit|valuation allowance|one-time gain|non-recurring gain|"
                                          r"gain on (?:the )?sale of", rel["text"][:20000], re.I))
         r["headline"] = rel["text"][:400]
+    # 4b. out, but no SEC filing yet (the user, Nov 12 2026, NBIS: the release was out at 7:13 AM, the tab still said "reports
+    # Thu" after 9:00: a foreign company files its 6-K hours after the release): the pre-market news headline (pmnews.json,
+    # the code grader's feed) stands in until the filing is read
+    for sym in syms:
+        r = rows[sym]
+        hd = (NEWS.get(sym) or {}).get("headline") if not r.get("rel_url") and now.isoformat() >= r["report_at"] else None
+        if hd and hd.get("title") and str(hd.get("ts") or "")[:10] >= r["date"]:
+            r["out_headline"] = {k: hd.get(k) for k in ("title", "at", "source", "url", "kind")}
+        else:
+            r.pop("out_headline", None)
     for sym in syms:
         r = rows[sym]
         # Yahoo's estimate stays paired with Yahoo's actual (the same adjusted basis). The old swap to Nasdaq's estimate

@@ -4659,6 +4659,15 @@ defCalc('industry_perf', {
     /* the read */
     const rd = h('td');
     if (r.read) { const b = h('span', 'er-read r' + erOf(r), r.read); b.title = (r.points > 0 ? '+' : '') + r.points + ' points: ' + (r.why || ''); rd.append(b); rd.append(h('span', 'tgr-lbl er-why', r.why || '')); }
+    else if (!r.reported && r.out_headline && r.out_headline.title) {
+      /* out, but the SEC filing isn't there yet (a foreign company files hours after the release; the user, Nov 12 2026,
+         NBIS): the news headline stands in until the numbers are read */
+      const b = h('span', 'er-read', 'Out · not read yet'); b.title = 'The results are out (' + (r.out_headline.source || 'news') + ', ' + (r.out_headline.at || '') + ') but the company\'s SEC filing isn\'t there yet, so the numbers aren\'t read. The tab checks again through the day.';
+      rd.append(b);
+      const t = h(r.out_headline.url ? 'a' : 'span', 'tgr-lbl er-why', r.out_headline.title + ' (' + (r.out_headline.source || 'news') + ' ' + (r.out_headline.at || '') + ')');
+      if (r.out_headline.url) { t.href = r.out_headline.url; t.target = '_blank'; t.rel = 'noopener'; }
+      rd.append(t);
+    }
     else rd.append(h('span', 'tgr-lbl', r.reported ? 'not enough data' : 'reports ' + erDay(r.date).split(',')[0]));
     /* EPS */
     const ep = h('td', 'num');
