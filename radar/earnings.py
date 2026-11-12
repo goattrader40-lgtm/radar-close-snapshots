@@ -188,9 +188,11 @@ class Y:
     def get(self, url):
         return json.loads(retry(lambda: self.y.get(url + ("&" if "?" in url else "?") + "crumb=" + urllib.parse.quote(self.y.crumb))))
 
-    def summary(self, s):
+    def summary(self, s, chart=False):
+        """EPS history and estimates; with chart=True also Yahoo's earnings chart [(label '3Q2026', revenue), ...] (oldest
+        first): it gets a new quarter's revenue hours to days before the revenue timeseries (AVEX Nov 12 2026)"""
         res = self.get(f"https://query2.finance.yahoo.com/v10/finance/quoteSummary/{urllib.parse.quote(s)}"
-                       f"?modules=earningsHistory,earningsTrend")["quoteSummary"]["result"][0]
+                       f"?modules=earningsHistory,earningsTrend" + (",earnings" if chart else ""))["quoteSummary"]["result"][0]
         hist = {}
         for h in (res.get("earningsHistory") or {}).get("history") or []:
             q = (h.get("quarter") or {}).get("fmt")
@@ -202,7 +204,11 @@ class Y:
             trend[t.get("period")] = {"end": t.get("endDate"), "eps": (e.get("avg") or {}).get("raw"),
                                       "eps_yago": (e.get("yearAgoEps") or {}).get("raw"),
                                       "rev": (r.get("avg") or {}).get("raw"), "rev_yago": (r.get("yearAgoRevenue") or {}).get("raw")}
-        return hist, trend
+        if not chart:
+            return hist, trend
+        ch = [(q.get("date"), (q.get("revenue") or {}).get("raw"))
+              for q in (((res.get("earnings") or {}).get("financialsChart") or {}).get("quarterly") or [])]
+        return hist, trend, ch
 
     def revenue_ts(self, s):
         now = int(time.time())
@@ -601,6 +607,57 @@ def product_of(s):
 READS = [(6, "Strong bullish"), (3, "Bullish"), (0, "Mixed"), (-3, "Somewhat bearish"), (-99, "Bearish")]
 
 
+def headline_guide(title, nq, fy, said=""):
+    """the guidance in a Benzinga earnings headline, for a report with no SEC release read (the user, Nov 12 2026, AVEX:
+    "AEVEX Raises FY2026 Sales Guidance from $700.000M-$720.000M to $820.000M-$840.000M vs $743.050M Est" was the news,
+    the tab read only the EPS miss). Same shape as guidance(): direction, and for a sales / revenue guide the range, its
+    midpoint vs the street (the headline's 'vs ... Est') and vs a year ago. None when the headline isn't a guidance one."""
+    m = re.search(r"\b(Raises|Lowers|Cuts|Trims|Reduces|Boosts|Increases|Affirms|Reaffirms|Maintains|Reiterates|Narrows|Sees|"
+                  r"Expects|Issues|Initiates|Guides)\b(.{0,40}?)\bGuidance\b(.*)$", title or "")
+    if not m:                                      # "Acme Sees Q4 Sales $500.000M-$520.000M vs $505.000M Est" (no "Guidance")
+        m = re.search(r"\b(Sees|Expects)\b\s+((?:Q[1-4]|FY\s?\d{2,4})[^$]{0,25}?\b(?:Sales|Revenue|EPS))\b(.*)$", title or "")
+    if not m:
+        return None
+    verb, per, rest = m.group(1).lower(), m.group(2), m.group(3)
+    d = {"raises": "raised", "boosts": "raised", "increases": "raised", "lowers": "lowered", "cuts": "lowered", "trims": "lowered",
+         "reduces": "lowered", "affirms": "reaffirmed", "reaffirms": "reaffirmed", "maintains": "reaffirmed",
+         "reiterates": "reaffirmed", "narrows": "reaffirmed"}.get(verb, "given")
+    g = {"dir": d, "src": "headline", "text": title + (" (" + said + ")" if said else ""), "said": title}
+    yr = re.search(r"\bFY\s?(\d{2,4})\b", per)
+    g["kind"] = "fy" if yr else "q" if re.search(r"\bQ[1-4]\b", per) else None
+    if not re.search(r"\b(Sales|Revenue)\b", per, re.I):
+        return g                                   # an EPS guide: the direction only
+    def money(x):
+        mm = re.match(r"\$?([\d,]+(?:\.\d+)?)([KMB])", x)
+        return float(mm.group(1).replace(",", "")) * {"K": 1e3, "M": 1e6, "B": 1e9}[mm.group(2)] if mm else None
+    rng = r"\$[\d,.]+[KMB](?:\s*-\s*\$[\d,.]+[KMB])?"
+    def mid_of(x):
+        v = [money(t) for t in re.findall(r"\$[\d,.]+[KMB]", x)]
+        v = [t for t in v if t]
+        return (v[0], v[-1], (v[0] + v[-1]) / 2) if v else (None, None, None)
+    fr = re.search(r"\bfrom\s+(" + rng + r")\s+to\s+(" + rng + r")", rest)
+    of = re.search(r"\b(?:of|at|to)\s+(" + rng + r")", rest) or re.match(r"\s*(" + rng + r")", rest)
+    est = re.search(r"\bvs\s+(\$[\d,.]+[KMB])\s+Est", rest)
+    if fr:
+        _, _, g["prior_mid"] = mid_of(fr.group(1))
+        g["lo"], g["hi"], g["mid"] = mid_of(fr.group(2))
+        if g["mid"] and g["prior_mid"]:          # the numbers beat the word (a narrowed range with a lower midpoint = lowered)
+            by = "raised" if g["mid"] > g["prior_mid"] * 1.002 else "lowered" if g["mid"] < g["prior_mid"] * 0.998 else "reaffirmed"
+            g["by_numbers"] = by
+            if d in ("given", "reaffirmed") or d == by:
+                g["dir"] = by
+            elif by != "reaffirmed":
+                g["dir"] = "mixed"
+    elif of:
+        g["lo"], g["hi"], g["mid"] = mid_of(of.group(1))
+    if g.get("mid") and est and money(est.group(1)):
+        g["vs_street"] = pct(g["mid"], money(est.group(1)))
+    e = fy if g["kind"] == "fy" else nq if g["kind"] == "q" else None
+    if g.get("mid") and e and e.get("rev_yago") and (g["kind"] != "fy" or not yr or str(e.get("end") or "")[:4].endswith(yr.group(1)[-2:])):
+        g["growth"] = pct(g["mid"], e["rev_yago"])
+    return g
+
+
 def score(r):
     """points: revenue surprise ±1/2, EPS surprise ±1/2, guidance (raised +2, above the street +1 more / +2 alone,
     lowered -3, below the street -2; one product's guide raised +1 / lowered -1), revenue growth 25%+ +1 / shrinking -1, the move after the report ±1/2.
@@ -809,7 +866,7 @@ def main():
         if r.get("px") and r.get("high20"):
             r["vs20h"] = pct(r["px"], r["high20"])
         try:
-            hist, trend = y.summary(ysym)
+            hist, trend, chart = y.summary(ysym, chart=True)
         except Exception as e:
             errors.append(f"summary {sym}: {e!r}"[:160]); return
         t0 = trend.get("0q") or {}
@@ -861,6 +918,12 @@ def main():
                     r["rev_act"], r["rev_src"] = rv, "Yahoo"
             except Exception:
                 pass
+            # not in the timeseries yet: Yahoo's earnings chart, only when its quarter before the newest is last quarter's
+            # revenue we already have (so its newest is this report's quarter). The user, Nov 12 2026, AVEX (no SEC results
+            # filing, the timeseries still at June): "it could have compared last q at least" -> $189.7M, q/q -6.0%
+            rp, vals = r.get("rev_prev"), [v for _, v in chart if v]
+            if r.get("rev_act") is None and rp and len(vals) >= 2 and abs(vals[-2] / rp - 1) < 0.005 and abs(vals[-1] / rp - 1) >= 0.0005:
+                r["rev_act"], r["rev_src"] = vals[-1], "Yahoo (earnings chart)"
     with cf.ThreadPoolExecutor(6) as ex:
         list(ex.map(per, syms))
 
@@ -903,6 +966,11 @@ def main():
         hd = (NEWS.get(sym) or {}).get("headline") if not r.get("rel_url") and now.isoformat() >= r["report_at"] else None
         if hd and hd.get("title") and str(hd.get("ts") or "")[:10] >= r["date"]:
             r["out_headline"] = {k: hd.get(k) for k in ("title", "at", "source", "url", "kind")}
+            # its guidance (AVEX Nov 12 2026), kept until the SEC release is read (the release's own reading replaces it)
+            if not r.get("guide") or (r.get("guide") or {}).get("src") == "headline":
+                hg = headline_guide(hd["title"], r.get("nq"), r.get("fy"), " ".join(x for x in (hd.get("source"), hd.get("at")) if x))
+                if hg:
+                    r["guide"] = hg
         else:
             r.pop("out_headline", None)
     for sym in syms:

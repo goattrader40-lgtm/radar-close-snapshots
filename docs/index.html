@@ -4635,6 +4635,7 @@ defCalc('industry_perf', {
     const c = { raised: 'tgr-up', lowered: 'tgr-dn', mixed: 'tgr-lbl', reaffirmed: '', given: '' }[g.dir] || '';
     const top = h('div');
     top.append(h('span', 'er-g ' + c, { raised: '▲ Raised', lowered: '▼ Lowered', mixed: 'Raised & lowered', reaffirmed: 'Reaffirmed', given: 'Given' }[g.dir]));
+    if (g.src === 'headline') top.append(h('span', 'tgr-lbl', ' · from the headline'));   /* no SEC release read yet (AVEX Nov 12 2026) */
     td.append(top);
     if (g.mid || g.growth !== undefined && g.growth !== null) {
       const per = g.kind === 'fy' ? 'Full year' : g.kind === 'q' ? 'Next quarter' : g.kind === 'product' ? (g.product || 'One product') + ' only' : '';
