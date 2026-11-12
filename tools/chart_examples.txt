@@ -444,3 +444,22 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 #   31.29; the day before closed 29.85 under both) and over its 1-month high 31.75, over the 200 SMA 29.53; ADR 3.6%. Live:
 #   launch Nov 4 2026 (C, +5.5% on 2.5x, closed 35.37). The test branch: no launch Oct 15 (1.1x volume, 1.5x needed for a
 #   regular launch; over its 200 SMA, so no first day). MISS. Light volume again, on the weak Nasdaq day Oct 15.
+#
+# ===== THE START-DAY TEST (Nov 12 2026; the user: "as long as it did breakthrough 21/50 changed the tide that day with volume
+# its the start day", "usually gap up", "above 1 rvol for sure", minimums unchanged: "test it plan it") =====
+# Tested as the launch rule, NOT KEPT (the code on the branch is the narrower first day of the commit before): the day before
+# closed under the 21 or 50 EMA, today closes over both, up 1 ADR+ on 1x+ volume in the top half (or a 5%+ gap opening over
+# both), over or under the 200 SMA, later launch-size days = follow-through.
+# The user's days it dates right: REAL Oct 15, PCOR Oct 5, TOST Oct 15, GLOB Oct 1, FLY Nov 6, APP Nov 5, CAI Aug 6, MRVL Aug 4,
+#   WRBY Nov 5; near: EPAM Oct 1 (the user: Oct 8 / 19), ITT and RLAY Nov 6. Still missed: TREX, LYFT, POOL, VCEL, XERS, PAR,
+#   FBIN, PGNY (under the ADR / liquidity / price minimums that day, which stay), SMG (closed under its 50 EMA), VERX.
+# What it breaks: 2 years 2,200 -> 3,345 launches (+52%): 1,703 new start days (26% ran 20%+, 31% failed: no better than the
+#   rest), 558 launches dropped. Agreed launch days lost: ANF Aug 3 and Aug 26 2026 (both become follow-through of a June 9
+#   start day), ATRC Jul 24 -> Jun 18, ARM Mar 25 -> Mar 16, VEEV Aug 27 -> Jun 26, NTSK Sep 14 -> Sep 3, CAI gets a Jan 6 one.
+#   Why: "through the 21 / 50 EMA on 1x volume" happens every few weeks in most stocks; an early weak one then turns the real
+#   launch (ANF Aug 3: +35.7% on 16.3x) into a follow-through day.
+# In the 1,822 start days that are no launch today: with a 2%+ gap 652 (30% ran 20%+, 41% failed), no gap 1,170 (24% / 21%);
+#   volume 1.5x+ 542 (24% / 25%), 1.0-1.5x 1,280 (28% / 30%); over the 200 SMA 1,020 (28% / 29%), under it 802 (24% / 28%).
+# Claude's proposal instead (not built): keep the launch as it is and ADD the start day to the row ("trend start Oct 15: back
+#   over the 21 / 50 EMA, +15.8% on 2.1x"), looked up backwards from the launch; and a "start days" list of its own for the
+#   stocks that just had one, so the user sees them the day they happen without changing what a launch is.
