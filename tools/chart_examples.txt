@@ -433,3 +433,4 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 #   out of the AI names into beaten-down ones. A strong day against a weak market may be the common mark, not its size.
 # CDW: "cdw 8th october". Not replayed yet (no bars fetched; fetch with ENOV and RAL).
 # DLTR: "dltr 14th october". Not replayed yet (no bars fetched; fetch with CDW, ENOV and RAL).
+# KTS (as the user typed it; the ticker to confirm): "kts 13th october". Not replayed yet (fetch with CDW, DLTR, ENOV and RAL).
