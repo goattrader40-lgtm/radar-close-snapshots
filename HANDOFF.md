@@ -49,6 +49,31 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status at the end of the session "Radar: watchlist/launches scanner tab (Nov 12)" (Thu Nov 12 2026 evening ET; session_01PkbDahfhKW69XD7xkjXjNm)
+
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~6:05 PM ET, branch test/listscan, commit 946beca): Scan your lists on the
+  Pre-market scanner and on Gainers.** The user: "can i have a scanner that screens my watchlist or launches whatever i
+  choose it automatically scans those tickers"; "all these under premarket scanner gap up, i go choose one of those, instead
+  of scanning market it would scan my chosen watchlist very simple"; "for live market we have gainers tab ... where i choose
+  my watchlist it only tracks those". docs/index.html: a **Scan:** button row under Gap ups / Gap downs (#pml-scan) and under
+  Gainers / Losers (#g-scan): Whole market (the default) · Launches (launch.json launches + ema50_undercut, minus the ✕
+  ones) · My picks (pickedNow: the followed stocks) · Launch laggards · 3-SETUPS (minus its ✕) · 2-POOL · 1-UPDAY · 1-EP/GAP
+  · TREND (trendSrc), each with its count (scanSet(); the choice in localStorage 'radar-scan-list' {pm, g}). A list = only
+  its names; the boxes and + Filter apply inside it; a line says the names, how many traded pre-market, how many pass.
+  Unchanged: S.gpass / S.gset (the gainer dot on Groups, the count at the top), the theme event card, the graded gappers and
+  their rules box, alerts, Launches. Rules workbook: one row in P3, one in G1.
+  Decided with the user: a Scan choice on the existing scanners, not a new card; no rows for names without a pre-market
+  trade ("no need"); no pop-up for a list stock gapping over its buy point (offered, not wanted).
+  Tested (Playwright, the Nov 12 9:25 scan and the Nov 12 close, vs main's page): Whole market identical (gap ups 50, gap
+  downs 189, gainers 9, losers 63, the chips and theme tables); every list's rows on that list; the counts = the Watchlist
+  tab's (3-SETUPS 100, 2-POOL 257, 1-UPDAY 144, 1-EP/GAP 52, TREND 210), Launches 149 (116 traded pre-market; gap ups with the
+  default boxes: AMD XERS PRGO ZYME VRDN CNC APPN PACS DLTR); remembered after a reload; phone 390 px no sideways scroll; no
+  page errors. Page only: no `--regress`, no 2-year check, no Launches rebuild.
+  Good to know: the pre-market scan (radar/pmlive.py) covers stocks with $300M+ market cap and 300K+ shares a day; the default
+  boxes (0.5-5% change, ADR 4%+ ...) still screen the list, so a list stock gapping 8% is hidden until the box is widened.
+- **Test only**: nothing (test/listscan is merged).
+- **First check Fri Nov 13**: the user's first morning with Scan (any feedback on which list / filters they use).
+
 ## Status at the end of the session "Radar: Earnings reader fix + pre-market grading (Nov 4)" (Nov 4 - Thu Nov 12 2026; session_01PkbDakDe1EUNP5wQZf4wMH)
 
 - **LIVE (the user's "go live", Thu Nov 12 2026 ~1:05 PM ET, branch test/earnrev, merge 7037cc8): three Earnings tab fixes.**
