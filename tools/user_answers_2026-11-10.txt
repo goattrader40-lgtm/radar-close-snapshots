@@ -116,3 +116,25 @@
 #   crossings of the 21 EMA (the clean charts AEHR, NTSK, ZS, ANF, APPN cross it as often as the bad ones) and "off on a close
 #   under the 10 and 21 EMA" (it hits AEHR Mar 26, ZS Oct 16, GMAB Sep 10, CAI Oct 1 / 6 before their agreed buy days). Not
 #   built, too few examples: the dying trend, a launch on under 1.5x volume (COHR Feb 6), a launch under the 200 SMA (CAI Aug 6).
+#
+# Nov 11 2026 evening (the session "Radar: full portal review, build continued (Nov 12)"), the user's answers, their words:
+# MRVL's September swing day (the note on the chart was cut off): "sept 16th pop above 21 ema.. while emas aligning upwards
+#   again.. sept 4th as well". The prices: Sep 4 2026 +7.0% on 0.9x, closed 223.55 at the day's high, back over the 10 / 21 /
+#   50 EMA (219.86 / 220.90 / 219.56) from under all three; Sep 16 2026 a 2.3% gap, +3.6% on 0.7x, closed 229.71 back over
+#   the 10 / 21 EMA (225.31 / 224.05), the 10 > 21 > 50 EMA in order again. The engine: no read on either day (MISS x2).
+# SPOT: "spot is like gmab, gap day stalls next day, it automatically means stock want to test breakout level... october 30th
+#   is just follow through... and breakout" -> SPOT's launch is Oct 22 2026; Oct 23 stalled (+0.1%), so the pullback to the
+#   breakout level (536-541, Oct 26-28) was expected; Oct 29 (closed 557.24 off that level) is the launch again ("delayed
+#   launch"); Oct 30 (+6.5%, 593.44) is follow-through and a breakout, NOT a launch. The engine's launch day Oct 30: WRONG DAY.
+#   The rule of thumb: a gap day that stalls the next day will come back to test its breakout level (GMAB Aug 7 2026 too).
+# COHR Mar 17 2026, the engine's "2nd higher low in the base": "correct" -> AGREED.
+# VEEV Sep 30 2026, the engine's "Breakout of the falling range": "has nothing to do with falling range... september 23rd is
+#   buy point there" -> WRONG. The buy point is Sep 23 2026 (the bull flag breakout, already agreed).
+# APPN: "2nd higher low is 28th september... october 15th is breakout.. 8th october nothing there.. just building base up" ->
+#   Oct 8 2026 "Breakout of the falling range": WRONG. Sep 28 and Oct 15 stand.
+# One item the user did not understand ("didn't understand this tbh"): taken to be NBIS Aug 25 2026; explained again in chat.
+# Measured after these answers (not built): the falling-range breakouts the user agreed were all big days (INTC Apr 1 2026
+#   +8.8%, AMD Apr 8 +4.6% on a 4.8% gap, COHR Apr 8 +10.5% on an 8.7% gap, MRVL Aug 4 +12.8% on an 8.4% gap); the two
+#   rejected ones were small days with no gap (VEEV Sep 30 +2.5%, APPN Oct 8 +2.4%) in a base that had already given its buy
+#   point (VEEV Sep 23, APPN Sep 28). The user's earlier words fit: "it has to break out of box or up down moving area [to a]
+#   new price point (meaning break out, usually its gap)".
