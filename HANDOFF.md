@@ -137,6 +137,21 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
      of the event's first 4 leaders that have any in pmnews.json (the code news feed), with source, time and link; else "a
      market or sector move". Tested with a simulated event on the Nov 12 scan. **So the 8:45 task's instructions need NO
      change** (the "NOT DONE" item below is dropped: the user does not want Claude for it).
+  6. **"Aerospace & Defense (all)", a wide list, and 4 homes** (the user's "go live. aerospace", ~2:20 PM ET Nov 12, 6d97190;
+     Launches rebuilt 2:25 PM). The user: aerospace & defense stocks "popping up, not even in your theme / industry list"
+     (MIR, AVEX). Found: 40 of the 60 have no theme, 45 no tight group, and they do not move together (KRMN 0.45, AVEX 0.41,
+     BETA 0.32, MIR 0.39 vs the 0.6 a pack needs; no pack among them). launch.py group_rank: GR_WIDE = ("Aerospace &
+     Defense",): the whole broad industry as one loose row "Aerospace & Defense (all)" (kind ind, `wide`, no tier), ranked
+     and with a heat on its tradable stocks, placed among the industry groups WITHOUT entering their ranking (checked: every
+     other group's rank, tier and heat identical with and without it; `--regress` 0). The page: the row in the Industry groups
+     table, tag "wide list"; a click lists all 60 stocks. After the rebuild (Nov 11 close): #165 of 217, heat 96 🔥 (week
+     +9.9%, 96% of its 25 tradable stocks up). Homes (0.6+ and the business matches, the homes test on the 340 tradable
+     stocks with no pack): industry_groups.json EGO -> Gold, SIBN -> Medical Devices, NESR -> Oil & Gas Equipment &
+     Services; theme_adds.json BCAX -> Small & Mid-cap Biotech (they join at the next weekly theme build).
+     **The tech check the user asked for** (262 tradable tech stocks: 178 in a theme, 172 in a tight group, 67 in neither):
+     nothing added. The liquid ones without a home are loners (ORCL 0.45, APP 0.27, SHOP 0.57, SPOT, SNPS / CDNS, RDDT, RBLX:
+     decided earlier to stay "· other" with RS). To ask the user: SITM -> Optics & CPO (0.71), TTD (0.64 Enterprise SaaS),
+     AMBA (0.61 AI Connectivity, on the waiting list), SIMO tracks Semi Subsystems (0.76) better than its Memory & Storage.
   Also seen that morning: rules/make_rules.py defines the sheet "E1 Earnings tab" twice (the 2nd, 4 rows, overwrites the 1st,
   longer one): the two new Earnings rows were added to the 2nd; the lost rows of the 1st are not restored (to look at).
   The user's other points that morning were not faults: FIGR was up 9% on that morning's Q3 report ("im wrong about figr");
