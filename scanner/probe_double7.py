@@ -18,7 +18,7 @@ import numpy as np
 NY = zoneinfo.ZoneInfo("America/New_York")
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 ADR_MIN, N7, ADR_N, COST = 4.0, 7, 20, 0.05          # COST: % a side in the account simulation
-FILTERS = ("user", "user200", "book_adr4", "book_all")
+FILTERS = ("user", "user200", "book_adr4", "book_all", "rise_adr4", "rise_all")
 ENTRIES = ("close", "open")
 EXITS = ("none", "daylow", "adr1", "adr2", "ema50", "time10")
 
@@ -76,7 +76,10 @@ class S:
         over200 = c > self.s200
         ok = np.arange(c.size) >= 200
         hi_adr = self.adr >= ADR_MIN
-        self.f = {"user": ok & self.lo7 & trend & hi_adr, "user200": ok & self.lo7 & trend & hi_adr & over200,
+        up21 = np.zeros(c.size, bool)
+        up21[1:] = self.e21[1:] > self.e21[:-1]
+        rise = up & up21                   # the book's rule + the 21 and the 50 EMA both higher than the day before
+        self.f = {"rise_adr4": ok & self.lo7 & over200 & hi_adr & rise, "rise_all": ok & self.lo7 & over200 & rise, "user": ok & self.lo7 & trend & hi_adr, "user200": ok & self.lo7 & trend & hi_adr & over200,
                   "book_adr4": ok & self.lo7 & over200 & hi_adr, "book_all": ok & self.lo7 & over200}
 
 
@@ -225,7 +228,8 @@ def main():
     # in the daily marks only, not in the trade's result (the exit value is entry price x the trade's own result)
     acct = {f"{f}|{en}|{ex}": account(keep[(f, en, ex)], cal, px) for f, en, ex in
             (("user", "close", "none"), ("user", "close", "adr2"), ("user", "close", "time10"), ("user", "open", "none"),
-             ("user200", "close", "none"), ("book_adr4", "close", "none"), ("book_all", "close", "none"))}
+             ("user200", "close", "none"), ("rise_adr4", "close", "none"), ("rise_adr4", "close", "daylow"),
+             ("rise_adr4", "close", "adr1"), ("rise_adr4", "close", "adr2"), ("rise_adr4", "open", "none"), ("book_adr4", "close", "none"), ("book_all", "close", "none"))}
     base = {}
     for k, s in etf.items():
         tr = [x for x in run([s], "book_all", "close", "none") if x[1] in ci]
