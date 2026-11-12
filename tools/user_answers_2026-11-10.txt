@@ -141,3 +141,7 @@
 # NBIS Aug 25 2026, the engine's "50 EMA undercut & reclaim": "nbis august 25th is no go broken chart" -> WRONG (confirmed).
 # Unfinished (the message was cut off, the stock not named; asked): "but engine doesn't recognize sept 28th and 29th retest
 #   breakout level correct along with 21. this is not regular one.. its connected to ..."
+# On the test of a-d (Nov 12 2026), the user on idea b's moved launch day: "atrc june 18th doesn't have anything to be launch
+#   day its range bound day... 24th july is the day... its bull flag plus break out of 200 sma" -> ATRC's launch stays Jul 24
+#   2026 (a bull flag breakout and the break of the 200 SMA the same day); Jun 18 2026 is a day inside a range, NOT a launch.
+#   Idea b as built is WRONG here (it stays off). d: "didn't understand" -> explained again in chat.
