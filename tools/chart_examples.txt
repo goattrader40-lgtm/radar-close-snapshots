@@ -360,3 +360,47 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 #    user had said no to for another read (CAI Oct 5 2026 "opened at its low", APPN Sep 14 2026 "a breakdown"), plus GMAB Sep
 #    15, ATRC Oct 9, APPN Oct 1, AEHR Mar 16, COHR Mar 16, AXTI Jun 2 2026. 2 years, every liquid stock: the gap kind 2,056
 #    days (27% ran 20%+, 53% failed), the 1-ADR kind 3,115 (27% / 25%).
+#
+# ===== Nov 12 2026, later: the user going through the live Launches list (the launches dated Nov 5-9 2026) =====
+# TWO POINTS. (1) A RANGE STOCK is no launch: a launch-size day inside a box, under the box's top, is at most a buy point; the
+# launch is the breakout of the range. (2) THE LAUNCH IS THE EARLIER DAY that turned the trend up, usually under the 200 SMA;
+# what the engine dates as the launch (the big day after the 200 SMA) is continuation: "our launch date is totally wrong".
+# WRBY: "look $wrby shows in launches. but its not, its range stock... still in box... maybe if it breakout of this range then
+#   its a launch day!!!! nov 5th was only buy point gap above 50 and 21..!!! with earnings". Live: launch Nov 9 2026 (A+, +18.6%
+#   on 3.1x, closed 30.21). The box: highs 31.00 (Dec 11 2025), 30.89 (Jun 30), 30.93 (Aug 5 2026), lows 20-23, around a flat
+#   200 SMA (25.1). Nov 5 2026: a 21.8% gap (earnings), +22.5% on 3.7x, opened 25.93 over the 21 / 50 EMA 24.61 / 25.06, closed
+#   26.08. The test branch: Nov 9 "Launch attempt... 2.3% under its 6-month high 30.93: the launch is a close over it" (MATCH).
+# VSAT: "no trend range bound no launch on it". Live: launch Nov 9 2026 (C, +16.3% on 1.7x, closed 74.37). Lower highs since
+#   Jul 1 2026 (93.03, 88.40, 79.83, 81.30). The test branch: "Launch attempt... 8.5% under its 1-month high 81.30" (MATCH).
+# ITT: "same for $itt". Live: launch Nov 9 2026 (C, +6.2% on 1.5x, closed 218.21) under its Aug 6 2026 high 230.32. The test
+#   branch read "Launch day"; with the attempt zone at 1.5 ADRs "Launch attempt... 5.3% under its 6-month high 230.32" (MATCH).
+# RLAY: "same rlay no launch its range bound". Live: launch Nov 9 2026 (C, +9.6% on 1.5x, closed 20.39) under 20.79 (Jul 9)
+#   and 21.27 (Aug 19 2026). With the zone at 1.5 ADRs: "Launch attempt... 4.1% under its 6-month high 21.27" (MATCH).
+# RAL: "same $ral". Live: launch Nov 6 2026 (C, +7.7% on 1.6x, closed 67.68), 5% under its top 75.21 (Oct 6). Not replayed
+#   (no bars fetched).
+# FBIN: "fbin only 2 could be launch 15th october or 22nd october, the ones after 200 was continuations". Oct 15 2026: a 1.9%
+#   gap, opened 39.55 over the 21 EMA 39.53, +2.9% on 0.7x. Oct 22 2026: +6.9% on 1.4x, closed 43.79 over the 21 / 50 EMA
+#   (40.21 / 41.50) and its 1-month high 41.59, under the 200 SMA 45.49. Live: launch Nov 9 (A). The test branch: still Nov 9
+#   (on Oct 22 its ADR was 3.4%, under the 3.5% minimum). MISS.
+# REAL: "$real launch was 15th october rest is continuation". Oct 15 2026: +15.8% on 2.1x, closed 10.54 over the 21 / 50 EMA
+#   (9.58 / 9.98) and its 1-month high 9.97, 7% under the 200 SMA 11.30. Live: launch Nov 9 (B). The test branch with the first
+#   day: launch Oct 15 2026; Nov 2 and Nov 9 are follow-through days (MATCH).
+# PAR: "par 15th october rest is cont.. 27th october is pullback and hold". Oct 15 2026: +9.7% on 1.4x, closed 17.35 over the
+#   21 / 50 EMA (15.64 / 16.22) and its 1-month high 16.25, under the 200 SMA 18.37; Oct 27 low 16.45 at the 21 / 50 EMA
+#   (16.62 / 16.57), closed 16.88. Live: launch Nov 9 (C). The test branch: still Nov 9 (PAR was under the liquidity minimums
+#   until Nov 9). MISS.
+# XERS: "xers original launch to turn trend up is sept 17th with 150 rvol.. 28th breakout beautiful.... our launch date is
+#   totally wrong". Sep 17 2026: +4.9% on 1.5x, closed 8.16 back over the 21 / 50 EMA (8.12 / 8.08); Sep 28: +8.0% on 2.3x,
+#   closed 9.83 over 9.20. Live: launch Nov 5 2026 (A, power). The test branch: Nov 5 (XERS traded under $10 until October: under
+#   the price minimum; Sep 17 was up under 5% and over its 200 SMA). MISS.
+# VCEL: "vcel launch is nov 4th". Nov 4 2026: +10.7% on 3.2x, closed 45.48 over its 1-month high 43.83. Live and the test
+#   branch: Nov 5 (the 11.1% earnings gap; on Nov 4 VCEL was under the liquidity minimums and over its 200 SMA). MISS by a day.
+# VERX: "verx october 1st". Oct 1 2026: a 2.2% gap, +4.4% on 1.8x, closed 12.30 over the 21 EMA 12.17, under the 50 EMA 12.50
+#   and the 200 SMA 13.94. Live and the test branch: Nov 5 (A, power). MISS.
+# ENOV: "enov 13th october or 4th november because of gap or volume". Not replayed (no bars fetched).
+# The test branch after these (scanner/launch.py, settings): the first day only under the 200 SMA, with a 5%+ gap OR a close
+# over its 1-month high on 1.3x+; the attempt zone 1.5 ADRs under a 3- / 6-month high. 2 years: 2,200 -> 2,407 launches, 265
+# new first days under the 200 SMA (27% ran 20%+, 31% failed: like the others), 58 dropped. Every agreed launch day the same
+# except CAI Aug 7 -> Aug 6 2026 (the user's date) and ATRC Jul 24 -> Jun 26 2026 (OPEN: the user said Jul 24).
+# WHAT NO RULE CATCHES YET: the modest first days (FBIN Oct 15 +2.9%, XERS Sep 17 +4.9%, VERX Oct 1 +4.4%) and the stocks
+# under the liquidity / ADR / price minimums that day (PAR, FBIN, VCEL Nov 4, XERS, PGNY Oct 7, SPOT Oct 22).

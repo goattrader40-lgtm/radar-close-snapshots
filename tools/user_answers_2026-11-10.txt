@@ -145,3 +145,7 @@
 #   day its range bound day... 24th july is the day... its bull flag plus break out of 200 sma" -> ATRC's launch stays Jul 24
 #   2026 (a bull flag breakout and the break of the 200 SMA the same day); Jun 18 2026 is a day inside a range, NOT a launch.
 #   Idea b as built is WRONG here (it stays off). d: "didn't understand" -> explained again in chat.
+# Nov 12 2026: "1-test it" (the first day with a gap) and on idea d's 8 extra reads (CAI Oct 5, APPN Sep 14 and Oct 1, GMAB Sep
+#   15, ATRC Oct 9, AEHR Mar 16, COHR Mar 16, AXTI Jun 2 2026): "yes they look good" -> d is ON on the test branch.
+#   Then the user's walk through the live Launches list (WRBY, VSAT, ITT, RLAY, RAL range-bound: no launch; FBIN, REAL, PAR,
+#   XERS, VCEL, VERX, ENOV: the launch is the earlier day): in their words in tools/chart_examples.txt.
