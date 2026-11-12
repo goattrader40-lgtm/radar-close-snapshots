@@ -151,6 +151,7 @@
   .tgr-chips { display: flex; flex-wrap: wrap; gap: 4px; }
   .tgr-chip { appearance: none; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); border-radius: 999px; padding: 0 var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.7; cursor: pointer; white-space: nowrap; }
   .tgr-chip:hover { border-color: var(--color-fg-muted); }
+  .tgr-chip.pm-on { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
   .tgr-sep { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .tgr-tk { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); text-decoration: none; border-bottom: 1px dotted var(--color-fg-muted); }
   .tgr-tk:hover { border-bottom-style: solid; }
@@ -698,7 +699,7 @@
       <details class="tgr-legend tgr-more" data-key="pmlive"><summary>About this scanner</summary>
       <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Pre vs 21, Pre vs 50 and Pre vs 200 = the latest pre-market price vs the 21-day EMA, 50-day EMA and 200-day SMA as of yesterday's close (a column added from the list named vs 21 EMA, vs 50 EMA or vs 200 SMA uses the regular-hours price: yesterday's close before the open; during the session the live price vs today's moving average). vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day. News = why it gaps, for every stock gapping 5%+ up or down, whether or not it passes the graded list's rules: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's <span class="tgr-lbl">(code)</span> from the SEC filings since the last close, the Earnings tab and, when the SEC has nothing, the stock's own headline <span class="tgr-lbl">(headline)</span>: Benzinga's feed through Alpaca, company press releases included (FLY Nov 6, 2026: "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile", 7:31 AM) (from about 8:05 AM ET: news runs at about 8:05 and 8:35, then the code grader at about 8:52, 9:05 and 9:18; hover for the whole reason, 📰 opens the source). <span class="tgr-gm">Sector move: group</span> = no news of its own (no filing, no event headline) while 3+ stocks of its theme or industry gap 5%+ the same way (the biggest names and those with their own news named; MU Nov 6, 2026: Memory &amp; Storage). News only: the stocks the list's rules drop get no grade. <strong>+ Filter</strong> (under the boxes) adds any other criterion, as on the Watchlist, Launches and Gainers: this table's columns (Pre-mkt vol and Vol in K) or anything else (RS, Trend, Group rank, Themes, Earnings date, Launch grade, Watchlist list …); one set for gap ups and one for gap downs, kept in this browser; Reset to my defaults removes them.</p>
       </details>
-      <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
+      <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass; click one to show only its stocks):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="pml-table">
           <thead><tr>
@@ -1569,6 +1570,8 @@ defCalc('industry_perf', {
     if (tr) select(tr.dataset.kind, tr.dataset.name);
   });
   $('#g-clear').addEventListener('click', () => { S.gsel = null; draw(); });
+  /* a group-gap chip on the Pre-market scanner filters its own table (not the Groups tab) */
+  $('#pml-moves-list').addEventListener('click', (e) => { const b = e.target.closest('[data-pmk]'); if (!b) return; e.stopPropagation(); S.pmsel = S.pmsel === b.dataset.pmk ? null : b.dataset.pmk; draw(); });
   $('#drill-search').addEventListener('input', (e) => { S.q = e.target.value.trim().toLowerCase(); draw(); });
   $('#grp-search').addEventListener('input', (e) => { S.gq = e.target.value.trim().toUpperCase(); draw(); });
   $('#grp-find').addEventListener('click', (e) => {        /* a theme or the industry: list its names below */
@@ -2757,7 +2760,7 @@ defCalc('industry_perf', {
     const xk = PMF.dir === 'down' ? 'pmd' : 'pmu';
     const allPm = pmRows();
     drawPmEvent(allPm);
-    const rows = allPm.filter((r) => pmPass(r, PMF) && pmXOk(FLT[xk].x, r));
+    let rows = allPm.filter((r) => pmPass(r, PMF) && pmXOk(FLT[xk].x, r));
     $('#pml-count').textContent = PML ? String(rows.length) : '—';
     /* + Filter: the set of the direction on screen; the count next to the chips */
     ['pmu', 'pmd'].forEach((k) => { if (XBOX[k] && XBOX[k].parentElement) XBOX[k].parentElement.hidden = k !== xk; });
@@ -2768,14 +2771,31 @@ defCalc('industry_perf', {
     const val = (r) => (txt ? String(r[spec.key] || '') : num(r[spec.key]));
     rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
     markSort(table, spec);
-    /* group gaps: themes with 3+ tight (0.7+) members passing */
+    /* group gaps: themes with 3+ tight (0.7+) members passing; a stock in no theme counts for its industry group (fit
+       0.7+; the user, Nov 11 2026: KLIC, SIMO had an empty Themes column). A click on a chip keeps the table on that
+       group's gappers (the same stocks the chip counts); a second click shows all again (the user, Nov 11 2026: "when i
+       click i want it in same table just show me those tickers") */
     const fits = new Map(rowsOf('themes').map((t) => [t.theme, fitMap(t.scores)]));
+    const gapKeys = (r) => {
+      const ts = String(r.themes || '').split(' | ').filter(Boolean);
+      if (ts.length) return ts.filter((t) => (fits.get(t) || new Map()).get(r.symbol) >= 0.7).map((t) => 'theme|' + t);
+      return r.group && num(r.group_score) >= 0.7 ? ['group|' + r.group] : [];
+    };
     const by = new Map();
-    rows.forEach((r) => String(r.themes || '').split(' | ').filter(Boolean).forEach((t) => { if ((fits.get(t) || new Map()).get(r.symbol) >= 0.7) by.set(t, (by.get(t) || 0) + 1); }));
+    rows.forEach((r) => gapKeys(r).forEach((k) => by.set(k, (by.get(k) || 0) + 1)));
     const ml = $('#pml-moves-list'); ml.replaceChildren();
     const gm = [...by].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]);
     if (!gm.length) ml.append(h('span', 'tgr-lbl', PML ? 'none' : '—'));
-    gm.forEach(([t, n], i) => { if (i) ml.append(h('span', 'tgr-sep', ' | ')); const b = h('button', 'tgr-chip', t + ' (' + n + ')'); b.type = 'button'; b.dataset.kind = 'theme'; b.dataset.name = t; ml.append(b); });
+    if (S.pmsel && !gm.some(([k]) => k === S.pmsel)) S.pmsel = null;
+    gm.forEach(([k, n], i) => {
+      if (i) ml.append(h('span', 'tgr-sep', ' | '));
+      const [kind, t] = [k.slice(0, k.indexOf('|')), k.slice(k.indexOf('|') + 1)];
+      const b = h('button', 'tgr-chip' + (S.pmsel === k ? ' pm-on' : ''), t + ' (' + n + ')'); b.type = 'button'; b.dataset.pmk = k;
+      b.title = (kind === 'group' ? 'Industry group (its stocks are in no theme)' : 'Theme') + ': click to show only these ' + n + ' stocks in the table; click again for all';
+      ml.append(b);
+    });
+    const all = rows.length;
+    if (S.pmsel) { rows = rows.filter((r) => gapKeys(r).includes(S.pmsel)); const x = h('button', 'tgr-lite', 'Showing ' + S.pmsel.slice(S.pmsel.indexOf('|') + 1) + ': ' + rows.length + ' of ' + all + ' · show all'); x.type = 'button'; x.dataset.pmk = S.pmsel; x.style.marginLeft = '8px'; ml.append(x); }
     if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 20; tr.append(td); tb.append(tr); }
     const pctTxt = (x) => (x === null || x === undefined ? '—' : (x > 0 ? '+' : '') + Number(x).toFixed(2) + '%');
     rows.slice(0, LIST_MAX).forEach((r) => {
@@ -2804,7 +2824,7 @@ defCalc('industry_perf', {
         h('td', 'num c2 ' + tone(r.vs_200), r.vs_200 === null ? '—' : (r.vs_200 > 0 ? '+' : '') + r.vs_200.toFixed(1) + '%'),
         h('td', 'num c2 ' + tone(r.vs_pdh), r.vs_pdh === null ? '—' : (r.vs_pdh > 0 ? '+' : '') + r.vs_pdh.toFixed(1) + '%'),
         h('td', 'num c2', r.below_low52 === null ? '—' : r.below_low52.toFixed(1) + '%'),
-        h('td', 'num c3', fCap(r.mcap_b)), chipCell(r.themes, 'theme', ''));
+        h('td', 'num c3', fCap(r.mcap_b)), r.themes || !(r.group || r.industry) ? chipCell(r.themes, 'theme', '') : (() => { const td = h('td', ''); const g = h('span', 'tgr-lbl', r.group || r.industry + ' · other'); g.title = r.group ? 'In no theme: its industry group' + (num(r.group_score) !== null ? ' (fit ' + num(r.group_score).toFixed(2) + ')' : '') : 'In no theme and no tight industry group: its broad industry'; td.append(g); return td; })());
       tb.append(tr);
     });
   };

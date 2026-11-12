@@ -147,6 +147,18 @@ def q_end(fq):
     return (int(m.group(2)), MON.get(m.group(1).title())) if m else None
 
 
+def yahoo_fq(end, report_day):
+    """the quarter a report covers, as Nasdaq writes it ('Sep/2026'), from the end of Yahoo's current-quarter estimate:
+    that quarter while Yahoo is still on the one being reported (it ended before the report day), the one before once
+    Yahoo has moved on (its current quarter ends after the report day)"""
+    q = ym(end)
+    if not q:
+        return None
+    if end[:10] > report_day:
+        q = qshift(q, -1)
+    return f"{[m for m, i in MON.items() if i == q[1]][0]}/{q[0]}"
+
+
 def qshift(q, n):
     """(2026, 9) shifted by n quarters: qshift((2026, 9), -1) = (2026, 6)"""
     k = q[0] * 12 + (q[1] - 1) + 3 * n
@@ -209,7 +221,7 @@ class Y:
             q = urllib.parse.urlencode({"symbols": ",".join(syms[i:i + 100]),
                                         "fields": "regularMarketPrice,regularMarketPreviousClose,regularMarketTime,preMarketPrice,"
                                                   "preMarketTime,postMarketPrice,postMarketTime,marketState,earningsTimestamp,"
-                                                  "isEarningsDateEstimate"})
+                                                  "earningsTimestampStart,earningsTimestampEnd,isEarningsDateEstimate"})
             for r in self.get("https://query2.finance.yahoo.com/v7/finance/quote?" + q)["quoteResponse"]["result"]:
                 out[r["symbol"]] = r
         return out
@@ -665,6 +677,32 @@ def main():
         except Exception as e:
             errors.append(f"nasdaq {d}: {e!r}"[:200])
         time.sleep(0.4)
+    # Nasdaq refused (Nov 9-11 2026: HTTP 403 for every day, the week's tables went blank after Monday): Yahoo's
+    # earnings date of every stock that passes your rules stands in for the days Nasdaq didn't give (the user, Nov 11
+    # 2026: "fix it"). Yahoo has no fiscal quarter and no time-of-day flag: the quarter comes from its estimates
+    # (yahoo_fq below), before / after the open from its report time as before
+    failed = [e.split(":")[0].split()[-1] for e in errors if e.startswith("nasdaq ")]
+    y = None
+    if failed:
+        try:
+            y = Y()
+            want = [k for k, s in S.items() if passes(s) or k in prev]
+            YQ = y.quotes([k.replace(".", "-") for k in want])
+            n_y = 0
+            for sym in want:
+                q = YQ.get(sym.replace(".", "-")) or {}
+                for key in ("earningsTimestamp", "earningsTimestampStart"):
+                    ts = q.get(key)
+                    d = datetime.datetime.fromtimestamp(ts, NY).date().isoformat() if ts else None
+                    if d in failed and sym not in cal:
+                        cal[sym] = (d, {"name": S[sym].get("name"), "yahoo": True}); n_y += 1
+            print(f"Nasdaq's calendar failed for {len(failed)} day(s): {n_y} reports from Yahoo's dates ({len(want)} stocks asked)")
+            errors.append(f"calendar from Yahoo for {len(failed)} day(s): {n_y} reports")
+        except (Exception, SystemExit) as e:
+            errors.append(f"yahoo calendar: {e!r}"[:200])
+        for sym, r in prev.items():                  # and a name already on a failed day stays on it
+            if sym not in cal and r.get("date") in failed and sym in S:
+                cal[sym] = (r["date"], {"name": r.get("name"), "kept": True, "fiscalQuarterEnding": r.get("fq")})
     rows = {}
     for sym, (d, x) in cal.items():
         s = S.get(sym)
@@ -673,6 +711,9 @@ def main():
         if sym not in prev and not passes(s):
             continue
         r = dict(prev.get(sym) or {})
+        if x.get("yahoo") or x.get("kept"):          # no Nasdaq row: what the file already had stays (quarter, Nasdaq's time and EPS)
+            x = dict(x, fiscalQuarterEnding=x.get("fiscalQuarterEnding") or r.get("fq"), time={"bmo": "time-pre-market", "amc": "time-after-hours"}.get(r.get("nasdaq_when")),
+                     epsForecast=r.get("nasdaq_eps_est"), eps=r.get("nasdaq_eps"))
         r.update(sym=sym, name=s.get("name") or x.get("name"), date=d, fq=x.get("fiscalQuarterEnding"),
                  nasdaq_when={"time-pre-market": "bmo", "time-after-hours": "amc"}.get(x.get("time")),
                  nasdaq_eps_est=num(x.get("epsForecast")), nasdaq_eps=num(x.get("eps")), industry=s.get("industry"),
@@ -695,7 +736,7 @@ def main():
     syms = sorted(rows)
     print(len(cal), "on the calendar,", len(syms), "pass your rules")
 
-    y = Y()
+    y = y or Y()
     # 2. quotes: report time, prices
     try:
         Q = y.quotes([s.replace(".", "-") for s in syms])
@@ -759,8 +800,10 @@ def main():
             hist, trend = y.summary(ysym)
         except Exception as e:
             errors.append(f"summary {sym}: {e!r}"[:160]); return
-        qe = q_end(r.get("fq"))
         t0 = trend.get("0q") or {}
+        if not r.get("fq"):                          # a report from Yahoo's calendar: the quarter from Yahoo's estimates
+            r["fq"] = yahoo_fq(t0.get("end"), r["date"])
+        qe = q_end(r.get("fq"))
         if not r.get("est_frozen"):
             if qe and near(ym(t0.get("end")), qe):           # Yahoo still on the quarter being reported
                 r.update(eps_est=t0.get("eps"), eps_yago=t0.get("eps_yago"), rev_est=t0.get("rev"), rev_yago=t0.get("rev_yago"),
