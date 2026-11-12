@@ -2021,6 +2021,13 @@ defCalc('industry_perf', {
     setState('industry-table', ['industry_perf']);
     const tb = table.querySelector('tbody'); tb.replaceChildren();
     const rows = levelRows().filter((r) => !S.gfind || r.industry === S.gfind.stock[S.level]);      /* Find a ticker: its industry */
+    /* wide lists (the user, Nov 12 2026: the aerospace & defense stocks with no theme or tight group): the whole broad industry
+       as one loose row in the Groups list, "<industry> (all)", ranked and with its heat but no tier (launch.json group_rank
+       rows with `wide`); its figures are the broad industry's own row */
+    if (S.level === 'grp' && GRK && !S.gfind) [...GRK.values()].filter((g) => g.wide).forEach((g) => {
+      const b = rowsOf('industry_perf').find((r) => r.level === 'industry' && r.industry === g.wide);
+      if (b) rows.push(Object.assign({}, b, { industry: g.group, key: 'grp: ' + g.group, level: 'grp', _wide: g.wide }));
+    });
     $('#th-ivs').textContent = 'vs ETF (' + S.period.toUpperCase() + ')';
     rows.forEach((r) => { r.etf = S.level === 'industry' ? indEtf(r.industry) : null; r.vs = vsOf(r, r.etf); const e = r.etf ? etfRow(r.etf) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; r.gr = S.level === 'grp' ? grOf('ind', r.industry) : null; r.gheat = r.gr && r.gr.heat ? r.gr.heat : -1; r.same = S.level === 'grp' ? ((grOf('ind', r.industry, true) || {}).same_as || '') : ''; r.grank = r.gr ? r.gr.pct : -1; r.gtier = r.gr ? grTierN(r.gr) : -1; r.gstr = S.level === 'grp' && GRPS[r.industry] ? num(GRPS[r.industry].strength) : -1; });
     $('#industries-h').textContent = S.level === 'grp' ? 'Industry groups (by business line)' : S.level === 'industry' ? 'Industries (broad)' : 'Industries (detailed)';
@@ -2037,6 +2044,7 @@ defCalc('industry_perf', {
       const scell = h('td', 'num', sv === null ? '—' : ''); if (sv !== null) scell.append(h('span', 'tgr-sdot ' + sband(sv)), h('span', '', sv.toFixed(2)));
       if (S.level === 'grp' && r.industry.endsWith(' · other')) scell.title = 'Stocks of this industry that do not move with any business-line group: ranked, but no Top / Strong';
       const ikey = h('td', 'key', r.industry);
+      if (r._wide) { const tg = h('span', 'tgr-etag', 'wide list'); tg.title = 'Every ' + r._wide + ' stock in one loose list, by business: they do not move tightly together, so it has a rank and a heat (on its tradable stocks) but no ★ Top / Strong, and it changes no other group\'s rank. Click it for the stocks'; ikey.append(tg); }
       if (r.same) { const tg = h('span', 'tgr-etag', '= ' + r.same); tg.title = 'One pack with your theme ' + r.same + ': they share three-quarters or more of their stocks, so the rank, tier and heat shown are the theme\'s (one name, one rank)'; ikey.append(tg); }
       tr.append(ikey, gcell, grTierCell(r.gr), grHeatCell(r.gr), scell, h('td', 'num c3', String(r.n)));
       ['1d', '1w', '1m', '3m'].forEach((p) => tr.append(pctCell(r[pf(p)], p === S.period ? max : 0)));
@@ -2137,8 +2145,9 @@ defCalc('industry_perf', {
       etfWrap.hidden = !(t && t.etfs);
       if (t) showUmb('Area ' + t.category + ', main ETF', areaEtf(t.category), t);
     } else {
-      const ind = levelRows().find((r) => r.industry === S.sel.name);
-      rows = rowsOf('stocks').filter((r) => r[S.level] === S.sel.name);
+      const wide = S.level === 'grp' && S.sel.name.endsWith(' (all)') ? S.sel.name.slice(0, -6) : null;   /* a wide list: the broad industry's stocks */
+      const ind = wide ? rowsOf('industry_perf').find((r) => r.level === 'industry' && r.industry === wide) : levelRows().find((r) => r.industry === S.sel.name);
+      rows = rowsOf('stocks').filter((r) => (wide ? r.industry === wide : r[S.level] === S.sel.name));
       nameEl.textContent = S.sel.name;
       nEl.setAttribute('data-source', 'industry_perf'); nEl.setAttribute('data-field', 'n'); nEl.setAttribute('data-where', 'key=' + enc(S.level + ': ' + S.sel.name));
       nEl.textContent = ind ? String(ind.n) : String(rows.length);

@@ -1,5 +1,5 @@
 {
- "_about": "Names the user approved for a theme (Nov 3 2026): stocks in no theme that moved with it at 0.6+ (May-Nov 2026) and whose business matches. Each week a name joins only if it still tracks the theme at 0.6+ (pipeline.py, the themes' co-movement test); the sector and liquidity filters of the automatic adds do not apply. Nov 3 2026 (tech review): GEN, IPGP. Nov 11 2026 (homes for tradable stocks with no pack: each moved with the theme at 0.6+ over the 120 sessions to Oct 23 and its business matches): XNCR, KYMR, PTCT, BAX, HGV, OSPN, STEP, BRKR. Nov 11 2026 (the user: \"i know for fact that klic, simo belongs to semi ecosystem\"): KLIC, ASX, SIMO.",
+ "_about": "Names the user approved for a theme (Nov 3 2026): stocks in no theme that moved with it at 0.6+ (May-Nov 2026) and whose business matches. Each week a name joins only if it still tracks the theme at 0.6+ (pipeline.py, the themes' co-movement test); the sector and liquidity filters of the automatic adds do not apply. Nov 3 2026 (tech review): GEN, IPGP. Nov 11 2026 (homes for tradable stocks with no pack: each moved with the theme at 0.6+ over the 120 sessions to Oct 23 and its business matches): XNCR, KYMR, PTCT, BAX, HGV, OSPN, STEP, BRKR. Nov 11 2026 (the user: \"i know for fact that klic, simo belongs to semi ecosystem\"): KLIC, ASX, SIMO. Nov 12 2026 (the homes test on every tradable stock with no pack, 120 sessions to Oct 23: tracks at 0.6+ and the business matches): BCAX; in industry_groups.json: EGO, SIBN, NESR.",
  "adds": {
   "Genomics & Diagnostics": "VCYT CSTL PACB AZTA SDGR MRVI",
   "Industrial Automation": "IR LECO",
@@ -10,7 +10,7 @@
   "Beverages": "FIZZ SAM",
   "Medtech": "IDXX TFX BAX",
   "Shale & Permian E&P": "VNOM",
-  "Small & Mid-cap Biotech": "RYTM MAZE PRAX XNCR KYMR PTCT",
+  "Small & Mid-cap Biotech": "RYTM MAZE PRAX XNCR KYMR PTCT BCAX",
   "Gene Editing": "GENB",
   "Natural Gas Producers": "DEC BKV",
   "Life Science Tools & CROs": "BIO AVTR BRKR",
