@@ -470,3 +470,10 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # 11 start days listed (ZM, AMD, NAVN Nov 11; VSAT, MPWR Nov 9; FLY, ITT, RLAY Nov 6; APP, MGNI, WRBY Nov 5). The page: all 8
 # tabs load, no page error. Not shown as a start: TREX, LYFT, POOL, SMG, VCEL, XERS, PAR, FBIN, PGNY on the user's days (under
 # the ADR / liquidity / price minimums that day, which stay).
+# APPN again (the user, Nov 12 2026, on the test engine's reads since Jul 23): "october 21st is breakout out of august 31st base
+#   !!! and november 12th is breakout". The prices: the Aug 31 2026 base top 44.06; Oct 15 +14.0% closed 43.82 (under it); Oct
+#   20 +5.3% closed 44.51 (1.0% over it); Oct 21 +9.5% on 2.0x closed 48.73. The engine: Oct 15 "Breakout of the inner base
+#   over 40.98"; Oct 20 and Oct 21 only "Running" / "follow-through day": NO base breakout read for 44.06 (MISS). Why: a base
+#   breakout within 5 sessions of another one is taken as its continuation (the ATRC Jul 27 / 28 2026 rule), so the main
+#   base's top was swallowed by the inner base's breakout 3 sessions before. To fix (not built): the continuation rule must
+#   not swallow a BIGGER base's top. Nov 12 2026: over the base top 54.12 (the engine's next buy point after Nov 11).
