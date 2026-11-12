@@ -149,3 +149,9 @@
 #   15, ATRC Oct 9, AEHR Mar 16, COHR Mar 16, AXTI Jun 2 2026): "yes they look good" -> d is ON on the test branch.
 #   Then the user's walk through the live Launches list (WRBY, VSAT, ITT, RLAY, RAL range-bound: no launch; FBIN, REAL, PAR,
 #   XERS, VCEL, VERX, ENOV: the launch is the earlier day): in their words in tools/chart_examples.txt.
+# Nov 12 2026, the user on Claude's summary of the point (the start day): "1# its usually gap up. and its high volume all the
+#   time above 1 rvol for sure!!!! i do prefer 2# over 200 sma, ... 3# actually vsat was launch but failed my bad, same for
+#   wrby,,,, my bad!!! i did hindsight,, but as long as it did breakthrough 21/50 changed the tide that day with volume its the
+#   start day!!!!" -> THE START DAY = the day the stock breaks through the 21 / 50 EMA and changes the tide, with volume (over
+#   1x for sure), usually on a gap up; over the 200 SMA preferred. WITHDRAWN: "range stock = no launch" for WRBY and VSAT
+#   (they were launches that failed; hindsight). ITT, RLAY, RAL were called "same" before this: not re-judged.
