@@ -434,3 +434,7 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # CDW: "cdw 8th october". Not replayed yet (no bars fetched; fetch with ENOV and RAL).
 # DLTR: "dltr 14th october". Not replayed yet (no bars fetched; fetch with CDW, ENOV and RAL).
 # KTS (as the user typed it; the ticker to confirm): "kts 13th october". Not replayed yet (fetch with CDW, DLTR, ENOV and RAL).
+# POOL: "pool 15th october". Oct 15 2026: +7.0% on 1.6x, closed 169.12 back over the 21 EMA 164.01 (the day before closed 158.12
+#   under it), still under the 50 EMA 173.40 and 18% under the 200 SMA 205.37; ADR 2.7%. Live and the test branch: launch Nov 4
+#   2026 (B, +5.8% on 1.6x, closed 219.26). MISS: 14 sessions and 30% later (ADR under 3.5%; closed under the 50 EMA). Like
+#   SMG: a strong day back over the 21 EMA only, from deep under the 50 EMA and the 200 SMA, on the weak Nasdaq day Oct 15.
