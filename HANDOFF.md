@@ -76,20 +76,40 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
      reported before the open, its 6-K reached the SEC at 9:22 AM, after the last morning run, so the tab said "reports Thu"
      until the evening). radar/earnings.py takes radar-data pmnews.json as a 4th argument: a row whose report time has passed
      with no filing read gets `out_headline` (the pre-market news headline: title, at, source, url) and the page shows "Out ·
-     not read yet" + that headline where it said "reports Thu". earnings.yml also runs at 9:20 AM and hourly 10:00 AM - 2:00
-     PM ET (window 7:00 AM - 3:05 PM). Tested: radar-tools `earntest` on the branch (386 rows, 0 errors, NBIS read), the page
+     not read yet" + that headline where it said "reports Thu". earnings.yml also runs at 9:10 and 9:20 AM ET (window 7:00 - 9:40 AM); the hourly
+     runs to 2:00 PM were taken out the same day, a34ae1f (the user: "no need to 2pm... i need those by market open after that
+     not interested"). Tested: radar-tools `earntest` on the branch (386 rows, 0 errors, NBIS read), the page
      with NBIS simulated at 7:15; the first live run 11:41 AM: 0 errors. Not built (offered): reading the release from the
      wire (GlobeNewswire / Business Wire) when the filing is missing; HBM (no filing, no headline) still reads "reports Thu".
   2. **+ Filter wording** (the user: "it should be ORH 5min above or not"): the three level filters read "Above the 5-min
      opening range high (ORH): any / Yes / No", "Above yesterday's high (PDH): ...", "Above the 21-day closing high: ..."
      (docs/index.html LVLF / LVLO; the saved values stay 'Over it' / 'Under it', so saved filters keep working; the Alerts
      tab's morning-breakout extra filter too). Tested on Gainers with live data.
+  3. **Earnings tab: read without the SEC filing** (the user: "#18 yes do that", "do this so we get news as in nbis"; branch
+     test/earnwire, 8ff3424, ~12:20 PM ET Nov 12). radar/earnings.py late_reports(): a report that is out (today's or last
+     evening's) with no filing read gets 1. the release on a newswire the news feed links to (use_release, the same reader as
+     the filing) and, when the wire refuses (GlobeNewswire: 403 for AVEX and HBM in the test), 2. the EPS / revenue / revenue
+     guide exactly as the feed's earnings headlines print them (hl_read: "Q4 Adj. EPS $0.43 Beats $0.42 Estimate, Sales
+     $447.062M Beat ..."; "Raises FY2026 Sales Guidance from ... to ... vs ... Est"). Alpaca's news API (earnings.yml now has
+     the ALPACA keys). The read ends "· from the news headlines, no SEC filing yet"; the filing replaces it when it comes.
+     Tested with `earntest`, then the first live run 12:20 PM: 0 errors, HBM "Mixed" (revenue $765.9M, +4.0% vs est; EPS
+     $0.34), AVEX "Bullish" (guidance raised, +11.7% vs street). By code, no Claude.
+  4. **+ Filter: short names and a search that finds them** (the user's "go live", ~1:30 PM ET Nov 12, cf3d250; the user: "i
+     cant even find now 5min over filter", "above orh-5min is better than this so long filter name"). The level filters are
+     now "Above ORH-5min", "Above PDH", "Above 21D closing high" (chip and search list alike: the morning's rename had left
+     the search list on the old name); the + Filter search ignores spaces and hyphens ("5min", "5 min", "5-min") and finds them
+     by "above" / "over" too. Saved values unchanged ('Over it' / 'Under it').
+  5. **Theme event: the reason line by code** (same push; the user: "i dont want this to be done by claude, it has to be done
+     by code"). docs/index.html drawPmEvent: under the event line, "Why (the leaders' own news)": the catalyst and headline
+     of the event's first 4 leaders that have any in pmnews.json (the code news feed), with source, time and link; else "a
+     market or sector move". Tested with a simulated event on the Nov 12 scan. **So the 8:45 task's instructions need NO
+     change** (the "NOT DONE" item below is dropped: the user does not want Claude for it).
   Also seen that morning: rules/make_rules.py defines the sheet "E1 Earnings tab" twice (the 2nd, 4 rows, overwrites the 1st,
   longer one): the two new Earnings rows were added to the 2nd; the lost rows of the 1st are not restored (to look at).
   The user's other points that morning were not faults: FIGR was up 9% on that morning's Q3 report ("im wrong about figr");
   "Pre-mkt gap" (the first pre-market trade vs the close) can read +0.8% while "Pre-mkt chg" is +9%: offered to hide or rename
   it, not answered.
-- **NOT DONE, the user has to do it: the 8:45 task's instructions.** update_trigger from this session was refused ("a
+- **DROPPED (see 5 above; kept for the record): the 8:45 task's instructions.** update_trigger from this session was refused ("a
   routine's instructions can be changed only from the conversation the routine posts into"). Until then the event card shows
   without the news line ("why"). The text to paste into the 8:45 conversation was given to the user in this session (4
   additions: rm event_news.json in step 1; theme_event.json in step 4; a new step 6b that searches once for the news behind the
