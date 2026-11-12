@@ -338,7 +338,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 
 | Trend | Rule (checked in this order, first match wins) |
 |---|---|
-| Base rule (the positive ones) | 10 EMA > 21 EMA > 50 EMA and the 50 EMA higher than 5 sessions ago (the user, Nov 3 2026) |
+| Base rule (the positive ones) | 10 EMA > 21 EMA > 50 EMA and the 50 EMA higher than the day before (the user, Nov 12 2026: "50 ema rising means today higher than yesterday not 5 days ago"; was 5 sessions ago since Nov 3). During the session: the 50 EMA at the live price vs the last close's |
 | 1 Negative | Price under the 21 EMA |
 | 2 Reclaim | Price back over the 21 EMA after a close under it, with the base rule |
 | 3 Turn up | The 5 EMA crosses over the 10 EMA that day, with the base rule |

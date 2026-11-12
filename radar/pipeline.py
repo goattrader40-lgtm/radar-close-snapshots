@@ -558,10 +558,11 @@ def trend_at(c, e5, e10, e21, e50, i):
     """your Trend (Nov 3 2026), first match wins: Negative (under the 21 EMA), Reclaim (back over the 21 after a close
     under it), Turn up (the 5 EMA crosses over the 10), Up (10 > 21 > 50, over the 21 and 50, the 10 and 21 rising),
     Resting (10 > 21 > 50, the 10 or 21 not rising); the base for the positive ones: the 21 over the 50 and the 50
-    higher than 5 sessions ago, and the 10 over the 21. '' = none of them."""
-    if i < 5 or None in (c[i], c[i - 1], e5[i], e5[i - 1], e10[i], e10[i - 1], e21[i], e21[i - 1], e50[i], e50[i - 5]):
+    higher than the session before (the user, Nov 12 2026: "50 ema rising means today higher than yesterday not 5 days
+    ago"; was 5 sessions ago), and the 10 over the 21. '' = none of them."""
+    if i < 5 or None in (c[i], c[i - 1], e5[i], e5[i - 1], e10[i], e10[i - 1], e21[i], e21[i - 1], e50[i], e50[i - 1]):
         return None
-    base = e10[i] > e21[i] > e50[i] and e50[i] > e50[i - 5]      # the 10 over the 21 too (the user, Nov 3 2026)
+    base = e10[i] > e21[i] > e50[i] and e50[i] > e50[i - 1]      # the 10 over the 21 too (the user, Nov 3 2026); the 50 up on the day (Nov 12)
     if c[i] < e21[i]: return "Negative"
     if not base: return ""
     if c[i - 1] < e21[i - 1]: return "Reclaim"
@@ -572,8 +573,9 @@ def trend_at(c, e5, e10, e21, e50, i):
     return ""
 
 def trend_info(closes):
-    """(the Trend at the last close, sessions in it, [5, 10, 21, 50 EMA at the last close, the 50 EMA 4 sessions before
-    it, the last close]) - the portal moves the EMAs on with the live price during the session"""
+    """(the Trend at the last close, sessions in it, [5, 10, 21, 50 EMA at the last close, the 50 EMA the session before
+    it (was 4 sessions before until Nov 12 2026), the last close]) - the portal moves the EMAs on with the live price during
+    the session and compares the live 50 EMA with the last close's"""
     c = list(closes)
     if len(c) < 110: return None, None, None
     e5, e10, e21, e50 = ema_series(c, 5), ema_series(c, 10), ema_series(c, 21), ema_series(c, 50)
@@ -583,7 +585,7 @@ def trend_info(closes):
     d = 1
     while d < 250 and trend_at(c, e5, e10, e21, e50, i - d) == st: d += 1
     r4 = lambda x: None if x is None else round(x, 4)
-    return st, d, [r4(e5[i]), r4(e10[i]), r4(e21[i]), r4(e50[i]), r4(e50[i - 4]), r4(c[i])]
+    return st, d, [r4(e5[i]), r4(e10[i]), r4(e21[i]), r4(e50[i]), r4(e50[i - 1]), r4(c[i])]
 
 def dollar_vol(series, n):
     v = [p * vv for (p, _, vv) in series[-(n + 2):] if p and vv][-n:]
@@ -648,7 +650,7 @@ for s, r in latest.items():
         "adr_20": rd(adr), "dvol_10_m": rd(dv10 / 1e6, 1) if dv10 else None, "dvol_20_m": rd(dv20 / 1e6, 1) if dv20 else None,
         "sma200": rd(sma), "c200": rd(snap_val(s, "c200")), "above_200": above, "vs_200": rd((price / sma - 1) * 100, 1) if sma and not stale else None,
         "ema50": rd(e50), "vs_50e": rd((price / e50 - 1) * 100, 1) if e50 else None,
-        # your Trend at this close and the sessions in it; tr = [5, 10, 21, 50 EMA, the 50 EMA 4 sessions back, close]
+        # your Trend at this close and the sessions in it; tr = [5, 10, 21, 50 EMA, the 50 EMA the session before, close]
         "trend": tr_st, "trend_days": tr_d, "tr": tr_e,
         "sector": sec, "industry": ind, "industry_detail": r["industry"] or "Other",
         "themes": " | ".join(theme_of.get(s, [])), "index": " | ".join(idx), "gainer": g,
