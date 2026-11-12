@@ -333,3 +333,30 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # VOLUME (HOOD 1.1x, APP May 2 2025 0.8x, GLOB Oct 8 0.9x) or with a low ADR out of a quiet base (PGNY 3.0%, SPOT 3.3%).
 # What the climax tops have in common: the gap day came after 6-7 months of uptrend, 120-190% over the 200 SMA (APP 163%, HOOD 124%, MRVL 190%), and closed
 # in the lower half of its range (APP 0.30, HOOD 0.46 of the range; MRVL Jun 2 closed at its high, the reversal came Jun 3-5).
+#
+# ===== THE TEST of a-d (Nov 12 2026, the user: "falling range is simple thing you connected lower highs thats downtrending ...
+# test all a-d"); code in scanner/launch.py, settings at the end of L =====
+# a. FALLING RANGE only on a big day (up 1 ADR+) or a 2%+ gap: ON. VEEV Sep 30 and APPN Oct 8 2026 are gone (and LIFE Oct 20's
+#    "also out of its falling range"); INTC Apr 1, AMD Apr 8, COHR Apr 8, MRVL Aug 4 2026 still read. No agreed read lost.
+#    2 years, every liquid stock: big-day breakouts 781 (32% ran 20%+, 30% failed), the small ones it removes 287 (30% / 39%).
+#    Still read on MRVL and not marked by the user: Aug 19, Sep 21, Oct 6 2026 (Oct 1 gone).
+# b. THE FIRST DAY IS THE LAUNCH (back over the 21 & 50 EMA from under one of them, up 5%+ on 1.5x+, also under the 200 SMA;
+#    later launch-size days are follow-through until 2 closes under the 50 EMA): BUILT, OFF (first_day=0, follow_thru=0).
+#    Right with it: GLOB Oct 1 2026 (was Oct 22), FLY Nov 6, APP Nov 5 (on Launches, not laggards), CAI Aug 6 2026 (was Aug 7);
+#    APP and HOOD Feb 13 2025 and MRVL Jun 2 2026 are no launches any more (follow-through of an older launch); BETA Nov 3 and
+#    MGNI Nov 5 stay; SPOT Oct 30 is tagged "a follow-through day of the Oct 22 launch" when followed from Oct 22.
+#    Still wrong with it: PGNY Oct 7 (ADR 3.0%, under the 3.5% minimum), SPOT Oct 22 (ADR 3.3%) and Oct 29, GLOB Oct 8, HOOD
+#    May 8 2025 (1.1x) and APP May 2 2025 (0.8x): light volume. A first day on a gap alone, under 1.5x volume, failed 52% of
+#    the time in 2 years (246 days), so it was left out.
+#    What it breaks: launch days agreed earlier move or go: ATRC Jul 24 2026 -> Jun 18 (a first day under the 200 SMA), NBIS
+#    Aug 12 -> Jul 30, ANF Aug 3 gone (Aug 26 stays), APLD May 21 gone, VEEV -> Jun 26, AXTI -> Aug 3 2026.
+#    2 years (2,949 stocks): 2,200 -> 2,192 launches; 1,635 the same day, 565 dropped (28% ran 20%+, 33% failed), 557 new (26%
+#    / 30%), 387 of them under the 200 SMA (25% / 29%). No better and no worse: it changes WHICH day, not the results.
+# c. CLIMAX TOP: ON as a tag only ("CLIMAX RISK" on the launch day: an 8%+ gap, 90%+ over the 200 SMA the day before, closed
+#    in the lower half). Tags APP and HOOD Feb 13 2025; not MRVL Jun 2 2026 (closed at its high). Not made a rule: of the 12
+#    such days in 2 years 6 still ran 20%+ (APLD, CELC, CRML, IREN, PRAX, STX...), 5 failed.
+# d. POP OVER THE 21 EMA (the day before under it, the close over the 21 and 50 EMA, a 2%+ gap opening over it or a day up 1
+#    ADR+): BUILT, OFF (pop21=0). Reads MRVL Sep 4 and Sep 16 2026. On the agreed charts it adds 8 reads, two on days the
+#    user had said no to for another read (CAI Oct 5 2026 "opened at its low", APPN Sep 14 2026 "a breakdown"), plus GMAB Sep
+#    15, ATRC Oct 9, APPN Oct 1, AEHR Mar 16, COHR Mar 16, AXTI Jun 2 2026. 2 years, every liquid stock: the gap kind 2,056
+#    days (27% ran 20%+, 53% failed), the 1-ADR kind 3,115 (27% / 25%).

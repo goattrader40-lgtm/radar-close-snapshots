@@ -137,7 +137,28 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          undercut_closes=1,
          # the 21 EMA undercut & reclaim stays at 2 closes for now: with 1 the agreed ANF Oct 1 2026 read moves to Sep 25 (to
          # ask the user)
-         undercut21_closes=2)
+         undercut21_closes=2,
+         # tested Nov 12 2026 (the user's 11 charts of Nov 11 evening, "test all a-d"; tools/chart_examples.txt):
+         # a. range_day_adr / range_gap: a falling-range breakout needs a day up 1 ADR+ or a 2%+ gap (see range_break)
+         range_day_adr=1, range_gap=2,
+         # b. first_day: the launch is the FIRST day of the new move, also under the 200 SMA ("very first day gap up over 21ema
+         #   50 ema is the launch, or very strong move up"; GLOB Oct 1 2026, FLY Nov 6 2026, APP Nov 5 2026: see Arr.first_day);
+         #   first_gap = the gap that lets it close in the lower half (GLOB faded to the bottom of its day, still over both EMAs)
+         #   follow_thru: a later launch-size day is a follow-through day of that launch, not a new launch, until the move ends
+         #   (see move_ended; "over 200 sma is just a follow through": GLOB Oct 22, PGNY Nov 5, BETA Nov 4 / 6, MGNI Nov 9 2026)
+         # c. climax_ext: a power-size gap day 90%+ over the 200 SMA that closes in the lower half is tagged CLIMAX RISK (APP and
+         #   HOOD Feb 13 2025, 114% and 97% over it the day before, closed at 0.30 / 0.46 of the day). A tag, not a rule: of the
+         #   12 such days in 2 years 6 still ran 20%+
+         # d. pop21: a pop back over the 21 EMA, the close over the 50 EMA too, on a 2%+ gap that opens over the 21 EMA or a day
+         #   up 1 ADR+ in its top half: a short swing entry (MRVL Sep 4 and Sep 16 2026: "pop above 21 ema.. while emas aligning
+         #   upwards again")
+         # THE TEST (Nov 12 2026, tools/chart_examples.txt): a is ON (VEEV Sep 30 and APPN Oct 8 2026 gone, no agreed read lost).
+         # c is ON as a tag only. b and d are BUILT BUT OFF (first_day=0, follow_thru=0, pop21=0) until the user has judged
+         # them: b gets GLOB Oct 1, FLY Nov 6, APP Nov 5 and CAI Aug 6 2026 right and drops APP / HOOD Feb 13 2025 and MRVL Jun 2
+         # 2026, but it also moves agreed launch days (ATRC Jul 24 -> Jun 18, NBIS Aug 12 -> Jul 30, ANF Aug 3, APLD May 21
+         # 2026 gone); over 2 years 2,200 -> 2,192 launches, 565 dropped and 557 new, the same results (26-27% ran 20%+, 29%
+         # failed). d adds reads on days the user had said no to (CAI Oct 5, APPN Sep 14 2026)
+         first_day=0, first_gap=4, follow_thru=0, climax_ext=90, pop21=0, pop21_gap=2)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -244,8 +265,33 @@ class Arr:
         return bool(L["reversal_launch"] and self.gap[i] < 0 and self.chg[i] >= L["rev_chg"] and self.clpos[i] >= L["min_clpos"]
                     and self.rv[i] >= L["rev_rv"] and st.c[i] > self.hi20[i])
 
+    def first_day(self, i):
+        """the first day of a new move (the user, Nov 11 2026: "very first day gap up over 21ema 50 ema is the launch, or very
+        strong move up", "the fundamental trend change starting point", also under the 200 SMA): the day before closed under
+        the 21 or the 50 EMA, today is up 5%+ on 1.5x+ volume and closes over both, in the top half of the day or after a 4%+
+        gap that opened over both. No 200 SMA and no 52-week-low test. GLOB Oct 1 2026: a 9.1% gap on 2.2x, opened 37.87 over
+        the 21 / 50 EMA 36.33 / 36.81, closed 36.98 over both, 18% under its 200 SMA. FLY Nov 6 2026: +36.8% on 4.7x, closed
+        20.76 over 18.55 / 20.25, 23% under its 200 SMA. APP Nov 5 2026: a 28.7% gap, +31.0% on 5.1x"""
+        st = self.st
+        c = st.c
+        if not L["first_day"] or i < self.start or not self.liquid[i] or not self.chg[i] >= L["min_chg"] or not self.rv[i] >= L["min_rv"]:
+            return False
+        if not ((c[i - 1] < self.e21[i - 1] or c[i - 1] < self.e50[i - 1]) and c[i] > self.e21[i] and c[i] > self.e50[i]):
+            return False
+        return bool(self.clpos[i] >= L["min_clpos"]
+                    or (self.gap[i] >= L["first_gap"] and st.o[i] > self.e21[i] and st.o[i] > self.e50[i]))
+
+    def climax(self, i):
+        """a climax gap (the user, Nov 11 2026: APP and HOOD Feb 13 2025, "climax top after 6-7 month uptrending stock", "then
+        violent move down"): a power-size gap with the stock 90%+ over its 200 SMA the day before, closing in the lower half"""
+        return bool(L["climax_ext"] and self.gap[i] >= L["power_gap"] and self.ext200_prev[i] >= L["climax_ext"] and self.clpos[i] < 0.5)
+
     def candidate(self, i, catalyst=True):
-        """the must-haves of a launch day (catalyst=False: the regular launch only, without the catalyst and reversal days)"""
+        """the must-haves of a launch day (catalyst=False: the regular launch only, without the catalyst and reversal days),
+        or the first day of a new move (first_day)"""
+        return self.regular(i, catalyst) or self.first_day(i)
+
+    def regular(self, i, catalyst=True):
         st = self.st
         return bool(i >= self.start and self.liquid[i]
                     and ((self.gap[i] > 0 and self.chg[i] >= L["min_chg"] and self.held(i))
@@ -637,6 +683,8 @@ def launch_row(sym, a, i, gstat, gname, S):
         cleared={120: "6-month", 63: "3-month", 21: "1-month"}.get(a.cleared(i)),
         catalyst=bool(a.catalyst(i) and not (a.chg[i] >= L["min_chg"] and a.held(i))),     # in on the catalyst rule only
         reversal=a.reversal(i),                                                            # opened down, closed up 8%+
+        # the first day of a new move (in on that rule only), launched under the 200 SMA, a climax gap
+        first_day=bool(a.first_day(i) and not a.regular(i)), under_200=bool(st.c[i] <= a.s200[i]), climax=a.climax(i),
     )
 
 
@@ -1051,7 +1099,12 @@ def range_break(a, j):
     c, h, l = st.c, st.h, st.l
     if j < L["range_max"] + 5 or not (c[j] > c[j - 1] and c[j] > a.e21[j] and c[j] > a.e50[j] and a.clpos[j] >= 0.5
                                        # 1x+ volume, or a day up a full ADR (COHR Apr 8 2026: +10.5%, an 8.7% gap, on 0.8x)
-                                       and (a.rv[j] >= 1 or a.chg[j] >= _adr(st, j))):
+                                       and (a.rv[j] >= 1 or a.chg[j] >= _adr(st, j))
+                                       # a big day or a gap (the user, Nov 11 2026: "it has to break out of box or up down moving
+                                       # area to a new price point, usually its gap"; VEEV Sep 30 2026 +2.5% and APPN Oct 8 2026
+                                       # +2.4%, no gap: "nothing to do with falling range", "just building base up". The agreed
+                                       # ones: INTC Apr 1 2026 +8.8%, AMD Apr 8 a 4.8% gap, COHR Apr 8 +10.5%, MRVL Aug 4 +12.8%)
+                                       and (a.chg[j] >= L["range_day_adr"] * _adr(st, j) or a.gap[j] >= L["range_gap"])):
         return None
     t = j - L["range_max"] + int(np.argmax(h[j - L["range_max"]:j]))
     if j - t < L["range_min"]:
@@ -1485,6 +1538,12 @@ def follow(a, i0, i, pick=False):
         dry_day = None if dry_day == i else dry_day
         push_day = None if push_day == i else push_day
     range_bo = bool(rng_day == i and not off_now)
+    # a pop back over the 21 EMA (the user, Nov 11 2026, MRVL: "sept 16th pop above 21 ema.. while emas aligning upwards again..
+    # sept 4th as well"; a short swing entry): the day before closed under the 21 EMA, today closes over it and over the 50
+    # EMA, on a 2%+ gap that opened over the 21 EMA (Sep 16 2026: a 2.3% gap, opened 226.73 over 224.05, closed 229.71) or a
+    # day up 1 ADR+ in its top half (Sep 4 2026: +7.0%, closed 223.55 at its high over the 10 / 21 / 50 EMA)
+    pop21 = bool(L["pop21"] and i > i0 and not off_now and not u200 and c[i - 1] < a.e21[i - 1] and c[i] > a.e21[i] and c[i] > a.e50[i]
+                 and ((a.gap[i] >= L["pop21_gap"] and st.o[i] > a.e21[i]) or (a.chg[i] >= _adr(st, i) and a.clpos[i] >= 0.5)))
     # the stock's stage after the close, the first that applies
     rest = 0
     while i - rest > i0 and resting(a, i - rest):
@@ -1499,6 +1558,12 @@ def follow(a, i0, i, pick=False):
             if whole:
                 stage_long = f", a new high: cleared everything in the data ({bm} months)"
         stage = "Launch day" + (f", cleared its {cb} base" if cb else "") + (stage_long if a.cleared(i) == 120 and cb is None else "")
+        if a.first_day(i) and not a.regular(i):
+            stage += (f" · the first day of the move: back over the 21 & 50 EMA ({a.e21[i]:.2f} / {a.e50[i]:.2f}), {a.chg[i]:+.1f}% on {a.rv[i]:.1f}x"
+                      + (f", {100 * (1 - c[i] / a.s200[i]):.0f}% under the 200 SMA {a.s200[i]:.2f}" if c[i] <= a.s200[i] else ""))
+        if a.climax(i):
+            stage += (f" · CLIMAX RISK: a {a.gap[i]:.0f}% gap with the stock {a.ext200_prev[i]:.0f}% over its 200 SMA the day before, "
+                      f"closed in the lower half of the day")
         if att:
             # a launch-size day that closed under a higher high: an attempt, the launch is the close over it
             stage = (f"Launch attempt: a launch-size day ({a.chg[i]:+.1f}% on {a.rv[i]:.1f}x), closed {c[i]:.2f}, {100 * (1 - c[i] / att[0]):.1f}% under "
@@ -1587,6 +1652,11 @@ def follow(a, i0, i, pick=False):
     elif range_bo:
         stage = (f"Breakout of the falling range: closed {c[i]:.2f} over the line {rng[1]:.2f} from its {st.dates[rng[0]]} high {st.h[rng[0]]:.2f} "
                  f"({i - rng[0]} sessions of lower highs) and over the 21 & 50 EMA, on {a.rv[i]:.1f}x volume (leg {leg})")
+    elif pop21:
+        stage = (f"Pop over the 21 EMA (a short swing entry): closed {c[i]:.2f} back over the 21 EMA {a.e21[i]:.2f} and over the 50 EMA "
+                 f"{a.e50[i]:.2f}, " + (f"a {a.gap[i]:.1f}% gap that opened over it" if a.gap[i] >= L["pop21_gap"] and st.o[i] > a.e21[i]
+                                        else f"{a.chg[i]:+.1f}% ({a.chg[i] / _adr(st, i):.1f} ADR)")
+                 + (", the 10 > 21 > 50 EMA in order" if a.e10[i] > a.e21[i] > a.e50[i] else ""))
     elif tight >= 2:
         stage = f"Tight under {tlv:.2f}, the base high ({tight} days)" + (
             f" · base {blen} sessions, {bdeep:.0f}% deep ({bdeep_adr:.1f} ADRs)" + (f", {msf_pat}" if msf_pat else "") if blen else "")
@@ -1659,6 +1729,11 @@ def follow(a, i0, i, pick=False):
     not_held = bool(not pick and exit_k == i and i - i0 <= L["hold_days"])
     if not_held:
         stage += f" · the launch {'attempt ' if att else ''}did not hold: closed {c[i]:.2f} under the 21 EMA {a.e21[i]:.2f}, {i - i0} sessions after it"
+    # a launch-size day after the launch is its follow-through, not a new launch (the user, Nov 11 2026: "rest was just follow
+    # through days"; BETA Nov 4 / 6, MGNI Nov 9, GLOB Oct 22 2026)
+    thru = bool(L["follow_thru"] and not pick and i > i0 and a.candidate(i))
+    if thru:
+        stage += f" · a follow-through day of the {st.dates[i0]} launch ({a.chg[i]:+.1f}% on {a.rv[i]:.1f}x), not a new launch"
     if off_now:
         stage = (f"Off the list since {st.dates[off_since]}: {off_why}. Back on when it breaks out (a base, a flag, a falling range, "
                  f"a launch-size day) over the 50 EMA with the 21 or the 50 EMA rising")
@@ -1697,6 +1772,7 @@ def follow(a, i0, i, pick=False):
         failed_breakout_top=fnum(failed[1]) if failed else None,
         range_breakout_today=range_bo, range_line=fnum(rng[1]) if range_bo else None,
         launch_hold=hold, launch_not_held_today=not_held, higher_low2_today=hl2_k1 is not None,
+        pop21_today=bool(pop21 and stage.startswith("Pop over the 21 EMA")), follow_through_today=thru,
         double_breakout="double breakout" in stage, flag_dry="volume dried up" in stage,
         # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
         # Flat base, Cup with handle, ... or Base forming (no pattern yet))
@@ -1787,6 +1863,19 @@ def load(bars_path, stocks_path):
     return A, groups, GS, cal, S
 
 
+def move_ended(a, last, i):
+    """the move the launch of bar `last` started is over before bar i: 2 closes in a row under the 50 EMA (the list rule), in
+    the first 10 sessions only when they are also under the close before the launch day (the user, Nov 11 2026: after a launch
+    the stock "pulls back, tests most recent gap / base and holds it": GLOB Oct 2-7 2026 closed 35.10-35.75 under its 50 EMA
+    but over the 34.70 it gapped from, "testing gap holding up", then Oct 8 went again); or 62 sessions from its highest
+    point without a new high (the list rule)"""
+    c, e50 = a.st.c, a.e50
+    for j in range(last + 2, i):
+        if c[j] < e50[j] and c[j - 1] < e50[j - 1] and (j - last > L["hold_days"] or (c[j] < c[last - 1] and c[j - 1] < c[last - 1])):
+            return True
+    return stale(a, last, i - 1)
+
+
 def detect(A, groups, GS, cal, S, upto=None):
     """every launch day up to calendar index `upto`, one per stock per dedupe window"""
     pos = {d: k for k, d in enumerate(cal)}
@@ -1795,6 +1884,8 @@ def detect(A, groups, GS, cal, S, upto=None):
     for s, a in A.items():
         last = -10 ** 9
         own, cat = [], []
+        if L["follow_thru"]:
+            last = -1
         for i in range(L["min_sessions"], len(a.st.dates)):
             k = pos.get(a.st.dates[i])
             if k is None or (upto is not None and k > upto) or not a.candidate(i):
@@ -1807,7 +1898,17 @@ def detect(A, groups, GS, cal, S, upto=None):
             # 21 EMA, or replaces it when it is the stronger day (APPN: a C on Aug 5 2026, the real launch, a B, on Aug 7).
             # A power day is never replaced: the days after it are its continuation (INFQ May 21 2026, a 20.8% gap, +31.5%
             # on 8.9x; May 22, +11.2% on a gap of 8.2%, was its 2nd day, not the launch; HLIT May 22 and May 26)
-            if i - last > L["dedupe_days"] or any(a.st.c[j] < a.e21[j] for j in range(last + 1, i)):
+            if L["follow_thru"]:
+                # the first day is the launch; a later launch-size day is its follow-through until the move ends (the user,
+                # Nov 11 2026). The stronger day within 20 sessions still replaces a regular launch (APPN Aug 5 -> Aug 7 2026),
+                # never a power day and never a first day
+                if last < 0 or move_ended(a, last, i):
+                    own.append((s, i, k, gs, gn))
+                    last = i
+                elif i - last <= L["dedupe_days"] and rank[grade(a, i)] < rank[grade(a, last)] and not a.power(last) and a.regular(last, catalyst=False):
+                    own[-1] = (s, i, k, gs, gn)
+                    last = i
+            elif i - last > L["dedupe_days"] or any(a.st.c[j] < a.e21[j] for j in range(last + 1, i)):
                 own.append((s, i, k, gs, gn))
                 last = i
             elif rank[grade(a, i)] < rank[grade(a, last)] and not a.power(last):
@@ -2205,7 +2306,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         # off while its last 2 closes are under the 200 SMA (your rule, Nov 3 2026, "only while under": back on the
         # list the first close it is over it again, ACN-type dips don't throw a launch out for good); not for a
         # laggard (under it by design: it is checked once it moved to the launch list)
-        if not lagg and under200(a, max(i, last - L["off_200"]), last):
+        # (nor for a first day that launched under it: GLOB Oct 1 2026, FLY Nov 6 2026)
+        if not lagg and not a.st.c[i] <= a.s200[i] and under200(a, max(i, last - L["off_200"]), last):
             return None
         f = follow(a, i, last)
         if f["off_now"] and not f["ema50_under2"]:
