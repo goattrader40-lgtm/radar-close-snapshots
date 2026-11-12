@@ -49,7 +49,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Status of the session "Radar: Earnings reader fix + pre-market grading (Nov 4)" (Nov 4 - Thu Nov 12 2026; session_01PkbDakDe1EUNP5wQZf4wMH)
+## Status at the end of the session "Radar: Earnings reader fix + pre-market grading (Nov 4)" (Nov 4 - Thu Nov 12 2026; session_01PkbDakDe1EUNP5wQZf4wMH)
 
 - **LIVE (the user's "go live", Thu Nov 12 2026 ~1:05 PM ET, branch test/earnrev, merge 7037cc8): three Earnings tab fixes.**
   The user (Nov 12): "WHY REV GROWTH MISSING FROM AVEX?" ... "it could have compared last q at least"; NBIS empty at 8:46
@@ -81,6 +81,14 @@ alone.
 - Answered, no change (Nov 12 morning): FIGR's news was that morning's Q3 release (SEC 6:47 AM); "Pre-mkt gap" is the first
   pre-market trade vs the close (TradingView's definition), so a stock with news after 4 AM shows a small gap and a big change
   (FIGR +0.83% vs +9.18%); offered to rename / hide it, not answered.
+- **Test only**: nothing (test/earnrev is merged). Earlier this session (Nov 4-5, all live then): the Alerts tab and its 7
+  boxes, the pre-market grading by 9:05 (Claude and code side by side), RS / group / Trend on every alert, the end-of-day
+  held / didn't hold lines: see the archived sections of Nov 4-5.
+- **Open, from this session** (each needs the user's go): one headline parser instead of two (hl_read / headline_guide);
+  FIGR's buyback headline missing from its News line (seen Nov 12, not fixed); HUBS Nov 12 labelled "Earnings (headline)"
+  for a CEO change + reaffirmed guidance (its report was Nov 4; not fixed); the "Pre-mkt gap" rename / hide (asked, no
+  answer). **First things to check Fri Nov 13**: the day job's earnings.yml runs at 7:05 / 7:35 / 8:35 / 8:50 / 9:05 and
+  earnings.json's built_at; the Nov 18 code-vs-Claude check-in (5:40 PM ET).
 
 ## Status of the session "Radar: full portal review, build continued (Nov 12)" (Wed Nov 11 2026 evening - night ET; session_01PkbDajtNcuGe22aVKWcF77)
 
@@ -673,18 +681,13 @@ brackets; some may be done or overtaken since, so check there before raising one
 - Stars: rename / caveat ★★ ("promising, not proven"); an earnings star (needs 2 years of earnings dates); the
   3-SETUPS alert text ["the last session (Nov 3 evening - Nov 4)", "the session before (Nov 3)"].
 
-New from Nov 5 (alerts / pre-market day, session_01PkbDakDe1EUNP5wQZf4wMH), all unanswered by the user:
-- **Power day vs episodic pivot**: drop the power day's +10% on the day, so the two differ only by the gap (8%+ vs
-  6%+; the power day needs a 4x volume pace, the episodic pivot 3x since Nov 5 evening; both over the 1-month high and
-  the 200 SMA)? Asked twice, no answer: leave as is until the user says.
-- **FCF**: offered a backtest of whether free cash flow change y/y matters for gap-ups when growth is high. Not run.
-- **The official open** from Alpaca's SIP feed instead of the first 1-minute bar (the gap is now the same all day, but
-  it can differ a little from TradingView's open). Offered, not decided.
+New from Nov 5 (alerts / pre-market day, session_01PkbDakDe1EUNP5wQZf4wMH), unanswered (the power day's +10%, the official
+open and the FCF backtest were dropped for good by the user on Nov 10):
 - **TREND triggers and the W (200 SMA) alerts in GitHub's job** (radar/alerts.py), so they reach every device like the
   other alerts; today they come only from the open portal page. Offered, not decided.
 - **Earnings tab, EPAM Nov 5**: EPS -26% (GAAP) on the tab vs Claude's adjusted beat; check the reader pairs GAAP with
   GAAP and adjusted with adjusted.
-- Check-ins already scheduled in that session: Nov 11 and Nov 18, 5:40 PM ET (code grade vs Claude grade comparison).
+- Check-in still to run: Nov 18, 5:40 PM ET (code grade vs Claude grade; the Nov 11 one ran: see this session's status).
 
 0. **Earnings tab, first live week**: check the reads with the user (Wed-Fri reports get estimates saved before
    the report); the guidance reader's misses go in as fixes with a GV bump. Not done: revenue from the release's
