@@ -77,7 +77,7 @@ alone.
   +0.9%, Claude's B held 5/9 vs code B 1/5. Where both gave letters and differed (6): code right 3 (PTON, U, TLN), Claude 2
   (EPAM, IMVT), 1 mixed (VCEL). The bigger gap is coverage: the code's best (XERS, MGNI, AZTA) were never on Claude's list;
   Claude's best (FROG A +15.6%, TMDX B +16.6%) were cut by the code's filters. Stars: no edge yet (10 names). The Nov 18
-  check runs as scheduled (trig_01WtAUrPCquRNbDPyqbm3Nc2's sibling); outcomes from close/latest.json's git history.
+  check (5:40 PM ET, scheduled in this session) is still to run; outcomes came from close/latest.json's git history.
 - Answered, no change (Nov 12 morning): FIGR's news was that morning's Q3 release (SEC 6:47 AM); "Pre-mkt gap" is the first
   pre-market trade vs the close (TradingView's definition), so a stock with news after 4 AM shows a small gap and a big change
   (FIGR +0.83% vs +9.18%); offered to rename / hide it, not answered.
