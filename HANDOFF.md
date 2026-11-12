@@ -71,6 +71,24 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   Checked before the push: `--regress` 0 differences on that branch (no launch read changed), the group rank on 2 years of
   bars, all 8 tabs with the live data and with the new rank, no page error. Rules workbook: 6 rows (theme event, bounce list,
   tradable rank, Heating up, one pack, homes).
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~11:40 AM ET, branch test/earnhead, commit f1c1dfd):**
+  1. **Earnings tab: a report that is out without an SEC filing yet** (the user: "see earnings nbis.. its 905 come on": NBIS
+     reported before the open, its 6-K reached the SEC at 9:22 AM, after the last morning run, so the tab said "reports Thu"
+     until the evening). radar/earnings.py takes radar-data pmnews.json as a 4th argument: a row whose report time has passed
+     with no filing read gets `out_headline` (the pre-market news headline: title, at, source, url) and the page shows "Out ·
+     not read yet" + that headline where it said "reports Thu". earnings.yml also runs at 9:20 AM and hourly 10:00 AM - 2:00
+     PM ET (window 7:00 AM - 3:05 PM). Tested: radar-tools `earntest` on the branch (386 rows, 0 errors, NBIS read), the page
+     with NBIS simulated at 7:15; the first live run 11:41 AM: 0 errors. Not built (offered): reading the release from the
+     wire (GlobeNewswire / Business Wire) when the filing is missing; HBM (no filing, no headline) still reads "reports Thu".
+  2. **+ Filter wording** (the user: "it should be ORH 5min above or not"): the three level filters read "Above the 5-min
+     opening range high (ORH): any / Yes / No", "Above yesterday's high (PDH): ...", "Above the 21-day closing high: ..."
+     (docs/index.html LVLF / LVLO; the saved values stay 'Over it' / 'Under it', so saved filters keep working; the Alerts
+     tab's morning-breakout extra filter too). Tested on Gainers with live data.
+  Also seen that morning: rules/make_rules.py defines the sheet "E1 Earnings tab" twice (the 2nd, 4 rows, overwrites the 1st,
+  longer one): the two new Earnings rows were added to the 2nd; the lost rows of the 1st are not restored (to look at).
+  The user's other points that morning were not faults: FIGR was up 9% on that morning's Q3 report ("im wrong about figr");
+  "Pre-mkt gap" (the first pre-market trade vs the close) can read +0.8% while "Pre-mkt chg" is +9%: offered to hide or rename
+  it, not answered.
 - **NOT DONE, the user has to do it: the 8:45 task's instructions.** update_trigger from this session was refused ("a
   routine's instructions can be changed only from the conversation the routine posts into"). Until then the event card shows
   without the news line ("why"). The text to paste into the 8:45 conversation was given to the user in this session (4
