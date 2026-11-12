@@ -463,3 +463,10 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # Claude's proposal instead (not built): keep the launch as it is and ADD the start day to the row ("trend start Oct 15: back
 #   over the 21 / 50 EMA, +15.8% on 2.1x"), looked up backwards from the launch; and a "start days" list of its own for the
 #   stocks that just had one, so the user sees them the day they happen without changing what a launch is.
+# BUILT on test/cleanlaunch (the user, Nov 12 2026: "test it 1 and 2 both makes sense"): (1) "start <date>" under the launch date
+# on a Launches row (launch.json trend_start...), (2) the Start days table under the Launches list (launch.json start_days).
+# The launch rules are untouched by it. Test build on the 165 fetched stocks after the Nov 11 close: 80 launches, 22 with a
+# start line (WRBY Nov 9 -> start Nov 5; ITT and RLAY Nov 9 -> Nov 6; GLOB -> Oct 1; KD Nov 4 -> Oct 15; APPN Oct 15 -> Sep 14),
+# 11 start days listed (ZM, AMD, NAVN Nov 11; VSAT, MPWR Nov 9; FLY, ITT, RLAY Nov 6; APP, MGNI, WRBY Nov 5). The page: all 8
+# tabs load, no page error. Not shown as a start: TREX, LYFT, POOL, SMG, VCEL, XERS, PAR, FBIN, PGNY on the user's days (under
+# the ADR / liquidity / price minimums that day, which stay).

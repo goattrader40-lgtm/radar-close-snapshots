@@ -164,6 +164,10 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # 9 2026: "its range stock... still in box... maybe if it breakout of this range then its a launch day"); it also
          # relabels NBIS Aug 12 2026 an attempt. OPEN: the no-gap first day takes ATRC Jun 26 2026, so the agreed Jul 24 reads
          # as its follow-through
+         # the start day, shown next to the launch and in its own list (not a launch rule): up start_adr ADRs on start_rv x volume
+         # through the 21 & 50 EMA, or a start_gap % gap opening over both; start_look = how far back a launch's trend start is
+         # looked for; start_list_days = how long a start day stays on the Start days list
+         start_adr=1, start_rv=1, start_gap=5, start_look=40, start_list_days=5,
          first_day=1, first_gap=5, first_rv=1.3, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
@@ -303,6 +307,25 @@ class Arr:
         # 10.54 over the 21 / 50 EMA 9.58 / 9.98 and its 1-month high 9.97, 7% under the 200 SMA; PAR Oct 15 2026 +9.7% on
         # 1.4x over 16.25; FBIN Oct 22 2026 +6.9% on 1.4x over 41.59: "the ones after 200 was continuations")
         return bool(c[i] > self.hi20[i] and self.clpos[i] >= L["min_clpos"])
+
+    def start_day(self, i):
+        """a START DAY (the user, Nov 12 2026: "as long as it did breakthrough 21/50 changed the tide that day with volume its the
+        start day!!!!", "its usually gap up and its high volume all the time above 1 rvol for sure"; the liquidity and ADR
+        minimums as for a launch: "no, liquidity adr important no change"): the day before closed under the 21 or the 50 EMA,
+        today closes over both, up 1 ADR+ (the 20-day ADR) on 1x+ volume in the top half of the day; or a 5%+ gap that opens
+        over both EMAs and still closes over them, up on the day (GLOB Oct 1 2026). Over or under the 200 SMA. NOT a launch:
+        as the launch rule it made 52% more launches in 2 years and moved agreed ones (ANF Aug 3 2026, ATRC Jul 24 2026), so
+        it is shown next to the launch (trend_start) and in its own list (start_days). REAL Oct 15 2026 (+15.8% on 2.1x),
+        PCOR Oct 5, TOST Oct 15 (+7.9% on 1.1x), FLY Nov 6, APP Nov 5, CAI Aug 6, MRVL Aug 4, WRBY Nov 5 2026"""
+        st = self.st
+        c = st.c
+        if i < max(self.start, 1) or not self.liquid[i] or not self.rv[i] >= L["start_rv"]:
+            return False
+        if not ((c[i - 1] < self.e21[i - 1] or c[i - 1] < self.e50[i - 1]) and c[i] > self.e21[i] and c[i] > self.e50[i]):
+            return False
+        if self.chg[i] >= L["start_adr"] * st.adr[i] and self.clpos[i] >= L["min_clpos"]:
+            return True
+        return bool(self.chg[i] > 0 and self.gap[i] >= L["start_gap"] and st.o[i] > self.e21[i] and st.o[i] > self.e50[i])
 
     def climax(self, i):
         """a climax gap (the user, Nov 11 2026: APP and HOOD Feb 13 2025, "climax top after 6-7 month uptrending stock", "then
@@ -689,6 +712,16 @@ def grade(a, i):
     return "C"
 
 
+def start_fields(a, k, pre):
+    """a start day's fields for a row (pre = the key prefix)"""
+    if k is None:
+        return {pre: None}
+    st = a.st
+    return {pre: st.dates[k], pre + "_chg_pct": fnum(a.chg[k], 1), pre + "_gap_pct": fnum(a.gap[k], 1), pre + "_rel_vol": fnum(a.rv[k], 1),
+            pre + "_close": fnum(st.c[k]), pre + "_ema21": fnum(a.e21[k]), pre + "_ema50": fnum(a.e50[k]),
+            pre + "_vs_200_pct": fnum(100 * (st.c[k] / a.s200[k] - 1), 0)}
+
+
 def launch_row(sym, a, i, gstat, gname, S):
     st = a.st
     days, depth = a.neglect(i)
@@ -708,6 +741,9 @@ def launch_row(sym, a, i, gstat, gname, S):
         reversal=a.reversal(i),                                                            # opened down, closed up 8%+
         # the first day of a new move (in on that rule only), launched under the 200 SMA, a climax gap
         first_day=bool(a.first_day(i) and not a.regular(i)), under_200=bool(st.c[i] <= a.s200[i]), climax=a.climax(i),
+        # the start day of the move before this launch (the user, Nov 12 2026: "our launch date is totally wrong", the launch
+        # is the earlier day that turned the trend): shown on the row, the launch day stays
+        **start_fields(a, trend_start(a, i), "trend_start"),
     )
 
 
@@ -1906,6 +1942,19 @@ def move_ended(a, last, i):
     return stale(a, last, i - 1)
 
 
+def start_holds(a, k, i):
+    """the move a start day (bar k) began is still on at bar i: no close under the close it started from, and not ended by the
+    50 EMA rule (move_ended)"""
+    return bool(i > k and (a.st.c[k + 1:i + 1] >= a.st.c[k - 1]).all() and not move_ended(a, k, i + 1))
+
+
+def trend_start(a, i0):
+    """the start day of the move a launch (bar i0) belongs to: the earliest start day in the 40 sessions before it whose move
+    still held on the launch day (REAL: launch Nov 9 2026, trend start Oct 15; PCOR: Nov 4, start Oct 5; GLOB: Oct 22, start Oct
+    1). None when the launch is the start itself"""
+    return next((k for k in range(max(a.start, i0 - L["start_look"]), i0) if a.start_day(k) and start_holds(a, k, i0)), None)
+
+
 def detect(A, groups, GS, cal, S, upto=None):
     """every launch day up to calendar index `upto`, one per stock per dedupe window"""
     pos = {d: k for k, d in enumerate(cal)}
@@ -2506,7 +2555,26 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         G.append(dict(group=g[5:] + " area" if g.startswith("area:") else g, status=STATUS[int(stt[-1])], members=len(ms), above_21ema_pct=fnum(100 * sh21[-1], 0),
                       median_1m_pct=fnum(m21[-1], 1), trending_days=since if since is not None else 0, recent_launches=launches))
     G.sort(key=lambda x: (-["Not trending", "Turning up", "Leading"].index(x["status"]), -(x["median_1m_pct"] or -999)))
-    doc = dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
+    # Start days (the user, Nov 12 2026): every liquid stock whose start day came in the last 5 sessions and still holds, the
+    # newest per stock, so the turn shows the day it happens and not weeks later at the launch
+    on_l, on_g = {r["symbol"] for r in rows}, {r["symbol"] for r in lag}
+    starts = []
+    for s, a in A.items():
+        st = a.st
+        i = len(st.dates) - 1
+        if st.dates[i] != today:
+            continue
+        k = next((m for m in range(i, max(a.start, i - L["start_list_days"]), -1) if a.start_day(m) and (m == i or start_holds(a, m, i))), None)
+        if k is None:
+            continue
+        gs_, gn_ = best_group(s, T, groups, GS)
+        d = dict(symbol=s, tv=run.tv_symbol(s, st.exchange), sessions=i - k, price=fnum(st.c[i]), since_pct=fnum(100 * (st.c[i] / st.c[k] - 1), 1),
+                 adr_pct=fnum(st.adr[i], 1), group=gn_, group_status=STATUS.get(gs_, "No group"), launch_day=bool(a.candidate(k)),
+                 on=("Launches" if s in on_l else "Launch laggards" if s in on_g else None))
+        d.update(start_fields(a, k, "date"))
+        starts.append(d)
+    starts.sort(key=lambda r: (r["date"], r["date_rel_vol"]), reverse=True)
+    doc = dict(date=today, start_days=starts, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50", "low_52w", "group rank now (★ Top / Strong, place in it)", "RS now"],

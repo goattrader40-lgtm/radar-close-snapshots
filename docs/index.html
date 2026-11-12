@@ -1029,6 +1029,32 @@
         </table>
       </div>
     </div>
+    <div class="tgr-card" id="ln-sd-card">
+      <div class="tgr-cardhead">
+        <h2>Start days</h2>
+        <span class="tgr-lbl" id="ln-sd-time">—</span>
+      </div>
+      <p class="tgr-note" id="ln-sd-note"></p>
+      <div class="tgr-scroll">
+        <table class="tgr-table" id="ln-sd-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="date" title="The day it closed back over the 21 and the 50 EMA">Start day</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_chg_pct" title="That day's move">Day</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_gap_pct" title="That day's gap at the open">Gap</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_rel_vol" title="That day's volume vs its 20-day average">Vol</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_close" title="That day's close">Close</button></th>
+            <th class="num"><button class="tgr-th" data-sort="px" title="Live during market hours, else the last close">Price</button></th>
+            <th class="num"><button class="tgr-th" data-sort="since" title="The price vs the start day's close">Since</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_vs_200_pct" title="Where the start day closed vs its 200-day SMA">vs 200 SMA</button></th>
+            <th class="num"><button class="tgr-th" data-sort="adr_pct">ADR</button></th>
+            <th><button class="tgr-th" data-sort="on" title="Whether the stock is on Launches already">On</button></th>
+            <th><button class="tgr-th" data-sort="group">Theme</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
     <div class="tgr-card" id="ln-g-card">
       <h2>Trending groups</h2>
       <p class="tgr-note">Each theme on the portal (or a stock's industry when it has no theme), and one level up its area. Leading = 60%+ of members close above their 50 EMA and the median 1-month move is +8% or more; Turning up = half or more close above their 21 EMA and the median week is up. Days = sessions in a row it has been trending.</p>
@@ -3376,6 +3402,7 @@ defCalc('industry_perf', {
     $('#ln-live-h').textContent = LAG ? 'Laggards launching today' : 'Launching today';
     $('#ln-h').textContent = LAG ? 'Launch laggards' : 'Launches';
     $('#ln-u50-card').hidden = LAG;
+    $('#ln-sd-card').hidden = LAG;
     const live = LAG ? lagLive(doc) : lnLive(doc);
     $('#ln-live-time').textContent = LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : marketOpen() ? 'Waiting for the first live update' : 'Live during market hours';
     $('#ln-live-note').textContent = !doc ? '' : (doc.watch ? Object.keys(doc.watch).length : 0) + ' stocks on watch from the ' + fDate(doc.date) + ' close. ' +
@@ -3508,6 +3535,15 @@ defCalc('industry_perf', {
       if (r.grade === 'You') ld.append(h('div', 'nw', 'Added ' + fDate(r.pick.slice(0, 10)).replace(/, \d{4}$/, '')), h('div', 'tgr-lbl', 'from ' + fPrice(r.close) + ' (' + fDate(r.date).replace(/, \d{4}$/, '') + ' close)'));
       else ld.append(h('div', 'nw', fDate(r.date).replace(/, \d{4}$/, '')),
         h('div', 'tgr-lbl', (r.chg_pct > 0 ? '+' : '') + Math.round(r.chg_pct) + '%' + (num(r.gap_pct) !== null ? ' gap ' + Math.round(r.gap_pct) + '%' : '') + ' ' + num(r.rel_vol).toFixed(1) + '×'));
+      /* the start day of the move before this launch (the user, Nov 12 2026: the launch is the earlier day that turned the
+         trend; the later big day is its continuation): shown here, the launch day stays */
+      if (r.grade !== 'You' && r.trend_start) {
+        const sd = h('div', 'tgr-lbl tgr-up', 'start ' + fDate(r.trend_start).replace(/, \d{4}$/, ''));
+        sd.title = 'Trend start ' + fDate(r.trend_start) + ': closed ' + fPrice(r.trend_start_close) + ' back over the 21 / 50 EMA (' + fPrice(r.trend_start_ema21) + ' / ' + fPrice(r.trend_start_ema50) + '), ' +
+          (r.trend_start_chg_pct > 0 ? '+' : '') + r.trend_start_chg_pct + '% on ' + r.trend_start_rel_vol + '× volume' + (r.trend_start_gap_pct >= 2 ? ', a ' + r.trend_start_gap_pct + '% gap' : '') +
+          ', ' + (r.trend_start_vs_200_pct >= 0 ? 'over' : Math.abs(r.trend_start_vs_200_pct) + '% under') + ' the 200 SMA. The launch day (' + fDate(r.date).replace(/, \d{4}$/, '') + ') is its continuation.';
+        ld.append(sd);
+      }
       const gc = r.grade === 'You' ? h('td', '') : gradeCell(r.grade);
       if (r.grade === 'You') { const t = h('span', 'tgr-gm', 'You'); t.title = 'Your pick: no launch day to grade'; gc.append(t); }
       const ty = h('td', 'nw');
@@ -3562,6 +3598,30 @@ defCalc('industry_perf', {
           h('td', 'num', fPrice(r.ema50)), h('td', 'num', fPrice(r.px)), h('td', 'num ' + tone(r.vs50), p1(r.vs50, true)), pctCell(r.today, 0),
           h('td', '', (r.group_now || r.group || '—') + ' · ' + (r.group_status_now || r.group_status || '')));
         utb.append(tr);
+      });
+    }
+    /* Start days (the user, Nov 12 2026: "as long as it did breakthrough 21/50 changed the tide that day with volume its the
+       start day"): every liquid stock that closed back over its 21 and 50 EMA in the last 5 sessions on a strong day, shown
+       the day it happens; not a launch, the Launches list is unchanged */
+    {
+      const st = $('#ln-sd-table'), stb = st.querySelector('tbody'); stb.replaceChildren();
+      const ss = doc ? (doc.start_days || []).map((r) => {
+        const m = symMap.get(r.symbol);
+        const px = m && num(m.price) !== null ? num(m.price) : r.price;
+        return Object.assign({}, r, { px, since: px && r.date_close ? r2((px / r.date_close - 1) * 100) : r.since_pct, on: r.on || '' });
+      }) : [];
+      $('#ln-sd-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : '—';
+      $('#ln-sd-note').textContent = 'The day a stock breaks back through its 21 and 50 EMA and changes the tide: the day before it closed under one of them, that day it closes over both, up 1 ADR or more on 1× volume or more in the top half of the day (or a 5%+ gap that opens over both and holds them). Over or under the 200 SMA; the same liquidity and ADR minimums as a launch. Listed for 5 sessions while it holds the close it started from. Not a launch: the big day that follows (the 200 SMA cross, the earnings gap) still makes the Launches list, with this day shown under its date as "start".';
+      sortRows(st, ss, null, ['symbol', 'date', 'group', 'on'], '');
+      if (doc && !ss.length) noRows(stb, 12, doc.start_days ? 'No start day in the last 5 sessions.' : 'Fills in after the next evening scan.');
+      ss.forEach((r) => {
+        const tr = h('tr');
+        tr.append(tkCell(r.symbol, r.tv), h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), pctCell(r.date_chg_pct, 0),
+          h('td', 'num' + (r.date_gap_pct >= 2 ? ' tgr-up' : ''), p1(r.date_gap_pct, true)), h('td', 'num' + (r.date_rel_vol >= 1.5 ? ' tgr-up' : ''), fX(r.date_rel_vol)),
+          h('td', 'num', fPrice(r.date_close)), h('td', 'num', fPrice(r.px)), h('td', 'num ' + tone(r.since), p1(r.since, true)),
+          h('td', 'num ' + tone(r.date_vs_200_pct), p1(r.date_vs_200_pct, true)), h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
+          h('td', 'nw', r.on || (r.launch_day ? 'launch day' : '—')), h('td', '', (r.group || '—') + ' · ' + (r.group_status || '')));
+        stb.append(tr);
       });
     }
     /* trending groups */
