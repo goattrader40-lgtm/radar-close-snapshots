@@ -973,6 +973,14 @@ def main():
                     r["guide"] = hg
         else:
             r.pop("out_headline", None)
+        # a release read without any guidance in it (NBIS Nov 12 2026: the 6-K read at 9:22 AM had none; the headline "Nebius
+        # Group Affirms FY2026 Sales Guidance of $3.000B-$3.400B vs $3.372B Est" had it): the headline's guidance stands in
+        hd2 = (NEWS.get(sym) or {}).get("headline") if r.get("rel_url") and now.isoformat() >= r["report_at"] else None
+        if hd2 and hd2.get("title") and str(hd2.get("ts") or "")[:10] >= r["date"] and \
+                (not r.get("guide") or r["guide"].get("dir") in (None, "none") or r["guide"].get("src") == "headline"):
+            hg = headline_guide(hd2["title"], r.get("nq"), r.get("fy"), " ".join(x for x in (hd2.get("source"), hd2.get("at")) if x))
+            if hg:
+                r["guide"] = hg
     for sym in syms:
         r = rows[sym]
         # Yahoo's estimate stays paired with Yahoo's actual (the same adjusted basis). The old swap to Nasdaq's estimate
