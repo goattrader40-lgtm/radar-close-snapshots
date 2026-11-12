@@ -125,19 +125,23 @@ unsure; launch days 7 / 7; 13 of 18 charts "not clean").
   to the last, then the EMAs roll over (COHR +21.5 / +13.2 / +6.5%, AXTI +48.7 / +6.8%); **a gap over the 21 EMA is a
   go even in a downtrend, as a short swing** (AXTI Jul 31, Sep 17 2026: 2-week runs); a trend that lasts needs a higher
   low, then a higher high; the day the uptrend breaks ends the trade (ALAB, MU Oct 8 2026).
-- **AGREED, to build first next session (the user's go, Nov 11 2026, APPN: "you can add this as a buy point in base, very
-  strong one")**: **the 2nd higher low in the base**. After a violent drop to the 50 EMA that holds (the 1st low: APPN Sep
-  10 2026, 33.28 over its 50 EMA 32.93), the stock "would try to make a 2nd higher low": the day(s) it does and holds the
-  50 EMA are a buy point in the base (APPN Sep 28 2026 low 33.35, closed 35.02 over the 50 EMA 34.54; Sep 29). Then the
-  base builds (~30-35 bars) and breaks out (Oct 15). The engine has no read there. Also from this chart: APPN's launch is
-  Aug 6 2026 for the user (Aug 7 too: volume + gap); the engine says Aug 7. Test branch first, `--regress`, show, wait.
+- **Built at the end (the user's go, Nov 11 2026, APPN: "you can add this as a buy point in base, very strong one")**: **the
+  2nd higher low in the base** (launch.py hl2_on, settings hl2_*): after a drop of 2.5+ ADRs in the base down to the 50 EMA
+  that holds (every close since over it) and a bounce of 1.25+ ADRs, 5+ sessions later the low is at or over the 1st low,
+  tests the 50 EMA and the day closes back over it in the upper half, the 50 EMA rising; once per base. APPN Sep 28 2026
+  (the 1st low 33.28 Sep 10, the 2nd 33.35, closed 35.02 over the 50 EMA 34.54): reads. It also reads COHR Mar 17 2026
+  (not judged by the user). No agreed read changed. Also from this chart: APPN's launch is Aug 6 2026 for the user (Aug 7
+  too: volume + gap); the engine says Aug 7.
+- **Done at the end**: the `long` fetch (161 symbols to Nov 11, with DOCU COHR AXTI ALAB NBIS); tools/examples.txt has DOCU,
+  COHR (pick from Feb 6), AXTI (pick from Feb 20), APPN (to Nov 10), ALAB, NBIS; **tools/expected_reads.txt still not
+  rewritten** (`--regress` lists ~220 differing lines: today's rule changes plus the 6 new examples). DOCU Nov 11: the
+  engine has its flag line 81.16 as the next buy point (matches the user's chart).
 - **Asked of the user (they will "compile and provide all at once")**: go live or not; the 135-row list (keep the way
   back, or only on a base breakout / launch-size day); 3-5 more charts each of: dying trends (and ones that kept going),
   follow-through days, launches under the 200 SMA, launches on light volume, gap-over-the-21-EMA swings, choppy charts;
   VEEV Sep 30 and APPN Oct 8 2026 right or wrong; NBIS Aug 25 2026 (assumed wrong).
-- **First things next session**: fetch the new example stocks' history (`long` with EVERY symbol again plus DOCU COHR
-  AXTI ALAB NBIS CAI: a `long` run replaces the file), then add the agreed COHR / AXTI / DOCU reads to tools/examples.txt;
-  DOCU's flag line Oct 26 - Nov 11 is unchecked (the bars here ended Oct 23).
+- **First things next session**: the user's new charts (see "Asked of the user"); for each, save it in their words in
+  tools/chart_examples.txt, replay it, say where the engine matches. A `long` run replaces the file: pass every symbol again.
 - **Good to know**: a session can't run probe_catalyst.py whole (no Alpaca keys: it hangs on the news step); its
   buy_points() alone runs in ~25 minutes on history/bars_2y.json.gz. Playwright needs `proxy: {server: HTTPS_PROXY, bypass:
   'localhost,127.0.0.1'}` to load the local page. The engine needs `pip install numba numpy pandas`; history/bars_2y.json.gz
