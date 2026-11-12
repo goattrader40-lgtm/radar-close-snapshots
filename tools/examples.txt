@@ -18,3 +18,11 @@ TTAN 2026-10-15 2026-10-30 pick
 LIFE 2026-10-01 2026-10-30 pick   # the user agreed its Oct 8 undercut & reclaim, Oct 20 pop, Oct 21 breakout and Oct 30 flag (44.81)
 AEHR 2026-02-11 2026-04-10 launch   # the user agreed (Nov 1 2026): Mar 31 50 EMA undercut & reclaim, Apr 2 bull flag breakout (closed under the 50 EMA Mar 27 & 30), Apr 6 base breakout
 APLD 2026-04-14 2026-05-08 launch   # the user agreed (Nov 1 2026): May 4 the textbook bull flag breakout (pole Mar 31 - Apr 23, flag Apr 24 - May 1)
+# Added Nov 11-12 2026 (the session "Radar: full portal review, build"): the user's new charts, tools/chart_examples.txt. NOT in
+# tools/expected_reads.txt yet (it is rewritten only once the user has agreed the test branch's reads): --regress lists them.
+DOCU 2026-08-13 2026-11-11 launch   # a clean chart the user would trade; Nov 11 at its flag line (the engine: the line 81.16 is the next buy point)
+COHR 2026-02-06 2026-05-13 pick     # the user's buy days: Feb 13 + Feb 17, Feb 18 bull flag, Feb 20 breakout, Mar 5 retest, Mar 9 reclaim, Mar 31 50 EMA undercut & reclaim (1 close), Apr 8 the falling line, Apr 10, Apr 30 bull flag, May 11 (Mar 17 "2nd higher low" is the engine's, not judged)
+AXTI 2026-02-20 2026-06-05 pick     # "beautiful chart": Feb 20 gap up + breakout of base, then breakout / pullback to the base / hold at the 21 EMA, to the May 26 high
+APPN 2026-08-07 2026-11-10 launch   # Sep 28 2026 the 2nd higher low in the base (the 1st low Sep 10 held the 50 EMA), Oct 15 breakout, the flag in November
+ALAB 2026-09-21 2026-10-14 launch   # tradable to Oct 6 (breakout); Oct 8 2026 the breakout failed: not tradable from then on
+NBIS 2026-08-12 2026-08-26 launch   # would not trade: the Aug 12 2026 launch did not hold (Aug 20); Aug 25 "50 EMA undercut & reclaim" is the engine's, assumed wrong
