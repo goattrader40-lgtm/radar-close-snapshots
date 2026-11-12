@@ -155,3 +155,12 @@
 #   start day!!!!" -> THE START DAY = the day the stock breaks through the 21 / 50 EMA and changes the tide, with volume (over
 #   1x for sure), usually on a gap up; over the 200 SMA preferred. WITHDRAWN: "range stock = no launch" for WRBY and VSAT
 #   (they were launches that failed; hindsight). ITT, RLAY, RAL were called "same" before this: not re-judged.
+# Nov 12 2026 (midday), the user on the test list throwing NET, AMD and ANET off the session after their launch: "come on now
+#   net amd anet is new leaders.. they just had a gap and big day above 21ema and 50!!!!"; "you gotta give a day or 2 so 21 ema
+#   and 50 ema start rising,, when i say rising means todays bigger than yesterday"; "anet as of today rising and net both of
+#   them". -> BUILT on test/cleanlaunch: rising = the EMA over the day before's (was vs 5 sessions before); the rule starts 2
+#   sessions after a launch; a launch that closed under its 50 EMA has no list rule until it has closed over the 50 EMA once
+#   (5 sessions at most). The full-market test build (Nov 11 close): AMD (launch Nov 6), NET (Nov 9) and ANET (Nov 6) are ON;
+#   218 launches, 192 off the list waiting (128 "neither EMA rising", 36 failed breakouts, 28 two closes under the 50 EMA).
+#   To tell the user: an EMA is over the day before's exactly when the close is over it, so "neither rising" now means a
+#   close under both the 21 and the 50 EMA, the same day (AEHR Mar 27 2026 off, back Mar 31 on its agreed 50 EMA reclaim).
