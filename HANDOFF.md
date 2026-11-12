@@ -81,7 +81,12 @@ alone.
   everywhere, the TREND list and its triggers, and the ★ stars (★ = Trend Up at the last close): their tested +0.33R was
   measured on the old rule; a 2-year check of the stars was offered, not asked for. Tonight's day job loaded the old code:
   radar-day `daily` and picks.yml were re-run after it on main. **First check**: Nov 13 stocks.json trend / tr[4] from the
-  new rule; the old-vs-new comparison (radar-tools groupsdry on main and test/trend50) was running when it went live.
+  new rule. The comparison (radar-tools groupsdry, Nov 12 close): 7 of 3,327 labels changed, all from none to positive (TSLA,
+  CDNS, RAL, MSGE, WS -> Up; NSC -> Reclaim; SPH -> Turn up); the TREND list 227 -> 228 (RAL joins). Explained to the user after
+  go live: with a one-day test an EMA rises exactly when the price is over yesterday's EMA, so on the Trend label (price over
+  the 21 EMA, which is over the 50) the 50 EMA check no longer filters anything. **The user is thinking about it** (also
+  offered: 'higher than yesterday 2 days in a row'). **Also open, the user to decide**: the code grader's STAGE (codegrade.py
+  SLOPE = 5: Stage 2 needs the 21 and 50 EMA higher than 5 sessions ago) to one day or not.
 - **Report only, no change (Nov 11 one-week check, code grade vs Claude, Nov 5-11 gap-ups)**: code A 3 names, avg +13.5%
   to Nov 11 (XERS +35.9%, MGNI +12.3%, APPN -7.8%); code B (5) no better than C (16), both +2.8%; Claude A +7.2% > B +3.5% > C
   +0.9%, Claude's B held 5/9 vs code B 1/5. Where both gave letters and differed (6): code right 3 (PTON, U, TLN), Claude 2
