@@ -329,6 +329,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Also on the tab | RS, Trend and + Filter for both tables (unchanged) |
 | When it updates | Weekdays about 7:10-8:55 AM ET, then 9:10 and 9:20 AM ET for reports whose filing came late (NBIS Nov 12 2026 filed at 9:22 AM); nothing between the open and the close (the user, Nov 12 2026: 'i need those by market open after that not interested'), 4:50 / 6:30 / 8:30 PM ET, Sunday 6 PM ET |
 | Out, no filing yet (the user, Nov 12 2026, NBIS) | A report that is out (its time has passed) with no SEC filing to read yet shows 'Out · not read yet' and the pre-market news headline (source and time) where it said 'reports Thu'; the numbers and the read come when the filing arrives (a foreign company files its 6-K hours after the release) |
+| Read without the SEC filing (the user, Nov 12 2026: 'yes do that'; by code, no Claude) | For a report that is out with no SEC filing yet (today's or last evening's): 1. the release itself on a newswire the news feed links to (GlobeNewswire, Business Wire, PR Newswire...), read like the filing; 2. else the EPS, revenue and revenue guide exactly as the news feed's earnings headlines print them ('Q3 EPS $0.43 Beats $0.42 Estimate, Sales $447.1M Beat $427.2M Estimate'; 'Raises FY2026 Sales Guidance from ... to ... vs ... Est'). The read then ends '· from the newswire / news headlines, no SEC filing yet'; the SEC filing replaces it when it arrives |
 
 ## Trend column
 

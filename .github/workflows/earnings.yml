@@ -36,6 +36,8 @@ jobs:
       - name: Build earnings.json
         env:
           SEC_UA: ${{ secrets.SEC_UA }}
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}     # the news feed, for reports out without an SEC filing yet
+          ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
         run: |
           H=$(TZ=America/New_York date +%H); M=$(TZ=America/New_York date +%M); D=$(TZ=America/New_York date +%u)
           T=$((10#$H * 60 + 10#$M))
