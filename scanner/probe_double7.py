@@ -18,9 +18,10 @@ import numpy as np
 NY = zoneinfo.ZoneInfo("America/New_York")
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 ADR_MIN, N7, ADR_N, COST = 4.0, 7, 20, 0.05          # COST: % a side in the account simulation
-FILTERS = ("user", "user200", "book_adr4", "book_all", "rise_adr4", "rise_all")
+FILTERS = ("user", "user200", "book_adr4", "book_all", "rise_adr4", "rise_all",
+           "pat", "pat_pull", "pat_lo7", "pat_u10", "pat_r21", "pat_u21")
 ENTRIES = ("close", "open")
-EXITS = ("none", "daylow", "adr1", "adr2", "ema50", "time10")
+EXITS = ("none", "daylow", "adr1", "adr2", "ema50", "ema21", "time10")
 
 
 def fetch(sym, since):
@@ -79,7 +80,33 @@ class S:
         up21 = np.zeros(c.size, bool)
         up21[1:] = self.e21[1:] > self.e21[:-1]
         rise = up & up21                   # the book's rule + the 21 and the 50 EMA both higher than the day before
-        self.f = {"rise_adr4": ok & self.lo7 & over200 & hi_adr & rise, "rise_all": ok & self.lo7 & over200 & rise, "user": ok & self.lo7 & trend & hi_adr, "user200": ok & self.lo7 & trend & hi_adr & over200,
+        # the user's reclaim days (Nov 12 2026), on daily bars, in place of the 7-day-low close:
+        #   r21 "21 EMA retest hold": the low under the 21 EMA and the open, the close back over it in the upper half
+        #       of the day, the close before over it
+        #   u21 "21 EMA undercut & reclaim": 1-3 closes under the 21 EMA (each within half an ADR of it), today's close
+        #       back over it in the upper half
+        #   u10 "10 EMA undercut & reclaim": the low under the 10 EMA and the open, or the close before under it; the
+        #       close back over the 10 EMA in the upper half
+        o, h, l, n = self.o, self.h, self.l, c.size
+        half = c >= (h + l) / 2
+        p = lambda x: np.concatenate(([np.nan], x[:-1]))
+        und21 = c < self.e21
+        near = c >= self.e21 * (1 - 0.5 * self.adr / 100)
+        run_ = np.zeros(n, int); bad = np.zeros(n, bool)       # closes in a row under the 21 EMA up to this day
+        for i in range(1, n):
+            if und21[i]:
+                run_[i] = run_[i - 1] + 1
+                bad[i] = (bad[i - 1] if und21[i - 1] else False) or not near[i]
+        pr, pb = np.concatenate(([0], run_[:-1])), np.concatenate(([False], bad[:-1]))
+        r21 = (l < self.e21) & (l < o) & (c > self.e21) & half & (p(c) > p(self.e21))
+        u21 = (c > self.e21) & half & (pr >= 1) & (pr <= 3) & ~pb
+        u10 = (c > self.e10) & (c > self.e21) & half & (((l < self.e10) & (l < o)) | (p(c) < p(self.e10)))
+        pat = r21 | u21 | u10
+        pull = roll(self.lo7.astype(float), 6, np.max) > 0      # a 7-day-low close today or in the 5 sessions before
+        base = ok & over200 & hi_adr & rise
+        self.pat = {"u10": u10, "r21": r21, "u21": u21}
+        self.f = {"pat": base & pat, "pat_pull": base & pat & pull, "pat_lo7": base & pat & self.lo7,
+                  "pat_u10": base & u10, "pat_r21": base & r21, "pat_u21": base & u21, "rise_adr4": ok & self.lo7 & over200 & hi_adr & rise, "rise_all": ok & self.lo7 & over200 & rise, "user": ok & self.lo7 & trend & hi_adr, "user200": ok & self.lo7 & trend & hi_adr & over200,
                   "book_adr4": ok & self.lo7 & over200 & hi_adr, "book_all": ok & self.lo7 & over200}
 
 
@@ -107,6 +134,7 @@ def trade(s, t, entry, ex):
         if u > e or entry == "open":
             if s.hi7[u] and u > t: return e, u, px, s.c[u], risk
             if ex == "ema50" and s.c[u] < s.e50[u]: return e, u, px, s.c[u], risk
+            if ex == "ema21" and s.c[u] < s.e21[u]: return e, u, px, s.c[u], risk
             if ex == "time10" and u - e >= 10: return e, u, px, s.c[u], risk
     return None            # still open at the end of the data
 
@@ -140,6 +168,9 @@ def stats(tr):
     rs = [x[5] for x in tr if x[5] is not None]
     if rs:
         o["avg_R"] = round(float(np.mean(rs)), 2)
+        wr, lr = [x for x in rs if x > 0], [x for x in rs if x <= 0]
+        o["win_R"] = round(float(np.mean(wr)), 2) if wr else None
+        o["loss_R"] = round(float(np.mean(lr)), 2) if lr else None
         o["stopped_pct"] = round(100 * sum(1 for x in rs if x <= -0.95) / len(rs), 1)
     yr = {}
     for x in tr: yr.setdefault(x[1][:4], []).append(x[3])
@@ -228,7 +259,9 @@ def main():
     # in the daily marks only, not in the trade's result (the exit value is entry price x the trade's own result)
     acct = {f"{f}|{en}|{ex}": account(keep[(f, en, ex)], cal, px) for f, en, ex in
             (("user", "close", "none"), ("user", "close", "adr2"), ("user", "close", "time10"), ("user", "open", "none"),
-             ("user200", "close", "none"), ("rise_adr4", "close", "none"), ("rise_adr4", "close", "daylow"),
+             ("user200", "close", "none"), ("pat", "close", "none"), ("pat", "close", "daylow"), ("pat", "close", "adr1"),
+             ("pat", "close", "ema21"), ("pat", "close", "time10"), ("pat", "open", "none"), ("pat_pull", "close", "none"),
+             ("pat_pull", "close", "daylow"), ("pat_pull", "close", "adr1"), ("pat_pull", "close", "ema21"), ("rise_adr4", "close", "none"), ("rise_adr4", "close", "daylow"),
              ("rise_adr4", "close", "adr1"), ("rise_adr4", "close", "adr2"), ("rise_adr4", "open", "none"), ("book_adr4", "close", "none"), ("book_all", "close", "none"))}
     base = {}
     for k, s in etf.items():
