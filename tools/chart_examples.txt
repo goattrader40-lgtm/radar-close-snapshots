@@ -404,3 +404,9 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # except CAI Aug 7 -> Aug 6 2026 (the user's date) and ATRC Jul 24 -> Jun 26 2026 (OPEN: the user said Jul 24).
 # WHAT NO RULE CATCHES YET: the modest first days (FBIN Oct 15 +2.9%, XERS Sep 17 +4.9%, VERX Oct 1 +4.4%) and the stocks
 # under the liquidity / ADR / price minimums that day (PAR, FBIN, VCEL Nov 4, XERS, PGNY Oct 7, SPOT Oct 22).
+# EPAM: "epam 8th october or 19th october... 5th november is episodic pivot maybe 2nd launch but not original!!!!". Oct 8 2026:
+#   +5.1% on 0.8x, closed 113.86 at the day's high, back over the 10 / 21 EMA (110.57 / 111.07), under the 200 SMA 128.61. Oct
+#   19 2026: +4.2% on 0.9x, closed 127.38 over the 200 SMA 125.44 and its 6-month bodies. Nov 5 2026: a 13.7% gap, +20.6% on
+#   3.3x, closed 165.70. Live: launch Nov 5 (the episodic pivot). The test branch with the first day: launch Oct 1 2026 (a first
+#   day under the 200 SMA), Nov 5 a follow-through day: the user's "not original" MATCHES, the day (Oct 1, not Oct 8 / 19) not
+#   confirmed by the user.
