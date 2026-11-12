@@ -72,6 +72,16 @@ alone.
      **First check Fri Nov 13**: earnings.yml workflow_dispatch runs at those times and earnings.json built_at follows.
   Tested: radar-tools `earntest` on main vs the branch (386 rows, 0 errors, 5 rows changed as above); the page with the
   new file (AVEX / NBIS rows, no page errors); the slot logic simulated (a job starting at 8:12 runs 8:12, 8:35, 8:50, 9:05).
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~4:05 PM ET, branch test/trend50, merge 90ce403): the Trend base's 50 EMA
+  "rising" = higher than the day before** (the user: "50 ema rising menain is this today higher than yesterday not 5 days
+  ago"; was 5 sessions ago since Nov 3). radar/pipeline.py trend_at (e50[i] > e50[i-1]); stocks.json tr[4] = the 50 EMA the
+  session before (was 4 sessions before); live (docs/index.html trendOf, radar/alerts.py live_trend): today's 50 EMA at the
+  live price vs the last close's. Unchanged: the 10 / 21 "rising" (already vs the day before), the list rules in
+  scanner/launch.py (the 21 / 50 EMA vs 5 sessions before), the code grader's STAGE (SLOPE = 5). It changes the Trend column
+  everywhere, the TREND list and its triggers, and the ★ stars (★ = Trend Up at the last close): their tested +0.33R was
+  measured on the old rule; a 2-year check of the stars was offered, not asked for. Tonight's day job loaded the old code:
+  radar-day `daily` and picks.yml were re-run after it on main. **First check**: Nov 13 stocks.json trend / tr[4] from the
+  new rule; the old-vs-new comparison (radar-tools groupsdry on main and test/trend50) was running when it went live.
 - **Report only, no change (Nov 11 one-week check, code grade vs Claude, Nov 5-11 gap-ups)**: code A 3 names, avg +13.5%
   to Nov 11 (XERS +35.9%, MGNI +12.3%, APPN -7.8%); code B (5) no better than C (16), both +2.8%; Claude A +7.2% > B +3.5% > C
   +0.9%, Claude's B held 5/9 vs code B 1/5. Where both gave letters and differed (6): code right 3 (PTON, U, TLN), Claude 2
