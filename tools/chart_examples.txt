@@ -227,3 +227,109 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # under the 50 EMA: MU, INTC, AMD x2); 4 other (NVDA Feb 18 2016, AMD May 18 2016, NTSK Oct 15, SHOP Jan 5 2017).
 # Also missing in the engine: bases longer than 6 months (DELL 34-month, ARM 24-month), long falling ranges, a way back onto
 # the list for leaders after a market low, blow-off-top exits (the red arrows).
+#
+# ===== Nov 11 2026 evening (the session "Radar: full portal review, build continued (Nov 12)"): 11 more charts =====
+# THE USER'S POINT IN ALL OF THEM: the LAUNCH is the FIRST day of the new move, "the fundamental trend change starting point":
+# "very first day gap up over 21 ema 50 ema is the launch, or very strong move up", even under the 200 SMA. Every big day
+# after it, also the day it crosses the 200 SMA and also a later episodic pivot breakout, is "just a follow through day" of
+# that launch, not a new launch. A launch can come twice: it pulls back, tests the gap / the breakout, holds, and goes again
+# ("delayed launch", "real launch again": GLOB Oct 8, SPOT Oct 29 2026).
+# The engine's reads below: test/cleanlaunch, bars to Nov 10-11 2026; "live" = the portal's Launches file of Nov 11.
+#
+# APP (a daily chart, Nov 2026). The user: "app nov 5th is the launch 6th is not launch its just a follow through day".
+#   The prices: Nov 5 2026 a 28.7% gap, +31.0% on 5.1x, closed 356.10 over the 21 EMA 272.65 and the 50 EMA 295.60, under
+#   the 200 SMA 409.96; Nov 6 +9.9% on 2.3x, closed 391.22, still under the 200 SMA (409.30).
+#   The engine: no launch on either day (both under the 200 SMA). Live it is on the Launch laggards tab with Nov 5 (A).
+#   MATCH on the day (Nov 5, not Nov 6), but as a laggard launch, not on Launches.
+# BETA (a daily chart, Nov 2026; a blue line at the old high ~27.4, a blue arrow at the Nov 3 candle). The user: "november
+#   3rd launch day rest was just follow through days".
+#   The prices: Nov 3 2026 a 10.2% gap, +16.0% on 2.6x, closed 23.64 over the 21 / 50 EMA (20.32 / 20.51) and the 200 SMA
+#   18.97; Nov 4 +7.1% on 2.0x; Nov 6 +12.8% on 1.7x, closed 27.12 under the old high 27.42; Nov 9 28.52.
+#   The engine: launch Nov 3 (B), live too. Nov 4 and Nov 6 pass the launch-day tests but are not taken as a new launch
+#   (one launch per 20 sessions). MATCH.
+# FLY (a daily chart to Nov 11 2026; a blue line at 24.91, the 200 SMA 26.82 above). The user: "fly original launch day 6th
+#   november (under 200). rest is follow through".
+#   The prices: Nov 6 2026 a 12.7% gap, +36.8% on 4.7x, closed 20.76 over the 21 EMA 18.55 and the 50 EMA 20.25, under its
+#   1-month high 20.96 and 23% under the 200 SMA 26.86; Nov 9 +17.1% on 2.6x, closed 24.31. (The bars end Nov 10.)
+#   The engine: MISS. No launch (under the 200 SMA), and no laggard launch either (it closed 20 cents under its 1-month
+#   high). FLY is not on any list.
+# GLOB (a daily chart Aug - Nov 2026). The user: "glob perfect example / october 1st is the launch day, very first day gap up
+#   over 21ema 50 ema is the launch, or very strong move up ... then testing gap holding up, 8th october real launch again
+#   after 4 days.. and kept going up straight line... so other days not launch, 1st october 8th october is the launch days...
+#   over 200 sma is just a follow through".
+#   The prices: Oct 1 2026 a 9.1% gap on 2.2x, opened 37.87 over the 21 EMA 36.33 and the 50 EMA 36.81, faded to close 36.98
+#   (+6.6%, at the bottom of the day's range), under the 200 SMA 44.99; Oct 2-7 closes 35.10 - 35.75 (the low 34.61, over
+#   the Sep 30 close 34.70 on closes: the gap held); Oct 8 +4.4% on 0.9x, closed 37.05 at the day's high, back over the 21
+#   / 50 EMA (36.15 / 36.63); then up to 45.78 on Oct 22 (+6.0% on 1.9x, the 2nd close over the 200 SMA 42.83).
+#   The engine: launch Oct 22 2026 (C), live too: the day the user calls "just a follow through". Oct 1 fails 3 tests (closed
+#   in the lower half, under the 200 SMA, under its 1-month high), Oct 8 fails 3 (up under 5%, 0.9x volume, under the 200).
+#   WRONG DAY: 15 sessions late, 24% higher (45.78 vs 36.98).
+# MGNI (a daily chart, Nov 2026). The user: "mgni 9th november 2026.. 5th november 2026 was the launch".
+#   The prices: Nov 5 2026 a 13.0% gap, +20.8% on 4.9x, closed 27.52 over its old high 26.84; Nov 9 +6.0% on 1.6x, 29.04.
+#   The engine: launch Nov 5 (A, power day), live too; Nov 9 passes the launch-day tests but a power day is never replaced.
+#   MATCH.
+# PGNY (a daily chart Aug - Nov 2026). The user: "$pgny 7th october is launch day (meaning fundamental trend change starting
+#   point!!!!!) 5th november is episodic pivot breakout, its follow through of pgny original launch day 7th october".
+#   The prices: Oct 7 2026 +6.3% on 1.9x, opened 25.81 (0.4% down), closed 27.55 over the 21 EMA 26.17 and the 50 EMA 26.67
+#   (it had closed under both), over the 200 SMA 24.21; ADR 3.0%. Nov 5 2026 a 10.2% gap, +14.2% on 3.1x, closed 34.37.
+#   The engine: launch Nov 5 2026 (A, power day), live too. Oct 7 is no launch for it: the ADR was 3.0% (3.5% needed) and it
+#   did not open up. WRONG DAY: 20 sessions late, 25% higher (34.37 vs 27.55).
+# SPOT (a daily chart Sep - Nov 2026; a box at ~536-541, the top of the October base). The user: "22 october 2026 launch
+#   day, then pulled back retested breakout / breakout high. 29th october i would consider launch again, strong reversal...
+#   delayed launch i would call.."
+#   The prices: Oct 22 2026 a 6.8% gap, +11.1% on 3.2x, closed 583.66 (ADR 3.3%); Oct 26-28 down to 538.40 (the low 536.74,
+#   at the box and the 21 EMA 536.18); Oct 29 +3.5% on 0.7x, low 538.42, closed 557.24 near the day's high; Oct 30 a 3.2%
+#   gap, +6.5% on 1.8x, closed 593.44.
+#   The engine: launch Oct 30 2026 (A), live too (Oct 22 had an ADR of 3.3%, under the 3.5% a launch needs; followed from Oct
+#   22 it reads "Base breakout over 576.00"). Oct 29 has no read ("back under its breakout level: the breakout didn't
+#   advance"). NEAR: the user's two launch days are Oct 22 and Oct 29; the engine's one is Oct 30, the day after.
+# INTC (a daily chart Jan - Sep 2021): a DYING TREND / not tradable. The user: "volatility again goes up, moves up and down
+#   but price not advancing higher highs.. intc april 2021".
+#   The prices: highs 63.95 (Jan 21) -> 63.54 (Feb 25) -> 67.44 (Mar 24, +5.4%) -> 68.49 (Apr 12 2021, only +1.6%), swings
+#   of 8-17% down between them; Apr 12 reversed from the high to close -4.2%; Apr 23 gapped down 5.4% under the 21 and 50 EMA.
+#   The engine: INTC was not on the list (ADR 2.4-3.2%): no read. The third dying-trend example after COHR and AXTI.
+# MRVL (a daily chart Apr - Nov 2026): a CLIMAX TOP, then not tradable, with one short swing. The user: "mrvl june 2026
+#   violent very distributions days.. adr became bigger up down at top. volatility out of control while price not going up...
+#   chopping... and high not making new high. august 4th is the only tradable starting point of gap up over 21. failed few
+#   days later, short swing point again in sep[tember]..." (the note is cut off at the chart's edge: the September day is
+#   not readable).
+#   The prices: Jun 2 2026 +32.5% on 3.9x (a 15.5% gap, closed 290.79); Jun 3 high 324.20; Jun 5 -16.7%; Jun 9 -7.6%; Jun 16
+#   -9.8%; Jun 18 high 329.88 on 4.2x, only 1.8% over Jun 3's, closed in the lower third; the average day's range 6.7% in May,
+#   10.6% in June. Aug 4 2026 an 8.4% gap, opened 210.01 over the 21 EMA 207.06, +12.8% on 1.4x, closed 218.59 over the 50
+#   EMA 213.95 too; Aug 10 closed 208.56, back under the 21 EMA.
+#   The engine: Jun 2 2026 "Launch day (A, power)": the user's read is the start of the climax top, not a launch (WRONG).
+#   Followed from June: Jun 25 "21 EMA retest" and Jul 8 "50 EMA undercut & reclaim" (buy reads in the chop: WRONG); Aug 4
+#   "Breakout of the falling range" (MATCH with the user's only tradable day); then 4 more falling-range breakouts (Aug 19,
+#   Sep 21, Oct 1, Oct 6) and launches Aug 19 and Oct 6 (C) that the user did not mark.
+# APP, the long chart (a daily chart mid-2023 - Nov 2026). The user: "climax top after 6-7 month uptrending stock 13th
+#   february $app violent move downwards.. not tradable until may 2nd 2025 where gaps up above 21 and 50 ema, new trend, then
+#   again on earnings same way alignment of emas, getting out of correction!!! run until september 29th. may 2nd buy point,
+#   may 27th bull flag buy points... examples.. top again after 160 days again upwards movement sept 29th 2025 .. after that
+#   its not tradable stock. until nov 5th 2026..."
+#   The prices: Feb 13 2025 a 31.3% gap on 4.6x, high 525.15, closed 471.67 in the lower third of the day (+24.0%), 163% over
+#   the 200 SMA; by Apr 7 2025 200.50 (-62%). May 2 2025 a 4.5% gap, opened 291.99 over the 21 EMA 270.68 and the 50 EMA
+#   286.16, +10.1% on 0.8x, closed 307.58; May 8 2025 (earnings) a 13.4% gap, +11.9% on 2.0x, closed 339.51 in the lower
+#   fifth; May 27 2025 +7.5% on 1.1x, closed 380.91; the top 745.61 on Sep 29 2025 (101 sessions after May 2).
+#   The engine: Feb 13 2025 "Launch day (A, power)": the user's climax top (WRONG). May 2 2025: no launch (0.8x volume; the
+#   earnings day May 8 closed in the lower half); followed from May 2 it reads May 8 "Breakout of the inner base" and misses
+#   May 27 (no flag read). Launches Aug 7 and Sep 8 2025 (inside the user's run: follow-through for the user). After Sep 29
+#   2025, the user's not-tradable stretch: buy reads Oct 22 2025 (50 EMA undercut & reclaim), Nov 26 2025 (21 EMA undercut &
+#   reclaim) and a launch May 27 2026 (B): WRONG by the user's read. Nov 5 2026: see APP above.
+# HOOD (a daily chart 2024 - Nov 2026; a blue line at ~50, the top of the spring 2025 base). The user: "after 6 month of
+#   uptrending stock nonstop double top lower high october 2025. until this day all higher lows and higher highs. may 8th
+#   2025 gap up (new launch) out of consolidation time, as it shows with news, and breakout out of base and all emas aligning
+#   upwards as you correctly identified"; "feb 13th 2025 climax, then violent move down.."
+#   The prices: Feb 13 2025 an 11.1% gap, +14.1% on 3.4x, high 66.91, closed 63.80 (124% over the 200 SMA); 29.66 on Apr 7
+#   (-56%). May 8 2025 a 3.5% gap, +8.2% on 1.1x, closed 54.07 over the base top 51.30, the 10 > 21 > 50 EMA rising. The top
+#   153.86 on Oct 6 2025 (closed at the day's low, -3.0%); the lower high 150.47 on Oct 31 2025.
+#   The engine: Feb 13 2025 "Launch day (A, power)": the user's climax (WRONG). May 8 2025: no launch (1.1x volume, 1.5x
+#   needed); its launch is Jun 30 2025 (B), 36 sessions and 72% later (93.00 vs 54.07). WRONG DAY. Followed from May 8 its
+#   buy reads to September are breakouts and retests of a rising staircase (no conflict with the user).
+#
+# THE SCORE of this batch (the user's launch day vs the engine's): MATCH 3 (BETA Nov 3, MGNI Nov 5, APP Nov 5 as a laggard) ·
+# NEAR 1 (SPOT) · LATE 4 (GLOB Oct 1 -> Oct 22, PGNY Oct 7 -> Nov 5, HOOD May 8 -> Jun 30 2025, APP May 2 2025 -> none
+# until Aug 7) · MISS 1 (FLY Nov 6) · a CLIMAX TOP read as a launch 3 (APP and HOOD Feb 13 2025, MRVL Jun 2 2026).
+# What the late / missed ones have in common: the first day came UNDER THE 200 SMA (GLOB, FLY, APP Nov 5) or on LIGHT
+# VOLUME (HOOD 1.1x, APP May 2 2025 0.8x, GLOB Oct 8 0.9x) or with a low ADR out of a quiet base (PGNY 3.0%, SPOT 3.3%).
+# What the climax tops have in common: the gap day came after 6-7 months of uptrend, 120-160% over the 200 SMA, and closed
+# in the lower half of its range (APP 0.30, HOOD 0.46 of the range; MRVL Jun 2 closed at its high, the reversal came Jun 3-5).
