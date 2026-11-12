@@ -2690,7 +2690,21 @@ defCalc('industry_perf', {
       why.append(h('b', '', 'Why: '), PMEV.why);
       (PMEV.sources || []).forEach((u) => { if (!/^https:\/\//.test(u)) return; const l = h('a', '', ' 📰'); l.href = u; l.target = '_blank'; l.rel = 'noopener'; l.title = 'The source: ' + u; why.append(l); });
       why.append(h('span', 'tgr-lbl', ' (Claude, the 8:45 grading' + (PMEV.time ? ', ' + PMEV.time + ' ET' : '') + ')'));
-    } else why.append(h('span', 'tgr-lbl', 'Why: the market / sector news behind it comes with the 8:45 grading (by about 9:05 AM ET). Each stock\'s own news is in the News column below.'));
+    } else {
+      /* the reason by code (the user, Nov 12 2026: "i dont want this to be done by claude, it has to be done by code"): the
+         own news of the event's leaders from the code news feed (pmnews.json, the 8:05 / 8:35 runs), the first 4 that have any */
+      const N = PMN && PMN.day === today && PMN.news ? PMN.news : {};
+      const got = evs.flatMap((e) => e.leaders || []).filter((x, i, a) => a.indexOf(x) === i).map((x) => [x, N[x]]).filter(([, n]) => n && (n.headline || n.catalyst)).slice(0, 4);
+      why.append(h('b', '', 'Why (the leaders\' own news): '));
+      if (!got.length) why.append(h('span', 'tgr-lbl', 'no company news on its leaders in the news feed yet: a market or sector move. Each stock\'s own news is in the News column below.'));
+      got.forEach(([x, n], i) => {
+        if (i) why.append(' · ');
+        why.append(h('b', '', x + ': '), (n.catalyst || 'In the news') + (n.headline && n.headline.title ? ' — ' + n.headline.title : n.reason ? ' — ' + n.reason : ''));
+        if (n.headline && n.headline.at) why.append(h('span', 'tgr-lbl', ' (' + (n.headline.source || 'news') + ' ' + n.headline.at + ')'));
+        const u = (n.headline && n.headline.url) || (n.sources || [])[0];
+        if (u && /^https:\/\//.test(u)) { const l = h('a', '', ' 📰'); l.href = u; l.target = '_blank'; l.rel = 'noopener'; l.title = 'The source: ' + u; why.append(l); }
+      });
+    }
     const up = evs.find((e) => e.dir === 'up');
     $('#pme-bounce').hidden = !up;
     if (!up) return;
