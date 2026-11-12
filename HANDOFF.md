@@ -85,6 +85,15 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
      opening range high (ORH): any / Yes / No", "Above yesterday's high (PDH): ...", "Above the 21-day closing high: ..."
      (docs/index.html LVLF / LVLO; the saved values stay 'Over it' / 'Under it', so saved filters keep working; the Alerts
      tab's morning-breakout extra filter too). Tested on Gainers with live data.
+  3. **Earnings tab: read without the SEC filing** (the user: "#18 yes do that", "do this so we get news as in nbis"; branch
+     test/earnwire, 8ff3424, ~12:20 PM ET Nov 12). radar/earnings.py late_reports(): a report that is out (today's or last
+     evening's) with no filing read gets 1. the release on a newswire the news feed links to (use_release, the same reader as
+     the filing) and, when the wire refuses (GlobeNewswire: 403 for AVEX and HBM in the test), 2. the EPS / revenue / revenue
+     guide exactly as the feed's earnings headlines print them (hl_read: "Q4 Adj. EPS $0.43 Beats $0.42 Estimate, Sales
+     $447.062M Beat ..."; "Raises FY2026 Sales Guidance from ... to ... vs ... Est"). Alpaca's news API (earnings.yml now has
+     the ALPACA keys). The read ends "· from the news headlines, no SEC filing yet"; the filing replaces it when it comes.
+     Tested with `earntest`, then the first live run 12:20 PM: 0 errors, HBM "Mixed" (revenue $765.9M, +4.0% vs est; EPS
+     $0.34), AVEX "Bullish" (guidance raised, +11.7% vs street). By code, no Claude.
   Also seen that morning: rules/make_rules.py defines the sheet "E1 Earnings tab" twice (the 2nd, 4 rows, overwrites the 1st,
   longer one): the two new Earnings rows were added to the 2nd; the lost rows of the 1st are not restored (to look at).
   The user's other points that morning were not faults: FIGR was up 9% on that morning's Q3 report ("im wrong about figr");
