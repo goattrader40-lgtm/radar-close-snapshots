@@ -115,6 +115,8 @@
   .tgr-seg button { appearance: none; border: 0; background: none; font: inherit; font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); color: var(--color-fg-muted); cursor: pointer; }
   .tgr-seg button + button { border-left: 1px solid var(--color-border-line); }
   .tgr-seg button[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); }
+  .tgr-scan { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .tgr-scan .tgr-seg { flex-wrap: wrap; }
   .tgr-rule { margin: 0; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); }
   .tgr-rule .em { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
   .tgr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr)); gap: var(--cds-gap-md); }
@@ -518,6 +520,7 @@
   <section class="tgr-page" id="gainers" role="tabpanel" aria-labelledby="tab-gainers" hidden>
     <div class="tgr-filters" id="g-filters" role="group" aria-label="Gainer filters">
       <span class="tgr-seg" data-param="g_dir" aria-label="Gainers or losers"><button data-v="up" aria-pressed="true">Gainers</button><button data-v="down" aria-pressed="false">Losers</button></span>
+      <div class="tgr-scan"><b>Scan:</b><span class="tgr-seg" id="g-scan" role="group" aria-label="Which stocks to scan: the whole market or one of your lists"></span><span class="tgr-lbl" id="g-scan-note"></span></div>
       <label class="tgr-f"><span id="g-pct-lbl">Up</span> at least <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-param="g_pct" aria-label="Minimum move today, %"> % today</label>
       <label class="tgr-f" title="Today's open vs yesterday's close. Empty = off"><span id="g-gap-lbl">Gap up</span> ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-param="g_gap" aria-label="Minimum gap at the open, %"> %</label>
       <label class="tgr-f">Rel vol ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-param="g_rv" aria-label="Minimum relative volume, times the last 20 trading days"> ×</label>
@@ -531,7 +534,7 @@
       <label class="tgr-f">20-day avg volume ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-param="g_avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K shares</label>
       <button class="tgr-lite" id="g-reset" type="button">Reset to my defaults</button>
     </div>
-    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. Gap = today's open vs yesterday's close (off unless you fill it in; while it's set, a stock without an open yet is left out: Yahoo leaves an NYSE stock's open empty for its first ~10 minutes). Rel vol = today's volume ÷ the average of the last 20 trading days: during market hours by this time of day (volume from 9:30 to now vs the same stretch on those days), after the close the full day; it's rough in the first 5 minutes. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list. <b>+ Filter</b> also has the morning breakout levels, each Over it / Under it: Yesterday's high (PDH), 5-min opening range high (ORH: from 9:36, for the stocks up 2%+), 21-day closing high (the highest close of the last 21 sessions) and EMA stack (live: 10 over 21, 21 over 50, 50 over the 200 SMA …); while one of these is set, a stock without its value is left out.</p>
+    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. <b>Scan</b>: the whole market, or only the names of one of your lists (Launches with its 50 EMA undercut tab, My picks = the stocks you follow, Launch laggards, 3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP, TREND: the names their own tabs show); the filters then apply inside that list and the theme and industry tables below count only its names; kept in this browser. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. Gap = today's open vs yesterday's close (off unless you fill it in; while it's set, a stock without an open yet is left out: Yahoo leaves an NYSE stock's open empty for its first ~10 minutes). Rel vol = today's volume ÷ the average of the last 20 trading days: during market hours by this time of day (volume from 9:30 to now vs the same stretch on those days), after the close the full day; it's rough in the first 5 minutes. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list. <b>+ Filter</b> also has the morning breakout levels, each Over it / Under it: Yesterday's high (PDH), 5-min opening range high (ORH: from 9:36, for the stocks up 2%+), 21-day closing high (the highest close of the last 21 sessions) and EMA stack (live: 10 over 21, 21 over 50, 50 over the 200 SMA …); while one of these is set, a stock without its value is left out.</p>
     <div class="tgr-moves" id="g-moves"><span class="tgr-lbl">Group moves today (3+ tight members pass):</span> <span class="tgr-chips" id="g-moves-list"></span></div>
     <div class="tgr-bar">
       <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
@@ -683,6 +686,7 @@
       </div>
       <div class="tgr-filters" id="pml-filters" role="group" aria-label="Pre-market filters">
         <span class="tgr-seg" data-pm="dir" aria-label="Gap ups or gap downs"><button data-v="up" aria-pressed="true">Gap ups</button><button data-v="down" aria-pressed="false">Gap downs</button></span>
+        <div class="tgr-scan"><b>Scan:</b><span class="tgr-seg" id="pml-scan" role="group" aria-label="Which stocks to scan: the whole market or one of your lists"></span><span class="tgr-lbl" id="pml-scan-note"></span></div>
         <label class="tgr-f">Pre-mkt chg <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-pm="chg_min" aria-label="Minimum pre-market change, %"> % to <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" data-pm="chg_max" aria-label="Maximum pre-market change, %"> %</label>
         <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-pm="price"></label>
         <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-pm="mcap_b"> B</label>
@@ -697,7 +701,7 @@
         <button class="tgr-lite" id="pml-reset" type="button">Reset to my defaults</button>
       </div>
       <details class="tgr-legend tgr-more" data-key="pmlive"><summary>About this scanner</summary>
-      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Pre vs 21, Pre vs 50 and Pre vs 200 = the latest pre-market price vs the 21-day EMA, 50-day EMA and 200-day SMA as of yesterday's close (a column added from the list named vs 21 EMA, vs 50 EMA or vs 200 SMA uses the regular-hours price: yesterday's close before the open; during the session the live price vs today's moving average). vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day. News = why it gaps, for every stock gapping 5%+ up or down, whether or not it passes the graded list's rules: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's <span class="tgr-lbl">(code)</span> from the SEC filings since the last close, the Earnings tab and, when the SEC has nothing, the stock's own headline <span class="tgr-lbl">(headline)</span>: Benzinga's feed through Alpaca, company press releases included (FLY Nov 6, 2026: "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile", 7:31 AM) (from about 8:05 AM ET: news runs at about 8:05 and 8:35, then the code grader at about 8:52, 9:05 and 9:18; hover for the whole reason, 📰 opens the source). <span class="tgr-gm">Sector move: group</span> = no news of its own (no filing, no event headline) while 3+ stocks of its theme or industry gap 5%+ the same way (the biggest names and those with their own news named; MU Nov 6, 2026: Memory &amp; Storage). News only: the stocks the list's rules drop get no grade. <strong>+ Filter</strong> (under the boxes) adds any other criterion, as on the Watchlist, Launches and Gainers: this table's columns (Pre-mkt vol and Vol in K) or anything else (RS, Trend, Group rank, Themes, Earnings date, Launch grade, Watchlist list …); one set for gap ups and one for gap downs, kept in this browser; Reset to my defaults removes them.</p>
+      <p class="tgr-note"><span class="em" id="pml-count">—</span> stocks pass. <b>Scan</b>: the whole market, or only the names of one of your lists (Launches with its 50 EMA undercut tab, My picks = the stocks you follow, Launch laggards, 3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP, TREND: the names their own tabs show); the boxes and + Filter then apply inside that list, and the line next to the buttons says how many names it has, how many traded pre-market and how many pass (clear a box to see more). The scan covers stocks with a $300M+ market cap and 300K+ shares a day. Kept in this browser; the theme event, the graded gappers and your rules for them keep the whole market. Updated every 5 minutes from 7:00 to 9:29 AM ET; this page picks each update up on its own. Prices are Yahoo's pre-market quotes; pre-market volume comes from the consolidated tape (Alpaca) and runs about 15 minutes behind the price (the free data plan's limit). Pre-mkt chg = latest pre-market price vs yesterday's close; Pre-mkt gap = the first pre-market trade vs yesterday's close (TradingView's definitions). Price, Chg, Vol and Rel vol are yesterday's session. Pre vs 21, Pre vs 50 and Pre vs 200 = the latest pre-market price vs the 21-day EMA, 50-day EMA and 200-day SMA as of yesterday's close (a column added from the list named vs 21 EMA, vs 50 EMA or vs 200 SMA uses the regular-hours price: yesterday's close before the open; during the session the live price vs today's moving average). vs PDH = the latest pre-market price vs yesterday's high (regular hours); Above prev-day high keeps only stocks trading over it. Clear a box to turn that filter off. 52W low below = how far the 52-week low sits under the pre-market price (TradingView's "Low 52W below price by"); a stock without a 52-week low yet isn't dropped. <span class="tgr-grade gA">A</span>/<span class="tgr-grade gB">B</span>… badges appear once the 8:47 grading posts (gaps of 5%+ only). <span class="tgr-gm">EP</span> = gap 10%+ with pre-market volume already 25%+ of a normal day. News = why it gaps, for every stock gapping 5%+ up or down, whether or not it passes the graded list's rules: Claude's catalyst and reason when its 8:45 grading covered the stock, else the code grader's <span class="tgr-lbl">(code)</span> from the SEC filings since the last close, the Earnings tab and, when the SEC has nothing, the stock's own headline <span class="tgr-lbl">(headline)</span>: Benzinga's feed through Alpaca, company press releases included (FLY Nov 6, 2026: "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile", 7:31 AM) (from about 8:05 AM ET: news runs at about 8:05 and 8:35, then the code grader at about 8:52, 9:05 and 9:18; hover for the whole reason, 📰 opens the source). <span class="tgr-gm">Sector move: group</span> = no news of its own (no filing, no event headline) while 3+ stocks of its theme or industry gap 5%+ the same way (the biggest names and those with their own news named; MU Nov 6, 2026: Memory &amp; Storage). News only: the stocks the list's rules drop get no grade. <strong>+ Filter</strong> (under the boxes) adds any other criterion, as on the Watchlist, Launches and Gainers: this table's columns (Pre-mkt vol and Vol in K) or anything else (RS, Trend, Group rank, Themes, Earnings date, Launch grade, Watchlist list …); one set for gap ups and one for gap downs, kept in this browser; Reset to my defaults removes them.</p>
       </details>
       <div class="tgr-moves" id="pml-moves"><span class="tgr-lbl">Group gaps (3+ tight members pass; click one to show only its stocks):</span> <span class="tgr-chips" id="pml-moves-list"></span></div>
       <div class="tgr-scroll tall">
@@ -2169,8 +2173,12 @@ defCalc('industry_perf', {
   const drawGainers = (symMap) => {
     const loaded = ok('stocks', 'themes');
     ['g-theme-table', 'g-industry-table', 'g-table'].forEach((id) => setState(id, ['stocks']));
-    const pass = S.gpass || [];
+    /* Scan: the whole market or one of your lists (S.gpass, the whole market's, stays as it is: the gainer dot elsewhere) */
+    const ss = scanSet(SCAN.g);
+    drawScanSeg('g-scan', SCAN.g);
+    const pass = (S.gpass || []).filter((r) => !ss || ss.has(r.symbol));
     $('#g-count').textContent = loaded ? String(pass.length) : '—';
+    $('#g-scan-note').textContent = !ss ? '' : ss.size + ' names on ' + scanName(SCAN.g) + (loaded ? ' · ' + pass.length + ' pass your filters' : '');
     const avg = (rs) => (rs.length ? rs.reduce((x, r) => x + num(r.chg_1d), 0) / rs.length : null);
     const down = params().g_dir === 'down';
     const byGain = (a2, b2) => (down ? cmp(num(a2.chg_1d), num(b2.chg_1d)) : cmp(num(b2.chg_1d), num(a2.chg_1d)));
@@ -2225,9 +2233,9 @@ defCalc('industry_perf', {
     let rows = pass.slice();
     if (S.gsel) rows = rows.filter((r) => (S.gsel.kind === 'theme' ? String(r.themes || '').split(' | ').includes(S.gsel.name) : r[S.level] === S.gsel.name));
     const clr = $('#g-clear'); clr.hidden = !S.gsel; clr.textContent = S.gsel ? S.gsel.name + '  ×' : '';
-    $('#g-list-h').textContent = (S.gsel ? 'Today’s ' + word.toLowerCase() + ' · ' + S.gsel.name : 'Today’s ' + word.toLowerCase()) + (rows.length > LIST_MAX ? ' (first ' + LIST_MAX + ' of ' + rows.length + ')' : '');
+    $('#g-list-h').textContent = (S.gsel ? 'Today’s ' + word.toLowerCase() + ' · ' + S.gsel.name : 'Today’s ' + word.toLowerCase()) + (ss ? ' · ' + scanName(SCAN.g) + ' only' : '') + (rows.length > LIST_MAX ? ' (first ' + LIST_MAX + ' of ' + rows.length + ')' : '');
     sortStocks(rows, 'g-table', { key: 'chg_1d', dir: down ? 1 : -1 });
-    S.gShown = { name: word + (S.gsel ? ' ' + S.gsel.name : ''), rows: rows.slice(0, LIST_MAX) };   /* for Download for TradingView */
+    S.gShown = { name: word + (ss ? ' ' + scanName(SCAN.g) : '') + (S.gsel ? ' ' + S.gsel.name : ''), rows: rows.slice(0, LIST_MAX) };   /* for Download for TradingView */
     rows.slice(0, LIST_MAX).forEach((r) => tb.append(stockRow(r, ['symbol', 'name', 'chg_1d', 'trend', 'rel_vol', 'price', 'adr_20', 'dvol', 'vs_200', 'vs_50e', 'mcap_b', 'avg_vol_30d', 'chg_1w', 'chg_1m', 'chg_3m', 'ind', 'themes', 'index'], symMap)));
   };
 
@@ -2759,12 +2767,17 @@ defCalc('industry_perf', {
     const xk = PMF.dir === 'down' ? 'pmd' : 'pmu';
     const allPm = pmRows();
     drawPmEvent(allPm);
-    let rows = allPm.filter((r) => pmPass(r, PMF) && pmXOk(FLT[xk].x, r));
+    /* Scan: the whole market or one of your lists (the event card above keeps the whole market) */
+    const ss = scanSet(SCAN.pm);
+    drawScanSeg('pml-scan', SCAN.pm);
+    let rows = allPm.filter((r) => (!ss || ss.has(r.symbol)) && pmPass(r, PMF) && pmXOk(FLT[xk].x, r));
     $('#pml-count').textContent = PML ? String(rows.length) : '—';
+    const pmTraded = ss ? allPm.filter((r) => ss.has(r.symbol)).length : 0;
+    $('#pml-scan-note').textContent = !ss ? '' : ss.size + ' names on ' + scanName(SCAN.pm) + (PML ? ' · ' + pmTraded + ' traded pre-market · ' + rows.length + ' pass your filters' : '');
     /* + Filter: the set of the direction on screen; the count next to the chips */
     ['pmu', 'pmd'].forEach((k) => { if (XBOX[k] && XBOX[k].parentElement) XBOX[k].parentElement.hidden = k !== xk; });
     { const cnt = XBOX[xk] && XBOX[xk].querySelector('.xf-cnt'); if (cnt) cnt.textContent = (FLT[xk].x || []).some(xfOn) ? '→ ' + rows.length + ' shown' : ''; }
-    $('#pml-h').textContent = 'Pre-market scanner · ' + (PMF.dir === 'down' ? 'gap downs' : 'gap ups');
+    $('#pml-h').textContent = 'Pre-market scanner · ' + (PMF.dir === 'down' ? 'gap downs' : 'gap ups') + (ss ? ' · ' + scanName(SCAN.pm) + ' only' : '');
     const spec = S.sort['pml-table'] || { key: 'pm_vol', dir: -1 };
     const txt = ['symbol', 'themes', 'news_cat'].includes(spec.key);
     const val = (r) => (txt ? String(r[spec.key] || '') : num(r[spec.key]));
@@ -2795,7 +2808,7 @@ defCalc('industry_perf', {
     });
     const all = rows.length;
     if (S.pmsel) { rows = rows.filter((r) => gapKeys(r).includes(S.pmsel)); const x = h('button', 'tgr-lite', 'Showing ' + S.pmsel.slice(S.pmsel.indexOf('|') + 1) + ': ' + rows.length + ' of ' + all + ' · show all'); x.type = 'button'; x.dataset.pmk = S.pmsel; x.style.marginLeft = '8px'; ml.append(x); }
-    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', 'Nothing passes these filters in this scan.'); td.colSpan = 20; tr.append(td); tb.append(tr); }
+    if (PML && !rows.length) { const tr = h('tr'); const td = h('td', 'tgr-lbl', ss ? 'None of the ' + pmTraded + ' ' + scanName(SCAN.pm) + ' names that traded pre-market pass these filters in this scan: clear a box to see more.' : 'Nothing passes these filters in this scan.'); td.colSpan = 20; tr.append(td); tb.append(tr); }
     const pctTxt = (x) => (x === null || x === undefined ? '—' : (x > 0 ? '+' : '') + Number(x).toFixed(2) + '%');
     rows.slice(0, LIST_MAX).forEach((r) => {
       const tr = h('tr');
@@ -4996,6 +5009,58 @@ defCalc('industry_perf', {
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
+
+  /* Scan: one of your lists in place of the whole market, on the Pre-market scanner and on Gainers (the user, Nov 12 2026:
+     "all these under premarket scanner gap up, i go choose one of those, instead of scanning market it would scan my
+     chosen watchlist"; "for live market we have gainers tab ... where i choose my watchlist it only tracks those"). A list
+     = the names its own tab shows: Launches (with its 50 EMA undercut tab; not the ones you removed with ✕), My picks (the
+     stocks you follow), Launch laggards, the four Watchlist lists and TREND. The filter boxes and + Filter still apply,
+     inside the list. One choice per tab, kept in this browser. The theme event card, the graded gappers and your rules
+     box above keep scanning the whole market. */
+  const SCAN_LISTS = [['all', 'Whole market'], ['launches', 'Launches'], ['picks', 'My picks'], ['laggards', 'Launch laggards'],
+    ['3-SETUPS', '3-SETUPS'], ['2-POOL', '2-POOL'], ['1-UPDAY', '1-UPDAY'], ['1-EP/GAP', '1-EP/GAP'], ['TREND', 'TREND']];
+  const SCANKEY = 'radar-scan-list';
+  const SCAN = (() => {
+    const d = { pm: 'all', g: 'all' };
+    try { const o = JSON.parse(localStorage.getItem(SCANKEY) || '{}'); ['pm', 'g'].forEach((k) => { if (SCAN_LISTS.some(([v]) => v === o[k])) d[k] = o[k]; }); } catch (e) { /* private window */ }
+    return d;
+  })();
+  const scanName = (k) => (SCAN_LISTS.find(([v]) => v === k) || [k, k])[1];
+  /* the tickers of a list (a Set), null = the whole market */
+  const scanSet = (k) => {
+    if (!k || k === 'all') return null;
+    if (k === 'picks') return pickedNow();
+    const ld = LDOC();
+    if (k === 'launches' || k === 'laggards') {
+      if (!ld) return new Set();
+      const gone = goneNow(), unpicked = pendingPicks();   /* as the Launches tab: hidden right away after ✕ / unfollow */
+      const kept = (r) => r.grade === 'You' ? !(unpicked[r.symbol] && !unpicked[r.symbol][0] && Date.now() - unpicked[r.symbol][1] < 30 * 60 * 1000) : !(gone[r.symbol] && r.date <= gone[r.symbol]);
+      const rows = k === 'laggards' ? ld.laggards || [] : (ld.launches || []).concat(ld.ema50_undercut || []);
+      return new Set(rows.filter(kept).map((r) => r.symbol));
+    }
+    const doc = st('setups').status === 'ok' ? st('setups').data : null;
+    if (!doc || !doc.lists) return new Set();
+    if (k === 'TREND') return new Set(trendSrc(doc).map((r) => r.symbol));
+    const gone3 = k === '3-SETUPS' ? s3Gone() : {};   /* as the Watchlist tab: your ✕ on 3-SETUPS */
+    return new Set((doc.lists[k] || []).filter((r) => !(gone3[r.symbol] && (r.added || '') <= gone3[r.symbol])).map((r) => r.symbol));
+  };
+  /* the buttons, each with its list's size; the line after them: how many of the list traded / pass */
+  const drawScanSeg = (id, k) => {
+    const seg = $('#' + id);
+    if (!seg.childElementCount) SCAN_LISTS.forEach(([v, t]) => { const b = h('button', '', t); b.type = 'button'; b.dataset.v = v; seg.append(b); });
+    seg.querySelectorAll('button').forEach((b) => {
+      const v = b.dataset.v, set = v === 'all' ? null : scanSet(v);
+      b.setAttribute('aria-pressed', String(v === k));
+      b.textContent = scanName(v) + (set ? ' (' + set.size + ')' : '');
+    });
+  };
+  [['pml-scan', 'pm'], ['g-scan', 'g']].forEach(([id, k]) => $('#' + id).addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || SCAN[k] === b.dataset.v) return;
+    SCAN[k] = b.dataset.v;
+    try { localStorage.setItem(SCANKEY, JSON.stringify(SCAN)); } catch (e2) { /* private window */ }
+    if (k === 'pm') S.pmsel = null; else S.gsel = null;     /* a group chip picked on the other list */
+    draw();
+  }));
 
   function draw() {
     syncControls();
