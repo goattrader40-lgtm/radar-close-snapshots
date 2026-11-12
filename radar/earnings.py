@@ -786,7 +786,8 @@ def late_reports(rows, syms, now, errors):
                     n_w += 1
                     continue
             except Exception as e:
-                errors.append(f"wire {sym}: {e!r}"[:160])
+                if "403" not in repr(e):               # the wires refuse a script more often than not (GlobeNewswire, Nov 12 2026: 403):
+                    errors.append(f"wire {sym}: {e!r}"[:160])     # then the feed's headlines below; no error for that
         h = hl_read([n.get("headline") or "" for n in A])
         if not h:
             continue
