@@ -282,6 +282,14 @@ def group_status(A, groups, cal):
 
 
 GR_TOP, GR_STRONG = 0.97, 0.90   # group rank tiers: ★ Top group = top 3%, Strong = 3-10% (2-year test, Nov 2 2026)
+# the themes review (the user, Nov 10 2026; tools/user_answers_2026-11-10.txt th1-th4):
+GR_TIER_MIN = 4     # a group is ranked on its TRADABLE stocks (the launch list's liquidity and ADR 3.5%+: "with adr high") when
+                    # it has 4+ of them, and only then can it be ★ Top / Strong; with fewer: all its stocks, a rank, no tier
+GR_SAME = 0.75      # a theme and an industry group sharing three-quarters+ of their stocks (shared / all stocks of both) are
+                    # one pack: one name (the theme's) and one rank (Drug Distributors / Medical Distribution, Cruise Lines /
+                    # Travel Services, Quantum Computing, Memory & Storage, Cybersecurity ...; Neoclouds, Optics & CPO, Gold
+                    # Miners share less: both kept)
+GR_HOT, GR_HOT_BREADTH = 90, 60   # "Heating up": heat 90+ (the top 10% of its kind on the last week) with 60%+ of its stocks up
 
 
 def _pct_rank_need(v, need):
@@ -333,6 +341,20 @@ def group_rank(A, cal, stocks_rows, back=5):
         if k_:
             mem["ind:" + k_].append(s)
     names = sorted(g for g, ms in mem.items() if len(ms) >= 3)
+    # ranked on its tradable stocks when it has 4+ (the user, Nov 10 2026), else on all of them without a tier
+    trad = {g: [s for s in ms if A[s].liquid[-1]] for g, ms in mem.items()}
+    full = dict(mem)
+    mem = {g: (trad[g] if len(trad[g]) >= GR_TIER_MIN else ms) for g, ms in mem.items()}
+    thin = {g for g in names if len(trad[g]) < GR_TIER_MIN}
+    # one pack where a theme and an industry group hold nearly the same stocks: the industry group takes the theme's name
+    same = {}
+    for g in names:
+        if not g.startswith("ind:") or g.endswith(LOOSE):
+            continue
+        a_ = set(full[g])
+        best = max(((len(a_ & set(full[t])) / len(a_ | set(full[t])), t) for t in names if t.startswith("theme:")), default=(0, None))
+        if best[0] >= GR_SAME:
+            same[g] = best[1][6:]
     cols = [len(cal) - 1, len(cal) - 1 - back]
     calset = set(cal)
     ret = {}                                      # {symbol: {calendar day: (1M, 3M, 6M)}}
@@ -348,13 +370,13 @@ def group_rank(A, cal, stocks_rows, back=5):
             if i is None:
                 continue
             i += off
-            ret[s][k] = tuple(100 * (st.c[i] / st.c[i - n] - 1) if i >= n else np.nan for n in (21, 63, 126))
+            ret[s][k] = tuple(100 * (st.c[i] / st.c[i - n] - 1) if i >= n else np.nan for n in (21, 63, 126, 5))
     P = {}
     med = {}
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", RuntimeWarning)
         for k in cols:
-            M = np.array([np.nanmedian(np.array([ret[s][k] for s in mem[g] if s in ret and k in ret[s]] or [(np.nan,) * 3]), axis=0)
+            M = np.array([np.nanmedian(np.array([ret[s][k][:3] for s in mem[g] if s in ret and k in ret[s]] or [(np.nan,) * 3]), axis=0)
                           for g in names]).reshape(len(names), 3)
             med[k] = M
             P[k] = np.full(len(names), np.nan)
@@ -374,7 +396,7 @@ def group_rank(A, cal, stocks_rows, back=5):
             ms = [s for s in mem[g] if s in ret and cols[0] in ret[s]]
             if len(ms) < 3:
                 continue
-            X = np.array([ret[s][cols[0]] for s in ms], dtype=float).reshape(len(ms), 3)
+            X = np.array([ret[s][cols[0]][:3] for s in ms], dtype=float).reshape(len(ms), 3)
             sc = np.nanmean([_pct_rank_need(X[:, h], 3) for h in range(3)], axis=0)
             ok = [j for j in range(len(ms)) if not np.isnan(sc[j])]
             order[g] = [ms[j] for j in sorted(ok, key=lambda j: -sc[j])]
@@ -385,11 +407,38 @@ def group_rank(A, cal, stocks_rows, back=5):
     if len(ss) >= 5:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
-            X = np.array([ret[s][cols[0]] for s in ss], dtype=float).reshape(len(ss), 3)
+            X = np.array([ret[s][cols[0]][:3] for s in ss], dtype=float).reshape(len(ss), 3)
             pr = _pct_rank_need(np.nanmean([_pct_rank_need(X[:, h], 5) for h in range(3)], axis=0), 5)
         rs = {s: int(min(99, max(1, math.floor(100 * pr[j])))) for j, s in enumerate(ss) if not np.isnan(pr[j])}
+    # "Heating up" (the user, Nov 10 2026: "I need that column for sure": the strength of the theme / industry group now, and
+    # a short-term RS of the stock next to the 1/3/6-month one). Group heat = its stocks' median 1-week move and its breadth
+    # (the share of them up on the week), each ranked among the groups of its kind, averaged and ranked again, 1-99.
+    # Stock RS 1W-1M = its own 1-week and 1-month move ranked the same way against every stock
+    heat, wk, br = {}, {}, {}
+    rsw = {}
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        for kind in ("theme:", "ind:"):
+            gs_ = [g for g in names if g.startswith(kind)]
+            w_, b_ = [], []
+            for g in gs_:
+                x = np.array([ret[s][cols[0]][3] for s in mem[g] if s in ret and cols[0] in ret[s]], dtype=float)
+                x = x[~np.isnan(x)]
+                w_.append(float(np.median(x)) if x.size >= 3 else np.nan)
+                b_.append(100 * float((x > 0).mean()) if x.size >= 3 else np.nan)
+            if not gs_:
+                continue
+            hp = _pct_rank(np.nanmean([_pct_rank(np.array(w_)), _pct_rank(np.array(b_))], axis=0))
+            for g, h_, a1, a2 in zip(gs_, hp, w_, b_):
+                if not np.isnan(h_):
+                    heat[g], wk[g], br[g] = int(min(99, max(1, math.floor(100 * h_)))), a1, a2
+        if len(ss) >= 5:
+            X = np.array([(ret[s][cols[0]][3], ret[s][cols[0]][0]) for s in ss], dtype=float).reshape(len(ss), 2)
+            pw = _pct_rank_need(np.nanmean([_pct_rank_need(X[:, h], 5) for h in range(2)], axis=0), 5)
+            rsw = {s: int(min(99, max(1, math.floor(100 * pw[j])))) for j, s in enumerate(ss) if not np.isnan(pw[j])}
     out = {"asof": cal[-1], "back_sessions": back, "top_pct": round(100 * (1 - GR_TOP)), "strong_pct": round(100 * (1 - GR_STRONG)),
-           "leader_min_stocks": 5, "rows": [], "_rs": rs}
+           "leader_min_stocks": 5, "rows": [], "_rs": rs, "_rsw": rsw, "tier_min_tradable": GR_TIER_MIN, "same_share": GR_SAME,
+           "hot_heat": GR_HOT, "hot_breadth": GR_HOT_BREADTH}
     for kind, label in (("theme:", "themes"), ("ind:", "industries")):
         rows = [j for j, g in enumerate(names) if g.startswith(kind)]
         rk = {}
@@ -404,8 +453,13 @@ def group_rank(A, cal, stocks_rows, back=5):
             m = med[cols[0]][j]
             out["rows"].append(dict(group=names[j][len(kind):], kind=kind[:-1], rank=rk[cols[0]][j], of=len(rk[cols[0]]),
                                     pct=round(100 * float(p), 1), loose=names[j].endswith(LOOSE),
-                                    tier="" if names[j].endswith(LOOSE) else "Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else "",
-                                    rank_before=rk[cols[1]].get(j), members=len(mem[names[j]]),
+                                    tier="" if names[j].endswith(LOOSE) or names[j] in thin else "Top" if p >= GR_TOP else "Strong" if p >= GR_STRONG else "",
+                                    rank_before=rk[cols[1]].get(j), members=len(full[names[j]]),
+                                    # the themes review (Nov 2026): its tradable stocks (4+ for a tier), the theme it is one
+                                    # pack with, and its heat (the last week + breadth)
+                                    tradable=len(trad[names[j]]), thin=names[j] in thin, same_as=same.get(names[j]),
+                                    heat=heat.get(names[j]), week=fnum(wk.get(names[j]), 1), breadth=fnum(br.get(names[j]), 0),
+                                    hot=bool(heat.get(names[j], 0) >= GR_HOT and (br.get(names[j]) or 0) >= GR_HOT_BREADTH),
                                     median_1m=fnum(m[0], 1), median_3m=fnum(m[1], 1), median_6m=fnum(m[2], 1),
                                     order=" ".join(order.get(names[j], []))))
     out["rows"].sort(key=lambda r: (r["kind"], r["rank"]))
@@ -476,6 +530,9 @@ def best_ranks(grank, stocks_rows):
     if not grank:
         return {}
     by = {(r["kind"], r["group"]): r for r in grank["rows"]}
+    for r in grank["rows"]:                       # an industry group that is one pack with a theme: the theme's name and rank
+        if r.get("same_as") and by.get(("theme", r["same_as"])):
+            by[("ind", r["group"])] = by[("theme", r["same_as"])]
     ug = uses_groups(stocks_rows)
     out = {}
     for r in stocks_rows:
@@ -2166,6 +2223,7 @@ def main():
         ghist = rank_history(A, cal, stocks_rows, full=True)[2:]
         grank = group_rank(A, cal, stocks_rows)
         rsmap = grank.pop("_rs", {})
+        grank["rs_week"] = grank.pop("_rsw", {})  # the short-term RS (1 week and 1 month) next to it (the user, Nov 10 2026)
         grank["rs"] = rsmap                       # every stock's RS, for the Watchlist column (the user, Nov 3 2026)
         gbest = best_ranks(grank, stocks_rows)
         for s_, v_ in rsmap.items():

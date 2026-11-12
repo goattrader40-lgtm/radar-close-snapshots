@@ -427,6 +427,7 @@
               <th><button class="tgr-th" data-sort="theme">Theme</button></th>
               <th class="num"><button class="tgr-th" data-sort="grank" title="Group rank after the last close: this theme against all the other themes on its stocks' median 1-, 3- and 6-month moves (Qullamaggie's 1/3/6-month lists). ▲▼ = change vs a week ago">Rank</button></th>
               <th><button class="tgr-th" data-sort="gtier" title="★ Top = the top 3% of themes, Strong = the top 3-10%. In 2 years of data, gap-ups and launches in these groups ran 20%+ more often; below the top 10% no group did better than the bottom half">Tier</button></th>
+              <th class="num"><button class="tgr-th" data-sort="gheat" title="Heating up: the theme's strength over the last week, 1-99 among the themes: its stocks' median 1-week move and its breadth (the share of them up on the week), each ranked and averaged. 🔥 = heat 90+ with 60%+ of its stocks up. The rank next to it is the 1/3/6-month one">Heating up</button></th>
               <th class="c2"><button class="tgr-th" data-sort="category">Area</button></th>
               <th class="num"><button class="tgr-th" data-sort="strength" title="How tightly the whole group moves together (average score between every pair of members)">Strength</button></th>
               <th class="num" data-p="1d"><button class="tgr-th" data-sort="p1d">1D</button></th>
@@ -455,6 +456,7 @@
               <th><button class="tgr-th" data-sort="industry">Industry</button></th>
               <th class="num"><button class="tgr-th" data-sort="grank" title="Group rank after the last close (Groups list only): this group against all the other industry groups on its stocks' median 1-, 3- and 6-month moves (Qullamaggie's 1/3/6-month lists). ▲▼ = change vs a week ago">Rank</button></th>
               <th><button class="tgr-th" data-sort="gtier" title="★ Top = the top 3% of industries, Strong = the top 3-10%. In 2 years of data, gap-ups and launches in these groups ran 20%+ more often; below the top 10% no group did better than the bottom half">Tier</button></th>
+              <th class="num"><button class="tgr-th" data-sort="gheat" title="Heating up (Groups list only): the group's strength over the last week, 1-99 among the industry groups: its stocks' median 1-week move and its breadth (the share of them up on the week), each ranked and averaged. 🔥 = heat 90+ with 60%+ of its stocks up">Heating up</button></th>
               <th class="num"><button class="tgr-th" data-sort="gstr" title="Strength: how tightly the group's stocks move together, the average correlation between every pair of them (daily moves with the market's move removed, 120 sessions; the same scale as the themes' Strength). Groups list only; '· other' = stocks that don't move with their business group (ranked, no Top / Strong)">Strength</button></th>
               <th class="num c3"><button class="tgr-th" data-sort="n">Stocks</button></th>
               <th class="num" data-p="1d"><button class="tgr-th" data-sort="p1d">1D</button></th>
@@ -609,6 +611,40 @@
 
   <!-- ───────── Tab 3: pre-market gappers ───────── -->
   <section class="tgr-page" id="premarket" role="tabpanel" aria-labelledby="tab-premarket" hidden>
+    <div class="tgr-card tgr-hc" id="pme-card" hidden>
+      <div class="tgr-cardhead">
+        <h2 id="pme-h">Theme event</h2>
+        <span class="tgr-lbl" id="pme-time">—</span>
+      </div>
+      <p class="tgr-note" id="pme-line"></p>
+      <p class="tgr-note" id="pme-why"></p>
+      <div id="pme-bounce">
+        <div class="tgr-copybar"><b>Theme bounce list</b><span class="tgr-seg" id="pme-show" aria-label="Which stocks of the event"><button data-v="turn" aria-pressed="true">Under an EMA at the last close</button><button data-v="all" aria-pressed="false">All of the event</button></span><button class="tgr-lite" id="pme-copy" type="button">Copy tickers shown</button><span class="tgr-lbl" id="pme-count"></span></div>
+        <details class="tgr-legend tgr-more" data-key="pmevent"><summary>What the theme event and the bounce list are</summary>
+        <p class="tgr-note">A theme event = many stocks of one area gapping together before the open: 8 or more tradable stocks of an area (market cap $700M+, 700K+ shares and $20M+ a day, ADR 3%+), and at least 30% of that area, up or down 5%+ in the latest pre-market scan (Nov 11, 2026: 93 semis / AI stocks, 63 of the 83 in AI &amp; Semis). An area = a family of themes (AI &amp; Semis, AI Infrastructure, Software, Energy …). The news line is the market or sector news behind the move, searched once by the 8:45 grading; a company's own news stays in the News column below. The graded list is not changed: a stock with no news of its own still reads C there, and gap-ups under the 50 EMA stay off it. <b>The bounce list</b> shows every gapper of the event with its distance to the 21 and the 50 EMA (as of the last close), so the first to get back over both stands out (your go sign: AMD Sep 4-8, 2026, MRVL Mar 6, 2026). <span class="tgr-gm">✔ over both</span> = under its 21 or 50 EMA at the last close and over both at the pre-market price; next come the ones over the 21 EMA and nearest to the 50, then the ones still under both. The sign is only real when the day closes over both; before the open this is a watch list, not a buy list. "All of the event" adds the stocks that were already over both EMAs.</p>
+        </details>
+        <div class="tgr-scroll tall">
+          <table class="tgr-table" id="pme-table">
+            <thead><tr>
+              <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+              <th><button class="tgr-th" data-sort="rank" title="✔ over both = under its 21 or 50 EMA at the last close, over both at the pre-market price (the go sign once the day closes there). Then: over the 21 EMA, nearest to the 50 first; then under both, nearest to the 21 first">Read</button></th>
+              <th class="num"><button class="tgr-th" data-sort="pm_chg">Pre-mkt chg</button></th>
+              <th class="num"><button class="tgr-th" data-sort="pm_last">Pre-mkt price</button></th>
+              <th class="num"><button class="tgr-th" data-sort="vs_21e" title="The latest pre-market price vs the 21-day EMA as of the last close">Pre vs 21</button></th>
+              <th class="num"><button class="tgr-th" data-sort="vs_50e" title="The latest pre-market price vs the 50-day EMA as of the last close">Pre vs 50</button></th>
+              <th class="num c2"><button class="tgr-th" data-sort="vs_200" title="The latest pre-market price vs the 200-day SMA as of the last close">Pre vs 200</button></th>
+              <th class="num c2"><button class="tgr-th" data-sort="c_vs21" title="The last close vs its 21-day EMA: where it stood before the gap">Close vs 21</button></th>
+              <th class="num c2"><button class="tgr-th" data-sort="c_vs50" title="The last close vs its 50-day EMA: where it stood before the gap">Close vs 50</button></th>
+              <th class="num c2"><button class="tgr-th" data-sort="pm_dvol_m">PM $ vol $M</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="adr_20">ADR%</button></th>
+              <th class="num c3"><button class="tgr-th" data-sort="mcap_b">Mkt cap $B</button></th>
+              <th><button class="tgr-th" data-sort="themes">Themes</button></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     <div class="tgr-card tgr-hc" id="pms-card">
       <div class="tgr-cardhead">
         <h2 id="pms-h">★ Launch watch: today's starred names</h2>
@@ -1550,10 +1586,14 @@ defCalc('industry_perf', {
   /* group rank (the evening scan, launch.json group_rank; your rule, Nov 2 2026): each theme ranked among the themes and
      each industry among the industries on its stocks' median 1-, 3- and 6-month moves; ★ Top = top 3%, Strong = 3-10% */
   let GRK = null, GRKsrc, GRS = new Map(), GRSsrc;
-  const grOf = (kind, name) => {
+  const grOf = (kind, name, raw) => {
     const doc = st('launch').status === 'ok' && st('launch').data ? st('launch').data.group_rank : null;
     if (doc !== GRKsrc) { GRKsrc = doc; GRK = new Map(((doc && doc.rows) || []).map((g) => [g.kind + ':' + g.group, g])); }
-    return (name && GRK.get(kind + ':' + name)) || null;
+    const g = (name && GRK.get(kind + ':' + name)) || null;
+    /* one pack (the user, Nov 10 2026): an industry group sharing three-quarters+ of its stocks with a theme shows the
+       theme's name and rank (Medical Distribution = Drug Distributors, Travel Services = Cruise Lines ...) */
+    if (g && g.same_as && !raw) { const t = GRK.get('theme:' + g.same_as); if (t) return t; }
+    return g;
   };
   const grBest = (sym) => {     /* the best-ranked of a stock's themes and its industry */
     const stocks = BASE ? BASE.stocks : null;
@@ -1879,12 +1919,23 @@ defCalc('industry_perf', {
   const grPlace = (g, sym) => { if (!g || !g.order) return null; const o = g.order.split(' '); const i = o.indexOf(sym); return i < 0 ? null : { place: i + 1, of: o.length }; };
   const GR_LEAD_MIN = 5;
   /* RS (market rank 1-99) for every stock, from the evening scan (launch.json group_rank.rs) */
+  const ldocRSW = () => { const d = st('launch').status === 'ok' && st('launch').data ? st('launch').data.group_rank : null; return (d && d.rs_week) || {}; };
   const ldocRS = () => { const d = st('launch').status === 'ok' && st('launch').data ? st('launch').data.group_rank : null; return (d && d.rs) || {}; };
 
   const grTitle = (g) => !g ? 'No rank: fewer than 3 stocks with 6 months of data, or not in tonight\'s scan' :
     (g.kind === 'theme' ? 'Theme ' : 'Industry ') + g.group + ': #' + g.rank + ' of ' + g.of + (g.kind === 'theme' ? ' themes' : ' industries') +
     (g.tier === 'Top' ? ' (★ Top group: top 3%)' : g.tier === 'Strong' ? ' (Strong: top 3-10%)' : '') + (g.rank_before ? '; #' + g.rank_before + ' a week ago' : '') +
-    '. Median of its ' + g.members + ' stocks: 1M ' + p1(g.median_1m, true) + ', 3M ' + p1(g.median_3m, true) + ', 6M ' + p1(g.median_6m, true);
+    '. Median of its ' + (g.tradable >= 4 ? g.tradable + ' tradable stocks (of ' + g.members + ')' : g.members + ' stocks') + ': 1M ' + p1(g.median_1m, true) + ', 3M ' + p1(g.median_3m, true) + ', 6M ' + p1(g.median_6m, true) +
+    (g.thin ? '. Under 4 tradable stocks (liquid, ADR 3.5%+): ranked, but no ★ Top / Strong' : '');
+  /* Heating up (the user, Nov 10 2026: "I need that column for sure"): the group's heat 1-99 = its stocks' median 1-week move
+     and its breadth (the share of them up on the week), each ranked among the groups of its kind; 🔥 = heat 90+ with 60%+ up */
+  const grHeatCell = (g) => {
+    const td = h('td', 'num nw' + (g && g.hot ? ' tgr-up' : ''));
+    if (!g || g.heat === null || g.heat === undefined) { td.textContent = '—'; td.title = 'No heat: from the next evening scan'; return td; }
+    td.textContent = (g.hot ? '🔥 ' : '') + g.heat;
+    td.title = 'Heat ' + g.heat + ' of 99 among the ' + (g.kind === 'theme' ? 'themes' : 'industry groups') + ': its stocks\' median 1-week move ' + p1(g.week, true) + ', ' + (g.breadth ?? '—') + '% of them up on the week' + (g.hot ? '. 🔥 Heating up: heat 90+ with 60%+ of its stocks up' : '');
+    return td;
+  };
   const grRankCell = (g) => {   /* Groups tab: #2/99 and the change vs a week ago */
     const td = h('td', 'num nw' + (g && g.tier ? ' tgr-up' : '')); td.title = grTitle(g);
     if (!g) { td.textContent = '—'; return td; }
@@ -1920,7 +1971,7 @@ defCalc('industry_perf', {
     const tb = table.querySelector('tbody'); tb.replaceChildren();
     const rows = rowsOf('theme_perf').filter((r) => S.tset === 'all' || (S.tset === 'auto') === (r.kind === 'auto'))
       .filter((r) => !S.gfind || S.gfind.themes.includes(r.theme));          /* Find a ticker: only its themes */
-    rows.forEach((r) => { r.vs = vsOf(r, areaEtf(r.category)); const e = themeEtf(r) ? etfRow(themeEtf(r)) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; r.gr = grOf('theme', r.theme); r.grank = r.gr ? r.gr.pct : -1; r.gtier = r.gr ? grTierN(r.gr) : -1; });   /* -1: unranked sorts last */
+    rows.forEach((r) => { r.vs = vsOf(r, areaEtf(r.category)); const e = themeEtf(r) ? etfRow(themeEtf(r)) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; r.gr = grOf('theme', r.theme); r.grank = r.gr ? r.gr.pct : -1; r.gtier = r.gr ? grTierN(r.gr) : -1; r.gheat = r.gr && r.gr.heat ? r.gr.heat : -1; });   /* -1: unranked sorts last */
     $('#themes-h').textContent = S.tset === 'core' ? 'Your baskets' : S.tset === 'auto' ? 'Auto groups' : 'Themes';
     const spec = sortSpec(table.id, { key: 'p' + S.period, dir: -1 });
     const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : spec.key === 'vs' ? r.vs : r[spec.key]);
@@ -1932,7 +1983,7 @@ defCalc('industry_perf', {
       if (S.sel && S.sel.kind === 'theme' && S.sel.name === r.theme) tr.classList.add('sel');
       const key = h('td', 'key', r.theme);
       if (r.weak) { const w = h('span', 'tgr-weak', '⚠'); w.setAttribute('aria-label', 'Has names that no longer move with this group'); key.append(w); }
-      tr.append(key, grRankCell(r.gr), grTierCell(r.gr), h('td', 'c2', r.category));
+      tr.append(key, grRankCell(r.gr), grTierCell(r.gr), grHeatCell(r.gr), h('td', 'c2', r.category));
       const st = num(r.strength); const sc = h('td', 'num');
       sc.append(h('span', 'tgr-sdot ' + sband(st)), h('span', '', st === null ? '—' : st.toFixed(2)));
       tr.append(sc);
@@ -1971,10 +2022,10 @@ defCalc('industry_perf', {
     const tb = table.querySelector('tbody'); tb.replaceChildren();
     const rows = levelRows().filter((r) => !S.gfind || r.industry === S.gfind.stock[S.level]);      /* Find a ticker: its industry */
     $('#th-ivs').textContent = 'vs ETF (' + S.period.toUpperCase() + ')';
-    rows.forEach((r) => { r.etf = S.level === 'industry' ? indEtf(r.industry) : null; r.vs = vsOf(r, r.etf); const e = r.etf ? etfRow(r.etf) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; r.gr = S.level === 'grp' ? grOf('ind', r.industry) : null; r.grank = r.gr ? r.gr.pct : -1; r.gtier = r.gr ? grTierN(r.gr) : -1; r.gstr = S.level === 'grp' && GRPS[r.industry] ? num(GRPS[r.industry].strength) : -1; });
+    rows.forEach((r) => { r.etf = S.level === 'industry' ? indEtf(r.industry) : null; r.vs = vsOf(r, r.etf); const e = r.etf ? etfRow(r.etf) : null; r.e50 = e ? e.vs_50e : null; r.e200 = e ? e.vs_200 : null; r.gr = S.level === 'grp' ? grOf('ind', r.industry) : null; r.gheat = r.gr && r.gr.heat ? r.gr.heat : -1; r.same = S.level === 'grp' ? ((grOf('ind', r.industry, true) || {}).same_as || '') : ''; r.grank = r.gr ? r.gr.pct : -1; r.gtier = r.gr ? grTierN(r.gr) : -1; r.gstr = S.level === 'grp' && GRPS[r.industry] ? num(GRPS[r.industry].strength) : -1; });
     $('#industries-h').textContent = S.level === 'grp' ? 'Industry groups (by business line)' : S.level === 'industry' ? 'Industries (broad)' : 'Industries (detailed)';
     const spec = sortSpec(table.id, { key: 'p' + S.period, dir: -1 });
-    const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : ['vs', 'e50', 'e200', 'grank', 'gtier', 'gstr'].includes(spec.key) ? r[spec.key] : spec.key === 'n' || spec.key === 'up_pct' ? num(r[spec.key]) : r[spec.key]);
+    const val = (r) => (spec.key.startsWith('p') && spec.key.length === 3 ? num(r[pf(spec.key.slice(1))]) : ['vs', 'e50', 'e200', 'grank', 'gtier', 'gstr', 'gheat'].includes(spec.key) ? r[spec.key] : spec.key === 'n' || spec.key === 'up_pct' ? num(r[spec.key]) : r[spec.key]);
     rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
     markSort(table, spec);
     const max = Math.max(1, ...rows.map((r) => Math.abs(num(r[pf(S.period)]) || 0)));
@@ -1985,7 +2036,9 @@ defCalc('industry_perf', {
       const sv = r.gstr >= 0 ? r.gstr : null;
       const scell = h('td', 'num', sv === null ? '—' : ''); if (sv !== null) scell.append(h('span', 'tgr-sdot ' + sband(sv)), h('span', '', sv.toFixed(2)));
       if (S.level === 'grp' && r.industry.endsWith(' · other')) scell.title = 'Stocks of this industry that do not move with any business-line group: ranked, but no Top / Strong';
-      tr.append(h('td', 'key', r.industry), gcell, grTierCell(r.gr), scell, h('td', 'num c3', String(r.n)));
+      const ikey = h('td', 'key', r.industry);
+      if (r.same) { const tg = h('span', 'tgr-etag', '= ' + r.same); tg.title = 'One pack with your theme ' + r.same + ': they share three-quarters or more of their stocks, so the rank, tier and heat shown are the theme\'s (one name, one rank)'; ikey.append(tg); }
+      tr.append(ikey, gcell, grTierCell(r.gr), grHeatCell(r.gr), scell, h('td', 'num c3', String(r.n)));
       ['1d', '1w', '1m', '3m'].forEach((p) => tr.append(pctCell(r[pf(p)], p === S.period ? max : 0)));
       const ec = h('td', 'c3'); if (r.etf) { ec.append(etfLink(r.etf)); const k = indEtfKind(r.industry, r.etf); if (k !== 'Industry ETF') { const tg = h('span', 'tgr-etag', SECTOR_ETFS.has(r.etf) ? 'sector' : 'related'); tg.title = k; ec.append(tg); } }
       tr.append(ec, pctCell(r.vs, 0), maCell(r.e50, 'c3'), maCell(r.e200, 'c3'));
@@ -2592,6 +2645,81 @@ defCalc('industry_perf', {
     if (p.low52 !== null && r.below_low52 !== null && r.below_low52 < p.low52) return false;
     return true;
   };
+  /* Theme event + theme bounce list (the user, Nov 11 2026: "the most important thing happened [in] semis and it hasn't
+     done anything related to it"). The events come with the live scan (radar/theme_event.py via pmlive.py: 8+ tradable
+     stocks and 30%+ of an area gapping 5%+ together); the news behind it from the 8:45 grading (pm_event.json). The
+     bounce list: each gapper's distance to the 21 and 50 EMA, the first to reclaim both first (AMD Sep 4-8 2026, MRVL
+     Mar 6 2026). Nothing here changes the grades or the graded list. */
+  let PMESHOW = 'turn';
+  const pmeRead = (r) => {
+    const o21 = r.vs_21e === null ? null : r.vs_21e > 0, o50 = r.vs_50e === null ? null : r.vs_50e > 0;
+    const was = (r.c_vs21 !== null && r.c_vs21 <= 0) || (r.c_vs50 !== null && r.c_vs50 <= 0);
+    const pc = (x) => Math.abs(x).toFixed(1) + '%';
+    if (o21 === null || o50 === null) return { rank: 4000, txt: 'No 21 / 50 EMA yet', cls: 'tgr-lbl' };
+    if (o21 && o50) return was ? { rank: 0 + Math.min(r.vs_21e, r.vs_50e) / 1000, txt: '✔ over both', go: true } : { rank: 3000 - r.pm_chg, txt: 'Already over both', cls: 'tgr-lbl' };
+    if (o21) return { rank: 1000 - r.vs_50e, txt: 'Over the 21, ' + pc(r.vs_50e) + ' under the 50' };
+    if (o50) return { rank: 1500 - r.vs_21e, txt: 'Over the 50, ' + pc(r.vs_21e) + ' under the 21' };
+    return { rank: 2000 - r.vs_21e, txt: 'Under both: ' + pc(r.vs_21e) + ' to the 21, ' + pc(r.vs_50e) + ' to the 50' };
+  };
+  const drawPmEvent = (all) => {
+    const card = $('#pme-card'), today = todayNY();
+    const evs = PML && PML.date === today && Array.isArray(PML.events) ? PML.events : [];
+    card.hidden = !evs.length;
+    if (!evs.length) return;
+    const by = new Map(all.map((r) => [r.symbol, r]));
+    const pct = (x) => (x > 0 ? '+' : '') + Number(x).toFixed(1) + '%';
+    $('#pme-time').textContent = 'Scan at ' + fTime(PML.saved_at) + ' ET';
+    const ln = $('#pme-line'); ln.replaceChildren();
+    evs.forEach((e, i) => {
+      if (i) ln.append(h('br'));
+      ln.append(h('b', e.dir === 'up' ? 'tgr-up' : 'tgr-dn', e.n + ' stocks gapping ' + e.dir + ' 5%+'), ' in ' +
+        e.areas.map((a) => a.name + ' (' + a.n + ' of ' + a.of + ')').join(' and ') + '. ');
+      if (e.themes && e.themes.length) {
+        ln.append('Themes: ');
+        e.themes.forEach((t, j) => { if (j) ln.append(', '); const b = h('button', 'tgr-chip', t.name); b.type = 'button'; b.dataset.kind = 'theme'; b.dataset.name = t.name; ln.append(b, ' ' + t.n + ' of ' + t.of); });
+        ln.append('. ');
+      }
+      ln.append('Leaders by pre-market $ volume: ');
+      (e.leaders || []).forEach((x, j) => { if (j) ln.append(', '); const a = h('a', 'tgr-tk', x); const r = by.get(x); a.href = tv((r && r.tv_symbol) || x); a.target = TVTAB; ln.append(a); if (r) ln.append(h('span', tone(r.pm_chg), ' ' + pct(r.pm_chg))); });
+      ln.append('.');
+    });
+    const why = $('#pme-why'); why.replaceChildren();
+    if (PMEV && PMEV.day === today && PMEV.why) {
+      why.append(h('b', '', 'Why: '), PMEV.why);
+      (PMEV.sources || []).forEach((u) => { if (!/^https:\/\//.test(u)) return; const l = h('a', '', ' 📰'); l.href = u; l.target = '_blank'; l.rel = 'noopener'; l.title = 'The source: ' + u; why.append(l); });
+      why.append(h('span', 'tgr-lbl', ' (Claude, the 8:45 grading' + (PMEV.time ? ', ' + PMEV.time + ' ET' : '') + ')'));
+    } else why.append(h('span', 'tgr-lbl', 'Why: the market / sector news behind it comes with the 8:45 grading (by about 9:05 AM ET). Each stock\'s own news is in the News column below.'));
+    const up = evs.find((e) => e.dir === 'up');
+    $('#pme-bounce').hidden = !up;
+    if (!up) return;
+    $('#pme-show').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === PMESHOW)));
+    const cv = (px, m) => (num(px) && m ? Math.round((num(px) / m - 1) * 1000) / 10 : null);
+    let rows = up.symbols.map((x) => by.get(x)).filter(Boolean).map((r) => { const o = Object.assign({}, r, { c_vs21: cv(r.price, e21Of(r)), c_vs50: cv(r.price, num(r.ema50)) }); o.read = pmeRead(o); o.rank = o.read.rank; return o; });
+    const nAll = rows.length, nGo = rows.filter((r) => r.read.go).length;
+    if (PMESHOW === 'turn') rows = rows.filter((r) => r.read.rank < 3000);
+    $('#pme-count').textContent = rows.length + ' of ' + nAll + ' shown · ' + nGo + ' over both EMAs now that were not at the last close';
+    const table = $('#pme-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
+    const spec = S.sort['pme-table'] || { key: 'rank', dir: 1 };
+    const txt = ['symbol', 'themes'].includes(spec.key);
+    const val = (r) => (txt ? String(r[spec.key] || '') : num(r[spec.key]));
+    rows.sort((a, b) => (spec.dir > 0 ? cmp(val(a), val(b)) : cmp(val(b), val(a))));
+    markSort(table, spec);
+    card.dataset.syms = rows.map((r) => r.symbol).join(',');
+    const pc = (x, cls) => h('td', 'num ' + (cls || '') + ' ' + tone(x), x === null || x === undefined ? '—' : pct(x));
+    rows.forEach((r) => {
+      const tr = h('tr'), key = h('td', 'key');
+      const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol || r.symbol); a.target = TVTAB; key.append(a);
+      if (r.grade) { const gb = h('span', 'tgr-grade g' + r.grade, r.grade); gb.style.marginLeft = '5px'; gb.title = r.g_reason; key.append(gb); }
+      const rd = h('td', r.read.cls || '');
+      if (r.read.go) rd.append(h('span', 'tgr-gm', r.read.txt)); else rd.textContent = r.read.txt;
+      if (r.read.go) rd.firstChild.style.marginLeft = '0';
+      tr.append(key, rd, pc(r.pm_chg), h('td', 'num', fPrice(r.pm_last)), pc(r.vs_21e), pc(r.vs_50e), pc(r.vs_200, 'c2'), pc(r.c_vs21, 'c2'), pc(r.c_vs50, 'c2'),
+        h('td', 'num c2', g2.format(r.pm_dvol_m)), h('td', 'num c3', fAdr(r.adr_20)), h('td', 'num c3', fCap(r.mcap_b)), chipCell(r.themes, 'theme', ''));
+      tb.append(tr);
+    });
+  };
+  $('#pme-show').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { PMESHOW = b.dataset.v; draw(); } });
+  $('#pme-copy').addEventListener('click', () => { const t = ($('#pme-card').dataset.syms || '').split(',').filter(Boolean); if (t.length && navigator.clipboard) navigator.clipboard.writeText(t.join(',')).then(() => { $('#pme-count').textContent = t.length + ' tickers copied'; }).catch(() => {}); });
   const drawPmLive = (symMap) => {
     syncPm();
     const table = $('#pml-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
@@ -2604,7 +2732,9 @@ defCalc('industry_perf', {
         (PML.date === today ? '' : ' · runs 7:00–9:29 AM ET on trading days');
     }
     const xk = PMF.dir === 'down' ? 'pmd' : 'pmu';
-    let rows = pmRows().filter((r) => pmPass(r, PMF) && pmXOk(FLT[xk].x, r));
+    const allPm = pmRows();
+    drawPmEvent(allPm);
+    let rows = allPm.filter((r) => pmPass(r, PMF) && pmXOk(FLT[xk].x, r));
     $('#pml-count').textContent = PML ? String(rows.length) : '—';
     /* + Filter: the set of the direction on screen; the count next to the chips */
     ['pmu', 'pmd'].forEach((k) => { if (XBOX[k] && XBOX[k].parentElement) XBOX[k].parentElement.hidden = k !== xk; });
@@ -4927,6 +5057,8 @@ defCalc('industry_perf', {
     ['trend_y', 'Trend (last close)', 'Rank & trend', 'The Trend at the last close (what the stars read)', ['trend_y'], (s) => { const x = trendLast(s); return cNode(x ? TR_N[x.st] * 1000 + Math.min(x.d || 0, 999) : null, trendLastCell(s)); }],
     ['grank', 'Group rank', 'Rank & trend', 'Its best group\'s rank (★ Top = top 3%, Strong = 3-10%) and its place in the group', ['grank'], (s) => { const g = grBest(s); return cNode(g ? g.pct : null, grStockCell(g, s, false)); }],
     ['rs', 'RS', 'Rank & trend', 'Market rank 1-99 after the last close', ['rs', 'rs_now'], (s) => { const v = num(ldocRS()[s]); return cNum(v, v === null ? '—' : String(v)); }],
+    ['rsw', 'RS 1W-1M', 'Rank & trend', 'Short-term market rank 1-99 after the last close: the stock\'s own 1-week and 1-month moves against every stock (RS next to it is the 1/3/6-month one)', ['rsw'], (s) => { const v = num(ldocRSW()[s]); return cNum(v, v === null ? '—' : String(v)); }],
+    ['gheat', 'Heating up', 'Rank & trend', 'The heat of its best group, 1-99: the group\'s median 1-week move and its breadth against the other groups of its kind. 🔥 = heat 90+ with 60%+ of its stocks up', ['gheat'], (s) => { const g = grBest(s), v = g && g.heat ? g.heat : null; return cNode(v, grHeatCell(g)); }],
     ['stars', 'Stars (launch)', 'Rank & trend', '★★ / ★ / ⚠ skip for a launch today, from the last close', ['stars'], (s) => { const x = launchStars(s); return cNode(x ? x.n : null, starCell(x)); }],
     ['earn', 'Earnings date', 'Earnings', 'When it reports this week (the Earnings tab)', ['earn'], (s) => { const e = EK(s); if (!e) return cTxt(null); const t = new Date(e.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }) + ' ' + ({ bmo: 'AM', amc: 'PM', dmh: 'day' }[e.when] || '?'); return cell(e.date + (e.when === 'amc' ? 'b' : 'a'), t, 'nw', 'Reports ' + fDate(e.date) + ' ' + (ER_WHEN[e.when] || '')); }],
     ['er_look', 'ER look', 'Earnings', 'The Earnings tab\'s Read: Strong bullish / Bullish / Mixed / Somewhat bearish / Bearish', ['er_look', 'read'], (s) => { const e = EK(s); const td = h('td', 'nw', e && e.read ? '' : '—'); if (e && e.read) { const b = h('span', 'er-read r' + (ER_R[e.read] || 0), e.read); b.title = (e.points > 0 ? '+' : '') + e.points + ' points: ' + (e.why || ''); td.append(b); } return cNode(e && e.read ? (ER_R[e.read] || 0) * 100 + (num(e.points) || 0) : null, td); }],
@@ -5371,6 +5503,7 @@ defCalc('industry_perf', {
   /* ───────── data: the radar-data branch of your GitHub repo ───────── */
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
   let CGR = null;     /* the code grades (radar/codegrade.py, test next to Claude's) */
+  let PMEV = null;    /* the news behind today's theme event (the 8:45 grading -> pm_event.json) */
   let PMN = null;     /* the 8:05 / 8:35 news runs (radar/codegrade.py news -> pmnews.json): the News column before 8:45 */
   let CGL = null;     /* the code grader's daily log: its W (laggard watch) names for the W-crossed-the-200 alerts */
   let LEV = null;     /* today's 5-minute opening ranges of the movers (radar/levels.py): the + Filter "5-min opening range high" */
@@ -5490,6 +5623,7 @@ defCalc('industry_perf', {
       LEV = await getJson(sha, 'levels.json').catch(() => LEV);
       CGL = await getJson(sha, 'codegrade_log.json').catch(() => CGL);
       PMN = await getJson(sha, 'pmnews.json').catch(() => PMN);
+      PMEV = await getJson(sha, 'pm_event.json').catch(() => PMEV);
       CGR = await getJson(sha, 'codegrade.json').catch(() => CGR);     /* the code grades, next to Claude's (test) */     /* the Earnings tab (radar/earnings.py) */     /* the job's alerts, incl. its 1-minute gap-up checks */
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {

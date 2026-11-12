@@ -1,5 +1,5 @@
 {
- "_about": "Names the user approved for a theme (Nov 3 2026): stocks in no theme that moved with it at 0.6+ (May-Nov 2026) and whose business matches. Each week a name joins only if it still tracks the theme at 0.6+ (pipeline.py, the themes' co-movement test); the sector and liquidity filters of the automatic adds do not apply. Nov 3 2026 (tech review): GEN, IPGP. Nov 11 2026 (the user: \"i know for fact that klic, simo belongs to semi ecosystem\"): KLIC, ASX, SIMO.",
+ "_about": "Names the user approved for a theme (Nov 3 2026): stocks in no theme that moved with it at 0.6+ (May-Nov 2026) and whose business matches. Each week a name joins only if it still tracks the theme at 0.6+ (pipeline.py, the themes' co-movement test); the sector and liquidity filters of the automatic adds do not apply. Nov 3 2026 (tech review): GEN, IPGP. Nov 11 2026 (homes for tradable stocks with no pack: each moved with the theme at 0.6+ over the 120 sessions to Oct 23 and its business matches): XNCR, KYMR, PTCT, BAX, HGV, OSPN, STEP, BRKR. Nov 11 2026 (the user: \"i know for fact that klic, simo belongs to semi ecosystem\"): KLIC, ASX, SIMO.",
  "adds": {
   "Genomics & Diagnostics": "VCYT CSTL PACB AZTA SDGR MRVI",
   "Industrial Automation": "IR LECO",
@@ -8,20 +8,20 @@
   "Homebuilders & Housing": "AOS QXO RKT SGI",
   "LatAm Energy": "TGS EC PAM",
   "Beverages": "FIZZ SAM",
-  "Medtech": "IDXX TFX",
+  "Medtech": "IDXX TFX BAX",
   "Shale & Permian E&P": "VNOM",
-  "Small & Mid-cap Biotech": "RYTM MAZE PRAX",
+  "Small & Mid-cap Biotech": "RYTM MAZE PRAX XNCR KYMR PTCT",
   "Gene Editing": "GENB",
   "Natural Gas Producers": "DEC BKV",
-  "Life Science Tools & CROs": "BIO AVTR",
+  "Life Science Tools & CROs": "BIO AVTR BRKR",
   "China Internet": "YMM WB",
   "Pipelines & Midstream": "LNG OKE",
   "Fintech & Payments": "DLX FOUR",
   "Enterprise SaaS": "FIG WIX GEN",
   "Building Products": "HAYW SWK",
   "AI Software & Data": "ZETA RDVT",
-  "Alt Asset Managers": "BNT",
-  "Cybersecurity": "RDWR",
+  "Alt Asset Managers": "BNT STEP",
+  "Cybersecurity": "RDWR OSPN",
   "Optics & CPO": "LWLG",
   "Oil Majors": "SSL",
   "Semi Test & Packaging": "ESI IPGP KLIC ASX",
@@ -34,6 +34,7 @@
   "Steel": "TX",
   "P&C Insurance & Brokers": "AGO",
   "Net Lease & Diversified REITs": "DEA",
-  "LatAm Fintech & Banks": "PICS"
+  "LatAm Fintech & Banks": "PICS",
+  "Hotels": "HGV"
  }
 }

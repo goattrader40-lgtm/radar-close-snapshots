@@ -11,8 +11,12 @@
       <out_dir>/rows.json plus <out_dir>/to_grade.json (by pre-market $ volume: top 20 gap-ups and top 8 gap-downs),
       and <out_dir>/gappers.json: every 5%+ gapper before those rules, with the rule that dropped it ("dropped"), so the
       code grader can give each one its news (the user, Nov 6 2026: "any gappers above 5%, their news"; FLY).
-  finish <out_dir> [grades.json]
-      Merges the grades into <out_dir>/premarket.json (the dashboard's dataset file).
+      and <out_dir>/theme_event.json: the theme events of the live scan (radar/theme_event.py: many stocks of one area
+      gapping 5%+ together, Nov 11 2026: 93 semis / AI stocks), each with a plain "line"; [] on a normal day.
+  finish <out_dir> [grades.json] [event_news.json]
+      Merges the grades into <out_dir>/premarket.json (the dashboard's dataset file). With event_news.json
+      ({"why": "one or two plain sentences: the market / sector news behind the theme event", "sources": ["url", ...]})
+      it writes <out_dir>/pm_event.json for the portal's theme event line.
 
 grades.json: {"SYM": {"grade": "A|B|C|F", "catalyst": "...", "reason": "...", "flags": "...",
                        "inflection": "Turnaround|Acceleration|New business|Margin|Deterioration|None", "inflection_score": 0-10,
@@ -84,6 +88,18 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
                 g["pm_last"], g["gap_pct"], g["pm_volume"], g["pm_dvol"] = q[0], q[1], q[3], q[4]
             pm["rows"] = list(by.values())
             pm["saved_at"] = lv.get("saved_at") or pm.get("saved_at", "")
+    events = []                                   # the theme events of the live scan (the user, Nov 11 2026)
+    if live_path and os.path.exists(live_path):
+        try:
+            lv = json.load(open(live_path))
+            if lv.get("date") == pm.get("date"):
+                sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+                import theme_event
+                events = [dict(e, line=theme_event.line(e, lv.get("rows") or {})) for e in lv.get("events") or []]
+        except Exception as e:
+            print(f"theme events: {e}", file=sys.stderr)
+    os.makedirs(out, exist_ok=True)
+    json.dump(events, open(os.path.join(out, "theme_event.json"), "w"), indent=1)
     R = load_rules()
     mcap_min, avgvol_min, dvol_min, adr_min, low52_min = R["mcap_min_b"], R["avgvol_min_k"] * 1000, R["dvol_min_m"], R["adr_min"], R["low52_min"]
     rows, every = [], []                          # every = all 5%+ gappers, for the news of each (the user, Nov 6 2026)
@@ -145,6 +161,7 @@ def prepare(pm_path, stocks_path, out, n_grade=20, n_down=8, live_path=None):
     json.dump(todo, open(os.path.join(out, "to_grade.json"), "w"), indent=1)
     print(json.dumps({"scan_date": pm.get("date"), "scan_time": pm.get("saved_at"), "in_file": len(pm.get("rows", [])),
                       "gapping_5": len(every), "pass_rules": len(rows), "to_grade": len(todo),
+                      "theme_events": [e["line"] for e in events],
                       "rules": {k: R[k] for k in list(RULES) + ["gapup_above_ema50", "saved_at"]},
                       **({"rules_ignored": R["ignored"]} if R["ignored"] else {})}))
 
@@ -210,7 +227,27 @@ def lock(r, er):
         r["flags"] = "; ".join([x for x in [r.get("flags") or ""] if x] + notes)
 
 
-def finish(out, grades_path=None):
+def event_news(out, news_path):
+    """the news behind today's theme event (the 8:45 grading searched it once) -> <out>/pm_event.json for the portal"""
+    try:
+        evs = json.load(open(os.path.join(out, "theme_event.json")))
+        meta = json.load(open(os.path.join(out, "meta.json")))
+        n = json.load(open(news_path))
+    except Exception:
+        return False
+    why = str(n.get("why") or "").strip()
+    if not evs or not why:
+        return False
+    src = [u for u in (n.get("sources") or []) if isinstance(u, str) and u.startswith("https://")][:3]
+    json.dump({"day": meta.get("scan_date", ""), "time": meta.get("scan_time", ""), "why": why[:600], "sources": src,
+               "areas": [a["name"] for e in evs for a in e.get("areas", [])]},
+              open(os.path.join(out, "pm_event.json"), "w"), separators=(",", ":"))
+    return True
+
+
+def finish(out, grades_path=None, news_path=None):
+    if news_path:
+        print(json.dumps({"theme_event_news": event_news(out, news_path)}))
     rows = json.load(open(os.path.join(out, "rows.json")))
     grades = json.load(open(grades_path)) if grades_path and os.path.exists(grades_path) else {}
     er = earnings_reads()
@@ -239,4 +276,4 @@ if __name__ == "__main__":
         live = next((x.split("=", 1)[1] for x in sys.argv if x.startswith("--live=")), None)
         prepare(a[0], a[1], a[2], int(a[3]) if len(a) > 3 else 20, int(a[4]) if len(a) > 4 else 8, live)
     else:
-        finish(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
+        finish(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None, sys.argv[4] if len(sys.argv) > 4 else None)
