@@ -134,7 +134,7 @@ unsure; launch days 7 / 7; 13 of 18 charts "not clean").
   too: volume + gap); the engine says Aug 7.
 - **Done at the end**: the `long` fetch (161 symbols to Nov 11, with DOCU COHR AXTI ALAB NBIS); tools/examples.txt has DOCU,
   COHR (pick from Feb 6), AXTI (pick from Feb 20), APPN (to Nov 10), ALAB, NBIS; **tools/expected_reads.txt still not
-  rewritten** (`--regress` lists ~220 differing lines: today's rule changes plus the 6 new examples). DOCU Nov 11: the
+  rewritten** (`--regress` lists 188 differing lines: today's rule changes plus the 6 new examples). DOCU Nov 11: the
   engine has its flag line 81.16 as the next buy point (matches the user's chart).
 - **Asked of the user (they will "compile and provide all at once")**: go live or not; the 135-row list (keep the way
   back, or only on a base breakout / launch-size day); 3-5 more charts each of: dying trends (and ones that kept going),
