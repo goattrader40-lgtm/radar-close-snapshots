@@ -2330,7 +2330,7 @@ defCalc('industry_perf', {
      can check for any stock (radar/alerts.py MORNING_X, the same ids); saved with the boxes. The 21-day high = the
      highest close of the last 21 sessions (the user: "highest close"). A stock without a value for one that is set is left out */
   const MBO_X = {
-    hc21: ['Over the 21-day closing high', 'cat', ['Over it', 'Under it'], 'The price over the highest close of the last 21 sessions (as your EP rule)'],
+    hc21: ['Above the 21-day closing high', 'cat', ['Over it', 'Under it'], 'The price over the highest close of the last 21 sessions (as your EP rule)'],
     gap: ['Gap at the open %', 'num', null, 'Today\'s open vs yesterday\'s close'],
     chg_1w: ['1W %', 'num', null, 'The % change over the last week, to yesterday\'s close'],
     chg_1m: ['1M %', 'num', null, 'The % change over the last month, to yesterday\'s close'],
@@ -2345,7 +2345,8 @@ defCalc('industry_perf', {
     sector: ['Sector', 'text', null, 'Its sector has this word'] };
   const mxOn = (f) => f.v !== null && f.v !== undefined && f.v !== '';
   const mxOk = (f) => { const c = MBO_X[f.id]; if (!c) return false; return c[1] === 'cat' ? c[2].includes(f.v) || f.v === null : c[1] === 'num' ? f.v === null || Number.isFinite(Number(f.v)) : true; };
-  const mxDesc = (f) => { const c = MBO_X[f.id]; return c[0] + (c[1] === 'cat' ? ' is ' + f.v : c[1] === 'text' ? ' ' + ({ is: 'is', not: 'has no' }[f.op] || 'has') + ' "' + f.v + '"' : ' ' + (f.op === '<=' ? '≤' : '≥') + ' ' + f.v); };
+  const MXO = { 'Over it': 'Yes', 'Under it': 'No' };
+  const mxDesc = (f) => { const c = MBO_X[f.id]; return c[0] + (c[1] === 'cat' && MXO[f.v] ? ': ' + MXO[f.v] : c[1] === 'cat' ? ' is ' + f.v : c[1] === 'text' ? ' ' + ({ is: 'is', not: 'has no' }[f.op] || 'has') + ' "' + f.v + '"' : ' ' + (f.op === '<=' ? '≤' : '≥') + ' ' + f.v); };
   const tOk = (t) => /^\d\d:\d\d$/.test(String(t || ''));
   const mboSaved = () => {
     const o = Object.assign({}, MBO_DEF, { x: [] });          /* (its own list: never the defaults' one) */
@@ -2392,9 +2393,10 @@ defCalc('industry_perf', {
       chip.append(h('b', '', c[0]));
       let inp;
       if (c[1] === 'cat') {
-        chip.append(document.createTextNode(' is '));
+        const yn = c[2].includes('Over it');
+        chip.append(document.createTextNode(yn ? ': ' : ' is '));
         inp = h('select', 'xf-in'); const o0 = h('option', '', 'any'); o0.value = ''; inp.append(o0);
-        c[2].forEach((o) => { const op = h('option', '', o); op.value = o; inp.append(op); });
+        c[2].forEach((o) => { const op = h('option', '', yn ? MXO[o] || o : o); op.value = o; inp.append(op); });
         inp.value = f.v || ''; inp.addEventListener('change', () => { f.v = inp.value || null; f.op = 'is'; inp.blur(); mxChanged(); });
         chip.append(inp);
       } else {
@@ -5357,8 +5359,12 @@ defCalc('industry_perf', {
     if (sp.k === 'text') return txtOk(r && r[1] ? r[1].textContent : '', f);
     return numOk(r ? num(r[0]) : null, f);
   });
-  const xfName = (f) => (f.col ? f.name : (CAT.get(f.id) || [])[1] || f.id);
-  const xfDesc = (f) => { const t = f.col ? f.t : xfSpec(f.id).k; return xfName(f) + (t === 'cat' ? ' is ' + f.v : t === 'text' ? ' ' + ({ is: 'is', not: 'has no' }[f.op] || 'has') + ' "' + f.v + '"' : ' ' + (f.op === '<=' ? '≤' : '≥') + ' ' + f.v); };
+  /* the level filters read as a yes / no question (the user, Nov 12 2026: "it should be ORH 5min above or not"; was
+     "5-min opening range high (ORH) is Over it"). The saved values stay 'Over it' / 'Under it' */
+  const LVLF = { pdh: 'Above yesterday\'s high (PDH)', orh: 'Above the 5-min opening range high (ORH)', hc21: 'Above the 21-day closing high' };
+  const LVLO = { 'Over it': 'Yes', 'Under it': 'No' };
+  const xfName = (f) => (f.col ? f.name : LVLF[f.id] || (CAT.get(f.id) || [])[1] || f.id);
+  const xfDesc = (f) => { const t = f.col ? f.t : xfSpec(f.id).k; return xfName(f) + (t === 'cat' && !f.col && LVLF[f.id] ? ': ' + (LVLO[f.v] || f.v) : t === 'cat' ? ' is ' + f.v : t === 'text' ? ' ' + ({ is: 'is', not: 'has no' }[f.op] || 'has') + ' "' + f.v + '"' : ' ' + (f.op === '<=' ? '≤' : '≥') + ' ' + f.v); };
   const xfText = (list) => (list || []).filter((f) => !f.col && xfOn(f) && CAT.has(f.id)).map(xfDesc);
   /* the table's own columns (f.col): Gainers from the stock's row (so the counts and the theme / industry tables follow),
      the Watchlist and Launches from what the cell shows */
@@ -5413,9 +5419,10 @@ defCalc('industry_perf', {
         chip.append(h('b', '', xfName(f)));
         let inp;
         if (kind === 'cat') {
-          chip.append(document.createTextNode(' is '));
+          const lvl = !f.col && !!LVLF[f.id];
+          chip.append(document.createTextNode(lvl ? ': ' : ' is '));
           inp = h('select', 'xf-in'); const o0 = h('option', '', 'any'); o0.value = ''; inp.append(o0);
-          xfSpec(f.id).opts.forEach(([o]) => { const op = h('option', '', o); op.value = o; inp.append(op); });
+          xfSpec(f.id).opts.forEach(([o]) => { const op = h('option', '', lvl ? LVLO[o] || o : o); op.value = o; inp.append(op); });
           inp.value = f.v || ''; inp.addEventListener('change', () => { f.v = inp.value || null; chip.classList.toggle('on', xfOn(f)); changed(); });
           chip.append(inp);
         } else {

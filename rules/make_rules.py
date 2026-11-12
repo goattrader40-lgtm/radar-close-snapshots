@@ -292,7 +292,8 @@ SHEETS["E1 Earnings tab"] = (["Item", "Rule"], [
  ["Read points", "Revenue beat +1 (2%+ +2) / miss -1 (-2); EPS beat +1 (10%+ +2) / miss -1 (-2); guidance raised +2, above the street +1 (+2 without a raise), below -2, lowered -3 (one product's guide: raised +1 / lowered -1); revenue growth 25%+ +1 / shrinking -1; the move after the report +2%: +1, +5%: +2, -2%: -1, -5%: -2"],
  ["Read", "6+ Strong bullish, 3-5 Bullish, 0-2 Mixed, -1 to -3 Somewhat bearish, -4 or less Bearish"],
  ["Columns at the end", "vs 200 SMA, vs 50 EMA (pre-market price vs the last close's SMA / EMA), vs 20D high (vs the highest high of the previous 20 sessions; 'cleared' = above it), over the 52-week low; Group rank and RS as on Launches"],
- ["When", "Weekdays about 7:10-8:55 AM ET (final by 9:00), 4:50 / 6:30 / 8:30 PM ET, Sunday 6 PM ET (earnings.yml -> radar-data earnings.json). No phone alerts"],
+ ["When", "Weekdays about 7:10-8:55 AM ET, then 9:20 and hourly from 10:00 AM to 2:00 PM ET for reports whose filing came late (the user, Nov 12 2026: NBIS filed at 9:22 AM and stayed 'reports Thu' until the evening), 4:50 / 6:30 / 8:30 PM ET, Sunday 6 PM ET (earnings.yml -> radar-data earnings.json). No phone alerts"],
+ ["Out, no filing yet (the user, Nov 12 2026, NBIS)", "A report that is out (its time has passed) with no SEC filing to read yet shows 'Out · not read yet' and the pre-market news headline (pmnews.json: source and time) where it said 'reports Thu'; the numbers and the read come when the filing arrives (a foreign company files its 6-K hours after the release)"],
 ])
 SHEETS["T1 Trend column"] = (["Trend", "Rule (checked in this order, first match wins)"], [
  ["Base rule (the positive ones)", "10 EMA > 21 EMA > 50 EMA and the 50 EMA higher than 5 sessions ago (the user, Nov 3 2026)"],
