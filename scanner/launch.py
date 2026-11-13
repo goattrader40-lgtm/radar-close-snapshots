@@ -1277,6 +1277,30 @@ def range_break(a, j):
     return t, float(line)
 
 
+def range_watch_of(a, i):
+    """for the phone alert (radar/alerts.py find_range): the falling range a close TOMORROW could break (range_break's tests that
+    today's close, bar i, already settles): [the line tomorrow, 21 EMA, 50 EMA, ADR %, the top's date, the top] or None"""
+    st = a.st
+    c, h, l = st.c, st.h, st.l
+    j = i + 1
+    if j < L["range_max"] + 5:
+        return None
+    t = j - L["range_max"] + int(np.argmax(h[j - L["range_max"]:j]))
+    if j - t < L["range_min"]:
+        return None
+    s1, s0 = flag_line(a, t, j - 1), flag_line(a, t, j - 2)
+    if s1 is None or s0 is None or s1 >= 0:
+        return None
+    line, prev = h[t] + s1 * (j - t), h[t] + s0 * (j - 1 - t)
+    lo = float(l[t + 1:j].min())
+    if not c[i] <= prev or 100 * (1 - lo / h[t]) > L["range_depth"] * _adr(st, t):
+        return None
+    k_lo = t + 1 + int(np.argmin(l[t + 1:j]))
+    if not np.isnan(st.sma200[k_lo]) and lo < st.sma200[k_lo]:
+        return None
+    return [fnum(line), fnum(a.e21[i]), fnum(a.e50[i]), fnum(_adr(st, i), 1), st.dates[t], fnum(h[t])]
+
+
 def stalled_high(a, j):
     """the END OF CYCLE warning on day j (L stall): (the stalled high's bar, the peak before it) or None"""
     st = a.st
@@ -2839,7 +2863,16 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         w_ = start_watch_of(a, i)
         if w_:
             start_watch[s] = w_ + [run.tv_symbol(s, a.st.exchange)]
-    doc = dict(date=today, start_days=starts, start_watch=start_watch, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
+    # the falling ranges a list stock (on the list or off it, waiting) could break tomorrow, for the phone alert
+    range_watch = {}
+    for s in {r["symbol"] for r in rows} | {x[0] for x in off_watch}:
+        a = A.get(s)
+        if a is None or a.st.dates[-1] != today or any(r["symbol"] == s and (r.get("cycle_warn") or "").startswith("END OF CYCLE") for r in rows):
+            continue
+        w_ = range_watch_of(a, len(a.st.dates) - 1)
+        if w_:
+            range_watch[s] = w_ + [run.tv_symbol(s, a.st.exchange)]
+    doc = dict(date=today, start_days=starts, start_watch=start_watch, range_watch=range_watch, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50", "low_52w", "group rank now (★ Top / Strong, place in it)", "RS now"],

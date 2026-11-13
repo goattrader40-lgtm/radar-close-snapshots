@@ -8,6 +8,8 @@
   retest   it pulled back to its last breakout's level (the top of the broken base's bodies or its wick top) and
            closed above it: another entry, once per breakout; high priority with the 10 / 21 / 50 EMA there too
            (GMAB Oct 2 2026 at 34.63 with the 21 EMA; SPOT Oct 28 at 536.98-540.82 with the 21 EMA)
+  2nd low  the 2nd higher low in the base (the 1st low held the 50 EMA, a bounce, then a higher low that tests the 50 EMA and
+           closes back over it: APPN Sep 28-29 2026): an end-of-day entry, high priority
   21 EMA   the 21 EMA entries in the base: the retest (a controlled pullback, the low under it, the close back over it:
            TTAN Oct 29 2026, ARM May 18) and the undercut & reclaim after 2 closes under it (strong: SMCI Jun 27 2023)
   3rd try  an ascending triangle: 2 tries of the top, the last pullback shallower, now close to the top again: the 3rd try
@@ -30,7 +32,14 @@ def main():
     for r in doc.get("launches", []):
         late = " (late leg)" if r.get("late") else ""
         tail = f" · leg {r.get('leg')}{late} · {'your pick since ' + r['pick'][:10] if r.get('grade') == 'You' else 'launched ' + r['date'] + ' (' + r['grade'] + ')'} · theme {r.get('group_now') or '-'} ({(r.get('group_status_now') or '').lower()})"
-        if r.get("retest_today"):
+        if (r.get("stage") or "").startswith("2nd higher low in the base") or " · 2nd higher low in the base" in (r.get("stage") or ""):
+            # the 2nd higher low in the base, an end-of-day entry (the user, Nov 13 2026: "2nd higher low can be end of day
+            # trigger its end of day thing"; APPN Sep 28-29 2026)
+            st_ = r["stage"]
+            st_ = st_[st_.index("2nd higher low in the base"):].split(" · ")[0]
+            out.append((f"{r['symbol']} 2nd higher low in its base", st_ + f" · the buy: tomorrow's break of the 5-min opening range high, the stop under "
+                        f"today's low" + tail, r.get("tv") or r["symbol"], "high"))
+        elif r.get("retest_today"):
             lb, lw, emas = r.get("retest_level"), r.get("retest_level_wick"), r.get("retest_ema") or []
             lv = f"${lb:.2f}" + (f"-${lw:.2f} (bodies-wicks)" if lw and lw > lb * 1.001 else "")
             out.append((f"{r['symbol']} retest held" + (" + " + " & ".join(emas) if emas else ""),

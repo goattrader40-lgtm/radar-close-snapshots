@@ -579,6 +579,37 @@ def find_start(live, doc, now, sent=()):
     return out
 
 
+def find_range(live, doc, now, sent=()):
+    """the BREAKOUT OF A FALLING RANGE as it happens (the user, Nov 13 2026: "breakout of falling range its good alert"; INTC Apr 1
+    2026): a list stock (on the list, or off it waiting for its way back; launch.json range_watch, from the last close) trades
+    over its falling line (the line through the lower highs from the range's top) and over the 21 and 50 EMA, up on the day on a
+    volume pace of 1x+ or a 1 ADR+ day, with a 1 ADR+ day or a 2%+ gap, in the top half of today's range and over its 5-minute
+    opening range high. From 9:36"""
+    out = []
+    if (now.hour, now.minute) < (9, 36):
+        return out
+    R = doc.get("rules", {})
+    for sym, w in (doc.get("range_watch") or {}).items():
+        q = live["rows"].get(sym)
+        if f"{sym}:rangebo" in sent or not q or len(q) < 8 or q[4] is None or q[0] is None or q[1] is None:
+            continue
+        price, chg, rv, op, hi = q[0], q[1], q[4], q[5], q[7]
+        line, e21, e50, adr, top_d, top, tvs = w[:7]
+        gap = 100 * (op / (price / (1 + chg / 100)) - 1) if op else 0
+        if not (price > line and price > e21 and price > e50 and chg > 0 and (rv >= 1 or chg >= adr)
+                and (chg >= R.get("range_day_adr", 1) * adr or gap >= R.get("range_gap", 2))):
+            continue
+        orh, low = opening_range_high(sym), chart_low_today(sym)
+        if not orh or not low or not price > orh or (hi and price < (hi + low) / 2):
+            continue
+        out.append((f"{sym}:rangebo", f"{sym} BREAKOUT of its falling range",
+                    f"${price:.2f} over the falling line ${line:.2f} (from the {top_d} high ${top:.2f}) and over the 21 & 50 EMA "
+                    f"${e21:.2f} / ${e50:.2f} · {chg:+.1f}% ({chg / adr:.1f} ADR)" + (f", a {gap:.1f}% gap" if gap >= 2 else "")
+                    + f" · vol {rv:.1f}x for the time of day · over the 5-min opening range high ${orh:.2f} · stop: today's low ${low:.2f} "
+                    f"({100 * (price / low - 1) / adr:.1f} ADR) · the close over the line confirms it", "high", tvs))
+    return out
+
+
 def gob_of(r, q):
     """a followed launch gapping out of its base today (your rule, Nov 1 2026): (base high, open) or None. The base high
     is last night's (scanner/launch.py gap_base_level: the base top or a pattern's pivot, not a flag line or a pop), the
@@ -1290,6 +1321,7 @@ def main():
     if not early:
         try:
             found += find_start(live, doc, now, sent)
+            found += find_range(live, doc, now, sent)
         except Exception as e:
             print(f"start-day alerts: {e}", file=sys.stderr)
     # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
