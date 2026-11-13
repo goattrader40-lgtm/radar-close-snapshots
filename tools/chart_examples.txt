@@ -499,3 +499,16 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 # not clear, swing high low not clear, too much whiplash to 21ema and 50 ema.. not nicely trending up".
 # Measured (closes crossing the 50 EMA in 60 sessions): clean trends 0-3 (AMD Jun 30: 0, MRVL Jun 15: 0);
 # the range stocks the user called broken 12-14 (WRBY 13, VSAT 12, ITT 14, RLAY 14); AMD Sep 8: 8, NET Nov 11: 6.
+#
+## AMD Jul-Sep 2026, the user's follow-up (Nov 13, 1 screenshot with the falling line Jul 14 -> Sep 8):
+# Top: "in climax tops volatility goes up, high swing daily volatility goes up but doesnt make [progress]..
+#   15th july bcs volatility up, stock stalled at top and made lower highs.. distribution days.. after 8th july".
+# Reset and new trend: "after climax stock need time to reset the energy.. keeps making lower high.. finally
+#   finds its bottom and sept 8th is new trend. september 3rd was a sign bcs it made local bottom, its 1st time
+#   higher low and volatility contracting since july 14th, every time swing becomes smaller and smaller".
+# Measured swings (pivot = 3 sessions each side): highs Jun 30 584.73 > Jul 14 574.20 > Jul 22 561.47 >
+#   Aug 4 530.13 > Aug 17 517.35 > Aug 26 491.12 (5 lower highs); lows Jul 29 424.03, Aug 11 463.21,
+#   Aug 24 451.00, Sep 3 440.50 (all over the Jul 29 bottom; Sep 3 is 2% under Aug 24 by the low).
+#   Swing size: 24.5%, 25.0%, 12.6%, 11.7%, 12.8%, 8.9%, 10.3%. Daily range (5-day avg): Jul 29 7.3%,
+#   Aug 10 4.7%, Aug 20 4.1%, Sep 3 2.8%. Top: Jun 15-Jul 14 daily range 6%+ with a 10-day net of -0.5% to +7%.
+#   Sep 8 closed 505.74 over the Aug 26 lower high 491.12 = the first higher high (the falling line broken).
