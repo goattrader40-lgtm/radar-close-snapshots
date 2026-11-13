@@ -168,7 +168,7 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # through the 21 & 50 EMA, or a start_gap % gap opening over both; start_look = how far back a launch's trend start is
          # looked for; start_list_days = how long a start day stays on the Start days list
          start_adr=1, start_rv=1, start_gap=5, start_look=40, start_list_days=5,
-         first_day=1, first_gap=5, first_rv=1.3, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2)
+         first_day=1, first_gap=5, first_rv=1.3, first_adr_nogap=1.8, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -306,7 +306,9 @@ class Arr:
         # user, Nov 12 2026: REAL Oct 15 2026 "real launch was 15th october rest is continuation": +15.8% on 2.1x, closed
         # 10.54 over the 21 / 50 EMA 9.58 / 9.98 and its 1-month high 9.97, 7% under the 200 SMA; PAR Oct 15 2026 +9.7% on
         # 1.4x over 16.25; FBIN Oct 22 2026 +6.9% on 1.4x over 41.59: "the ones after 200 was continuations")
-        return bool(c[i] > self.hi20[i] and self.clpos[i] >= L["min_clpos"])
+        # and the day itself is big, 1.8 ADRs+ (the user, Nov 12 2026: ATRC's launch is "july 24th", not Jun 26 2026: +7.3% =
+        # 1.7 ADRs with a 0.6% gap, a day inside its range; REAL Oct 15 2026 was 3.4 ADRs, FBIN Oct 22 2.0, PAR Oct 15 1.9)
+        return bool(c[i] > self.hi20[i] and self.clpos[i] >= L["min_clpos"] and self.chg[i] >= L["first_adr_nogap"] * st.adr[i])
 
     def start_day(self, i):
         """a START DAY (the user, Nov 12 2026: "as long as it did breakthrough 21/50 changed the tide that day with volume its the
@@ -1275,7 +1277,10 @@ def follow(a, i0, i, pick=False):
         flag_go = bool(L["flag_legs"] and f and at_highs and f[0] not in used_flags and j - f[0] > L["flag_days"] and c[j] > f[2] and c[j - 1] <= (flag_at(a, j - 1) or (0, 0, np.inf))[2]
                        and surfing(a, f[0], j - 1) >= L["flag_surf"] and c[j] > a.e10[j] and c[j] > a.e21[j])
         b = base_breakout(a, j, used)
-        if b and bo and j - bo[0] < L["leg_pause"] and (c[bo[0]:j] >= bo[1]).all():
+        # (not when that earlier breakout was only of the inner base, the last 20 days' high, and this one is of the main
+        # base: the user, Nov 12 2026, APPN: "october 21st is breakout out of august 31st base!!!": Oct 15 2026 broke the
+        # inner base 40.98, Oct 20 closed 44.51 over the Aug 31 top 44.06 and was swallowed as its continuation)
+        if b and bo and j - bo[0] < L["leg_pause"] and (c[bo[0]:j] >= bo[1]).all() and not (inner_day == bo[0] and len(b) == 2):
             used.add(b[1])               # continuation of that breakout, no new one (ATRC Jul 28 2026 over its Feb high
             b = None                     # 38.32 the day after Jul 27's breakout of 36.33: the retest level stays 36.33)
         # the follow-through of a caution breakout (closed within 0.5% over the top), within 3 sessions: it opens over

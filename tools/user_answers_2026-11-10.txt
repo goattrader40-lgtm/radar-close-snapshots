@@ -164,3 +164,17 @@
 #   218 launches, 192 off the list waiting (128 "neither EMA rising", 36 failed breakouts, 28 two closes under the 50 EMA).
 #   To tell the user: an EMA is over the day before's exactly when the close is over it, so "neither rising" now means a
 #   close under both the 21 and the 50 EMA, the same day (AEHR Mar 27 2026 off, back Mar 31 on its agreed 50 EMA reclaim).
+# Nov 12 2026 (evening), the user's answers to the 5 go-live questions:
+#   1. the list at 218 rows: "ok, i can delete some.. it shouldn't be that big though.... isn't they go off the list as soon as 10
+#      ema or 21 ema goes below 50, or 50 ema not rising no more? then they can come back when they rise above 21, pop that we
+#      just introduced" -> a PROPOSAL for the list rule (off: the 10 or the 21 EMA under the 50 EMA, or the 50 EMA not rising;
+#      back: the pop over the 21 EMA). Measured, not built: see chat / the next handoff.
+#   2. ATRC: "july 24th" -> BUILT: a first day without a gap must be 1.8 ADRs+ (Jun 26 2026 was 1.7); ATRC's launch is Jul 24
+#      again, REAL Oct 15 / GLOB Oct 1 / FLY Nov 6 / APP Nov 5 / CAI Aug 6 / PCOR Oct 5 2026 keep their first day.
+#   3. WRBY, VSAT, ITT, RLAY: "you reading it wrong, all those 4 already broken charts, end of cycle, i have provided so many
+#      examples and explained signs" -> NOT launches. The engine has no "broken chart / end of cycle" read; the wider attempt
+#      zone (1.5 ADRs) stays, so they read "launch attempt", not "launch".
+#   4. APPN Oct 21 (the Aug 31 base): "yes" -> BUILT: an inner base's breakout no longer swallows the main base's breakout a few
+#      sessions later; Oct 20 2026 reads "Base breakout over the base high 44.06 (an 11-month high)" (closed 44.51), Oct 21 its
+#      follow-through day. The user's day is Oct 21: one session apart.
+#   5. the alerts: "what would change in alerts?" -> answered in chat (nothing changes in them at this go live).
