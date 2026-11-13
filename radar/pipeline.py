@@ -524,6 +524,14 @@ def adj_closes(series):
         a[i - 1] = a[i] / r
     return a
 
+def high_ago(adj, dates, n, stale):
+    """the highest close of the last n sessions: {hcN_ago: sessions since it (0 = the last close), hcN_date[, close_high_N]}."""
+    if stale or len(adj) < n or None in adj[-n:]: return {f"hc{n}_ago": None}
+    w = adj[-n:]; m = max(w); ago = w[::-1].index(m)
+    o = {f"hc{n}_ago": ago, f"hc{n}_date": str(dates[-1 - ago])}
+    if n != 21: o[f"close_high_{n}"] = round(m, 4)
+    return o
+
 def ema_last(closes, n=50):
     """n-day EMA at the last close, from the unbroken run of closes at the end (seeded with their first n-day SMA)."""
     run = []
@@ -626,6 +634,7 @@ for s, r in latest.items():
     c1 = pct1 if pct1 is not None else compound(ser, 1)
     if stale: c1 = None
     adj = adj_closes(ser)
+    sdates = [d for d in sessions if d in hist[s]]
     sma = snap_val(s, "sma200")
     if sma is None and len(adj) >= SMA_N and None not in adj[-SMA_N:] and not stale: sma = sum(adj[-SMA_N:]) / SMA_N
     above = None if sma is None or stale else price > sma
@@ -669,6 +678,10 @@ for s, r in latest.items():
         # the highest close of the last 21 sessions (this one included): the next session's "21-day closing high" in
         # + Filter (the user, Nov 9 2026: "highest close", as the EP rule)
         "close_high_21": None if stale or len(adj) < 21 or None in adj[-21:] else rd(max(adj[-21:]), 4),
+        # how many sessions ago the highest close of the last 21 / 62 sessions was (0 = this close; the newest day on a
+        # tie), with its date and, for 62, the close itself: the columns "Days 21H" / "Days 62H" (the user, Nov 13 2026:
+        # "if its been 3 days since that day or 5 days", "highest closing price day is considered high day")
+        **{k: v for n in (21, 62) for k, v in high_ago(adj, sdates, n, stale).items()},
     })
 out.sort(key=lambda x: -x["mcap_b"])
 

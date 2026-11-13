@@ -5176,6 +5176,15 @@ defCalc('industry_perf', {
   const orhOf = (s) => { const d = LEV && LEV.date === todayNY() && LEV.rows ? LEV.rows[s] : null; return d ? num(d[0]) : null; };
   /* the price over (true) / under (false) a level; null = no level or no price (left out while the filter is set) */
   const overLvl = (s, lv) => { const p = pxOf(s), v = num(lv); return p !== null && v ? p > v : null; };
+  /* Days 21H / Days 62H: sessions since the highest close of the last n sessions, [value, cell] */
+  const hiAgo = (s, n) => {
+    const r = SK(s), ago = r ? num(r['hc' + n + '_ago']) : null, hi = r ? num(r['close_high_' + n]) : null;
+    if (ago === null) return cNum(null, '—', '', r ? 'Fewer than ' + n + ' sessions of closes' : '');
+    const p = pxOf(s), over = LIVE_ON && p !== null && hi && p > hi, v = over ? 0 : ago + (LIVE_ON ? 1 : 0), off = hi ? vsPct(p, hi) : null;
+    const tip = 'Highest close of the last ' + n + ' sessions: ' + (hi ? fPrice(hi) : '') + (r['hc' + n + '_date'] ? ' on ' + fDate(r['hc' + n + '_date']) : '') +
+      (over ? ' · the price is over it now (' + p1(off, true) + ')' : off !== null ? ' · the price is ' + p1(off, true) + ' from it' : '');
+    return cNum(v, v + 'd', v === 0 ? 'tgr-up' : '', tip);
+  };
   /* the EMA stack at the live price (trendOf's EMAs) and the 200 SMA: {a: 10 > 21, b: 21 > 50, c: 50 > 200, txt} */
   const stackOf = (s) => {
     const x = trendOf(s), r = SK(s); if (!x || !x.t || x.t.some((v) => v === null || v === undefined)) return null;
@@ -5207,6 +5216,11 @@ defCalc('industry_perf', {
     ['pdh', 'Yesterday\'s high (PDH)', 'Price', 'The price now vs yesterday\'s high (regular hours). As a filter: Over it / Under it', ['vs_pdh'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.high_1d) : null; return cNum(v, p1(v, true), tone(v), r && r.high_1d ? 'Yesterday\'s high ' + fPrice(r.high_1d) : 'No high for yesterday'); }],
     ['orh', '5-min opening range high (ORH)', 'Price', 'The price now vs today\'s 9:30-9:35 high (from 9:36, for the stocks up 2%+ at a 5-minute update). As a filter: Over it / Under it', [], (s) => { const o = orhOf(s), v = o ? vsPct(pxOf(s), o) : null; return cNum(v, p1(v, true), tone(v), o ? '5-min opening range high ' + fPrice(o) : 'No opening range: from 9:36, for the stocks up 2%+'); }],
     ['hc21', '21-day closing high', 'Price', 'The price now vs the highest close of the last 21 sessions (as the EP rule). As a filter: Over it / Under it', [], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.close_high_21) : null; return cNum(v, p1(v, true), tone(v), r && r.close_high_21 ? '21-day closing high ' + fPrice(r.close_high_21) : ''); }],
+    /* sessions since the highest close of the last 21 / 62 sessions (the user, Nov 13 2026: "if its been 3 days since that
+       day or 5 days", "highest closing price day is considered high day", "make column name short"); stocks.json hc21_ago /
+       hc62_ago at the last close; in the session a price over that close reads 0, else one session more */
+    ['d21h', 'Days 21H', 'Price', 'Sessions since the highest close of the last 21 sessions (0 = at the high; in the session a price over it reads 0). Hover a cell for the high, its date and how far under it. As a filter: ≤ 3 = made the high within 3 days', [], (s) => hiAgo(s, 21)],
+    ['d62h', 'Days 62H', 'Price', 'Sessions since the highest close of the last 62 sessions (0 = at the high; in the session a price over it reads 0). Hover a cell for the high, its date and how far under it. As a filter: ≤ 5 = made the high within 5 days', [], (s) => hiAgo(s, 62)],
     ['emastack', 'EMA stack (live)', 'Trend', 'The 10, 21 and 50 EMA at the live price (as the Trend column) and the 200 SMA: which is over which', [], (s) => { const k = stackOf(s); return cTxt(k ? k.txt : null); }],
     ['rel_vol', 'Rel vol', 'Volume', 'Relative volume at the time of day (live in the session)', ['rel_vol', 'rv', 'rv_today'], (s) => { const v = num((SK(s) || {}).rel_vol); return cNum(v, fX(v)); }],
     ['adr', 'ADR%', 'Volume', 'Average daily range of the last 20 sessions (red under 3.5%: a launch day needs 3.5%+)', ['adr', 'adr_20', 'adr_pct'], (s) => { const v = num((SK(s) || {}).adr_20); return cNum(v, fAdr(v), v !== null && v < 3.5 ? 'tgr-dn' : ''); }],
@@ -5508,6 +5522,7 @@ defCalc('industry_perf', {
     w_list: { k: 'cat', opts: ['3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'].map((o) => [o, (s) => { const w = WK(s); return !!w && w.lists.includes(o); }]).concat([['Not on the Watchlist', (s) => !WK(s)]]) },
     coil: { k: 'cat', opts: [['Has a coil', (s) => !!COILK(s)], ['No coil', (s) => !COILK(s)]] },
   };
+  const xfOp0 = (id) => (['d21h', 'd62h'].includes(id) ? '<=' : '>=');   /* Days 21H / 62H start as "at most" (within N days of the high) */
   const xfSpec = (id) => XF[id] || { k: 'num' };
   const xfVal = (id, s) => { const c = CAT.get(id); if (!c) return null; try { return c[5](s); } catch (e) { return [null, null]; } };
   const xfOn = (f) => f.v !== null && f.v !== undefined && f.v !== '';
@@ -5630,7 +5645,7 @@ defCalc('industry_perf', {
       if (!t || !DEFK[t.id]) return [];
       const Ly = layOf(t), off = new Set(Ly.off);
       return Ly.order.slice(1).filter((key) => !off.has(key)).map((key) => {
-        if (key.startsWith('x:')) return { name: colName(t, key), add: { id: key.slice(2), op: '>=', v: null }, kind: xfSpec(key.slice(2)).k };
+        if (key.startsWith('x:')) return { name: colName(t, key), add: { id: key.slice(2), op: xfOp0(key.slice(2)), v: null }, kind: xfSpec(key.slice(2)).k };
         if (XF_COLCAT[key]) return { name: colName(t, key), add: { id: XF_COLCAT[key], op: '>=', v: null }, kind: 'cat' };
         let kind = 'num';
         if (k === 'g') kind = G_TEXT.has(key) ? 'text' : 'num';
@@ -5654,7 +5669,7 @@ defCalc('industry_perf', {
       const nz = (x) => String(x).toLowerCase().replace(/[\s\-]+/g, ''), hit = (text) => text.toLowerCase().includes(q) || nz(text).includes(nz(q));
       const mine = own().filter((o) => hit(o.name)).sort((a, b) => rank(a.name) - rank(b.name));
       const ownIds = new Set(mine.filter((o) => o.add.id).map((o) => o.add.id));
-      const cat = CATL.filter((c) => !ownIds.has(c[0]) && hit(c[1] + ' ' + c[2] + ' ' + c[3] + (LVLF[c[0]] ? ' ' + LVLF[c[0]] + ' over above' : ''))).sort((a, b) => rank(a[1]) - rank(b[1])).map((c) => ({ name: LVLF[c[0]] || c[1], add: { id: c[0], op: '>=', v: null }, kind: xfSpec(c[0]).k, grp: c[2], tip: c[3] }));
+      const cat = CATL.filter((c) => !ownIds.has(c[0]) && hit(c[1] + ' ' + c[2] + ' ' + c[3] + (LVLF[c[0]] ? ' ' + LVLF[c[0]] + ' over above' : ''))).sort((a, b) => rank(a[1]) - rank(b[1])).map((c) => ({ name: LVLF[c[0]] || c[1], add: { id: c[0], op: xfOp0(c[0]), v: null }, kind: xfSpec(c[0]).k, grp: c[2], tip: c[3] }));
       const item = (o, tag) => {
         const i = L().findIndex((f) => same(f, o.add)), b = h('button', 'col-item' + (i >= 0 ? ' on' : ''), (i >= 0 ? '✓ ' : '') + o.name); b.type = 'button'; b.title = i >= 0 ? 'Added: click to remove it' : (o.tip || 'This table\'s column, as it shows');
         b.append(h('span', 'tgr-lbl', i >= 0 ? ' added · click to remove' : tag ? ' · ' + tag : ''));
