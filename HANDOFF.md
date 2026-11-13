@@ -271,6 +271,29 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   and ANET on.
   To look at with the user: are the 21 warnings too quick (many from the Nov 4-10 dip: AEM, WPM, AU, IAG); 35 range notes
   (12+ crossings would leave 17); AMD comes back Jul 10 2026 on a flag attempt and goes off again Jul 16.
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~11 PM ET = Nov 13 ~04:00 UTC; test/cleanlaunch 344f16e): THE START DAY re-read**
+  (the user's corrections to my alert examples, in their words in tools/chart_examples.txt; rules: SCANNER_RULES "L5 Off the
+  list", the 3 rows above "End of cycle"; settings `start_down, start_down_look, start_first, red_adr, red_look, gap_keep`):
+  1. **Start day = the FIRST strong close over the 21 EMA after a downtrend, the 50 EMA not needed** (`Arr.start_raw` +
+     `start_day`; RKLB: "clear downtrending stock, november 9th was a start point upward.. and 10th confirmation!!!"): 6+ of
+     the 10 closes before under the 21 EMA and the 21 EMA lower than 10 sessions before; only the first while its move holds
+     (TTEK: "start is 15th october.. nov12 nothing"); the close over the high of every violent red candle (1.5 ADR+ down) of
+     the 5 sessions before. The Start days rows carry `confirmed` (the first close over the 50 EMA) and `over_50ema`.
+     Matches the user: RKLB Nov 9, TTEK Oct 15 only, LUNR Nov 9, LSCC Nov 9, AVGO Nov 10, AMD / ZM / SONO Nov 11, NAVN none.
+     Differs: AMD's plain start is now Sep 4 2026 (Sep 8 stays the reset start, back on the list); APP's start Nov 4 (the
+     launch stays Nov 5). Not found, as before: MRVL Sep 16, XERS Sep 17, VERX Oct 1 2026.
+  2. **A first-day launch on a gap keeps half of its gap** (`gap_keep`; LUNR Nov 12 2026 gapped 17.8%, closed +7.0% at its
+     low: "big big red candle", no launch) and is not inside a violent red candle (`Arr.red_inside`).
+  3. **Wording**: a list stock's strong close back over the 21 EMA reads "21 EMA undercut & reclaim on a strong day", not
+     "Pop over the 21 EMA" (the user: AMD Jun 11 2026 "we already have buy point of 21 ema undercut and reclaim"); the
+     2-close undercut rule is unchanged (ANF).
+  Test build (Nov 12 close): 238 launches, 206 off waiting, 62 start days (Nov 9: 25, the market's bounce day), 50 first-day
+  launches. `--regress` 209 lines, expected_reads.txt still not rewritten.
+  **NEXT, agreed in principle, NOT built: the alerts.** One START DAY alert (live: closed under the 21 or 50 EMA, now over the
+  21 EMA, 1 ADR+, pace 1x+, top half, over the 5-min ORH; tags: launch size / after a reset), the 21 EMA reclaim alert for
+  list stocks, text notes (follow-through, range stock). Still to ask the user: all start days or only the bigger kinds
+  (Nov 9 would have sent ~25: maybe 1.5x volume or the confirmation), and whether an END OF CYCLE WARNING blocks buy alerts
+  (my recommendation). radar/alerts.py on main is still the old one.
 - **DROPPED (see 5 above; kept for the record): the 8:45 task's instructions.** update_trigger from this session was refused ("a
   routine's instructions can be changed only from the conversation the routine posts into"). Until then the event card shows
   without the news line ("why"). The text to paste into the 8:45 conversation was given to the user in this session (4
