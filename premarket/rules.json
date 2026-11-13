@@ -3,8 +3,8 @@
  "avgvol_min_k": 700,
  "dvol_min_m": 20,
  "adr_min": 3,
- "low52_min": 10,
+ "low52_min": 20,
  "gapup_above_ema50": true,
- "saved_at": "2026-11-13T08:55:20",
+ "saved_at": "2026-11-13T09:11:53",
  "by": "portal"
 }
