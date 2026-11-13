@@ -49,6 +49,25 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 2026; session_01PkbDahhagkKkQ2rkgKsLuZ)
+
+- **LIVE (the user's "go live", Fri Nov 13 2026 ~0:50 AM ET, branch claude/watchlist-launch-column-filters-ia4hqf, merge
+  754cbb1): Days 21H / Days 62H, two columns and + Filter.** The user: "days of from 21 day high and days of from 62 day",
+  "i just want to see if its been 3 days since that day or 5 days", "highest closing price day is considered high day",
+  "make column name short". (1) radar/pipeline.py high_ago(): stocks.json `hc21_ago` / `hc62_ago` = sessions since the
+  highest CLOSE of the last 21 / 62 sessions (0 = the last close; the newest day on a tie), `hc21_date` / `hc62_date`,
+  `close_high_62` (None with fewer sessions). (2) docs/index.html: catalog columns "Days 21H" / "Days 62H" (hiAgo; hover: the
+  high, its date, the distance), on every stock table's column list and in + Filter, which starts as "at most" for these two
+  (xfOp0). In the session (LIVE_ON): a live price over that close reads 0d, else the stored count + 1, so it follows the
+  5-minute live updates from 9:30 (the user asked "as of 930 am or end of day ... twice a day or every 1hr?": answered: every
+  5 minutes in the session, settled by the evening build). A display only: no rule, buy point or alert reads it. Rules
+  workbook: one row. Tested: the page with the Nov 12 files and stand-in values (236 Launches / 100 Watchlist rows right, both
+  filters, no page errors), again after merging main; high_ago on made-up series only. No `--regress`, no 2-year check, no
+  Launches rebuild (nothing in launch.py changed). radar-day `daily` started after the push to fill the Nov 12 close.
+  **First check Fri Nov 13**: stocks.json has `hc21_ago`; in the session the counts read one more than at the close (or 0d
+  over the high); after the evening build they match the charts.
+- **Test only**: nothing.
+
 ## Status of the session "Radar: MBGL / AVEX miss (Nov 12)" (Thu Nov 12 - Fri Nov 13 2026; session_01PkbDaiSjzGPJPtohD3UF2C)
 
 - **LIVE (the user's "go live", Fri Nov 13 2026 ~0:30 AM ET, branch test/coilfilter, merge c9b1b59): the coil on Launches and a
