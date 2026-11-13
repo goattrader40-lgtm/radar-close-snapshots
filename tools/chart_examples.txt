@@ -512,3 +512,7 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 #   Swing size: 24.5%, 25.0%, 12.6%, 11.7%, 12.8%, 8.9%, 10.3%. Daily range (5-day avg): Jul 29 7.3%,
 #   Aug 10 4.7%, Aug 20 4.1%, Sep 3 2.8%. Top: Jun 15-Jul 14 daily range 6%+ with a 10-day net of -0.5% to +7%.
 #   Sep 8 closed 505.74 over the Aug 26 lower high 491.12 = the first higher high (the falling line broken).
+#
+## BETA (the user, Nov 13 2026): "beta nov3 was launch but you right, now it fell back to range as of today".
+# The RANGE STOCK note on BETA (12 crossings of the 50 EMA in the 60 sessions before the launch) is right: keep the note
+# on a first-day launch too.
