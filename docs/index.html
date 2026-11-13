@@ -5097,6 +5097,16 @@ defCalc('industry_perf', {
   const LDOC = () => (st('launch').status === 'ok' ? st('launch').data : null);
   const LK = (s) => by('l', LDOC(), (d) => { const m = new Map(); (d.laggards || []).forEach((r) => m.set(r.symbol, Object.assign({ _lag: true }, r))); (d.launches || []).forEach((r) => m.set(r.symbol, r)); return m; }).get(s) || null;
   const WK = (s) => by('w', st('setups').status === 'ok' ? st('setups').data : null, (d) => { const m = new Map(); Object.entries(d.lists || {}).forEach(([ln, rows]) => (rows || []).forEach((r) => { const x = m.get(r.symbol) || { lists: [], row: null, s3: null }; x.lists.push(ln); if (!x.row || ln === '3-SETUPS') x.row = r; if (ln === '3-SETUPS') x.s3 = r; m.set(r.symbol, x); })); return m; }).get(s) || null;
+  /* your MSF coil (the user, Nov 13 2026: "i want to see coil pattern in launches table"): from the Launches build (every
+     launch, laggard and 50 EMA undercut row carries it from the Nov 13 build on), else the Watchlist row's "Other entries".
+     {buy: the last inside day's high, stop: the mother day's low} or null. A display only: nothing alerts on it */
+  const LUK = (s) => by('lu', LDOC(), (d) => new Map((d.ema50_undercut || []).map((r) => [r.symbol, r]))).get(s) || null;
+  const COILK = (s) => {
+    const r = LK(s) || LUK(s);
+    if (r && num(r.coil) !== null) return { buy: num(r.coil), stop: num(r.coil_stop) };
+    const w = WK(s), e = w && w.row ? w.row.entries || {} : {};
+    return num(e.coil) !== null ? { buy: num(e.coil), stop: num(e.coil_stop) } : null;
+  };
   const EK = (s) => by('e', EARN, (d) => new Map((d.rows || []).map((r) => [r.sym, r]))).get(s) || null;
   const PGK = (s) => by('g', rowsOf('premarket'), (a) => { const t0 = todayNY(); return new Map(a.filter((x) => (x.graded === true || x.graded === 'true') && x.scan_date === t0 && x.grade).map((x) => [x.symbol, x])); }).get(s) || null;
   const PMK = (s) => (PML && PML.rows && PML.date === todayNY() ? PML.rows[s] || null : null);
@@ -5183,6 +5193,8 @@ defCalc('industry_perf', {
     ['l_gain', 'LD → now', 'Launches', 'Gain from the launch day\'s close to now', ['gain_now'], (s) => cPct((LK(s) || {}).gain_pct, true)],
     ['l_max', 'Max gain', 'Launches', 'Best gain since the launch day', ['max_gain_pct'], (s) => cPct((LK(s) || {}).max_gain_pct, true)],
     ['l_corr', 'Correction', 'Launches', 'The deepest drop after the 52-week high, to now', ['corr'], (s) => cPct((LK(s) || {}).correction_now_pct, false)],
+    ['coil', 'Coil buy', 'Launches', 'Your MSF coil, armed at the last close: a mother day, then 2+ quiet days inside its high and low (small bodies), over the 200 SMA. The buy = the last quiet day\'s high; hover for the stop (the mother day\'s low). The same as the Watchlist\'s Other entries. No alert fires on it', ['coil'], (s) => { const k = COILK(s); return cNum(k ? k.buy : null, k ? fPrice(k.buy) : '—', '', k && k.stop ? 'Coil buy ' + fPrice(k.buy) + ' · stop ' + fPrice(k.stop) + ' (the mother day\'s low)' : ''); }],
+    ['coil_away', 'Away (coil buy)', 'Launches', 'How far the coil\'s buy is over the price (coil, coiled)', ['coil_away'], (s) => { const k = COILK(s), v = k ? vsPct(k.buy, pxOf(s)) : null; return cNum(v, p1(v, true)); }],
     ['w_list', 'Watchlist list', 'Watchlist', 'Which Watchlist lists it is on', [], (s) => { const w = WK(s); return cTxt(w ? w.lists.join(', ') : null); }],
     ['w_section', 'Watchlist section', 'Watchlist', 'Its section on the Watchlist (3-SETUPS: Triggered today / Ready / Setting up)', [], (s) => { const w = WK(s); return cTxt(w && w.row ? w.row.section || null : null); }],
     ['w_bp', 'Watchlist buy point', 'Watchlist', 'Its buy point on the Watchlist', [], (s) => { const w = WK(s), v = w && w.row ? num(w.row.buy_point) : null; return cNum(v, fPrice(v)); }],
@@ -5433,6 +5445,7 @@ defCalc('industry_perf', {
     emastack: { k: 'cat', opts: [['10 over 21', (s) => !!(stackOf(s) || {}).a], ['21 over 50', (s) => !!(stackOf(s) || {}).b], ['50 over the 200 SMA', (s) => (stackOf(s) || {}).c === true],
       ['10 > 21 > 50', (s) => { const k = stackOf(s); return !!(k && k.a && k.b); }], ['10 > 21 > 50 > 200 SMA', (s) => { const k = stackOf(s); return !!(k && k.a && k.b && k.c === true); }]] },
     w_list: { k: 'cat', opts: ['3-SETUPS', '2-POOL', '1-UPDAY', '1-EP/GAP'].map((o) => [o, (s) => { const w = WK(s); return !!w && w.lists.includes(o); }]).concat([['Not on the Watchlist', (s) => !WK(s)]]) },
+    coil: { k: 'cat', opts: [['Has a coil', (s) => !!COILK(s)], ['No coil', (s) => !COILK(s)]] },
   };
   const xfSpec = (id) => XF[id] || { k: 'num' };
   const xfVal = (id, s) => { const c = CAT.get(id); if (!c) return null; try { return c[5](s); } catch (e) { return [null, null]; } };
@@ -5570,7 +5583,9 @@ defCalc('industry_perf', {
     const same = (a, b) => (a.col ? a.col === b.col : !b.col && a.id === b.id);
     const fill = () => {
       const q = inp.value.trim().toLowerCase(); res.replaceChildren();
-      if (!q) { res.append(h('div', 'tgr-lbl', 'Type a few letters of the criterion (e.g. "base", "adr", "rs", "gap").')); return; }
+      /* nothing typed: every filter shows, this table's columns first, then the rest group by group (the user, Nov 13 2026,
+         on Launches: "nothing really available on filter part here": it only showed "type a few letters") */
+      if (!q) res.append(h('div', 'tgr-lbl', 'Pick one below, or type to search (e.g. "coil", "adr", "rs", "gap").'));
       const rank = (n) => { n = n.toLowerCase(); return n === q ? 0 : n.startsWith(q) ? 1 : 2; };
       /* the search ignores spaces and hyphens ("5min", "5 min" and "5-min" all find the opening range), and the level
          filters are listed under the name their chip shows ("Above the 5-min opening range high (ORH)") and also found by
@@ -5591,7 +5606,8 @@ defCalc('industry_perf', {
         return b;
       };
       if (mine.length) { res.append(h('div', 'col-grp', 'In this table')); mine.forEach((o) => res.append(item(o))); }
-      if (cat.length) { res.append(h('div', 'col-grp', mine.length ? 'More' : 'Criteria')); cat.slice(0, 30).forEach((o) => res.append(item(o, o.grp))); }
+      if (cat.length && !q) { let g0 = ''; cat.forEach((o) => { if (o.grp !== g0) { g0 = o.grp; res.append(h('div', 'col-grp', g0)); } res.append(item(o)); }); }
+      else if (cat.length) { res.append(h('div', 'col-grp', mine.length ? 'More' : 'Criteria')); cat.slice(0, 30).forEach((o) => res.append(item(o, o.grp))); }
       if (!mine.length && !cat.length) res.append(h('div', 'tgr-lbl', 'Nothing matches "' + inp.value + '".'));
     };
     inp.addEventListener('input', fill); fill();

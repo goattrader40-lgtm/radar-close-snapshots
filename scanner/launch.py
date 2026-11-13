@@ -1464,6 +1464,11 @@ def follow(a, i0, i, pick=False):
         # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
         # Flat base, Cup with handle, ... or Base forming (no pattern yet))
         base_pattern=msf.NAMES[code] if code else None,
+        # your MSF coil, armed at this close (the same as the Watchlist's "Other entries": a mother day, then 2+ quiet
+        # inside days with small bodies, over the 200 SMA): its buy = the last inside day's high, its stop = the mother
+        # day's low; shown and filtered on the Launches table (the user, Nov 13 2026: "i want to see coil pattern in
+        # launches table"). A display field only: no buy point, trigger or alert reads it
+        coil=fnum(r.early), coil_stop=fnum(r.earlyStop),
         # the day of the base: sessions since the launch or the leg's breakout (ANF: Aug 26 = day 0, Sep 10 day 10,
         # Sep 24 day 20; Oct 19, leg 2, day 0 again), and whether today it turned up: back over a rising 10 EMA after
         # closing under it (ANF Oct 1, day 25)
