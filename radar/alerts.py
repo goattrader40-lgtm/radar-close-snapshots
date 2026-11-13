@@ -361,11 +361,24 @@ def find(live, doc, now=None):
             q = rows.get(r["symbol"])
             if not q or len(q) < 5 or q[4] is None:
                 continue
+            if (r.get("cycle_warn") or "").startswith("END OF CYCLE"):
+                continue                    # stalled at its highs: no buy alerts until a close over the stalled high (the user, Nov 13 2026)
             if gob_of(r, q):
                 continue                    # gapping out of its base: the gap-out-of-base alerts (find_gob) have it today
             price, chg, rv = q[0], q[1], q[4]
             op = q[5] if len(q) > 5 else None
             sym, tvs = r["symbol"], r.get("tv") or r["symbol"]
+            # the 21 EMA reclaim on a strong day (the user, Nov 13 2026: AMD Jun 11 2026 "21 ema undercut and reclaim"): a followed
+            # launch that closed under its 21 EMA, over the 50 EMA, trades back over the 21 EMA on a 2%+ gap that opened over it or
+            # up 1 ADR+, from 9:36
+            e21_, e50_, adr_ = r.get("ema21"), r.get("ema50"), r.get("adr_pct")
+            if (e21_ and e50_ and adr_ and not r.get("off_now") and (r.get("price") or 0) < e21_ and (r.get("price") or 0) > e50_ and price > e21_
+                    and (now.hour, now.minute) >= (9, 36) and op
+                    and ((op > e21_ and 100 * (op / (price / (1 + chg / 100)) - 1) >= doc["rules"].get("pop21_gap", 2) and chg > 0) or chg >= adr_)):
+                out.append((f"{sym}:ema21strong", f"{sym} entry: back over its 21 EMA on a strong day",
+                            f"closed under the 21 EMA ${e21_:.2f} (over the 50 EMA ${e50_:.2f}), now ${price:.2f} back over it · {chg:+.1f}% "
+                            f"({chg / adr_:.1f} ADR) · vol {rv:.1f}x for the time of day · the 21 EMA undercut & reclaim on a strong day, "
+                            f"a short swing entry; the close confirms it" + since(r), "default", tvs))
             late = bool(r.get("late"))
             ago = r.get("last_breakout_days_ago")
             # a breakout a few sessions after the last one is the same push (RPD Oct 22 / Oct 23): the same leg
@@ -527,6 +540,42 @@ def find(live, doc, now=None):
         out.append((f"{sym}:s3", f"{sym} 3-SETUPS {r.get('section', '')}: {r.get('setup', '')} trigger",
                     f"${price:.2f} over ${bp:.2f} · {chg:+.1f}% · vol {rv:.1f}x for the time of day" + (" (light)" if rv < 1 else "")
                     + (f" · {r['why']}" if r.get("why") else ""), "default", r.get("tv") or sym))
+    return out
+
+
+def find_start(live, doc, now, sent=()):
+    """the START DAY as it happens (the user, Nov 13 2026: "do alerts go live"; RKLB Nov 9 2026: "clear downtrending stock, november
+    9th was a start point upward"): a stock that closed under its 21 or 50 EMA after a downtrend (launch.json start_watch, from the
+    last close) trades over its 21 EMA, up 1 ADR+ on a volume pace of 1x+, over the high of any violent red candle of the last 5
+    sessions, in the top half of today's range and over its 5-minute opening range high (the user's entry; the stop: today's low).
+    Any liquid stock, on the list or not. From 9:35. Tags: launch size under the 200 SMA; after a reset (AMD Sep 8 2026)"""
+    out = []
+    if (now.hour, now.minute) < (9, 36):
+        return out
+    R = doc.get("rules", {})
+    for sym, w in (doc.get("start_watch") or {}).items():
+        q = live["rows"].get(sym)
+        if f"{sym}:start" in sent or not q or len(q) < 8 or q[4] is None or q[0] is None or q[1] is None:
+            continue
+        price, chg, rv, op, hi = q[0], q[1], q[4], q[5], q[7]
+        e21, e50, adr, red, u200, rs_n, rs_lv, first, tvs = w[:9]
+        if not (price > e21 and chg >= R.get("start_adr", 1) * adr and rv >= R.get("start_rv", 1) and price > (red or 0)):
+            continue
+        orh, low = opening_range_high(sym), chart_low_today(sym)
+        if not orh or not low or not price > orh or (hi and price < (hi + low) / 2):
+            continue
+        tag = ""
+        if not first and not (rs_n and rs_lv and price > rs_lv and price > e50):
+            continue                    # a start came before: only the reset start (over both EMAs and the last lower high) alerts
+        if rs_n and rs_lv and price > rs_lv and price > e50:
+            tag = f" · NEW TREND after a reset: {rs_n} lower highs, now over the last one ${rs_lv:.2f}"
+        elif u200 and price > e50 and chg >= R.get("min_chg", 5) and rv >= R.get("first_rv", 1.3):
+            tag = " · launch size, from under the 200 SMA"
+        conf = (f"over the 50 EMA ${e50:.2f} too" if price > e50 else f"still under the 50 EMA ${e50:.2f}: the close over it is the confirmation")
+        out.append((f"{sym}:start", f"{sym} START DAY: over its 21 EMA after a downtrend",
+                    f"{chg:+.1f}% ({chg / adr:.1f} ADR) · vol {rv:.1f}x for the time of day · ${price:.2f} over the 21 EMA ${e21:.2f} (the last close's), "
+                    f"{conf} · over the 5-min opening range high ${orh:.2f} · stop: today's low ${low:.2f} ({100 * (price / low - 1) / adr:.1f} ADR)"
+                    + (f" · over the red candle's high ${red:.2f}" if red else "") + tag, "high" if tag else "default", tvs))
     return out
 
 
@@ -1238,6 +1287,11 @@ def main():
         _MCTX["gr"] = {(g.get("kind"), g.get("group")): g for g in gr_.get("rows") or []}
         mb_cands = find_morning(live, S_all, M, now)
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
+    if not early:
+        try:
+            found += find_start(live, doc, now, sent)
+        except Exception as e:
+            print(f"start-day alerts: {e}", file=sys.stderr)
     # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
     found = [a for a in found if over_low52(a[0].split(":")[0], live, low52_of(launch_p))]
     # 3-SETUPS triggers only over the 200 SMA (the user, Nov 3 2026: ECHO's base top 100.90 under its 200 SMA 106.63)

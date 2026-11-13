@@ -1314,13 +1314,13 @@ def churn_at(a, i):
     return None
 
 
-def reset_start(a, j):
-    """the NEW TREND START after a top on day j (L reset): (the top's bar, lower highs, range then, range now, the last lower high's
-    bar) or None. The day itself must be a start day"""
+def reset_base(a, j):
+    """the reset before day j (L reset), without day j's own tests: (the top's bar, lower highs, range then, range now, the last
+    lower high's bar) or None"""
     st = a.st
     h, l, c = st.h, st.l, st.c
     n = L["reset_look"]
-    if not L["reset"] or j < n + 10 or not a.start_raw(j) or not (c[j] > a.e21[j] and c[j] > a.e50[j]):
+    if not L["reset"] or j < n + 10 or j > len(c):
         return None
     top = j - n + int(np.argmax(h[j - n:j]))
     piv = [k for k in range(top + 3, j - 1) if h[k] == h[k - 3:min(j, k + 4)].max()]
@@ -1328,15 +1328,44 @@ def reset_start(a, j):
     for k in piv:                       # the lower highs, each under the one before
         if h[k] < (h[lows[-1]] if lows else h[top]):
             lows.append(k)
-    if len(lows) < L["reset_highs"]:
+    if len(lows) < L["reset_highs"] or j - 1 - top < 8:
         return None
     rng = 100 * (h - l) / c
     r5 = lambda k: float(rng[k - 4:k + 1].mean())
     wide, now = max(r5(k) for k in range(top + 4, j)), r5(j - 1)
     kb = top + int(np.argmin(l[top:j]))
-    if now > L["reset_range"] * wide or j - kb < 10 or c[j] <= h[lows[-1]]:
+    if now > L["reset_range"] * wide or j - kb < 10:
         return None
     return top, len(lows), wide, now, lows[-1]
+
+
+def reset_start(a, j):
+    """the NEW TREND START after a top on day j (L reset): reset_base, and day j is a start day (not only the first) that closes
+    over both EMAs and over the last lower high"""
+    c = a.st.c
+    if not L["reset"] or not a.start_raw(j) or not (c[j] > a.e21[j] and c[j] > a.e50[j]):
+        return None
+    rb = reset_base(a, j)
+    return rb if rb and c[j] > a.st.h[rb[4]] else None
+
+
+def start_watch_of(a, i):
+    """for the phone alert (radar/alerts.py find_start): what a start day TOMORROW needs from today's close (bar i), or None when
+    tomorrow cannot be one: [21 EMA, 50 EMA, ADR %, the high a violent red candle of the last 5 sessions leaves to clear (0 = none),
+    under the 200 SMA, lower highs of a reset (0 = none), the last lower high, the first start (False: only the reset start alerts)]"""
+    st = a.st
+    c = st.c
+    n = L["start_down_look"]
+    if i < max(a.start, n + 2) or not a.liquid[i] or not (c[i] < a.e21[i] or c[i] < a.e50[i]):
+        return None
+    if sum(1 for k in range(i - n + 1, i + 1) if c[k] < a.e21[k]) < L["start_down"] or not a.e21[i] < a.e21[i - n]:
+        return None
+    first = not any(a.start_raw(k) and (c[k + 1:i + 1] >= c[k - 1]).all() for k in range(max(a.start, 1, i + 1 - L["start_first"]), i + 1))
+    rb = reset_base(a, i + 1)
+    if not first and not rb:            # after an earlier start only the reset start still alerts (AMD Sep 4 -> Sep 8 2026)
+        return None
+    red = max([st.h[d] for d in range(max(1, i + 1 - L["red_look"]), i + 1) if a.chg[d] <= -L["red_adr"] * _adr(st, d)], default=0)
+    return [fnum(a.e21[i]), fnum(a.e50[i]), fnum(_adr(st, i), 1), fnum(red), bool(c[i] <= a.s200[i]), rb[1] if rb else 0, fnum(st.h[rb[4]]) if rb else None, first]
 
 
 def whiplash(a, i):
@@ -2801,7 +2830,16 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         d.update(confirmed=st.dates[cf] if cf is not None else None, over_50ema=bool(st.c[k] > a.e50[k]))
         starts.append(d)
     starts.sort(key=lambda r: (r["date"], r["date_rel_vol"]), reverse=True)
-    doc = dict(date=today, start_days=starts, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
+    # tomorrow's possible start days, for the phone alert (the user, Nov 13 2026: "do alerts go live")
+    start_watch = {}
+    for s, a in A.items():
+        i = len(a.st.dates) - 1
+        if a.st.dates[i] != today:
+            continue
+        w_ = start_watch_of(a, i)
+        if w_:
+            start_watch[s] = w_ + [run.tv_symbol(s, a.st.exchange)]
+    doc = dict(date=today, start_days=starts, start_watch=start_watch, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
                watch_fields=["close", "base_high_20d", "sma200", "ema21", "ema50", "high_52w", "days_since_high",
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50", "low_52w", "group rank now (★ Top / Strong, place in it)", "RS now"],
