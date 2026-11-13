@@ -239,6 +239,34 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   The user's other points that morning were not faults: FIGR was up 9% on that morning's Q3 report ("im wrong about figr");
   "Pre-mkt gap" (the first pre-market trade vs the close) can read +0.8% while "Pre-mkt chg" is +9%: offered to hide or rename
   it, not answered.
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~9:40 PM ET = Nov 13 02:40 UTC; test/cleanlaunch merged with main, commit
+  dfd3554; picks.yml started right after): THE CHART READING, all of it.** Everything listed under "on `test/cleanlaunch`"
+  below is now on main, EXCEPT radar/alerts.py, which stays as it was on main (the Nov 10 alert changes are only on the
+  branch history; the alerts know none of the new reads). On top of that list, agreed and built this evening (the user's AMD
+  2026 charts, in their words in tools/chart_examples.txt; rules in rules/SCANNER_RULES.md "L5 Off the list"; settings at the
+  end of `L` in scanner/launch.py):
+  1. **End of cycle: warning, then off** (the user chose A: "8th and 9th october end of cycle.. 12th october you take this off
+     the list", "july 7th is good take off!!!"): `stalled_high()`: a high less than 1 ADR over (or under) the peak before it
+     with a 1.5 ADR+ pullback between, then within 5 sessions a 1 ADR+ down day and a close under that peak and the 10 EMA ->
+     "END OF CYCLE WARNING" in FRONT of the status; off on the first close under the 21 EMA. A failed breakout that still
+     closes over the 21 EMA is now this warning too (before: off that day; ALAB Oct 8 2026 warning, off Oct 9). AMD: warning
+     Jul 1, off Jul 7 (516.11); warning Oct 8, off Oct 12 (594.24).
+  2. **Top watch** (`churn_at`, a status note): 2+ up and 2+ down days of 1 ADR+ in 10 sessions, net under 1 ADR, at a
+     stalled high.
+  3. **New trend start after a reset** (`reset_start`, a way back onto the list, NOT a launch rule): a start day after 3+
+     lower swing highs since the 60-session top, the 5-day range at 60% or less of its widest, closing over the last lower
+     high. AMD Sep 8 2026 back on at 505.74 (before: Sep 21 at 615.52). As a launch day of its own it would be a new launch
+     rule: ask the user for the 2-year check first.
+  4. **ADR minimum on the highest 20-day ADR of the last 63 sessions** (`adr_look`; the user: "amd never was 3.4% adr stock..
+     its beta name", "agree with your adr fix"): `Arr.liquid`; the group ranking keeps today's ADR (`Arr.liquid20`).
+  5. **Range stock note** (`whiplash`): the close crossed the 50 EMA 10+ times in the 60 sessions before the launch (the
+     user on ANET Apr-Oct 2026: "too much whiplash"; BETA: "fell back to range"). A note only, the stock stays.
+  Full-market test build before the push (Nov 11 close): 256 launches (live before: 148), 192 off waiting (105 two closes under
+  the 50 EMA, 79 end of cycle, 8 failed breakouts), 21 warnings, 1 top watch, 35 range notes, 4 reset starts (M, BILL, XYZ Oct
+  15, GEN Oct 29), 79 start days. `--regress`: 209 lines differ from tools/expected_reads.txt, which is NOT rewritten yet (only
+  after the user agrees the reads). The user will review charts and send corrections ("you can make it better later").
+  To look at with the user: are the 21 warnings too quick (many from the Nov 4-10 dip: AEM, WPM, AU, IAG); 35 range notes
+  (12+ crossings would leave 17); AMD comes back Jul 10 2026 on a flag attempt and goes off again Jul 16.
 - **DROPPED (see 5 above; kept for the record): the 8:45 task's instructions.** update_trigger from this session was refused ("a
   routine's instructions can be changed only from the conversation the routine posts into"). Until then the event card shows
   without the news line ("why"). The text to paste into the 8:45 conversation was given to the user in this session (4
@@ -246,7 +274,7 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   event and writes /root/pm/event_news.json; the 3rd argument of `finish` and pm_event.json in the publish). **First check next
   session**: whether the user did it, and whether the Nov 12 morning scan and grading ran clean (premarket_live.json has
   "events"; the Heating up column filled).
-- **NOT LIVE, on `test/cleanlaunch` (main merged in at 0a1c4ad, then more commits; the chart-reading work):** everything of
+- **NOW LIVE (see the go live above; was: not live), on `test/cleanlaunch` (main merged in at 0a1c4ad, then more commits; the chart-reading work):** everything of
   the Nov 11 session plus, from this one (settings at the end of `L` in scanner/launch.py, each with the user's example):
   - **a. Falling range only on a big day (1 ADR+) or a 2%+ gap** (the user: VEEV Sep 30 and APPN Oct 8 2026 "nothing to do with
     falling range", "just building base up"): those two are gone; INTC Apr 1, AMD Apr 8, COHR Apr 8, MRVL Aug 4 2026 stay.
