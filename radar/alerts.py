@@ -86,19 +86,7 @@ MAX_TRIGGERS = 15             # triggers a run that always get their own push (a
 # the buys (the user, Nov 3 2026: "so it gets my attention"); everything else is a heads-up. The 21 EMA retest alone is a
 # heads-up (the user: "21 ema retest is not a strong sign by itself"); with the breakout level under it (ema21bl) a trigger
 TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "breakout", "retest", "reclaimbo2",
-            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep", "mbo", "ema21hold", "ema50hold"}
-# the user, Nov 10 2026 (after the 2-year record: breakout buys under 1x volume won 18%, at 1x+ 32%; a stop over 1 ADR away
-# averaged -1.9%; retests without an EMA, pattern pivots lost):
-#   a breakout / 3-SETUPS trigger needs a volume pace of 1x+ ("let's do it 1x+"): under it a heads-up (bolight), the
-#     trigger when the pace gets there; 1.5x+ is tagged "strong volume"
-#   the alert shows the risk to the day's low; over 0.7 ADR away (the user's maximum risk) it steps down to a heads-up (bowide)
-#   a retest of the breakout level is a trigger only with an EMA at it (10 / 21 / 50); alone a heads-up
-#   a pattern pivot stays a trigger (the user: "pattern pivot is the main important part of Qullamaggie / Zanger / O'Neil
-#     style trading: we don't want to mess with it")
-#   new, from 3:45 PM: a tight day that touched the 21 EMA (or the 50 EMA) and holds over it into the close (ema21hold /
-#     ema50hold): "stock pulling back touching 21 ema but holds 21 ema, closes it.. day is tight day.. same for 50 ema"
-#   every trigger says when earnings are within 5 sessions
-BO_MIN_PACE, BO_STRONG_PACE, BO_MAX_RISK_ADR, EARN_WARN_SESSIONS = 1.0, 1.5, 0.7, 5   # 0.7 ADR: the user's max risk (Nov 1 / Nov 10 2026)
+            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep", "mbo"}
 
 
 def is_trigger(key, title=""):
@@ -107,8 +95,6 @@ def is_trigger(key, title=""):
     kind = key.split(":", 1)[1] if ":" in key else ""
     if kind == "ema21":                                  # the 21 EMA undercut & reclaim (2 closes under: strong) is one
         return "UNDERCUT" in (title or "")
-    if kind == "retest":                                 # with an EMA at the level (the title names it); alone a heads-up
-        return " + " in (title or "")
     return kind in TRIGGERS
 
 
@@ -131,7 +117,7 @@ KIND_WORDS = {"retest": "retest holding", "zone": "in the retest zone", "ema21":
               "reclaimbo2": "breakout undercut & reclaim", "ema50back": "back over the 50 EMA", "ema50": "50 EMA undercut & reclaim",
               "push": "push", "pop": "pop", "gapbase": "gap out of base", "gob1": "gap out of base", "gob5": "gap out of base",
               "s3": "3-SETUPS trigger", "early": "early gap", "near": "gapping to the buy point", "ep": "episodic pivot",
-              "mbo": "morning breakout", "bolight": "over the buy point on light volume", "bowide": "breakout, the day's low far", "ema21hold": "21 EMA hold (tight day)", "ema50hold": "50 EMA hold (tight day)"}
+              "mbo": "morning breakout"}
 
 
 def kind_words(key, title=""):
@@ -270,70 +256,6 @@ def gtext(w):
         return (w[15] or "no ranked group") + (f" · RS {w[16]}" + (" ★" if w[16] >= 97 else "") if w[16] is not None else "")
     group, gstat = w[8], w[9]
     return f"{group} ({['not trending', 'turning up', 'leading'][gstat] if gstat in (0, 1, 2) else 'no group'})" if group else "no group"
-
-
-TREND_OK = ("Up", "Turn up", "Reclaim", "Resting")
-
-
-def trend_rows(doc, launch_p, wl_path=None):
-    """the TREND list's own names for the hold alert: on 2-POOL, 1-UPDAY or 1-EP/GAP (setups/latest.json) with Trend Up,
-    Turn up, Reclaim or Resting at the last close (stocks.json), not on Launches, Launch laggards or 3-SETUPS (those alert
-    from there) and not taken off the TREND list with its ✕ (setups/picks.json removed_trend). Each as a small row: the
-    last close, its 10 / 21 / 50 EMA (stocks.json tr), ADR, and how far under its 21-day closing high"""
-    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    try:
-        wl = json.load(open(wl_path or os.path.join(root, "setups", "latest.json")))["lists"]
-    except Exception:
-        return []
-    try:
-        rem = json.load(open(os.path.join(root, "setups", "picks.json"))).get("removed_trend") or {}
-    except Exception:
-        rem = {}
-    S, d = {}, os.path.dirname(os.path.abspath(launch_p))
-    for name in ("base_stocks.json", "stocks.json"):
-        if os.path.exists(os.path.join(d, name)):
-            try:
-                S = {s["symbol"]: s for s in json.load(open(os.path.join(d, name)))}
-                break
-            except Exception:
-                pass
-    have = {x["symbol"] for x in doc.get("launches", []) + doc.get("laggards", []) + s3_rows(doc)}
-    out, seen = [], set()
-    for lst in ("2-POOL", "1-UPDAY", "1-EP/GAP"):
-        for w in wl.get(lst) or []:
-            s = w.get("symbol")
-            st = S.get(s) or {}
-            tr = st.get("tr") or []
-            if not s or s in have or s in seen or s in rem or st.get("trend") not in TREND_OK or len(tr) < 6 or not tr[5]:
-                continue
-            seen.add(s)
-            hi = st.get("close_high_21")
-            out.append({"symbol": s, "tv": w.get("tv") or st.get("tv_symbol") or s, "trend_list": lst, "ema10": tr[1], "ema21": tr[2],
-                        "ema50": tr[3], "adr_pct": st.get("adr_20") or w.get("adr_pct") or 5.0, "price": tr[5],
-                        "off_high_pct": round(100 * (1 - tr[5] / hi), 1) if hi else 0})
-    return out
-
-
-def ema_hold(sym, r, price, chg, rv, op, tvs, now):
-    """a tight day holding the 21 EMA or the 50 EMA into the close (the user, Nov 10 2026: "stock pulling back touching 21
-    ema but holds 21 ema, closes it.. day is tight day.. same for 50 ema"; on Launches, 3-SETUPS and the TREND list), from
-    3:45 PM: pulled back an ADR+ from its high, today's move and body each at most half an ADR, over the EMA at the last
-    close and now, within an ADR over it (the 21 EMA one also over the 50 EMA). Today's low at the EMA is checked on the
-    1-minute chart before it goes out (main). Both EMAs at once: one alert, keyed by the nearer (the higher) one"""
-    adr, e21 = r.get("adr_pct") or 5.0, r.get("ema21")
-    if (now.hour, now.minute) < (15, 45) or not op or (r.get("off_high_pct") or 0) < adr:
-        return None
-    prev_ = price / (1 + chg / 100)
-    if not (abs(chg) <= adr / 2 and abs(price - op) <= 0.5 * adr / 100 * prev_):
-        return None
-    hold_ = [(n_, e_) for n_, e_ in ((21, e21), (50, r.get("ema50")))
-             if e_ and (r.get("price") or 0) > e_ and e_ < price <= e_ * (1 + adr / 100) and (n_ == 50 or price > (r.get("ema50") or 0))]
-    if not hold_:
-        return None
-    hold_.sort(key=lambda x: -x[1])
-    return (f"{sym}:ema{hold_[0][0]}hold", f"{sym} {' & '.join(str(n) for n, e in hold_)} EMA HOLD on a tight day into the close",
-            f"${price:.2f} holding over the {' & '.join(f'{n} EMA ${e:.2f}' for n, e in hold_)} (the last close's) on a tight day ({chg:+.1f}%, ADR {adr:.1f}%)"
-            f" · the buy: at the close, if it holds over it · vol {rv:.1f}x" + (f" · leg {r.get('leg')}" if r.get("leg") is not None else "") + since(r), "high", tvs)
 
 
 def find(live, doc, now=None):
@@ -476,10 +398,6 @@ def find(live, doc, now=None):
                     out.append((f"{sym}:ema21", f"{sym} 21 EMA {'UNDERCUT & RECLAIM' if w21 == 'undercut' else 'RETEST'} holding into the close",
                                 f"back over the 21 EMA ${e21:.2f} (the last close's) at ${price:.2f}"
                                 f" · the buy: at the close, if it holds over it" + tail21, "high" if w21 == "undercut" else "default", tvs))
-            # a tight day holding the 21 EMA or the 50 EMA into the close (ema_hold)
-            h_ = ema_hold(sym, r, price, chg, rv, op, tvs, now)
-            if h_:
-                out.append(h_)
             # the breakout undercut & reclaim (the user's CAI Oct 9 2026): 2+ closes back under the breakout level, holding over the
             # 50 EMA; today back over it: a heads-up as it crosses, from 3:45 PM holding into the close (the buy: the close)
             rl = r.get("reclaim_level")
@@ -595,14 +513,6 @@ def find(live, doc, now=None):
             out.append((f"{sym}:ema50", f"{sym} 50 EMA UNDERCUT & RECLAIM holding into the close",
                         f"back over the 50 EMA ${e50:.2f} (the last close's) at ${price:.2f} after 2 closes under it ({dates})"
                         f" · the buy: at the close, if it holds over it" + tail50, "high", tvs))
-    # the TREND list's own names (the user, Nov 10 2026: the hold alert on "launches list, 3-setups and trend")
-    for r in doc.get("_trend_rows") or []:
-        q = rows.get(r["symbol"])
-        if not q or len(q) < 6 or q[4] is None or not q[0]:
-            continue
-        h_ = ema_hold(r["symbol"], r, q[0], q[1], q[4], q[5], r.get("tv") or r["symbol"], now)
-        if h_:
-            out.append(h_)
     # 3-SETUPS (Watchlist tab) on the phone too (the user, Nov 3 2026; the desktop had them): a name trading over its
     # trigger, any section, once a day; a name also on Launches / Launch laggards alerts from there
     followed = {r["symbol"] for r in doc.get("launches", []) + doc.get("laggards", [])}
@@ -729,13 +639,11 @@ def s3_rows(doc):
 
 def row_of(doc, sym):
     """a followed stock's row: Launches, Launch laggards, then 3-SETUPS"""
-    return next((x for x in doc.get("launches", []) + doc.get("laggards", []) + s3_rows(doc) + (doc.get("_trend_rows") or []) if x["symbol"] == sym), {})
+    return next((x for x in doc.get("launches", []) + doc.get("laggards", []) + s3_rows(doc) if x["symbol"] == sym), {})
 
 
 def since(r):
     """how the stock came to be followed: its launch, your Follow button, or the 3-SETUPS list"""
-    if r.get("trend_list"):
-        return f" · TREND list (from {r['trend_list']})"
     if r.get("s3"):
         return f" · 3-SETUPS {r.get('section') or ''} (from {r.get('source') or 'the watchlist'} {r.get('added') or ''})"
     return f" · your pick since {r['pick'][:10]}" if r.get("grade") == "You" else f" · launched {r['date']} ({r['grade']})"
@@ -829,28 +737,6 @@ def over_low52(sym, live, low):
     return q[0] >= lo * (1 + MIN_OVER_LOW52 / 100)
 
 
-def earnings_soon(path, today):
-    """{symbol: "Thu Nov 12 before the open (in 2 sessions)"} for reports due within EARN_WARN_SESSIONS sessions (the
-    Earnings tab's calendar, radar-data earnings.json); {} when the file can't be read"""
-    try:
-        rows = json.load(open(path)).get("rows", [])
-    except Exception:
-        return {}
-    out = {}
-    for x in rows:
-        try:
-            d = datetime.date.fromisoformat(x.get("date") or "")
-        except ValueError:
-            continue
-        if x.get("reported") or d < today:
-            continue
-        n = sum(1 for k in range(1, (d - today).days + 1) if (today + datetime.timedelta(days=k)).weekday() < 5)
-        if n <= EARN_WARN_SESSIONS:
-            when = {"bmo": " before the open", "amc": " after the close"}.get(x.get("when") or "", "")
-            out[x["sym"]] = f"{d:%a %b} {d.day}{when} (" + ("today" if n == 0 else f"in {n} session{'s' if n != 1 else ''}") + ")"
-    return out
-
-
 def still_holds(key, title, found_keys, live, doc, memo):
     """a trigger sent today still meets its own rule at this check (the user, Nov 5 2026: "whatever doesn't hold, it has
     to be taken from that box"; "whatever the rule is, it's the rule"): find() finds it again on the latest prices (the
@@ -885,10 +771,6 @@ def still_holds(key, title, found_keys, live, doc, memo):
     if kind == "reversal":                   # in the top half of today's range
         lo_, hi_ = got("lo", chart_low_today), got("hi", chart_high_today)
         return bool(lo_ and hi_ and price - lo_ >= 0.5 * (hi_ - lo_))
-    if kind in ("ema21hold", "ema50hold"):   # the low still at the EMA (a deeper low is an undercut, not a hold)
-        r_ = row_of(doc, sym)
-        e_, adr_, lo_ = r_.get("ema21" if kind == "ema21hold" else "ema50") or 0, r_.get("adr_pct") or 5.0, got("lo", chart_low_today)
-        return bool(lo_ and e_ * (1 - adr_ / 200) <= lo_ <= e_ * (1 + adr_ / 400))
     if kind in ("gob1", "gob5"):             # the opening range's high broken, the price over its low (the stop)
         rg = gob_range(got("bars", gob_bars), 1 if kind == "gob1" else 5)
         return bool(rg and rg[2] and price > rg[1])
@@ -1355,13 +1237,12 @@ def main():
         _MCTX["rs"] = gr_.get("rs") or {}
         _MCTX["gr"] = {(g.get("kind"), g.get("group")): g for g in gr_.get("rows") or []}
         mb_cands = find_morning(live, S_all, M, now)
-    doc["_trend_rows"] = trend_rows(doc, launch_p) if (now.hour, now.minute) >= (15, 45) else []
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
     # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
     found = [a for a in found if over_low52(a[0].split(":")[0], live, low52_of(launch_p))]
     # 3-SETUPS triggers only over the 200 SMA (the user, Nov 3 2026: ECHO's base top 100.90 under its 200 SMA 106.63)
     low52_of(launch_p)
-    s3syms = {x["symbol"] for x in s3_rows(doc)} | {x["symbol"] for x in doc["_trend_rows"]}
+    s3syms = {x["symbol"] for x in s3_rows(doc)}
     found = [a for a in found if not (a[0].endswith(":s3") or a[0].split(":")[0] in s3syms) or over_sma200(a[0].split(":")[0], live)]
     gbars = {}
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
@@ -1433,40 +1314,6 @@ def main():
                     msg = (f"${q_[0]:.2f} over the {n_}-minute opening range high ${rg[0]:.2f} · stop ${rg[1]:.2f}, its low: risk {risk:.1f}%"
                            f" = {risk / adr_:.1f} ADR" + (" (over your 0.7 ADR)" if risk / adr_ > 0.7 else "") + " · " + msg
                            + " · out at 9:50 if the volume pace isn't 2x")
-        if title is not None and key.endswith((":breakout", ":s3")):
-            # the volume pace (1x+ for a trigger) and the risk to the day's low (over 1 ADR: a heads-up)
-            sym_ = key.split(":")[0]
-            q_, r_ = live["rows"].get(sym_), row_of(doc, sym_)
-            rv_, adr_ = (q_[4] if q_ and len(q_) > 4 else None), (r_.get("adr_pct") or 5.0)
-            if rv_ is not None and rv_ < BO_MIN_PACE:
-                if f"{sym_}:bolight" in sent:
-                    continue
-                key, prio = f"{sym_}:bolight", "default"
-                title = f"{sym_} over its buy point on light volume ({rv_:.2f}x): a trigger at {BO_MIN_PACE:g}x+"
-            else:
-                lo_ = chart_low_today(sym_)
-                risk_ = 100 * (1 - lo_ / q_[0]) if lo_ and q_ and q_[0] > lo_ else None
-                if risk_ is not None:
-                    msg += f" · stop under the day's low ${lo_:.2f}: risk {risk_:.1f}% = {risk_ / adr_:.1f} ADR"
-                if risk_ is not None and risk_ / adr_ > BO_MAX_RISK_ADR:
-                    if f"{sym_}:bowide" in sent:
-                        continue
-                    key, prio = f"{sym_}:bowide", "default"
-                    title += f" · the day's low is over {BO_MAX_RISK_ADR:g} ADR away: a heads-up"
-                elif rv_ is not None and rv_ >= BO_STRONG_PACE:
-                    title += " · strong volume"
-        if title is not None and key.endswith((":ema21hold", ":ema50hold")):
-            # today's low touched the EMA (from half an ADR under it to a quarter ADR over it); one alert per move: none
-            # when the stock's undercut & reclaim / retest alert of that EMA went out today
-            sym_, n_ = key.split(":")[0], (21 if key.endswith(":ema21hold") else 50)
-            r_ = row_of(doc, sym_)
-            e_, adr_, lo_ = r_.get(f"ema{n_}") or 0, r_.get("adr_pct") or 5.0, chart_low_today(sym_)
-            if any(f"{sym_}:{k_}" in sent for k_ in (("ema21", "ema21bl", "retest") if n_ == 21 else ("ema50",))):
-                continue
-            if not (lo_ and e_ * (1 - adr_ / 200) <= lo_ <= e_ * (1 + adr_ / 400)):
-                print(f"{key}: today's low {lo_} did not touch the {n_} EMA {e_}, not sent")
-                continue
-            msg += f" · today's low ${lo_:.2f} at it"
         if title is not None and key.endswith(":retest"):
             # today's low (1-minute chart) came into the zone, after a real pullback; with the EMA, the low at it
             sym_ = key.split(":")[0]
@@ -1558,10 +1405,6 @@ def main():
     for a in [a for a in passed if a[0].split(":")[0] in rt and a[0].endswith((":ema21", ":ema21bl"))]:
         passed.remove(a)
         state["sent"] += [a[0]] + ([a[0][:-2]] if a[0].endswith("bl") else [])
-    # earnings within 5 sessions: every trigger says so (the user, Nov 10 2026)
-    soon = earnings_soon(sys.argv[sys.argv.index("--earnings") + 1], now.date()) if "--earnings" in sys.argv else {}
-    passed = [(k_, t_, m_ + (f" · ⚠ earnings {soon[k_.split(':')[0]]}" if is_trigger(k_, t_) and k_.split(":")[0] in soon else ""), p_, v_)
-              for k_, t_, m_, p_, v_ in passed]
     trig = [a for a in passed if is_trigger(a[0], a[1])]
     heads = [a for a in passed if not is_trigger(a[0], a[1])]
     solo = trig[:MAX_TRIGGERS] + heads[:max(0, MAX_PER_RUN - len(trig[:MAX_TRIGGERS]))]
