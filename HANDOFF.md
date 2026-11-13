@@ -49,7 +49,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Status of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 2026; session_01PkbDahhagkKkQ2rkgKsLuZ)
+## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 2026, ~0:30 - 2 AM ET; session_01PkbDahhagkKkQ2rkgKsLuZ)
 
 - **LIVE (the user's "go live", Fri Nov 13 2026 ~0:50 AM ET, branch claude/watchlist-launch-column-filters-ia4hqf, merge
   754cbb1): Days 21H / Days 62H, two columns and + Filter.** The user: "days of from 21 day high and days of from 62 day",
@@ -66,7 +66,18 @@ alone.
   Launches rebuild (nothing in launch.py changed). radar-day `daily` started after the push to fill the Nov 12 close.
   **First check Fri Nov 13**: stocks.json has `hc21_ago`; in the session the counts read one more than at the close (or 0d
   over the high); after the evening build they match the charts.
-- **Test only**: nothing.
+  **After the refresh (radar-day `daily`, 05:53 UTC Nov 13, the Nov 12 close), checked on the real file**: 3,275 of 3,299 stocks
+  have `hc21_ago`, 3,257 `hc62_ago` (the rest too newly listed: a dash); the 146 with Days 21H = 0 all closed at their 21-day
+  closing high; the 62-day count is never under the 21-day one. By hand: NVDA 16d (221.26, Oct 21) and 27d (238.48, Oct 6);
+  AMD 0d (585.30, Nov 12) / 27d (650.40, Oct 6); MBGL 0d / 0d; RKLB 1d (66.15, Nov 11) / 61d (78.61, Aug 18).
+  Good to know: 61d on Days 62H (20d on Days 21H) is the oldest day of the window: a stock falling the whole time reads it
+  (told the user). Go live met another session's go live on main: rules/scanner_rules.xlsx conflicted (a binary file) and was
+  rebuilt with `python3 rules/make_rules.py` from the merged make_rules.py; the merged page re-tested.
+- **Decided with the user**: days, not %; the high day = the highest CLOSING day; short names (offered "Days off 21D high" /
+  "Days off 62D high" as longer names: no answer, the short ones stay).
+- **Test only**: nothing (the branch is merged).
+- **Open / first check Fri Nov 13**: in the session the counts read one more than at the close, or 0d with the price over the
+  high close (LIVE_ON; not seen live yet); after the evening build they match the charts. Nothing else open from this session.
 
 ## Status of the session "Radar: MBGL / AVEX miss (Nov 12)" (Thu Nov 12 - Fri Nov 13 2026; session_01PkbDaiSjzGPJPtohD3UF2C)
 
