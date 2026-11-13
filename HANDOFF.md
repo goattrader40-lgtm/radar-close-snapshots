@@ -487,6 +487,26 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 **Keep in this file until the Nov 18 check-in has run**: the section "Code grade next to Claude's (LIVE Nov 4)" (the
 Nov 11 and Nov 18 code-grade check-ins read HANDOFF.md); after that, /wrapup moves it to the archive.
 
+- **From the session "Radar: MBGL / AVEX miss (Nov 12)"** (Nov 12-13 2026; session_01PkbDaiSjzGPJPtohD3UF2C; questions
+  only, nothing changed; each item needs the user's go):
+  - **The coil alert: to look at later** (the user, Nov 13: "note this in notes for me, take a look at this alert later").
+    A coil (MSF, scanner/msf.py: a mother day, then 2+ inside days with small bodies, over the 200 SMA; buy = the last
+    inside day's high, stop = the mother day's low) shows only in the Watchlist's "Other entries" column ("coil 14.54",
+    LFST Nov 12). Nothing alerts on it: no phone, desktop or Alerts-tab alert at the coil buy or at the mother day's high;
+    an alert comes only when another trigger sits there (GME / PAY Nov 12: a pop next to the coil price). Also asked: the
+    coil can't be added as a column or + Filter on Launches (the shared column list has Watchlist list / section / buy
+    point / why, not Other entries; coils are worked out only for stocks on the Watchlist lists).
+  - **MBGL / AVEX Nov 12, explained, not fixed** (the user: "big miss"): (1) the pre-market scanner is blind 9:10-9:30
+    (Alpaca free plan 15 minutes late, Yahoo's bars stop at 8:30, Yahoo's quote gave nothing for MBGL): MBGL showed
+    +2.4% ($20.41, 8:35) at 9:25, opened +6.0% ($21.12), $22.62 by 9:35; 450 of 1,954 rows had a price from 8:35 or
+    earlier at 9:25. Offered: a minute-by-minute check of MBGL's pre-market trades, then a real-time price for the last
+    20 minutes and the time of each price on the page. (2) Young listings (AVEX IPO Apr 17 2026, MBGL spin-off Jul 1 2026):
+    the 52-week low is the lowest since listing (MBGL $16.95 dropped it at the open: 24.6% over it) and the "200 SMA" in
+    launch.py / alerts.py is the average since listing (AVEX $19.44; its high $15.51, so no launch / EP alert; the laggard
+    alert needed its 1-month high $15.81); stocks.json has none. The user's point: they have no real 52-week low. (3) A bug:
+    the code grader's stage() fails on a stock with no 200 SMA and says "no daily bars" (AVEX 9:23). (4) MBGL's ADR 3.23%
+    at the Nov 11 close, under the 3.5% Launches minimum, kept it off the alert watch list (the user's rule; it made
+    Launches at the Nov 12 close, B, ADR 3.51%).
 - Moved to the archive on Nov 12: still open there: the user's answers they will "compile and provide all at once" (go
   live or not for test/cleanlaunch, the 135-row list, more charts of each kind); tools/expected_reads.txt not rewritten
   (188 differing lines); AEHR Jan 16 2026 still read as a launch attempt (the user: not one) ["Radar: full portal review,
