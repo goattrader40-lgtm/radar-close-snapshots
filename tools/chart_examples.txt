@@ -477,3 +477,25 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 #   breakout within 5 sessions of another one is taken as its continuation (the ATRC Jul 27 / 28 2026 rule), so the main
 #   base's top was swallowed by the inner base's breakout 3 sessions before. To fix (not built): the continuation rule must
 #   not swallow a BIGGER base's top. Nov 12 2026: over the base top 54.12 (the engine's next buy point after Nov 11).
+
+## AMD 2026: the list ON / OFF, the user's four dates (Nov 13 2026, 4 screenshots)
+# The user: "i can visually know when stock will go down, but cant quite explain".
+# 1. May 19 2026: "amd resting, its not breakdown of the chart, its regular pullback".
+#    Data: close 414.05, 2.0 ADR off the May 11 high 469.22 on light volume (0.5-0.8x), never closed under the
+#    21 EMA (+8.1% over it), 10 > 21 > 50 EMA rising. May 20 +8.1%, new high May 22.
+# 2. Jul 24-27 2026: "end of cycle". Data: the Jun 30 high 584.73 was only 0.6 ADR over the high before it
+#    (562.99) and failed the next day; closes under the 21 EMA Jul 7-8 and Jul 16-20; a lower high Jul 14
+#    (574.20); Jul 24 closed 521.95 under the 10 and 21 EMA, Jul 27 494.95, Jul 28 under the 50 EMA.
+# 3. Sep 8 2026: "new trend start day (pop gap up above 21 and 50 ema and breaking out of downtrending line)".
+#    Data: +5.9% on 1.6x, closed 505.74 over the 21 EMA 478.25 and the 50 EMA 480.68. On the list from Sep 8.
+# 4. Oct 8-9 2026: "end of cycle, couldnt make breakout, stalled"; "12th october you take this off the list".
+#    Data: the Oct 6 high 658.52 was 0.8 ADR over the Sep 25 high 639.00; Oct 8 620.68 back under 639;
+#    Oct 12 the first close under the 21 EMA (594.24).
+# Test engine (Nov 13): 1 stays on (match). 2 off Jul 1 (failed breakout), back Jul 10-21, off Jul 29 at 429.56
+#    (late). 3 NOT on until Sep 21 at 615.52 (miss). 4 off Oct 8 (failed breakout; the user: Oct 12).
+# Not built: explained to the user, waiting for "test it".
+#
+## ANET Apr-Oct 2026 (the user, Nov 13): "too much up down, not a good candidate april to october.. higher lows
+# not clear, swing high low not clear, too much whiplash to 21ema and 50 ema.. not nicely trending up".
+# Measured (closes crossing the 50 EMA in 60 sessions): clean trends 0-3 (AMD Jun 30: 0, MRVL Jun 15: 0);
+# the range stocks the user called broken 12-14 (WRBY 13, VSAT 12, ITT 14, RLAY 14); AMD Sep 8: 8, NET Nov 11: 6.
