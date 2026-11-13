@@ -289,6 +289,8 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
      2-close undercut rule is unchanged (ANF).
   Test build (Nov 12 close): 238 launches, 206 off waiting, 62 start days (Nov 9: 25, the market's bounce day), 50 first-day
   launches. `--regress` 209 lines, expected_reads.txt still not rewritten.
+  LIVE LIST after the rebuild (picks.yml, 04:24 UTC Nov 13, the Nov 12 close): 236 launches, 207 off waiting, 62 start days;
+  RKLB and LUNR start Nov 9, LUNR no longer a launch, TTEK not in the table, AMD on the list.
   **NEXT, agreed in principle, NOT built: the alerts.** One START DAY alert (live: closed under the 21 or 50 EMA, now over the
   21 EMA, 1 ADR+, pace 1x+, top half, over the 5-min ORH; tags: launch size / after a reset), the 21 EMA reclaim alert for
   list stocks, text notes (follow-through, range stock). Still to ask the user: all start days or only the bigger kinds
