@@ -265,6 +265,10 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   the 50 EMA, 79 end of cycle, 8 failed breakouts), 21 warnings, 1 top watch, 35 range notes, 4 reset starts (M, BILL, XYZ Oct
   15, GEN Oct 29), 79 start days. `--regress`: 209 lines differ from tools/expected_reads.txt, which is NOT rewritten yet (only
   after the user agrees the reads). The user will review charts and send corrections ("you can make it better later").
+  LIVE LIST after the rebuild (picks.yml run 49, 02:42 UTC Nov 13, the Nov 12 close; the first run, 48, saved nothing: the
+  guard, its bars ended Nov 11): 236 launches, 5 in the 50 EMA tab, 208 off waiting (111 two closes under the 50 EMA, 88 end
+  of cycle, 9 failed breakouts), 23 warnings, 32 range notes, 4 reset starts, 68 start days; AMD (a launch day Nov 12), NET
+  and ANET on.
   To look at with the user: are the 21 warnings too quick (many from the Nov 4-10 dip: AEM, WPM, AU, IAG); 35 range notes
   (12+ crossings would leave 17); AMD comes back Jul 10 2026 on a flag attempt and goes off again Jul 16.
 - **DROPPED (see 5 above; kept for the record): the 8:45 task's instructions.** update_trigger from this session was refused ("a
