@@ -291,11 +291,24 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   launches. `--regress` 209 lines, expected_reads.txt still not rewritten.
   LIVE LIST after the rebuild (picks.yml, 04:24 UTC Nov 13, the Nov 12 close): 236 launches, 207 off waiting, 62 start days;
   RKLB and LUNR start Nov 9, LUNR no longer a launch, TTEK not in the table, AMD on the list.
-  **NEXT, agreed in principle, NOT built: the alerts.** One START DAY alert (live: closed under the 21 or 50 EMA, now over the
-  21 EMA, 1 ADR+, pace 1x+, top half, over the 5-min ORH; tags: launch size / after a reset), the 21 EMA reclaim alert for
-  list stocks, text notes (follow-through, range stock). Still to ask the user: all start days or only the bigger kinds
-  (Nov 9 would have sent ~25: maybe 1.5x volume or the confirmation), and whether an END OF CYCLE WARNING blocks buy alerts
-  (my recommendation). radar/alerts.py on main is still the old one.
+- **LIVE (the user's "do alerts go live", Thu Nov 12 2026 ~11:50 PM ET = Nov 13 ~04:50 UTC; test/cleanlaunch 0dc53b4): THE ALERTS
+  FOR THE NEW READS** (radar/alerts.py = main's alerts + only this; the Nov 10 alert changes stay out). Rules: SCANNER_RULES
+  "L5 Off the list", the row "Phone alerts for the new reads".
+  1. **START DAY alert** (`find_start`, key `:start`, any liquid stock, from 9:36): launch.json `start_watch` (`start_watch_of`
+     in launch.py: tonight's stocks that can make a start day tomorrow, 379 on Nov 12: [21 EMA, 50 EMA, ADR, red candle high,
+     under 200, reset lower highs, last lower high, first, tv]) -> live: over the 21 EMA, up 1 ADR+, pace 1x+ (the user answered
+     "a" to "all of them or only stronger": read as ALL, 1x), over the red candle's high, top half of the day, over the 5-min
+     ORH; the message has the stop (today's low), the risk in ADRs, the 50 EMA confirmation, the tags "launch size, from under
+     the 200 SMA" / "NEW TREND after a reset" (high priority). After an earlier start only the reset start alerts (AMD Sep 8).
+  2. **21 EMA reclaim on a strong day** (key `:ema21strong`): a followed launch that closed under its 21 EMA and over the 50
+     EMA trades back over the 21 EMA on a 2%+ gap that opened over it or up 1 ADR+.
+  3. **END OF CYCLE WARNING blocks the buy alerts** of a followed launch (my recommendation; the user did not answer B: ask
+     again if they object).
+  Simulated with the day's closing values on the 174 long-bar stocks (scratch only): Nov 6 FLY, IONQ; Nov 9 LSCC, LUNR, MPWR,
+  RKLB, UBER; Nov 10 AVGO; Nov 11 AMD, IBKR, SONO, ZM; Nov 12 none; Sep 4 2026 AMD (plain), Sep 8 AMD "after a reset". NOT
+  tested live: the first real session is Fri Nov 13: check alerts.json for `:start` keys and the count (a bounce day like Nov 9
+  had 25 start days market-wide: if too many, 1.5x volume or the confirmation). Not done: the "follow-through" / "range stock"
+  words in the alert texts; the eod_alerts.py texts.
 - **DROPPED (see 5 above; kept for the record): the 8:45 task's instructions.** update_trigger from this session was refused ("a
   routine's instructions can be changed only from the conversation the routine posts into"). Until then the event card shows
   without the news line ("why"). The text to paste into the 8:45 conversation was given to the user in this session (4
