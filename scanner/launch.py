@@ -190,6 +190,15 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # whip: a status note: the close crossed the 50 EMA whip_n+ times in 60 sessions = a range, not a trend (the user,
          #   ANET Apr-Oct 2026: "too much whiplash to 21ema and 50 ema.. not nicely trending up"; WRBY 13, VSAT 12, ITT 14, RLAY 14
          #   on Nov 11 2026; clean trends 0-3)
+         # the start day = the trend-change pop (the user, Nov 13 2026, RKLB: "clear downtrending stock, november 9th was a start
+         #   point upward.. and 10th confirmation!!!"): the FIRST strong close over the 21 EMA after a downtrend, the 50 EMA not
+         #   needed. start_down of the start_down_look closes before it under the 21 EMA, the 21 EMA lower than that many
+         #   sessions before; no earlier start in start_first sessions whose move still holds (TTEK: "start is 15th october after
+         #   downtrend 1st day start!!!! nov12 nothing, its wild move down and up bad"); and over the high of every violent red
+         #   candle (down red_adr ADRs+) of the red_look sessions before (LUNR Nov 12 2026: "it made big big red candle downward
+         #   movement"; RKLB Nov 9 closed 58.86 over the Nov 5 candle's high 50.83). The confirmation = the first close over the 50
+         #   EMA after it (RKLB Nov 10)
+         start_down=6, start_down_look=10, start_first=20, red_adr=1.5, red_look=5, gap_keep=0.5,
          adr_look=63, stall=1, stall_adr=1, stall_pull=1.5, stall_look=5, churn=1, churn_days=10, churn_n=2,
          reset=1, reset_look=60, reset_highs=3, reset_range=0.6, whip=1, whip_n=10, whip_look=60)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
@@ -244,6 +253,7 @@ class Arr:
         avgv20, dv20 = roll_mean(v, 20), roll_mean(c * v, 20) / 1e6
         self.liq_noadr = np.array([c[i] >= LQ["min_price"] and avgv20[i] >= LQ["min_avg_vol_20d"]
                                    and dv20[i] >= LQ["min_dollar_vol_20d_millions"] for i in range(n)])
+        self._sr = {}
         self.liquid20 = self.liq_noadr & (st.adr >= LQ["min_adr"])          # on today's 20-day ADR (the group ranking keeps this one)
         adr_hi = np.array([np.nanmax(st.adr[max(0, i - L["adr_look"] + 1):i + 1]) if not np.isnan(st.adr[max(0, i - L["adr_look"] + 1):i + 1]).all() else np.nan for i in range(n)])
         self.liquid = self.liq_noadr & (adr_hi >= LQ["min_adr"])            # adr_look: the highest ADR of the last 63 sessions
@@ -320,12 +330,17 @@ class Arr:
             return False
         if not ((c[i - 1] < self.e21[i - 1] or c[i - 1] < self.e50[i - 1]) and c[i] > self.e21[i] and c[i] > self.e50[i]):
             return False
+        if self.red_inside(i):          # still inside a violent red candle (the user, Nov 13 2026, LUNR Nov 12: not a launch)
+            return False
         # a real gap that opens over both EMAs (the user, Nov 12 2026: ATRC Jun 18 2026, +6.2% on 2.2x with a 1.3% gap, closing
         # inside its range over two flat EMAs, "doesn't have anything to be launch day its range bound day"; the first days
         # gapped: GLOB 9.1%, FLY 12.7%, APP 28.7%, CAI Aug 6 2026 15.5%)
         # It closes in the top half of the day (FLY opened under both EMAs and closed over them at its high), or it opened
         # over both EMAs and still closes over them (GLOB faded to the bottom of its day)
-        if self.gap[i] >= L["first_gap"] and (self.clpos[i] >= L["min_clpos"] or (st.o[i] > self.e21[i] and st.o[i] > self.e50[i])):
+        # and the day keeps at least half of its gap (the user, Nov 13 2026, LUNR Nov 12: "wrong, it made big big red candle
+        # downward movement": gapped 17.8%, closed +7.0% at the day's low; GLOB Oct 1 2026 kept 6.6 of its 9.1%)
+        if self.gap[i] >= L["first_gap"] and self.chg[i] >= L["gap_keep"] * self.gap[i] \
+                and (self.clpos[i] >= L["min_clpos"] or (st.o[i] > self.e21[i] and st.o[i] > self.e50[i])):
             return True
         # or, without a gap, a strong day that closes over its 1-month high in the top half of the day, on 1.3x+ volume (the
         # user, Nov 12 2026: REAL Oct 15 2026 "real launch was 15th october rest is continuation": +15.8% on 2.1x, closed
@@ -344,15 +359,32 @@ class Arr:
         as the launch rule it made 52% more launches in 2 years and moved agreed ones (ANF Aug 3 2026, ATRC Jul 24 2026), so
         it is shown next to the launch (trend_start) and in its own list (start_days). REAL Oct 15 2026 (+15.8% on 2.1x),
         PCOR Oct 5, TOST Oct 15 (+7.9% on 1.1x), FLY Nov 6, APP Nov 5, CAI Aug 6, MRVL Aug 4, WRBY Nov 5 2026"""
+        if not self.start_raw(i):
+            return False
+        c = self.st.c
+        return not any(self.start_raw(k) and (c[k + 1:i] >= c[k - 1]).all() for k in range(max(self.start, 1, i - L["start_first"]), i))
+
+    def red_inside(self, i):
+        """a violent red candle (down red_adr ADRs+) in the red_look sessions before day i whose high the close has not cleared"""
+        st = self.st
+        return any(self.chg[d] <= -L["red_adr"] * (st.adr[d] if st.adr[d] > 0 else 5.0) and st.c[i] <= st.h[d] for d in range(max(1, i - L["red_look"]), i))
+
+    def start_raw(self, i):
+        """the start day's own tests, without "the first one" (Nov 13 2026: the close over the 21 EMA, the 50 EMA not needed; after
+        a downtrend; not inside a violent red candle). A later such day is the confirmation, or the reset start (AMD Sep 8 2026)"""
+        if i in self._sr:
+            return self._sr[i]
         st = self.st
         c = st.c
-        if i < max(self.start, 1) or not self.liquid[i] or not self.rv[i] >= L["start_rv"]:
-            return False
-        if not ((c[i - 1] < self.e21[i - 1] or c[i - 1] < self.e50[i - 1]) and c[i] > self.e21[i] and c[i] > self.e50[i]):
-            return False
-        if self.chg[i] >= L["start_adr"] * st.adr[i] and self.clpos[i] >= L["min_clpos"]:
-            return True
-        return bool(self.chg[i] > 0 and self.gap[i] >= L["start_gap"] and st.o[i] > self.e21[i] and st.o[i] > self.e50[i])
+        n = L["start_down_look"]
+        ok = bool(i >= max(self.start, n + 2) and self.liquid[i] and self.rv[i] >= L["start_rv"]
+                  and (c[i - 1] < self.e21[i - 1] or c[i - 1] < self.e50[i - 1]) and c[i] > self.e21[i]
+                  and sum(1 for k in range(i - n, i) if c[k] < self.e21[k]) >= L["start_down"] and self.e21[i - 1] < self.e21[i - 1 - n]
+                  and not self.red_inside(i)
+                  and ((self.chg[i] >= L["start_adr"] * st.adr[i] and self.clpos[i] >= L["min_clpos"])
+                       or (self.chg[i] >= L["gap_keep"] * self.gap[i] and self.gap[i] >= L["start_gap"] and st.o[i] > self.e21[i])))
+        self._sr[i] = ok
+        return ok
 
     def climax(self, i):
         """a climax gap (the user, Nov 11 2026: APP and HOOD Feb 13 2025, "climax top after 6-7 month uptrending stock", "then
@@ -1288,7 +1320,7 @@ def reset_start(a, j):
     st = a.st
     h, l, c = st.h, st.l, st.c
     n = L["reset_look"]
-    if not L["reset"] or j < n + 10 or not a.start_day(j):
+    if not L["reset"] or j < n + 10 or not a.start_raw(j) or not (c[j] > a.e21[j] and c[j] > a.e50[j]):
         return None
     top = j - n + int(np.argmax(h[j - n:j]))
     piv = [k for k in range(top + 3, j - 1) if h[k] == h[k - 3:min(j, k + 4)].max()]
@@ -1884,7 +1916,7 @@ def follow(a, i0, i, pick=False):
         stage = (f"Breakout of the falling range: closed {c[i]:.2f} over the line {rng[1]:.2f} from its {st.dates[rng[0]]} high {st.h[rng[0]]:.2f} "
                  f"({i - rng[0]} sessions of lower highs) and over the 21 & 50 EMA, on {a.rv[i]:.1f}x volume (leg {leg})")
     elif pop21:
-        stage = (f"Pop over the 21 EMA (a short swing entry): closed {c[i]:.2f} back over the 21 EMA {a.e21[i]:.2f} and over the 50 EMA "
+        stage = (f"21 EMA undercut & reclaim on a strong day (a short swing entry): closed {c[i]:.2f} back over the 21 EMA {a.e21[i]:.2f} and over the 50 EMA "
                  f"{a.e50[i]:.2f}, " + (f"a {a.gap[i]:.1f}% gap that opened over it" if a.gap[i] >= L["pop21_gap"] and st.o[i] > a.e21[i]
                                         else f"{a.chg[i]:+.1f}% ({a.chg[i] / _adr(st, i):.1f} ADR)")
                  + (", the 10 > 21 > 50 EMA in order" if a.e10[i] > a.e21[i] > a.e50[i] else ""))
@@ -2007,7 +2039,7 @@ def follow(a, i0, i, pick=False):
         failed_breakout_top=fnum(failed[1]) if failed else None,
         range_breakout_today=range_bo, range_line=fnum(rng[1]) if range_bo else None,
         launch_hold=hold, launch_not_held_today=not_held, higher_low2_today=hl2_k1 is not None,
-        pop21_today=bool(pop21 and stage.startswith("Pop over the 21 EMA")), follow_through_today=thru,
+        pop21_today=bool(pop21 and stage.startswith("21 EMA undercut & reclaim on a strong day")), follow_through_today=thru,
         double_breakout="double breakout" in stage, flag_dry="volume dried up" in stage,
         # the base forming now, as your MSF engine names it (High tight flag, Bull flag, Pennant, Ascending triangle,
         # Flat base, Cup with handle, ... or Base forming (no pattern yet))
@@ -2765,6 +2797,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                  adr_pct=fnum(st.adr[i], 1), group=gn_, group_status=STATUS.get(gs_, "No group"), launch_day=bool(a.candidate(k)),
                  on=("Launches" if s in on_l else "Launch laggards" if s in on_g else None))
         d.update(start_fields(a, k, "date"))
+        cf = next((m for m in range(k, i + 1) if st.c[m] > a.e50[m]), None)      # the confirmation: the first close over the 50 EMA
+        d.update(confirmed=st.dates[cf] if cf is not None else None, over_50ema=bool(st.c[k] > a.e50[k]))
         starts.append(d)
     starts.sort(key=lambda r: (r["date"], r["date_rel_vol"]), reverse=True)
     doc = dict(date=today, start_days=starts, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=L, liquidity=dict(LIQ),
