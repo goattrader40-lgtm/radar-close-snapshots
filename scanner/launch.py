@@ -168,7 +168,30 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # through the 21 & 50 EMA, or a start_gap % gap opening over both; start_look = how far back a launch's trend start is
          # looked for; start_list_days = how long a start day stays on the Start days list
          start_adr=1, start_rv=1, start_gap=5, start_look=40, start_list_days=5,
-         first_day=1, first_gap=5, first_rv=1.3, first_adr_nogap=1.8, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2)
+         first_day=1, first_gap=5, first_rv=1.3, first_adr_nogap=1.8, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2,
+         # the list ON / OFF read from the user's AMD 2026 charts (Nov 13 2026: "i can visually know when stock will go down"):
+         # adr_look: the ADR minimum is tested on the highest 20-day ADR of the last 63 sessions, not on today's alone: the
+         #   quiet weeks before a new trend are when the 20-day ADR is lowest (AMD Sep 8 2026: 3.5% after 6.3% in July: "amd
+         #   never was 3.4% adr stock.. its beta name"). The minimum itself (3.5%) is unchanged
+         # stall: the END OF CYCLE warning: a high less than stall_adr ADRs over (or under) the peak before it, with a pullback of
+         #   stall_pull ADRs+ between the two ("higher highs very close each other.. 6th october doesnt really count bcs it
+         #   stalled right away"), then within stall_look sessions a 1 ADR+ down day and a close back under that earlier peak and
+         #   under the 10 EMA ("stalling at highs and violent breakdown"). AMD Oct 8 2026 (highs 639.00 Sep 25, 658.52 Oct 6);
+         #   Jul 2 2026 (562.99 Jun 22, 584.73 Jun 30). OFF the list on the first close under the 21 EMA after it (Oct 12 2026:
+         #   "12th october you take this off the list"; Jul 7: "july 7th is good take off!!!"). A failed breakout that still
+         #   closes over the 21 EMA is this warning too and goes off the same way (the user chose A, Nov 13 2026)
+         # churn: the top read, a status note only: in churn_days sessions churn_n+ up days and churn_n+ down days of 1 ADR+,
+         #   a net change under 1 ADR, at a stalled high ("volatility goes up.. but doesnt make [progress].. distribution days")
+         # reset: the NEW TREND START after a top: reset_highs+ lower swing highs since the top (60 sessions), the 5-day daily
+         #   range down to reset_range of its widest since the top, the last low over the lowest low of the decline, and a start
+         #   day that closes over the last lower high: a way back onto the list (AMD Sep 8 2026: "new trend start day, pop gap up
+         #   above 21 and 50 ema and breaking out of downtrending [line]"; "volatility contracting since july 14th, every time
+         #   swing becomes smaller and smaller"). Not a launch rule
+         # whip: a status note: the close crossed the 50 EMA whip_n+ times in 60 sessions = a range, not a trend (the user,
+         #   ANET Apr-Oct 2026: "too much whiplash to 21ema and 50 ema.. not nicely trending up"; WRBY 13, VSAT 12, ITT 14, RLAY 14
+         #   on Nov 11 2026; clean trends 0-3)
+         adr_look=63, stall=1, stall_adr=1, stall_pull=1.5, stall_look=5, churn=1, churn_days=10, churn_n=2,
+         reset=1, reset_look=60, reset_highs=3, reset_range=0.6, whip=1, whip_n=10, whip_look=60)
 STATUS = {2: "Leading", 1: "Turning up", 0: "Not trending"}
 LIQ = dict(min_price=10, min_dollar_vol_20d_millions=20, min_avg_vol_20d=700000, min_adr=3.5)   # settings.json "launch"
 BASES = (120, 63, 21)  # the bases a launch can clear: 6, 3 and 1 month(s)
@@ -221,7 +244,9 @@ class Arr:
         avgv20, dv20 = roll_mean(v, 20), roll_mean(c * v, 20) / 1e6
         self.liq_noadr = np.array([c[i] >= LQ["min_price"] and avgv20[i] >= LQ["min_avg_vol_20d"]
                                    and dv20[i] >= LQ["min_dollar_vol_20d_millions"] for i in range(n)])
-        self.liquid = self.liq_noadr & (st.adr >= LQ["min_adr"])
+        self.liquid20 = self.liq_noadr & (st.adr >= LQ["min_adr"])          # on today's 20-day ADR (the group ranking keeps this one)
+        adr_hi = np.array([np.nanmax(st.adr[max(0, i - L["adr_look"] + 1):i + 1]) if not np.isnan(st.adr[max(0, i - L["adr_look"] + 1):i + 1]).all() else np.nan for i in range(n)])
+        self.liquid = self.liq_noadr & (adr_hi >= LQ["min_adr"])            # adr_look: the highest ADR of the last 63 sessions
         self.ret21 = np.full(n, np.nan)
         self.ret21[21:] = 100 * (c[21:] / c[:-21] - 1)
         self.ret5 = np.full(n, np.nan)
@@ -483,7 +508,7 @@ def group_rank(A, cal, stocks_rows, back=5):
             mem["ind:" + k_].append(s)
     names = sorted(g for g, ms in mem.items() if len(ms) >= 3)
     # ranked on its tradable stocks when it has 4+ (the user, Nov 10 2026), else on all of them without a tier
-    trad = {g: [s for s in ms if A[s].liquid[-1]] for g, ms in mem.items()}
+    trad = {g: [s for s in ms if A[s].liquid20[-1]] for g, ms in mem.items()}
     full = dict(mem)
     mem = {g: (trad[g] if len(trad[g]) >= GR_TIER_MIN else ms) for g, ms in mem.items()}
     thin = {g for g in names if len(trad[g]) < GR_TIER_MIN}
@@ -610,7 +635,7 @@ def group_rank(A, cal, stocks_rows, back=5):
     ind_rows = [r for r in out["rows"] if r["kind"] == "ind"]
     for wname in GR_WIDE:
         allm = [r["symbol"] for r in stocks_rows if r.get("industry") == wname and r["symbol"] in A]
-        tr_ = [s for s in allm if A[s].liquid[-1]]
+        tr_ = [s for s in allm if A[s].liquid20[-1]]
         ms = [s for s in (tr_ if len(tr_) >= GR_TIER_MIN else allm) if s in ret and cols[0] in ret[s]]
         if len(ms) < 3 or not ind_rows:
             continue
@@ -1220,6 +1245,75 @@ def range_break(a, j):
     return t, float(line)
 
 
+def stalled_high(a, j):
+    """the END OF CYCLE warning on day j (L stall): (the stalled high's bar, the peak before it) or None"""
+    st = a.st
+    h, c = st.h, st.c
+    if j < 50:
+        return None
+    adr = _adr(st, j)
+    hk = j - L["stall_look"] + int(np.argmax(h[j - L["stall_look"]:j]))
+    if h[j] >= h[hk] or hk - 3 < 40:
+        return None
+    pk = hk - 40 + int(np.argmax(h[hk - 40:hk - 2]))
+    if not (1 - L["stall_adr"] * adr / 100) * h[pk] <= h[hk] < (1 + L["stall_adr"] * adr / 100) * h[pk]:
+        return None
+    if h[pk] < h[max(0, pk - 60):pk + 1].max() * (1 - adr / 100) or st.l[pk:hk + 1].min() > h[pk] * (1 - L["stall_pull"] * adr / 100):
+        return None                     # the earlier peak is at the highs, and the stock pulled back between the two
+    if not any(a.chg[d] <= -_adr(st, d) for d in range(hk + 1, j + 1)):
+        return None
+    return (hk, pk) if c[j] < h[pk] and c[j] < a.e10[j] else None
+
+
+def churn_at(a, i):
+    """the top read on day i (L churn): big days both ways, no progress, at a stalled high: (up days, down days, net %) or None"""
+    st = a.st
+    n = L["churn_days"]
+    if i < 60 + n:
+        return None
+    adr = _adr(st, i)
+    up = sum(1 for d in range(i - n + 1, i + 1) if a.chg[d] >= _adr(st, d))
+    dn = sum(1 for d in range(i - n + 1, i + 1) if a.chg[d] <= -_adr(st, d))
+    net = 100 * (st.c[i] / st.c[i - n] - 1)
+    hi, before = st.h[i - n + 1:i + 1].max(), st.h[i - n - 39:i - n + 1].max()
+    if up >= L["churn_n"] and dn >= L["churn_n"] and abs(net) < adr and hi >= st.h[i - 59:i + 1].max() and hi < before * (1 + adr / 100) \
+            and st.c[i] >= hi * (1 - 3 * adr / 100):
+        return up, dn, net
+    return None
+
+
+def reset_start(a, j):
+    """the NEW TREND START after a top on day j (L reset): (the top's bar, lower highs, range then, range now, the last lower high's
+    bar) or None. The day itself must be a start day"""
+    st = a.st
+    h, l, c = st.h, st.l, st.c
+    n = L["reset_look"]
+    if not L["reset"] or j < n + 10 or not a.start_day(j):
+        return None
+    top = j - n + int(np.argmax(h[j - n:j]))
+    piv = [k for k in range(top + 3, j - 1) if h[k] == h[k - 3:min(j, k + 4)].max()]
+    lows = []
+    for k in piv:                       # the lower highs, each under the one before
+        if h[k] < (h[lows[-1]] if lows else h[top]):
+            lows.append(k)
+    if len(lows) < L["reset_highs"]:
+        return None
+    rng = 100 * (h - l) / c
+    r5 = lambda k: float(rng[k - 4:k + 1].mean())
+    wide, now = max(r5(k) for k in range(top + 4, j)), r5(j - 1)
+    kb = top + int(np.argmin(l[top:j]))
+    if now > L["reset_range"] * wide or j - kb < 10 or c[j] <= h[lows[-1]]:
+        return None
+    return top, len(lows), wide, now, lows[-1]
+
+
+def whiplash(a, i):
+    """how many times the close crossed the 50 EMA in the 60 sessions to day i"""
+    c, e = a.st.c, a.e50
+    k0 = max(1, i - L["whip_look"] + 1)
+    return int(sum(1 for k in range(k0, i + 1) if (c[k] > e[k]) != (c[k - 1] > e[k - 1])))
+
+
 def follow(a, i0, i, pick=False):
     """what happened from the launch close (i0) to bar i: status, gain, exit signal, current base and pattern.
     pick: a stock you follow from the Watchlist tab, from the close you added it at (i0): no launch day, and its top
@@ -1294,6 +1388,7 @@ def follow(a, i0, i, pick=False):
                     and (not L["reclaim50_rising"] or a.e50[k] > a.e50[k - 5]))
     off_since, off_why, back_day, back_from = None, None, None, None
     failed, rng_day, rng = None, None, None                 # the last failed breakout (day, top, breakout day); the falling range broken
+    stall, reset_day, reset = None, None, None              # the end-of-cycle warning (day, high bar, peak bar); the reset start
     for j in range(i0 + 1, i + 1):
         if not dry_done and dry_armed(a, j - 1, H):
             lv = pop_level(a, j - 1)
@@ -1362,7 +1457,16 @@ def follow(a, i0, i, pick=False):
             used.discard(bo[2])
             rlv, weak_bo = None, None
             if L["off_failed_bo"] and not pick and off_since is None:
-                off_since, off_why = j, "a failed breakout"
+                if L["stall"] and c[j] >= a.e21[j]:       # still over the 21 EMA: the warning, off on the close under it
+                    stall = stall or (j, bo[0], None)
+                else:
+                    off_since, off_why = j, "a failed breakout"
+        if L["stall"] and off_since is None:
+            if stall and c[j] > st.h[stall[1]]:
+                stall = None                              # a close over the stalled high: the warning is over
+            sh = None if stall else stalled_high(a, j)
+            if sh:
+                stall = (j, sh[0], sh[1])
         rg = range_break(a, j) if (pick or j - i0 > L["range_after_launch"]) else None
         if rg:
             rng_day, rng = j, rg
@@ -1375,7 +1479,11 @@ def follow(a, i0, i, pick=False):
             elif off_since is None and under0 and j - i0 <= L["ema_grace_under"] and not (c[i0 + 1:j] > a.e50[i0 + 1:j]).any():
                 pass
             elif off_since is None:
-                if j >= i0 + L["off50_closes"] and all(c[m] < a.e50[m] for m in range(j - L["off50_closes"] + 1, j + 1)):
+                if stall and c[j] < a.e21[j]:
+                    off_since, off_why = j, (f"the end of the cycle: it stalled at its highs ({st.h[stall[1]]:.2f} on {st.dates[stall[1]]}, warning "
+                                             f"{st.dates[stall[0]]}), then closed under the 21 EMA")
+                    stall = None
+                elif j >= i0 + L["off50_closes"] and all(c[m] < a.e50[m] for m in range(j - L["off50_closes"] + 1, j + 1)):
                     off_since, off_why = j, f"{L['off50_closes']} closes in a row under the 50 EMA"
                 # (not in the 5 sessions after it came back: out of a range the EMAs are flat and only start to turn)
                 # rising = today's EMA over yesterday's, and a launch gets 2 sessions before the test starts (the user, Nov 12
@@ -1388,8 +1496,11 @@ def follow(a, i0, i, pick=False):
                     off_since, off_why = j, "neither the 21 nor the 50 EMA is rising"
             # the way back: the breakout day closes over the 21 and the 50 EMA, which turns them up that day (INTC Apr 1
             # 2026: out of its falling range, both EMAs still a little under their level of 5 sessions before)
-            elif c[j] > a.e50[j] and c[j] > a.e21[j] and (b or flag_go or thru_day == j or rg or r50(j) or a.candidate(j)):
-                back_day, back_from, off_since, off_why = j, off_since, None, None
+            elif c[j] > a.e50[j] and c[j] > a.e21[j] and (b or flag_go or thru_day == j or rg or r50(j) or a.candidate(j) or reset_start(a, j)):
+                rs_ = reset_start(a, j)
+                if rs_:
+                    reset_day, reset = j, rs_
+                back_day, back_from, off_since, off_why, stall = j, off_since, None, None, None
         if st.h[j] > H:
             H, last_new, armed, dry_done = st.h[j], j, True, False
     hi = st.h[i0:i + 1].max()
@@ -1858,6 +1969,10 @@ def follow(a, i0, i, pick=False):
         stage = (f"Off the list since {st.dates[off_since]}: {off_why}. Back on when it breaks out (a base, a flag, a falling range, "
                  f"a launch-size day) over the 50 EMA with the 21 or the 50 EMA rising")
     elif back_day == i:
+        if reset_day == i:
+            stage += (f" · NEW TREND START after a reset: {reset[1]} lower highs since the {st.dates[reset[0]]} top {st.h[reset[0]]:.2f}, the daily range "
+                      f"down from {reset[2]:.1f}% to {reset[3]:.1f}%, closed {c[i]:.2f} over the last lower high {st.h[reset[4]]:.2f} "
+                      f"({st.dates[reset[4]]}) and the 21 & 50 EMA, {a.chg[i]:+.1f}% on {a.rv[i]:.1f}x")
         stage += f" · BACK ON THE LIST (off since {st.dates[back_from]})"
     if range_bo and not stage.startswith("Breakout of the falling range"):
         stage += f" · also out of its falling range: over the line {rng[1]:.2f} from its {st.dates[rng[0]]} high {st.h[rng[0]]:.2f} ({i - rng[0]} sessions)"
@@ -1948,6 +2063,25 @@ def follow(a, i0, i, pick=False):
         new_run_after_rest=st.dates[rested] if rested is not None else None,
         days_since_new_high=i - last_new,
     )
+    # the list ON / OFF notes in front of the status (the user, Nov 13 2026: "when stall happens, would be great in status bar")
+    warn, ch = None, None
+    if not off_now and stall:
+        hk_, pk_ = stall[1], stall[2]
+        how = (f"the high {st.h[hk_]:.2f} ({st.dates[hk_]}) was only {100 * (st.h[hk_] / st.h[pk_] - 1):+.1f}% vs the {st.dates[pk_]} peak {st.h[pk_]:.2f} and it broke "
+               f"back under it" if pk_ is not None else f"the {st.dates[hk_]} breakout failed")
+        warn = f"END OF CYCLE WARNING since {st.dates[stall[0]]}: stalled at the highs, {how}. Off the list on a close under the 21 EMA {a.e21[i]:.2f}"
+    elif not off_now and L["churn"]:
+        ch = churn_at(a, i)
+        if ch:
+            warn = (f"TOP WATCH: big swings, no progress ({ch[0]} up and {ch[1]} down days of 1 ADR+ in {L['churn_days']} sessions, net {ch[2]:+.1f}%) "
+                    f"at a stalled high: distribution")
+    wl_ = whiplash(a, i0) if L["whip"] else 0
+    out.update(cycle_warn=warn, stall_since=st.dates[stall[0]] if (stall and not off_now) else None, top_watch=bool(ch),
+               reset_start=st.dates[reset_day] if reset_day is not None else None, whiplash=wl_, range_stock=bool(L["whip"] and wl_ >= L["whip_n"]))
+    if warn:
+        out["stage"] = warn + " · " + out["stage"]
+    if out["range_stock"] and not off_now:
+        out["stage"] += f" · RANGE STOCK: the close crossed the 50 EMA {wl_} times in the {L['whip_look']} sessions before the launch, not a clean trend"
     # too far from its momentum's start (the user, Nov 1 2026): 300%+ over that low, no buy points of any kind (2 years of
     # buy points: past it -0.4 to -0.8R whatever the entry; AEHR May 2026 +358-451%, SMCI Jul 20 / Aug 4 2023 +340 / +365%)
     ms = momentum_start(a, i)
