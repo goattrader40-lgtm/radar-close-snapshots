@@ -516,3 +516,20 @@ AMD  2026-04-16  6-month base ~267 broken, close 278.26                     | OF
 ## BETA (the user, Nov 13 2026): "beta nov3 was launch but you right, now it fell back to range as of today".
 # The RANGE STOCK note on BETA (12 crossings of the 50 EMA in the 60 sessions before the launch) is right: keep the note
 # on a first-day launch too.
+#
+## The start day / the pop over the 21 EMA: the user's corrections to my alert examples (Nov 13 2026)
+# TTEK: "ttek wrong - start is 15th october after downtrend 1st day start!!!! nov12 nothing, its wild move down and up bad!!!!"
+#   (the engine listed Nov 12 2026, +4.8% on 2.5x, as a start day). Not replayed: no bars for TTEK here.
+# LUNR: "first day launch lunr nov 12 wrong, it made big big red candle downward movement" (the engine: a first-day launch
+#   Nov 12 2026, +7.0% on 3.5x). Not replayed: no bars for LUNR here.
+# AMD Sep 8 2026: "new trend start after a reset amd sept 8th correct".
+# RKLB: "examples for you to see rklb nov 9th for one of 4 options you have.. i gave you so many examples about this 21 ema
+#   pop trend change". Data: Nov 5 2026 -12.2% on 2.0x to 45.99 (the low 43.89), Nov 6 +15.4% to 53.07 (still under the 21
+#   EMA 56.23), Nov 9 +10.9% on 1.6x, closed 58.86 OVER the 21 EMA 56.47 and still UNDER the 50 EMA 62.15; Nov 10 closed 62.71
+#   over the 50 EMA 62.17. The engine's start day needs both EMAs: it reads Nov 10, the user Nov 9.
+# AMD Jun 11 2026: "amd jun 11th we already have buy point of 21 ema undercut and reclaim!!!" (the engine called it "Pop over
+#   the 21 EMA (a short swing entry)" because only 1 close was under the 21 EMA; its undercut & reclaim needs 2).
+# To take from it (not built): 1. the trend-change pop is the first strong close back over the 21 EMA after a downtrend, the
+#   50 EMA not needed (RKLB Nov 9; MRVL Sep 16 2026); 2. only the FIRST such day after the downtrend is the start (TTEK Oct
+#   15), a later one after a wild down-and-up swing is not (TTEK Nov 12, LUNR Nov 12); 3. on a list stock in an uptrend the
+#   close back over the 21 EMA is the 21 EMA undercut & reclaim, not a separate "pop" (AMD Jun 11).
