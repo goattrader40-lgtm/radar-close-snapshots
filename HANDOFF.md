@@ -309,6 +309,19 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   tested live: the first real session is Fri Nov 13: check alerts.json for `:start` keys and the count (a bounce day like Nov 9
   had 25 start days market-wide: if too many, 1.5x volume or the confirmation). Not done: the "follow-through" / "range stock"
   words in the alert texts; the eod_alerts.py texts.
+- **LIVE (the user's "go live after test", Fri Nov 13 2026 ~12:50 AM ET = ~05:50 UTC; test/cleanlaunch 7e0677c):**
+  1. **BREAKOUT OF ITS FALLING RANGE alert** (the user: "breakout of falling range its good alert"; alerts.py `find_range`, key
+     `:rangebo`, daytime from 9:36, high priority): launch.json `range_watch` (`range_watch_of` in launch.py: tomorrow's line for
+     every list stock, on the list or off it waiting; 56 on Nov 12) -> live: over the line and the 21 & 50 EMA, a 1 ADR+ day or a
+     2%+ gap, pace 1x+ or 1 ADR+, top half, over the 5-min ORH; not for a warned stock. Simulated on closing values: INTC Apr
+     1 2026, COHR Apr 8 (missed AMD and MTSI that day, not looked into), MRVL Aug 4 (+ TREX extra), FDS Oct 8, SONO Nov 11.
+  2. **2nd higher low in the base: in the after-the-close message** (radar/eod_alerts.py, high priority; the user: "2nd higher
+     low can be end of day trigger"), **and on the 21 EMA as well as the 50 EMA** (launch.py `hl2_on(k, t, e)`; "could be on 21
+     emas as well not necessarily would be 50 ema"; same tests on either). 12 since Aug 2026 on the long-bar stocks, 7 on the
+     21 EMA; the 21 EMA ones were mixed after (SMCI Sep 1 +6% in 5 sessions, TRU Aug 11 -1%, DELL Oct 13 -19%, PGNY Aug 4 -16%):
+     to look at with the user. APPN Sep 28-29 2026 (the original example) not re-checked. `--regress` still 209 lines.
+  None of the new alerts (start day, 21 EMA reclaim, falling range, the warning block) has run on live prices: first session
+  Fri Nov 13.
 - **DROPPED (see 5 above; kept for the record): the 8:45 task's instructions.** update_trigger from this session was refused ("a
   routine's instructions can be changed only from the conversation the routine posts into"). Until then the event card shows
   without the news line ("why"). The text to paste into the 8:45 conversation was given to the user in this session (4
