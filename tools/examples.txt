@@ -26,3 +26,5 @@ AXTI 2026-02-20 2026-06-05 pick     # "beautiful chart": Feb 20 gap up + breakou
 APPN 2026-08-07 2026-11-10 launch   # Sep 28 2026 the 2nd higher low in the base (the 1st low Sep 10 held the 50 EMA), Oct 15 breakout, the flag in November
 ALAB 2026-09-21 2026-10-14 launch   # tradable to Oct 6 (breakout); Oct 8 2026 the breakout failed: not tradable from then on
 NBIS 2026-08-12 2026-08-26 launch   # would not trade: the Aug 12 2026 launch did not hold (Aug 20); Aug 25 "50 EMA undercut & reclaim" is the engine's, assumed wrong
+AMD 2026-04-24 2026-09-10 launch    # the list ON / OFF (the user, Nov 13 2026): May 19 a regular pullback (stays on); the Jun 30 high stalled: warning Jul 1, off Jul 7 ("good take off"); Sep 8 the new trend start after a reset (back on)
+AMD 2026-09-21 2026-10-14 launch    # Oct 6 stalled 3% over Sep 25's high: END OF CYCLE WARNING Oct 8, off the list Oct 12 on the close under the 21 EMA
