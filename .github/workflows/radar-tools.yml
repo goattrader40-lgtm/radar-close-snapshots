@@ -147,13 +147,13 @@ jobs:
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
             git show origin/radar-data:earnings.json > /tmp/rd/earnings_prev.json 2>/dev/null || echo '{}' > /tmp/rd/earnings_prev.json
-            python3 radar/earnings.py /tmp/rd/stocks.json /tmp/rd/earnings_prev.json /tmp/earnings.json && python3 radar/publish.py "earnings (by hand)" /tmp/earnings.json
+            (git show origin/radar-data:pmnews.json > /tmp/rd/pmnews.json 2>/dev/null || echo '{}' > /tmp/rd/pmnews.json) && python3 radar/earnings.py /tmp/rd/stocks.json /tmp/rd/earnings_prev.json /tmp/earnings.json /tmp/rd/pmnews.json && python3 radar/publish.py "earnings (by hand)" /tmp/earnings.json
           fi
           if [ "${{ inputs.cmd }}" = "earntest" ]; then   # a test branch's Earnings build -> radar-data earnings_test.json (the portal doesn't read it)
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
             git show origin/radar-data:earnings.json > /tmp/rd/earnings_prev.json 2>/dev/null || echo '{}' > /tmp/rd/earnings_prev.json
-            python3 radar/earnings.py /tmp/rd/stocks.json /tmp/rd/earnings_prev.json /tmp/earnings_test.json && python3 radar/publish.py "earnings test build" /tmp/earnings_test.json
+            (git show origin/radar-data:pmnews.json > /tmp/rd/pmnews.json 2>/dev/null || echo '{}' > /tmp/rd/pmnews.json) && python3 radar/earnings.py /tmp/rd/stocks.json /tmp/rd/earnings_prev.json /tmp/earnings_test.json /tmp/rd/pmnews.json && python3 radar/publish.py "earnings test build" /tmp/earnings_test.json
           fi
           if [ "${{ inputs.cmd }}" = "codegrade" ]; then   # the code grader's backtest (test/codegrade) -> radar-data probe_codegrade.json
             pip install --quiet numba numpy pandas

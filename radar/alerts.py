@@ -1021,10 +1021,10 @@ def live_trend(st, p):
     t = st.get("tr")
     if not t or len(t) < 6 or any(x is None for x in t) or not p:
         return st.get("trend") or "—"
-    e5, e10, e21, e50, e50b, c = t
+    e5, e10, e21, e50, _, c = t
     mv = lambda e, n: e + (2 / (n + 1)) * (p - e)
     E5, E10, E21, E50 = mv(e5, 5), mv(e10, 10), mv(e21, 21), mv(e50, 50)
-    base, stack = E10 > E21 > E50 and E50 > e50b, E10 > E21 > E50
+    base, stack = E10 > E21 > E50 and E50 > e50, E10 > E21 > E50     # the 50 up on the day: vs the last close's (Nov 12 2026)
     lab = ("Negative" if p < E21 else "" if not base else "Reclaim" if c < e21 else "Turn up" if E5 > E10 and e5 <= e10
            else "Up" if stack and p > E50 and E10 > e10 and E21 > e21 else "Resting" if stack else "")
     return lab or "—"

@@ -428,6 +428,8 @@ GR_SAME = 0.75      # a theme and an industry group sharing three-quarters+ of t
                     # one pack: one name (the theme's) and one rank (Drug Distributors / Medical Distribution, Cruise Lines /
                     # Travel Services, Quantum Computing, Memory & Storage, Cybersecurity ...; Neoclouds, Optics & CPO, Gold
                     # Miners share less: both kept)
+GR_WIDE = ("Aerospace & Defense",)   # broad industries also shown whole, as one loose list "<industry> (all)" (see group_rank)
+GR_WIDE_TAG = " (all)"
 GR_HOT, GR_HOT_BREADTH = 90, 60   # "Heating up": heat 90+ (the top 10% of its kind on the last week) with 60%+ of its stocks up
 
 
@@ -601,6 +603,41 @@ def group_rank(A, cal, stocks_rows, back=5):
                                     hot=bool(heat.get(names[j], 0) >= GR_HOT and (br.get(names[j]) or 0) >= GR_HOT_BREADTH),
                                     median_1m=fnum(m[0], 1), median_3m=fnum(m[1], 1), median_6m=fnum(m[2], 1),
                                     order=" ".join(order.get(names[j], []))))
+    # wide lists (the user, Nov 12 2026: aerospace & defense stocks "popping up, not even in your theme / industry list": 40 of
+    # the 60 have no theme and 45 no tight group, and they do not move together: KRMN 0.45, AVEX 0.41, BETA 0.32 vs the 0.6 a
+    # pack needs): the whole broad industry as one loose list, by business. Placed among the industry groups by the same
+    # medians and heat, WITHOUT entering their ranking (no group's rank, tier or a stock's stars change) and with no tier
+    ind_rows = [r for r in out["rows"] if r["kind"] == "ind"]
+    for wname in GR_WIDE:
+        allm = [r["symbol"] for r in stocks_rows if r.get("industry") == wname and r["symbol"] in A]
+        tr_ = [s for s in allm if A[s].liquid[-1]]
+        ms = [s for s in (tr_ if len(tr_) >= GR_TIER_MIN else allm) if s in ret and cols[0] in ret[s]]
+        if len(ms) < 3 or not ind_rows:
+            continue
+        X = np.array([ret[s][cols[0]] for s in ms], dtype=float).reshape(len(ms), 4)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            m3 = np.nanmedian(X[:, :3], axis=0)
+            wk_ = X[:, 3][~np.isnan(X[:, 3])]
+        keys = ("median_1m", "median_3m", "median_6m")
+        share = lambda v, k: float(np.mean([v > (r[k] if r.get(k) is not None else -1e9) for r in ind_rows]))
+        comp = lambda vals: float(np.mean([share(v, k) for v, k in zip(vals, keys)]))
+        mine = comp(m3)
+        rank = 1 + sum(1 for r in ind_rows if comp([r.get(k) if r.get(k) is not None else -1e9 for k in keys]) > mine)
+        week = float(np.median(wk_)) if wk_.size >= 3 else None
+        breadth = 100 * float((wk_ > 0).mean()) if wk_.size >= 3 else None
+        hrow = [r for r in ind_rows if r.get("heat") is not None and r.get("week") is not None and r.get("breadth") is not None]
+        heat = None
+        if week is not None and hrow:
+            hs = lambda v, k: float(np.mean([v > r[k] for r in hrow]))
+            mh = (hs(week, "week") + hs(breadth, "breadth")) / 2
+            heat = int(min(99, max(1, math.floor(100 * float(np.mean([mh > (hs(r["week"], "week") + hs(r["breadth"], "breadth")) / 2 for r in hrow]))))))
+        order = [s for _, s in sorted(((X[i, 0] if not np.isnan(X[i, 0]) else -1e9, ms[i]) for i in range(len(ms))), reverse=True)]
+        out["rows"].append(dict(group=wname + GR_WIDE_TAG, kind="ind", rank=rank, of=len(ind_rows), pct=round(100 * mine, 1), loose=True, tier="",
+                                rank_before=None, members=len(allm), tradable=len(tr_), thin=False, same_as=None, wide=wname,
+                                heat=heat, week=fnum(week, 1), breadth=fnum(breadth, 0),
+                                hot=bool((heat or 0) >= GR_HOT and (breadth or 0) >= GR_HOT_BREADTH),
+                                median_1m=fnum(m3[0], 1), median_3m=fnum(m3[1], 1), median_6m=fnum(m3[2], 1), order=" ".join(order)))
     out["rows"].sort(key=lambda r: (r["kind"], r["rank"]))
     return out
 

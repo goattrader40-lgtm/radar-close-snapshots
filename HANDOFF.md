@@ -49,187 +49,202 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Status at the end of the session "Radar: full portal review, build (Nov 11)" (Wed Nov 11 2026 afternoon - evening; session_01PkbDajNX1kVmKBSagSkYW9)
+## Status at the end of the session "Radar: watchlist/launches scanner tab (Nov 12)" (Thu Nov 12 2026 evening ET; session_01PkbDahfhKW69XD7xkjXjNm)
 
-**Read first, before anything else: tools/chart_examples.txt and tools/user_answers_2026-11-10.txt ON THE BRANCH
-test/cleanlaunch** (`git show origin/test/cleanlaunch:tools/chart_examples.txt`): the user's 51 marked buy days, and from
-this session their clean charts (DOCU, AXTI Feb 20 - May, COHR's buy days), their 7 would-not-trade charts (XMTR, NBIS, NVDA,
-ALAB, MU, COHR May-June, CAI before Aug 6) and their answers, in their words, each with the engine's read. Never ask again
-for what those two files answer. tools/blindtest/answers2_2026-11-11.txt: the blind test 2 marks (22 right, 17 wrong, 3
-unsure; launch days 7 / 7; 13 of 18 charts "not clean").
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~6:05 PM ET, branch test/listscan, commit 946beca): Scan your lists on the
+  Pre-market scanner and on Gainers.** The user: "can i have a scanner that screens my watchlist or launches whatever i
+  choose it automatically scans those tickers"; "all these under premarket scanner gap up, i go choose one of those, instead
+  of scanning market it would scan my chosen watchlist very simple"; "for live market we have gainers tab ... where i choose
+  my watchlist it only tracks those". docs/index.html: a **Scan:** button row under Gap ups / Gap downs (#pml-scan) and under
+  Gainers / Losers (#g-scan): Whole market (the default) · Launches (launch.json launches + ema50_undercut, minus the ✕
+  ones) · My picks (pickedNow: the followed stocks) · Launch laggards · 3-SETUPS (minus its ✕) · 2-POOL · 1-UPDAY · 1-EP/GAP
+  · TREND (trendSrc), each with its count (scanSet(); the choice in localStorage 'radar-scan-list' {pm, g}). A list = only
+  its names; the boxes and + Filter apply inside it; a line says the names, how many traded pre-market, how many pass.
+  Unchanged: S.gpass / S.gset (the gainer dot on Groups, the count at the top), the theme event card, the graded gappers and
+  their rules box, alerts, Launches. Rules workbook: one row in P3, one in G1.
+  Decided with the user: a Scan choice on the existing scanners, not a new card; no rows for names without a pre-market
+  trade ("no need"); no pop-up for a list stock gapping over its buy point (offered, not wanted).
+  Tested (Playwright, the Nov 12 9:25 scan and the Nov 12 close, vs main's page): Whole market identical (gap ups 50, gap
+  downs 189, gainers 9, losers 63, the chips and theme tables); every list's rows on that list; the counts = the Watchlist
+  tab's (3-SETUPS 100, 2-POOL 257, 1-UPDAY 144, 1-EP/GAP 52, TREND 210), Launches 149 (116 traded pre-market; gap ups with the
+  default boxes: AMD XERS PRGO ZYME VRDN CNC APPN PACS DLTR); remembered after a reload; phone 390 px no sideways scroll; no
+  page errors. Page only: no `--regress`, no 2-year check, no Launches rebuild.
+  Good to know: the pre-market scan (radar/pmlive.py) covers stocks with $300M+ market cap and 300K+ shares a day; the default
+  boxes (0.5-5% change, ADR 4%+ ...) still screen the list, so a list stock gapping 8% is hidden until the box is widened.
+- **Test only**: nothing (test/listscan is merged).
+- **First check Fri Nov 13**: the user's first morning with Scan (any feedback on which list / filters they use).
 
-- **Nothing went live in this session.** Everything is on **`test/cleanlaunch`** (the chart-reading code as of 1096495; later commits are examples and handoff only). It has main up to
-  1dd16e4; main moved on since (the Earnings calendar's Yahoo fallback, c3ebfb1: it touched radar/theme_adds.json and
-  rules/make_rules.py, which this branch changed too). **Before any go live: merge main in, re-run
-  `python3 rules/make_rules.py`, `--regress`, and re-test the page.** tools/expected_reads.txt was NOT rewritten (the
-  replay differs on ~100 lines by design; the user agreed some of them, not all: see "the proof" below).
-- **1. Pre-market: theme event line + theme bounce list** (the user's Nov 11 "I accept your proposal"; built, tested on
-  the Nov 11 9:25 scan). radar/theme_event.py: an AREA (a theme category of themes.json, else the sector) has an event when
-  8+ of its tradable stocks (market cap $700M+, 700K+ shares and $20M+ a day, ADR 3%+; no 50 EMA / 52-week-low rule) and
-  30%+ of them move 5%+ the same way; pmlive.py puts `events` into premarket_live.json (day.py passes themes.json);
-  premarket_build.py prepare writes theme_event.json, finish takes an optional 3rd file (event_news.json: {"why",
-  "sources"}) -> pm_event.json. The page (docs/index.html): the card "Theme event" at the top of the Pre-market tab and
-  the bounce list under it (Pre vs 21 / 50 / 200, Close vs 21 / 50; "✔ over both" first). Nov 11: 93 stocks, AI & Semis
-  63 of 83, AI Infrastructure 30 of 62; 7 back over both EMAs (ENTG, AVGO, PLAB, AMD, ANET, WOLF, LSCC). Grades and the
-  graded list unchanged. **At go live the 8:45 task (trig_01EhkhyMeC5yC4H4sFxsqUVQ) needs one more step**: read
-  /root/pm/out/theme_event.json; when it is not empty, search once for the market / sector news behind it, write
-  /root/pm/event_news.json, pass it as the 3rd argument of `finish`, and publish /root/pm/out/pm_event.json too.
-- **2. Chart reading, built in scanner/launch.py** (settings in `L`, each with the user's example in the comment):
-  - **Launch attempt**: a launch-size day closing under its 1-month high (RPD Sep 14, ATRC Jul 24 2026), or within half an
-    ADR under a 3- / 6-month high (RHI Oct 23 2026, AEHR Feb 11 2026: the user, "attempt / launch"); not when it closed
-    over every candle body of 6 months and within 1% of the wick high (**GMAB Aug 7 2026 stays a launch**: "gap out of
-    base breakout and launch and episodic pivot... popped out of consolidation line"). The close over the high reads
-    "confirms the launch attempt" (AEHR Feb 24). **AEHR Jan 16 2026 is NOT an attempt** (the user: "follow through day,
-    nothing fundamentally changed"); the engine still reads it as one.
-  - **List rules**: off after 2 closes under the 50 EMA (was 3), or while neither the 21 nor the 50 EMA is higher than 5
-    sessions before, or the day a base breakout fails; back on the day it breaks out (base, flag, follow-through, falling
-    range, launch-size day, 50 EMA undercut & reclaim) closing over the 21 and 50 EMA: "BACK ON THE LIST" (AMD Apr 8 /
-    16, INTC Apr 1, MU Apr 22 2026; AXTI Feb 20 2026). Not for picks. launch.json gets `off_watch`. **The list grows: 97
-    -> 135 rows on the Oct 23 data** (41 came back, 3 left): the user asked what it means, was told, has not decided.
-  - **Long bases** named by their length ("cleared its 19-month base", "a 21-month high"); **falling range** 23-90
-    sessions broken over the 21 & 50 EMA on 1x+ volume or a full-ADR day, not in the 5 sessions after a launch (INTC Apr 1,
-    AMD Apr 8, COHR Apr 8 2026; NBIS Aug 14 gone); **failed breakout** (back under the top and the breakout day's low
-    within 2 sessions: SNDK Mar 20, PGY Aug 28, ALAB Oct 8 2026); "breakout with caution" -> **"breakout attempt"**; the
-    **flag line** redrawn by a poke under 0.75 ADR (PGY's flag is Aug 21, not Aug 13); **50 EMA undercut & reclaim after
-    ONE close under** (the user: "change it, one close is ok"; COHR Mar 31 2026; the 21 EMA one stays at 2: ANF Oct 1
-    kept, Claude's view, the user asked "what you think?"); **the hold** in the 10 sessions after a launch / attempt
-    ("Holding after the launch": AEHR Feb 12-19, ALAB Sep 24 - Oct 2 2026) and "the launch did not hold" (first close
-    under the 21 EMA: NBIS Aug 20 2026).
-  - tools/chart_check.py: the 51 chart buy days, **29 -> 34 named and on the list**. radar/alerts.py and the alert texts
-    are untouched (they still say "with caution").
-- **3. Themes, built** (launch.py group_rank + the page): ranked on **tradable stocks, 4+ for a tier** (28 of 99 themes,
-  53 of 217 groups; tiers 10 -> 7 and 20 -> 9); **Heating up** column (heat 1-99 = the group's median 1-week move + the
-  share up on the week; 🔥 = 90+ with 60%+ up) on Themes and Industry groups, "Heating up" and "RS 1W-1M" in the column
-  list; **one pack** where a theme and an industry group share 75%+ (15 pairs: the group shows the theme's name and
-  rank); **homes**: of 343 pack-less tradable stocks 25 track a pack at 0.6+, 11 added by hand where the business matches
-  (theme_adds.json: XNCR KYMR PTCT BAX HGV OSPN STEP BRKR; industry_groups.json: PDFS, KBR, AMTM, STEP); no new pack
-  found among the rest.
-- **The proof so far**: `--regress`: no agreed read lost except by design (AEHR Feb 11 -> attempt, ATRC Oct 30 off on a
-  failed breakout, wording); new unjudged reads: VEEV Sep 30, APPN Oct 8 2026 (falling range), SMCI Aug 10 2023 and NBIS
-  Aug 25 2026 (50 EMA reclaim after one close; NBIS is a would-not-trade chart). **The 2-year check** (the user: "that's
-  fine"; run on GitHub and, like for like, in the session: the branch this morning vs with these rules, 2,200 launches):
-  all buy points 5,037 -> 5,086, ran 20%+ 26% / 26%, failed 43% / 43%; flags 689 -> 674 (25 -> 26% ran); the new falling
-  range 104: 31% ran, 47% failed, median -3.7%. It stops at the 2nd close under the 50 EMA: the way back is not measured.
-  scanner/probe_catalyst.py now counts "Bull flag / Bull pennant breakout" again (its flag rows were empty since Nov 1).
-  All 8 tabs load with no page error (the Oct 23 launch file and the Nov 11 scan).
-- **Tested and NOT built** (don't repeat): a follow-through-day rule (3 versions: best caught 4 of 6, hit 6 of 36 liked
-  launches; the days it marked ran 20%+ MORE often, 34% vs 26%); "launch failed" on a close under the gap day's open
-  (the user: "no... it would possibly pull back, test its base, if it holds then it's ok": AEHR Feb 12); "choppy" by
-  crossings of the 21 EMA (clean charts cross as often); "off on a close under the 10 and 21 EMA" (hits AEHR Mar 26, ZS
-  Oct 16, GMAB Sep 10, CAI Oct 1 / 6 before agreed buys).
-- **The user's new rules of thumb, not in the engine**: a launch must change the stock's character, not continue a move
-  (SLG Jun 9, CNH Sep 2, LITE Aug 12, AEHR Jan 16; the AI stocks: lows Mar 9 / Mar 30 2026, the character-change day Apr
-  8, then follow-through days); no launch under a falling line of lower highs (RMBS Jun 18, ALAB Sep 4); another base's
-  high above is resistance (ALHC Jun 26); **CAI's launch is Aug 6 2026 even under the 200 SMA** (the engine: Aug 7);
-  a strong day after earnings on under 1.5x volume can start it (COHR Feb 6); **the dying trend**: each new high closer
-  to the last, then the EMAs roll over (COHR +21.5 / +13.2 / +6.5%, AXTI +48.7 / +6.8%); **a gap over the 21 EMA is a
-  go even in a downtrend, as a short swing** (AXTI Jul 31, Sep 17 2026: 2-week runs); a trend that lasts needs a higher
-  low, then a higher high; the day the uptrend breaks ends the trade (ALAB, MU Oct 8 2026).
-- **Built at the end (the user's go, Nov 11 2026, APPN: "you can add this as a buy point in base, very strong one")**: **the
-  2nd higher low in the base** (launch.py hl2_on, settings hl2_*): after a drop of 2.5+ ADRs in the base down to the 50 EMA
-  that holds (every close since over it) and a bounce of 1.25+ ADRs, 5+ sessions later the low is at or over the 1st low,
-  tests the 50 EMA and the day closes back over it in the upper half, the 50 EMA rising; once per base. APPN Sep 28 2026
-  (the 1st low 33.28 Sep 10, the 2nd 33.35, closed 35.02 over the 50 EMA 34.54): reads. It also reads COHR Mar 17 2026
-  (not judged by the user). No agreed read changed. Also from this chart: APPN's launch is Aug 6 2026 for the user (Aug 7
-  too: volume + gap); the engine says Aug 7.
-- **Done at the end**: the `long` fetch (161 symbols to Nov 11, with DOCU COHR AXTI ALAB NBIS); tools/examples.txt has DOCU,
-  COHR (pick from Feb 6), AXTI (pick from Feb 20), APPN (to Nov 10), ALAB, NBIS; **tools/expected_reads.txt still not
-  rewritten** (`--regress` lists 188 differing lines: today's rule changes plus the 6 new examples). DOCU Nov 11: the
-  engine has its flag line 81.16 as the next buy point (matches the user's chart).
-- **Asked of the user (they will "compile and provide all at once")**: go live or not; the 135-row list (keep the way
-  back, or only on a base breakout / launch-size day); 3-5 more charts each of: dying trends (and ones that kept going),
-  follow-through days, launches under the 200 SMA, launches on light volume, gap-over-the-21-EMA swings, choppy charts;
-  VEEV Sep 30 and APPN Oct 8 2026 right or wrong; NBIS Aug 25 2026 (assumed wrong).
-- **First things next session**: the user's new charts (see "Asked of the user"); for each, save it in their words in
-  tools/chart_examples.txt, replay it, say where the engine matches. A `long` run replaces the file: pass every symbol again.
-- **Good to know**: a session can't run probe_catalyst.py whole (no Alpaca keys: it hangs on the news step); its
-  buy_points() alone runs in ~25 minutes on history/bars_2y.json.gz. Playwright needs `proxy: {server: HTTPS_PROXY, bypass:
-  'localhost,127.0.0.1'}` to load the local page. The engine needs `pip install numba numpy pandas`; history/bars_2y.json.gz
-  ends Oct 23; sessions before Oct 26 can't be reached.
+## Status at the end of the session "Radar: Earnings reader fix + pre-market grading (Nov 4)" (Nov 4 - Thu Nov 12 2026; session_01PkbDakDe1EUNP5wQZf4wMH)
 
-## Status of the session "Radar: pre-market scanner vs EMA columns (Nov 11)" (Wed Nov 11 2026 morning; session_01PkbDajamht2fhC31vMGzcy)
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~1:05 PM ET, branch test/earnrev, merge 7037cc8): three Earnings tab fixes.**
+  The user (Nov 12): "WHY REV GROWTH MISSING FROM AVEX?" ... "it could have compared last q at least"; NBIS empty at 8:46
+  AM; "we had 805 835 855 905 didnt we" (the tab's updates were on GitHub's own timer).
+  1. **Revenue from Yahoo's earnings chart** (radar/earnings.py Y.summary(chart=True), per()): when neither the SEC release
+     nor Yahoo's revenue history has the new quarter, the earnings chart's newest quarter is used, only when the chart's
+     quarter before it equals last quarter's saved revenue (rev_prev, within 0.5%). rev_src "Yahoo (earnings chart)".
+     Nov 12 13:04 build: NBIS $980.8M (+8.1% beat, q/q +68.4%, +571% y/y), ABSI $0.30M (-47.7%, q/q -4.4%, -19.6% y/y),
+     QNT $9.1M (q/q +13.2%), FRVO $0.1M (q/q +2.7%). AVEX was already filled by the other session's news-feed reading
+     (late_reports, "news headline": $189.7M, q/q -6.0%). 25 reported rows still have no revenue (mostly drug developers).
+  2. **Guidance from the headline when the release has none** (headline_guide, step 4b): a report whose SEC release has no
+     guidance in it, or one out with no release read when the news feed gave none, takes it from pmnews.json's earnings
+     headline (Benzinga: Raises / Lowers / Affirms / Narrows / Sees ... Guidance; a from-to range read by its numbers).
+     guide.src = "headline"; the page shows "· from the headline". NBIS: "Affirms FY2026 Sales Guidance of $3.0-3.4B vs
+     $3.372B Est" -> Reaffirmed, -5.1% vs street (its 6-K, read at 9:22 AM, had no guidance). It overlaps the other
+     session's hl_read / late_reports (same day, merged at da7d0aa): theirs reads reports with NO filing from the whole news
+     feed; this one fills a release without guidance. Two headline parsers now (hl_read and headline_guide): could be one.
+  3. **The day job starts the Earnings update at 7:05, 7:35, 8:35, 8:50 and 9:05 AM ET** (the user's times; radar/day.py
+     er_started; GitHub's own schedule stays as a backup; Nov 5-12 it ran 1-2 real morning builds a day, Nov 12 only 8:12).
+     **First check Fri Nov 13**: earnings.yml workflow_dispatch runs at those times and earnings.json built_at follows.
+  Tested: radar-tools `earntest` on main vs the branch (386 rows, 0 errors, 5 rows changed as above); the page with the
+  new file (AVEX / NBIS rows, no page errors); the slot logic simulated (a job starting at 8:12 runs 8:12, 8:35, 8:50, 9:05).
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~4:05 PM ET, branch test/trend50, merge 90ce403): the Trend base's 50 EMA
+  "rising" = higher than the day before** (the user: "50 ema rising menain is this today higher than yesterday not 5 days
+  ago"; was 5 sessions ago since Nov 3). radar/pipeline.py trend_at (e50[i] > e50[i-1]); stocks.json tr[4] = the 50 EMA the
+  session before (was 4 sessions before); live (docs/index.html trendOf, radar/alerts.py live_trend): today's 50 EMA at the
+  live price vs the last close's. Unchanged: the 10 / 21 "rising" (already vs the day before), the list rules in
+  scanner/launch.py (the 21 / 50 EMA vs 5 sessions before), the code grader's STAGE (SLOPE = 5). It changes the Trend column
+  everywhere, the TREND list and its triggers, and the ★ stars (★ = Trend Up at the last close): their tested +0.33R was
+  measured on the old rule; a 2-year check of the stars was offered, not asked for. Tonight's day job loaded the old code:
+  radar-day `daily` and picks.yml were re-run after it on main. **First check**: Nov 13 stocks.json trend / tr[4] from the
+  new rule. The comparison (radar-tools groupsdry, Nov 12 close): 7 of 3,327 labels changed, all from none to positive (TSLA,
+  CDNS, RAL, MSGE, WS -> Up; NSC -> Reclaim; SPH -> Turn up); the TREND list 227 -> 228 (RAL joins). Explained to the user after
+  go live: with a one-day test an EMA rises exactly when the price is over yesterday's EMA, so on the Trend label (price over
+  the 21 EMA, which is over the 50) the 50 EMA check no longer filters anything. **The user is thinking about it** (also
+  offered: 'higher than yesterday 2 days in a row'). **Also open, the user to decide**: the code grader's STAGE (codegrade.py
+  SLOPE = 5: Stage 2 needs the 21 and 50 EMA higher than 5 sessions ago) to one day or not.
+- **Report only, no change (Nov 11 one-week check, code grade vs Claude, Nov 5-11 gap-ups)**: code A 3 names, avg +13.5%
+  to Nov 11 (XERS +35.9%, MGNI +12.3%, APPN -7.8%); code B (5) no better than C (16), both +2.8%; Claude A +7.2% > B +3.5% > C
+  +0.9%, Claude's B held 5/9 vs code B 1/5. Where both gave letters and differed (6): code right 3 (PTON, U, TLN), Claude 2
+  (EPAM, IMVT), 1 mixed (VCEL). The bigger gap is coverage: the code's best (XERS, MGNI, AZTA) were never on Claude's list;
+  Claude's best (FROG A +15.6%, TMDX B +16.6%) were cut by the code's filters. Stars: no edge yet (10 names). The Nov 18
+  check (5:40 PM ET, scheduled in this session) is still to run; outcomes came from close/latest.json's git history.
+- Answered, no change (Nov 12 morning): FIGR's news was that morning's Q3 release (SEC 6:47 AM); "Pre-mkt gap" is the first
+  pre-market trade vs the close (TradingView's definition), so a stock with news after 4 AM shows a small gap and a big change
+  (FIGR +0.83% vs +9.18%); offered to rename / hide it, not answered.
+- **Test only**: nothing (test/earnrev is merged). Earlier this session (Nov 4-5, all live then): the Alerts tab and its 7
+  boxes, the pre-market grading by 9:05 (Claude and code side by side), RS / group / Trend on every alert, the end-of-day
+  held / didn't hold lines: see the archived sections of Nov 4-5.
+- **Open, from this session** (each needs the user's go): one headline parser instead of two (hl_read / headline_guide);
+  FIGR's buyback headline missing from its News line (seen Nov 12, not fixed); HUBS Nov 12 labelled "Earnings (headline)"
+  for a CEO change + reaffirmed guidance (its report was Nov 4; not fixed); the "Pre-mkt gap" rename / hide (asked, no
+  answer). **First things to check Fri Nov 13**: the day job's earnings.yml runs at 7:05 / 7:35 / 8:35 / 8:50 / 9:05 and
+  earnings.json's built_at; the Nov 18 code-vs-Claude check-in (5:40 PM ET).
 
-- **Live (the user's "test it and go live", branch test/pmvs21, merge f7da91b): the pre-market comparisons carry
-  their own names, and the 21 EMA is there.** The user (Nov 11, a screenshot of the scanner at 8:40): "this numbers are
-  yesterdays closing numbers comparison not premarket"; "i need pre mkt vs 21 premkt vs50 and pre mkt vs200". Found:
-  vs 200D / vs 50 EMA on the scanner were already on the pre-market price; the "vs 21 EMA" the user had added with
-  + add is a catalog column on the regular-hours price (yesterday's close before the open), and its 21 EMA came from
-  launch.json's watch list (one day old that morning, see below). docs/index.html only:
-  1. Pre-market scanner (pml-table): **Pre-mkt vs 21 EMA** (new, key vs_21e), **Pre-mkt vs 50 EMA** (was vs 50 EMA),
-     **Pre-mkt vs 200 SMA** (was vs 200D), in that order after ADR%; the same keys (vs_50e, vs_200), so saved layouts
-     and filters keep working; the new column lands after ADR% in a saved layout. The 21 EMA = stocks.json tr[2]
-     (e21Of: the last close's, 3,211 of 3,313 stocks). INTC Nov 11 9:15: $61.45 = -19.9% / -31.4% / -29.5%.
-  2. Graded gappers: the two headers renamed the same way (the numbers as before). The Earnings tab's vs 200D /
-     vs 50 EMA were left as they are (its layout keys come from the header text: a rename would reset a saved layout).
-  3. Column list / + Filter (every table): new "Pre-mkt vs 21 EMA / 50 EMA / 200 SMA" in the Pre-market group
-     (pm_vs21, pm_vs50, pm_vs200: today's scan only); **vs 21 EMA** (vs21e) now reads stocks.json tr[2] first, so it
-     works for every stock (Gainers too) and is never a day old; the descriptions of vs 21 EMA / vs 50 EMA / vs 200D
-     say: regular-hours price, live during the session, yesterday's close before the open.
-  **Market hours** (the user: "make sure during market hours i would have filters to compare market hr price to
-  21ema/50 ema and 200 sma"): + Filter -> vs 21 EMA / vs 50 EMA / vs 200D, "≥ 0" = over it, on Gainers, Watchlist,
-  Launches, Earnings (the price is live in the session; the averages are the last close's). Tested with Playwright on
-  the 9:15 scan against main's page: the same 71 rows, no page errors, a saved layout kept; the three filters on
-  Gainers / Watchlist / Launches (16 / 51 / 122 rows). Rules workbook: a row in "P3 Pre-market scanner". No scanner
-  code touched: no `--regress`, no Launches rebuild.
-- **Not offered tick box**: "Above 21-day EMA" next to the scanner's two tick boxes was offered, not answered (the
-  + Filter on Pre-mkt vs 21 EMA ≥ 0 does the same).
-- **Live (the user's "go live", Nov 11 ~10:15 AM ET, branch test/scanfallback, merge 8f4bd6a): the evening scan no
-  longer dies when Nasdaq refuses its stock list.** The scan had failed since Tue Nov 10 4:34 PM ET (scanner.yml runs
-  38-41: 4:34 PM, 5:16 PM and both early-morning safety runs): scanner/fetch.py symbols() got "HTTP Error 403:
-  Forbidden" from Nasdaq's screener (api.nasdaq.com), so setups/latest.json and setups/launch.json stayed at Nov 9
-  (the user: "big problem"). Now fallback_symbols(): when an exchange's list fails 3 times, market cap and exchange
-  come from radar-data stocks.json (the day job's file: 2,744 stocks over $700M on Nov 11; all 159 Launches and 298
-  Watchlist names in it, 1 of 723 launch-watch names missing, CSIQ); the log prints "FALLBACK LIST". Tested here on
-  the fallback step only (Yahoo can't be reached from a session). picks.yml (Follow picks, safe in market hours:
-  launch.py drops the unfinished day) run at 10:15 AM rebuilt Launches as of the Nov 10 close (saved 10:19, commit 8dbb707: 153 launches, 745 on the
-  launch watch list, 1 new launch Nov 10: EMBJ; not checked whether Nasdaq answered or the fallback was used). The Watchlist lists (run.py) can't be rebuilt in market hours (run.py would
-  take today's unfinished day as a close): the 4:25 PM scan processes Nov 10 and Nov 11 together. The job logs can be
-  read from a session with the GitHub tools (get_job_logs). Why Nasdaq: its screener is the scan's only source of
-  the full US stock list with market cap and exchange (Yahoo gives the bars).
-- **Live (the user's "go live", Nov 11 ~10:40 AM ET, branch test/livema): built on the user's "test it", then:
-  the pre-market columns renamed again, "Pre vs 21", "Pre vs 50", "Pre vs 200" (the user: "its too long"; scanner,
-  Graded gappers, the column list; the Pre-mkt names above are gone). The scanner's own vs PDH is the pre-market
-  price vs yesterday's high: kept as it is. First check after the Nov 11 close: stocks.json has c200 (the close
-  snapshot and the nightly build were changed blind) and vs 200 SMA moves in the Nov 12 session.** (Nov 11: "vs 200d-change to sma. and during
-  hours it has to use dynamic one meaning todays 21ema already different than yesterdays same for 50ema and 200 sma"):
-  "vs 200D" renamed "vs 200 SMA" (Gainers, Earnings, the column list); during the session vs 21 EMA / vs 50 EMA /
-  vs 200 SMA use today's moving averages: applyLive puts ema21_now / ema50_now / sma200_now on the live rows (EMA =
-  the last close's + 2/(n+1) x (price - it), as trendOf; the 200 SMA + (price - c200) / 200, c200 = the close that
-  drops out, added to snapshot.yml and pipeline.py: in stocks.json from the first close after go live, until then the
-  200 SMA stays the last close's); maOf(sym) serves the column list / + Filter, Gainers' columns and its Above 200 SMA
-  / Above 50 EMA boxes, the Watchlist's vs 21 EMA / vs 50 EMA. Not changed: alerts, Launches, the Trend label, the
-  Earnings tab's numbers, the ETF columns. Tested live at 10:10 AM against main's page (MU $793.10: vs 50 EMA -13.0%
-  -> -12.5%; no page errors; row counts the same). All tabs load with no page errors after merging main.
+## Status of the session "Radar: full portal review, build continued (Nov 12)" (Wed Nov 11 2026 evening - night ET; session_01PkbDajtNcuGe22aVKWcF77)
 
-- **Live (the user's "go live", Nov 11 midday, branch test/pmthemes): the Pre-market scanner's group gaps and Themes
-  column.** The user: "when i click those themes it takes me to themes tab, when i click i want it in same table just
-  show me those tickers"; "i know for fact that klic, simo belongs to semi ecosystem" (their Themes cell was empty);
-  "do b, next time no theme show industry group your fix a". docs/index.html drawPmLive: (1) a click on a group-gap
-  chip sets S.pmsel and keeps the table on the stocks that chip counts (the chip dark, a "Showing X: n of N · show
-  all" button; a second click clears; the row chips in the Themes column still open the Groups tab); (2) a stock in no
-  theme shows its industry group in grey (stocks.json group), or its broad industry "· other" when it has no tight
-  group (2,262 of 3,313 stocks have no theme, 1,704 of them no group either), and counts for its group's chip at
-  fit 0.7+; (3) radar/theme_adds.json: KLIC, ASX -> Semi Test & Packaging, SIMO -> Memory & Storage. Tested on the
-  Nov 11 9:25 scan: Cybersecurity (13) -> 13 rows on the same tab, 205 back on show all; 114 theme rows, 91 grey
-  labels, 0 blank; no page errors. **To check after the next theme build**: whether KLIC, ASX, SIMO passed the 0.6
-  tracking test (and the AI & Semis SEMI_FLOOR) and show in their themes; SITM and FSLY got no theme (the user to say).
-  Only the scanner's Themes column has the fallback (not Gainers, Graded gappers or the column list).
+**Read first, as before: tools/chart_examples.txt and tools/user_answers_2026-11-10.txt ON THE BRANCH test/cleanlaunch**: this
+session added about 40 more of the user's charts in their words (the launch is the FIRST day, the rest is follow-through;
+climax tops; dying trends; the walk through the live Launches list of Nov 5-9), each with the engine's read and every test.
 
-- **Live (the user's "go live", Nov 11 ~3:30 PM ET, branch test/earncal, merge 4398262): the Earnings tab no longer
-  goes blank when Nasdaq refuses its calendar.** The user's screenshot (Nov 11): only Monday in the week's tables,
-  "329 of 0 reports". Cause: api.nasdaq.com/api/calendar/earnings answered 403 for every day from about Nov 9 evening
-  (earnings.json errors; the job doesn't fail), and only reports already read were kept. radar/earnings.py: when a
-  day's Nasdaq call fails, Yahoo's v7 quote (earningsTimestamp / earningsTimestampStart) is asked for every stock that
-  passes the rules or is in the file, and a date on a failed day puts it on the calendar; a name already on a failed
-  day stays; the fiscal quarter comes from Yahoo's estimates (yahoo_fq: the 0q quarter if it ended before the report
-  day, else the one before), before / after the open from Yahoo's report time. Test build (radar-tools `earntest`,
-  3:08 PM): 215 reports from Yahoo; Mon 41, Tue 15, Wed 7, Thu 19, Fri 0; all 41 new rows with a quarter and an EPS
-  estimate, the 18 reported ones read (AZTA Strong bullish, CRWV Bullish, EMBJ Somewhat bearish). Limits told to the
-  user: Friday 0 (none passing, or no Yahoo date yet: unknown); Yahoo can move a date to next quarter soon after a
-  report, so a past day can be short. Rules workbook: the two "second source" notes. The first "go live" push was
-  refused by the session's safety check ("fix it" was not taken as a go): the user then said "go live".
-  **Check next session**: the live earnings.json after the dispatch at ~3:30 PM and the 4:50 PM run; whether Nasdaq
-  answers again (then its rows win).
+- **LIVE (the user, Nov 12 2026: "regarding themes, premarket things tasks get them live if you already tested it"; branch
+  test/themespm = main + only these pieces, commit 70eb9fa, pushed ~10:30 PM ET Nov 11; Launches rebuilt 10:31 PM, 12a57fc):**
+  1. **Themes**: themes and industry groups ranked on their TRADABLE stocks, 4+ for a ★ Top / Strong tier (launch.py group_rank:
+     GR_TIER_MIN, `thin`); the **Heating up** column (heat 1-99, 🔥 = 90+ with 60%+ up) on Themes and Industry groups, "Heating
+     up" and "RS 1W-1M" in the column list (launch.json group_rank rows: heat, week, breadth, hot; rs_week); **one pack** where a
+     theme and an industry group share 75%+ (same_as: the group shows the theme's name and rank); the homes (theme_adds.json:
+     XNCR KYMR PTCT BAX HGV OSPN STEP BRKR; industry_groups.json: PDFS, KBR, AMTM, STEP). After the rebuild (Nov 11 close): 4
+     themes and 4 industry groups hold a tier (★ Top: IT Services & Consulting; IT Consulting & Outsourcing, Software: Vertical
+     & Industry, Software: Finance & Banking), 50 themes / 139 groups under 4 tradable stocks, 14 one-pack pairs, Launches 148 +
+     6 laggards as before. **This changes which Launches rows carry ★ Top / Strong** (the tier feeds the stars and the grade).
+  2. **Pre-market: the Theme event card and the theme bounce list** (radar/theme_event.py, pmlive.py, day.py,
+     premarket_build.py, the page). An event shows when the live scan finds one (8+ tradable stocks and 30%+ of an area
+     gapping 5%+ the same way).
+  Checked before the push: `--regress` 0 differences on that branch (no launch read changed), the group rank on 2 years of
+  bars, all 8 tabs with the live data and with the new rank, no page error. Rules workbook: 6 rows (theme event, bounce list,
+  tradable rank, Heating up, one pack, homes).
+- **LIVE (the user's "go live", Thu Nov 12 2026 ~11:40 AM ET, branch test/earnhead, commit f1c1dfd):**
+  1. **Earnings tab: a report that is out without an SEC filing yet** (the user: "see earnings nbis.. its 905 come on": NBIS
+     reported before the open, its 6-K reached the SEC at 9:22 AM, after the last morning run, so the tab said "reports Thu"
+     until the evening). radar/earnings.py takes radar-data pmnews.json as a 4th argument: a row whose report time has passed
+     with no filing read gets `out_headline` (the pre-market news headline: title, at, source, url) and the page shows "Out ·
+     not read yet" + that headline where it said "reports Thu". earnings.yml also runs at 9:10 and 9:20 AM ET (window 7:00 - 9:40 AM); the hourly
+     runs to 2:00 PM were taken out the same day, a34ae1f (the user: "no need to 2pm... i need those by market open after that
+     not interested"). Tested: radar-tools `earntest` on the branch (386 rows, 0 errors, NBIS read), the page
+     with NBIS simulated at 7:15; the first live run 11:41 AM: 0 errors. Not built (offered): reading the release from the
+     wire (GlobeNewswire / Business Wire) when the filing is missing; HBM (no filing, no headline) still reads "reports Thu".
+  2. **+ Filter wording** (the user: "it should be ORH 5min above or not"): the three level filters read "Above the 5-min
+     opening range high (ORH): any / Yes / No", "Above yesterday's high (PDH): ...", "Above the 21-day closing high: ..."
+     (docs/index.html LVLF / LVLO; the saved values stay 'Over it' / 'Under it', so saved filters keep working; the Alerts
+     tab's morning-breakout extra filter too). Tested on Gainers with live data.
+  3. **Earnings tab: read without the SEC filing** (the user: "#18 yes do that", "do this so we get news as in nbis"; branch
+     test/earnwire, 8ff3424, ~12:20 PM ET Nov 12). radar/earnings.py late_reports(): a report that is out (today's or last
+     evening's) with no filing read gets 1. the release on a newswire the news feed links to (use_release, the same reader as
+     the filing) and, when the wire refuses (GlobeNewswire: 403 for AVEX and HBM in the test), 2. the EPS / revenue / revenue
+     guide exactly as the feed's earnings headlines print them (hl_read: "Q4 Adj. EPS $0.43 Beats $0.42 Estimate, Sales
+     $447.062M Beat ..."; "Raises FY2026 Sales Guidance from ... to ... vs ... Est"). Alpaca's news API (earnings.yml now has
+     the ALPACA keys). The read ends "· from the news headlines, no SEC filing yet"; the filing replaces it when it comes.
+     Tested with `earntest`, then the first live run 12:20 PM: 0 errors, HBM "Mixed" (revenue $765.9M, +4.0% vs est; EPS
+     $0.34), AVEX "Bullish" (guidance raised, +11.7% vs street). By code, no Claude.
+  4. **+ Filter: short names and a search that finds them** (the user's "go live", ~1:30 PM ET Nov 12, cf3d250; the user: "i
+     cant even find now 5min over filter", "above orh-5min is better than this so long filter name"). The level filters are
+     now "Above ORH-5min", "Above PDH", "Above 21D closing high" (chip and search list alike: the morning's rename had left
+     the search list on the old name); the + Filter search ignores spaces and hyphens ("5min", "5 min", "5-min") and finds them
+     by "above" / "over" too. Saved values unchanged ('Over it' / 'Under it').
+  5. **Theme event: the reason line by code** (same push; the user: "i dont want this to be done by claude, it has to be done
+     by code"). docs/index.html drawPmEvent: under the event line, "Why (the leaders' own news)": the catalyst and headline
+     of the event's first 4 leaders that have any in pmnews.json (the code news feed), with source, time and link; else "a
+     market or sector move". Tested with a simulated event on the Nov 12 scan. **So the 8:45 task's instructions need NO
+     change** (the "NOT DONE" item below is dropped: the user does not want Claude for it).
+  6. **"Aerospace & Defense (all)", a wide list, and 4 homes** (the user's "go live. aerospace", ~2:20 PM ET Nov 12, 6d97190;
+     Launches rebuilt 2:25 PM). The user: aerospace & defense stocks "popping up, not even in your theme / industry list"
+     (MIR, AVEX). Found: 40 of the 60 have no theme, 45 no tight group, and they do not move together (KRMN 0.45, AVEX 0.41,
+     BETA 0.32, MIR 0.39 vs the 0.6 a pack needs; no pack among them). launch.py group_rank: GR_WIDE = ("Aerospace &
+     Defense",): the whole broad industry as one loose row "Aerospace & Defense (all)" (kind ind, `wide`, no tier), ranked
+     and with a heat on its tradable stocks, placed among the industry groups WITHOUT entering their ranking (checked: every
+     other group's rank, tier and heat identical with and without it; `--regress` 0). The page: the row in the Industry groups
+     table, tag "wide list"; a click lists all 60 stocks. After the rebuild (Nov 11 close): #165 of 217, heat 96 🔥 (week
+     +9.9%, 96% of its 25 tradable stocks up). Homes (0.6+ and the business matches, the homes test on the 340 tradable
+     stocks with no pack): industry_groups.json EGO -> Gold, SIBN -> Medical Devices, NESR -> Oil & Gas Equipment &
+     Services; theme_adds.json BCAX -> Small & Mid-cap Biotech (they join at the next weekly theme build).
+     **The tech check the user asked for** (262 tradable tech stocks: 178 in a theme, 172 in a tight group, 67 in neither):
+     nothing added. The liquid ones without a home are loners (ORCL 0.45, APP 0.27, SHOP 0.57, SPOT, SNPS / CDNS, RDDT, RBLX:
+     decided earlier to stay "· other" with RS). To ask the user: SITM -> Optics & CPO (0.71), TTD (0.64 Enterprise SaaS),
+     AMBA (0.61 AI Connectivity, on the waiting list), SIMO tracks Semi Subsystems (0.76) better than its Memory & Storage.
+  Also seen that morning: rules/make_rules.py defines the sheet "E1 Earnings tab" twice (the 2nd, 4 rows, overwrites the 1st,
+  longer one): the two new Earnings rows were added to the 2nd; the lost rows of the 1st are not restored (to look at).
+  The user's other points that morning were not faults: FIGR was up 9% on that morning's Q3 report ("im wrong about figr");
+  "Pre-mkt gap" (the first pre-market trade vs the close) can read +0.8% while "Pre-mkt chg" is +9%: offered to hide or rename
+  it, not answered.
+- **DROPPED (see 5 above; kept for the record): the 8:45 task's instructions.** update_trigger from this session was refused ("a
+  routine's instructions can be changed only from the conversation the routine posts into"). Until then the event card shows
+  without the news line ("why"). The text to paste into the 8:45 conversation was given to the user in this session (4
+  additions: rm event_news.json in step 1; theme_event.json in step 4; a new step 6b that searches once for the news behind the
+  event and writes /root/pm/event_news.json; the 3rd argument of `finish` and pm_event.json in the publish). **First check next
+  session**: whether the user did it, and whether the Nov 12 morning scan and grading ran clean (premarket_live.json has
+  "events"; the Heating up column filled).
+- **NOT LIVE, on `test/cleanlaunch` (main merged in at 0a1c4ad, then more commits; the chart-reading work):** everything of
+  the Nov 11 session plus, from this one (settings at the end of `L` in scanner/launch.py, each with the user's example):
+  - **a. Falling range only on a big day (1 ADR+) or a 2%+ gap** (the user: VEEV Sep 30 and APPN Oct 8 2026 "nothing to do with
+    falling range", "just building base up"): those two are gone; INTC Apr 1, AMD Apr 8, COHR Apr 8, MRVL Aug 4 2026 stay.
+  - **b. First day (a launch under the 200 SMA)**: the day before under the 21 or 50 EMA, today over both, up 5%+ on 1.3x+,
+    under the 200 SMA, with a 5%+ gap or a close over its 1-month high; later launch-size days are tagged "a follow-through
+    day of the launch" and do not replace it (move_ended). GLOB Oct 1 (was Oct 22), FLY Nov 6, APP Nov 5, CAI Aug 6, REAL Oct
+    15, PCOR Oct 5 2026. **OPEN: it dates ATRC Jun 26 2026; the user said Jul 24** ("bull flag plus break out of 200 sma"; Jun
+    18 "range bound day").
+  - **c. CLIMAX RISK tag** (a tag only): an 8%+ gap, 90%+ over the 200 SMA, closed in the lower half (APP, HOOD Feb 13 2025).
+  - **d. Pop over the 21 EMA** (a short swing entry; MRVL Sep 4 / Sep 16 2026; the user on its 8 extra reads: "yes they look
+    good").
+  - **Launch attempt zone 1.5 ADRs** under a 3- / 6-month high (was 0.5): WRBY, ITT, RLAY Nov 9 2026 read "attempt". The user
+    then took WRBY and VSAT back ("was launch but failed my bad... i did hindsight"): **to re-judge whether 1.5 stays**.
+  - **Start day** (the user: "as long as it did breakthrough 21/50 changed the tide that day with volume its the start day",
+    "usually gap up", "above 1 rvol for sure", minimums unchanged): NOT a launch rule (tested as one: 2,200 -> 3,345 launches in
+    2 years, ANF Aug 3 2026 and ATRC Jul 24 lost). Built as **"start <date>" under the launch date** and a **Start days
+    table** under the Launches list (launch.json trend_start..., start_days; the user: "test it 1 and 2 both makes sense").
+  - **The full-market test build** (radar-tools `launchdry AAPL` on the branch, Nov 11 close, no news tags): **219 launches
+    (live 148)**, 7 in the 50 EMA tab, 190 off the list waiting, 41 first-day launches, 27 attempts, 50 rows with a start
+    line, **72 start days (34 not on Launches)**.
+  - `--regress` on the branch: 209 lines differ from tools/expected_reads.txt (NOT rewritten); the 2-year numbers of each
+    idea are in tools/chart_examples.txt ("THE TEST of a-d", "THE START-DAY TEST").
+- **Still to do before the chart reading can go live**: the alerts (radar/alerts.py) know none of it and still say "with
+  caution"; the user's decisions (the Launches list 148 -> 219, ATRC, the attempt zone, d's reads); rewrite
+  tools/expected_reads.txt once agreed; merge main again and re-test the page.
+- **Not replayed** (no bars fetched): CDW Oct 8, DLTR Oct 14, ENOV Oct 13 / Nov 4, RAL, "KTS" Oct 13 and "PPLI" Sep 25 / Nov 3
+  2026 (the last two tickers to confirm). The user's modest first days no rule catches: TREX, LYFT, POOL, SMG, TOST Oct 15,
+  FBIN, PAR, VCEL Nov 4, XERS Sep 17, VERX Oct 1, PGNY Oct 7 (most were under the ADR / liquidity / price minimums that day,
+  which the user keeps). Claude's reading, not confirmed: their days cluster on Oct 8 and Oct 14-15 2026, weak Nasdaq days.
+- **Good to know**: `git diff main..branch` split by hunks and `git apply` is how the themes / pre-market pieces were taken
+  out of the branch (tools: none saved). A `long` run replaces the file: the list is now 171 symbols (the 161 + BETA FLY GLOB
+  MRVL WRBY FBIN PAR VSAT ITT RLAY).
 
 ## Code grade next to Claude's (LIVE Nov 4 2026 ~6:15 PM, the user's "go live"; branches test/codegrade, test/lag50)
 
@@ -472,6 +487,13 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 **Keep in this file until the Nov 18 check-in has run**: the section "Code grade next to Claude's (LIVE Nov 4)" (the
 Nov 11 and Nov 18 code-grade check-ins read HANDOFF.md); after that, /wrapup moves it to the archive.
 
+- Moved to the archive on Nov 12: still open there: the user's answers they will "compile and provide all at once" (go
+  live or not for test/cleanlaunch, the 135-row list, more charts of each kind); tools/expected_reads.txt not rewritten
+  (188 differing lines); AEHR Jan 16 2026 still read as a launch attempt (the user: not one) ["Radar: full portal review,
+  build (Nov 11)"].
+- Moved to the archive on Nov 12: still open there: the "Above 21-day EMA" tick box (offered, no answer); to check: c200 in
+  stocks.json and vs 200 SMA moving in the session; KLIC / ASX / SIMO in their themes after the next theme build; SITM and
+  FSLY without a theme (the user to say) ["Radar: pre-market scanner vs EMA columns (Nov 11)"].
 - Moved to the archive on Nov 11: still open there: the alert changes agreed Nov 6 and never live (branch test/brkvoice:
   short breakout titles, a "back over its level" alert, the end-of-day pop-up of what didn't hold; and the unanswered "then
   rest see where the volume is"); the morning breakouts' +5% rule made TRAX / TGTX alert late (suggested: a week of both
@@ -524,18 +546,13 @@ brackets; some may be done or overtaken since, so check there before raising one
 - Stars: rename / caveat ★★ ("promising, not proven"); an earnings star (needs 2 years of earnings dates); the
   3-SETUPS alert text ["the last session (Nov 3 evening - Nov 4)", "the session before (Nov 3)"].
 
-New from Nov 5 (alerts / pre-market day, session_01PkbDakDe1EUNP5wQZf4wMH), all unanswered by the user:
-- **Power day vs episodic pivot**: drop the power day's +10% on the day, so the two differ only by the gap (8%+ vs
-  6%+; the power day needs a 4x volume pace, the episodic pivot 3x since Nov 5 evening; both over the 1-month high and
-  the 200 SMA)? Asked twice, no answer: leave as is until the user says.
-- **FCF**: offered a backtest of whether free cash flow change y/y matters for gap-ups when growth is high. Not run.
-- **The official open** from Alpaca's SIP feed instead of the first 1-minute bar (the gap is now the same all day, but
-  it can differ a little from TradingView's open). Offered, not decided.
+New from Nov 5 (alerts / pre-market day, session_01PkbDakDe1EUNP5wQZf4wMH), unanswered (the power day's +10%, the official
+open and the FCF backtest were dropped for good by the user on Nov 10):
 - **TREND triggers and the W (200 SMA) alerts in GitHub's job** (radar/alerts.py), so they reach every device like the
   other alerts; today they come only from the open portal page. Offered, not decided.
 - **Earnings tab, EPAM Nov 5**: EPS -26% (GAAP) on the tab vs Claude's adjusted beat; check the reader pairs GAAP with
   GAAP and adjusted with adjusted.
-- Check-ins already scheduled in that session: Nov 11 and Nov 18, 5:40 PM ET (code grade vs Claude grade comparison).
+- Check-in still to run: Nov 18, 5:40 PM ET (code grade vs Claude grade; the Nov 11 one ran: see this session's status).
 
 0. **Earnings tab, first live week**: check the reads with the user (Wed-Fri reports get estimates saved before
    the report); the guidance reader's misses go in as fixes with a GV bump. Not done: revenue from the release's

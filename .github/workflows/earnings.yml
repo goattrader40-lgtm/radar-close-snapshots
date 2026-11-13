@@ -8,6 +8,9 @@ name: Earnings
 on:
   schedule:
     - cron: "10,30,45,55 11,12,13 * * 1-5"   # mornings (EDT 7:10-9:55 / EST 6:10-8:55; the script keeps 7:00-9:00 ET)
+    - cron: "10,20 13,14 * * 1-5"            # 9:10 and 9:20 AM ET (EDT / EST): a report out before the open whose filing came late
+                                             # (NBIS Nov 12 2026: filed 9:22). Nothing after the open (the user, Nov 12 2026: "i need
+                                             # those by market open after that not interested")
     - cron: "50 20,21 * * 1-5"               # 4:50 PM ET (EDT / EST)
     - cron: "30 22,23 * * 1-5"               # 6:30 PM ET
     - cron: "30 0,1 * * 2-6"                 # 8:30 PM ET
@@ -33,13 +36,15 @@ jobs:
       - name: Build earnings.json
         env:
           SEC_UA: ${{ secrets.SEC_UA }}
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}     # the news feed, for reports out without an SEC filing yet
+          ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
         run: |
           H=$(TZ=America/New_York date +%H); M=$(TZ=America/New_York date +%M); D=$(TZ=America/New_York date +%u)
           T=$((10#$H * 60 + 10#$M))
           if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
-            # mornings 7:00-9:00, evenings 4:45-9:30 PM on weekdays; Sunday evening
+            # 7:00-9:40 AM (the morning runs up to the open; a late-starting 9:20 run still counts), evenings 4:45-9:30 PM on weekdays; Sunday evening
             ok=0
-            if [ "$D" -le 5 ] && (( (T >= 420 && T <= 540) || (T >= 1005 && T <= 1290) )); then ok=1; fi
+            if [ "$D" -le 5 ] && (( (T >= 420 && T <= 580) || (T >= 1005 && T <= 1290) )); then ok=1; fi
             if [ "$D" = 7 ] && (( T >= 1020 )); then ok=1; fi
             if [ $ok = 0 ]; then echo "outside the Earnings windows ($H:$M ET): nothing to do"; exit 0; fi
           fi
@@ -47,5 +52,6 @@ jobs:
           git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
           mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
           git show origin/radar-data:earnings.json > /tmp/rd/earnings_prev.json 2>/dev/null || echo '{}' > /tmp/rd/earnings_prev.json
-          python3 radar/earnings.py /tmp/rd/stocks.json /tmp/rd/earnings_prev.json /tmp/earnings.json
+          git show origin/radar-data:pmnews.json > /tmp/rd/pmnews.json 2>/dev/null || echo '{}' > /tmp/rd/pmnews.json
+          python3 radar/earnings.py /tmp/rd/stocks.json /tmp/rd/earnings_prev.json /tmp/earnings.json /tmp/rd/pmnews.json
           python3 radar/publish.py "earnings $(TZ=America/New_York date '+%F %H:%M')" /tmp/earnings.json
