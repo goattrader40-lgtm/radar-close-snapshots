@@ -348,6 +348,13 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   and without): VIR and NXT (96.02) leave Nov 12, MOH Nov 9 (203.35 under 207.85; 209.49 on Nov 13); the one-time backfill
   on the saved state removes VIR and NXT. **First check Mon Nov 16**: state.json EP rows have pre_close; VIR / NXT leave if
   still under. The portal's rule text and the rules workbook follow.
+- **LIVE (the user's "go live", Sat Nov 14 2026 ~3:40 PM ET, same branch, commit 117c201): the Launches tab's ticker search
+  covers every table.** The user (RKLB): "when i search rklb in launch it should show in any of those 3 tables (now it only
+  pulls names from launch tables)". docs/index.html: #ln-search ("Find a ticker") also filters the 50 EMA undercut and
+  Start days tables; #ln-found next to it says "RKLB": Launches n · 50 EMA undercut n · Start days n ↓ · Watchlist: its
+  lists / not on a list. Tested on desktop / phone (RKLB, AXGN, a partial, no match, cleared), no page errors. Rules
+  workbook: one row. The user followed RKLB that afternoon (a pick, Launches row grade You, 2:52 PM ET); confirmed to them:
+  with the first-day low 54.96 RKLB would still be on 1-UPDAY (Nov 13 close 61.53; its first close under the 50 EMA 62.36).
 - **Answered Nov 14, no change: why RKLB is on no list.** Start day Nov 9 2026 (Launches' Start days table, confirmed Nov
   10); on 1-UPDAY and 2-POOL Nov 10 (+6.5%, the first close over the 50 EMA; low 54.96); Nov 11 +5.5% raised its line to
   63.20 (the flaw fixed today); Nov 13 closed 61.53 -> off 1-UPDAY ("closed below the up-day low 63.2": with the first-day
