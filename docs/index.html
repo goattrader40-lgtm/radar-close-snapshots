@@ -1039,6 +1039,7 @@
       <div class="tgr-cardhead">
         <h2>Start days</h2>
         <span class="tgr-lbl" id="ln-sd-time">—</span>
+        <button class="tgr-lite" id="ln-sd-dl" type="button" title="Saves the Start days rows on screen (the ticker search and your column filters applied) as a file for TradingView, one section per start day: Watchlist menu → Import list">Download for TradingView</button>
       </div>
       <p class="tgr-note" id="ln-sd-note"></p>
       <div class="tgr-scroll">
@@ -3330,6 +3331,19 @@ defCalc('industry_perf', {
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
+  /* Start days as a TradingView import file (the user, Nov 14 2026: "i need download tradingview for this table as well"):
+     the rows on screen, one ###section per start day (newest first), each day's rows in the table's order */
+  $('#ln-sd-dl').addEventListener('click', () => {
+    const rows = (S.sdShown || []).filter((r) => !(XHID['ln-sd-table'] && XHID['ln-sd-table'].has(r.symbol)));
+    if (!rows.length) { toast('No rows to save.'); return; }
+    const days = [...new Set(rows.map((r) => r.date))].sort().reverse();
+    const txt = days.map((d) => '###Start day ' + fDate(d).replace(/, \d{4}$/, '') + '\n' + [...new Set(rows.filter((r) => r.date === d).map((r) => r.tv || r.tv_symbol || r.symbol))].join('\n')).join('\n') + '\n';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
+    a.download = 'Start days ' + todayNY() + '.txt';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
   /* Gainers / Losers as a TradingView import file (the user, Nov 7 2026: "I need Download for TradingView here as well"):
      the rows on screen in their order (a column you added and sorted on included), one ###Gainers (or ###Losers) section */
   $('#g-dl').addEventListener('click', () => {
@@ -3727,6 +3741,7 @@ defCalc('industry_perf', {
       $('#ln-sd-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : '—';
       $('#ln-sd-note').textContent = 'The day a stock breaks back through its 21 and 50 EMA and changes the tide: the day before it closed under one of them, that day it closes over both, up 1 ADR or more on 1× volume or more in the top half of the day (or a 5%+ gap that opens over both and holds them). Over or under the 200 SMA; the same liquidity and ADR minimums as a launch. Listed for 5 sessions while it holds the close it started from. Not a launch: the big day that follows (the 200 SMA cross, the earnings gap) still makes the Launches list, with this day shown under its date as "start".';
       sortRows(st, ss, null, ['symbol', 'date', 'group', 'on'], '');
+      S.sdShown = ss;
       if (doc && !ss.length) noRows(stb, 12, lq ? 'No "' + lq + '" in this table.' : doc.start_days ? 'No start day in the last 5 sessions.' : 'Fills in after the next evening scan.');
       ss.forEach((r) => {
         const tr = h('tr');
