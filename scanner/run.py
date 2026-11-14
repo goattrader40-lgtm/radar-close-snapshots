@@ -154,7 +154,9 @@ def step(state, d, stocks, cfg, cal, log):
                 remove(name, sym, f"{nb} closes in a row below the 50 EMA")
             elif ((name == "1-EP/GAP" and L["delete_below_gap_low"]) or (name == "1-UPDAY" and L["delete_below_upday_low"])) and st.c[i] < e["low"]:
                 remove(name, sym, "closed below the " + ("gap" if name == "1-EP/GAP" else "up-day") + f" low {e['low']}")
-            elif name in ("1-EP/GAP", "1-UPDAY") and not e.get("promoted") and tdays_between(cal, e["added"], d) >= L["new_mover_days_without_setup"]:
+            # the 15 days without a setup: 1-UPDAY only (the user, Nov 14 2026, on 1-EP/GAP: "lets take that 15 day clock,
+            # we dont need it there": an EP gap stays until it closes 2 days under the 50 EMA)
+            elif name == "1-UPDAY" and not e.get("promoted") and tdays_between(cal, e["added"], d) >= L["new_mover_days_without_setup"]:
                 remove(name, sym, f"{L['new_mover_days_without_setup']} trading days with no setup")
             elif name == "3-SETUPS" and L["setups_need_above_sma200"] and not st.c[i] > st.sma200[i]:
                 remove(name, sym, "closed below the 200 SMA")
