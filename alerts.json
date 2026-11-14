@@ -1,0 +1,1641 @@
+{
+ "date": "2026-11-13",
+ "sent": [
+  "ACN:breakout",
+  "ACN:touch",
+  "ADMA:breakout",
+  "ADMA:touch",
+  "ADSK:push",
+  "ADSK:retest",
+  "ADSK:zone",
+  "AI:breakout",
+  "AI:touch",
+  "ALMR:ema21",
+  "ALMR:ema21zone",
+  "AMLX:breakout",
+  "AMLX:touch",
+  "ATI:breakout",
+  "ATI:touch",
+  "AVPT:ema21zone",
+  "BAX:ema21zone",
+  "BBWI:breakout",
+  "BBWI:ema21strong",
+  "BBWI:touch",
+  "BBWI:zone",
+  "BETA:ema21zone",
+  "BHVN:zone",
+  "BLMN:ema21",
+  "BLMN:ema21zone",
+  "CBRL:breakout",
+  "CBRL:ema21strong",
+  "CBRL:touch",
+  "CDNA:ema21zone",
+  "CGON:zone",
+  "CHDN:breakout",
+  "CHDN:touch",
+  "CNC:zone",
+  "CRL:zone",
+  "CROX:breakout",
+  "CTSH:ema21zone",
+  "CVLT:ema21zone",
+  "CWST:breakout",
+  "CWST:touch",
+  "CYRX:retest",
+  "CYRX:zone",
+  "DG:ema21",
+  "DG:ema21zone",
+  "DOCU:breakout",
+  "DOCU:touch",
+  "EFOR:ema21zone",
+  "ELF:ema21",
+  "ELF:ema21bl",
+  "ELF:ema21zone",
+  "ELF:mbo",
+  "EMBJ:retest",
+  "EMBJ:zone",
+  "FA:ema21",
+  "FA:ema21bl",
+  "FA:ema21zone",
+  "FIGS:confirm",
+  "GLBE:touch",
+  "GME:breakout",
+  "GPN:early",
+  "HAWK:laggard",
+  "ISRG:zone",
+  "KRMN:ema21",
+  "KRMN:ema21zone",
+  "KTB:retest",
+  "KTB:zone",
+  "KVYO:breakout",
+  "KVYO:touch",
+  "LTH:ema21zone",
+  "MANE:early",
+  "MD:retest",
+  "MD:zone",
+  "MPWR:zone",
+  "MRNA:ema21zone",
+  "NTSK:zone",
+  "OSCR:ema21zone",
+  "PACS:ema21",
+  "PACS:ema21zone",
+  "PRCT:breakout",
+  "PRCT:touch",
+  "PRMB:breakout",
+  "PRMB:touch",
+  "RDNT:ema21zone",
+  "REZI:touch",
+  "RHI:ema21zone",
+  "RPD:zone",
+  "SG:retest",
+  "SG:zone",
+  "SIG:zone",
+  "SLDE:zone",
+  "SONO:breakout",
+  "SONO:touch",
+  "SPOT:breakout",
+  "SPOT:touch",
+  "SWKS:breakout",
+  "SWKS:touch",
+  "SYRE:retest",
+  "SYRE:zone",
+  "TEM:ema21zone",
+  "TNDM:catalyst",
+  "TNDM:early",
+  "TNDM:mbo",
+  "TOST:retest",
+  "TOST:zone",
+  "TREX:zone",
+  "WAY:ema21zone",
+  "WING:zone",
+  "WRBY:retest",
+  "WRBY:zone",
+  "ZLAB:ema21zone",
+  "grp:Cybersecurity",
+  "grp:Enterprise SaaS",
+  "grp:Fintech & Payments",
+  "grp:IT Services & Consulting",
+  "grp:Managed Care",
+  "grp:Small & Mid-cap Biotech",
+  "grp:Software: Cybersecurity",
+  "summary:0935",
+  "summary:1545"
+ ],
+ "items": [
+  {
+   "key": "GPN:early",
+   "time": "09:31",
+   "title": "GPN EARLY: power-day gap (news? no earnings)",
+   "msg": "gap +13.4% \u00b7 $88.86 (+0.8%) \u00b7 was under its 50 EMA, now above the 50 EMA & 200 SMA \u00b7 base high $102.91 not cleared \u00b7 vol 2.6x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (4x+ and up 15%+) \u00b7 theme Financial Tech Processors #11/217 \u00b7 #4 of 5 in it \u00b7 RS 74",
+   "tv": "NYSE:GPN",
+   "kind": "heads-up",
+   "groups": [
+    "Fintech & Payments",
+    "Financial Tech Processors"
+   ]
+  },
+  {
+   "key": "MANE:early",
+   "time": "09:31",
+   "title": "MANE EARLY: power-day gap (news? no earnings)",
+   "msg": "gap +8.4% \u00b7 $135.48 (+0.1%) \u00b7 base high $156.63 not cleared \u00b7 vol 0.9x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (4x+ and up 15%+) \u00b7 theme Biotechnology \u00b7 other #60/217 \u00b7 #23 of 93 in it \u00b7 RS 93",
+   "tv": "NYSE:MANE",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "TNDM:early",
+   "time": "09:32",
+   "title": "TNDM EARLY: power-day gap (news? no earnings)",
+   "msg": "gap +8.6% \u00b7 $18.99 (+8.5%) \u00b7 was under its 50 EMA & 200 SMA, now above the 50 EMA & 200 SMA \u00b7 base high $20.25 not cleared \u00b7 vol 6.4x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (4x+ and up 15%+) \u00b7 theme Medical Devices & Supplies \u00b7 other #48/217 \u00b7 #12 of 17 in it \u00b7 RS 54",
+   "tv": "NASDAQ:TNDM",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "HAWK:laggard",
+   "time": "09:35",
+   "title": "HAWK A LAGGARD launch on earnings",
+   "msg": "+14.0% \u00b7 gap +15.3% \u00b7 vol 15.3x for the time of day \u00b7 $16.73, -18.1% vs the 200 SMA $20.42 \u00b7 base high $15.79 cleared \u00b7 moves to Launches after 5 closes over the 200 SMA",
+   "tv": "NYSE:HAWK",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "TNDM:catalyst",
+   "time": "09:35",
+   "title": "TNDM CATALYST GAP: news? (no earnings), over its 50 EMA & 200 SMA",
+   "msg": "+10.5% \u00b7 gap +8.5% \u00b7 vol 4.3x for the time of day \u00b7 $19.35 \u00b7 was under its 50 EMA & 200 SMA, now above the 50 EMA & 200 SMA \u00b7 35% under its 52-week high ($29.65), after a 40% correction \u00b7 base high $20.25 not cleared yet: 2nd alert when it is \u00b7 theme Medical Devices & Supplies \u00b7 other #48/217 \u00b7 #12 of 17 in it \u00b7 RS 54 \u00b7 5-min opening range high $19.25: 0.5% above it",
+   "tv": "NASDAQ:TNDM",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "SONO:breakout",
+   "time": "09:35",
+   "title": "SONO B breakout: Base top",
+   "msg": "$18.44 over the base top $18.35 (set 2026-10-02; nothing traded above it for 216 sessions; decisive with a close more than 0.5% over it, $18.44: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Household Durables \u00b7 other #128/217, volume building \u00b7 +1.8% \u00b7 vol 1.0x for the time of day (light) \u00b7 base 30 days \u00b7 would be leg 2 \u00b7 launched 2026-11-11 (A)",
+   "tv": "NASDAQ:SONO",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "GME:breakout",
+   "time": "09:35",
+   "title": "GME C breakout: Pop out of the consolidation (in base)",
+   "msg": "$25.95 over the buy point $25.62 \u00b7 1st breakout since the launch, group not top 10% unranked \u00b7 +1.3% \u00b7 vol 2.0x for the time of day \u00b7 would be leg 0 \u00b7 3-SETUPS Ready (from 2-POOL 2026-10-29)",
+   "tv": "NYSE:GME",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "ATI:breakout",
+   "time": "09:35",
+   "title": "ATI C breakout: Base top",
+   "msg": "$192.31 over the base top $191.52 (set 2026-10-16; decisive with a close more than 0.5% over it, $192.48: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% unranked \u00b7 +1.1% \u00b7 vol 0.6x for the time of day (light) \u00b7 would be leg 1 \u00b7 3-SETUPS Ready (from 2-POOL 2026-11-09)",
+   "tv": "NYSE:ATI",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "EMBJ:zone",
+   "time": "09:35",
+   "title": "EMBJ pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$78.38 in the retest zone $74.42-$79.20 \u00b7 level $78.52-$78.63 (bodies-wicks) (broken 2026-11-10) \u00b7 at the 10 EMA ($77.77 at the last close) & 21 EMA ($75.95 at the last close) \u00b7 a heads-up: the buy is the close holding over $78.52 \u00b7 -1.4% \u00b7 vol 1.1x \u00b7 leg 1 \u00b7 launched 2026-11-10 (B)",
+   "tv": "NYSE:EMBJ",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "WRBY:zone",
+   "time": "09:35",
+   "title": "WRBY pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "$26.65 in the retest zone $23.44-$27.45 \u00b7 level $26.58-$27.45 (bodies-wicks) (broken 2026-11-09) \u00b7 at the 10 EMA ($26.93 at the last close) & 21 EMA ($26.09 at the last close) & 50 EMA ($25.69 at the last close) \u00b7 a heads-up: the buy is the close holding over $26.58 \u00b7 -0.3% \u00b7 vol 0.8x \u00b7 leg 1 \u00b7 launched 2026-11-09 (A+)",
+   "tv": "NYSE:WRBY",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "KRMN:ema21zone",
+   "time": "09:35",
+   "title": "KRMN at its 21 EMA in the base",
+   "msg": "$39.27 at the 21 EMA $39.05 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -2.9% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-06 (A+)",
+   "tv": "NYSE:KRMN",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "SYRE:zone",
+   "time": "09:35",
+   "title": "SYRE pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$100.77 in the retest zone $92.37-$100.98 \u00b7 level $99.75-$100.42 (bodies-wicks) (broken 2026-11-06) \u00b7 at the 10 EMA ($101.84 at the last close) & 21 EMA ($97.79 at the last close) \u00b7 a heads-up: the buy is the close holding over $99.75 \u00b7 -2.1% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-06 (C)",
+   "tv": "NASDAQ:SYRE",
+   "kind": "heads-up",
+   "groups": [
+    "Small & Mid-cap Biotech"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "CNC:zone",
+   "time": "09:35",
+   "title": "CNC pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$70.00 in the retest zone $66.28-$72.50 \u00b7 level $71.24-$72.50 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($70.11 at the last close) & 21 EMA ($69.34 at the last close) \u00b7 a heads-up: the buy is the close holding over $71.24 \u00b7 -0.4% \u00b7 vol 1.1x \u00b7 leg 1 \u00b7 launched 2026-11-04 (A) \u00b7 MANAGED CARE MOVE: also OSCR at the 21 EMA 09:35",
+   "tv": "NYSE:CNC",
+   "kind": "heads-up",
+   "groups": [
+    "Managed Care",
+    "Healthcare Plans"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "OSCR:ema21zone",
+   "time": "09:35",
+   "title": "OSCR at its 21 EMA in the base",
+   "msg": "$31.95 at the 21 EMA $32.17 (the last close's) \u00b7 a 21 EMA undercut & reclaim (2 closes under it: strong) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.0% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B) \u00b7 MANAGED CARE MOVE: also CNC in the retest zone 09:35",
+   "tv": "NYSE:OSCR",
+   "kind": "heads-up",
+   "groups": [
+    "Managed Care"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "ISRG:zone",
+   "time": "09:35",
+   "title": "ISRG pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$443.79 in the retest zone $431.19-$458.88 \u00b7 level $453.60-$458.88 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($449.72 at the last close) & 21 EMA ($443.08 at the last close) \u00b7 a heads-up: the buy is the close holding over $453.60 \u00b7 +0.9% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B)",
+   "tv": "NASDAQ:ISRG",
+   "kind": "heads-up",
+   "groups": [
+    "Medtech",
+    "Medical Instruments & Supplies"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "KTB:zone",
+   "time": "09:35",
+   "title": "KTB pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "$78.23 in the retest zone $72.48-$79.62 \u00b7 level $77.78-$79.62 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($78.67 at the last close) & 21 EMA ($76.50 at the last close) & 50 EMA ($74.39 at the last close) \u00b7 a heads-up: the buy is the close holding over $77.78 \u00b7 +0.5% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B)",
+   "tv": "NYSE:KTB",
+   "kind": "heads-up",
+   "groups": [
+    "Apparel & Luxury Goods"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "TOST:zone",
+   "time": "09:35",
+   "title": "TOST pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "$33.77 in the retest zone $31.55-$34.66 \u00b7 level $33.53-$34.66 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($33.88 at the last close) & 21 EMA ($33.20 at the last close) & 50 EMA ($32.42 at the last close) \u00b7 a heads-up: the buy is the close holding over $33.53 \u00b7 +0.7% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 FINTECH & PAYMENTS MOVE: also GPN early gap 09:31",
+   "tv": "NYSE:TOST",
+   "kind": "heads-up",
+   "groups": [
+    "Fintech & Payments",
+    "Payments"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "ADSK:zone",
+   "time": "09:35",
+   "title": "ADSK pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$262.02 in the retest zone $245.33-$263.16 \u00b7 level $257.91-$263.16 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($258.57 at the last close) & 21 EMA ($252.14 at the last close) \u00b7 a heads-up: the buy is the close holding over $257.91 \u00b7 +1.0% \u00b7 vol 0.9x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C)",
+   "tv": "NASDAQ:ADSK",
+   "kind": "heads-up",
+   "groups": [
+    "Enterprise SaaS",
+    "Software: Majors"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "PACS:ema21zone",
+   "time": "09:35",
+   "title": "PACS at its 21 EMA in the base",
+   "msg": "$48.24 at the 21 EMA $47.83 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.5% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C)",
+   "tv": "NYSE:PACS",
+   "kind": "heads-up",
+   "groups": [],
+   "grouped": true
+  },
+  {
+   "key": "TEM:ema21zone",
+   "time": "09:35",
+   "title": "TEM at its 21 EMA in the base",
+   "msg": "$71.69 at the 21 EMA $74.94 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -5.5% \u00b7 vol 1.5x \u00b7 leg 0 \u00b7 launched 2026-11-02 (C)",
+   "tv": "NASDAQ:TEM",
+   "kind": "heads-up",
+   "groups": [
+    "Genomics & Diagnostics"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "WING:zone",
+   "time": "09:35",
+   "title": "WING pulling back to its breakout level + 10 EMA",
+   "msg": "$161.46 in the retest zone $148.50-$170.37 \u00b7 level $163.04-$170.37 (bodies-wicks) (broken 2026-11-09) \u00b7 at the 10 EMA ($160.55 at the last close) \u00b7 a heads-up: the buy is the close holding over $163.04 \u00b7 +1.6% \u00b7 vol 0.3x \u00b7 leg 2 \u00b7 launched 2026-11-02 (C)",
+   "tv": "NASDAQ:WING",
+   "kind": "heads-up",
+   "groups": [],
+   "grouped": true
+  },
+  {
+   "key": "CTSH:ema21zone",
+   "time": "09:35",
+   "title": "CTSH at its 21 EMA in the base",
+   "msg": "$63.42 at the 21 EMA $64.69 (the last close's) \u00b7 a 21 EMA undercut & reclaim (2 closes under it: strong) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.0% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-10-22 (C)",
+   "tv": "NASDAQ:CTSH",
+   "kind": "heads-up",
+   "groups": [
+    "IT Services & Consulting",
+    "IT Consulting & Outsourcing"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "BBWI:zone",
+   "time": "09:35",
+   "title": "BBWI pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$21.25 in the retest zone $20.19-$21.74 \u00b7 level $21.52-$21.56 (bodies-wicks) (broken 2026-10-22) \u00b7 at the 10 EMA ($21.74 at the last close) & 21 EMA ($21.22 at the last close) \u00b7 a heads-up: the buy is the close holding over $21.52 \u00b7 +0.8% \u00b7 vol 0.9x \u00b7 leg 1 \u00b7 launched 2026-10-15 (C)",
+   "tv": "NYSE:BBWI",
+   "kind": "heads-up",
+   "groups": [],
+   "grouped": true
+  },
+  {
+   "key": "MRNA:ema21zone",
+   "time": "09:35",
+   "title": "MRNA at its 21 EMA in the base",
+   "msg": "$223.00 at the 21 EMA $230.40 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -3.6% \u00b7 vol 1.0x \u00b7 leg 2 \u00b7 launched 2026-10-09 (B)",
+   "tv": "NASDAQ:MRNA",
+   "kind": "heads-up",
+   "groups": [],
+   "grouped": true
+  },
+  {
+   "key": "EFOR:ema21zone",
+   "time": "09:35",
+   "title": "EFOR at its 21 EMA in the base",
+   "msg": "$35.30 at the 21 EMA $36.72 (the last close's) \u00b7 a 21 EMA undercut & reclaim (2 closes under it: strong) setup: the buy is the close back over it, in the upper half of the day \u00b7 -1.5% \u00b7 vol 0.4x \u00b7 leg 2 \u00b7 launched 2026-10-01 (B)",
+   "tv": "NYSE:EFOR",
+   "kind": "heads-up",
+   "groups": [],
+   "grouped": true
+  },
+  {
+   "key": "SLDE:zone",
+   "time": "09:35",
+   "title": "SLDE pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$26.06 in the retest zone $25.28-$26.99 \u00b7 level $26.75 (broken 2026-10-16) \u00b7 at the 10 EMA ($26.53 at the last close) & 21 EMA ($26.54 at the last close) \u00b7 a heads-up: the buy is the close holding over $26.75 \u00b7 +0.4% \u00b7 vol 1.6x \u00b7 leg 1 \u00b7 launched 2026-10-01 (C)",
+   "tv": "NASDAQ:SLDE",
+   "kind": "heads-up",
+   "groups": [
+    "P&C Insurance & Brokers",
+    "Insurance: Florida Homeowners"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "CVLT:ema21zone",
+   "time": "09:35",
+   "title": "CVLT at its 21 EMA in the base",
+   "msg": "$157.28 at the 21 EMA $162.12 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -5.3% \u00b7 vol 7.3x \u00b7 leg 0 \u00b7 3-SETUPS Ready (from 2-POOL 2026-11-06)",
+   "tv": "NASDAQ:CVLT",
+   "kind": "heads-up",
+   "groups": [
+    "Cybersecurity",
+    "Software: Cybersecurity"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "grp:Fintech & Payments",
+   "time": "09:35",
+   "title": "GROUP MOVE: Fintech & Payments (#31/99, 12 stocks): GPN, TOST",
+   "msg": "GPN early gap 09:31 \u00b7 TOST in the retest zone 09:35 \u00b7 2 stocks of Fintech & Payments alerting today",
+   "tv": "",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "grp:Managed Care",
+   "time": "09:35",
+   "title": "GROUP MOVE: Managed Care (#26/99, 8 stocks): CNC, OSCR",
+   "msg": "CNC in the retest zone 09:35 \u00b7 OSCR at the 21 EMA 09:35 \u00b7 2 stocks of Managed Care alerting today",
+   "tv": "",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "summary:0935",
+   "time": "09:35",
+   "title": "16 more heads-ups (in the portal's alert log)",
+   "msg": "SYRE pulling back to its breakout level $100.77 \u00b7 CNC pulling back to its breakout level $70.00 \u00b7 OSCR at its 21 EMA in the base $31.95 \u00b7 ISRG pulling back to its breakout level $443.79 \u00b7 KTB pulling back to its breakout level $78.23 \u00b7 TOST pulling back to its breakout level $33.77 \u00b7 ADSK pulling back to its breakout level $262.02 \u00b7 PACS at its 21 EMA in the base $48.24 \u00b7 TEM at its 21 EMA in the base $71.69 \u00b7 WING pulling back to its breakout level $161.46 \u00b7 CTSH at its 21 EMA in the base $63.42 \u00b7 BBWI pulling back to its breakout level $21.25 \u00b7 MRNA at its 21 EMA in the base $223.00 \u00b7 EFOR at its 21 EMA in the base $35.30 \u00b7 SLDE pulling back to its breakout level $26.06 \u00b7 CVLT at its 21 EMA in the base $157.28",
+   "tv": "",
+   "kind": "summary",
+   "groups": []
+  },
+  {
+   "key": "TNDM:mbo",
+   "time": "09:35",
+   "title": "TNDM MORNING BREAKOUT +10.5%",
+   "msg": "$19.35 \u00b7 +10.5% \u00b7 vol 4.3x for the time of day \u00b7 over yesterday's high $19.20 and the 5-min opening range high $19.25 \u00b7 stop under the day's low $18.53: risk 4.4% = 0.6 ADR \u00b7 ADR 6.8% \u00b7 +3% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 news: FDA / trial (headline): Tandem Diabetes Care Receives FDA Clearance For Tandem Mobi As Tubeless Automated Insulin Delivery System With Up To 7 Days Of Wear (Benzinga 8:32 AM ET) \u00b7 \ud83d\udcf0 https://www.benzinga.com/quote/TNDM",
+   "tv": "NASDAQ:TNDM",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "FIGS:confirm",
+   "time": "09:36",
+   "title": "FIGS breakout confirmed",
+   "msg": "opened $23.08 and trades $22.62 above the base top $22.46 (broken 2026-11-11) \u00b7 -0.2% \u00b7 vol 4.1x for the time of day",
+   "tv": "NYSE:FIGS",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "CGON:zone",
+   "time": "09:36",
+   "title": "CGON pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "$68.59 in the retest zone $61.73-$68.71 \u00b7 level $67.71-$67.88 (bodies-wicks) (broken 2026-11-06) \u00b7 at the 10 EMA ($69.54 at the last close) & 21 EMA ($67.60 at the last close) & 50 EMA ($67.91 at the last close) \u00b7 a heads-up: the buy is the close holding over $67.71 \u00b7 -2.2% \u00b7 vol 2.2x \u00b7 leg 1 \u00b7 launched 2026-11-06 (A) \u00b7 SMALL & MID-CAP BIOTECH MOVE: also SYRE in the retest zone 09:35",
+   "tv": "NASDAQ:CGON",
+   "kind": "heads-up",
+   "groups": [
+    "Small & Mid-cap Biotech"
+   ]
+  },
+  {
+   "key": "AVPT:ema21zone",
+   "time": "09:36",
+   "title": "AVPT at its 21 EMA in the base",
+   "msg": "$16.28 at the 21 EMA $16.18 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.6% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-10-28 (B) \u00b7 CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35, NTSK in the retest zone 09:36",
+   "tv": "NASDAQ:AVPT",
+   "kind": "heads-up",
+   "groups": [
+    "Cybersecurity",
+    "Software: Cloud, Data & Observability"
+   ]
+  },
+  {
+   "key": "BBWI:ema21strong",
+   "time": "09:36",
+   "title": "BBWI entry: back over its 21 EMA on a strong day",
+   "msg": "closed under the 21 EMA $21.22 (over the 50 EMA $20.13), now $21.37 back over it \u00b7 +1.3% (0.3 ADR) \u00b7 vol 0.9x for the time of day \u00b7 the 21 EMA undercut & reclaim on a strong day, a short swing entry; the close confirms it \u00b7 launched 2026-10-15 (C)",
+   "tv": "NYSE:BBWI",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "NTSK:zone",
+   "time": "09:36",
+   "title": "NTSK pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "$21.32 in the retest zone $18.67-$21.56 \u00b7 level $21.15-$21.30 (bodies-wicks) (broken 2026-10-21) \u00b7 at the 10 EMA ($22.37 at the last close) & 21 EMA ($22.06 at the last close) & 50 EMA ($20.07 at the last close) \u00b7 a heads-up: the buy is the close holding over $21.15 \u00b7 -4.4% \u00b7 vol 1.2x \u00b7 leg 3 \u00b7 launched 2026-09-14 (B) \u00b7 CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35, AVPT at the 21 EMA 09:36 \u00b7 SOFTWARE: CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35",
+   "tv": "NASDAQ:NTSK",
+   "kind": "heads-up",
+   "groups": [
+    "Cybersecurity",
+    "Software: Cybersecurity"
+   ]
+  },
+  {
+   "key": "FA:ema21zone",
+   "time": "09:36",
+   "title": "FA at its 21 EMA in the base",
+   "msg": "$21.59 at the 21 EMA $21.41 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 +1.1% \u00b7 vol 0.5x \u00b7 leg 2 \u00b7 launched 2026-08-13 (C)",
+   "tv": "NASDAQ:FA",
+   "kind": "heads-up",
+   "groups": [
+    "Payroll & HR Software"
+   ]
+  },
+  {
+   "key": "grp:Small & Mid-cap Biotech",
+   "time": "09:36",
+   "title": "GROUP MOVE: Small & Mid-cap Biotech (#44/99, 23 stocks): SYRE, CGON",
+   "msg": "SYRE in the retest zone 09:35 \u00b7 CGON in the retest zone 09:36 \u00b7 2 stocks of Small & Mid-cap Biotech alerting today",
+   "tv": "",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "grp:Cybersecurity",
+   "time": "09:36",
+   "title": "GROUP MOVE: Cybersecurity (#19/99, 16 stocks): CVLT, AVPT, NTSK",
+   "msg": "CVLT at the 21 EMA 09:35 \u00b7 AVPT at the 21 EMA 09:36 \u00b7 NTSK in the retest zone 09:36 \u00b7 3 stocks of Cybersecurity alerting today",
+   "tv": "",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "grp:Software: Cybersecurity",
+   "time": "09:36",
+   "title": "GROUP MOVE: Software: Cybersecurity (#52/217, 13 stocks): CVLT, NTSK",
+   "msg": "CVLT at the 21 EMA 09:35 \u00b7 NTSK in the retest zone 09:36 \u00b7 2 stocks of Software: Cybersecurity alerting today",
+   "tv": "",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "ELF:mbo",
+   "time": "09:36",
+   "title": "ELF MORNING BREAKOUT +5.2%",
+   "msg": "$119.40 \u00b7 +5.2% \u00b7 vol 3.7x for the time of day \u00b7 over yesterday's high $117.30 and the 5-min opening range high $118.46 \u00b7 stop under the day's low $113.00: risk 5.7% = 1.2 ADR \u00b7 ADR 4.6% \u00b7 +45% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 news: nothing of its own today or the last 2 sessions (After earnings (Nov 4))",
+   "tv": "NYSE:ELF",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "BBWI:breakout",
+   "time": "09:37",
+   "title": "BBWI C breakout: Bull flag (trendline)",
+   "msg": "$21.43 over the buy point $21.38 \u00b7 2nd breakout since the launch, group not top 10% Specialty Retail \u00b7 other #19/217 \u00b7 +1.6% \u00b7 vol 0.9x for the time of day (light) \u00b7 base 5 days \u00b7 an entry in the base (still leg 1), the base top is next \u00b7 launched 2026-10-15 (C)",
+   "tv": "NYSE:BBWI",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "SIG:zone",
+   "time": "09:37",
+   "title": "SIG pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$118.45 in the retest zone $113.41-$122.64 \u00b7 level $119.95-$122.64 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($119.28 at the last close) & 21 EMA ($116.78 at the last close) \u00b7 a heads-up: the buy is the close holding over $119.95 \u00b7 +0.1% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B)",
+   "tv": "NYSE:SIG",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "ALMR:ema21zone",
+   "time": "09:37",
+   "title": "ALMR at its 21 EMA in the base",
+   "msg": "$30.77 at the 21 EMA $30.20 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -3.1% \u00b7 vol 1.5x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 2-POOL 2026-11-09)",
+   "tv": "NASDAQ:ALMR",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "DG:ema21zone",
+   "time": "09:38",
+   "title": "DG at its 21 EMA in the base",
+   "msg": "$134.23 at the 21 EMA $133.19 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.3% \u00b7 vol 2.0x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B)",
+   "tv": "NYSE:DG",
+   "kind": "heads-up",
+   "groups": [
+    "Retail",
+    "Discount Stores"
+   ]
+  },
+  {
+   "key": "WAY:ema21zone",
+   "time": "09:40",
+   "title": "WAY at its 21 EMA in the base",
+   "msg": "$28.17 at the 21 EMA $28.24 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.1% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C)",
+   "tv": "NASDAQ:WAY",
+   "kind": "heads-up",
+   "groups": [
+    "Health Information Services"
+   ]
+  },
+  {
+   "key": "SPOT:breakout",
+   "time": "09:41",
+   "title": "SPOT C breakout: Bull flag (trendline)",
+   "msg": "$609.99 over the buy point $608.18 \u00b7 2nd breakout since the launch, group not top 10% Internet Media & Services \u00b7 other #164/217 \u00b7 +1.9% \u00b7 vol 0.4x for the time of day (light) \u00b7 base 5 days \u00b7 an entry in the base (still leg 2), the base top is next \u00b7 launched 2026-10-22 (A)",
+   "tv": "NYSE:SPOT",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "CDNA:ema21zone",
+   "time": "09:42",
+   "title": "CDNA at its 21 EMA in the base",
+   "msg": "$77.33 at the 21 EMA $76.25 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -3.1% \u00b7 vol 0.8x \u00b7 leg 1 \u00b7 launched 2026-10-30 (B)",
+   "tv": "NASDAQ:CDNA",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "RPD:zone",
+   "time": "09:43",
+   "title": "RPD pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "$14.11 in the retest zone $12.03-$14.14 \u00b7 level $13.84-$13.87 (bodies-wicks) (broken 2026-10-22) \u00b7 at the 10 EMA ($14.93 at the last close) & 21 EMA ($14.75 at the last close) & 50 EMA ($13.71 at the last close) \u00b7 a heads-up: the buy is the close holding over $13.84 \u00b7 -2.0% \u00b7 vol 0.3x \u00b7 leg 1 \u00b7 3-SETUPS Setting up (from 2-POOL 2026-10-05) \u00b7 CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35, AVPT at the 21 EMA 09:36, NTSK in the retest zone 09:36 \u00b7 SOFTWARE: CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35, NTSK in the retest zone 09:36",
+   "tv": "NASDAQ:RPD",
+   "kind": "heads-up",
+   "groups": [
+    "Cybersecurity",
+    "Software: Cybersecurity"
+   ]
+  },
+  {
+   "key": "ADSK:push",
+   "time": "09:45",
+   "title": "ADSK entry: push out of the 10 / 21 EMA with a gap",
+   "msg": "opened $265.95 (+2.5%) over yesterday's candle, now $263.51 over the trigger $263.16 (yesterday's candle, its 10 & 21 EMA and the breakout level, all reclaimed) \u00b7 after the retest of its breakout level $257.91 (touched 2026-11-09) \u00b7 +1.6% \u00b7 vol 0.8x for the time of day (light) \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 5-min opening range high $267.06: not cleared yet \u00b7 ENTERPRISE SAAS MOVE: also DOCU touched the buy point 09:45",
+   "tv": "NASDAQ:ADSK",
+   "kind": "trigger",
+   "groups": [
+    "Enterprise SaaS",
+    "Software: Majors"
+   ]
+  },
+  {
+   "key": "REZI:touch",
+   "time": "09:45",
+   "title": "REZI touched its buy point, back under",
+   "msg": "traded up to $22.15 today, over the buy point $22.13, now $22.08 (-0.2%) \u00b7 not a breakout yet: that alert comes when it trades over $22.13 at a check \u00b7 +3.0% \u00b7 vol 0.8x \u00b7 launched 2026-11-11 (A+)",
+   "tv": "NYSE:REZI",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "DOCU:touch",
+   "time": "09:45",
+   "title": "DOCU touched its buy point, back under",
+   "msg": "traded up to $81.00 today, over the buy point $80.80, now $79.93 (-1.1%) \u00b7 not a breakout yet: that alert comes when it trades over $80.80 at a check \u00b7 -0.3% \u00b7 vol 0.5x \u00b7 launched 2026-08-13 (B) \u00b7 ENTERPRISE SAAS MOVE: also ADSK in the retest zone 09:35",
+   "tv": "NASDAQ:DOCU",
+   "kind": "heads-up",
+   "groups": [
+    "Enterprise SaaS",
+    "Software: Collaboration & Communications"
+   ]
+  },
+  {
+   "key": "SWKS:touch",
+   "time": "09:45",
+   "title": "SWKS touched its buy point, back under",
+   "msg": "traded up to $90.54 today, over the buy point $90.50, now $88.33 (-2.4%) \u00b7 not a breakout yet: that alert comes when it trades over $90.50 at a check \u00b7 -1.9% \u00b7 vol 0.5x \u00b7 3-SETUPS Triggered today (from 2-POOL 2026-10-15)",
+   "tv": "NASDAQ:SWKS",
+   "kind": "heads-up",
+   "groups": [
+    "Semis: Mobile & RF"
+   ]
+  },
+  {
+   "key": "AI:touch",
+   "time": "09:45",
+   "title": "AI touched its buy point, back under",
+   "msg": "traded up to $12.17 today, over the buy point $12.07, now $11.93 (-1.2%) \u00b7 not a breakout yet: that alert comes when it trades over $12.07 at a check \u00b7 -1.1% \u00b7 vol 0.5x \u00b7 3-SETUPS Ready (from 1-EP/GAP 2026-10-12)",
+   "tv": "NYSE:AI",
+   "kind": "heads-up",
+   "groups": [
+    "AI Software & Data"
+   ]
+  },
+  {
+   "key": "ATI:touch",
+   "time": "09:45",
+   "title": "ATI touched its buy point, back under",
+   "msg": "traded up to $194.18 today, over the buy point $191.52, now $186.94 (-2.4%) \u00b7 not a breakout yet: that alert comes when it trades over $191.52 at a check \u00b7 -1.7% \u00b7 vol 1.0x \u00b7 3-SETUPS Ready (from 2-POOL 2026-11-09)",
+   "tv": "NYSE:ATI",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "grp:Enterprise SaaS",
+   "time": "09:45",
+   "title": "GROUP MOVE: Enterprise SaaS (#15/99, 48 stocks): ADSK, DOCU",
+   "msg": "ADSK in the retest zone 09:35 \u00b7 DOCU touched the buy point 09:45 \u00b7 2 stocks of Enterprise SaaS alerting today",
+   "tv": "",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "CHDN:breakout",
+   "time": "09:46",
+   "title": "CHDN C breakout: Base top",
+   "msg": "$100.44 over the base top $100.28 (set 2026-11-04; nothing traded above it for 135 sessions; decisive with a close more than 0.5% over it, $100.78: within 0.5% a breakout with caution) \u00b7 late (3rd+ breakout or 50+ sessions on), group not top 10% Hospitality & Leisure \u00b7 other #92/217 \u00b7 +0.8% \u00b7 vol 0.3x for the time of day (light) \u00b7 base 7 days \u00b7 would be leg 2 \u00b7 launched 2026-06-15 (C)",
+   "tv": "NASDAQ:CHDN",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "AI:breakout",
+   "time": "09:46",
+   "title": "AI C breakout: Pop out of the consolidation (in base)",
+   "msg": "$12.08 over the buy point $12.07 \u00b7 1st breakout since the launch, group not top 10% AI Software & Data #48/99 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +0.1% \u00b7 vol 0.5x for the time of day (light) \u00b7 would be leg 1 \u00b7 3-SETUPS Ready (from 1-EP/GAP 2026-10-12)",
+   "tv": "NYSE:AI",
+   "kind": "trigger",
+   "groups": [
+    "AI Software & Data"
+   ]
+  },
+  {
+   "key": "BBWI:touch",
+   "time": "09:46",
+   "title": "BBWI touched its buy point, back under",
+   "msg": "traded up to $21.50 today, over the buy point $21.38, now $21.35 (-0.1%) \u00b7 not a breakout yet: that alert comes when it trades over $21.38 at a check \u00b7 +1.3% \u00b7 vol 0.7x \u00b7 launched 2026-10-15 (C)",
+   "tv": "NYSE:BBWI",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "CHDN:touch",
+   "time": "09:47",
+   "title": "CHDN touched its buy point, back under",
+   "msg": "traded up to $100.44 today, over the buy point $100.28, now $99.64 (-0.6%) \u00b7 not a breakout yet: that alert comes when it trades over $100.28 at a check \u00b7 +0.0% \u00b7 vol 0.4x \u00b7 launched 2026-06-15 (C)",
+   "tv": "NASDAQ:CHDN",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "BAX:ema21zone",
+   "time": "09:47",
+   "title": "BAX at its 21 EMA in the base",
+   "msg": "$25.52 at the 21 EMA $25.34 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.9% \u00b7 vol 0.3x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-11-03)",
+   "tv": "NYSE:BAX",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "BHVN:zone",
+   "time": "09:50",
+   "title": "BHVN pulling back to its breakout level + 21 EMA & 50 EMA",
+   "msg": "$13.75 in the retest zone $12.01-$13.75 \u00b7 level $13.50-$13.63 (bodies-wicks) (broken 2026-10-22) \u00b7 at the 21 EMA ($14.34 at the last close) & 50 EMA ($13.91 at the last close) \u00b7 a heads-up: the buy is the close holding over $13.50 \u00b7 -2.3% \u00b7 vol 0.3x \u00b7 leg 0 \u00b7 launched 2026-10-22 (A+)",
+   "tv": "NYSE:BHVN",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "ACN:breakout",
+   "time": "09:56",
+   "title": "ACN C breakout: Bull flag (trendline)",
+   "msg": "$254.05 over the buy point $254.02 \u00b7 late (3rd+ breakout or 50+ sessions on), group \u2605 Top IT Services & Consulting #1/99 \u00b7 +1.6% \u00b7 vol 0.7x for the time of day (light) \u00b7 base 5 days \u00b7 an entry in the base (still leg 3), the base top is next \u00b7 launched 2026-10-01 (A+) \u00b7 IT SERVICES & CONSULTING MOVE: also CTSH at the 21 EMA 09:35",
+   "tv": "NYSE:ACN",
+   "kind": "trigger",
+   "groups": [
+    "IT Services & Consulting",
+    "IT Consulting & Outsourcing"
+   ]
+  },
+  {
+   "key": "grp:IT Services & Consulting",
+   "time": "09:56",
+   "title": "GROUP MOVE: IT Services & Consulting (\u2605 Top #1/99, 16 stocks): CTSH, ACN",
+   "msg": "CTSH at the 21 EMA 09:35 \u00b7 ACN breakout 09:56 \u00b7 2 stocks of IT Services & Consulting alerting today",
+   "tv": "",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "ACN:touch",
+   "time": "09:57",
+   "title": "ACN touched its buy point, back under",
+   "msg": "traded up to $254.05 today, over the buy point $254.02, now $253.62 (-0.2%) \u00b7 not a breakout yet: that alert comes when it trades over $254.02 at a check \u00b7 +1.4% \u00b7 vol 0.7x \u00b7 launched 2026-10-01 (A+) \u00b7 IT SERVICES & CONSULTING MOVE: also CTSH at the 21 EMA 09:35",
+   "tv": "NYSE:ACN",
+   "kind": "heads-up",
+   "groups": [
+    "IT Services & Consulting",
+    "IT Consulting & Outsourcing"
+   ]
+  },
+  {
+   "key": "SONO:touch",
+   "time": "10:05",
+   "title": "SONO touched its buy point, back under",
+   "msg": "traded up to $18.73 today, over the buy point $18.35, now $18.35 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $18.35 at a check \u00b7 +1.3% \u00b7 vol 1.0x \u00b7 launched 2026-11-11 (A)",
+   "tv": "NASDAQ:SONO",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "BLMN:ema21zone",
+   "time": "10:05",
+   "title": "BLMN at its 21 EMA in the base",
+   "msg": "$10.08 at the 21 EMA $9.96 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.4% \u00b7 vol 0.8x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-11-09)",
+   "tv": "NASDAQ:BLMN",
+   "kind": "heads-up",
+   "groups": [
+    "Casual Dining",
+    "Restaurants"
+   ]
+  },
+  {
+   "key": "ZLAB:ema21zone",
+   "time": "10:10",
+   "title": "ZLAB at its 21 EMA in the base",
+   "msg": "$24.54 at the 21 EMA $24.43 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -5.8% \u00b7 vol 0.9x \u00b7 leg 1 \u00b7 3-SETUPS Setting up (from 2-POOL 2026-11-06)",
+   "tv": "NASDAQ:ZLAB",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "LTH:ema21zone",
+   "time": "10:11",
+   "title": "LTH at its 21 EMA in the base",
+   "msg": "$44.97 at the 21 EMA $44.71 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -1.3% \u00b7 vol 1.0x \u00b7 leg 1 \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-11-04)",
+   "tv": "NYSE:LTH",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "MPWR:zone",
+   "time": "10:13",
+   "title": "MPWR pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "$1371.44 in the retest zone $1240.14-$1386.23 \u00b7 level $1365.36 (broken 2026-11-09) \u00b7 at the 10 EMA ($1332.52 at the last close) & 21 EMA ($1297.72 at the last close) & 50 EMA ($1295.67 at the last close) \u00b7 a heads-up: the buy is the close holding over $1365.36 \u00b7 -5.2% \u00b7 vol 0.7x \u00b7 leg 0 \u00b7 launched 2026-11-09 (B)",
+   "tv": "NASDAQ:MPWR",
+   "kind": "heads-up",
+   "groups": [
+    "Analog & Auto Semis",
+    "Semis: Analog, Auto & Power"
+   ]
+  },
+  {
+   "key": "SPOT:touch",
+   "time": "10:15",
+   "title": "SPOT touched its buy point, back under",
+   "msg": "traded up to $614.81 today, over the buy point $608.18, now $608.18 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $608.18 at a check \u00b7 +1.6% \u00b7 vol 0.4x \u00b7 launched 2026-10-22 (A)",
+   "tv": "NYSE:SPOT",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "ELF:ema21zone",
+   "time": "10:15",
+   "title": "ELF at its 21 EMA in the base",
+   "msg": "$114.44 at the 21 EMA $113.21 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.8% \u00b7 vol 2.5x \u00b7 leg 4 \u00b7 launched 2026-08-04 (C)",
+   "tv": "NYSE:ELF",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "RHI:ema21zone",
+   "time": "10:16",
+   "title": "RHI at its 21 EMA in the base",
+   "msg": "$41.70 at the 21 EMA $41.20 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.6% \u00b7 vol 0.2x \u00b7 leg 1 \u00b7 launched 2026-10-23 (A)",
+   "tv": "NYSE:RHI",
+   "kind": "heads-up",
+   "groups": [
+    "Staffing & Employment Services"
+   ]
+  },
+  {
+   "key": "TREX:zone",
+   "time": "10:19",
+   "title": "TREX pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$52.48 in the retest zone $48.58-$52.57 \u00b7 level $52.00-$52.38 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($53.66 at the last close) & 21 EMA ($51.66 at the last close) \u00b7 a heads-up: the buy is the close holding over $52.00 \u00b7 -0.6% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (A)",
+   "tv": "NYSE:TREX",
+   "kind": "heads-up",
+   "groups": [
+    "Building Products",
+    "Building Products & Equipment"
+   ]
+  },
+  {
+   "key": "RDNT:ema21zone",
+   "time": "10:20",
+   "title": "RDNT at its 21 EMA in the base",
+   "msg": "$75.25 at the 21 EMA $74.60 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -1.0% \u00b7 vol 0.2x \u00b7 leg 2 \u00b7 launched 2026-08-07 (C)",
+   "tv": "NASDAQ:RDNT",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "CWST:breakout",
+   "time": "10:34",
+   "title": "CWST B breakout: Base top",
+   "msg": "$101.90 over the base top $101.69 (set 2026-11-05; decisive with a close more than 0.5% over it, $102.20: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Waste Management #4/99, volume building \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +1.6% \u00b7 vol 0.6x for the time of day (light) \u00b7 would be leg 2 \u00b7 3-SETUPS Ready (from 1-UPDAY 2026-11-11)",
+   "tv": "NASDAQ:CWST",
+   "kind": "trigger",
+   "groups": [
+    "Waste Management"
+   ]
+  },
+  {
+   "key": "BETA:ema21zone",
+   "time": "10:39",
+   "title": "BETA at its 21 EMA in the base",
+   "msg": "$23.84 at the 21 EMA $23.40 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -5.3% \u00b7 vol 1.3x \u00b7 leg 1 \u00b7 launched 2026-11-03 (B)",
+   "tv": "NYSE:BETA",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "CWST:touch",
+   "time": "10:41",
+   "title": "CWST touched its buy point, back under",
+   "msg": "traded up to $101.90 today, over the buy point $101.69, now $101.53 (-0.2%) \u00b7 not a breakout yet: that alert comes when it trades over $101.69 at a check \u00b7 +1.2% \u00b7 vol 0.6x \u00b7 3-SETUPS Ready (from 1-UPDAY 2026-11-11)",
+   "tv": "NASDAQ:CWST",
+   "kind": "heads-up",
+   "groups": [
+    "Waste Management"
+   ]
+  },
+  {
+   "key": "PRMB:breakout",
+   "time": "10:48",
+   "title": "PRMB C breakout: Inner base (last 20 days)",
+   "msg": "$24.15 over the buy point $24.15 \u00b7 1st breakout since the launch, group not top 10% Beverages \u00b7 other #54/217 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +1.4% \u00b7 vol 0.3x for the time of day (light) \u00b7 base 4 days \u00b7 would be leg 2 \u00b7 launched 2026-11-02 (C)",
+   "tv": "NYSE:PRMB",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "PRMB:touch",
+   "time": "10:49",
+   "title": "PRMB touched its buy point, back under",
+   "msg": "traded up to $24.16 today, over the buy point $24.15, now $24.15 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $24.15 at a check \u00b7 +1.4% \u00b7 vol 0.3x \u00b7 launched 2026-11-02 (C)",
+   "tv": "NYSE:PRMB",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "CBRL:touch",
+   "time": "10:50",
+   "title": "CBRL touched its buy point, back under",
+   "msg": "traded up to $67.38 today, over the buy point $67.37, now $67.27 (-0.1%) \u00b7 not a breakout yet: that alert comes when it trades over $67.37 at a check \u00b7 +3.7% \u00b7 vol 0.5x \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-10-15)",
+   "tv": "NASDAQ:CBRL",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "CBRL:breakout",
+   "time": "11:11",
+   "title": "CBRL C breakout: Bull flag (trendline)",
+   "msg": "$67.46 over the buy point $67.37 \u00b7 2nd breakout since the launch, group not top 10% unranked \u00b7 +4.0% \u00b7 vol 0.7x for the time of day (light) \u00b7 an entry in the base (still leg 2), the base top is next \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-10-15)",
+   "tv": "NASDAQ:CBRL",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "CYRX:zone",
+   "time": "11:16",
+   "title": "CYRX pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$19.50 in the retest zone $17.43-$19.53 \u00b7 level $19.10-$19.53 (bodies-wicks) (broken 2026-11-09) \u00b7 at the 10 EMA ($19.07 at the last close) & 21 EMA ($18.35 at the last close) \u00b7 a heads-up: the buy is the close holding over $19.10 \u00b7 -3.0% \u00b7 vol 0.2x \u00b7 leg 1 \u00b7 launched 2026-11-09 (C)",
+   "tv": "NASDAQ:CYRX",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "CRL:zone",
+   "time": "11:16",
+   "title": "CRL pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "$333.04 in the retest zone $294.44-$333.30 \u00b7 level $319.80-$333.30 (bodies-wicks) (broken 2026-10-21) \u00b7 at the 10 EMA ($341.86 at the last close) & 21 EMA ($335.76 at the last close) & 50 EMA ($314.73 at the last close) \u00b7 a heads-up: the buy is the close holding over $319.80 \u00b7 -2.3% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-10-21 (C)",
+   "tv": "NYSE:CRL",
+   "kind": "heads-up",
+   "groups": [
+    "Life Science Tools & CROs",
+    "Diagnostics & Research"
+   ]
+  },
+  {
+   "key": "CBRL:ema21strong",
+   "time": "11:21",
+   "title": "CBRL entry: back over its 21 EMA on a strong day",
+   "msg": "closed under the 21 EMA $65.82 (over the 50 EMA $61.50), now $67.58 back over it \u00b7 +4.2% (1.0 ADR) \u00b7 vol 0.7x for the time of day \u00b7 the 21 EMA undercut & reclaim on a strong day, a short swing entry; the close confirms it \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-10-15)",
+   "tv": "NASDAQ:CBRL",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "SG:zone",
+   "time": "11:40",
+   "title": "SG pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$11.99 in the retest zone $10.60-$12.00 \u00b7 level $11.80-$11.95 (bodies-wicks) (broken 2026-11-06) \u00b7 at the 10 EMA ($12.17 at the last close) & 21 EMA ($11.36 at the last close) \u00b7 a heads-up: the buy is the close holding over $11.80 \u00b7 -3.1% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-06 (C)",
+   "tv": "NYSE:SG",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "DOCU:breakout",
+   "time": "12:10",
+   "title": "DOCU C breakout: Bull flag (trendline)",
+   "msg": "$80.81 over the buy point $80.80 \u00b7 late (3rd+ breakout or 50+ sessions on), group not top 10% Enterprise SaaS #15/99 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +0.8% \u00b7 vol 0.8x for the time of day (light) \u00b7 base 13 days \u00b7 an entry in the base (still leg 4), the base top is next \u00b7 launched 2026-08-13 (B) \u00b7 ENTERPRISE SAAS MOVE: also ADSK in the retest zone 09:35",
+   "tv": "NASDAQ:DOCU",
+   "kind": "trigger",
+   "groups": [
+    "Enterprise SaaS",
+    "Software: Collaboration & Communications"
+   ]
+  },
+  {
+   "key": "CROX:breakout",
+   "time": "12:35",
+   "title": "CROX C breakout: Base top",
+   "msg": "$162.13 over the base top $161.88 (set 2026-11-04; nothing traded above it for 501 sessions; decisive with a close more than 0.5% over it, $162.69: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Apparel & Luxury Goods \u00b7 other #23/217 \u00b7 +3.3% \u00b7 vol 0.8x for the time of day (light) \u00b7 base 7 days \u00b7 would be leg 2 \u00b7 launched 2026-10-29 (A)",
+   "tv": "NASDAQ:CROX",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "KVYO:touch",
+   "time": "12:55",
+   "title": "KVYO touched its buy point, back under",
+   "msg": "traded up to $22.21 today, over the buy point $22.20, now $22.17 (-0.1%) \u00b7 not a breakout yet: that alert comes when it trades over $22.20 at a check \u00b7 +3.9% \u00b7 vol 0.6x \u00b7 launched 2026-10-20 (B) \u00b7 ENTERPRISE SAAS MOVE: also ADSK in the retest zone 09:35, DOCU touched the buy point 09:45",
+   "tv": "NYSE:KVYO",
+   "kind": "heads-up",
+   "groups": [
+    "Enterprise SaaS",
+    "Software: Marketing & Ad Tech"
+   ]
+  },
+  {
+   "key": "PRCT:touch",
+   "time": "13:15",
+   "title": "PRCT touched its buy point, back under",
+   "msg": "traded up to $24.09 today, over the buy point $24.07, now $23.99 (-0.3%) \u00b7 not a breakout yet: that alert comes when it trades over $24.07 at a check \u00b7 +2.0% \u00b7 vol 0.7x \u00b7 3-SETUPS Ready (from 1-UPDAY 2026-11-09)",
+   "tv": "NASDAQ:PRCT",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "PRCT:breakout",
+   "time": "13:20",
+   "title": "PRCT B breakout: Base top",
+   "msg": "$24.11 over the base top $24.07 (set 2026-11-05; decisive with a close more than 0.5% over it, $24.19: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% unranked, volume building \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +2.5% \u00b7 vol 0.7x for the time of day (light) \u00b7 would be leg 2 \u00b7 3-SETUPS Ready (from 1-UPDAY 2026-11-09)",
+   "tv": "NASDAQ:PRCT",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "KVYO:breakout",
+   "time": "13:35",
+   "title": "KVYO C breakout: Base top",
+   "msg": "$22.22 over the base top $22.20 (set 2026-11-05; nothing traded above it for 133 sessions; decisive with a close more than 0.5% over it, $22.31: within 0.5% a breakout with caution) \u00b7 late (3rd+ breakout or 50+ sessions on), group not top 10% Software: Marketing & Ad Tech #2/217 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +4.1% \u00b7 vol 0.6x for the time of day (light) \u00b7 base 6 days \u00b7 would be leg 3 \u00b7 launched 2026-10-20 (B) \u00b7 ENTERPRISE SAAS MOVE: also ADSK in the retest zone 09:35, DOCU touched the buy point 09:45",
+   "tv": "NYSE:KVYO",
+   "kind": "trigger",
+   "groups": [
+    "Enterprise SaaS",
+    "Software: Marketing & Ad Tech"
+   ]
+  },
+  {
+   "key": "MD:zone",
+   "time": "13:55",
+   "title": "MD pulling back to its breakout level + 10 EMA & 21 EMA",
+   "msg": "$31.07 in the retest zone $28.95-$31.07 \u00b7 level $30.71-$31.07 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($31.05 at the last close) & 21 EMA ($30.02 at the last close) \u00b7 a heads-up: the buy is the close holding over $30.71 \u00b7 -1.1% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C)",
+   "tv": "NYSE:MD",
+   "kind": "heads-up",
+   "groups": [
+    "Medical Care Facilities"
+   ]
+  },
+  {
+   "key": "SWKS:breakout",
+   "time": "14:10",
+   "title": "SWKS C breakout: Base top",
+   "msg": "$90.66 over the base top $90.50 (set 2026-11-02; decisive with a close more than 0.5% over it, $90.95: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Semis: Mobile & RF #137/217 \u00b7 +0.7% \u00b7 vol 0.9x for the time of day (light) \u00b7 would be leg 1 \u00b7 3-SETUPS Triggered today (from 2-POOL 2026-10-15)",
+   "tv": "NASDAQ:SWKS",
+   "kind": "trigger",
+   "groups": [
+    "Semis: Mobile & RF"
+   ]
+  },
+  {
+   "key": "GLBE:touch",
+   "time": "14:45",
+   "title": "GLBE touched its buy point, back under",
+   "msg": "traded up to $41.94 today, over the buy point $41.91, now $41.80 (-0.3%) \u00b7 not a breakout yet: that alert comes when it trades over $41.91 at a check \u00b7 +1.8% \u00b7 vol 0.7x \u00b7 launched 2026-11-04 (C)",
+   "tv": "NASDAQ:GLBE",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "ADMA:breakout",
+   "time": "14:50",
+   "title": "ADMA C breakout: Base top",
+   "msg": "$13.82 over the base top $13.77 (set 2026-11-05; nothing traded above it for 163 sessions; decisive with a close more than 0.5% over it, $13.84: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Biotechnology \u00b7 other #60/217 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +4.4% \u00b7 vol 0.9x for the time of day (light) \u00b7 base 6 days \u00b7 would be leg 2 \u00b7 launched 2026-11-05 (A+)",
+   "tv": "NASDAQ:ADMA",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "AMLX:breakout",
+   "time": "15:11",
+   "title": "AMLX C breakout: Base top",
+   "msg": "$30.72 over the base top $30.68 (set 2026-11-04; nothing traded above it for 34 sessions; decisive with a close more than 0.5% over it, $30.83: within 0.5% a breakout with caution) \u00b7 late (3rd+ breakout or 50+ sessions on), group not top 10% Biotechnology \u00b7 other #60/217, volume building \u00b7 +2.9% \u00b7 vol 1.2x for the time of day \u00b7 base 7 days \u00b7 would be leg 2 \u00b7 launched 2026-08-18 (A)",
+   "tv": "NASDAQ:AMLX",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "AMLX:touch",
+   "time": "15:13",
+   "title": "AMLX touched its buy point, back under",
+   "msg": "traded up to $30.72 today, over the buy point $30.68, now $30.62 (-0.2%) \u00b7 not a breakout yet: that alert comes when it trades over $30.68 at a check \u00b7 +2.5% \u00b7 vol 1.2x \u00b7 launched 2026-08-18 (A)",
+   "tv": "NASDAQ:AMLX",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "ADMA:touch",
+   "time": "15:38",
+   "title": "ADMA touched its buy point, back under",
+   "msg": "traded up to $14.02 today, over the buy point $13.77, now $13.77 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $13.77 at a check \u00b7 +4.0% \u00b7 vol 1.0x \u00b7 launched 2026-11-05 (A+)",
+   "tv": "NASDAQ:ADMA",
+   "kind": "heads-up",
+   "groups": []
+  },
+  {
+   "key": "EMBJ:retest",
+   "time": "15:45",
+   "title": "EMBJ RETEST HOLDING into the close + 10 EMA & 21 EMA",
+   "msg": "came back to its breakout level $78.52-$78.63 (bodies-wicks) (broken 2026-11-10) and trades $78.78 over it \u00b7 over the 10 EMA ($77.77 at the last close) & 21 EMA ($75.95 at the last close) \u00b7 the buy: at the close, if it holds over $78.52 \u00b7 -0.9% \u00b7 vol 0.9x \u00b7 leg 1 \u00b7 launched 2026-11-10 (B) \u00b7 today's low $77.93",
+   "tv": "NYSE:EMBJ",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "WRBY:retest",
+   "time": "15:45",
+   "title": "WRBY RETEST HOLDING into the close + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "came back to its breakout level $26.58-$27.45 (bodies-wicks) (broken 2026-11-09) and trades $27.28 over it \u00b7 over the 10 EMA ($26.93 at the last close) & 21 EMA ($26.09 at the last close) & 50 EMA ($25.69 at the last close) \u00b7 the buy: at the close, if it holds over $26.58 \u00b7 +2.1% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-09 (A+) \u00b7 today's low $26.21",
+   "tv": "NYSE:WRBY",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "CYRX:retest",
+   "time": "15:45",
+   "title": "CYRX RETEST HOLDING into the close + 10 EMA & 21 EMA",
+   "msg": "came back to its breakout level $19.10-$19.53 (bodies-wicks) (broken 2026-11-09) and trades $19.90 over it \u00b7 over the 10 EMA ($19.07 at the last close) & 21 EMA ($18.35 at the last close) \u00b7 the buy: at the close, if it holds over $19.10 \u00b7 -1.0% \u00b7 vol 0.3x \u00b7 leg 1 \u00b7 launched 2026-11-09 (C) \u00b7 today's low $19.43",
+   "tv": "NASDAQ:CYRX",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "SG:retest",
+   "time": "15:45",
+   "title": "SG RETEST HOLDING into the close + 10 EMA & 21 EMA",
+   "msg": "came back to its breakout level $11.80-$11.95 (bodies-wicks) (broken 2026-11-06) and trades $12.19 over it \u00b7 over the 10 EMA ($12.17 at the last close) & 21 EMA ($11.36 at the last close) \u00b7 the buy: at the close, if it holds over $11.80 \u00b7 -1.6% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-06 (C) \u00b7 today's low $11.86",
+   "tv": "NYSE:SG",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "SYRE:retest",
+   "time": "15:45",
+   "title": "SYRE RETEST HOLDING into the close + 10 EMA & 21 EMA",
+   "msg": "came back to its breakout level $99.75-$100.42 (bodies-wicks) (broken 2026-11-06) and trades $103.70 over it \u00b7 over the 10 EMA ($101.84 at the last close) & 21 EMA ($97.79 at the last close) \u00b7 the buy: at the close, if it holds over $99.75 \u00b7 +0.8% \u00b7 vol 0.8x \u00b7 leg 1 \u00b7 launched 2026-11-06 (C) \u00b7 today's low $100.49 \u00b7 SMALL & MID-CAP BIOTECH MOVE: also CGON in the retest zone 09:36",
+   "tv": "NASDAQ:SYRE",
+   "kind": "trigger",
+   "groups": [
+    "Small & Mid-cap Biotech"
+   ]
+  },
+  {
+   "key": "KTB:retest",
+   "time": "15:45",
+   "title": "KTB RETEST HOLDING into the close + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "came back to its breakout level $77.78-$79.62 (bodies-wicks) (broken 2026-11-04) and trades $80.77 over it \u00b7 over the 10 EMA ($78.67 at the last close) & 21 EMA ($76.50 at the last close) & 50 EMA ($74.39 at the last close) \u00b7 the buy: at the close, if it holds over $77.78 \u00b7 +3.9% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B) \u00b7 today's low $78.08",
+   "tv": "NYSE:KTB",
+   "kind": "trigger",
+   "groups": [
+    "Apparel & Luxury Goods"
+   ]
+  },
+  {
+   "key": "TOST:retest",
+   "time": "15:45",
+   "title": "TOST RETEST HOLDING into the close + 10 EMA & 21 EMA & 50 EMA",
+   "msg": "came back to its breakout level $33.53-$34.66 (bodies-wicks) (broken 2026-11-04) and trades $34.55 over it \u00b7 over the 10 EMA ($33.88 at the last close) & 21 EMA ($33.20 at the last close) & 50 EMA ($32.42 at the last close) \u00b7 the buy: at the close, if it holds over $33.53 \u00b7 +3.1% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 today's low $33.40 \u00b7 FINTECH & PAYMENTS MOVE: also GPN early gap 09:31",
+   "tv": "NYSE:TOST",
+   "kind": "trigger",
+   "groups": [
+    "Fintech & Payments",
+    "Payments"
+   ]
+  },
+  {
+   "key": "ADSK:retest",
+   "time": "15:45",
+   "title": "ADSK RETEST HOLDING into the close + 10 EMA & 21 EMA",
+   "msg": "came back to its breakout level $257.91-$263.16 (bodies-wicks) (broken 2026-11-04) and trades $264.15 over it \u00b7 over the 10 EMA ($258.57 at the last close) & 21 EMA ($252.14 at the last close) \u00b7 the buy: at the close, if it holds over $257.91 \u00b7 +1.8% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 today's low $261.40 \u00b7 ENTERPRISE SAAS MOVE: also DOCU touched the buy point 09:45, KVYO touched the buy point 12:55",
+   "tv": "NASDAQ:ADSK",
+   "kind": "trigger",
+   "groups": [
+    "Enterprise SaaS",
+    "Software: Majors"
+   ]
+  },
+  {
+   "key": "MD:retest",
+   "time": "15:45",
+   "title": "MD RETEST HOLDING into the close + 10 EMA & 21 EMA",
+   "msg": "came back to its breakout level $30.71-$31.07 (bodies-wicks) (broken 2026-11-04) and trades $31.33 over it \u00b7 over the 10 EMA ($31.05 at the last close) & 21 EMA ($30.02 at the last close) \u00b7 the buy: at the close, if it holds over $30.71 \u00b7 -0.2% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 today's low $31.07",
+   "tv": "NYSE:MD",
+   "kind": "trigger",
+   "groups": [
+    "Medical Care Facilities"
+   ]
+  },
+  {
+   "key": "ELF:ema21bl",
+   "time": "15:45",
+   "title": "ELF 21 EMA RETEST + BREAKOUT LEVEL $116.28 holding into the close",
+   "msg": "back over the 21 EMA $113.21 (the last close's) at $118.20 \u00b7 the buy: at the close, if it holds over it \u00b7 +4.1% \u00b7 vol 1.6x \u00b7 leg 4 \u00b7 launched 2026-08-04 (C) \u00b7 today's low $113.00 under it \u00b7 also holding over its breakout level $116.28 (broken 2026-11-09): 2 confluences",
+   "tv": "NYSE:ELF",
+   "kind": "trigger",
+   "groups": []
+  },
+  {
+   "key": "KRMN:ema21",
+   "time": "15:45",
+   "title": "KRMN 21 EMA RETEST holding into the close",
+   "msg": "back over the 21 EMA $39.05 (the last close's) at $40.14 \u00b7 the buy: at the close, if it holds over it \u00b7 -0.9% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-06 (A+) \u00b7 today's low $37.33 under it",
+   "tv": "NYSE:KRMN",
+   "kind": "heads-up",
+   "groups": [],
+   "grouped": true
+  },
+  {
+   "key": "DG:ema21",
+   "time": "15:45",
+   "title": "DG 21 EMA RETEST holding into the close",
+   "msg": "back over the 21 EMA $133.19 (the last close's) at $134.47 \u00b7 the buy: at the close, if it holds over it \u00b7 -0.1% \u00b7 vol 1.0x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B) \u00b7 today's low $133.00 under it",
+   "tv": "NYSE:DG",
+   "kind": "heads-up",
+   "groups": [
+    "Retail",
+    "Discount Stores"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "PACS:ema21",
+   "time": "15:45",
+   "title": "PACS 21 EMA RETEST holding into the close",
+   "msg": "back over the 21 EMA $47.83 (the last close's) at $48.27 \u00b7 the buy: at the close, if it holds over it \u00b7 +0.6% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 today's low $47.24 under it",
+   "tv": "NYSE:PACS",
+   "kind": "heads-up",
+   "groups": [],
+   "grouped": true
+  },
+  {
+   "key": "BLMN:ema21",
+   "time": "15:45",
+   "title": "BLMN 21 EMA RETEST holding into the close",
+   "msg": "back over the 21 EMA $9.96 (the last close's) at $10.33 \u00b7 the buy: at the close, if it holds over it \u00b7 +2.1% \u00b7 vol 0.6x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-11-09) \u00b7 today's low $9.88 under it",
+   "tv": "NASDAQ:BLMN",
+   "kind": "heads-up",
+   "groups": [
+    "Casual Dining",
+    "Restaurants"
+   ],
+   "grouped": true
+  },
+  {
+   "key": "ALMR:ema21",
+   "time": "15:45",
+   "title": "ALMR 21 EMA RETEST holding into the close",
+   "msg": "back over the 21 EMA $30.20 (the last close's) at $30.77 \u00b7 the buy: at the close, if it holds over it \u00b7 -3.1% \u00b7 vol 0.9x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 2-POOL 2026-11-09) \u00b7 today's low $29.22 under it",
+   "tv": "NASDAQ:ALMR",
+   "kind": "heads-up",
+   "groups": [],
+   "grouped": true
+  },
+  {
+   "key": "summary:1545",
+   "time": "15:45",
+   "title": "5 more heads-ups (in the portal's alert log)",
+   "msg": "KRMN 21 EMA RETEST holding into the close $39.05 \u00b7 DG 21 EMA RETEST holding into the close $133.19 \u00b7 PACS 21 EMA RETEST holding into the close $47.83 \u00b7 BLMN 21 EMA RETEST holding into the close $9.96 \u00b7 ALMR 21 EMA RETEST holding into the close $30.20",
+   "tv": "",
+   "kind": "summary",
+   "groups": []
+  },
+  {
+   "key": "FA:ema21bl",
+   "time": "15:52",
+   "title": "FA 21 EMA RETEST + BREAKOUT LEVEL $20.56 holding into the close",
+   "msg": "back over the 21 EMA $21.41 (the last close's) at $21.57 \u00b7 the buy: at the close, if it holds over it \u00b7 +1.0% \u00b7 vol 1.1x \u00b7 leg 2 \u00b7 launched 2026-08-13 (C) \u00b7 today's low $21.33 under it \u00b7 also holding over its breakout level $20.56 (broken 2026-10-22): 2 confluences",
+   "tv": "NASDAQ:FA",
+   "kind": "trigger",
+   "groups": [
+    "Payroll & HR Software"
+   ]
+  }
+ ],
+ "log": [
+  "09:31 GPN EARLY: power-day gap (news? no earnings): gap +13.4% \u00b7 $88.86 (+0.8%) \u00b7 was under its 50 EMA, now above the 50 EMA & 200 SMA \u00b7 base high $102.91 not cleared \u00b7 vol 2.6x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (4x+ and up 15%+) \u00b7 theme Financial Tech Processors #11/217 \u00b7 #4 of 5 in it \u00b7 RS 74",
+  "09:31 MANE EARLY: power-day gap (news? no earnings): gap +8.4% \u00b7 $135.48 (+0.1%) \u00b7 base high $156.63 not cleared \u00b7 vol 0.9x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (4x+ and up 15%+) \u00b7 theme Biotechnology \u00b7 other #60/217 \u00b7 #23 of 93 in it \u00b7 RS 93",
+  "09:32 TNDM EARLY: power-day gap (news? no earnings): gap +8.6% \u00b7 $18.99 (+8.5%) \u00b7 was under its 50 EMA & 200 SMA, now above the 50 EMA & 200 SMA \u00b7 base high $20.25 not cleared \u00b7 vol 6.4x so far (rough: the opening auction) \u00b7 the full alert from 9:35 if the volume confirms (4x+ and up 15%+) \u00b7 theme Medical Devices & Supplies \u00b7 other #48/217 \u00b7 #12 of 17 in it \u00b7 RS 54",
+  "09:35 HAWK A LAGGARD launch on earnings: +14.0% \u00b7 gap +15.3% \u00b7 vol 15.3x for the time of day \u00b7 $16.73, -18.1% vs the 200 SMA $20.42 \u00b7 base high $15.79 cleared \u00b7 moves to Launches after 5 closes over the 200 SMA",
+  "09:35 TNDM CATALYST GAP: news? (no earnings), over its 50 EMA & 200 SMA: +10.5% \u00b7 gap +8.5% \u00b7 vol 4.3x for the time of day \u00b7 $19.35 \u00b7 was under its 50 EMA & 200 SMA, now above the 50 EMA & 200 SMA \u00b7 35% under its 52-week high ($29.65), after a 40% correction \u00b7 base high $20.25 not cleared yet: 2nd alert when it is \u00b7 theme Medical Devices & Supplies \u00b7 other #48/217 \u00b7 #12 of 17 in it \u00b7 RS 54 \u00b7 5-min opening range high $19.25: 0.5% above it",
+  "09:35 SONO B breakout: Base top: $18.44 over the base top $18.35 (set 2026-10-02; nothing traded above it for 216 sessions; decisive with a close more than 0.5% over it, $18.44: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Household Durables \u00b7 other #128/217, volume building \u00b7 +1.8% \u00b7 vol 1.0x for the time of day (light) \u00b7 base 30 days \u00b7 would be leg 2 \u00b7 launched 2026-11-11 (A)",
+  "09:35 GME C breakout: Pop out of the consolidation (in base): $25.95 over the buy point $25.62 \u00b7 1st breakout since the launch, group not top 10% unranked \u00b7 +1.3% \u00b7 vol 2.0x for the time of day \u00b7 would be leg 0 \u00b7 3-SETUPS Ready (from 2-POOL 2026-10-29)",
+  "09:35 ATI C breakout: Base top: $192.31 over the base top $191.52 (set 2026-10-16; decisive with a close more than 0.5% over it, $192.48: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% unranked \u00b7 +1.1% \u00b7 vol 0.6x for the time of day (light) \u00b7 would be leg 1 \u00b7 3-SETUPS Ready (from 2-POOL 2026-11-09)",
+  "09:35 EMBJ pulling back to its breakout level + 10 EMA & 21 EMA: $78.38 in the retest zone $74.42-$79.20 \u00b7 level $78.52-$78.63 (bodies-wicks) (broken 2026-11-10) \u00b7 at the 10 EMA ($77.77 at the last close) & 21 EMA ($75.95 at the last close) \u00b7 a heads-up: the buy is the close holding over $78.52 \u00b7 -1.4% \u00b7 vol 1.1x \u00b7 leg 1 \u00b7 launched 2026-11-10 (B)",
+  "09:35 WRBY pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA: $26.65 in the retest zone $23.44-$27.45 \u00b7 level $26.58-$27.45 (bodies-wicks) (broken 2026-11-09) \u00b7 at the 10 EMA ($26.93 at the last close) & 21 EMA ($26.09 at the last close) & 50 EMA ($25.69 at the last close) \u00b7 a heads-up: the buy is the close holding over $26.58 \u00b7 -0.3% \u00b7 vol 0.8x \u00b7 leg 1 \u00b7 launched 2026-11-09 (A+)",
+  "09:35 KRMN at its 21 EMA in the base: $39.27 at the 21 EMA $39.05 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -2.9% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-06 (A+)",
+  "09:35 SYRE pulling back to its breakout level + 10 EMA & 21 EMA: $100.77 in the retest zone $92.37-$100.98 \u00b7 level $99.75-$100.42 (bodies-wicks) (broken 2026-11-06) \u00b7 at the 10 EMA ($101.84 at the last close) & 21 EMA ($97.79 at the last close) \u00b7 a heads-up: the buy is the close holding over $99.75 \u00b7 -2.1% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-06 (C)",
+  "09:35 CNC pulling back to its breakout level + 10 EMA & 21 EMA: $70.00 in the retest zone $66.28-$72.50 \u00b7 level $71.24-$72.50 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($70.11 at the last close) & 21 EMA ($69.34 at the last close) \u00b7 a heads-up: the buy is the close holding over $71.24 \u00b7 -0.4% \u00b7 vol 1.1x \u00b7 leg 1 \u00b7 launched 2026-11-04 (A) \u00b7 MANAGED CARE MOVE: also OSCR at the 21 EMA 09:35",
+  "09:35 OSCR at its 21 EMA in the base: $31.95 at the 21 EMA $32.17 (the last close's) \u00b7 a 21 EMA undercut & reclaim (2 closes under it: strong) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.0% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B) \u00b7 MANAGED CARE MOVE: also CNC in the retest zone 09:35",
+  "09:35 ISRG pulling back to its breakout level + 10 EMA & 21 EMA: $443.79 in the retest zone $431.19-$458.88 \u00b7 level $453.60-$458.88 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($449.72 at the last close) & 21 EMA ($443.08 at the last close) \u00b7 a heads-up: the buy is the close holding over $453.60 \u00b7 +0.9% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B)",
+  "09:35 KTB pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA: $78.23 in the retest zone $72.48-$79.62 \u00b7 level $77.78-$79.62 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($78.67 at the last close) & 21 EMA ($76.50 at the last close) & 50 EMA ($74.39 at the last close) \u00b7 a heads-up: the buy is the close holding over $77.78 \u00b7 +0.5% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B)",
+  "09:35 TOST pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA: $33.77 in the retest zone $31.55-$34.66 \u00b7 level $33.53-$34.66 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($33.88 at the last close) & 21 EMA ($33.20 at the last close) & 50 EMA ($32.42 at the last close) \u00b7 a heads-up: the buy is the close holding over $33.53 \u00b7 +0.7% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 FINTECH & PAYMENTS MOVE: also GPN early gap 09:31",
+  "09:35 ADSK pulling back to its breakout level + 10 EMA & 21 EMA: $262.02 in the retest zone $245.33-$263.16 \u00b7 level $257.91-$263.16 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($258.57 at the last close) & 21 EMA ($252.14 at the last close) \u00b7 a heads-up: the buy is the close holding over $257.91 \u00b7 +1.0% \u00b7 vol 0.9x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C)",
+  "09:35 PACS at its 21 EMA in the base: $48.24 at the 21 EMA $47.83 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.5% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C)",
+  "09:35 TEM at its 21 EMA in the base: $71.69 at the 21 EMA $74.94 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -5.5% \u00b7 vol 1.5x \u00b7 leg 0 \u00b7 launched 2026-11-02 (C)",
+  "09:35 WING pulling back to its breakout level + 10 EMA: $161.46 in the retest zone $148.50-$170.37 \u00b7 level $163.04-$170.37 (bodies-wicks) (broken 2026-11-09) \u00b7 at the 10 EMA ($160.55 at the last close) \u00b7 a heads-up: the buy is the close holding over $163.04 \u00b7 +1.6% \u00b7 vol 0.3x \u00b7 leg 2 \u00b7 launched 2026-11-02 (C)",
+  "09:35 CTSH at its 21 EMA in the base: $63.42 at the 21 EMA $64.69 (the last close's) \u00b7 a 21 EMA undercut & reclaim (2 closes under it: strong) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.0% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-10-22 (C)",
+  "09:35 BBWI pulling back to its breakout level + 10 EMA & 21 EMA: $21.25 in the retest zone $20.19-$21.74 \u00b7 level $21.52-$21.56 (bodies-wicks) (broken 2026-10-22) \u00b7 at the 10 EMA ($21.74 at the last close) & 21 EMA ($21.22 at the last close) \u00b7 a heads-up: the buy is the close holding over $21.52 \u00b7 +0.8% \u00b7 vol 0.9x \u00b7 leg 1 \u00b7 launched 2026-10-15 (C)",
+  "09:35 MRNA at its 21 EMA in the base: $223.00 at the 21 EMA $230.40 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -3.6% \u00b7 vol 1.0x \u00b7 leg 2 \u00b7 launched 2026-10-09 (B)",
+  "09:35 EFOR at its 21 EMA in the base: $35.30 at the 21 EMA $36.72 (the last close's) \u00b7 a 21 EMA undercut & reclaim (2 closes under it: strong) setup: the buy is the close back over it, in the upper half of the day \u00b7 -1.5% \u00b7 vol 0.4x \u00b7 leg 2 \u00b7 launched 2026-10-01 (B)",
+  "09:35 SLDE pulling back to its breakout level + 10 EMA & 21 EMA: $26.06 in the retest zone $25.28-$26.99 \u00b7 level $26.75 (broken 2026-10-16) \u00b7 at the 10 EMA ($26.53 at the last close) & 21 EMA ($26.54 at the last close) \u00b7 a heads-up: the buy is the close holding over $26.75 \u00b7 +0.4% \u00b7 vol 1.6x \u00b7 leg 1 \u00b7 launched 2026-10-01 (C)",
+  "09:35 CVLT at its 21 EMA in the base: $157.28 at the 21 EMA $162.12 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -5.3% \u00b7 vol 7.3x \u00b7 leg 0 \u00b7 3-SETUPS Ready (from 2-POOL 2026-11-06)",
+  "09:35 GROUP MOVE: Fintech & Payments (#31/99, 12 stocks): GPN, TOST: GPN early gap 09:31 \u00b7 TOST in the retest zone 09:35 \u00b7 2 stocks of Fintech & Payments alerting today",
+  "09:35 GROUP MOVE: Managed Care (#26/99, 8 stocks): CNC, OSCR: CNC in the retest zone 09:35 \u00b7 OSCR at the 21 EMA 09:35 \u00b7 2 stocks of Managed Care alerting today",
+  "09:35 16 more heads-ups (in the portal's alert log): SYRE pulling back to its breakout level $100.77 \u00b7 CNC pulling back to its breakout level $70.00 \u00b7 OSCR at its 21 EMA in the base $31.95 \u00b7 ISRG pulling back to its breakout level $443.79 \u00b7 KTB pulling back to its breakout level $78.23 \u00b7 TOST pulling back to its breakout level $33.77 \u00b7 ADSK pulling back to its breakout level $262.02 \u00b7 PACS at its 21 EMA in the base $48.24 \u00b7 TEM at its 21 EMA in the base $71.69 \u00b7 WING pulling back to its breakout level $161.46 \u00b7 CTSH at its 21 EMA in the base $63.42 \u00b7 BBWI pulling back to its breakout level $21.25 \u00b7 MRNA at its 21 EMA in the base $223.00 \u00b7 EFOR at its 21 EMA in the base $35.30 \u00b7 SLDE pulling back to its breakout level $26.06 \u00b7 CVLT at its 21 EMA in the base $157.28",
+  "09:35 TNDM MORNING BREAKOUT +10.5%: $19.35 \u00b7 +10.5% \u00b7 vol 4.3x for the time of day \u00b7 over yesterday's high $19.20 and the 5-min opening range high $19.25 \u00b7 stop under the day's low $18.53: risk 4.4% = 0.6 ADR \u00b7 ADR 6.8% \u00b7 +3% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 news: FDA / trial (headline): Tandem Diabetes Care Receives FDA Clearance For Tandem Mobi As Tubeless Automated Insulin Delivery System With Up To 7 Days Of Wear (Benzinga 8:32 AM ET) \u00b7 \ud83d\udcf0 https://www.benzinga.com/quote/TNDM",
+  "09:36 FIGS breakout confirmed: opened $23.08 and trades $22.62 above the base top $22.46 (broken 2026-11-11) \u00b7 -0.2% \u00b7 vol 4.1x for the time of day",
+  "09:36 CGON pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA: $68.59 in the retest zone $61.73-$68.71 \u00b7 level $67.71-$67.88 (bodies-wicks) (broken 2026-11-06) \u00b7 at the 10 EMA ($69.54 at the last close) & 21 EMA ($67.60 at the last close) & 50 EMA ($67.91 at the last close) \u00b7 a heads-up: the buy is the close holding over $67.71 \u00b7 -2.2% \u00b7 vol 2.2x \u00b7 leg 1 \u00b7 launched 2026-11-06 (A) \u00b7 SMALL & MID-CAP BIOTECH MOVE: also SYRE in the retest zone 09:35",
+  "09:36 AVPT at its 21 EMA in the base: $16.28 at the 21 EMA $16.18 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.6% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-10-28 (B) \u00b7 CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35, NTSK in the retest zone 09:36",
+  "09:36 BBWI entry: back over its 21 EMA on a strong day: closed under the 21 EMA $21.22 (over the 50 EMA $20.13), now $21.37 back over it \u00b7 +1.3% (0.3 ADR) \u00b7 vol 0.9x for the time of day \u00b7 the 21 EMA undercut & reclaim on a strong day, a short swing entry; the close confirms it \u00b7 launched 2026-10-15 (C)",
+  "09:36 NTSK pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA: $21.32 in the retest zone $18.67-$21.56 \u00b7 level $21.15-$21.30 (bodies-wicks) (broken 2026-10-21) \u00b7 at the 10 EMA ($22.37 at the last close) & 21 EMA ($22.06 at the last close) & 50 EMA ($20.07 at the last close) \u00b7 a heads-up: the buy is the close holding over $21.15 \u00b7 -4.4% \u00b7 vol 1.2x \u00b7 leg 3 \u00b7 launched 2026-09-14 (B) \u00b7 CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35, AVPT at the 21 EMA 09:36 \u00b7 SOFTWARE: CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35",
+  "09:36 FA at its 21 EMA in the base: $21.59 at the 21 EMA $21.41 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 +1.1% \u00b7 vol 0.5x \u00b7 leg 2 \u00b7 launched 2026-08-13 (C)",
+  "09:36 GROUP MOVE: Small & Mid-cap Biotech (#44/99, 23 stocks): SYRE, CGON: SYRE in the retest zone 09:35 \u00b7 CGON in the retest zone 09:36 \u00b7 2 stocks of Small & Mid-cap Biotech alerting today",
+  "09:36 GROUP MOVE: Cybersecurity (#19/99, 16 stocks): CVLT, AVPT, NTSK: CVLT at the 21 EMA 09:35 \u00b7 AVPT at the 21 EMA 09:36 \u00b7 NTSK in the retest zone 09:36 \u00b7 3 stocks of Cybersecurity alerting today",
+  "09:36 GROUP MOVE: Software: Cybersecurity (#52/217, 13 stocks): CVLT, NTSK: CVLT at the 21 EMA 09:35 \u00b7 NTSK in the retest zone 09:36 \u00b7 2 stocks of Software: Cybersecurity alerting today",
+  "09:36 ELF MORNING BREAKOUT +5.2%: $119.40 \u00b7 +5.2% \u00b7 vol 3.7x for the time of day \u00b7 over yesterday's high $117.30 and the 5-min opening range high $118.46 \u00b7 stop under the day's low $113.00: risk 5.7% = 1.2 ADR \u00b7 ADR 4.6% \u00b7 +45% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 news: nothing of its own today or the last 2 sessions (After earnings (Nov 4))",
+  "09:37 BBWI C breakout: Bull flag (trendline): $21.43 over the buy point $21.38 \u00b7 2nd breakout since the launch, group not top 10% Specialty Retail \u00b7 other #19/217 \u00b7 +1.6% \u00b7 vol 0.9x for the time of day (light) \u00b7 base 5 days \u00b7 an entry in the base (still leg 1), the base top is next \u00b7 launched 2026-10-15 (C)",
+  "09:37 SIG pulling back to its breakout level + 10 EMA & 21 EMA: $118.45 in the retest zone $113.41-$122.64 \u00b7 level $119.95-$122.64 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($119.28 at the last close) & 21 EMA ($116.78 at the last close) \u00b7 a heads-up: the buy is the close holding over $119.95 \u00b7 +0.1% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B)",
+  "09:37 ALMR at its 21 EMA in the base: $30.77 at the 21 EMA $30.20 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -3.1% \u00b7 vol 1.5x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 2-POOL 2026-11-09)",
+  "09:38 DG at its 21 EMA in the base: $134.23 at the 21 EMA $133.19 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.3% \u00b7 vol 2.0x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B)",
+  "09:40 WAY at its 21 EMA in the base: $28.17 at the 21 EMA $28.24 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.1% \u00b7 vol 0.4x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C)",
+  "09:41 SPOT C breakout: Bull flag (trendline): $609.99 over the buy point $608.18 \u00b7 2nd breakout since the launch, group not top 10% Internet Media & Services \u00b7 other #164/217 \u00b7 +1.9% \u00b7 vol 0.4x for the time of day (light) \u00b7 base 5 days \u00b7 an entry in the base (still leg 2), the base top is next \u00b7 launched 2026-10-22 (A)",
+  "09:42 CDNA at its 21 EMA in the base: $77.33 at the 21 EMA $76.25 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -3.1% \u00b7 vol 0.8x \u00b7 leg 1 \u00b7 launched 2026-10-30 (B)",
+  "09:43 RPD pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA: $14.11 in the retest zone $12.03-$14.14 \u00b7 level $13.84-$13.87 (bodies-wicks) (broken 2026-10-22) \u00b7 at the 10 EMA ($14.93 at the last close) & 21 EMA ($14.75 at the last close) & 50 EMA ($13.71 at the last close) \u00b7 a heads-up: the buy is the close holding over $13.84 \u00b7 -2.0% \u00b7 vol 0.3x \u00b7 leg 1 \u00b7 3-SETUPS Setting up (from 2-POOL 2026-10-05) \u00b7 CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35, AVPT at the 21 EMA 09:36, NTSK in the retest zone 09:36 \u00b7 SOFTWARE: CYBERSECURITY MOVE: also CVLT at the 21 EMA 09:35, NTSK in the retest zone 09:36",
+  "09:45 ADSK entry: push out of the 10 / 21 EMA with a gap: opened $265.95 (+2.5%) over yesterday's candle, now $263.51 over the trigger $263.16 (yesterday's candle, its 10 & 21 EMA and the breakout level, all reclaimed) \u00b7 after the retest of its breakout level $257.91 (touched 2026-11-09) \u00b7 +1.6% \u00b7 vol 0.8x for the time of day (light) \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 5-min opening range high $267.06: not cleared yet \u00b7 ENTERPRISE SAAS MOVE: also DOCU touched the buy point 09:45",
+  "09:45 REZI touched its buy point, back under: traded up to $22.15 today, over the buy point $22.13, now $22.08 (-0.2%) \u00b7 not a breakout yet: that alert comes when it trades over $22.13 at a check \u00b7 +3.0% \u00b7 vol 0.8x \u00b7 launched 2026-11-11 (A+)",
+  "09:45 DOCU touched its buy point, back under: traded up to $81.00 today, over the buy point $80.80, now $79.93 (-1.1%) \u00b7 not a breakout yet: that alert comes when it trades over $80.80 at a check \u00b7 -0.3% \u00b7 vol 0.5x \u00b7 launched 2026-08-13 (B) \u00b7 ENTERPRISE SAAS MOVE: also ADSK in the retest zone 09:35",
+  "09:45 SWKS touched its buy point, back under: traded up to $90.54 today, over the buy point $90.50, now $88.33 (-2.4%) \u00b7 not a breakout yet: that alert comes when it trades over $90.50 at a check \u00b7 -1.9% \u00b7 vol 0.5x \u00b7 3-SETUPS Triggered today (from 2-POOL 2026-10-15)",
+  "09:45 AI touched its buy point, back under: traded up to $12.17 today, over the buy point $12.07, now $11.93 (-1.2%) \u00b7 not a breakout yet: that alert comes when it trades over $12.07 at a check \u00b7 -1.1% \u00b7 vol 0.5x \u00b7 3-SETUPS Ready (from 1-EP/GAP 2026-10-12)",
+  "09:45 ATI touched its buy point, back under: traded up to $194.18 today, over the buy point $191.52, now $186.94 (-2.4%) \u00b7 not a breakout yet: that alert comes when it trades over $191.52 at a check \u00b7 -1.7% \u00b7 vol 1.0x \u00b7 3-SETUPS Ready (from 2-POOL 2026-11-09)",
+  "09:45 GROUP MOVE: Enterprise SaaS (#15/99, 48 stocks): ADSK, DOCU: ADSK in the retest zone 09:35 \u00b7 DOCU touched the buy point 09:45 \u00b7 2 stocks of Enterprise SaaS alerting today",
+  "09:46 CHDN C breakout: Base top: $100.44 over the base top $100.28 (set 2026-11-04; nothing traded above it for 135 sessions; decisive with a close more than 0.5% over it, $100.78: within 0.5% a breakout with caution) \u00b7 late (3rd+ breakout or 50+ sessions on), group not top 10% Hospitality & Leisure \u00b7 other #92/217 \u00b7 +0.8% \u00b7 vol 0.3x for the time of day (light) \u00b7 base 7 days \u00b7 would be leg 2 \u00b7 launched 2026-06-15 (C)",
+  "09:46 AI C breakout: Pop out of the consolidation (in base): $12.08 over the buy point $12.07 \u00b7 1st breakout since the launch, group not top 10% AI Software & Data #48/99 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +0.1% \u00b7 vol 0.5x for the time of day (light) \u00b7 would be leg 1 \u00b7 3-SETUPS Ready (from 1-EP/GAP 2026-10-12)",
+  "09:46 BBWI touched its buy point, back under: traded up to $21.50 today, over the buy point $21.38, now $21.35 (-0.1%) \u00b7 not a breakout yet: that alert comes when it trades over $21.38 at a check \u00b7 +1.3% \u00b7 vol 0.7x \u00b7 launched 2026-10-15 (C)",
+  "09:47 CHDN touched its buy point, back under: traded up to $100.44 today, over the buy point $100.28, now $99.64 (-0.6%) \u00b7 not a breakout yet: that alert comes when it trades over $100.28 at a check \u00b7 +0.0% \u00b7 vol 0.4x \u00b7 launched 2026-06-15 (C)",
+  "09:47 BAX at its 21 EMA in the base: $25.52 at the 21 EMA $25.34 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.9% \u00b7 vol 0.3x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-11-03)",
+  "09:50 BHVN pulling back to its breakout level + 21 EMA & 50 EMA: $13.75 in the retest zone $12.01-$13.75 \u00b7 level $13.50-$13.63 (bodies-wicks) (broken 2026-10-22) \u00b7 at the 21 EMA ($14.34 at the last close) & 50 EMA ($13.91 at the last close) \u00b7 a heads-up: the buy is the close holding over $13.50 \u00b7 -2.3% \u00b7 vol 0.3x \u00b7 leg 0 \u00b7 launched 2026-10-22 (A+)",
+  "09:56 ACN C breakout: Bull flag (trendline): $254.05 over the buy point $254.02 \u00b7 late (3rd+ breakout or 50+ sessions on), group \u2605 Top IT Services & Consulting #1/99 \u00b7 +1.6% \u00b7 vol 0.7x for the time of day (light) \u00b7 base 5 days \u00b7 an entry in the base (still leg 3), the base top is next \u00b7 launched 2026-10-01 (A+) \u00b7 IT SERVICES & CONSULTING MOVE: also CTSH at the 21 EMA 09:35",
+  "09:56 GROUP MOVE: IT Services & Consulting (\u2605 Top #1/99, 16 stocks): CTSH, ACN: CTSH at the 21 EMA 09:35 \u00b7 ACN breakout 09:56 \u00b7 2 stocks of IT Services & Consulting alerting today",
+  "09:57 ACN touched its buy point, back under: traded up to $254.05 today, over the buy point $254.02, now $253.62 (-0.2%) \u00b7 not a breakout yet: that alert comes when it trades over $254.02 at a check \u00b7 +1.4% \u00b7 vol 0.7x \u00b7 launched 2026-10-01 (A+) \u00b7 IT SERVICES & CONSULTING MOVE: also CTSH at the 21 EMA 09:35",
+  "10:05 SONO touched its buy point, back under: traded up to $18.73 today, over the buy point $18.35, now $18.35 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $18.35 at a check \u00b7 +1.3% \u00b7 vol 1.0x \u00b7 launched 2026-11-11 (A)",
+  "10:05 BLMN at its 21 EMA in the base: $10.08 at the 21 EMA $9.96 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.4% \u00b7 vol 0.8x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-11-09)",
+  "10:10 ZLAB at its 21 EMA in the base: $24.54 at the 21 EMA $24.43 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -5.8% \u00b7 vol 0.9x \u00b7 leg 1 \u00b7 3-SETUPS Setting up (from 2-POOL 2026-11-06)",
+  "10:11 LTH at its 21 EMA in the base: $44.97 at the 21 EMA $44.71 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -1.3% \u00b7 vol 1.0x \u00b7 leg 1 \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-11-04)",
+  "10:13 MPWR pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA: $1371.44 in the retest zone $1240.14-$1386.23 \u00b7 level $1365.36 (broken 2026-11-09) \u00b7 at the 10 EMA ($1332.52 at the last close) & 21 EMA ($1297.72 at the last close) & 50 EMA ($1295.67 at the last close) \u00b7 a heads-up: the buy is the close holding over $1365.36 \u00b7 -5.2% \u00b7 vol 0.7x \u00b7 leg 0 \u00b7 launched 2026-11-09 (B)",
+  "10:15 SPOT touched its buy point, back under: traded up to $614.81 today, over the buy point $608.18, now $608.18 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $608.18 at a check \u00b7 +1.6% \u00b7 vol 0.4x \u00b7 launched 2026-10-22 (A)",
+  "10:15 ELF at its 21 EMA in the base: $114.44 at the 21 EMA $113.21 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 +0.8% \u00b7 vol 2.5x \u00b7 leg 4 \u00b7 launched 2026-08-04 (C)",
+  "10:16 RHI at its 21 EMA in the base: $41.70 at the 21 EMA $41.20 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -0.6% \u00b7 vol 0.2x \u00b7 leg 1 \u00b7 launched 2026-10-23 (A)",
+  "10:19 TREX pulling back to its breakout level + 10 EMA & 21 EMA: $52.48 in the retest zone $48.58-$52.57 \u00b7 level $52.00-$52.38 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($53.66 at the last close) & 21 EMA ($51.66 at the last close) \u00b7 a heads-up: the buy is the close holding over $52.00 \u00b7 -0.6% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (A)",
+  "10:20 RDNT at its 21 EMA in the base: $75.25 at the 21 EMA $74.60 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -1.0% \u00b7 vol 0.2x \u00b7 leg 2 \u00b7 launched 2026-08-07 (C)",
+  "10:34 CWST B breakout: Base top: $101.90 over the base top $101.69 (set 2026-11-05; decisive with a close more than 0.5% over it, $102.20: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Waste Management #4/99, volume building \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +1.6% \u00b7 vol 0.6x for the time of day (light) \u00b7 would be leg 2 \u00b7 3-SETUPS Ready (from 1-UPDAY 2026-11-11)",
+  "10:39 BETA at its 21 EMA in the base: $23.84 at the 21 EMA $23.40 (the last close's) \u00b7 a 21 EMA retest (a controlled pullback into it) setup: the buy is the close back over it, in the upper half of the day \u00b7 -5.3% \u00b7 vol 1.3x \u00b7 leg 1 \u00b7 launched 2026-11-03 (B)",
+  "10:41 CWST touched its buy point, back under: traded up to $101.90 today, over the buy point $101.69, now $101.53 (-0.2%) \u00b7 not a breakout yet: that alert comes when it trades over $101.69 at a check \u00b7 +1.2% \u00b7 vol 0.6x \u00b7 3-SETUPS Ready (from 1-UPDAY 2026-11-11)",
+  "10:48 PRMB C breakout: Inner base (last 20 days): $24.15 over the buy point $24.15 \u00b7 1st breakout since the launch, group not top 10% Beverages \u00b7 other #54/217 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +1.4% \u00b7 vol 0.3x for the time of day (light) \u00b7 base 4 days \u00b7 would be leg 2 \u00b7 launched 2026-11-02 (C)",
+  "10:49 PRMB touched its buy point, back under: traded up to $24.16 today, over the buy point $24.15, now $24.15 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $24.15 at a check \u00b7 +1.4% \u00b7 vol 0.3x \u00b7 launched 2026-11-02 (C)",
+  "10:50 CBRL touched its buy point, back under: traded up to $67.38 today, over the buy point $67.37, now $67.27 (-0.1%) \u00b7 not a breakout yet: that alert comes when it trades over $67.37 at a check \u00b7 +3.7% \u00b7 vol 0.5x \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-10-15)",
+  "11:11 CBRL C breakout: Bull flag (trendline): $67.46 over the buy point $67.37 \u00b7 2nd breakout since the launch, group not top 10% unranked \u00b7 +4.0% \u00b7 vol 0.7x for the time of day (light) \u00b7 an entry in the base (still leg 2), the base top is next \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-10-15)",
+  "11:16 CYRX pulling back to its breakout level + 10 EMA & 21 EMA: $19.50 in the retest zone $17.43-$19.53 \u00b7 level $19.10-$19.53 (bodies-wicks) (broken 2026-11-09) \u00b7 at the 10 EMA ($19.07 at the last close) & 21 EMA ($18.35 at the last close) \u00b7 a heads-up: the buy is the close holding over $19.10 \u00b7 -3.0% \u00b7 vol 0.2x \u00b7 leg 1 \u00b7 launched 2026-11-09 (C)",
+  "11:16 CRL pulling back to its breakout level + 10 EMA & 21 EMA & 50 EMA: $333.04 in the retest zone $294.44-$333.30 \u00b7 level $319.80-$333.30 (bodies-wicks) (broken 2026-10-21) \u00b7 at the 10 EMA ($341.86 at the last close) & 21 EMA ($335.76 at the last close) & 50 EMA ($314.73 at the last close) \u00b7 a heads-up: the buy is the close holding over $319.80 \u00b7 -2.3% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-10-21 (C)",
+  "11:21 CBRL entry: back over its 21 EMA on a strong day: closed under the 21 EMA $65.82 (over the 50 EMA $61.50), now $67.58 back over it \u00b7 +4.2% (1.0 ADR) \u00b7 vol 0.7x for the time of day \u00b7 the 21 EMA undercut & reclaim on a strong day, a short swing entry; the close confirms it \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-10-15)",
+  "11:40 SG pulling back to its breakout level + 10 EMA & 21 EMA: $11.99 in the retest zone $10.60-$12.00 \u00b7 level $11.80-$11.95 (bodies-wicks) (broken 2026-11-06) \u00b7 at the 10 EMA ($12.17 at the last close) & 21 EMA ($11.36 at the last close) \u00b7 a heads-up: the buy is the close holding over $11.80 \u00b7 -3.1% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-06 (C)",
+  "12:10 DOCU C breakout: Bull flag (trendline): $80.81 over the buy point $80.80 \u00b7 late (3rd+ breakout or 50+ sessions on), group not top 10% Enterprise SaaS #15/99 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +0.8% \u00b7 vol 0.8x for the time of day (light) \u00b7 base 13 days \u00b7 an entry in the base (still leg 4), the base top is next \u00b7 launched 2026-08-13 (B) \u00b7 ENTERPRISE SAAS MOVE: also ADSK in the retest zone 09:35",
+  "12:35 CROX C breakout: Base top: $162.13 over the base top $161.88 (set 2026-11-04; nothing traded above it for 501 sessions; decisive with a close more than 0.5% over it, $162.69: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Apparel & Luxury Goods \u00b7 other #23/217 \u00b7 +3.3% \u00b7 vol 0.8x for the time of day (light) \u00b7 base 7 days \u00b7 would be leg 2 \u00b7 launched 2026-10-29 (A)",
+  "12:55 KVYO touched its buy point, back under: traded up to $22.21 today, over the buy point $22.20, now $22.17 (-0.1%) \u00b7 not a breakout yet: that alert comes when it trades over $22.20 at a check \u00b7 +3.9% \u00b7 vol 0.6x \u00b7 launched 2026-10-20 (B) \u00b7 ENTERPRISE SAAS MOVE: also ADSK in the retest zone 09:35, DOCU touched the buy point 09:45",
+  "13:15 PRCT touched its buy point, back under: traded up to $24.09 today, over the buy point $24.07, now $23.99 (-0.3%) \u00b7 not a breakout yet: that alert comes when it trades over $24.07 at a check \u00b7 +2.0% \u00b7 vol 0.7x \u00b7 3-SETUPS Ready (from 1-UPDAY 2026-11-09)",
+  "13:20 PRCT B breakout: Base top: $24.11 over the base top $24.07 (set 2026-11-05; decisive with a close more than 0.5% over it, $24.19: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% unranked, volume building \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +2.5% \u00b7 vol 0.7x for the time of day (light) \u00b7 would be leg 2 \u00b7 3-SETUPS Ready (from 1-UPDAY 2026-11-09)",
+  "13:35 KVYO C breakout: Base top: $22.22 over the base top $22.20 (set 2026-11-05; nothing traded above it for 133 sessions; decisive with a close more than 0.5% over it, $22.31: within 0.5% a breakout with caution) \u00b7 late (3rd+ breakout or 50+ sessions on), group not top 10% Software: Marketing & Ad Tech #2/217 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +4.1% \u00b7 vol 0.6x for the time of day (light) \u00b7 base 6 days \u00b7 would be leg 3 \u00b7 launched 2026-10-20 (B) \u00b7 ENTERPRISE SAAS MOVE: also ADSK in the retest zone 09:35, DOCU touched the buy point 09:45",
+  "13:55 MD pulling back to its breakout level + 10 EMA & 21 EMA: $31.07 in the retest zone $28.95-$31.07 \u00b7 level $30.71-$31.07 (bodies-wicks) (broken 2026-11-04) \u00b7 at the 10 EMA ($31.05 at the last close) & 21 EMA ($30.02 at the last close) \u00b7 a heads-up: the buy is the close holding over $30.71 \u00b7 -1.1% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C)",
+  "14:10 SWKS C breakout: Base top: $90.66 over the base top $90.50 (set 2026-11-02; decisive with a close more than 0.5% over it, $90.95: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Semis: Mobile & RF #137/217 \u00b7 +0.7% \u00b7 vol 0.9x for the time of day (light) \u00b7 would be leg 1 \u00b7 3-SETUPS Triggered today (from 2-POOL 2026-10-15)",
+  "14:45 GLBE touched its buy point, back under: traded up to $41.94 today, over the buy point $41.91, now $41.80 (-0.3%) \u00b7 not a breakout yet: that alert comes when it trades over $41.91 at a check \u00b7 +1.8% \u00b7 vol 0.7x \u00b7 launched 2026-11-04 (C)",
+  "14:50 ADMA C breakout: Base top: $13.82 over the base top $13.77 (set 2026-11-05; nothing traded above it for 163 sessions; decisive with a close more than 0.5% over it, $13.84: within 0.5% a breakout with caution) \u00b7 1st breakout since the launch, group not top 10% Biotechnology \u00b7 other #60/217 \u00b7 also pushed out of the 10 & 21 EMA with a gap (opened over yesterday's candle) \u00b7 +4.4% \u00b7 vol 0.9x for the time of day (light) \u00b7 base 6 days \u00b7 would be leg 2 \u00b7 launched 2026-11-05 (A+)",
+  "15:11 AMLX C breakout: Base top: $30.72 over the base top $30.68 (set 2026-11-04; nothing traded above it for 34 sessions; decisive with a close more than 0.5% over it, $30.83: within 0.5% a breakout with caution) \u00b7 late (3rd+ breakout or 50+ sessions on), group not top 10% Biotechnology \u00b7 other #60/217, volume building \u00b7 +2.9% \u00b7 vol 1.2x for the time of day \u00b7 base 7 days \u00b7 would be leg 2 \u00b7 launched 2026-08-18 (A)",
+  "15:13 AMLX touched its buy point, back under: traded up to $30.72 today, over the buy point $30.68, now $30.62 (-0.2%) \u00b7 not a breakout yet: that alert comes when it trades over $30.68 at a check \u00b7 +2.5% \u00b7 vol 1.2x \u00b7 launched 2026-08-18 (A)",
+  "15:38 ADMA touched its buy point, back under: traded up to $14.02 today, over the buy point $13.77, now $13.77 (+0.0%) \u00b7 not a breakout yet: that alert comes when it trades over $13.77 at a check \u00b7 +4.0% \u00b7 vol 1.0x \u00b7 launched 2026-11-05 (A+)",
+  "15:45 EMBJ RETEST HOLDING into the close + 10 EMA & 21 EMA: came back to its breakout level $78.52-$78.63 (bodies-wicks) (broken 2026-11-10) and trades $78.78 over it \u00b7 over the 10 EMA ($77.77 at the last close) & 21 EMA ($75.95 at the last close) \u00b7 the buy: at the close, if it holds over $78.52 \u00b7 -0.9% \u00b7 vol 0.9x \u00b7 leg 1 \u00b7 launched 2026-11-10 (B) \u00b7 today's low $77.93",
+  "15:45 WRBY RETEST HOLDING into the close + 10 EMA & 21 EMA & 50 EMA: came back to its breakout level $26.58-$27.45 (bodies-wicks) (broken 2026-11-09) and trades $27.28 over it \u00b7 over the 10 EMA ($26.93 at the last close) & 21 EMA ($26.09 at the last close) & 50 EMA ($25.69 at the last close) \u00b7 the buy: at the close, if it holds over $26.58 \u00b7 +2.1% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-09 (A+) \u00b7 today's low $26.21",
+  "15:45 CYRX RETEST HOLDING into the close + 10 EMA & 21 EMA: came back to its breakout level $19.10-$19.53 (bodies-wicks) (broken 2026-11-09) and trades $19.90 over it \u00b7 over the 10 EMA ($19.07 at the last close) & 21 EMA ($18.35 at the last close) \u00b7 the buy: at the close, if it holds over $19.10 \u00b7 -1.0% \u00b7 vol 0.3x \u00b7 leg 1 \u00b7 launched 2026-11-09 (C) \u00b7 today's low $19.43",
+  "15:45 SG RETEST HOLDING into the close + 10 EMA & 21 EMA: came back to its breakout level $11.80-$11.95 (bodies-wicks) (broken 2026-11-06) and trades $12.19 over it \u00b7 over the 10 EMA ($12.17 at the last close) & 21 EMA ($11.36 at the last close) \u00b7 the buy: at the close, if it holds over $11.80 \u00b7 -1.6% \u00b7 vol 0.6x \u00b7 leg 1 \u00b7 launched 2026-11-06 (C) \u00b7 today's low $11.86",
+  "15:45 SYRE RETEST HOLDING into the close + 10 EMA & 21 EMA: came back to its breakout level $99.75-$100.42 (bodies-wicks) (broken 2026-11-06) and trades $103.70 over it \u00b7 over the 10 EMA ($101.84 at the last close) & 21 EMA ($97.79 at the last close) \u00b7 the buy: at the close, if it holds over $99.75 \u00b7 +0.8% \u00b7 vol 0.8x \u00b7 leg 1 \u00b7 launched 2026-11-06 (C) \u00b7 today's low $100.49 \u00b7 SMALL & MID-CAP BIOTECH MOVE: also CGON in the retest zone 09:36",
+  "15:45 KTB RETEST HOLDING into the close + 10 EMA & 21 EMA & 50 EMA: came back to its breakout level $77.78-$79.62 (bodies-wicks) (broken 2026-11-04) and trades $80.77 over it \u00b7 over the 10 EMA ($78.67 at the last close) & 21 EMA ($76.50 at the last close) & 50 EMA ($74.39 at the last close) \u00b7 the buy: at the close, if it holds over $77.78 \u00b7 +3.9% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B) \u00b7 today's low $78.08",
+  "15:45 TOST RETEST HOLDING into the close + 10 EMA & 21 EMA & 50 EMA: came back to its breakout level $33.53-$34.66 (bodies-wicks) (broken 2026-11-04) and trades $34.55 over it \u00b7 over the 10 EMA ($33.88 at the last close) & 21 EMA ($33.20 at the last close) & 50 EMA ($32.42 at the last close) \u00b7 the buy: at the close, if it holds over $33.53 \u00b7 +3.1% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 today's low $33.40 \u00b7 FINTECH & PAYMENTS MOVE: also GPN early gap 09:31",
+  "15:45 ADSK RETEST HOLDING into the close + 10 EMA & 21 EMA: came back to its breakout level $257.91-$263.16 (bodies-wicks) (broken 2026-11-04) and trades $264.15 over it \u00b7 over the 10 EMA ($258.57 at the last close) & 21 EMA ($252.14 at the last close) \u00b7 the buy: at the close, if it holds over $257.91 \u00b7 +1.8% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 today's low $261.40 \u00b7 ENTERPRISE SAAS MOVE: also DOCU touched the buy point 09:45, KVYO touched the buy point 12:55",
+  "15:45 MD RETEST HOLDING into the close + 10 EMA & 21 EMA: came back to its breakout level $30.71-$31.07 (bodies-wicks) (broken 2026-11-04) and trades $31.33 over it \u00b7 over the 10 EMA ($31.05 at the last close) & 21 EMA ($30.02 at the last close) \u00b7 the buy: at the close, if it holds over $30.71 \u00b7 -0.2% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 today's low $31.07",
+  "15:45 ELF 21 EMA RETEST + BREAKOUT LEVEL $116.28 holding into the close: back over the 21 EMA $113.21 (the last close's) at $118.20 \u00b7 the buy: at the close, if it holds over it \u00b7 +4.1% \u00b7 vol 1.6x \u00b7 leg 4 \u00b7 launched 2026-08-04 (C) \u00b7 today's low $113.00 under it \u00b7 also holding over its breakout level $116.28 (broken 2026-11-09): 2 confluences",
+  "15:45 KRMN 21 EMA RETEST holding into the close: back over the 21 EMA $39.05 (the last close's) at $40.14 \u00b7 the buy: at the close, if it holds over it \u00b7 -0.9% \u00b7 vol 0.7x \u00b7 leg 1 \u00b7 launched 2026-11-06 (A+) \u00b7 today's low $37.33 under it",
+  "15:45 DG 21 EMA RETEST holding into the close: back over the 21 EMA $133.19 (the last close's) at $134.47 \u00b7 the buy: at the close, if it holds over it \u00b7 -0.1% \u00b7 vol 1.0x \u00b7 leg 1 \u00b7 launched 2026-11-04 (B) \u00b7 today's low $133.00 under it",
+  "15:45 PACS 21 EMA RETEST holding into the close: back over the 21 EMA $47.83 (the last close's) at $48.27 \u00b7 the buy: at the close, if it holds over it \u00b7 +0.6% \u00b7 vol 0.5x \u00b7 leg 1 \u00b7 launched 2026-11-04 (C) \u00b7 today's low $47.24 under it",
+  "15:45 BLMN 21 EMA RETEST holding into the close: back over the 21 EMA $9.96 (the last close's) at $10.33 \u00b7 the buy: at the close, if it holds over it \u00b7 +2.1% \u00b7 vol 0.6x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 1-UPDAY 2026-11-09) \u00b7 today's low $9.88 under it",
+  "15:45 ALMR 21 EMA RETEST holding into the close: back over the 21 EMA $30.20 (the last close's) at $30.77 \u00b7 the buy: at the close, if it holds over it \u00b7 -3.1% \u00b7 vol 0.9x \u00b7 leg 0 \u00b7 3-SETUPS Setting up (from 2-POOL 2026-11-09) \u00b7 today's low $29.22 under it",
+  "15:45 5 more heads-ups (in the portal's alert log): KRMN 21 EMA RETEST holding into the close $39.05 \u00b7 DG 21 EMA RETEST holding into the close $133.19 \u00b7 PACS 21 EMA RETEST holding into the close $47.83 \u00b7 BLMN 21 EMA RETEST holding into the close $9.96 \u00b7 ALMR 21 EMA RETEST holding into the close $30.20",
+  "15:52 FA 21 EMA RETEST + BREAKOUT LEVEL $20.56 holding into the close: back over the 21 EMA $21.41 (the last close's) at $21.57 \u00b7 the buy: at the close, if it holds over it \u00b7 +1.0% \u00b7 vol 1.1x \u00b7 leg 2 \u00b7 launched 2026-08-13 (C) \u00b7 today's low $21.33 under it \u00b7 also holding over its breakout level $20.56 (broken 2026-10-22): 2 confluences"
+ ],
+ "mbo_lv": {
+  "ELF": {
+   "pdh": 117.3,
+   "orh": 118.46,
+   "orl": 113.0,
+   "low": 113.0,
+   "pd": "2026-11-12"
+  }
+ },
+ "lost": {
+  "ATI:breakout": {
+   "at": "09:47",
+   "price": 187.43
+  },
+  "AI:breakout": {
+   "at": "09:48",
+   "price": 11.98
+  },
+  "FIGS:confirm": {
+   "at": "09:53",
+   "price": 22.54
+  },
+  "SONO:breakout": {
+   "at": "10:05",
+   "price": 18.35
+  },
+  "ACN:breakout": {
+   "at": "10:58",
+   "price": 253.89
+  },
+  "CBRL:breakout": {
+   "at": "11:28",
+   "price": 67.3
+  },
+  "CHDN:breakout": {
+   "at": "11:41",
+   "price": 100.18
+  },
+  "CWST:breakout": {
+   "at": "11:54",
+   "price": 101.6
+  },
+  "TNDM:catalyst": {
+   "at": "12:45",
+   "price": 19.71
+  },
+  "PRCT:breakout": {
+   "at": "13:30",
+   "price": 24.0
+  },
+  "PRMB:breakout": {
+   "at": "13:40",
+   "price": 24.14
+  },
+  "SWKS:breakout": {
+   "at": "14:35",
+   "price": 90.37
+  },
+  "AMLX:breakout": {
+   "at": "15:13",
+   "price": 30.62
+  },
+  "BBWI:breakout": {
+   "at": "15:55",
+   "price": 21.38
+  },
+  "ADMA:breakout": {
+   "at": "15:55",
+   "price": 13.72
+  },
+  "FA:ema21bl": {
+   "at": "15:55",
+   "price": 21.52
+  },
+  "KVYO:breakout": {
+   "at": "15:56",
+   "price": 22.18
+  },
+  "DOCU:breakout": {
+   "at": "16:00",
+   "price": 80.76
+  }
+ },
+ "back": {
+  "BBWI:breakout": {
+   "at": "15:54",
+   "price": 21.39
+  },
+  "ATI:breakout": {
+   "at": "09:46",
+   "price": 192.57
+  },
+  "FIGS:confirm": {
+   "at": "09:49",
+   "price": 22.48
+  },
+  "SPOT:breakout": {
+   "at": "10:16",
+   "price": 608.97
+  },
+  "ADSK:push": {
+   "at": "10:28",
+   "price": 263.49
+  },
+  "CHDN:breakout": {
+   "at": "11:13",
+   "price": 100.55
+  },
+  "ACN:breakout": {
+   "at": "10:56",
+   "price": 254.04
+  },
+  "PRMB:breakout": {
+   "at": "13:30",
+   "price": 24.17
+  },
+  "CWST:breakout": {
+   "at": "11:42",
+   "price": 101.83
+  },
+  "CBRL:breakout": {
+   "at": "11:19",
+   "price": 67.44
+  },
+  "TNDM:catalyst": {
+   "at": "11:48",
+   "price": 20.05
+  },
+  "DOCU:breakout": {
+   "at": "15:59",
+   "price": 80.81
+  },
+  "KVYO:breakout": {
+   "at": "15:46",
+   "price": 22.2
+  },
+  "SWKS:breakout": {
+   "at": "14:30",
+   "price": 90.56
+  },
+  "ADMA:breakout": {
+   "at": "15:42",
+   "price": 13.78
+  },
+  "SG:retest": {
+   "at": "15:50",
+   "price": 12.21
+  },
+  "FA:ema21bl": {
+   "at": "15:54",
+   "price": 21.59
+  }
+ },
+ "hold": {
+  "at": "16:10",
+  "keys": [
+   "HAWK:laggard",
+   "GME:breakout",
+   "SPOT:breakout",
+   "ADSK:push",
+   "CROX:breakout",
+   "EMBJ:retest",
+   "WRBY:retest",
+   "CYRX:retest",
+   "SG:retest",
+   "SYRE:retest",
+   "KTB:retest",
+   "TOST:retest",
+   "ADSK:retest",
+   "MD:retest",
+   "ELF:ema21bl"
+  ],
+  "now": [
+   "ADSK:push",
+   "ADSK:retest",
+   "ARHS:retest",
+   "BAH:retest",
+   "BBY:retest",
+   "BSY:retest",
+   "CARG:retest",
+   "CDNA:retest",
+   "CHKP:retest",
+   "CNC:retest",
+   "CRL:retest",
+   "CROX:breakout",
+   "CYRX:retest",
+   "EL:retest",
+   "EMBJ:retest",
+   "FA:retest",
+   "GME:breakout",
+   "HAWK:laggard",
+   "HCA:retest",
+   "HOG:retest",
+   "KTB:retest",
+   "LASR:retest",
+   "MAZE:retest",
+   "MD:retest",
+   "MHK:retest",
+   "MMYT:retest",
+   "MPWR:retest",
+   "POOL:retest",
+   "SG:retest",
+   "SKY:retest",
+   "SPOT:breakout",
+   "SPOT:retest",
+   "SYRE:retest",
+   "THC:retest",
+   "TOST:retest",
+   "TREX:retest",
+   "VSXY:retest",
+   "WAT:retest",
+   "WRBY:retest"
+  ]
+ }
+}

@@ -1,0 +1,1423 @@
+{
+"built_at": "2026-11-09T15:25:56-05:00",
+"day": "2026-11-09",
+"window": [
+"2026-11-06T16:00:00-05:00",
+"2026-11-09T09:18:00-05:00"
+],
+"rows": {
+"MNDY": {
+"news": "B",
+"catalyst": "Earnings beat",
+"reason": "revenue beat +2.3%; revenue +19% y/y (last q +22%: slower); guide -1.2% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1845338/000117891326005085/exhibit_99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"stage": 3,
+"chart": "pullback",
+"event": null,
+"eligible": true,
+"not_eligible": "",
+"grade": "B",
+"group": 0,
+"star": "",
+"trend": "Negative",
+"group_tier": "",
+"levels": {
+"e21": 94.04,
+"e50": 91.32,
+"s200": 82.53,
+"hi21": 106.86,
+"e21_rising": false,
+"e50_rising": true,
+"ext200": 6.5,
+"sma50": 90.72,
+"atr_mult": -1.7
+},
+"claude": "C",
+"pm_last": 80.0,
+"over_low52": 39.1,
+"headline": {
+"kind": "Earnings",
+"title": "Monday.Com Sees Q4 Sales $380.000M-$382.000M vs $385.665M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63026459/monday-com-sees-q4-sales-380-000m-382-000m-vs-385-665m-est",
+"at": "7:00 AM ET",
+"ts": "2026-11-09T07:00-05:00"
+}
+},
+"IBRX": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue +52% y/y (last q +94%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1326110/000132611026000091/ibrx-20261198xkexhibit991.htm",
+"https://www.sec.gov/Archives/edgar/data/1326110/000132611026000097/ibrx-2026119x8kexhibit991.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "down",
+"stage": 3,
+"chart": "pullback",
+"event": null,
+"eligible": true,
+"not_eligible": "",
+"grade": "C",
+"group": 0,
+"star": "",
+"trend": "Negative",
+"group_tier": null,
+"levels": {
+"e21": 8.66,
+"e50": 8.64,
+"s200": 7.96,
+"hi21": 10.51,
+"e21_rising": false,
+"e50_rising": false,
+"ext200": 8.5,
+"sma50": 8.74,
+"atr_mult": -2.1
+},
+"claude": "C",
+"pm_last": 7.39,
+"over_low52": 279.0,
+"headline": {
+"kind": "FDA / trial",
+"title": "ImmunityBio Says ANKTIVA Plus BCG Meets Primary Endpoint In Phase 3 NMIBC Trial, Supports Planned FDA Filing",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63025519/immunitybio-says-anktiva-plus-bcg-meets-primary-endpoint-phase-3-nmibc-trial-supports-planned-fda-fi",
+"at": "6:36 AM ET",
+"ts": "2026-11-09T06:36-05:00"
+}
+},
+"IMVT": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1764013/000176401326000121/exhibit9912026119.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"stage": 4,
+"chart": "downtrend",
+"event": "turnup",
+"eligible": true,
+"not_eligible": "",
+"grade": "C",
+"group": 1,
+"star": "",
+"trend": "Negative",
+"group_tier": null,
+"levels": {
+"e21": 29.76,
+"e50": 32.23,
+"s200": 32.12,
+"hi21": 30.53,
+"e21_rising": false,
+"e50_rising": false,
+"ext200": -5.0,
+"sma50": 33.11,
+"atr_mult": 0.4
+},
+"claude": "B",
+"pm_last": 33.62,
+"over_low52": 56.9,
+"headline": {
+"kind": "FDA / trial",
+"title": "Immunovant\u2019s IMVT-1402 600mg Meets Primary Endpoint In Difficult-To-Treat Rheumatoid Arthritis Trial; 300mg Dose Shows No Difference From Placebo",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/ROIV",
+"at": "7:01 AM ET",
+"ts": "2026-11-09T07:01-05:00"
+}
+},
+"ZLAB": {
+"news": "C",
+"catalyst": "Earlier news (Thu Nov 5): Earnings",
+"reason": "revenue -7% y/y (SEC Nov 5 6:36 AM ET); today: Sector move: Biotechnology: 7 Biotechnology stocks gapping up 5%+ (IMVT, MBX, GPCR, MLYS, CTMX, AUTL); with their own news: IMVT (Earnings), MLYS (FDA / trial (headline)); no SEC filing or",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1704292/000162828026070517/zlab-2026115x8kex991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"stage": 3,
+"chart": "pullback",
+"event": "trend",
+"eligible": true,
+"not_eligible": "",
+"grade": "C",
+"group": 0,
+"star": "",
+"trend": "Negative",
+"group_tier": null,
+"levels": {
+"e21": 23.51,
+"e50": 23.79,
+"s200": 21.08,
+"hi21": 25.48,
+"e21_rising": false,
+"e50_rising": false,
+"ext200": 20.9,
+"sma50": 24.61,
+"atr_mult": 1.5
+},
+"claude": null,
+"pm_last": 26.8,
+"over_low52": 67.9,
+"earlier": {
+"label": "Thu Nov 5",
+"date": "2026-11-05",
+"kind": "Earnings",
+"text": "revenue -7% y/y",
+"source": "SEC",
+"url": "https://www.sec.gov/Archives/edgar/data/1704292/000162828026070517/zlab-2026115x8kex991.htm",
+"at": "Nov 5 6:36 AM ET"
+}
+},
+"ARWR": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "10 Biotechnology stocks gapping down 5%+ (IBRX, IONS, OCUL, OBX, FTH, BCAX, ...); with their own news: IBRX (Earnings), IONS (Earnings + guide cut), OCUL (Earnings); headline: Reported Saturday, Arrowhead Presents Plozasiran Data At AHA 2026 Showing 78% Lower Acute Pancreatitis Event Rate Versus Placebo And Sustained Triglyceride Reductions, Plus ARO-DIMER-PA Lowering LDL Cholesterol And Triglycerides (Benzinga 3:23 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/news/26/11/63023110/reported-saturday-arrowhead-presents-plozasiran-data-aha-2026-showing-78-lower-acute-pancreatitis-ev"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"stage": 4,
+"chart": "downtrend",
+"event": null,
+"eligible": true,
+"not_eligible": "",
+"grade": "C",
+"group": 0,
+"star": "",
+"trend": "Negative",
+"group_tier": null,
+"levels": {
+"e21": 60.35,
+"e50": 65.61,
+"s200": 71.55,
+"hi21": 62.75,
+"e21_rising": false,
+"e50_rising": false,
+"ext200": -18.7,
+"sma50": 66.91,
+"atr_mult": -4.9
+},
+"claude": "C",
+"pm_last": 53.65,
+"over_low52": 44.8,
+"headline": {
+"kind": "In the news",
+"title": "Reported Saturday, Arrowhead Presents Plozasiran Data At AHA 2026 Showing 78% Lower Acute Pancreatitis Event Rate Versus Placebo And Sustained Triglyceride Reductions, Plus ARO-DIMER-PA Lowering LDL Cholesterol And Triglycerides",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63023110/reported-saturday-arrowhead-presents-plozasiran-data-aha-2026-showing-78-lower-acute-pancreatitis-ev",
+"at": "3:23 AM ET",
+"ts": "2026-11-09T03:23-05:00"
+}
+},
+"HYMC": {
+"news": "C",
+"catalyst": "Sector move: Mining & Metals",
+"reason": "8 Mining & Metals stocks gapping up 5%+ (TECK, AUGO, VZLA, TMC, HSLV, ITRG, ...); with their own news: AUGO (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"stage": 4,
+"chart": "downtrend",
+"event": null,
+"eligible": false,
+"not_eligible": "33% under the 200 SMA (a laggard at most 20%)",
+"grade": "\u2014",
+"group": 0,
+"star": "",
+"trend": "Negative",
+"group_tier": "",
+"levels": {
+"e21": 17.42,
+"e50": 19.13,
+"s200": 29.49,
+"hi21": 19.19,
+"e21_rising": false,
+"e50_rising": false,
+"ext200": -36.3,
+"sma50": 19.29,
+"atr_mult": 0.3
+},
+"claude": null,
+"pm_last": 19.72,
+"over_low52": 178.9
+},
+"AUGO": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1468642/000117184326007236/exh_991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"stage": 3,
+"chart": "pullback",
+"event": null,
+"eligible": false,
+"not_eligible": "under the 21-day high close (gapping into last month's range = chop)",
+"grade": "\u2014",
+"group": 0,
+"star": "",
+"trend": "Negative",
+"group_tier": "",
+"levels": {
+"e21": 77.23,
+"e50": 79.02,
+"s200": 76.03,
+"hi21": 91.8,
+"e21_rising": false,
+"e50_rising": false,
+"ext200": 2.4,
+"sma50": 82.5,
+"atr_mult": -0.1
+},
+"claude": null,
+"pm_last": 82,
+"over_low52": 147.3
+},
+"CXW": {
+"news": "C",
+"catalyst": "After earnings (Nov 4)",
+"reason": "Reported Wed Nov 4 after the close: EPS beat +13.3%, revenue +28% y/y, +0.0% after hours; no new filing since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"stage": 3,
+"chart": "pullback",
+"event": null,
+"eligible": true,
+"not_eligible": "",
+"grade": "C",
+"group": 0,
+"star": "",
+"trend": "Negative",
+"group_tier": null,
+"levels": {
+"e21": 30.64,
+"e50": 31.37,
+"s200": 25.99,
+"hi21": 34.03,
+"e21_rising": false,
+"e50_rising": false,
+"ext200": 10.3,
+"sma50": 32.32,
+"atr_mult": -3.4
+},
+"claude": "C",
+"pm_last": 26.74,
+"over_low52": 69.9
+}
+},
+"news": {
+"ZURA": {
+"news": "A",
+"catalyst": "Failed trial",
+"reason": "Zura Bio Provides Clinical Update on Phase 2 TibuSHIELD Study of Tibulizumab (ZB-106) in Hidradenitis Suppurativa November 9, 2026 7:00 AM \u00b7 Study did not meet primary endpoint of percentage change fr",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1855644/000110465926124149/tm2629310d1_ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -69.19,
+"pm_last": 1.26,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "FDA / trial",
+"title": "Zura Bio Says Phase 2 TibuSHIELD Study Of Tibulizumab In Hidradenitis Suppurativa Missed Primary And Key Secondary Endpoints",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63027501/zura-bio-says-phase-2-tibushield-study-tibulizumab-hidradenitis-suppurativa-missed-primary-and-key-s",
+"at": "7:18 AM ET",
+"ts": "2026-11-09T07:18-05:00"
+}
+},
+"SOC": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1831481/000183148126000121/a991_3q26xpr.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -65.94,
+"pm_last": 0.6574,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Sable Offshore Cuts H2 Net Crude Sales Guidance To 20-30 MBoe/d From 40-45 MBoe/d",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/SOC",
+"at": "6:31 AM ET",
+"ts": "2026-11-09T06:31-05:00"
+}
+},
+"GFR": {
+"news": "C",
+"catalyst": "Takeover / sale talk (headline)",
+"reason": "Strathcona Resources To Acquire Greenfire Resources In C$2.7B-C$2.9B Deal, Including C$550M Net Debt (Benzinga 3:56 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/quote/STHRF"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 37.9,
+"pm_last": 7.75,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Takeover / sale talk",
+"title": "Strathcona Resources To Acquire Greenfire Resources In C$2.7B-C$2.9B Deal, Including C$550M Net Debt",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/STHRF",
+"at": "3:56 AM ET",
+"ts": "2026-11-09T03:56-05:00"
+}
+},
+"FTH": {
+"news": "C",
+"catalyst": "FDA / trial (headline)",
+"reason": "Faeth Therapeutics To Conduct Virtual Event On Nov. 9 To Present Topline Data From Its Phase 2 PIK-2-1 Study Of PIKTOR To Treat Endometrial Cancer (Benzinga Nov 6 4:02 PM ET); SEC: Filing, not classified: Filed since the close: 8-K 7.01,9.01, 8-K 8.01,9.01. EX-99.1 EX-99.1 Faeth Reports Positive Prelimin",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/news/26/11/63012546/faeth-therapeutics-conduct-virtual-event-nov-9-present-topline-data-its-phase-2-pik-2-1-study-piktor",
+"https://www.sec.gov/Archives/edgar/data/1829802/000119312526452643/d199028dex991.htm",
+"https://www.sec.gov/Archives/edgar/data/1829802/000119312526452755/d19560dex991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -27.44,
+"pm_last": 16.0,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "FDA / trial",
+"title": "Faeth Therapeutics To Conduct Virtual Event On Nov. 9 To Present Topline Data From Its Phase 2 PIK-2-1 Study Of PIKTOR To Treat Endometrial Cancer",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63012546/faeth-therapeutics-conduct-virtual-event-nov-9-present-topline-data-its-phase-2-pik-2-1-study-piktor",
+"at": "Nov 6 4:02 PM ET",
+"ts": "2026-11-06T16:02-05:00"
+}
+},
+"DCTH": {
+"news": "A",
+"catalyst": "Earnings + raise",
+"reason": "revenue +71% y/y (last q +21%: faster); guidance raised; guide +9.2% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/872912/000162828026071894/dcth-q32026erex991.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 10,
+"direction": "up",
+"gap_pct": 25.79,
+"pm_last": 18.78,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Delcath Systems Q3 EPS $0.17 Beats $(0.09) Estimate, Sales $35.102M Beat $26.027M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63029057/delcath-systems-q3-eps-0-17-beats-0-09-estimate-sales-35-102m-beat-26-027m-estimate",
+"at": "8:01 AM ET",
+"ts": "2026-11-09T08:01-05:00"
+}
+},
+"TLS": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/320121/000032012126000041/q32026earningspressrelease.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 25.54,
+"pm_last": 6.051,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Telos Sees Q4 Sales $47.500M-$50.000M vs $45.571M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63032345/telos-sees-q4-sales-47-500m-50-000m-vs-45-571m-est",
+"at": "9:14 AM ET",
+"ts": "2026-11-09T09:14-05:00"
+}
+},
+"VISN": {
+"news": "B",
+"catalyst": "Executive change",
+"reason": "EX-99.1 EX-99.1 Vistance Networks Announces CEO Succession Plan Chuck Treadway to Step Down Following Significant Strategic Transformation Board Initiates Search to Identify the Company\u2019s Next CEO RIC",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1517228/000119312526452515/visn-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -24.18,
+"pm_last": 4.17,
+"dropped": "under 30% over the 52-week low"
+},
+"LINC": {
+"news": "C",
+"catalyst": "Earnings (headline)",
+"reason": "Lincoln Educational Servs Affirms FY2026 GAAP EPS Guidance of $0.74-$0.83 vs $0.78 Est; Raises FY2026 Sales Guidance from $590.000M-$600.000M to $600.000M-$605.000M vs $594.646M Est (Benzinga 8:01 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/news/26/11/63029071/lincoln-educational-servs-affirms-fy2026-gaap-eps-guidance-0-74-0-83-vs-0-78-est-raises-fy2026-sales"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 21.18,
+"pm_last": 21.4,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Lincoln Educational Servs Affirms FY2026 GAAP EPS Guidance of $0.74-$0.83 vs $0.78 Est; Raises FY2026 Sales Guidance from $590.000M-$600.000M to $600.000M-$605.000M vs $594.646M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63029071/lincoln-educational-servs-affirms-fy2026-gaap-eps-guidance-0-74-0-83-vs-0-78-est-raises-fy2026-sales",
+"at": "8:01 AM ET",
+"ts": "2026-11-09T08:01-05:00"
+}
+},
+"AIOT": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue +4% y/y (last q +6%: slower); guide +0.3% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1774170/000149315226050619/ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 19.74,
+"pm_last": 3.221,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "PowerFleet Q2 Adj. EPS $0.04 Beats $(0.03) Estimate, Sales $115.723M Beat $114.919M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63026715/powerfleet-q2-adj-eps-0-04-beats-0-03-estimate-sales-115-723m-beat-114-919m-estimate",
+"at": "7:02 AM ET",
+"ts": "2026-11-09T07:02-05:00"
+}
+},
+"TPB": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1290677/000143774926035713/tpb20260827_8k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -18.76,
+"pm_last": 53.26,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "Turning Point Brands Q3 Adj. EPS $0.41 Beats $0.34 Estimate, Sales $151.100M Beat $146.672M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63027913/turning-point-brands-q3-adj-eps-0-41-beats-0-34-estimate-sales-151-100m-beat-146-672m-estimate",
+"at": "7:32 AM ET",
+"ts": "2026-11-09T07:32-05:00"
+}
+},
+"IONS": {
+"news": "A",
+"catalyst": "Earnings + guide cut",
+"reason": "revenue +55% y/y; guidance lowered; guide -3.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/874015/000114036126042598/ef20085128_ex99-1.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 7,
+"direction": "down",
+"gap_pct": -18.55,
+"pm_last": 32.1064,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Ionis Pharmaceuticals Affirms FY2026 Sales Guidance of $875.000M-$900.000M vs $916.396M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63026696/ionis-pharmaceuticals-affirms-fy2026-sales-guidance-875-000m-900-000m-vs-916-396m-est",
+"at": "7:02 AM ET",
+"ts": "2026-11-09T07:02-05:00"
+}
+},
+"OFIX": {
+"news": "A",
+"catalyst": "Earnings + guide cut",
+"reason": "revenue +1% y/y (last q +4%: slower); guidance lowered; guide -2.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/884624/000119312526452696/ofix-ex99_1.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 7,
+"direction": "down",
+"gap_pct": -15.76,
+"pm_last": 6.63,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Orthofix Medical Lowers FY2026 Sales Guidance from $845.000M-$855.000M to $825.000M-$830.000M vs $851.203M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63026523/orthofix-medical-lowers-fy2026-sales-guidance-845-000m-855-000m-825-000m-830-000m-vs-851-203m-est",
+"at": "7:01 AM ET",
+"ts": "2026-11-09T07:01-05:00"
+}
+},
+"CEVA": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1173489/000143774926035705/ceva20261108c_8k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -14.35,
+"pm_last": 23.21,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "CEVA Q3 Adj. EPS $0.13 Misses $0.19 Estimate, Sales $29.100M Miss $32.708M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63026656/ceva-q3-adj-eps-0-13-misses-0-19-estimate-sales-29-100m-miss-32-708m-estimate",
+"at": "7:02 AM ET",
+"ts": "2026-11-09T07:02-05:00"
+}
+},
+"SGRY": {
+"news": "A",
+"catalyst": "Signed takeover",
+"reason": "A signed agreement to be acquired (8-K / release)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1638833/000110465926124236/tm2629312d1_ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.21,
+"pm_last": 25.8,
+"dropped": "ADR under 3%",
+"headline": {
+"kind": "Takeover / sale talk",
+"title": "HealthSpan Partners Raises Merger Consideration To $25 Per Share For Surgery Partners",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63030679/surgery-partners-raises-merger-consideration-to-25-per-share-for-healthspan-partners",
+"at": "8:38 AM ET",
+"ts": "2026-11-09T08:38-05:00"
+}
+},
+"QXO": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +70% y/y",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1236275/000162828026071846/qxo-20261109.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 9.0,
+"pm_last": 12.6,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "QXO, Inc. Announces Preliminary Third-Quarter 2026 Financial Results",
+"source": "Fiscal.ai",
+"url": "https://www.tradingview.com/news/tradingview:6e764590ba41a:0-qxo-posts-preliminary-q3-sales-of-4-90b-adjusted-ebitda-of-557m/",
+"at": "7:32 AM ET",
+"ts": "2026-11-09T07:32-05:00"
+}
+},
+"SSL": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -8.22,
+"pm_last": 13.62,
+"dropped": "ADR under 3%"
+},
+"STLN": {
+"news": "C",
+"catalyst": "Earlier news (Thu Nov 5): Earnings + raise",
+"reason": "revenue +24% y/y (last q +35%: slower); guidance raised; guide +0.5% vs street (SEC Nov 5 4:57 PM ET); today: Analyst note (headline): BTIG Reiterates Buy on Starling Oncology, Maintains $10 Price Target (Benzinga 5:12 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1799191/000107997326001430/ex99x1.htm",
+"https://www.benzinga.com/news/26/11/63024047/btig-reiterates-buy-starling-oncology-maintains-10-price-target"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.97,
+"pm_last": 3.9086,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Analyst note",
+"title": "BTIG Reiterates Buy on Starling Oncology, Maintains $10 Price Target",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63024047/btig-reiterates-buy-starling-oncology-maintains-10-price-target",
+"at": "5:12 AM ET",
+"ts": "2026-11-09T05:12-05:00"
+},
+"earlier": {
+"label": "Thu Nov 5",
+"date": "2026-11-05",
+"kind": "Earnings + raise",
+"text": "revenue +24% y/y (last q +35%: slower); guidance raised; guide +0.5% vs street",
+"source": "SEC",
+"url": "https://www.sec.gov/Archives/edgar/data/1799191/000107997326001430/ex99x1.htm",
+"at": "Nov 5 4:57 PM ET"
+}
+},
+"AUTL": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "7 Biotechnology stocks gapping up 5%+ (IMVT, ZLAB, MBX, GPCR, MLYS, CTMX); with their own news: IMVT (Earnings), MLYS (FDA / trial (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.81,
+"pm_last": 1.38,
+"dropped": "market cap under $0.7B"
+},
+"FWDI": {
+"news": "B",
+"catalyst": "Offering / dilution",
+"reason": "Filed since the close: 424B5. ",
+"flags": "dilution: 424B5",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/38264/000168316826008408/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -7.54,
+"pm_last": 5.27,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Deal / contract",
+"title": "Forward Industries Selected for Upcoming Solana-Based Tokenized Securities Venue",
+"source": "Fiscal.ai",
+"url": "https://www.prnewswire.co.uk/news-releases/formation-securities-notifies-sec-of-intent-to-operate-first-tokenized-securities-venue-on-solana-302932907.html",
+"at": "9:02 AM ET",
+"ts": "2026-11-09T09:02-05:00"
+}
+},
+"TTD": {
+"news": "C",
+"catalyst": "Deal / contract (headline)",
+"reason": "The Trade Desk Employees Recognized in 2026 Luminaries of Telecom Awards (Fiscal.ai Nov 6 6:02 PM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.prnewswire.com/news-releases/lightyear-announces-winners-of-2026-luminaries-of-telecom-awards-302932233.html"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.5,
+"pm_last": 13.9,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Deal / contract",
+"title": "The Trade Desk Employees Recognized in 2026 Luminaries of Telecom Awards",
+"source": "Fiscal.ai",
+"url": "https://www.prnewswire.com/news-releases/lightyear-announces-winners-of-2026-luminaries-of-telecom-awards-302932233.html",
+"at": "Nov 6 6:02 PM ET",
+"ts": "2026-11-06T18:02-05:00"
+}
+},
+"GMRS": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -7.38,
+"pm_last": 11.54,
+"dropped": "market cap under $0.7B"
+},
+"TAC": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.14,
+"pm_last": 13.95,
+"dropped": "20-day average $ volume under $20M"
+},
+"OCUL": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue -12% y/y",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1393434/000110465926124151/tm2629079d2_ex99-1.htm",
+"https://www.sec.gov/Archives/edgar/data/1393434/000110465926124159/tm2629303d1_8k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.95,
+"pm_last": 6.132,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Earnings",
+"title": "Ocular Therapeutix Q3 EPS $(0.42) Misses $(0.36) Estimate, Sales $12.874M Miss $14.339M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63027048/ocular-therapeutix-q3-eps-0-42-misses-0-36-estimate-sales-12-874m-miss-14-339m-estimate",
+"at": "7:06 AM ET",
+"ts": "2026-11-09T07:06-05:00"
+}
+},
+"VFF": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "revenue -18% y/y",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1584549/000119312526452618/vff-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.94,
+"pm_last": 3.08,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Village Farms Intl Q3 EPS $0.08 Beats $0.05 Estimate, Sales $66.903M Beat $64.371M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63026572/village-farms-intl-q3-eps-0-08-beats-0-05-estimate-sales-66-903m-beat-64-371m-estimate",
+"at": "7:01 AM ET",
+"ts": "2026-11-09T07:01-05:00"
+}
+},
+"NVDA": {
+"news": "C",
+"catalyst": "Deal / contract (headline)",
+"reason": "NVIDIA, Rebellions And SK Telecom Collaborate On Korea\u2019s Sovereign AI Infrastructure, Planning NVIDIA GPUs For Prefill And Rebellions NPUs For Decode (Benzinga 1:12 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/news/26/11/63022173/nvidia-rebellions-and-sk-telecom-collaborate-korea-s-sovereign-ai-infrastructure-planning-nvidia-gpu",
+"https://www.sec.gov/Archives/edgar/data/1045810/000119764726000013/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.84,
+"pm_last": 173.88,
+"dropped": "ADR under 3%",
+"headline": {
+"kind": "Deal / contract",
+"title": "NVIDIA, Rebellions And SK Telecom Collaborate On Korea\u2019s Sovereign AI Infrastructure, Planning NVIDIA GPUs For Prefill And Rebellions NPUs For Decode",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63022173/nvidia-rebellions-and-sk-telecom-collaborate-korea-s-sovereign-ai-infrastructure-planning-nvidia-gpu",
+"at": "1:12 AM ET",
+"ts": "2026-11-09T01:12-05:00"
+}
+},
+"MBX": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "7 Biotechnology stocks gapping up 5%+ (IMVT, ZLAB, GPCR, MLYS, CTMX, AUTL); with their own news: IMVT (Earnings), MLYS (FDA / trial (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.72,
+"pm_last": 54.8,
+"dropped": "20-day average volume under 700K"
+},
+"IFF": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.62,
+"pm_last": 88.0539,
+"dropped": "ADR under 3%"
+},
+"TROX": {
+"news": "C",
+"catalyst": "Analyst upgrade (headline)",
+"reason": "JP Morgan Upgrades Tronox Holdings to Neutral (Benzinga 7:14 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/news/26/11/63027404/jp-morgan-upgrades-tronox-holdings-neutral"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.4,
+"pm_last": 2.66,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Analyst upgrade",
+"title": "JP Morgan Upgrades Tronox Holdings to Neutral",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63027404/jp-morgan-upgrades-tronox-holdings-neutral",
+"at": "7:14 AM ET",
+"ts": "2026-11-09T07:14-05:00"
+}
+},
+"SGI": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1206264/000120626426000129/a11092026sgipressrelease-f.htm",
+"https://www.sec.gov/Archives/edgar/data/1206264/000120626426000132/sgi-20261109.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.39,
+"pm_last": 60.05,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Deal / contract",
+"title": "Somnigroup Q3 GAAP EPS $0.74 vs $0.83 Prior, Down 10.8%, On Leggett & Platt Deal Costs",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/SGI",
+"at": "6:38 AM ET",
+"ts": "2026-11-09T06:38-05:00"
+}
+},
+"NRG": {
+"news": "A",
+"catalyst": "Earnings + raise",
+"reason": "revenue +24% y/y (last q +11%: faster); guidance raised",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1013871/000101387126000022/nrgq32026ex991.htm",
+"https://www.sec.gov/Archives/edgar/data/1013871/000110465926124147/tm2629302d1_ex99-1.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 10,
+"direction": "up",
+"gap_pct": 6.37,
+"pm_last": 93.88,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "NRG Energy Q3 Adj. EPS $4.68 Beats $3.33 Estimate, Sales $9.466B Beat $9.240B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63025997/nrg-energy-q3-adj-eps-4-68-beats-3-33-estimate-sales-9-466b-beat-9-240b-estimate",
+"at": "6:46 AM ET",
+"ts": "2026-11-09T06:46-05:00"
+}
+},
+"SLDB": {
+"news": "C",
+"catalyst": "Earlier news (Wed Nov 4): FDA / trial",
+"reason": "Solid Biosciences Has Scheduled Type C Meeting With FDA In Late Q4 2026 To Discuss Preliminary INSPIRE DUCHENNE SGT-003 Data Package & Seek Guidance On Potential Accelerated Approval Pathway; Expects Update After Receipt (Benzinga Nov 4 4:50 PM ET); today: Filing, not classified: Filed since the close: SCHEDULE 13D/A. ",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/quote/SLDB",
+"https://www.sec.gov/Archives/edgar/data/1707502/000134682426000255/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.37,
+"pm_last": 7.01,
+"dropped": "20-day average $ volume under $20M",
+"earlier": {
+"label": "Wed Nov 4",
+"date": "2026-11-04",
+"kind": "FDA / trial",
+"text": "Solid Biosciences Has Scheduled Type C Meeting With FDA In Late Q4 2026 To Discuss Preliminary INSPIRE DUCHENNE SGT-003 Data Package & Seek Guidance On Potential Accelerated Approval Pathway; Expects Update After Receipt Of Formal Meeting Minutes",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/SLDB",
+"at": "Nov 4 4:50 PM ET"
+}
+},
+"ASX": {
+"news": "C",
+"catalyst": "Takeover / sale talk (headline)",
+"reason": "ASE Technology Subsidiary to Acquire NT$2.03 Billion in Equipment from Mirle Automation (Fiscal.ai 9:01 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://de.marketscreener.com/boerse-nachrichten/ase-technology-tochter-erwirbt-ausruestung-im-wert-von-2-03-mrd-nt-von-mirle-automation-ce785fd3db8cf725"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.33,
+"pm_last": 33.62,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Takeover / sale talk",
+"title": "ASE Technology Subsidiary to Acquire NT$2.03 Billion in Equipment from Mirle Automation",
+"source": "Fiscal.ai",
+"url": "https://de.marketscreener.com/boerse-nachrichten/ase-technology-tochter-erwirbt-ausruestung-im-wert-von-2-03-mrd-nt-von-mirle-automation-ce785fd3db8cf725",
+"at": "9:01 AM ET",
+"ts": "2026-11-09T09:01-05:00"
+}
+},
+"AKAM": {
+"news": "C",
+"catalyst": "Earlier news (Thu Nov 5): Earnings + raise",
+"reason": "revenue +6% y/y; guide +3.5% vs street (SEC Nov 5 4:08 PM ET); today: Filing, not classified: Filed since the close: 10-Q, 8-K 1.01,2.03,8.01,9.01. EX-99.1 EX-99.1 Akamai Announces Proposed Offering of Convertible Senior Notes CAMBRIDGE, Mass. \u2013 November",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1086222/000108622226000097/exhibit991-q32026.htm",
+"https://www.sec.gov/Archives/edgar/data/1086222/000119312526452631/d137487dex991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.27,
+"pm_last": 77.88,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "In the news",
+"title": "What Is Going on With Akamai Stock on Monday?",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/markets/earnings/26/11/63029483/what-is-going-on-with-akamai-stock-on-monday",
+"at": "8:08 AM ET",
+"ts": "2026-11-09T08:08-05:00"
+},
+"earlier": {
+"label": "Thu Nov 5",
+"date": "2026-11-05",
+"kind": "Earnings + raise",
+"text": "revenue +6% y/y; guide +3.5% vs street",
+"source": "SEC",
+"url": "https://www.sec.gov/Archives/edgar/data/1086222/000108622226000097/exhibit991-q32026.htm",
+"at": "Nov 5 4:08 PM ET"
+}
+},
+"CYPH": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "10 Biotechnology stocks gapping down 5%+ (IBRX, ARWR, IONS, OCUL, OBX, FTH, ...); with their own news: IBRX (Earnings), IONS (Earnings + guide cut), OCUL (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.25,
+"pm_last": 2.7,
+"dropped": "market cap under $0.7B"
+},
+"GMEX": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.25,
+"pm_last": 0.45,
+"dropped": "market cap under $0.7B"
+},
+"CWH": {
+"news": "C",
+"catalyst": "Analyst note (headline)",
+"reason": "Wells Fargo Initiates Coverage On Camping World Holdings with Overweight Rating, Announces Price Target of $6 (Benzinga 7:52 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/news/26/11/63028691/wells-fargo-initiates-coverage-camping-world-holdings-overweight-rating-announces-price-target-6"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.11,
+"pm_last": 4.86,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Analyst note",
+"title": "Wells Fargo Initiates Coverage On Camping World Holdings with Overweight Rating, Announces Price Target of $6",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63028691/wells-fargo-initiates-coverage-camping-world-holdings-overweight-rating-announces-price-target-6",
+"at": "7:52 AM ET",
+"ts": "2026-11-09T07:52-05:00"
+}
+},
+"MLYS": {
+"news": "C",
+"catalyst": "FDA / trial (headline)",
+"reason": "Mineralys Therapeutics Announced Sunday, Phase 3 Transform-HTN Extension Data For Lorundrostat, Showing Sustained 17.8 mmHg Systolic BP Reduction At Week 48, 56% Achieving BP Below 130 mmHg (Benzinga Nov 8 4:57 PM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/quote/MLYS"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.1,
+"pm_last": 16.2657,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "FDA / trial",
+"title": "Mineralys Therapeutics Announced Sunday, Phase 3 Transform-HTN Extension Data For Lorundrostat, Showing Sustained 17.8 mmHg Systolic BP Reduction At Week 48, 56% Achieving BP Below 130 mmHg",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/MLYS",
+"at": "Nov 8 4:57 PM ET",
+"ts": "2026-11-08T16:57-05:00"
+}
+},
+"UMC": {
+"news": "C",
+"catalyst": "Earlier news (Thu Nov 5): Earnings",
+"reason": "earnings release (numbers not read) (SEC Nov 5 6:15 AM ET); today: No company news: No SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1033767/000119312526448404/umc-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.99,
+"pm_last": 14.69,
+"dropped": "gap-up under the 50 EMA",
+"earlier": {
+"label": "Thu Nov 5",
+"date": "2026-11-05",
+"kind": "Earnings",
+"text": "earnings release (numbers not read)",
+"source": "SEC",
+"url": "https://www.sec.gov/Archives/edgar/data/1033767/000119312526448404/umc-ex99_1.htm",
+"at": "Nov 5 6:15 AM ET"
+}
+},
+"BCAX": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2023658/000162828026071886/bcax-20261109.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.9,
+"pm_last": 8.14,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "FDA / trial",
+"title": "Bicara Therapeutics Reports Substantial Enrollment In FORTIFI-HN01 Pivotal Trial In 1L R/M HPV-Negative HNSCC; Interim Results Expected Mid-2027",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/BCAX",
+"at": "9:02 AM ET",
+"ts": "2026-11-09T09:02-05:00"
+}
+},
+"HSLV": {
+"news": "C",
+"catalyst": "Sector move: Mining & Metals",
+"reason": "8 Mining & Metals stocks gapping up 5%+ (TECK, AUGO, HYMC, VZLA, TMC, ITRG, ...); with their own news: AUGO (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.88,
+"pm_last": 4.68,
+"dropped": "20-day average volume under 700K"
+},
+"THM": {
+"news": "C",
+"catalyst": "Sector move: Mining & Metals",
+"reason": "8 Mining & Metals stocks gapping up 5%+ (TECK, AUGO, HYMC, VZLA, TMC, HSLV, ...); with their own news: AUGO (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.84,
+"pm_last": 1.63,
+"dropped": "market cap under $0.7B"
+},
+"SFIX": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.84,
+"pm_last": 2.58,
+"dropped": "market cap under $0.7B"
+},
+"KELYA": {
+"news": "C",
+"catalyst": "Earlier news (Thu Nov 5): Earnings",
+"reason": "revenue -1% y/y (SEC Nov 5 7:41 AM ET); today: No company news: No SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/55135/000005513526000171/kelya-20261105.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.65,
+"pm_last": 13.03,
+"dropped": "market cap under $0.7B",
+"earlier": {
+"label": "Thu Nov 5",
+"date": "2026-11-05",
+"kind": "Earnings",
+"text": "revenue -1% y/y",
+"source": "SEC",
+"url": "https://www.sec.gov/Archives/edgar/data/55135/000005513526000171/kelya-20261105.htm",
+"at": "Nov 5 7:41 AM ET"
+}
+},
+"OBX": {
+"news": "C",
+"catalyst": "Earnings (headline)",
+"reason": "Obsidian Therapeutics Announces Positive Updated Results for Amsoki-cel in Advanced Melanoma (Fiscal.ai Nov 6 5:31 PM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.businesswire.com/newsroom/industry/health/biotechnology"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.55,
+"pm_last": 13.1,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "Obsidian Therapeutics Announces Positive Updated Results for Amsoki-cel in Advanced Melanoma",
+"source": "Fiscal.ai",
+"url": "https://www.businesswire.com/newsroom/industry/health/biotechnology",
+"at": "Nov 6 5:31 PM ET",
+"ts": "2026-11-06T17:31-05:00"
+}
+},
+"ITRG": {
+"news": "C",
+"catalyst": "Sector move: Mining & Metals",
+"reason": "8 Mining & Metals stocks gapping up 5%+ (TECK, AUGO, HYMC, VZLA, TMC, HSLV, ...); with their own news: AUGO (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.38,
+"pm_last": 2.35,
+"dropped": "market cap under $0.7B"
+},
+"UWMC": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.3,
+"pm_last": 1.59,
+"dropped": "20-day average $ volume under $20M"
+},
+"TMC": {
+"news": "C",
+"catalyst": "Filing, not classified",
+"reason": "Filed since the close: 8-K 7.01,9.01. false 0001798562 TMC the metals Co Inc. 00-0000000 0001798562 2026-11-09 2026-11-09 0001798562 TMC:TMCCommonShareswithoutparvalueMember 2026",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1798562/000110465926124241/tm2629328d1_8k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.29,
+"pm_last": 2.39,
+"dropped": "20-day average $ volume under $20M"
+},
+"ALEC": {
+"news": "C",
+"catalyst": "Earlier news (Thu Nov 5): Earnings",
+"reason": "earnings release (numbers not read) (SEC Nov 5 4:10 PM ET); today: Sector move: Biotechnology: 10 Biotechnology stocks gapping down 5%+ (IBRX, ARWR, IONS, OCUL, OBX, FTH, ...); with their own news: IBRX (Earnings), IONS (Earnings + guide cut), OCUL (Earni",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1653087/000119312526449813/alec-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.24,
+"pm_last": 2.17,
+"dropped": "market cap under $0.7B",
+"earlier": {
+"label": "Thu Nov 5",
+"date": "2026-11-05",
+"kind": "Earnings",
+"text": "earnings release (numbers not read)",
+"source": "SEC",
+"url": "https://www.sec.gov/Archives/edgar/data/1653087/000119312526449813/alec-ex99_1.htm",
+"at": "Nov 5 4:10 PM ET"
+}
+},
+"VZLA": {
+"news": "C",
+"catalyst": "Sector move: Mining & Metals",
+"reason": "8 Mining & Metals stocks gapping up 5%+ (TECK, AUGO, HYMC, TMC, HSLV, ITRG, ...); with their own news: AUGO (Earnings); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.17,
+"pm_last": 3.46,
+"dropped": "20-day average $ volume under $20M"
+},
+"SAN": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.11,
+"pm_last": 12.35,
+"dropped": "ADR under 3%"
+},
+"TECK": {
+"news": "C",
+"catalyst": "Earlier news (Thu Nov 5): Earnings",
+"reason": "revenue +33% y/y (SEC Nov 5 12:35 PM ET); today: Sector move: Mining & Metals: 8 Mining & Metals stocks gapping up 5%+ (AUGO, HYMC, VZLA, TMC, HSLV, ITRG, ...); with their own news: AUGO (Earnings); no SEC filing or company release since t",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/886986/000095014226002959/eh260852179_ex9901.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.08,
+"pm_last": 63.49,
+"dropped": "gap-up under the 50 EMA",
+"earlier": {
+"label": "Thu Nov 5",
+"date": "2026-11-05",
+"kind": "Earnings",
+"text": "revenue +33% y/y",
+"source": "SEC",
+"url": "https://www.sec.gov/Archives/edgar/data/886986/000095014226002959/eh260852179_ex9901.htm",
+"at": "Nov 5 12:35 PM ET"
+}
+},
+"GPCR": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "7 Biotechnology stocks gapping up 5%+ (IMVT, ZLAB, MBX, MLYS, CTMX, AUTL); with their own news: IMVT (Earnings), MLYS (FDA / trial (headline)); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.08,
+"pm_last": 21.3831,
+"dropped": "under 30% over the 52-week low"
+},
+"CTMX": {
+"news": "C",
+"catalyst": "Earlier news (Thu Nov 5): Earnings",
+"reason": "earnings release (numbers not read) (SEC Nov 5 4:07 PM ET); today: Sector move: Biotechnology: 7 Biotechnology stocks gapping up 5%+ (IMVT, ZLAB, MBX, GPCR, MLYS, AUTL); with their own news: IMVT (Earnings), MLYS (FDA / trial (headline)); headline: Wedbus",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1501989/000119312526449787/ctmx-ex99_1.htm",
+"https://www.marketscreener.com/news/wedbush-raises-price-target-on-cytomx-therapeutics-to-12-from-11-keeps-outperform-rating-ce785fd2d980f623"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.02,
+"pm_last": 2.3,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Analyst note",
+"title": "Wedbush Raises Price Target on CytomX Therapeutics to $12",
+"source": "Fiscal.ai",
+"url": "https://www.marketscreener.com/news/wedbush-raises-price-target-on-cytomx-therapeutics-to-12-from-11-keeps-outperform-rating-ce785fd2d980f623",
+"at": "Nov 6 5:32 PM ET",
+"ts": "2026-11-06T17:32-05:00"
+},
+"earlier": {
+"label": "Thu Nov 5",
+"date": "2026-11-05",
+"kind": "Earnings",
+"text": "earnings release (numbers not read)",
+"source": "SEC",
+"url": "https://www.sec.gov/Archives/edgar/data/1501989/000119312526449787/ctmx-ex99_1.htm",
+"at": "Nov 5 4:07 PM ET"
+}
+}
+}
+}

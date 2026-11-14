@@ -1,0 +1,2423 @@
+{
+ "from": "2026-11-05T16:00:00-05:00",
+ "to": "2026-11-06T09:18:00-05:00",
+ "symbols": [
+  "FLY",
+  "ASTS",
+  "NET",
+  "LRCX",
+  "BE",
+  "VCEL",
+  "AMD",
+  "MU",
+  "SPCX",
+  "RKLB",
+  "LUNR",
+  "EXTR"
+ ],
+ "alpaca": {
+  "ok": true,
+  "n": 57,
+  "secs": 0.7,
+  "items": [
+   {
+    "created_at": "2026-11-06T14:11:38Z",
+    "headline": "Piper Sandler Reiterates Overweight on Cloudflare, Raises Price Target to $337",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/26/11/62976486/piper-sandler-reiterates-overweight-cloudflare-raises-price-target-337",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T14:05:48Z",
+    "headline": "'TSMC Weighs Making Advanced Memory Chips to Capture More AI Spending' - The Information",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga News-desk",
+    "url": "https://www.benzinga.com/news/26/11/62976032/tsmc-weighs-making-advanced-memory-chips-to-capture-more-ai-spending-the-information",
+    "symbols": [
+     "MU",
+     "SKHY",
+     "SNDK",
+     "STX",
+     "TSM",
+     "WDC"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T14:03:53Z",
+    "headline": "Extreme Networks Exploring Sale Of The Company After Interest From Suitors - Reuters Exclusive",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/quote/EXTR",
+    "symbols": [
+     "EXTR"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T13:58:56Z",
+    "headline": "Lam Research Unleashes $25 Billion Stock Buyback",
+    "summary": "Lam Research stock surges 11% premarket after approving a $25B share buyback and declaring a $0.33 dividend. Read the full update.",
+    "source": "benzinga",
+    "author": "Lekha Gupta",
+    "url": "https://www.benzinga.com/markets/buybacks/26/11/62975570/lam-research-unleashes-25-billion-stock-buyback",
+    "symbols": [
+     "LRCX"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T13:54:10Z",
+    "headline": "October Payrolls Smash Estimates at 165K, Jobless Rate Falls to 4.1% (UPDATED)",
+    "summary": "October jobs report: nonfarm payrolls rose 165,000 vs 65,000 expected and unemployment fell to 4.1%, a day after the Nasdaq 100 worst day since 2020.",
+    "source": "benzinga",
+    "author": "Piero Cingari",
+    "url": "https://www.benzinga.com/markets/economic-data/26/11/62974776/october-jobs-report-nonfarm-payrolls-unemployment-rate",
+    "symbols": [
+     "AMAT",
+     "AMD",
+     "BTCUSD",
+     "DELL",
+     "LRCX",
+     "MU",
+     "NVDA",
+     "QQQ"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T13:45:47Z",
+    "headline": "Firefly, AST SpaceMobile Stocks Rise on $1.3B Rocket Engine Deal: What\u2019s Happening?",
+    "summary": "Firefly Aerospace and AST SpaceMobile are rising Friday after Firefly announced a $1.3 billion-plus rocket engine deal with AST SpaceMobile.",
+    "source": "benzinga",
+    "author": "Dylan Berman",
+    "url": "https://www.benzinga.com/trading-ideas/movers/26/11/62975219/firefly-ast-spacemobile-stocks-rise-on-dollar13b-rocket-engine-deal-whats-happening",
+    "symbols": [
+     "ASTS",
+     "FLY"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T13:39:33Z",
+    "headline": "Stock Market Today: Dow Jones, S&P 500, Nasdaq 100 Futures Trade Mixed as October Jobs Rose by 165,000\u2014 Airbnb, Cloudflare, Lam Research in Focus (UPDATED)",
+    "summary": "U.S. stocks were mixed on Friday, with the Dow Jones, S&amp;P 500, and Nasdaq 100 index futures moving in different directions.",
+    "source": "benzinga",
+    "author": "Rishabh Mishra",
+    "url": "https://www.benzinga.com/markets/equities/26/11/62968424/stock-market-today-dow-jones-sp-500-futures-trade-mixed-ahead-of-octobers-jobs-report-airbnb-cloudflare-lam-research-in-focus",
+    "symbols": [
+     "ABNB",
+     "AMZN",
+     "BTCUSD",
+     "DIA",
+     "FIVN",
+     "GOOG",
+     "GOOGL",
+     "LRCX",
+     "META",
+     "MNST",
+     "NET",
+     "QQQ",
+     "SPY"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T13:37:23Z",
+    "headline": "Why Is Intuitive Machines Stock Gaining Friday?",
+    "summary": "Intuitive Machines (LUNR) rose 5% premarket from oversold levels ahead of Nov. 12 earnings. Read key technicals and price targets.",
+    "source": "benzinga",
+    "author": "Kaustubh Bagalkote",
+    "url": "https://www.benzinga.com/trading-ideas/movers/26/11/62974909/why-is-intuitive-machines-stock-gaining-friday",
+    "symbols": [
+     "JEDI",
+     "LUNR",
+     "ORBX",
+     "WSPC"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T13:36:08Z",
+    "headline": "Guggenheim Maintains Sell on Cloudflare, Raises Price Target to $190",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/26/11/62974786/guggenheim-maintains-sell-cloudflare-raises-price-target-190",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T13:21:56Z",
+    "headline": "Cloudflare Shares Power Higher Friday: What's Going On?",
+    "summary": "Cloudflare shares are trading higher Friday after it reported a Q3 beat, issued Q4 guidance above estimates, and raised its FY26 outlook.",
+    "source": "benzinga",
+    "author": "Dylan Berman",
+    "url": "https://www.benzinga.com/trading-ideas/movers/26/11/62974106/cloudflare-shares-power-higher-friday-whats-going-on",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T13:07:01Z",
+    "headline": "These Analysts Slash Their Forecasts On Cloudflare Following Q3 Results",
+    "summary": "Cloudflare beat Q3 estimates, raised full-year guidance, and shares surged 19.9%; analysts cut price targets despite strong results.",
+    "source": "benzinga",
+    "author": "Avi Kapoor",
+    "url": "https://www.benzinga.com/analyst-stock-ratings/price-target/26/11/62973644/these-analysts-slash-their-forecasts-on-cloudflare-following-q3-results",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T12:50:38Z",
+    "headline": "Rocket Lab Stock Pulls Out of a Nosedive Friday: What's Going On?",
+    "summary": "Rocket Lab shares are trading higher Friday ahead of Monday&#39;s earnings report, rebounding from Thursday&#39;s decline.",
+    "source": "benzinga",
+    "author": "Dylan Berman",
+    "url": "https://www.benzinga.com/trading-ideas/movers/26/11/62973089/rocket-lab-stock-pulls-out-of-a-nosedive-friday-whats-going-on",
+    "symbols": [
+     "ASTS",
+     "RDW",
+     "RKLB",
+     "SPCE"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T12:46:27Z",
+    "headline": "Bloom Energy Scores Major Role In Google's 702-Megawatt Power Project",
+    "summary": "Bloom Energy (BE) jumps 12% premarket as Google taps its fuel cells for a major $17B data center project in Wyoming. Key levels to watch.",
+    "source": "benzinga",
+    "author": "Kaustubh Bagalkote",
+    "url": "https://www.benzinga.com/trading-ideas/movers/26/11/62973002/bloom-energy-scores-major-role-in-googles-702-megawatt-power-project",
+    "symbols": [
+     "AEP",
+     "BE",
+     "EGGQ",
+     "GOOGL",
+     "IBAT",
+     "ICLN"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T12:46:14Z",
+    "headline": "Cantor Fitzgerald Maintains Neutral on Cloudflare, Lowers Price Target to $310",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/26/11/62972990/cantor-fitzgerald-maintains-neutral-cloudflare-lowers-price-target-310",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T12:41:56Z",
+    "headline": "Jim Cramer Picks DuPont Over Xylem, Has Cold Feet on Lam Research",
+    "summary": "Xylem, a water technology provider, saw its shares fall 1% to close at $100.05 on Thursday. Vertiv shares dipped 14% to settle at $176.73.",
+    "source": "benzinga",
+    "author": "Avi Kapoor",
+    "url": "https://www.benzinga.com/trading-ideas/long-ideas/26/11/62972914/jim-cramer-xylem-dupont-lam-research",
+    "symbols": [
+     "DD",
+     "FSLR",
+     "LRCX",
+     "NXT",
+     "VRT",
+     "XYL"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T12:35:24Z",
+    "headline": "Elon Musk\u2019s SpaceX Needs at Least \u20ac200 Billion to Challenge US Telecom Giants, Says Deutsche Telekom CEO Tim H\u00f6ttges: \u2018Welcome to the Party\u2019",
+    "summary": "Deutsche Telekom CEO says SpaceX needs at least $200B to challenge U.S. carriers as Starlink Mobile targets a 2027 rollout.",
+    "source": "benzinga",
+    "author": "Shomik Sen Bhattacharjee",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62972597/elon-musks-spacex-needs-at-least-e200-billion-to-challenge-us-telecom-giants-says-deutsche-telekom-ceo-tim-hottges-welcome-to-the-party",
+    "symbols": [
+     "DTEGY",
+     "SPCX",
+     "TMUS"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T12:31:31Z",
+    "headline": "Firefly Aerospace Inks $1.3B Agreement With AST SpaceMobile To Provide Over 36 Rocket Engines",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/26/11/62972383/firefly-aerospace-inks-1-3b-agreement-ast-spacemobile-provide-over-36-rocket-engines",
+    "symbols": [
+     "ASTS",
+     "FLY"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T12:05:29Z",
+    "headline": "12 Industrials Stocks Moving In Friday's Pre-Market Session",
+    "summary": "Gainers\n\nTianci International (NASDAQ:CIIT) shares increased by 49.7% to $2.32 during Friday&#39;s pre-market session. The market value of their outstanding shares is at $1.8 million. As per the press release, Q4",
+    "source": "benzinga",
+    "author": "Benzinga Insights",
+    "url": "https://www.benzinga.com/trading-ideas/movers/26/11/62971576/12-industrials-stocks-moving-friday-s-pre-market-session",
+    "symbols": [
+     "AXON",
+     "BE",
+     "CIIT",
+     "ELPW",
+     "HUHU",
+     "INOD",
+     "JLHL",
+     "PANL",
+     "POLA",
+     "RAYA",
+     "SCWO",
+     "WFF"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T12:05:29Z",
+    "headline": "12 Information Technology Stocks Moving In Friday's Pre-Market Session",
+    "summary": "Gainers\n\nGauzy (NASDAQ:GAUZ) stock increased by 39.4% to $9.1 during Friday&#39;s pre-market session. The market value of their outstanding shares is at $7.5 million. \nJFrog (NASDAQ:FROG) shares increased by 23.02% to",
+    "source": "benzinga",
+    "author": "Benzinga Insights",
+    "url": "https://www.benzinga.com/trading-ideas/movers/26/11/62971575/12-information-technology-stocks-moving-friday-s-pre-market-session",
+    "symbols": [
+     "CTM",
+     "FIVN",
+     "FROG",
+     "GAUZ",
+     "HUBC",
+     "IREN",
+     "LASR",
+     "NET",
+     "P",
+     "TBCH",
+     "TEAM",
+     "WK"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T12:04:21Z",
+    "headline": "Micron Technology Stock Is Surging Friday: What's Going On?",
+    "summary": "Micron (MU) rebounds nearly 8% after a 17% slide. Analyze memory chip pricing trends, AI infrastructure demand, and analyst price targets.",
+    "source": "benzinga",
+    "author": "Anusuya Lahiri",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62971493/micron-technology-stock-is-surging-friday-whats-going-on",
+    "symbols": [
+     "MU",
+     "SPMO",
+     "TRFK",
+     "XNTK"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T11:55:11Z",
+    "headline": "Needham Maintains Buy on Cloudflare, Lowers Price Target to $365",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/26/11/62971112/needham-maintains-buy-cloudflare-lowers-price-target-365",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T11:51:35Z",
+    "headline": "HC Wainwright & Co. Maintains Buy on Vericel, Raises Price Target to $75",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/26/11/62971075/hc-wainwright-co-maintains-buy-vericel-raises-price-target-75",
+    "symbols": [
+     "VCEL"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T11:38:52Z",
+    "headline": "Nasdaq\u2019s 5.5% Wipeout And AI's Next Reality Check\u2014IRS' New Tax Brackets",
+    "summary": "AI stocks unravel as Cloudflare, Airbnb and the IRS deliver a very different set of numbers.",
+    "source": "benzinga",
+    "author": "Gav Blaxberg",
+    "url": "https://www.benzinga.com/opinion/26/11/62970305/nasdaq-wipeout-ai-next-reality-check-irs-new-tax-brackets",
+    "symbols": [
+     "ABNB",
+     "APP",
+     "AXON",
+     "GOOGL",
+     "NET",
+     "NVDA",
+     "UBER",
+     "USO",
+     "V"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T11:32:14Z",
+    "headline": "Coforge Joins SpaceXSI Partner Network",
+    "summary": "Coforge has joined the SpaceX Super Intelligence (SpaceXSI) partner network to assist enterprises in integrating Grok AI tools.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://www.marketscreener.com/news/coforge-joins-spacexsi-partner-network-to-deploy-grok-for-enterprises-ce785fddd181f125",
+    "symbols": [
+     "SPCX"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T11:32:14Z",
+    "headline": "Texas Governor-Elect Discusses Data Center Construction Policy",
+    "summary": "Texas Governor-elect Gina Hinojosa has indicated that data center construction could continue, provided that necessary legislation is passed to address state concerns.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://www.fidelity.com/news/article/company-news/202611060447MIDNIGHTUSEQUITY_A3747830",
+    "symbols": [
+     "SPCX"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T11:31:38Z",
+    "headline": "Cloudflare Announces Workforce Reduction and Transition to Agentic AI-First Model",
+    "summary": "Cloudflare reported a workforce reduction of approximately 20% as part of its transition to an agentic AI-first operating model.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://www.tradingview.com/news/tradingview:3a181836e99a6:0-key-facts-cloudflare-q3-beats-20-workforce-cut-anderson-to-leave/",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T11:26:18Z",
+    "headline": "NVIDIA Claws Back Losses After $400 Billion Bloodbath, but the AI Scare Isn't Over",
+    "summary": "NVIDIA stock jumps nearly 5% after losing $400 billion in market value. Can AI demand and upcoming earnings fuel a recovery?",
+    "source": "benzinga",
+    "author": "Anusuya Lahiri",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62969899/nvidia-claws-back-losses-after-400-billion-bloodbath-but-the-ai-scare-isnt-over",
+    "symbols": [
+     "AMD",
+     "NVDA"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T11:08:19Z",
+    "headline": "AMD Shares Rebound 7% Premarket After 17% Rout: Here's What's Happening",
+    "summary": "AMD shares jump 5.28% in premarket trading after strong quarterly results, with revenue and earnings beating analyst expectations.",
+    "source": "benzinga",
+    "author": "Mohd Haider",
+    "url": "https://www.benzinga.com/markets/equities/26/11/62969487/amd-shares-jump-5-percent-premarket-after-strong-quarterly-results",
+    "symbols": [
+     "AMD",
+     "MU"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T10:56:26Z",
+    "headline": "AI Bubble About to Burst? Top Tech Investor Warns Most Neocloud Players Could Go to Zero",
+    "summary": "Midterm results trigger a $3.2T tech market selloff. Analysts assess the fallout for NVIDIA, hyperscalers, and neocloud infrastructure.",
+    "source": "benzinga",
+    "author": "Anusuya Lahiri",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62968934/ai-bubble-about-to-burst-top-tech-investor-warns-most-neocloud-players-could-go-to-zero",
+    "symbols": [
+     "AAPL",
+     "AMZN",
+     "AVGO",
+     "CRWV",
+     "GOOG",
+     "GOOGL",
+     "META",
+     "MSFT",
+     "MU",
+     "NBIS",
+     "NVDA",
+     "QCOM",
+     "SNDK",
+     "WDC"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T10:23:07Z",
+    "headline": "Why Cloudflare Shares Are Trading Higher By Around 15%; Here Are 20 Stocks Moving Premarket",
+    "summary": "Cloudflare jumped 14.6% after beating Q3 estimates; JFrog and Eton gained, while Site Centers and Biostem plunged premarket.",
+    "source": "benzinga",
+    "author": "Avi Kapoor",
+    "url": "https://www.benzinga.com/trading-ideas/movers/26/11/62968476/why-cloudflare-shares-are-trading-higher-by-around-15-here-are-20-stocks-moving-premarket",
+    "symbols": [
+     "AEHL",
+     "BDMD",
+     "BDSX",
+     "BSEM",
+     "CIIT",
+     "DKNG",
+     "ETON",
+     "FIVN",
+     "FROG",
+     "IREN",
+     "LABT",
+     "LASR",
+     "NET",
+     "NRDS",
+     "NTCL",
+     "RCT",
+     "SHAZ",
+     "SHFS",
+     "SITC",
+     "VSA"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T08:36:11Z",
+    "headline": "Elon Musk Gets an Overseas Offer for His AI, Data Center Ambitions After Texas Democrats' Midterm Sweep",
+    "summary": "After GOP losses cloud Elon Musk\u2019s Texas AI plans, this country has invited his data centers on one condition.",
+    "source": "benzinga",
+    "author": "Badar Shaikh",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62967645/elon-musk-gets-an-overseas-offer-for-his-ai-data-center-ambitions-after-texas-democrats-midterm-sweep",
+    "symbols": [
+     "SPCX",
+     "TSLA"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T08:22:26Z",
+    "headline": "Elon Musk's SpaceX Wants to Take On AT&T, T-Mobile \u2014 But Both Carriers Could Cut Off Boost Mobile: Report",
+    "summary": "AT&amp;T and T-Mobile may cut Boost Mobile&#39;s network access if SpaceX buys it, complicating Musk&#39;s plans to disrupt the U.S. wireless market.",
+    "source": "benzinga",
+    "author": "Shomik Sen Bhattacharjee",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62967596/elon-musks-spacex-wants-to-take-on-att-t-mobile-but-both-carriers-could-cut-off-boost-mobile-report",
+    "symbols": [
+     "ECHO",
+     "SPCX",
+     "T",
+     "TMUS",
+     "VZ"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T07:19:57Z",
+    "headline": "Nasdaq Tumbles 5.5% as AI Stocks Crater: Investor Sentiment Weakens, Fear & Greed Index Moves to \u2018Extreme Fear\u2019 Zone",
+    "summary": "Markets plunged as AI stocks rout deepened, pushing CNN\u2019s Fear &amp; Greed Index to Extreme Fear; Nasdaq fell 5.5%, while AMD and Micron dropped 17%.",
+    "source": "benzinga",
+    "author": "Avi Kapoor",
+    "url": "https://www.benzinga.com/markets/market-summary/26/11/62967148/nasdaq-tumbles-5-5-as-ai-stocks-crater-investor-sentiment-weakens-fear-greed-index-moves-to-extreme-fear-zone",
+    "symbols": [
+     "AMD",
+     "CHTR",
+     "FLR",
+     "HUM",
+     "MU",
+     "QCOM",
+     "U"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T07:10:50Z",
+    "headline": "Core Scientific to Exit Bitcoin Mining by Year-End and Become a Pure-Play AI Data Center Provider",
+    "summary": "Core Scientific said on Thursday it plans to abandon Bitcoin mining entirely by year-end and reposition itself as a pure-play AI firm.",
+    "source": "benzinga",
+    "author": "Aniket Verma",
+    "url": "https://www.benzinga.com/crypto/cryptocurrency/26/11/62966994/core-scientific-to-exit-bitcoin-mining-by-year-end-and-become-a-pure-play-ai-data-center-provider",
+    "symbols": [
+     "AMD",
+     "BTCUSD",
+     "CORZ",
+     "CRWV",
+     "ZECUSD"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T05:56:19Z",
+    "headline": "Asian Stocks Tumble After $3 Trillion US Wipeout as SK hynix Leads KOSPI Rout \u2014 Mohamed El-Erian Says 'When the Nasdaq Sneezes...'",
+    "summary": "Asian chipmakers sank Friday as the AI selloff that erased $3 trillion from U.S. stocks spread, on fears Democrats could slow AI buildout.",
+    "source": "benzinga",
+    "author": "Radhika Anilkumar Nadig",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62966567/asian-stocks-sk-hynix-samsung-electronics-tsmc-nikkei-kospi-nasdaq-selloff",
+    "symbols": [
+     "AMD",
+     "MU",
+     "NVDA",
+     "SKHY",
+     "SOXX",
+     "TSM"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T05:29:23Z",
+    "headline": "Peter Schiff Sees More Pain Ahead After $3 Trillion Wipeout, While Gary Black Spots a Tech Buying Opportunity: 'The Market Has Reset'",
+    "summary": "Peter Schiff warned of further losses after a $3 trillion market rout, while Gary Black saw a buying opportunity in tech stocks.",
+    "source": "benzinga",
+    "author": "Ananya Gairola",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62966353/peter-schiff-stock-market-gary-black",
+    "symbols": [
+     "AMD",
+     "AMZN",
+     "GOOG",
+     "GOOGL",
+     "META",
+     "MU",
+     "NVDA",
+     "QQQ",
+     "SMH",
+     "SPCX",
+     "SPY",
+     "TSLA",
+     "XLK"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T05:01:27Z",
+    "headline": "Why Is Tesla (TSLA) Stock Trending After Hours?",
+    "summary": "Tesla shares edge 0.58% higher in after-hours trading following a steep selloff fueled by concerns over data center expansion.",
+    "source": "benzinga",
+    "author": "Mohd Haider",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62966229/tesla-shares-edge-higher-after-hours-after-sharp-selloff",
+    "symbols": [
+     "GS",
+     "SPCX",
+     "TSLA"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T04:29:58Z",
+    "headline": "Relief for SpaceX? Elon Musk's Texas Election Bet Backfires, But Democrats Extend an Olive Branch: 'Please Take It,' Says Anthony Scaramucci",
+    "summary": "Elon Musk\u2019s Texas election setback raises data center concerns, but Democrats signal willingness to work with him.",
+    "source": "benzinga",
+    "author": "Ananya Gairola",
+    "url": "https://www.benzinga.com/news/space/26/11/62966105/musk-texas-election-spacex-data-centers",
+    "symbols": [
+     "SPCX",
+     "TSLA"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T03:23:16Z",
+    "headline": "Micron Technology (MU) Stock Is Trending After Hours: Here\u2019s Why",
+    "summary": "Micron Technology shares jump 4.11% in after-hours trading following a sharp intraday selloff in semiconductor stocks.",
+    "source": "benzinga",
+    "author": "Mohd Haider",
+    "url": "https://www.benzinga.com/markets/equities/26/11/62965790/micron-technology-shares-jump-4-percent-after-hours",
+    "symbols": [
+     "ARM",
+     "MU",
+     "QCOM"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T03:01:36Z",
+    "headline": "AMD CEO Lisa Su Addresses AI Spending Concerns",
+    "summary": "In an interview, AMD CEO Lisa Su defended the company's long-term investment strategy in AI and computing infrastructure despite recent market volatility.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://www.tradingview.com/news/benzinga:38e37bfce094b:0-amd-ceo-lisa-su-calls-this-market-moment-short-sighted-on-ai-spending/",
+    "symbols": [
+     "AMD"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T01:59:15Z",
+    "headline": "Trump Blames 'Dumocrats' as Stock Market Suffers $3 Trillion Rout After Democrats Win Congress: 'Your 401(k)s Have Dropped'",
+    "summary": "Donald Trump blamed Democrats for a rout that erased about $3 trillion from the S&amp;P 500 and handed the Nasdaq 100 its worst day since 2020",
+    "source": "benzinga",
+    "author": "Radhika Anilkumar Nadig",
+    "url": "https://www.benzinga.com/markets/equities/26/11/62965277/donald-trump-democrats-stock-market-selloff-3-trillion-nasdaq-100-midterms",
+    "symbols": [
+     "AMD",
+     "MU",
+     "NVDA",
+     "QQQ",
+     "SMH",
+     "SPCX",
+     "SPY",
+     "TSLA",
+     "XLK"
+    ]
+   },
+   {
+    "created_at": "2026-11-06T00:01:42Z",
+    "headline": "Micron Technology Announces Retirement of Board Member Linnie M. Haynesworth",
+    "summary": "Micron Technology, Inc. announced that board member Linnie M. Haynesworth will retire from the company's board of directors at the annual shareholders meeting in January 2027.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://www.globenewswire.com/news-release/2026/11/05/3397160/14450/en/micron-announces-board-of-directors-retirement.html",
+    "symbols": [
+     "MU"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T23:16:48Z",
+    "headline": "Chip Stocks Just Had Their Worst Day Since 2020: 28 of 30 Biggest Names Are in a Bear Market",
+    "summary": "Chip stocks posted their worst day since March 2020 as 28 of the 30 stocks in the iShares Semiconductor ETF now trade at least 20% below record highs.",
+    "source": "benzinga",
+    "author": "Piero Cingari",
+    "url": "https://www.benzinga.com/markets/equities/26/11/62961405/chip-stocks-worst-day-since-2020-soxx-bear-market",
+    "symbols": [
+     "ADI",
+     "ALAB",
+     "AMAT",
+     "AMD",
+     "ARM",
+     "ASML",
+     "ASX",
+     "AVGO",
+     "CBRS",
+     "CRDO",
+     "ENTG",
+     "INTC",
+     "KLAC",
+     "LRCX",
+     "MCHP",
+     "MPWR",
+     "MRVL",
+     "MTSI",
+     "MU",
+     "NVDA",
+     "NXPI",
+     "ON",
+     "QCOM",
+     "SKHY",
+     "SOXX",
+     "STM",
+     "TER",
+     "TSEM",
+     "TSM",
+     "TXN",
+     "UMC"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T23:16:35Z",
+    "headline": "Cloudflare Q3 2026 Earnings Call Transcript",
+    "summary": "Cloudflare (NYSE:NET) reported third-quarter financial results on Thursday. The transcript from the company\u2019s third-quarter earnings call has been provided below.This transcript is brought to you by Benzinga APIs. For",
+    "source": "benzinga",
+    "author": "Earnings Transcripts",
+    "url": "https://www.benzinga.com/news/26/11/62961393/cloudflare-q3-2026-earnings-call-transcript",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T22:31:35Z",
+    "headline": "Bloom Energy Shares Decline Amid Market Concerns Over Data Center Development",
+    "summary": "Bloom Energy stock experienced a significant decline following market concerns regarding the potential impact of U.S. midterm election results on data center development.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://www.morningstar.com/news/marketwatch/20261105223/bloom-energys-stock-is-one-of-the-sp-500s-biggest-losers-amid-fears-of-data-center-delays",
+    "symbols": [
+     "BE"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T22:09:05Z",
+    "headline": "Cloudflare Stock Rises After Q3 Results: CEO Says \u2018Best Quarter Ever\u2019",
+    "summary": "Cloudflare stock soars on a Q3 beat and updated guidance. Here are the key highlights and what to know.",
+    "source": "benzinga",
+    "author": "Chris Katje",
+    "url": "https://www.benzinga.com/markets/earnings/26/11/62957362/cloudflare-stock-rises-after-q3-results-ceo-says-best-quarter-ever",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:42:14Z",
+    "headline": "Cloudflare Raises FY2026 Adj EPS Guidance from $1.25-$1.26 to $1.35 vs $1.28 Est; Raises FY2026 Sales Guidance from $2.864B-$2.870B to $2.963B-$2.964B vs $2.872B Est",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/26/11/62955352/cloudflare-raises-fy2026-adj-eps-guidance-1-25-1-26-1-35-vs-1-28-est-raises-fy2026-sales-guidance-2-",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:41:34Z",
+    "headline": "Cloudflare Sees Q4 Adj EPS $0.43 vs $0.38 Est; Sees Sales $845.000M-$846.000M vs $797.673M Est",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/26/11/62955271/cloudflare-sees-q4-adj-eps-0-43-vs-0-38-est-sees-sales-845-000m-846-000m-vs-797-673m-est",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:37:56Z",
+    "headline": "CORRECTION: Cloudflare Ticker Is \"NET\" Not \"NE\"",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/quote/NET",
+    "symbols": [
+     "NE",
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:34:14Z",
+    "headline": "Lam Research Announces $25B Buyback Plan",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/26/11/62954337/lam-research-announces-25b-buyback-plan",
+    "symbols": [
+     "LRCX"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:33:05Z",
+    "headline": "Cloudflare Appoints Christian Smith as President of Revenue",
+    "summary": "Cloudflare has appointed industry veteran Christian Smith as its new President of Revenue to lead the company's global go-to-market organization.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://pressreleasehub.pa.media/article/cloudflare-appoints-christian-smith-as-president-of-revenue-88319.html",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:33:05Z",
+    "headline": "Cloudflare Reports Third Quarter 2026 Financial Results",
+    "summary": "Cloudflare announced its financial results for the third quarter ended September 30, 2026, reporting $782 million in revenue.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://www.businesswire.com/newsroom/industry/technology/security",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:32:40Z",
+    "headline": "SpaceX Faces Local Opposition to Proposed Arizona AI Data Center",
+    "summary": "Plans for a large-scale AI data center in Cochise County, Arizona, have drawn backlash from local residents due to concerns over infrastructure and resource demands.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://www.tradingview.com/news/gurufocus:723003102094b:0-spacex-stock-tumbles-a-6-gigawatt-ai-data-center-is-drawing-backlash/",
+    "symbols": [
+     "SPCX"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:32:39Z",
+    "headline": "Lam Research Announces $25 Billion Share Repurchase Authorization and Quarterly Dividend",
+    "summary": "Lam Research Corporation's Board of Directors has approved a new $25 billion share repurchase program and declared a quarterly dividend of $0.33 per share.",
+    "source": "fiscal.ai",
+    "author": "",
+    "url": "https://www.prnewswire.com/news-releases/lam-research-corporation-announces-25-billion-share-repurchase-authorization-and-declares-quarterly-dividend-302931288.html",
+    "symbols": [
+     "LRCX"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:16:18Z",
+    "headline": "Cloudflare Q3 Adj. EPS $0.38 Beats $0.34 Estimate, Sales $782.513M Beat $738.532M Estimate",
+    "summary": "",
+    "source": "benzinga",
+    "author": "Benzinga Newsdesk",
+    "url": "https://www.benzinga.com/news/earnings/26/11/62951903/cloudflare-q3-adj-eps-0-38-beats-0-34-estimate-sales-782-513m-beat-738-532m-estimate",
+    "symbols": [
+     "NET"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:02:04Z",
+    "headline": "Michael Burry Asks Whether Anthropic\u2019s Partners Are Polishing Its IPO Numbers",
+    "summary": "Michael Burry questions whether Anthropic\u2019s cloud partners are helping polish expenses and margins ahead of its IPO.",
+    "source": "benzinga",
+    "author": "Erica Kollmann",
+    "url": "https://www.benzinga.com/markets/tech/26/11/62948723/michael-burry-asks-whether-anthropics-partners-are-polishing-its-ipo-numbers",
+    "symbols": [
+     "AMD",
+     "AMZN",
+     "APO",
+     "AVGO",
+     "BX",
+     "GOOG",
+     "GOOGL",
+     "MSFT",
+     "NVDA",
+     "SPCX"
+    ]
+   },
+   {
+    "created_at": "2026-11-05T21:00:08Z",
+    "headline": "Elon Musk's SpaceX Default Risk Hits Record High as Democratic Sweep Adds to AI Rout",
+    "summary": "SpaceX default insurance hit a record high as the AI selloff deepened and Democratic victories added new political risks.",
+    "source": "benzinga",
+    "author": "Daragh Thomas",
+    "url": "https://www.benzinga.com/markets/prediction-markets/26/11/62948387/elon-musks-spacex-default-risk-hits-record-high-as-democratic-sweep-adds-to-ai-rout",
+    "symbols": [
+     "APO",
+     "CRWV",
+     "SPCX",
+     "TSLA"
+    ]
+   }
+  ]
+ },
+ "yahoo": {
+  "FLY": [],
+  "ASTS": [
+   {
+    "at": "2026-11-06T14:27:22-05:00",
+    "title": "AST SpaceMobile Soars 7% on $1.3 Billion Rocket Plan Promising \u201cUnconstrained Access to Orbit\u201d",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/ast-spacemobile-soars-7-1-192722460.html",
+    "tickers": [
+     "ASTS",
+     "SPCX",
+     "FLY"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:34:55-05:00",
+    "title": "Why Firefly Aerospace Stock Went to the Moon Today",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/why-firefly-aerospace-stock-went-173455818.html",
+    "tickers": [
+     "FLY",
+     "ASTS",
+     "NVDA"
+    ]
+   },
+   {
+    "at": "2026-11-06T11:18:21-05:00",
+    "title": "AST SpaceMobile Fell 26% in a Week. The November 9 Report Has to Answer the Dilution Question",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/ast-spacemobile-fell-26-week-161821152.html",
+    "tickers": [
+     "ASTS",
+     "SPCX",
+     "ECHO",
+     "T",
+     "VZ"
+    ]
+   },
+   {
+    "at": "2026-11-06T11:04:00-05:00",
+    "title": "Firefly Aerospace shares jump 23% on $1.3B rocket engine deal with AST SpaceMobile",
+    "publisher": "Proactive",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/firefly-aerospace-shares-jump-23-160400281.html",
+    "tickers": [
+     "ASTS",
+     "FLY",
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:38:38-05:00",
+    "title": "Firefly inks $1.3 billion deal to supply engines for new AST SpaceMobile 'Blacklift' rocket",
+    "publisher": "Reuters",
+    "link": "https://finance.yahoo.com/technology/articles/firefly-inks-1-3-billion-151810804.html",
+    "tickers": [
+     "ASTS",
+     "FLY"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:23:40-05:00",
+    "title": "AST SpaceMobile to Develop Blacklift Rocket Using Firefly Aerospace Engines in $1.3 Billion Agreement",
+    "publisher": "InvestorsHub",
+    "link": "https://finance.yahoo.com/technology/articles/ast-spacemobile-develop-blacklift-rocket-152340270.html",
+    "tickers": [
+     "ASTS",
+     "FLY"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:00:00-05:00",
+    "title": "AST SpaceMobile Will Use Firefly in Bold Move to Build Its Starlink Competitor",
+    "publisher": "Barrons.com",
+    "link": "https://finance.yahoo.com/m/2bffda9d-f667-380c-b5e7-f41771dbe478/ast-spacemobile-will-use.html",
+    "tickers": [
+     "ASTS",
+     "FLY",
+     "LUNR",
+     "RKLB",
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T09:56:22-05:00",
+    "title": "SpaceX Rises 4% as Tech Stocks Rebound From Post-Election Rout; AST SpaceMobile Sinks 8%, Rocket Lab Gains 2%",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/spacex-rises-4-tech-stocks-145622731.html",
+    "tickers": [
+     "SPCX",
+     "ASTS",
+     "RKLB",
+     "TSLA"
+    ]
+   },
+   {
+    "at": "2026-11-06T09:15:55-05:00",
+    "title": "Firefly Aerospace Signs $1.3 Billion Deal With AST SpaceMobile to Deliver 36 Rocket Engines",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/technology/articles/firefly-aerospace-signs-1-3-141555578.html",
+    "tickers": [
+     "FLY",
+     "ASTS"
+    ]
+   },
+   {
+    "at": "2026-11-06T09:11:18-05:00",
+    "title": "Is AST SpaceMobile (ASTS) Undervalued As AT&T Tests Direct To Device Satellite Handoff?",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/ast-spacemobile-asts-undervalued-t-141118933.html",
+    "tickers": [
+     "ASTS",
+     "T"
+    ]
+   },
+   {
+    "at": "2026-11-06T08:24:00-05:00",
+    "title": "Firefly Aerospace Inks $1.3 Billion Deal With AST SpaceMobile for Rocket Engines",
+    "publisher": "The Wall Street Journal",
+    "link": "https://finance.yahoo.com/m/1feeeccf-54f9-3d09-b75f-637d1f26890d/firefly-aerospace-inks-%241.3.html",
+    "tickers": [
+     "ASTS",
+     "FLY"
+    ]
+   },
+   {
+    "at": "2026-11-06T08:10:05-05:00",
+    "title": "Firefly Aerospace stock surges 13% on $1.3 billion engine deal",
+    "publisher": "Investing.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/firefly-aerospace-stock-surges-13-131005466.html",
+    "tickers": [
+     "ASTS",
+     "FLY"
+    ]
+   }
+  ],
+  "NET": [
+   {
+    "at": "2026-11-06T15:19:51-05:00",
+    "title": "Stock Market Today: Nasdaq Bounces After Jobs Report; Moderna Races Higher (Live Coverage)",
+    "publisher": "Investor's Business Daily",
+    "link": "https://finance.yahoo.com/m/259a2432-7041-3624-978f-9a7336f10b31/stock-market-today%3A-nasdaq.html",
+    "tickers": [
+     "^DJI",
+     "MRNA",
+     "CL=F",
+     "AMZN",
+     "^IXIC",
+     "^RUT",
+     "^GSPC",
+     "NET",
+     "NVDA",
+     "JNJ",
+     "CAT",
+     "HON"
+    ]
+   },
+   {
+    "at": "2026-11-06T15:09:47-05:00",
+    "title": "Cloudflare CEO: \u201cCloudflare Isn\u2019t a Neocloud.\u201d Maybe That\u2019s Why Its Stock Soared as Neoclouds Sank",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/cloudflare-ceo-cloudflare-isn-t-200947171.html",
+    "tickers": [
+     "NET",
+     "CRWV",
+     "NBIS",
+     "IREN"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:20:42-05:00",
+    "title": "Intel and AMD in Focus as Tech Stocks Seek Rebound",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/intel-amd-focus-tech-stocks-192042980.html",
+    "tickers": [
+     "INTC",
+     "AMD",
+     "ABNB",
+     "SNDK",
+     "NET"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:13:44-05:00",
+    "title": "Cloudflare Just Surged on Earnings. Here\u2019s What It Means for Your ETFs",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/cloudflare-just-surged-earnings-means-191344605.html",
+    "tickers": [
+     "NET",
+     "ARKW",
+     "CLOU",
+     "HACK",
+     "QQQ"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:06:52-05:00",
+    "title": "Top Midday Gainers",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/top-midday-gainers-190652781.html",
+    "tickers": [
+     "GOGO",
+     "ABNB",
+     "NET"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:25:56-05:00",
+    "title": "Cloudflare earnings analysis: questions answered and next catalysts",
+    "publisher": "Investing.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/cloudflare-earnings-analysis-questions-answered-182556402.html",
+    "tickers": [
+     "NET"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:17:02-05:00",
+    "title": "Why Cloudflare Stock Opened 17% Higher Today",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/why-cloudflare-stock-opened-17-171702433.html",
+    "tickers": [
+     "NET",
+     "NVDA"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:07:24-05:00",
+    "title": "Cloudflare Stocks Surge 10.9% After 39% Revenue Jump and Fresh Guidance",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/cloudflare-stocks-surge-10-9-170724449.html",
+    "tickers": [
+     "NET"
+    ]
+   },
+   {
+    "at": "2026-11-06T11:39:35-05:00",
+    "title": "CrowdStrike Rebounds 2%, Palo Alto Up 2% as Cloudflare Finds \u201cAn Even Higher Gear\u201d",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/crowdstrike-rebounds-2-palo-alto-163935311.html",
+    "tickers": [
+     "NET",
+     "CRWD",
+     "PANW",
+     "ZS"
+    ]
+   },
+   {
+    "at": "2026-11-06T11:37:05-05:00",
+    "title": "Cloudflare Just Had Its \u201cBest Quarter Ever\u201d on the Day Tech Crashed",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/cloudflare-just-had-best-quarter-163705920.html",
+    "tickers": [
+     "NET",
+     "^NDX",
+     "QQQ"
+    ]
+   },
+   {
+    "at": "2026-11-06T11:14:34-05:00",
+    "title": "Cloudflare (NET) Opens Zero Wire To Put Internet Vulnerability Data In Public View",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/technology/articles/cloudflare-net-opens-zero-wire-161434218.html",
+    "tickers": [
+     "NET"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:03:12-05:00",
+    "title": "UBS Adjusts Price Target on Cloudflare to $300 From $350, Keeps Neutral Rating",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/ubs-adjusts-price-target-cloudflare-150312811.html",
+    "tickers": [
+     "NET"
+    ]
+   }
+  ],
+  "LRCX": [
+   {
+    "at": "2026-11-06T15:12:39-05:00",
+    "title": "Lam Research Shares Rise After Company Approves Share Buybacks, Maintains Quarterly Dividend",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/lam-research-shares-rise-company-201239113.html",
+    "tickers": [
+     "LRCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T15:07:18-05:00",
+    "title": "5 Companies Buying Back Their Own Stock Hand Over Fist As the Stock Market Sells Off",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/5-companies-buying-back-own-200718233.html",
+    "tickers": [
+     "LRCX",
+     "^IXIC",
+     "NVDA"
+    ]
+   },
+   {
+    "at": "2026-11-06T15:03:09-05:00",
+    "title": "Own a Semiconductor ETF? Lam Research\u2019s Buyback Move Affects You",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/own-semiconductor-etf-lam-research-200309029.html",
+    "tickers": [
+     "LRCX",
+     "QQQ",
+     "SMH",
+     "XLK"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:18:19-05:00",
+    "title": "Investing.com\u2019s stocks of the week",
+    "publisher": "Investing.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/investing-com-stocks-week-191819455.html",
+    "tickers": [
+     "LITE",
+     "SNDK",
+     "LRCX",
+     "AMAT",
+     "MU",
+     "AVGO",
+     "NVDA",
+     "MRVL"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:03:10-05:00",
+    "title": "Applied Materials Stocks Rise 4.7% as Chip Equipment Rallies Ahead of Earnings",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/applied-materials-stocks-rise-4-190310933.html",
+    "tickers": [
+     "AMAT",
+     "LRCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:28:00-05:00",
+    "title": "Nvidia, Intel, Tesla, AMD, Coherent, Lam Research, Moderna, and More Stocks That Explain Today\u2019s Market",
+    "publisher": "Barrons.com",
+    "link": "https://finance.yahoo.com/m/13933ac1-ca44-3c66-87e0-08f5c6b276e8/nvidia%2C-intel%2C-tesla%2C-amd%2C.html",
+    "tickers": [
+     "COHR",
+     "AMD",
+     "SNDK",
+     "LRCX",
+     "ABNB",
+     "MRNA",
+     "INTC",
+     "IREN",
+     "NVDA",
+     "LITE"
+    ]
+   },
+   {
+    "at": "2026-11-06T11:55:45-05:00",
+    "title": "What Is The True Hidden Price Of Lam Research Stock?",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/true-hidden-price-lam-research-165545119.html",
+    "tickers": [
+     "LRCX",
+     "AMAT",
+     "KLAC",
+     "TER",
+     "ENTG",
+     "MKSI"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:10:09-05:00",
+    "title": "Lam Research Soars 9% on $25 Billion Buyback as Chip Stocks Rebound From Rout",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/lam-research-soars-9-25-151009930.html",
+    "tickers": [
+     "LRCX",
+     "ASML",
+     "AMAT",
+     "TSM"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:05:00-05:00",
+    "title": "Lam Research Sure Picked a Good Time to Buy Back Its Own Stock",
+    "publisher": "Barrons.com",
+    "link": "https://finance.yahoo.com/m/818361a8-c0cc-3183-8dbd-d74bb4abc62a/lam-research-sure-picked-a.html",
+    "tickers": [
+     "LRCX",
+     "MU",
+     "NVDA"
+    ]
+   },
+   {
+    "at": "2026-11-06T09:08:56-05:00",
+    "title": "SanDisk Surges 10%, Micron and Western Digital Jump 8% as Memory and Storage Stocks Rebound From AI Sell-Off",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/sandisk-surges-10-micron-western-140856154.html",
+    "tickers": [
+     "MU",
+     "SNDK",
+     "WDC",
+     "LRCX",
+     "STX"
+    ]
+   },
+   {
+    "at": "2026-11-06T09:02:43-05:00",
+    "title": "Chip Stocks Just Had Their Second-Worst Day on Record",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/chip-stocks-just-had-second-140243882.html",
+    "tickers": [
+     "NVDA",
+     "SOXX",
+     "MU",
+     "LRCX",
+     "^SOX",
+     "AMD",
+     "SMH"
+    ]
+   },
+   {
+    "at": "2026-11-06T08:39:44-05:00",
+    "title": "AI semiconductor rout may be buying opportunity, LYNX Equity says: \u2019Dip a toe in\u2019",
+    "publisher": "Investing.com",
+    "link": "https://finance.yahoo.com/technology/ai/articles/ai-semiconductor-rout-may-buying-133944257.html",
+    "tickers": [
+     "LRCX",
+     "MU",
+     "AMD",
+     "SNDK",
+     "SOX"
+    ]
+   }
+  ],
+  "BE": [
+   {
+    "at": "2026-11-06T14:26:29-05:00",
+    "title": "Google Is Spending $17 Billion on a Wyoming Data Center and Says It Will Pay for 100% of Its Power",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/energy/articles/google-spending-17-billion-wyoming-192629782.html",
+    "tickers": [
+     "GOOG",
+     "BE",
+     "AEP",
+     "BKH"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:28:16-05:00",
+    "title": "Bloom Energy Rises 2%, AMD Up 8% as AI Stocks Rebound From Midterm Rout",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/bloom-energy-rises-2-amd-182816164.html",
+    "tickers": [
+     "BE",
+     "AMD",
+     "CRC",
+     "ORCL",
+     "GEV"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:16:00-05:00",
+    "title": "AI Stocks Plunge: Buy, Sell or Hold?",
+    "publisher": "Zacks",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/ai-stocks-plunge-buy-sell-171600469.html",
+    "tickers": [
+     "^IXIC",
+     "^GSPC",
+     "PWR",
+     "MU",
+     "SWKS",
+     "BE"
+    ]
+   },
+   {
+    "at": "2026-11-06T09:45:48-05:00",
+    "title": "Oklo Soars 16% as Narrower-Than-Expected Q3 Loss Sparks Rebound From Election Sell-Off",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/oklo-soars-16-narrower-expected-144548673.html",
+    "tickers": [
+     "OKLO",
+     "SMR",
+     "BE",
+     "META"
+    ]
+   },
+   {
+    "at": "2026-11-06T00:13:46-05:00",
+    "title": "Is Bloom Energy (BE) A Bargain Following Election Driven AI Data Center Fears?",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/bloom-energy-bargain-following-election-051346362.html",
+    "tickers": [
+     "BE",
+     "CRC"
+    ]
+   },
+   {
+    "at": "2026-11-05T23:53:27-05:00",
+    "title": "Should You Wait Before Buying Bloom Energy Stock?",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/wait-buying-bloom-energy-stock-045327425.html",
+    "tickers": [
+     "BE",
+     "^GSPC",
+     "PLUG",
+     "FCEL",
+     "CMI",
+     "APD",
+     "LIN"
+    ]
+   },
+   {
+    "at": "2026-11-05T22:29:11-05:00",
+    "title": "Can Bloom Energy Stock Jump 50%?",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/bloom-energy-stock-jump-50-032911335.html",
+    "tickers": [
+     "BE",
+     "PLUG",
+     "FCEL",
+     "CMI",
+     "APD",
+     "LIN"
+    ]
+   },
+   {
+    "at": "2026-11-05T19:02:30-05:00",
+    "title": "Bloom Energy Sinks 16% Despite 900 MW NTT DATA Deal as Midterm Fears Hit AI Power Stocks",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/bloom-energy-sinks-16-despite-000230240.html",
+    "tickers": [
+     "BE",
+     "GEV",
+     "OKLO"
+    ]
+   },
+   {
+    "at": "2026-11-05T15:45:51-05:00",
+    "title": "Google plans $17 billion Wyoming data center amid rising threats of curbs",
+    "publisher": "Reuters",
+    "link": "https://finance.yahoo.com/technology/ai/articles/google-plans-17-billion-wyoming-204551123.html",
+    "tickers": [
+     "GOOG",
+     "BE",
+     "AEP"
+    ]
+   },
+   {
+    "at": "2026-11-05T15:02:12-05:00",
+    "title": "Credo Sinks Another 14% as Democratic Sweep Stokes \u201cLeft-Tail Event\u201d Fears for AI",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/credo-sinks-another-14-democratic-200212855.html",
+    "tickers": [
+     "CRDO",
+     "ORCL",
+     "ANET",
+     "BE"
+    ]
+   },
+   {
+    "at": "2026-11-05T14:04:00-05:00",
+    "title": "The Stock Market Celebrated Election Day. Then the AI Trade Imploded.",
+    "publisher": "Barrons.com",
+    "link": "https://finance.yahoo.com/m/38c96a1f-9853-3505-99f8-e90d6000ec99/the-stock-market-celebrated.html",
+    "tickers": [
+     "^GSPC",
+     "BE",
+     "AMD",
+     "SNDK",
+     "VRT",
+     "MU"
+    ]
+   },
+   {
+    "at": "2026-11-05T12:30:55-05:00",
+    "title": "Alphabet's Google Plans $17 Billion Investment in Wyoming Data Center",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/technology/articles/alphabet-apos-google-plans-17-173055976.html",
+    "tickers": [
+     "GOOG",
+     "AEP",
+     "BE"
+    ]
+   }
+  ],
+  "VCEL": [
+   {
+    "at": "2026-11-06T15:14:42-05:00",
+    "title": "Vericel Q3 Earnings Call Highlights",
+    "publisher": "MarketBeat",
+    "link": "https://finance.yahoo.com/healthcare/articles/vericel-q3-earnings-call-highlights-201442985.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-11-05T18:19:06-05:00",
+    "title": "Vericel Corp (VCEL) (Q3 2026) Earnings Call Highlights: Record Revenue and Tripled Net Income ...",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/vericel-corp-vcel-q3-2026-231906701.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-11-05T14:49:23-05:00",
+    "title": "Vericel Corp (VCEL) Q3 2026 Earnings Call Transcript",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/vericel-corp-vcel-q3-2026-194923046.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-11-05T10:12:56-05:00",
+    "title": "Vericel Shares Rise After Higher Q3 Results, Raised 2026 Revenue Outlook",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/vericel-shares-rise-higher-q3-151256214.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-11-05T09:11:02-05:00",
+    "title": "Vericel (VCEL) Stock Looks Overvalued Given Its Earnings Support",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/vericel-vcel-stock-looks-overvalued-141102794.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-11-05T08:35:10-05:00",
+    "title": "Vericel Corporation (VCEL) Beats Q3 Earnings and Revenue Estimates",
+    "publisher": "Zacks",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/vericel-corporation-vcel-beats-q3-133510984.html",
+    "tickers": [
+     "VCEL",
+     "ALVO"
+    ]
+   },
+   {
+    "at": "2026-11-05T07:55:00-05:00",
+    "title": "Vericel Reports Third Quarter 2026 Financial Results and Raises Full-Year Financial Guidance",
+    "publisher": "GlobeNewswire",
+    "link": "https://finance.yahoo.com/healthcare/articles/vericel-reports-third-quarter-2026-125500223.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-10-22T07:30:00-05:00",
+    "title": "Vericel to Report Third Quarter 2026 Financial Results on November 5, 2026",
+    "publisher": "GlobeNewswire",
+    "link": "https://finance.yahoo.com/healthcare/articles/vericel-report-third-quarter-2026-123000619.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-10-14T07:23:08-05:00",
+    "title": "Truist Securities Adjusts Vericel Price Target to $52 From $58, Maintains Buy Rating",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/truist-securities-adjusts-vericel-price-122308350.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-09-26T17:06:32-05:00",
+    "title": "Vericel (VCEL) Stock Looks Fully Priced After A 31% Gain",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/vericel-vcel-stock-looks-fully-220632180.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-09-08T07:30:00-05:00",
+    "title": "Vericel to Present at the 24th Annual Morgan Stanley Global Healthcare Conference on Tuesday, September 15, 2026",
+    "publisher": "GlobeNewswire",
+    "link": "https://finance.yahoo.com/healthcare/articles/vericel-present-24th-annual-morgan-123000011.html",
+    "tickers": [
+     "VCEL"
+    ]
+   },
+   {
+    "at": "2026-08-13T06:00:00-05:00",
+    "title": "MediWound Reports Second Quarter 2026 Financial Results and Provides Corporate Update",
+    "publisher": "GlobeNewswire",
+    "link": "https://finance.yahoo.com/healthcare/articles/mediwound-reports-second-quarter-2026-110000017.html",
+    "tickers": [
+     "MDWD",
+     "VCEL"
+    ]
+   }
+  ],
+  "AMD": [
+   {
+    "at": "2026-11-06T15:19:06-05:00",
+    "title": "Stock market today: Nasdaq, S&P 500 rebound after brutal sell-off as US adds 165K jobs",
+    "publisher": "Yahoo Finance",
+    "link": "https://finance.yahoo.com/markets/live/stock-market-today-friday-november-6-dow-sp-500-nasdaq-jobs-report-earnings-135953863.html",
+    "tickers": [
+     "^IXIC",
+     "^DJI",
+     "^GSPC",
+     "NVDA",
+     "AMD",
+     "MU",
+     "SNDK",
+     "^VIX"
+    ]
+   },
+   {
+    "at": "2026-11-06T15:03:19-05:00",
+    "title": "Broadcom Is Still Down 22% in the Past Month: Is AVGO Stock Really on a Road to Recovery?",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/broadcom-still-down-22-past-200319828.html",
+    "tickers": [
+     "AVGO",
+     "AMD",
+     "NVDA",
+     "MRVL"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:34:18-05:00",
+    "title": "Nasdaq rebounds but remains on track for fourth straight weekly decline",
+    "publisher": "Reuters",
+    "link": "https://finance.yahoo.com/technology/ai/articles/nasdaq-futures-rise-steep-ai-094400237.html",
+    "tickers": [
+     "^IXIC",
+     "NVDA",
+     "AMD",
+     "SNDK"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:20:42-05:00",
+    "title": "Intel and AMD in Focus as Tech Stocks Seek Rebound",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/intel-amd-focus-tech-stocks-192042980.html",
+    "tickers": [
+     "INTC",
+     "AMD",
+     "ABNB",
+     "SNDK",
+     "NET"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:14:05-05:00",
+    "title": "Oracle Faces Major Wall Street Test After AI Selloff",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/technology/ai/articles/oracle-faces-major-wall-street-191405948.html",
+    "tickers": [
+     "ORCL",
+     "NVDA",
+     "AMD",
+     "AVGO"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:09:11-05:00",
+    "title": "AMD Stock Soars After Thursday's Rout. AI Fears Take a Back Seat",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/amd-stock-soars-thursdays-rout-190911124.html",
+    "tickers": [
+     "AMD"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:00:00-05:00",
+    "title": "NVIDIA and AMD Sell-Off: Which AI Stock Is the Better Buy on the Dip?",
+    "publisher": "Zacks",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/nvidia-amd-sell-off-ai-190000358.html",
+    "tickers": [
+     "^IXIC",
+     "NVDA",
+     "AMD"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:58:53-05:00",
+    "title": "Cathie Wood Makes $437 Million In Trades. Adds Nvidia, SpaceX; Offloads Broadcom",
+    "publisher": "Investor's Business Daily",
+    "link": "https://finance.yahoo.com/m/be001c9f-c94b-3a4d-9a7d-61cb27b85933/cathie-wood-makes-%24437.html",
+    "tickers": [
+     "AVGO",
+     "NVDA",
+     "SPCX",
+     "CRWV",
+     "AMD",
+     "GOOG"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:47:41-05:00",
+    "title": "Semiconductor Plunged in Thursday's Market Rout. These Were the Ones That Lost the Most.",
+    "publisher": "International Business Times",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/semiconductor-plunged-thursdays-market-rout-184741428.html",
+    "tickers": [
+     "NVDA",
+     "^SOX",
+     "AMD"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:34:00-05:00",
+    "title": "TSMC Makes the Chips for Both Nvidia and AMD. Here's What a $5,000 Investment Could Be Worth by 2030.",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/tsmc-makes-chips-both-nvidia-183400901.html",
+    "tickers": [
+     "TSM",
+     "NVDA",
+     "AMD"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:28:16-05:00",
+    "title": "Bloom Energy Rises 2%, AMD Up 8% as AI Stocks Rebound From Midterm Rout",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/bloom-energy-rises-2-amd-182816164.html",
+    "tickers": [
+     "BE",
+     "AMD",
+     "CRC",
+     "ORCL",
+     "GEV"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:16:32-05:00",
+    "title": "Qualcomm Faces Worst Day Since 2020 as Chips Crater",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/technology/articles/qualcomm-faces-worst-day-since-181632192.html",
+    "tickers": [
+     "QCOM",
+     "^IXIC",
+     "AMD",
+     "MRVL",
+     "DELL",
+     "MU",
+     "AAPL"
+    ]
+   }
+  ],
+  "MU": [
+   {
+    "at": "2026-11-06T15:19:06-05:00",
+    "title": "Stock market today: Nasdaq, S&P 500 rebound after brutal sell-off as US adds 165K jobs",
+    "publisher": "Yahoo Finance",
+    "link": "https://finance.yahoo.com/markets/live/stock-market-today-friday-november-6-dow-sp-500-nasdaq-jobs-report-earnings-135953863.html",
+    "tickers": [
+     "^IXIC",
+     "^DJI",
+     "^GSPC",
+     "NVDA",
+     "AMD",
+     "MU",
+     "SNDK",
+     "^VIX"
+    ]
+   },
+   {
+    "at": "2026-11-06T15:05:00-05:00",
+    "title": "SK Hynix Just Announced Huge News for Micron Shareholders",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/sk-hynix-just-announced-huge-200500512.html",
+    "tickers": [
+     "MU",
+     "SKHY",
+     "NVDA"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:18:19-05:00",
+    "title": "Investing.com\u2019s stocks of the week",
+    "publisher": "Investing.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/investing-com-stocks-week-191819455.html",
+    "tickers": [
+     "LITE",
+     "SNDK",
+     "LRCX",
+     "AMAT",
+     "MU",
+     "AVGO",
+     "NVDA",
+     "MRVL"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:16:42-05:00",
+    "title": "Micron Stock Is the Cheapest Right Now -- Here's Why",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/micron-stock-cheapest-now-heres-191642844.html",
+    "tickers": [
+     "MU",
+     "AMKR",
+     "PENG",
+     "FSLR",
+     "CRUS"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:39:01-05:00",
+    "title": "Why Micron Stock Is Up Today",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/why-micron-stock-today-183901803.html",
+    "tickers": [
+     "MU",
+     "^IXIC",
+     "^GSPC",
+     "NVDA"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:16:32-05:00",
+    "title": "Qualcomm Faces Worst Day Since 2020 as Chips Crater",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/technology/articles/qualcomm-faces-worst-day-since-181632192.html",
+    "tickers": [
+     "QCOM",
+     "^IXIC",
+     "AMD",
+     "MRVL",
+     "DELL",
+     "MU",
+     "AAPL"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:03:00-05:00",
+    "title": "The Chip Stock Bloodbath Is a Case Study in the Risks of Leveraged ETFs",
+    "publisher": "Barrons.com",
+    "link": "https://finance.yahoo.com/m/e1cc3675-f7f1-37df-be78-62a32fbe2487/the-chip-stock-bloodbath-is-a.html",
+    "tickers": [
+     "SNDK",
+     "MU",
+     "MRVL",
+     "AMD",
+     "AMDG",
+     "MRVU",
+     "MULL",
+     "SNDU"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:59:46-05:00",
+    "title": "Update: Wall Street Rises as Tech Stocks Rebound",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/wall-street-rises-tech-stocks-175946005.html",
+    "tickers": [
+     "^GSPC",
+     "^IXIC",
+     "NVDA",
+     "^DJI",
+     "SNDK",
+     "AMD",
+     "MU",
+     "MRVL"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:48:39-05:00",
+    "title": "Why You Should Think About SanDisk Differently Now",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/why-think-sandisk-differently-now-174839758.html",
+    "tickers": [
+     "SNDK",
+     "^GSPC",
+     "MU",
+     "STX",
+     "WDC",
+     "NTAP",
+     "HPE"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:46:42-05:00",
+    "title": "Nvidia Stock, Other AI Names Rebound After Sell-Off",
+    "publisher": "Investor's Business Daily",
+    "link": "https://finance.yahoo.com/m/870e9d6a-dbbb-3380-9680-17f32e5017a1/nvidia-stock%2C-other-ai-names.html",
+    "tickers": [
+     "NVDA",
+     "MU",
+     "AMD",
+     "AVGO",
+     "MCHP"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:39:07-05:00",
+    "title": "Chip Stocks Recover Some Losses After Rout",
+    "publisher": "The Wall Street Journal",
+    "link": "https://finance.yahoo.com/m/bd07ca4c-d15a-3b2d-8aca-96fb46ec6051/chip-stocks-recover-some.html",
+    "tickers": [
+     "^SOX",
+     "NVDA",
+     "SOX",
+     "AMD",
+     "MU",
+     "INTC",
+     "QCOM",
+     "AVGO",
+     "MRVL"
+    ]
+   }
+  ],
+  "SPCX": [
+   {
+    "at": "2026-11-06T15:24:48-05:00",
+    "title": "How AI spending limits could help hyperscaler bonds but hurt stocks",
+    "publisher": "Investing.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/ai-spending-limits-could-help-202448432.html",
+    "tickers": [
+     "ORCL",
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:27:53-05:00",
+    "title": "Elon Musk's longtime backer exits Tesla after 13-fold gain",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/elon-musks-longtime-backer-exits-192753973.html",
+    "tickers": [
+     "SMT.L",
+     "TSLA",
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:27:22-05:00",
+    "title": "AST SpaceMobile Soars 7% on $1.3 Billion Rocket Plan Promising \u201cUnconstrained Access to Orbit\u201d",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/ast-spacemobile-soars-7-1-192722460.html",
+    "tickers": [
+     "ASTS",
+     "SPCX",
+     "FLY"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:20:00-05:00",
+    "title": "Texas Gov.-Elect Gina Hinojosa Just Delivered Fantastic News for SpaceX Investors",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/technology/articles/texas-gov-elect-gina-hinojosa-192000959.html",
+    "tickers": [
+     "SPCX",
+     "NVDA"
+    ]
+   },
+   {
+    "at": "2026-11-06T14:18:01-05:00",
+    "title": "Why SpaceX Stock Is Up Today",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/why-spacex-stock-today-191801909.html",
+    "tickers": [
+     "SPCX",
+     "^GSPC",
+     "NVDA",
+     "^IXIC"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:58:53-05:00",
+    "title": "Cathie Wood Makes $437 Million In Trades. Adds Nvidia, SpaceX; Offloads Broadcom",
+    "publisher": "Investor's Business Daily",
+    "link": "https://finance.yahoo.com/m/be001c9f-c94b-3a4d-9a7d-61cb27b85933/cathie-wood-makes-%24437.html",
+    "tickers": [
+     "AVGO",
+     "NVDA",
+     "SPCX",
+     "CRWV",
+     "AMD",
+     "GOOG"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:29:23-05:00",
+    "title": "SpaceX government contracts to be under 10% of revenue, Musk says",
+    "publisher": "Investing.com",
+    "link": "https://finance.yahoo.com/technology/articles/spacex-government-contracts-under-10-182923290.html",
+    "tickers": [
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:14:22-05:00",
+    "title": "What Does QUALCOMM (QCOM) Winning A Nationwide 5G Buildout Mean For Investors?",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/technology/articles/does-qualcomm-qcom-winning-nationwide-181422645.html",
+    "tickers": [
+     "QCOM",
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T13:03:37-05:00",
+    "title": "SpaceX to Get Less Than 10% of Revenue From Government This Quarter, Musk Says",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/spacex-less-10-revenue-government-180337623.html",
+    "tickers": [
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:57:00-05:00",
+    "title": "Musk Kills Tesla Cybertruck. Why He Had to Shoot the Elephant.",
+    "publisher": "Barrons.com",
+    "link": "https://finance.yahoo.com/m/06aa7a72-3f3b-3740-ba90-e5a9da6f4d4f/musk-kills-tesla-cybertruck..html",
+    "tickers": [
+     "TSLA",
+     "F",
+     "SPCX",
+     "^GSPC"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:25:36-05:00",
+    "title": "Tesla Rebounds 5% as Musk Ends Cybertruck to Make Room for \u201cIncreased Cybercab Production\u201d",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/tesla-rebounds-5-musk-ends-172536423.html",
+    "tickers": [
+     "TSLA",
+     "RKLB",
+     "AMAT",
+     "LITE",
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T12:22:26-05:00",
+    "title": "Apple, Meta, Musk Face New Threat From Democrats",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/technology/articles/apple-meta-musk-face-threat-172226280.html",
+    "tickers": [
+     "AAPL",
+     "META",
+     "TSLA",
+     "SPCX"
+    ]
+   }
+  ],
+  "RKLB": [
+   {
+    "at": "2026-11-06T12:25:36-05:00",
+    "title": "Tesla Rebounds 5% as Musk Ends Cybertruck to Make Room for \u201cIncreased Cybercab Production\u201d",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/tesla-rebounds-5-musk-ends-172536423.html",
+    "tickers": [
+     "TSLA",
+     "RKLB",
+     "AMAT",
+     "LITE",
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:00:00-05:00",
+    "title": "AST SpaceMobile Will Use Firefly in Bold Move to Build Its Starlink Competitor",
+    "publisher": "Barrons.com",
+    "link": "https://finance.yahoo.com/m/2bffda9d-f667-380c-b5e7-f41771dbe478/ast-spacemobile-will-use.html",
+    "tickers": [
+     "ASTS",
+     "FLY",
+     "LUNR",
+     "RKLB",
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-06T09:56:22-05:00",
+    "title": "SpaceX Rises 4% as Tech Stocks Rebound From Post-Election Rout; AST SpaceMobile Sinks 8%, Rocket Lab Gains 2%",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/spacex-rises-4-tech-stocks-145622731.html",
+    "tickers": [
+     "SPCX",
+     "ASTS",
+     "RKLB",
+     "TSLA"
+    ]
+   },
+   {
+    "at": "2026-11-06T09:41:41-05:00",
+    "title": "Rocket Lab Earnings Ahead: What Past Reactions Say About The Stock",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/rocket-lab-earnings-ahead-past-144141689.html",
+    "tickers": [
+     "RKLB",
+     "LMT",
+     "NOC",
+     "LHX",
+     "PL",
+     "RDW"
+    ]
+   },
+   {
+    "at": "2026-11-06T08:22:37-05:00",
+    "title": "Cathie Wood sells $120 million in AI stock, buys Nvidia",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/cathie-wood-sells-120-million-132237793.html",
+    "tickers": [
+     "SPCX",
+     "NVDA",
+     "RKLB",
+     "AMD",
+     "AVGO",
+     "CRWV",
+     "GOOG",
+     "CBRS"
+    ]
+   },
+   {
+    "at": "2026-11-06T07:41:53-05:00",
+    "title": "Rocket Lab Reports November 9. The Quarter Has to Show It Can Fund Growth Without More Dilution",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/rocket-lab-reports-november-9-124153299.html",
+    "tickers": [
+     "RKLB",
+     "ASTS",
+     "FLY"
+    ]
+   },
+   {
+    "at": "2026-11-06T00:16:32-05:00",
+    "title": "Rocket Lab Stock Slides As Neutron Delay Puts Focus On Earnings",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/rocket-lab-stock-slides-neutron-051632083.html",
+    "tickers": [
+     "RKLB"
+    ]
+   },
+   {
+    "at": "2026-11-05T21:54:01-05:00",
+    "title": "Rocket Lab Stock Has Lost About 70% From Its Record. Is It Finally a Buy?",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/rocket-lab-stock-lost-70-025401278.html",
+    "tickers": [
+     "RKLB",
+     "NVDA"
+    ]
+   },
+   {
+    "at": "2026-11-05T17:31:01-05:00",
+    "title": "Why Rocket Lab Stock Dropped Today",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/why-rocket-lab-stock-dropped-223101274.html",
+    "tickers": [
+     "NBIS",
+     "RKLB",
+     "NVDA",
+     "^GSPC",
+     "^IXIC",
+     "AMD",
+     "FIX"
+    ]
+   },
+   {
+    "at": "2026-11-05T17:14:41-05:00",
+    "title": "Rocket Lab Sinks 12% as AI Stock Sell-Off Hits Space: \u201cAbsolute Slaughter\u201d",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/rocket-lab-sinks-12-ai-221441410.html",
+    "tickers": [
+     "RKLB",
+     "SPCX",
+     "LUNR",
+     "KTOS"
+    ]
+   },
+   {
+    "at": "2026-11-05T13:13:31-05:00",
+    "title": "SpaceX Sinks 9% as AI Stocks Crater: \u201cAbsolute Slaughter\u201d",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/spacex-sinks-9-ai-stocks-181331536.html",
+    "tickers": [
+     "SPCX",
+     "RKLB",
+     "ASTS"
+    ]
+   },
+   {
+    "at": "2026-11-05T10:35:00-05:00",
+    "title": "Better Space Stock: Rocket Lab vs. AST SpaceMobile (Hint: It Comes Down to Dilution)",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/better-space-stock-rocket-lab-153500752.html",
+    "tickers": [
+     "RKLB",
+     "ASTS",
+     "SPCX",
+     "NVDA"
+    ]
+   }
+  ],
+  "LUNR": [
+   {
+    "at": "2026-11-06T10:13:47-05:00",
+    "title": "Intuitive Machines Keeps Winning Space Contracts. The Real Test Is Whether It Can Profit From Them",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-keeps-winning-space-151347614.html",
+    "tickers": [
+     "LUNR"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:00:00-05:00",
+    "title": "AST SpaceMobile Will Use Firefly in Bold Move to Build Its Starlink Competitor",
+    "publisher": "Barrons.com",
+    "link": "https://finance.yahoo.com/m/2bffda9d-f667-380c-b5e7-f41771dbe478/ast-spacemobile-will-use.html",
+    "tickers": [
+     "ASTS",
+     "FLY",
+     "LUNR",
+     "RKLB",
+     "SPCX"
+    ]
+   },
+   {
+    "at": "2026-11-05T22:27:02-05:00",
+    "title": "Intuitive Machines Stock In Focus After NASA Earth Observation Contract Win",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-stock-focus-nasa-032702089.html",
+    "tickers": [
+     "LUNR"
+    ]
+   },
+   {
+    "at": "2026-11-05T17:14:41-05:00",
+    "title": "Rocket Lab Sinks 12% as AI Stock Sell-Off Hits Space: \u201cAbsolute Slaughter\u201d",
+    "publisher": "TIKR",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/rocket-lab-sinks-12-ai-221441410.html",
+    "tickers": [
+     "RKLB",
+     "SPCX",
+     "LUNR",
+     "KTOS"
+    ]
+   },
+   {
+    "at": "2026-11-05T16:14:56-05:00",
+    "title": "Intuitive Machines (LUNR) Lands Another NASA Mission Following Fresh Questions On Valuation",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-lunr-lands-another-211456961.html",
+    "tickers": [
+     "LUNR"
+    ]
+   },
+   {
+    "at": "2026-11-05T13:57:09-05:00",
+    "title": "Redwire Plunges 21% as Revenue Miss Overshadows Record Margins and Backlog; Intuitive Machines Sinks 15%, Planet Labs Tumbles 12%",
+    "publisher": "24/7 Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/redwire-plunges-21-revenue-miss-185709004.html",
+    "tickers": [
+     "RDW",
+     "LUNR",
+     "PL",
+     "QQQ",
+     "^IXIC",
+     "^NDX"
+    ]
+   },
+   {
+    "at": "2026-11-05T11:13:34-05:00",
+    "title": "What Could Intuitive Machines (LUNR) Gain From Adding Chris Scolese To Its Board?",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/could-intuitive-machines-lunr-gain-161334409.html",
+    "tickers": [
+     "LUNR"
+    ]
+   },
+   {
+    "at": "2026-11-05T09:13:20-05:00",
+    "title": "Intuitive Machines (LUNR) Stock May Be Pricing In Too Much On NASA Mission Win",
+    "publisher": "Simply Wall St.",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-lunr-stock-may-141320360.html",
+    "tickers": [
+     "LUNR"
+    ]
+   },
+   {
+    "at": "2026-11-04T23:45:43-05:00",
+    "title": "Intuitive Machines and Rocket Lab: A Comparison of Spiking Sales Versus Steady Revenue",
+    "publisher": "Motley Fool",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-rocket-lab-comparison-044543442.html",
+    "tickers": [
+     "RKLB",
+     "LUNR",
+     "IRDM"
+    ]
+   },
+   {
+    "at": "2026-11-04T18:12:55-05:00",
+    "title": "5 Stocks That Could Skyrocket in 2027",
+    "publisher": "Insider Monkey",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/5-stocks-could-skyrocket-2027-231255848.html",
+    "tickers": [
+     "NVTS",
+     "STM",
+     "RKLB",
+     "LUNR",
+     "CBRS"
+    ]
+   },
+   {
+    "at": "2026-11-04T12:41:58-05:00",
+    "title": "LUNR Stock Gets A Price Target Cut Ahead Of Q3 Report \u2013 Here\u2019s What The Analyst Said About Valuation",
+    "publisher": "Stocktwits",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/lunr-stock-gets-price-target-174158076.html",
+    "tickers": [
+     "LUNR"
+    ]
+   },
+   {
+    "at": "2026-11-04T08:49:40-05:00",
+    "title": "How Long Can Firefly Keep Burning Cash?",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/long-firefly-keep-burning-cash-134940135.html",
+    "tickers": [
+     "FLY",
+     "RKLB",
+     "LUNR",
+     "LMT",
+     "NOC",
+     "BA"
+    ]
+   }
+  ],
+  "EXTR": [
+   {
+    "at": "2026-11-06T12:57:22-05:00",
+    "title": "What Changed In Arista's Story?",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/technology/ai/articles/changed-aristas-story-175722660.html",
+    "tickers": [
+     "ANET",
+     "^GSPC",
+     "CSCO",
+     "HPE",
+     "DELL",
+     "EXTR",
+     "CIEN"
+    ]
+   },
+   {
+    "at": "2026-11-06T11:35:08-05:00",
+    "title": "Why Is Arista Stock Falling?",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/why-arista-stock-falling-163508229.html",
+    "tickers": [
+     "ANET",
+     "^GSPC",
+     "NVDA",
+     "CSCO",
+     "HPE",
+     "DELL",
+     "EXTR",
+     "CIEN",
+     "SPGI"
+    ]
+   },
+   {
+    "at": "2026-11-06T11:07:53-05:00",
+    "title": "Update: Market Chatter: Extreme Networks Explores Sale After Receiving Interest",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/market-chatter-extreme-networks-explores-160753197.html",
+    "tickers": [
+     "EXTR",
+     "FTNT",
+     "CSCO",
+     "NTAP"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:54:07-05:00",
+    "title": "Extreme Networks jumps 15% on report company is exploring a sale",
+    "publisher": "Investing.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/extreme-networks-jumps-15-report-155407885.html",
+    "tickers": [
+     "EXTR",
+     "NTAP",
+     "FTNT",
+     "CSCO"
+    ]
+   },
+   {
+    "at": "2026-11-06T10:04:33-05:00",
+    "title": "Market Chatter: Extreme Networks Explores Sale After Receiving Interest",
+    "publisher": "MT Newswires",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/market-chatter-extreme-networks-explores-150433860.html",
+    "tickers": [
+     "EXTR",
+     "FTNT",
+     "CSCO",
+     "NTAP"
+    ]
+   },
+   {
+    "at": "2026-11-03T17:09:50-05:00",
+    "title": "What Just Happened To Lumentum Shares?",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/just-happened-lumentum-shares-220950438.html",
+    "tickers": [
+     "LITE",
+     "MRVL",
+     "^GSPC",
+     "CSCO",
+     "FFIV",
+     "VSAT",
+     "ESE",
+     "EXTR",
+     "SPGI"
+    ]
+   },
+   {
+    "at": "2026-11-03T16:05:00-05:00",
+    "title": "Extreme Networks Announces Investor Conferences for November and December 2026",
+    "publisher": "Business Wire",
+    "link": "https://finance.yahoo.com/technology/articles/extreme-networks-announces-investor-conferences-210500995.html",
+    "tickers": [
+     "EXTR"
+    ]
+   },
+   {
+    "at": "2026-11-03T11:00:06-05:00",
+    "title": "All You Need to Know About Extreme Networks (EXTR) Rating Upgrade to Strong Buy",
+    "publisher": "Zacks",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/know-extreme-networks-extr-rating-160006534.html",
+    "tickers": [
+     "EXTR"
+    ]
+   },
+   {
+    "at": "2026-10-30T17:18:44-05:00",
+    "title": "Is Arista Networks Stock Really Expensive?",
+    "publisher": "Trefis",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/arista-networks-stock-really-expensive-221844192.html",
+    "tickers": [
+     "ANET",
+     "CSCO",
+     "HPE",
+     "DELL",
+     "EXTR",
+     "CIEN"
+    ]
+   },
+   {
+    "at": "2026-10-28T18:04:14-05:00",
+    "title": "What Extreme Networks (EXTR) Said on Its Q1 Earnings Call",
+    "publisher": "MarketBeat",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/extreme-networks-extr-said-q1-230414301.html",
+    "tickers": [
+     "EXTR"
+    ]
+   },
+   {
+    "at": "2026-10-28T14:06:01-05:00",
+    "title": "Extreme Networks Inc (EXTR) (Q1 2027) Earnings Call Highlights: Revenue Tops Guidance as ...",
+    "publisher": "GuruFocus.com",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/extreme-networks-inc-extr-q1-190601087.html",
+    "tickers": [
+     "EXTR"
+    ]
+   },
+   {
+    "at": "2026-10-28T13:36:32-05:00",
+    "title": "Extreme Networks: Fiscal Q1 Earnings Snapshot",
+    "publisher": "Associated Press",
+    "link": "https://finance.yahoo.com/markets/stocks/articles/extreme-networks-fiscal-q1-earnings-183632621.html",
+    "tickers": [
+     "EXTR"
+    ]
+   }
+  ]
+ }
+}

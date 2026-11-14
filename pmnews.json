@@ -1,0 +1,687 @@
+{
+"built_at": "2026-11-13T08:36:19-05:00",
+"day": "2026-11-13",
+"window": [
+"2026-11-12T16:00:00-05:00",
+"2026-11-13T08:36:02.840060-05:00"
+],
+"news": {
+"MOD": {
+"news": "C",
+"catalyst": "In the news (headline)",
+"reason": "Modine Manufacturing in Acquisition Talks with Samsung Electronics (Fiscal.ai 7:32 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://news.futunn.com/post/1004440648/modine-manufacturing-shares-jump-on-samsung-electronics-buyout-talks"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 37.27,
+"pm_last": 145.64,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "In the news",
+"title": "Modine Manufacturing in Acquisition Talks with Samsung Electronics",
+"source": "Fiscal.ai",
+"url": "https://news.futunn.com/post/1004440648/modine-manufacturing-shares-jump-on-samsung-electronics-buyout-talks",
+"at": "7:32 AM ET",
+"ts": "2026-11-13T07:32-05:00"
+}
+},
+"CADL": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "dilution: 424B5",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1841387/000119312526458316/cadl-ex99_1.htm",
+"https://www.sec.gov/Archives/edgar/data/1841387/000119312526458522/d177170d8k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -33.95,
+"pm_last": 5.5413,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Candel Therapeutics Q3 EPS $(0.28) Beats $(0.35) Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63224600/candel-therapeutics-q3-eps-0-28-beats-0-35-estimate",
+"at": "Nov 12 4:32 PM ET",
+"ts": "2026-11-12T16:32-05:00"
+}
+},
+"LFTO": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1850351/000162828026073379/lfto-20261112.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 22.93,
+"pm_last": 23.0,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Earnings",
+"title": "Liftoff Mobile Sees Q4 Sales $244.000M-$249.000M vs $232.513M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63221003/liftoff-mobile-sees-q4-sales-244-000m-249-000m-vs-232-513m-est",
+"at": "Nov 12 4:03 PM ET",
+"ts": "2026-11-12T16:03-05:00"
+}
+},
+"NMAX": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +16% y/y",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2026478/000202647826000070/nmax-20261106.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 19.34,
+"pm_last": 8.7001,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Earnings",
+"title": "Newsmax Raises FY2026 Sales Guidance from $212.000M-$216.000M to $226.000M-$230.000M vs $214.767M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63221676/newsmax-raises-fy2026-sales-guidance-212-000m-216-000m-226-000m-230-000m-vs-214-767m-est",
+"at": "Nov 12 4:06 PM ET",
+"ts": "2026-11-12T16:06-05:00"
+}
+},
+"HAWK": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "guidance raised; guide +3.2% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1750704/000175070426000032/exhibit991-earningsrelease.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 12.47,
+"pm_last": 16.5,
+"dropped": "",
+"headline": {
+"kind": "Earnings",
+"title": "Hawkeye 360 Raises FY2026 Sales Guidance from $215.000M-$220.000M to $225.000M-$227.000M vs $217.212M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63220714/hawkeye-360-raises-fy2026-sales-guidance-215-000m-220-000m-225-000m-227-000m-vs-217-212m-est",
+"at": "Nov 12 4:02 PM ET",
+"ts": "2026-11-12T16:02-05:00"
+}
+},
+"VIR": {
+"news": "B",
+"catalyst": "Offering / dilution",
+"reason": "Filed since the close: 424B5, S-3ASR. ",
+"flags": "dilution: 424B5",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1706431/000119312526458278/",
+"https://www.sec.gov/Archives/edgar/data/1706431/000119312526458462/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -12.38,
+"pm_last": 10.62,
+"dropped": "",
+"headline": {
+"kind": "Offering",
+"title": "Vir Biotechnology Announces Proposed Public Offering Of Common Stock; Size Not Disclosed",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/VIR",
+"at": "Nov 12 4:14 PM ET",
+"ts": "2026-11-12T16:14-05:00"
+}
+},
+"CBRS": {
+"news": "B",
+"catalyst": "Earnings miss + raise",
+"reason": "revenue miss -1.8%; guidance raised; guide +16.4% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2021728/000162828026073366/cbrs-20261112.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 11.54,
+"pm_last": 109.03,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Earnings",
+"title": "Cerebras Systems Q3 Adj. EPS $(0.67) Misses $(0.14) Estimate, Sales $210.800M Miss $214.702M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63221771/cerebras-systems-q3-adj-eps-0-67-misses-0-14-estimate-sales-210-800m-miss-214-702m-estimate",
+"at": "Nov 12 4:07 PM ET",
+"ts": "2026-11-12T16:07-05:00"
+}
+},
+"YSS": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue -7% y/y (last q +10%: slower)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2086587/000162828026073414/yss-20261110.htm",
+"https://www.sec.gov/Archives/edgar/data/2086587/000162828026073422/pressreleaseq32026.htm"
+],
+"inflection": "Deterioration",
+"inflection_score": 5,
+"direction": "down",
+"gap_pct": -10.15,
+"pm_last": 5.93,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Earnings",
+"title": "York Space Systems Narrows FY2026 Sales Guidance from $375.000M-$405.000M to $380.000M-$400.000M vs $393.506M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63223950/york-space-systems-narrows-fy2026-sales-guidance-375-000m-405-000m-380-000m-400-000m-vs-393-506m-est",
+"at": "Nov 12 4:23 PM ET",
+"ts": "2026-11-12T16:23-05:00"
+}
+},
+"ACCV": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2141406/000162828026073382/accv-20261112.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 8.68,
+"pm_last": 13.27,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Earnings",
+"title": "Accelevation Q3 Rev $202.2M Vs $121.9M YoY; Net Income $3.2M Vs $13.6M",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/quote/ACCV",
+"at": "Nov 12 4:06 PM ET",
+"ts": "2026-11-12T16:06-05:00"
+}
+},
+"ANDG": {
+"news": "C",
+"catalyst": "Earnings + raise",
+"reason": "guide +29.8% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2065708/000206570826000008/nov_12x2026xex991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -8.28,
+"pm_last": 60.0,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "Andersen Group Q3 Adj. EPS $2.39 Beats $1.11 Estimate, Sales $337.318M Beat $333.636M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63225025/andersen-group-q3-adj-eps-2-39-beats-1-11-estimate-sales-337-318m-beat-333-636m-estimate",
+"at": "Nov 12 4:37 PM ET",
+"ts": "2026-11-12T16:37-05:00"
+}
+},
+"TNDM": {
+"news": "C",
+"catalyst": "After earnings (Nov 5)",
+"reason": "Reported Thu Nov 5 after the close: EPS beat +58.4%, guidance reaffirmed, +0.0% after hours; no new filing since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.94,
+"pm_last": 18.9,
+"dropped": ""
+},
+"ZVRA": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "3 Biotechnology stocks gapping down 5%+ (VIR, CADL); with their own news: VIR (Offering / dilution), CADL (Earnings); headline: Zevra Therapeutics Says CHMP Adopts Negative Opinion On MAA For Arimoclomol For Treatment Of Niemann-Pick Disease Type C; European Commission Expected To Issue Final Decision On MAA Within 67 Days (Benzinga 6:30 AM ET); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.benzinga.com/news/26/11/63232529/zevra-therapeutics-says-chmp-adopts-negative-opinion-maa-arimoclomol-treatment-niemann-pick-disease-"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -7.35,
+"pm_last": 10.34,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "In the news",
+"title": "Zevra Therapeutics Says CHMP Adopts Negative Opinion On MAA For Arimoclomol For Treatment Of Niemann-Pick Disease Type C; European Commission Expected To Issue Final Decision On MAA Within 67 Days",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63232529/zevra-therapeutics-says-chmp-adopts-negative-opinion-maa-arimoclomol-treatment-niemann-pick-disease-",
+"at": "6:30 AM ET",
+"ts": "2026-11-13T06:30-05:00"
+}
+},
+"WSE": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.23,
+"pm_last": 11.72,
+"dropped": "ADR under 3%"
+},
+"SCZM": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 7.21,
+"pm_last": 7.5586,
+"dropped": "market cap under $0.7B"
+},
+"KEP": {
+"news": "C",
+"catalyst": "Earnings (headline)",
+"reason": "Korea Electric Power Corporation Shares Decline Following Earnings Miss (Fiscal.ai 4:01 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.finanzen.ch/nachrichten/aktien/maerkte-asien-boersen-meist-im-minus-technologietitel-vereinzelt-erholt-1036760790"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -7.01,
+"pm_last": 10.35,
+"dropped": "20-day average $ volume under $20M",
+"headline": {
+"kind": "Earnings",
+"title": "Korea Electric Power Corporation Shares Decline Following Earnings Miss",
+"source": "Fiscal.ai",
+"url": "https://www.finanzen.ch/nachrichten/aktien/maerkte-asien-boersen-meist-im-minus-technologietitel-vereinzelt-erholt-1036760790",
+"at": "4:01 AM ET",
+"ts": "2026-11-13T04:01-05:00"
+}
+},
+"FLO": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue -5% y/y (last q -4%: same); guide -0.7% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1128928/000119312526458445/flo-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.99,
+"pm_last": 5.5901,
+"dropped": "under 30% over the 52-week low",
+"headline": {
+"kind": "Earnings",
+"title": "Flowers Foods Q3 Adj. EPS $0.10 Misses $0.15 Estimate, Sales $1.169B Miss $1.180B Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63222584/flowers-foods-q3-adj-eps-0-10-misses-0-15-estimate-sales-1-169b-miss-1-180b-estimate",
+"at": "Nov 12 4:11 PM ET",
+"ts": "2026-11-12T16:11-05:00"
+}
+},
+"RMIX": {
+"news": "C",
+"catalyst": "Earnings (headline)",
+"reason": "Suncrete Lowers FY2026 Sales Guidance from $420.000M-$480.000M to $408.000M-$434.000M vs $443.298M Est (Benzinga 8:01 AM ET)",
+"flags": "headline only: no SEC filing on it yet",
+"sources": [
+"https://www.benzinga.com/news/26/11/63234986/suncrete-lowers-fy2026-sales-guidance-420-000m-480-000m-408-000m-434-000m-vs-443-298m-est"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.9,
+"pm_last": 8.68,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Suncrete Lowers FY2026 Sales Guidance from $420.000M-$480.000M to $408.000M-$434.000M vs $443.298M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63234986/suncrete-lowers-fy2026-sales-guidance-420-000m-480-000m-408-000m-434-000m-vs-443-298m-est",
+"at": "8:01 AM ET",
+"ts": "2026-11-13T08:01-05:00"
+}
+},
+"SLS": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1390478/000139047826000021/sls-202611128xkexhibit991.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.85,
+"pm_last": 8.58,
+"dropped": "gap-up under the 50 EMA",
+"headline": {
+"kind": "Earnings",
+"title": "SELLAS Life Sciences Reports Third Quarter 2026 Financial Results and Corporate Update",
+"source": "Fiscal.ai",
+"url": "https://www.globenewswire.com/news-release/2026/11/12/3402212/0/en/sellas-life-sciences-reports-third-quarter-2026-financial-results-and-provides-corporate-update.html",
+"at": "Nov 12 5:32 PM ET",
+"ts": "2026-11-12T17:32-05:00"
+}
+},
+"PHR": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No news since the last close, only routine filings (SCHEDULE 13G/A)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1412408/000116755726000252/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.83,
+"pm_last": 13.482,
+"dropped": "20-day average volume under 700K"
+},
+"OPRT": {
+"news": "C",
+"catalyst": "Earlier news (Wed Nov 11): Earnings",
+"reason": "Oportun Financial Raises Full-Year 2026 Guidance (Fiscal.ai Nov 11 5:32 PM ET); today: No company news: No SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.moomoo.com/stock/OPRT-US/news?chain_id=Name1K9-3FXPhg.1l5djc0&global_content=%7B%22promote_id%22%3A13764,%22sub_promote_id%22%3A63,%22f%22%3A%22www.moomoo.com%2Fcommunity%2Fdiscussion%2Fjensen-huang-praises-marvell-technology-can-optical-stocks-continue-their-2132803649%22%7D"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.38,
+"pm_last": 12.51,
+"dropped": "market cap under $0.7B",
+"earlier": {
+"label": "Wed Nov 11",
+"date": "2026-11-11",
+"kind": "Earnings",
+"text": "Oportun Financial Raises Full-Year 2026 Guidance",
+"source": "Fiscal.ai",
+"url": "https://www.moomoo.com/stock/OPRT-US/news?chain_id=Name1K9-3FXPhg.1l5djc0&global_content=%7B%22promote_id%22%3A13764,%22sub_promote_id%22%3A63,%22f%22%3A%22www.moomoo.com%2Fcommunity%2Fdiscussion%2Fjensen-huang-praises-marvell-technology-can-optical-stocks-continue-their-2132803649%22%7D",
+"at": "Nov 11 5:32 PM ET"
+}
+},
+"SPCE": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +10% y/y (last q -67%: faster)",
+"flags": "dilution: 424B5",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1706946/000119312526458580/d183696dex991.htm"
+],
+"inflection": "Acceleration",
+"inflection_score": 10,
+"direction": "down",
+"gap_pct": -6.37,
+"pm_last": 2.5,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Virgin Galactic Hldgs Q3 EPS $(0.39) Beats $(0.50) Estimate, Sales $427.000K Beat $400.000K Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63221963/virgin-galactic-hldgs-q3-eps-0-39-beats-0-50-estimate-sales-427-000k-beat-400-000k-estimate",
+"at": "Nov 12 4:08 PM ET",
+"ts": "2026-11-12T16:08-05:00"
+}
+},
+"HOS": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.35,
+"pm_last": 6.2,
+"dropped": "under 30% over the 52-week low"
+},
+"FTK": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.31,
+"pm_last": 27.46,
+"dropped": "20-day average volume under 700K"
+},
+"BAK": {
+"news": "B",
+"catalyst": "Earnings",
+"reason": "revenue +22% y/y",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1071438/000129281426005294/bakitr3q26_6k.htm",
+"https://www.sec.gov/Archives/edgar/data/1071438/000129281426005296/bakpr3q26_6k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.19,
+"pm_last": 1.2,
+"dropped": "market cap under $0.7B"
+},
+"SSMR": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No news since the last close, only routine filings (10-Q, 3, 4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/2091017/000162828026073381/",
+"https://www.sec.gov/Archives/edgar/data/2091017/000162828026073400/",
+"https://www.sec.gov/Archives/edgar/data/2091017/000162828026073405/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -6.07,
+"pm_last": 12.69,
+"dropped": "20-day average $ volume under $20M"
+},
+"GDYN": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No news since the last close, only routine filings (4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1743725/000162828026073367/",
+"https://www.sec.gov/Archives/edgar/data/1743725/000162828026073373/",
+"https://www.sec.gov/Archives/edgar/data/1743725/000089914026001299/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 6.05,
+"pm_last": 14.19,
+"dropped": ""
+},
+"RZLT": {
+"news": "F",
+"catalyst": "Dilution / warning",
+"reason": "F by rule: dilution: 424B5",
+"flags": "dilution: 424B5",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1509261/000110465926126502/tm2627558d10_ex99-1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.94,
+"pm_last": 4.1,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "FDA / trial",
+"title": "Rezolute Announces Results From Its Ongoing Open-Label Phase 3 upLIFT Study Of Ersodetug In Tumor Hyperinsulinism; Primary Efficacy Endpoint Has Been Achieved Based On Preliminary Results; Topline Results Expected By Mid-December 2026",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63232398/rezolute-announces-results-its-ongoing-open-label-phase-3-uplift-study-ersodetug-tumor-hyperinsulini",
+"at": "6:20 AM ET",
+"ts": "2026-11-13T06:20-05:00"
+}
+},
+"BHF": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.87,
+"pm_last": 46.6866,
+"dropped": "under 30% over the 52-week low"
+},
+"HYLN": {
+"news": "C",
+"catalyst": "Earlier news (Tue Nov 10): Earnings + raise",
+"reason": "revenue +882% y/y; guidance raised; guide +5.2% vs street (SEC Nov 10 4:46 PM ET); today: No company news: No SEC filing or company release since the last close",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1759631/000162828026072808/exhibit991093026.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.86,
+"pm_last": 2.8475,
+"dropped": "market cap under $0.7B",
+"earlier": {
+"label": "Tue Nov 10",
+"date": "2026-11-10",
+"kind": "Earnings + raise",
+"text": "revenue +882% y/y; guidance raised; guide +5.2% vs street",
+"source": "SEC",
+"url": "https://www.sec.gov/Archives/edgar/data/1759631/000162828026072808/exhibit991093026.htm",
+"at": "Nov 10 4:46 PM ET"
+}
+},
+"ENHA": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1956439/000162828026073365/exhibit991-pressreleasex93.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.83,
+"pm_last": 6.78,
+"dropped": "20-day average volume under 700K",
+"headline": {
+"kind": "Earnings",
+"title": "Enhanced Group Q3 EPS $(1.01) Misses $(0.30) Estimate, Sales $3.307M Miss $8.533M Estimate",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/earnings/26/11/63222003/enhanced-group-q3-eps-1-01-misses-0-30-estimate-sales-3-307m-miss-8-533m-estimate",
+"at": "Nov 12 4:08 PM ET",
+"ts": "2026-11-12T16:08-05:00"
+}
+},
+"OFRM": {
+"news": "B",
+"catalyst": "Earnings + raise",
+"reason": "revenue +35% y/y; guidance raised; guide -8.0% vs street",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1696556/000169655626000032/ofrm-ex99_1.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "down",
+"gap_pct": -5.5,
+"pm_last": 9.62,
+"dropped": "market cap under $0.7B",
+"headline": {
+"kind": "Earnings",
+"title": "Once Upon a Farm Lowers FY2026 Sales Guidance from $327.000M-$335.000M to $290.000M-$300.000M vs $320.323M Est",
+"source": "Benzinga",
+"url": "https://www.benzinga.com/news/26/11/63221647/once-upon-farm-lowers-fy2026-sales-guidance-327-000m-335-000m-290-000m-300-000m-vs-320-323m-est",
+"at": "Nov 12 4:06 PM ET",
+"ts": "2026-11-12T16:06-05:00"
+}
+},
+"ALEC": {
+"news": "C",
+"catalyst": "Sector move: Biotechnology",
+"reason": "3 Biotechnology stocks gapping up 5%+ (SLS, RZLT); with their own news: SLS (Earnings), RZLT (Dilution / warning); no SEC filing or company release since the last close",
+"flags": "",
+"sources": [],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.31,
+"pm_last": 2.58,
+"dropped": "market cap under $0.7B"
+},
+"VISN": {
+"news": "C",
+"catalyst": "No company news",
+"reason": "No news since the last close, only routine filings (4)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1517228/000119312526458972/",
+"https://www.sec.gov/Archives/edgar/data/1517228/000119312526458974/"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.25,
+"pm_last": 4.21,
+"dropped": "under 30% over the 52-week low"
+},
+"NU": {
+"news": "C",
+"catalyst": "Earnings",
+"reason": "earnings release (numbers not read)",
+"flags": "",
+"sources": [
+"https://www.sec.gov/Archives/edgar/data/1691493/000129281426005272/nufs3q26_6k.htm",
+"https://www.sec.gov/Archives/edgar/data/1691493/000129281426005273/nupr3q26_6k.htm",
+"https://www.sec.gov/Archives/edgar/data/1691493/000129281426005275/nu20261112_6k.htm"
+],
+"inflection": "None",
+"inflection_score": 0,
+"direction": "up",
+"gap_pct": 5.24,
+"pm_last": 12.45,
+"dropped": "under 30% over the 52-week low"
+}
+}
+}

@@ -1,0 +1,514 @@
+{
+ "built_at": "2026-11-12T11:40:31-05:00",
+ "nasdaq": {
+  "2026-11-09": {
+   "n": 238,
+   "sample": [
+    {
+     "eps": "$5.06",
+     "surprise": "29.74",
+     "time": "time-not-supplied",
+     "symbol": "CEG",
+     "name": "Constellation Energy Corporation",
+     "marketCap": "$96,597,402,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$3.90",
+     "noOfEsts": "5"
+    },
+    {
+     "eps": "$1.62",
+     "surprise": "14.89",
+     "time": "time-not-supplied",
+     "symbol": "KKR",
+     "name": "KKR & Co. Inc.",
+     "marketCap": "$89,258,557,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$1.41",
+     "noOfEsts": "7"
+    },
+    {
+     "eps": "$0.82",
+     "surprise": "10.81",
+     "time": "time-not-supplied",
+     "symbol": "B",
+     "name": "Barrick Mining Corporation",
+     "marketCap": "$63,629,713,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.74",
+     "noOfEsts": "5"
+    }
+   ]
+  },
+  "2026-11-10": {
+   "n": 223,
+   "sample": [
+    {
+     "eps": "$1.44",
+     "surprise": "4.35",
+     "time": "time-not-supplied",
+     "symbol": "PBR",
+     "name": "Petroleo Brasileiro S.A.- Petrobras",
+     "marketCap": "$114,838,610,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$1.38",
+     "noOfEsts": "2"
+    },
+    {
+     "eps": "$1.44",
+     "surprise": "N/A",
+     "time": "time-not-supplied",
+     "symbol": "PBR.A",
+     "name": "Petroleo Brasileiro S.A.- Petrobras",
+     "marketCap": "$114,838,610,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "",
+     "noOfEsts": "N/A"
+    },
+    {
+     "eps": "$11.88",
+     "surprise": "3.94",
+     "time": "time-not-supplied",
+     "symbol": "TDG",
+     "name": "Transdigm Group Incorporated",
+     "marketCap": "$67,964,346,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$11.43",
+     "noOfEsts": "5"
+    }
+   ]
+  },
+  "2026-11-11": {
+   "n": 150,
+   "sample": [
+    {
+     "eps": "$1.89",
+     "surprise": "6.78",
+     "time": "time-not-supplied",
+     "symbol": "FNV",
+     "name": "Franco-Nevada Corporation",
+     "marketCap": "$47,952,470,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$1.77",
+     "noOfEsts": "3"
+    },
+    {
+     "eps": "$1.65",
+     "surprise": "0.61",
+     "time": "time-not-supplied",
+     "symbol": "GIB",
+     "name": "CGI Inc.",
+     "marketCap": "$18,814,382,100",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$1.64",
+     "noOfEsts": "3"
+    },
+    {
+     "eps": "$0.49",
+     "surprise": "4.26",
+     "time": "time-not-supplied",
+     "symbol": "TTEK",
+     "name": "Tetra Tech, Inc.",
+     "marketCap": "$9,629,831,200",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.47",
+     "noOfEsts": "2"
+    }
+   ]
+  },
+  "2026-11-12": {
+   "n": 354,
+   "sample": [
+    {
+     "lastYearRptDt": "11/12/2025",
+     "lastYearEPS": "$0.81",
+     "time": "time-after-hours",
+     "symbol": "CSCO",
+     "name": "Cisco Systems, Inc.",
+     "marketCap": "$397,255,049,000",
+     "fiscalQuarterEnding": "Oct/2026",
+     "epsForecast": "$1.15",
+     "noOfEsts": "8"
+    },
+    {
+     "lastYearRptDt": "11/13/2025",
+     "lastYearEPS": "$2.17",
+     "time": "time-after-hours",
+     "symbol": "AMAT",
+     "name": "Applied Materials, Inc.",
+     "marketCap": "$313,534,480,000",
+     "fiscalQuarterEnding": "Oct/2026",
+     "epsForecast": "$4.06",
+     "noOfEsts": "10"
+    },
+    {
+     "lastYearRptDt": "11/13/2025",
+     "lastYearEPS": "$0.63",
+     "time": "time-pre-market",
+     "symbol": "BN",
+     "name": "Brookfield Corporation",
+     "marketCap": "$103,007,502,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.72",
+     "noOfEsts": "3"
+    }
+   ]
+  },
+  "2026-11-13": {
+   "n": 205,
+   "sample": [
+    {
+     "lastYearRptDt": "11/14/2025",
+     "lastYearEPS": "$0.44",
+     "time": "time-not-supplied",
+     "symbol": "MUFG",
+     "name": "Mitsubishi UFJ Financial Group Inc",
+     "marketCap": "$260,377,575,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.45",
+     "noOfEsts": "1"
+    },
+    {
+     "lastYearRptDt": "11/14/2025",
+     "lastYearEPS": "$0.59",
+     "time": "time-pre-market",
+     "symbol": "SMFG",
+     "name": "Sumitomo Mitsui Financial Group Inc",
+     "marketCap": "$157,952,164,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.24",
+     "noOfEsts": "1"
+    },
+    {
+     "lastYearRptDt": "11/14/2025",
+     "lastYearEPS": "$0.20",
+     "time": "time-pre-market",
+     "symbol": "MFG",
+     "name": "Mizuho Financial Group, Inc.",
+     "marketCap": "$126,484,308,000",
+     "fiscalQuarterEnding": "Sep/2026",
+     "epsForecast": "$0.21",
+     "noOfEsts": "1"
+    }
+   ]
+  }
+ },
+ "nasdaq_secs": 13.7,
+ "yahoo": {
+  "AVEX": {
+   "eps_history": [
+    {
+     "quarter": "2026-03-31",
+     "period": "-3q",
+     "epsActual": "0.22",
+     "epsEstimate": "0.16",
+     "surprisePercent": "37.11%"
+    },
+    {
+     "quarter": "2026-06-30",
+     "period": "-2q",
+     "epsActual": "0.19",
+     "epsEstimate": "0.07",
+     "surprisePercent": "187.41%"
+    },
+    {
+     "quarter": "2026-09-30",
+     "period": "-1q",
+     "epsActual": "-0.22",
+     "epsEstimate": "0.1",
+     "surprisePercent": "-328.44%"
+    }
+   ],
+   "trend": [
+    {
+     "period": "0q",
+     "end": "2026-09-30",
+     "eps_avg": 0.096,
+     "eps_yago": null,
+     "rev_avg": 211547400,
+     "rev_yago": null,
+     "eps_7d_ago": 0.14
+    },
+    {
+     "period": "+1q",
+     "end": "2026-12-31",
+     "eps_avg": 0.14333,
+     "eps_yago": null,
+     "rev_avg": 199333140,
+     "rev_yago": 216693000,
+     "eps_7d_ago": 0.14286
+    },
+    {
+     "period": "0y",
+     "end": "2026-12-31",
+     "eps_avg": 0.44,
+     "eps_yago": null,
+     "rev_avg": 803596200,
+     "rev_yago": null,
+     "eps_7d_ago": 0.52
+    },
+    {
+     "period": "+1y",
+     "end": "2027-12-31",
+     "eps_avg": 0.68923,
+     "eps_yago": 0.44,
+     "rev_avg": 895262680,
+     "rev_yago": 803596200,
+     "eps_7d_ago": 0.69077
+    }
+   ],
+   "calendar": {
+    "dates": [
+     "2026-11-11"
+    ],
+    "eps_avg": 0.096,
+    "rev_avg": 211547400,
+    "call": [
+     "2026-11-11"
+    ]
+   },
+   "fin_chart": [
+    {
+     "q": "1Q2026",
+     "rev": 216693000
+    },
+    {
+     "q": "2Q2026",
+     "rev": 201791000
+    },
+    {
+     "q": "3Q2026",
+     "rev": 189697000
+    }
+   ],
+   "quarterlyDilutedEPS": [
+    [
+     "2025-03-31",
+     -0.565301
+    ],
+    [
+     "2025-06-30",
+     -0.244993
+    ],
+    [
+     "2026-03-31",
+     0.432855
+    ],
+    [
+     "2026-06-30",
+     0.01
+    ]
+   ],
+   "quarterlyTotalRevenue": [
+    [
+     "2025-03-31",
+     53258000.0
+    ],
+    [
+     "2025-06-30",
+     101134000.0
+    ],
+    [
+     "2026-03-31",
+     216693000.0
+    ],
+    [
+     "2026-06-30",
+     201791000.0
+    ]
+   ],
+   "quote": {
+    "earningsTimestamp": 1794430800,
+    "earningsTimestampStart": 1794430800,
+    "isEarningsDateEstimate": false,
+    "earningsCallTimestampStart": 1794434400,
+    "preMarketPrice": 13.7747,
+    "preMarketTime": 1794493762,
+    "marketCap": 1010146624
+   }
+  },
+  "NBIS": {
+   "eps_history": [
+    {
+     "quarter": "2025-12-31",
+     "period": "-4q",
+     "epsActual": "-0.99",
+     "epsEstimate": "-0.61",
+     "surprisePercent": "-63.06%"
+    },
+    {
+     "quarter": "2026-03-31",
+     "period": "-3q",
+     "epsActual": "2.11",
+     "epsEstimate": "-0.71",
+     "surprisePercent": "396.14%"
+    },
+    {
+     "quarter": "2026-06-30",
+     "period": "-2q",
+     "epsActual": "-0.68",
+     "epsEstimate": "-0.86",
+     "surprisePercent": "21.24%"
+    },
+    {
+     "quarter": "2026-09-30",
+     "period": "-1q",
+     "epsActual": "-0.13",
+     "epsEstimate": "-1.24",
+     "surprisePercent": "89.50%"
+    }
+   ],
+   "trend": [
+    {
+     "period": "0q",
+     "end": "2026-12-31",
+     "eps_avg": -1.7775,
+     "eps_yago": -0.9865,
+     "rev_avg": 1461911250,
+     "rev_yago": 227700000,
+     "eps_7d_ago": -2.00667
+    },
+    {
+     "period": "+1q",
+     "end": "2027-03-31",
+     "eps_avg": -1.7975,
+     "eps_yago": 2.11,
+     "rev_avg": 2171473080,
+     "rev_yago": 399000000,
+     "eps_7d_ago": -2.03667
+    },
+    {
+     "period": "0y",
+     "end": "2026-12-31",
+     "eps_avg": -2.11316,
+     "eps_yago": null,
+     "rev_avg": 3346419280,
+     "rev_yago": 529800000,
+     "eps_7d_ago": -2.11316
+    },
+    {
+     "period": "+1y",
+     "end": "2027-12-31",
+     "eps_avg": -6.15734,
+     "eps_yago": -2.11316,
+     "rev_avg": 12280572950,
+     "rev_yago": 3346419280,
+     "eps_7d_ago": -6.15734
+    }
+   ],
+   "calendar": {
+    "dates": [
+     "2026-11-12"
+    ],
+    "eps_avg": -0.70477,
+    "rev_avg": 1461911250,
+    "call": [
+     "2026-11-12"
+    ]
+   },
+   "fin_chart": [
+    {
+     "q": "4Q2025",
+     "rev": 227700000
+    },
+    {
+     "q": "1Q2026",
+     "rev": 399000000
+    },
+    {
+     "q": "2Q2026",
+     "rev": 582300000
+    },
+    {
+     "q": "3Q2026",
+     "rev": 980800000
+    }
+   ],
+   "quarterlyDilutedEPS": [
+    [
+     "2025-06-30",
+     2.38
+    ],
+    [
+     "2025-09-30",
+     -0.5
+    ],
+    [
+     "2025-12-31",
+     -0.986495
+    ],
+    [
+     "2026-03-31",
+     2.11
+    ],
+    [
+     "2026-06-30",
+     -0.68
+    ]
+   ],
+   "quarterlyTotalRevenue": [
+    [
+     "2025-06-30",
+     105100000.0
+    ],
+    [
+     "2025-09-30",
+     146100000.0
+    ],
+    [
+     "2025-12-31",
+     227700000.0
+    ],
+    [
+     "2026-03-31",
+     399000000.0
+    ],
+    [
+     "2026-06-30",
+     582300000.0
+    ]
+   ],
+   "quote": {
+    "earningsTimestamp": 1794490200,
+    "earningsTimestampStart": 1794490200,
+    "isEarningsDateEstimate": false,
+    "earningsCallTimestampStart": 1794488400,
+    "preMarketPrice": 119.86,
+    "preMarketTime": 1794493799,
+    "marketCap": 32150366208
+   }
+  }
+ },
+ "yahoo_secs": 1.2,
+ "sec": {
+  "ua_from_secret": true,
+  "AVEX": {
+   "filed": "2026-05-20T20:11:14.000Z",
+   "acc": "0002096300-26-000011",
+   "docs": [
+    "0002096300-26-000011-index-headers.html",
+    "0002096300-26-000011-index.html",
+    "0002096300-26-000011.txt",
+    "0002096300-26-000011-xbrl.zip",
+    "avex-20260520.htm",
+    "avex-20260520.xsd",
+    "avex-20260520_htm.xml",
+    "avex-20260520_lab.xml",
+    "avex-20260520_pre.xml",
+    "exhibit991-pressrelease1q2.htm",
+    "FilingSummary.xml",
+    "linea.jpg"
+   ],
+   "chars": 28288,
+   "guidance_snippets": [
+    "million in Q1 2025 &#8226; Adjusted EBITDA* of $36.4 million compared to Adjusted EBITDA* of $(13.4) million in Q1 2025 Outlook for Full Year 2026 &#8226; Total revenue of $600.0 million to $620.0 million &#8226; Adjusted EBITDA* of $88.0 million to $94.5 million * See &#8220;Non-GAAP Financial Measures&#8221; below for an explanation of this measure. The Company is unable to provide a reconciliation for forward-looking outlook of Adjusted EBITDA to net income (loss), the most closely comparable",
+    "bal Solutions segment from aircraft modifications and testing products and services, which is offset by $2.2 million of lower revenue in our Global Solutions segment primarily from a decrease in mission support, intelligence, surveillance, and reconnaissance services. For the three months ended March 31, 2026 , our net income (loss) increased to net income of $21.0 million and a net income margin of 9.7% from a net loss of $(27.3) million and a net loss margin of (51.3)% , or by $48.3 million , ",
+    "ITDA , primarily due to higher revenue from aircraft modification and testing products and services, which is offset by lower revenue from mission support, intelligence, surveillance, and reconnaissance products and services . Segment Highlights We measure the performance of our reportable segments based on total segment revenue and Segment Adjusted EBITDA. Our operating and reportable segments are Tactical Systems and Global Solutions. The following table presents total revenue by segment, Segm",
+    "ion of higher revenue from aircraft modifications and testing products and services, which is offset by $2.2 million of lower revenue from mission support, intelligence, surveillance, and reconnaissance products and services . Global Solutions Adjusted EBITDA increased to $4.2 million from $(2.1) million , or by $6.3 million , for the three months ended March 31, 2026 , compared to the three months ended March 31, 2025 . The increase is primarily due to higher gross profit from aircraft modifica",
+    "ce, surveillance, and reconnaissance services . Funded Backlog Funded backlog represents our estimate of the revenue we expect to realize in future periods as a result of performing work on funded contracts that have been awarded to us (net of any revenue already recognized as of the backlog date). We include the aggregate expected revenue from awarded contracts in our funded backlog upon the execution of a legally binding agreement (e.g., written contract or purchase order), even though our con",
+    "arily due to revenue recognized for the EUCOM AOR Deep Strike program during the three months ended March 31, 2026 . We expect to convert approximately 93.0% of the total $356.6 million of funded backlog as of March 31, 2026 into revenue during the remainder of 2026. In addition, our funded backlog is subject to meaningful customer concentration risk. As of March 31, 2026 , approximately 73.9% of the total dollar value of our funded backlog related to the U.S Government. For purposes of evaluati"
+   ]
+  },
+  "NBIS": {}
+ },
+ "sec_secs": 0.9
+}

@@ -1,0 +1,356 @@
+{
+ "day": "2026-11-10",
+ "settings": {
+  "on": true,
+  "start": "09:35",
+  "end": "10:30",
+  "min_chg": 5.0,
+  "min_rv": 1.0,
+  "over_pdh": true,
+  "over_orh": true,
+  "price": 5.0,
+  "mcap_b": 0.7,
+  "avgvol_k": 700.0,
+  "dvol_m": 30.0,
+  "adr": 4.0,
+  "low52": 30.0,
+  "above200": true,
+  "above50": true,
+  "e10_e21": true,
+  "e21_e50": true,
+  "e50_s200": false,
+  "x": [],
+  "saved_at": ""
+ },
+ "read": 537,
+ "fired_n": 3,
+ "fired": [
+  {
+   "symbol": "TRAX",
+   "time": "09:41",
+   "price": 52.3,
+   "chg": 5.24,
+   "rv": 3.77,
+   "pdh": 50.4,
+   "orh": 50.94,
+   "low": 48.89,
+   "title": "TRAX MORNING BREAKOUT +5.2%",
+   "msg": "$52.30 \u00b7 +5.2% \u00b7 vol 3.8x for the time of day \u00b7 over yesterday's high $50.40 and the 5-min opening range high $50.94 \u00b7 stop under the day's low $48.89: risk 7.0% = 0.9 ADR \u00b7 ADR 7.8% \u00b7 10 > 21 > 50 EMA",
+   "after": {
+    "high": 54.78,
+    "high_at": "09:50",
+    "max_pct": 4.73,
+    "max_r": 0.73,
+    "low": 49.7,
+    "stop": 48.89,
+    "stopped_at": null,
+    "back_under_orh_at": "11:40",
+    "last": 51.66,
+    "last_at": "15:43",
+    "last_pct": -1.23,
+    "last_r": -0.19
+   },
+   "news": {
+    "checked": true,
+    "catalyst": "After earnings (Nov 3)",
+    "reason": "Reported Tue Nov 3 after the close: EPS beat +0.3%, +2.3% after hours; no new filing since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "TGTX",
+   "time": "10:05",
+   "price": 67.31,
+   "chg": 6.2,
+   "rv": 2.69,
+   "pdh": 63.5,
+   "orh": 64.5,
+   "low": 62.19,
+   "title": "TGTX MORNING BREAKOUT +6.2%",
+   "msg": "$67.31 \u00b7 +6.2% \u00b7 vol 2.7x for the time of day \u00b7 over yesterday's high $63.50 and the 5-min opening range high $64.50 \u00b7 stop under the day's low $62.19: risk 8.2% = 1.6 ADR \u00b7 ADR 5.2% \u00b7 +51% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "after": {
+    "high": 68.03,
+    "high_at": "10:22",
+    "max_pct": 1.07,
+    "max_r": 0.14,
+    "low": 62.89,
+    "stop": 62.19,
+    "stopped_at": null,
+    "back_under_orh_at": "13:00",
+    "last": 63.55,
+    "last_at": "15:43",
+    "last_pct": -5.59,
+    "last_r": -0.73
+   },
+   "news": {
+    "checked": true,
+    "catalyst": "After earnings (Nov 9)",
+    "reason": "Reported Mon Nov 9 before the open: revenue beat +5.9%, EPS beat +35.9%, guidance raised, guide -3.5% vs street, revenue +61% y/y, -0.6% after hours; only routine filings since the last close (10-Q)",
+    "url": "https://www.sec.gov/Archives/edgar/data/1001316/000162828026072257/",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "ZETA",
+   "time": "10:19",
+   "price": 34.72,
+   "chg": 7.13,
+   "rv": 3.46,
+   "pdh": 32.56,
+   "orh": 33.45,
+   "low": 31.34,
+   "title": "ZETA MORNING BREAKOUT +7.1%",
+   "msg": "$34.72 \u00b7 +7.1% \u00b7 vol 3.5x for the time of day \u00b7 over yesterday's high $32.56 and the 5-min opening range high $33.45 \u00b7 stop under the day's low $31.34: risk 10.8% = 2.0 ADR \u00b7 ADR 5.4% \u00b7 +52% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme AI Software & Data",
+   "after": {
+    "high": 35.35,
+    "high_at": "10:58",
+    "max_pct": 1.81,
+    "max_r": 0.19,
+    "low": 34.14,
+    "stop": 31.34,
+    "stopped_at": null,
+    "back_under_orh_at": null,
+    "last": 34.26,
+    "last_at": "15:43",
+    "last_pct": -1.31,
+    "last_r": -0.13
+   },
+   "news": {
+    "checked": true,
+    "catalyst": "Earnings beat + raise",
+    "reason": "revenue beat +4.7%; revenue +46% y/y (last q +44%: faster); guidance raised; guide +2.5% vs street",
+    "url": "https://www.sec.gov/Archives/edgar/data/1851003/000119312526453558/zeta-ex99_1.htm",
+    "earlier": null,
+    "weak": false
+   }
+  }
+ ],
+ "per_minute": {
+  "09:41": [
+   "TRAX"
+  ],
+  "10:05": [
+   "TGTX"
+  ],
+  "10:19": [
+   "ZETA"
+  ]
+ },
+ "watch": {
+  "RKLB": {
+   "steps": [
+    [
+     "09:35",
+     "$58.37 (-0.8%, vol 5.3x): up -0.8%, under 5%"
+    ],
+    [
+     "09:36",
+     "$57.87 (-1.7%, vol 4.95x): up -1.7%, under 5%"
+    ],
+    [
+     "09:37",
+     "$58.05 (-1.4%, vol 4.63x): up -1.4%, under 5%"
+    ],
+    [
+     "09:38",
+     "$57.56 (-2.2%, vol 4.37x): up -2.2%, under 5%"
+    ],
+    [
+     "09:39",
+     "$57.59 (-2.1%, vol 4.16x): up -2.1%, under 5%"
+    ],
+    [
+     "09:40",
+     "$57.81 (-1.8%, vol 3.96x): up -1.8%, under 5%"
+    ],
+    [
+     "09:41",
+     "$58.15 (-1.2%, vol 3.87x): up -1.2%, under 5%"
+    ],
+    [
+     "09:42",
+     "$57.80 (-1.8%, vol 3.74x): up -1.8%, under 5%"
+    ],
+    [
+     "09:44",
+     "$58.02 (-1.4%, vol 3.48x): up -1.4%, under 5%"
+    ],
+    [
+     "09:45",
+     "$57.60 (-2.1%, vol 3.36x): up -2.1%, under 5%"
+    ],
+    [
+     "09:46",
+     "$57.85 (-1.7%, vol 3.3x): up -1.7%, under 5%"
+    ],
+    [
+     "09:47",
+     "$57.96 (-1.5%, vol 3.23x): up -1.5%, under 5%"
+    ],
+    [
+     "09:48",
+     "$57.83 (-1.7%, vol 3.14x): up -1.7%, under 5%"
+    ],
+    [
+     "09:49",
+     "$57.71 (-1.9%, vol 3.04x): up -1.9%, under 5%"
+    ],
+    [
+     "09:52",
+     "$57.94 (-1.6%, vol 2.82x): up -1.6%, under 5%"
+    ],
+    [
+     "09:53",
+     "$58.08 (-1.3%, vol 2.77x): up -1.3%, under 5%"
+    ],
+    [
+     "09:54",
+     "$58.30 (-0.9%, vol 2.73x): up -0.9%, under 5%"
+    ],
+    [
+     "09:56",
+     "$58.53 (-0.6%, vol 2.69x): up -0.6%, under 5%"
+    ],
+    [
+     "09:58",
+     "$58.35 (-0.9%, vol 2.61x): up -0.9%, under 5%"
+    ],
+    [
+     "09:59",
+     "$58.28 (-1.0%, vol 2.6x): up -1.0%, under 5%"
+    ],
+    [
+     "10:00",
+     "$58.51 (-0.6%, vol 2.57x): up -0.6%, under 5%"
+    ],
+    [
+     "10:01",
+     "$59.23 (+0.6%, vol 2.58x): up 0.6%, under 5%"
+    ],
+    [
+     "10:02",
+     "$59.08 (+0.4%, vol 2.56x): up 0.4%, under 5%"
+    ],
+    [
+     "10:03",
+     "$58.90 (+0.1%, vol 2.54x): up 0.1%, under 5%"
+    ],
+    [
+     "10:04",
+     "$58.48 (-0.6%, vol 2.51x): up -0.6%, under 5%"
+    ],
+    [
+     "10:05",
+     "$58.76 (-0.2%, vol 2.47x): up -0.2%, under 5%"
+    ],
+    [
+     "10:06",
+     "$59.00 (+0.2%, vol 2.47x): up 0.2%, under 5%"
+    ],
+    [
+     "10:07",
+     "$58.88 (+0.0%, vol 2.45x): up 0.0%, under 5%"
+    ],
+    [
+     "10:08",
+     "$59.17 (+0.5%, vol 2.43x): up 0.5%, under 5%"
+    ],
+    [
+     "10:09",
+     "$59.28 (+0.7%, vol 2.42x): up 0.7%, under 5%"
+    ],
+    [
+     "10:10",
+     "$59.35 (+0.8%, vol 2.4x): up 0.8%, under 5%"
+    ],
+    [
+     "10:11",
+     "$59.81 (+1.6%, vol 2.42x): up 1.6%, under 5%"
+    ],
+    [
+     "10:12",
+     "$59.19 (+0.6%, vol 2.42x): up 0.6%, under 5%"
+    ],
+    [
+     "10:13",
+     "$59.16 (+0.5%, vol 2.4x): up 0.5%, under 5%"
+    ],
+    [
+     "10:14",
+     "$59.08 (+0.4%, vol 2.4x): up 0.4%, under 5%"
+    ],
+    [
+     "10:15",
+     "$59.28 (+0.7%, vol 2.37x): up 0.7%, under 5%"
+    ],
+    [
+     "10:17",
+     "$59.15 (+0.5%, vol 2.35x): up 0.5%, under 5%"
+    ],
+    [
+     "10:18",
+     "$59.37 (+0.9%, vol 2.33x): up 0.9%, under 5%"
+    ],
+    [
+     "10:19",
+     "$59.56 (+1.2%, vol 2.32x): up 1.2%, under 5%"
+    ],
+    [
+     "10:20",
+     "$59.62 (+1.3%, vol 2.32x): up 1.3%, under 5%"
+    ],
+    [
+     "10:21",
+     "$59.31 (+0.8%, vol 2.33x): up 0.8%, under 5%"
+    ],
+    [
+     "10:22",
+     "$59.81 (+1.6%, vol 2.36x): up 1.6%, under 5%"
+    ],
+    [
+     "10:23",
+     "$59.72 (+1.5%, vol 2.35x): up 1.5%, under 5%"
+    ],
+    [
+     "10:24",
+     "$59.45 (+1.0%, vol 2.36x): up 1.0%, under 5%"
+    ],
+    [
+     "10:25",
+     "$59.27 (+0.7%, vol 2.37x): up 0.7%, under 5%"
+    ],
+    [
+     "10:26",
+     "$59.65 (+1.3%, vol 2.36x): up 1.3%, under 5%"
+    ],
+    [
+     "10:27",
+     "$59.18 (+0.5%, vol 2.35x): up 0.5%, under 5%"
+    ],
+    [
+     "10:28",
+     "$59.24 (+0.6%, vol 2.34x): up 0.6%, under 5%"
+    ],
+    [
+     "10:29",
+     "$59.15 (+0.5%, vol 2.33x): up 0.5%, under 5%"
+    ],
+    [
+     "10:30",
+     "$59.24 (+0.6%, vol 2.34x): up 0.6%, under 5%"
+    ]
+   ],
+   "news": {
+    "checked": true,
+    "catalyst": "Earnings beat + raise",
+    "reason": "revenue beat +4.1%; revenue +73% y/y (last q +62%: faster); guide +5.5% vs street",
+    "url": "https://www.sec.gov/Archives/edgar/data/1819994/000181999426000073/rklb-11092026ex991.htm",
+    "earlier": null,
+    "weak": false
+   }
+  }
+ }
+}
