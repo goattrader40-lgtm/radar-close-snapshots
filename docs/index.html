@@ -3548,11 +3548,20 @@ defCalc('industry_perf', {
       const fd = $('#ln-found');
       if (!lq || !doc) fd.textContent = '';
       else {
-        const n1 = rows.length, n2 = LAG ? 0 : (doc.ema50_undercut || []).filter(kept).filter((r) => r.symbol.includes(lq)).length, n3 = LAG ? 0 : (doc.start_days || []).filter((r) => r.symbol.includes(lq)).length;
-        const w = WK(lq), parts = [(LAG ? 'Launch laggards ' : 'Launches ') + n1];
-        if (!LAG) parts.push('50 EMA undercut ' + n2 + (n2 ? ' ↓' : ''), 'Start days ' + n3 + (n3 ? ' ↓' : ''));
-        parts.push('Watchlist: ' + (w ? w.lists.join(', ') : 'not on a list'));
-        fd.textContent = '"' + lq + '": ' + parts.join(' · ');
+        /* each table's matches right here, as buttons that jump to the row's table (the user, Nov 14 2026: "if i search ticker
+           it has to pull that ticker from all tables under launch tab": the Start days match sat two cards further down) */
+        const u = LAG ? [] : (doc.ema50_undercut || []).filter(kept).filter((r) => r.symbol.includes(lq)), sd = LAG ? [] : (doc.start_days || []).filter((r) => r.symbol.includes(lq));
+        const w = WK(lq), dm = (d) => (d ? fDate(d).replace(/, \d{4}$/, '') : '');
+        const jump = (txt, card, tip) => { const b = h('button', 'tgr-lite', txt); b.type = 'button'; b.title = tip; b.addEventListener('click', () => { const c = $(card); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); return b; };
+        const bits = [h('span', '', '"' + lq + '": ' + (LAG ? 'Launch laggards ' : 'Launches ') + rows.length + (rows.length ? ' (below)' : ''))];
+        if (!LAG) {
+          if (u.length) u.slice(0, 4).forEach((r) => bits.push(jump('50 EMA undercut: ' + r.symbol + ' · launched ' + dm(r.date) + ' ↓', '#ln-u50-card', 'Go to the 50 EMA undercut table')));
+          else bits.push(h('span', '', '50 EMA undercut 0'));
+          if (sd.length) sd.slice(0, 4).forEach((r) => bits.push(jump('Start days: ' + r.symbol + ' · ' + dm(r.date) + ' · ' + p1(r.date_chg_pct, true) + ' · close ' + fPrice(r.date_close) + ' ↓', '#ln-sd-card', 'Go to the Start days table')));
+          else bits.push(h('span', '', 'Start days 0'));
+        }
+        bits.push(h('span', '', 'Watchlist: ' + (w ? w.lists.join(', ') : 'not on a list')));
+        fd.replaceChildren(); bits.forEach((x, k) => { if (k) fd.append(' · '); fd.append(x); });
       }
     }
     $('#ln-type').value = S.lntype;
