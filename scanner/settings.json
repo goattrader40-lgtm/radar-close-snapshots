@@ -54,6 +54,8 @@
     "delete_after_closes_below_ema50": 2,
     "new_mover_days_without_setup": 15,
     "delete_below_gap_low": false,
+    "delete_below_pre_gap_close": true,
+    "_delete_below_pre_gap_close": "1-EP/GAP: off the list on a close below the close of the day before the gap = the whole gap given back (the user, Nov 14 2026, VIR Nov 12 2026: 12.12 under 12.21); a dip under the gap day's low that holds inside the gap stays",
     "delete_below_upday_low": true,
     "pool_refresh_weekday": 4,
     "setups_max": 30,

@@ -141,6 +141,13 @@ def step(state, d, stocks, cfg, cal, log):
             if d0:
                 e["low"] = round(float(st.l[st.pos[d0]]), 4)
 
+    # 1-EP/GAP rows from before Nov 14 2026 have no pre-gap close: once, take the close before the day they came on
+    for sym, e in lists["1-EP/GAP"].items():
+        st = today.get(sym)
+        if "pre_close" not in e and st is not None:
+            k = st.pos.get(e.get("added"))
+            e["pre_close"] = round(float(st.c[k - 1]), 4) if k else None
+
     # your x on 1-EP/GAP and 1-UPDAY (the user, Nov 14 2026: "add x button next to tickers for ep/gap and upday so if i see
     # some wrong i can delete it myself"): setups/picks.json "removed_lists" {list: {symbol: {added}}}: the row you saw
     # (its added day) leaves; a new gap / up day on a later day puts the stock back
@@ -161,6 +168,8 @@ def step(state, d, stocks, cfg, cal, log):
             e = lists[name][sym]
             if st.below50(i, nb):
                 remove(name, sym, f"{nb} closes in a row below the 50 EMA")
+            elif name == "1-EP/GAP" and L.get("delete_below_pre_gap_close") and e.get("pre_close") and st.c[i] < e["pre_close"]:
+                remove(name, sym, f"closed below the pre-gap close {e['pre_close']} (the gap is given back)")
             elif ((name == "1-EP/GAP" and L["delete_below_gap_low"]) or (name == "1-UPDAY" and L["delete_below_upday_low"])) and st.c[i] < e["low"]:
                 remove(name, sym, "closed below the " + ("gap" if name == "1-EP/GAP" else "up-day") + f" low {e['low']}")
             # the 15 days without a setup: 1-UPDAY only (the user, Nov 14 2026, on 1-EP/GAP: "lets take that 15 day clock,
@@ -192,7 +201,9 @@ def step(state, d, stocks, cfg, cal, log):
         st = today[sym]; i = st.pos[d]
         if "EP-GAPUP-BREAKOUT" in h:
             gap = round(100 * (st.o[i] / st.c[i - 1] - 1), 1)
-            add("1-EP/GAP", sym, dict(section=d, low=round(float(st.l[i]), 4), why=f"gap +{gap}%, rel vol {st.relvol[i]:.1f}"))
+            # pre_close: the close before the gap, the line an EP has to hold (the first gap's while it is on the list)
+            add("1-EP/GAP", sym, dict(section=d, low=round(float(st.l[i]), 4), why=f"gap +{gap}%, rel vol {st.relvol[i]:.1f}",
+                                      **({} if lists["1-EP/GAP"].get(sym, {}).get("pre_close") else dict(pre_close=round(float(st.c[i - 1]), 4)))))
             lists["1-EP/GAP"][sym].update(added=d, promoted=False)   # a repeat gap moves it to today's section
         elif "HOTTEST STOCKS" in h:
             chg = round(100 * (st.c[i] / st.c[i - 1] - 1), 1)
@@ -312,6 +323,8 @@ def details(sym, st, d, entry, P):
     out.update({k: v for k, v in entry.items() if k not in ("low",)})
     if "low" in entry:
         out["support_low"] = entry["low"]
+    if entry.get("pre_close"):
+        out["pre_gap_close"] = entry["pre_close"]
     return out
 
 
