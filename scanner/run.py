@@ -270,6 +270,8 @@ def details(sym, st, d, entry, P):
     r = st.df.iloc[i]
     code = int(r.code)
     H = st.h
+    ins = msf.inside_days(st.h, st.l, i) if r.early != r.early and st.c[i] > st.sma200[i] else None   # no coil, over the 200 SMA
+    ins = ins if ins and ins[0] is not None else None
     hb20 = int(19 - np.where(H[i - 19:i + 1] == H[i - 19:i + 1].max())[0][-1]) if i >= 19 else None
     hi20 = float(H[i - 19:i + 1].max()) if i >= 19 else None
     out = dict(
@@ -284,6 +286,9 @@ def details(sym, st, d, entry, P):
             breakout=fnum(r.pivot) if msf.is_pat(code) else None,
             flag_trendline=fnum(r.tlLive),
             coil=fnum(r.early), coil_stop=fnum(r.earlyStop),
+            # "inside day": 2+ days inside a mother day whatever their bodies, over the 200 SMA; only when there is no coil
+            # (the coil is the stronger read and wins: the user, Nov 14 2026)
+            inside_day=fnum(ins[0]) if ins else None, inside_day_stop=fnum(ins[1]) if ins else None,
             pullback_tight_day=fnum(r.hlTrig) if not r.hlDone else None, pullback_stop=fnum(r.hlStop) if not r.hlDone and r.hlTrig == r.hlTrig else None,
             level=fnum(r.cLvTrig), bigger_base=fnum(r.cBigBuy), flat_top=fnum(r.cFTBuy)).items() if v is not None},
         ema_triggers_tomorrow=[] if not higher_high(H, i) else [t for t, ok in (

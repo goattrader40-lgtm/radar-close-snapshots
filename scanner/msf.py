@@ -1125,3 +1125,18 @@ def run_symbol(bars, bench_close, p):
     df = pd.DataFrame(out, columns=OUT, index=pd.to_datetime(dates))
     df[["open", "high", "low", "close", "volume"]] = a
     return df
+
+
+def inside_days(h, l, i, need=2, look=260):
+    """The "inside day" entry (the user, Nov 14 2026, AXGN Nov 11-13 2026: "lets call this kind of days inside days, all
+    coil rules apply"): a mother day, then `need`+ days in a row inside its high and low, WHATEVER their bodies (the coil
+    wants small bodies and starts again from a day that has a big one). Returns (buy = the last inside day's high,
+    stop = the mother day's low) at bar i, else (None, None). Plain Python: display only, the engine's coil is untouched."""
+    k0 = max(0, i - look)
+    mh, ml, n = h[k0], l[k0], 0
+    for k in range(k0 + 1, i + 1):
+        if h[k] <= mh and l[k] >= ml:
+            n += 1
+        else:
+            mh, ml, n = h[k], l[k], 0
+    return (float(h[i]), float(ml)) if n >= need else (None, None)
