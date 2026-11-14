@@ -2107,6 +2107,13 @@ def follow(a, i0, i, pick=False):
         # day's low; shown and filtered on the Launches table (the user, Nov 13 2026: "i want to see coil pattern in
         # launches table"). A display field only: no buy point, trigger or alert reads it
         coil=fnum(r.early), coil_stop=fnum(r.earlyStop),
+        # the Watchlist's "Other entries" on every Launches row (the user, Nov 14 2026: "add other entries as a column in
+        # all watchlist tabs"): the same MSF levels scanner/run.py details() saves as `entries`, breakout left out.
+        # A display field only
+        other_entries={k: v for k, v in dict(
+            flag_trendline=fnum(r.tlLive), coil=fnum(r.early),
+            pullback_tight_day=fnum(r.hlTrig) if not r.hlDone else None,
+            level=fnum(r.cLvTrig), bigger_base=fnum(r.cBigBuy), flat_top=fnum(r.cFTBuy)).items() if v is not None},
         # the day of the base: sessions since the launch or the leg's breakout (ANF: Aug 26 = day 0, Sep 10 day 10,
         # Sep 24 day 20; Oct 19, leg 2, day 0 again), and whether today it turned up: back over a rising 10 EMA after
         # closing under it (ANF Oct 1, day 25)

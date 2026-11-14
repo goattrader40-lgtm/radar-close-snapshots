@@ -859,7 +859,7 @@
             <th class="num c2"><button class="tgr-th" data-sort="rel_vol">Rel vol</button></th>
             <th class="num"><button class="tgr-th" data-sort="vs21e" title="The price vs the 21-day EMA: during the session the live price vs today's EMA (it moves with the price); otherwise the last close vs its EMA">vs 21 EMA</button></th>
             <th class="num"><button class="tgr-th" data-sort="vs50e" title="The price vs the 50-day EMA: during the session the live price vs today's EMA (it moves with the price); otherwise the last close vs its EMA">vs 50 EMA</button></th>
-            <th class="c2"><button class="tgr-th" data-sort="other">Other entries</button></th>
+            <th><button class="tgr-th" data-sort="other">Other entries</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="adr_pct">ADR%</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="perf_1m_pct">1M</button></th>
             <th class="num c3"><button class="tgr-th" data-sort="perf_3m_pct">3M</button></th>
@@ -3059,6 +3059,8 @@ defCalc('industry_perf', {
   const trigText = (t) => (t.lost ? '↓ ' : '🔔 ') + hm12x(t.time) + ' ' + t.name + (t.lvl ? ' over ' + fPrice(t.lvl) : '')
     + (t.lost ? ' · back under since ' + hm12x(t.lost.at) + (t.lost.price ? ' (' + fPrice(t.lost.price) + ')' : '') : t.back ? ' · holding again since ' + hm12x(t.back.at) : ' · holding');
   const p1 = (x, sign) => { const v = num(x); return v === null || isNaN(v) ? '—' : (sign && v > 0 ? '+' : '') + v.toFixed(1) + '%'; };
+  /* "Other entries": the MSF levels next to the buy point (coil, flag trendline, pullback tight day, level, bigger base, flat top) */
+  const entTxt = (ent) => Object.entries(ent || {}).filter(([k]) => k !== 'breakout' && !k.endsWith('stop')).map(([k, v]) => k.replace(/_/g, ' ') + ' ' + v).join(', ');
   const wlRows = (symMap) => {
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
     if (!doc || !doc.lists) return [];
@@ -3067,7 +3069,7 @@ defCalc('industry_perf', {
       const m = symMap.get(r.symbol);
       const price = m && num(m.price) !== null ? num(m.price) : num(r.close);
       const ent = r.entries || {};
-      let other = Object.entries(ent).filter(([k]) => k !== 'breakout' && !k.endsWith('stop')).map(([k, v]) => k.replace(/_/g, ' ') + ' ' + v).join(', ');
+      let other = entTxt(ent);
       if ((r.ema_triggers_tomorrow || []).length) other = (other ? other + ', ' : '') + 'armed: ' + r.ema_triggers_tomorrow.join(' + ') + ' pullback';
       return Object.assign({}, r, { i, price, other,
         chg_1d: m ? m.chg_1d : r.chg_pct, rel_vol: m ? m.rel_vol : r.rel_vol, themes: m ? m.themes : '', tv_symbol: (m && m.tv_symbol) || r.tv,
@@ -3216,7 +3218,7 @@ defCalc('industry_perf', {
       tr.append(key, h('td', 'nw' + (lt0 ? (lt0.lost ? ' tgr-dn' : ' tgr-up') : ''), sec), gd, grStockCell(r.gr, r.symbol, false), h('td', 'num', num(r.rs) === null ? '—' : String(r.rs)), trendCell(r.symbol), whyTd, h('td', 'c2', r.pattern || ''), h('td', 'num', num(r.buy_point) === null ? '—' : fPrice(r.buy_point)),
         h('td', 'num', p1(r.away, true)), resCell(r, num(r.price)), h('td', 'num', fPrice(r.price)), pctCell(r.chg_1d, 0), h('td', 'num c2', fX(r.rel_vol)),
         h('td', 'num ' + tone(r.vs21e), p1(r.vs21e, true)), h('td', 'num ' + tone(r.vs50e), p1(r.vs50e, true)),
-        h('td', 'c2', r.other), h('td', 'num c3', p1(r.adr_pct)), h('td', 'num c3 ' + tone(r.perf_1m_pct), p1(r.perf_1m_pct, true)),
+        h('td', '', r.other), h('td', 'num c3', p1(r.adr_pct)), h('td', 'num c3 ' + tone(r.perf_1m_pct), p1(r.perf_1m_pct, true)),
         h('td', 'num c3 ' + tone(r.perf_3m_pct), p1(r.perf_3m_pct, true)), h('td', 'num c3', p1(r.off_52w_high_pct)), h('td', 'num c3', fDv(r.dollar_vol_30d_m)),
         h('td', 'c2 nw', r.added ? fDate(r.added).replace(/, \d{4}$/, '') : '—'), chipCell(r.themes, 'theme', 'c2'));
       tb.append(tr);
@@ -5147,6 +5149,7 @@ defCalc('industry_perf', {
      radar-layout); what the old Columns tick boxes hid (radar-cols-<table>) carries over as deleted. The first column
      (ticker / name) stays first. ───────── */
   const LAYK = 'radar-layout';
+  const AUTO_X = { 'ln-table': ['x:other'], 'ln-u50-table': ['x:other'] };   /* catalog columns a table gets once by itself */
   let LAY = {}; try { LAY = JSON.parse(localStorage.getItem(LAYK) || '{}') || {}; } catch (e) { LAY = {}; }
   const laySave = () => { try { localStorage.setItem(LAYK, JSON.stringify(LAY)); } catch (e) { /* private window */ } };
   const DEFK = {}, DEFN = {};        /* table id -> its columns' keys / names in the order the code builds them */
@@ -5162,6 +5165,13 @@ defCalc('industry_perf', {
      launch, laggard and 50 EMA undercut row carries it from the Nov 13 build on), else the Watchlist row's "Other entries".
      {buy: the last inside day's high, stop: the mother day's low} or null. A display only: nothing alerts on it */
   const LUK = (s) => by('lu', LDOC(), (d) => new Map((d.ema50_undercut || []).map((r) => [r.symbol, r]))).get(s) || null;
+  const otherOf = (s) => {
+    const r = LK(s) || LUK(s);
+    if (r && r.other_entries) return entTxt(r.other_entries);
+    const w = WK(s);
+    if (w && w.row) { let o = entTxt(w.row.entries); if ((w.row.ema_triggers_tomorrow || []).length) o = (o ? o + ', ' : '') + 'armed: ' + w.row.ema_triggers_tomorrow.join(' + ') + ' pullback'; return o; }
+    return r && num(r.coil) !== null ? 'coil ' + r.coil : '';
+  };
   const COILK = (s) => {
     const r = LK(s) || LUK(s);
     if (r && num(r.coil) !== null) return { buy: num(r.coil), stop: num(r.coil_stop) };
@@ -5269,6 +5279,10 @@ defCalc('industry_perf', {
     ['l_max', 'Max gain', 'Launches', 'Best gain since the launch day', ['max_gain_pct'], (s) => cPct((LK(s) || {}).max_gain_pct, true)],
     ['l_corr', 'Correction', 'Launches', 'The deepest drop after the 52-week high, to now', ['corr'], (s) => cPct((LK(s) || {}).correction_now_pct, false)],
     ['coil', 'Coil buy', 'Launches', 'Your MSF coil, armed at the last close: a mother day, then 2+ quiet days inside its high and low (small bodies), over the 200 SMA. The buy = the last quiet day\'s high; hover for the stop (the mother day\'s low). The same as the Watchlist\'s Other entries. No alert fires on it', ['coil'], (s) => { const k = COILK(s); return cNum(k ? k.buy : null, k ? fPrice(k.buy) : '—', '', k && k.stop ? 'Coil buy ' + fPrice(k.buy) + ' · stop ' + fPrice(k.stop) + ' (the mother day\'s low)' : ''); }],
+    /* the Watchlist's "Other entries" for any stock table (the user, Nov 14 2026: "add other entries as a column in all
+       watchlist tabs"): the Launches row's other_entries (launch.py, from the Nov 14 build on; before: its coil), else the
+       Watchlist row's entries. Added once by itself to the Launches tables (AUTO_X) */
+    ['other', 'Other entries', 'Launches', 'The other setups next to the buy point, as on the Watchlist: coil (its buy), flag trendline, pullback tight day, level, bigger base, flat top, each with its price. A display only: nothing alerts on it. As a filter: has "coil"', ['other'], (s) => cTxt(otherOf(s) || null)],
     ['coil_away', 'Away (coil buy)', 'Launches', 'How far the coil\'s buy is over the price (coil, coiled)', ['coil_away'], (s) => { const k = COILK(s), v = k ? vsPct(k.buy, pxOf(s)) : null; return cNum(v, p1(v, true)); }],
     ['w_list', 'Watchlist list', 'Watchlist', 'Which Watchlist lists it is on', [], (s) => { const w = WK(s); return cTxt(w ? w.lists.join(', ') : null); }],
     ['w_section', 'Watchlist section', 'Watchlist', 'Its section on the Watchlist (3-SETUPS: Triggered today / Ready / Setting up)', [], (s) => { const w = WK(s); return cTxt(w && w.row ? w.row.section || null : null); }],
@@ -5288,11 +5302,20 @@ defCalc('industry_perf', {
   const layOf = (t) => {
     const def = DEFK[t.id], id = lid(t);
     let L = LAY[id];
+    const fresh = !L;
     if (!L) {
       L = { order: def.slice(), off: [] };
       try { const old = JSON.parse(localStorage.getItem('radar-cols-' + t.id) || '[]'); L.off = old.map((n) => def[DEFN[t.id].indexOf(n)]).filter(Boolean); } catch (e) { /* none */ }
     }
     const known = new Set(def);
+    /* a catalog column a table gets by itself (AUTO_X): always on a table without a saved layout (also after "Reset this
+       table"), and once on a saved one; its x in the column list takes it off for good */
+    (AUTO_X[t.id] || []).forEach((k) => {
+      const done = (LAY._auto = LAY._auto || {}), mark = id + '|' + k, first = !done[mark];
+      if (!fresh && !first) return;
+      if (!(L.order || []).includes(k)) { const o = (L.order || def).slice(), i = o.indexOf('away'); o.splice(i < 0 ? o.length : i + 1, 0, k); L = Object.assign({}, L, { order: o }); if (!fresh) LAY[id] = L; }
+      if (first) { done[mark] = 1; laySave(); }
+    });
     const order = (L.order || []).filter((k) => known.has(k) || (k.startsWith('x:') && CAT.has(k.slice(2))));
     def.forEach((k, i) => { if (!order.includes(k)) order.splice(i ? order.indexOf(def[i - 1]) + 1 : 0, 0, k); });   /* a column added to the code later lands where the code puts it */
     const w = {}; Object.entries(L.w || {}).forEach(([k, v]) => { if (order.includes(k) && num(v) > 0) w[k] = Math.round(num(v)); });
@@ -5505,7 +5528,7 @@ defCalc('industry_perf', {
   const XF_TR = ['Up', 'Turn up', 'Reclaim', 'Resting', 'Negative', '—'];
   const XF = {
     name: { k: 'text' }, sector: { k: 'text' }, industry: { k: 'text' }, themes: { k: 'text' }, index: { k: 'text' },
-    l_status: { k: 'text' }, l_trigger: { k: 'text' }, l_date: { k: 'text' }, w_section: { k: 'text' }, w_why: { k: 'text' },
+    other: { k: 'text' }, l_status: { k: 'text' }, l_trigger: { k: 'text' }, l_date: { k: 'text' }, w_section: { k: 'text' }, w_why: { k: 'text' },
     trend: { k: 'cat', opts: XF_TR.map((o) => [o, (s) => trLabel(s) === o]) },
     trend_y: { k: 'cat', opts: XF_TR.map((o) => [o, (s) => { const x = trendLast(s); return (x ? x.st || '—' : '—') === o; }]) },
     grank: { k: 'cat', opts: [['★ Top', (s) => XF_TIER(s) === 'Top'], ['Strong', (s) => XF_TIER(s) === 'Strong'], ['★ Top or Strong', (s) => ['Top', 'Strong'].includes(XF_TIER(s))], ['Not in the top 10%', (s) => !['Top', 'Strong'].includes(XF_TIER(s))]] },
