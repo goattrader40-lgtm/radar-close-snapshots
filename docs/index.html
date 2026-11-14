@@ -957,7 +957,8 @@
         <select class="tgr-search" id="ln-type" aria-label="Launch type" style="max-width:11em"><option value="all">All types</option><option>Launch</option><option>Power day</option><option>Catalyst</option><option>Reversal</option><option>Delayed</option><option>Follower</option><option>Your pick</option></select>
         <label class="tgr-f"><input type="checkbox" id="ln-wolf" checked> Show lone wolves</label>
         <span class="tgr-flt" data-f="ln"></span>
-        <input class="tgr-search" id="ln-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
+        <input class="tgr-search" id="ln-search" type="search" placeholder="Find a ticker" aria-label="Find a ticker in the Launches, 50 EMA undercut and Start days tables" title="Searches the Launches table, the 50 EMA undercut table and the Start days table; the line next to it says where the ticker is, your Watchlist lists included">
+        <span class="tgr-lbl" id="ln-found" aria-live="polite"></span>
         <button class="tgr-lite" id="ln-dl" type="button" title="Saves the rows on screen (your filters applied) as a file for TradingView: Watchlist menu → Import list">Download for TradingView</button>
       </div>
       <div class="tgr-bar" id="ln-add-bar">
@@ -3540,6 +3541,20 @@ defCalc('industry_perf', {
     const rows = lq ? all.filter((r) => r.symbol.includes(lq)) : all.filter((r) => (S.lng === 'all' || r.grade === 'You' || S.lng.includes(r.grade[0])) && (S.lnwolf || !r.lone_wolf) &&
       (S.lnst === 'all' || (S.lnst === 'riding' ? r.status === 'Riding' : !!r.pattern)) && (S.lntype === 'all' || r.types.includes(S.lntype)) && fltPass('ln', r.symbol, r.rs_now));
     S.lnShown = rows;
+    /* the ticker search covers every table of the tab (the user, Nov 14 2026, RKLB: "when i search rklb in launch it should
+       show in any of those 3 tables, now it only pulls names from launch tables"): the 50 EMA undercut and Start days tables
+       below are filtered too, and this line says where the ticker is, its Watchlist lists included */
+    {
+      const fd = $('#ln-found');
+      if (!lq || !doc) fd.textContent = '';
+      else {
+        const n1 = rows.length, n2 = LAG ? 0 : (doc.ema50_undercut || []).filter(kept).filter((r) => r.symbol.includes(lq)).length, n3 = LAG ? 0 : (doc.start_days || []).filter((r) => r.symbol.includes(lq)).length;
+        const w = WK(lq), parts = [(LAG ? 'Launch laggards ' : 'Launches ') + n1];
+        if (!LAG) parts.push('50 EMA undercut ' + n2 + (n2 ? ' ↓' : ''), 'Start days ' + n3 + (n3 ? ' ↓' : ''));
+        parts.push('Watchlist: ' + (w ? w.lists.join(', ') : 'not on a list'));
+        fd.textContent = '"' + lq + '": ' + parts.join(' · ');
+      }
+    }
     $('#ln-type').value = S.lntype;
     const lr = doc && doc.rules, lqd = doc && doc.liquidity;
     $('#ln-rules').replaceChildren(...(lr && lqd ? [
@@ -3666,7 +3681,7 @@ defCalc('industry_perf', {
        session has to close back over it (the reclaim), a 3rd close under takes them off the list */
     {
       const ut = $('#ln-u50-table'), utb = ut.querySelector('tbody'); utb.replaceChildren();
-      const us = doc ? (doc.ema50_undercut || []).filter(kept).map((r) => {
+      const us = doc ? (doc.ema50_undercut || []).filter(kept).filter((r) => !lq || r.symbol.includes(lq)).map((r) => {
         const m = symMap.get(r.symbol);
         const px = m && num(m.price) !== null ? num(m.price) : r.price;
         const today = m && num(m.chg_1d) !== null ? num(m.chg_1d) : num(r.chg_today_pct);
@@ -3675,7 +3690,7 @@ defCalc('industry_perf', {
       $('#ln-u50-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : '—';
       $('#ln-u50-note').textContent = 'Launches that closed under their 50 EMA 2 days in a row. The next session has to close back over it: then the stock is back on the Launches list; a 3rd close under takes it off. The reclaim is an entry, the 50 EMA undercut & reclaim: the low under the 50 EMA and under the open, the close back over it in the upper half of the day (AEHR Mar 31, 2026). Alerts: when it trades back over the 50 EMA, and from 3:45 PM when it holds over it into the close.';
       sortRows(ut, us, null, ['symbol', 'date', 'group'], 'grade');
-      if (doc && !us.length) noRows(utb, 9, 'No launch closed under its 50 EMA 2 days in a row.');
+      if (doc && !us.length) noRows(utb, 9, lq ? 'No "' + lq + '" in this table.' : 'No launch closed under its 50 EMA 2 days in a row.');
       us.forEach((r) => {
         const tr = h('tr');
         const key = tkCell(r.symbol, r.tv);
@@ -3695,7 +3710,7 @@ defCalc('industry_perf', {
        the day it happens; not a launch, the Launches list is unchanged */
     {
       const st = $('#ln-sd-table'), stb = st.querySelector('tbody'); stb.replaceChildren();
-      const ss = doc ? (doc.start_days || []).map((r) => {
+      const ss = doc ? (doc.start_days || []).filter((r) => !lq || r.symbol.includes(lq)).map((r) => {
         const m = symMap.get(r.symbol);
         const px = m && num(m.price) !== null ? num(m.price) : r.price;
         return Object.assign({}, r, { px, since: px && r.date_close ? r2((px / r.date_close - 1) * 100) : r.since_pct, on: r.on || '' });
@@ -3703,7 +3718,7 @@ defCalc('industry_perf', {
       $('#ln-sd-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : '—';
       $('#ln-sd-note').textContent = 'The day a stock breaks back through its 21 and 50 EMA and changes the tide: the day before it closed under one of them, that day it closes over both, up 1 ADR or more on 1× volume or more in the top half of the day (or a 5%+ gap that opens over both and holds them). Over or under the 200 SMA; the same liquidity and ADR minimums as a launch. Listed for 5 sessions while it holds the close it started from. Not a launch: the big day that follows (the 200 SMA cross, the earnings gap) still makes the Launches list, with this day shown under its date as "start".';
       sortRows(st, ss, null, ['symbol', 'date', 'group', 'on'], '');
-      if (doc && !ss.length) noRows(stb, 12, doc.start_days ? 'No start day in the last 5 sessions.' : 'Fills in after the next evening scan.');
+      if (doc && !ss.length) noRows(stb, 12, lq ? 'No "' + lq + '" in this table.' : doc.start_days ? 'No start day in the last 5 sessions.' : 'Fills in after the next evening scan.');
       ss.forEach((r) => {
         const tr = h('tr');
         tr.append(tkCell(r.symbol, r.tv), h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), pctCell(r.date_chg_pct, 0),
