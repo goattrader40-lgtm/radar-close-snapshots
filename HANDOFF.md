@@ -49,6 +49,181 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 ~0:30 - 2 AM ET and Sat Nov 14 2026 ~noon - 5 PM ET; session_01PkbDahhagkKkQ2rkgKsLuZ)
+
+**In one line: the Days 21H / 62H columns (Nov 13), then on Sat Nov 14 nine go lives on the Watchlist's 1-lists and the Launches
+tab, all on main, nothing left on a test branch. FIRST THING NEXT SESSION: the Mon Nov 16 evening scan is the first real run of
+the four 1-list rule changes (they were tested on made-up bars and on the ~175 long-bar stocks only).**
+
+- **The 1-lists as they stand after Nov 14** (scanner/settings.json, scanner/run.py, scanner/screens.py; rules/SCANNER_RULES.md):
+  **1-EP/GAP on**: gap of more than 5%, relative volume 2x+ (was 2.5x), the gap day closes up 5%+ (new), the standard
+  filters at that close. **Off**: 2 closes in a row under the 50 EMA, or a close below the close of the day before the gap
+  (new: VIR Nov 12 2026, 12.12 under 12.21), or the user's x (new). No 15-day limit any more.
+  **1-UPDAY on**: up 4%+, relative volume 1x+, the standard filters (unchanged). **Off**: 2 closes under the 50 EMA, a close
+  below the low of the FIRST day it came on (was: the latest up day's low; RKLB Nov 13 2026 left on 63.20, its first-day low
+  was 54.96), 15 trading days without reaching 3-SETUPS (kept), or the user's x (new).
+- **First checks Mon Nov 16 after the evening scan** (scanner/state.json and its log): (1) 1-UPDAY rows have `first_day` and
+  the 43 rows with a raised line got their first day's low back; (2) 1-EP/GAP rows have `pre_close`; VIR and NXT leave if
+  still under it ("closed below the pre-gap close"); (3) what joined 1-EP/GAP with the 2x volume and the 5% close (the 2x
+  was never measured); (4) a first real x: picks.json `removed_lists`, the log's "removed by you"; (5) the Watchlist rows'
+  Other entries show "inside day"; (6) Days 21H / 62H in the session (one more than at the close, or 0d over the high).
+- **Open, the user to decide**: the 15 trading days off 1-UPDAY too (my last answer: leave it, look again after a week of
+  scans; offered a Friday Nov 20 check of what joined / left 1-UPDAY and the list's size: no answer); a stock on 1-EP/GAP
+  not shown on 1-UPDAY as well (offered); Download for TradingView on the 50 EMA undercut table (offered); one combined
+  search result table on Launches (offered); a standing Coil buy column (overtaken by Other entries on Launches).
+- **A correction made to the user (Nov 14)**: the five 15-day removals from 1-UPDAY were first shown with their 1-month
+  gains (misleading: mostly before the removal); from the removal day FDS +4.0%, PCOR +2.6%, SGRY +1.9%; only ADMA was off
+  every list and then moved (its Nov 5 gap put it on 1-EP/GAP the same day).
+
+
+- **LIVE (the user's "go live", Sat Nov 14 2026 ~1 PM ET, branch claude/watchlist-launch-column-filters-ia4hqf, commit d1a2b9a):
+  1-UPDAY holds the low of the FIRST day it came on the list.** The user: "what about if one stock did up 1st day lets say 6%
+  next day another 5%, if 3rd day it closed below 2nd days low would it take it off from list?", "it should have counted the
+  low of 1st day it got into our table", "1# fix it". Before: each repeat up day replaced the row's `low` with that day's low
+  (and the stock left on a close under it). Now (scanner/run.py step): a repeat up day keeps the row's `low` and `first_day`;
+  it still moves the row to that day's section and restarts the 15 days (`added`). Once, rows from before (no `first_day`)
+  get the low of the day they came on, from the state log's last "added" (43 of the 136 rows on Nov 13 had a raised line:
+  CGON, UPBD, ELAN, WWW ...). The portal's Watchlist rule text and the rules workbook (1-UPDAY row) follow. Not touched:
+  Launches, alerts, 3-SETUPS; 1-EP/GAP has no low rule (`delete_below_gap_low` is false).
+  Tested with made-up bars only (this session can't fetch real bars): +6%, +5%, then a close 1% under day 2's low: main
+  removes it, the fix keeps it (line 29.40, not 31.47); a close under day 1's low leaves in both; the one-time repair
+  restores the day-1 low. No `--regress` (launch.py untouched), no 2-year check. scanner.yml was NOT re-run (Saturday: no new
+  session to process). **First check Mon Nov 16 after the evening scan**: scanner/state.json 1-UPDAY rows have `first_day`;
+  the 43 rows' `low` went down to their first day's; the removals "closed below the up-day low" quote the first day's low.
+- **LIVE (the user's "task1 # go live", Sat Nov 14 2026 ~2 PM ET, same branch, commit e797659): 1-EP/GAP has no 15-day limit.**
+  The user: "lets take that 15 day clock, we dont need it there". scanner/run.py step: "15 trading days with no setup" now
+  removes from 1-UPDAY only; an EP gap stays until 2 closes in a row under the 50 EMA (`delete_below_gap_low` is still false).
+  The portal's Watchlist rule text and the rules workbook (1-EP/GAP row) follow. Tested with made-up bars: a gap stock quiet
+  over its 50 EMA leaves on day 15 on main, stays with the change; the 1-UPDAY stock still leaves on day 15. Why (the list's
+  log since Oct 5): 71 added, 17 removed, only 3 by the 15 days (RXO, XP, BRZE: nothing lost), 14 by the 50 EMA; an EP
+  stock with ADR 3.5-4% could never reach 3-SETUPS (ADR 4%+) and always expired. Takes effect at the Mon Nov 16 evening scan.
+- **LIVE (the user's "3#task go live", Sat Nov 14 2026 ~1:40 PM ET, same branch, commits 42a536b + 6789ee6, merge bdbe3b5):
+  Other entries as a column on every list table.** The user: "i need you add other entries as a column in all watchlist
+  tabs" (they could not find the coil / Other entries on Launches, nor on the phone). (1) scanner/launch.py follow(): every
+  Launches / laggard / 50 EMA undercut row carries `other_entries` (the Watchlist's `entries`: flag_trendline, coil,
+  pullback_tight_day, level, bigger_base, flat_top; breakout left out). (2) docs/index.html: catalog column and + Filter
+  "Other entries" (`otherOf`: the Launches row's other_entries, else the Watchlist row's entries, else its coil; text
+  filter: has "coil"); AUTO_X: the Launches, 50 EMA undercut and laggards tables get it once by itself, after Away (LAY._auto
+  marks; the x in the column list takes it off for good; "Reset this table" brings it back); the Watchlist's Other entries
+  no longer has class c2 (it was hidden under 560 px). Display only. Tested: `--regress` "every agreed example reads the
+  same"; the page on desktop / phone, fresh and with a saved layout, all 5 Watchlist lists, no page errors. Launches rebuilt
+  (picks.yml, 1:42 PM ET, the Nov 13 close): 225 rows carry other_entries, 49 non-empty (TMDX coil 96.45 + level 97.56,
+  ELAN coil 26.91, ZM flat top 100.65). Rules workbook: one row.
+- **LIVE (the user's "go live", Sat Nov 14 2026 ~2:50 PM ET, same branch, commit 6fb1b40, merge 15c1f57): an x next to the
+  ticker on 1-EP/GAP and 1-UPDAY.** The user: "i need to add x button next to tickers for ep/gap and upday so if i see some
+  wrong i can delete it myself". docs/index.html: the button on those two lists (removeListed, after a confirm) saves
+  setups/picks.json `removed_lists` {list: {symbol: {added, at}}} with the Follow key; hidden at once on every device
+  (wlGone: PICKS + localStorage 'radar-wl-removed'; wlRows). scanner/run.py step: the evening scan takes a row off whose
+  `added` is at or before the removed one ("removed by you (the x on the Watchlist)"); a new gap / up day on a later day
+  puts it back. picks.yml gate: such a save rebuilds nothing. The stock's other lists keep it. Until the evening scan the
+  list's count on its button, the Scan lists and TREND still include it. Tested: the page on desktop / phone with a
+  stand-in for the GitHub save (x on 54 / 135 rows, none on 2-POOL, the row gone, a second browser hides it, no page
+  errors); the scan with made-up bars (removed rows leave, one comes back on a new gap 4 sessions later). Rules workbook:
+  one row. **First check**: the user's first real x (picks.json has removed_lists; the Monday scan logs "removed by you").
+- **LIVE (the user's "do volume 2x+ go live on ep/gap", Sat Nov 14 2026 ~3:30 PM ET, same branch, commits 2f4e62b + the 2x
+  one): 1-EP/GAP entry = a gap of more than 5%, relative volume 2x+ (was 2.5x), AND the gap day closes up 5%+.** The user:
+  "do we have requirement that ep/gap day has to close above 5%?" (no: only the open and the volume were checked), "put that
+  as a requirement it has to close above 5% for the day!!!". scanner/settings.json EP-GAPUP-BREAKOUT {gap_pct 5, rel_vol 2,
+  close_chg_pct 5}; scanner/screens.py (chg >= close_chg_pct). A gap that fades goes on 1-UPDAY if it still closes up 4%+.
+  Rows already on the list are not touched. The portal's rule text and the rules workbook follow. Tested with made-up gap
+  stocks (8% gap: close +9% on EP; +4.5% -> 1-UPDAY; +1% -> no list; 2.2x on EP, 1.8x -> 1-UPDAY). Real data, the close
+  rule only: of the 45 names that came on 1-EP/GAP in the 11 saved scans Oct 29 - Nov 13, one would have been kept off:
+  CHYM Nov 5 2026 (gap +6.4%, closed +1.0% at 30.18; 33.55 on Nov 13, +11%): told the user. The 2x volume was NOT measured
+  (how many more names): **first check** the 1-EP/GAP additions of the Mon Nov 16 scan. Not touched: the EP alerts
+  (radar/alerts.py), Launches.
+- **LIVE (the user's "task6# go live", Sat Nov 14 2026 ~2:35 PM ET, same branch, commit 155080e, merge 60af082): "inside day"
+  in Other entries.** The user on AXGN Nov 11-13 2026 ("it looks coil to me am i missing something?"): "lets call this kind
+  of days inside days, all coil rules apply, so when i check in column other entries it should show it as inside day... if
+  both is true it shows strongest one which is coil". scanner/msf.py inside_days(): a mother day, then 2+ days in a row
+  inside its high and low WHATEVER their bodies, the close over the 200 SMA; buy = the last inside day's high, stop = the
+  mother day's low. run.py entries (inside_day, inside_day_stop) and launch.py other_entries (inside_day), ONLY when there
+  is no coil. Display only: no alert; the Coil buy column / filter stay the strict coil. AXGN: Nov 12 (-5.5%, body 4.2% vs
+  half its ADR 2.8%) is why the coil counted 1 of 2; inside day 51.48 (Nov 9), 51.10 (Nov 10), 57.46 (Nov 13). `--regress`
+  "every agreed example reads the same". Launches rebuilt (picks.yml 2:37 PM ET, the Nov 13 close): 235 rows, 4 coils, 22
+  inside days, AXGN "inside day 57.46". About 5x as frequent as coils (told the user; some loose: YOU buy 58.99, mother low
+  51.27). The Watchlist lists get it at the Mon Nov 16 scan.
+- **LIVE (the user's "task2# agree with that solution.. go live", Sat Nov 14 2026 ~3:10 PM ET, commit 6295e78, merge 4c5a2bb):
+  1-EP/GAP: off on a close below the pre-gap close.** scanner/run.py: every EP row carries `pre_close` (the close before the
+  gap; the FIRST gap's while it is on the list; old rows get it once from the bar before their `added` day); settings
+  `delete_below_pre_gap_close: true`; removal text "closed below the pre-gap close X (the gap is given back)". VIR: pre-gap
+  close 12.21 (Nov 6), gap Nov 9, closed 12.12 Nov 12 -> off, a day before -17.8% to 9.96. A dip under the gap day's low
+  that holds inside the gap stays (TREX, SMG, ICLR). Tested on the real long bars (175 symbols, the last 30 sessions, with
+  and without): VIR and NXT (96.02) leave Nov 12, MOH Nov 9 (203.35 under 207.85; 209.49 on Nov 13); the one-time backfill
+  on the saved state removes VIR and NXT. **First check Mon Nov 16**: state.json EP rows have pre_close; VIR / NXT leave if
+  still under. The portal's rule text and the rules workbook follow.
+- **LIVE (the user's "go live", Sat Nov 14 2026 ~3:40 PM ET, same branch, commit 117c201): the Launches tab's ticker search
+  covers every table.** The user (RKLB): "when i search rklb in launch it should show in any of those 3 tables (now it only
+  pulls names from launch tables)". docs/index.html: #ln-search ("Find a ticker") also filters the 50 EMA undercut and
+  Start days tables; #ln-found next to it says "RKLB": Launches n · 50 EMA undercut n · Start days n ↓ · Watchlist: its
+  lists / not on a list. Tested on desktop / phone (RKLB, AXGN, a partial, no match, cleared), no page errors. Rules
+  workbook: one row. The user followed RKLB that afternoon (a pick, Launches row grade You, 2:52 PM ET); confirmed to them:
+  with the first-day low 54.96 RKLB would still be on 1-UPDAY (Nov 13 close 61.53; its first close under the 50 EMA 62.36).
+- **LIVE (the user's "go live", Sat Nov 14 2026 ~4:40 PM ET, same branch, commits a378575 + 3781a0c): two page changes on the
+  Launches tab.** (1) The ticker search shows each table's match under the box: the user: "you didnt do that search ticker
+  correctly, if i search ticker, it has to pull that ticker from all tables under launch tab" (the tables were filtered, but
+  the Start days match sat two cards down and the "Start days 1 ↓" note was missed). #ln-found now holds buttons, e.g.
+  "Start days: RKLB · Nov 9 · +10.9% · close $58.86 ↓" / "50 EMA undercut: CNH · launched Nov 9 ↓", that scroll to that
+  table. Offered, no answer: one combined result table at the top instead. (2) **Download for TradingView on the Start days
+  table** ("i need download tradingview for this table as well"): #ln-sd-dl, the rows on screen (search and column filters
+  applied), one ###Start day <date> section per start day, newest first. Tested on desktop / phone: 45 rows, 5 sections;
+  with RKLB searched only RKLB; no page errors. Offered: the same button on the 50 EMA undercut table.
+- **Asked Nov 14, no go yet: take the 15 trading days off 1-UPDAY too?** My answer: yes (since Oct 5 it removed 5: ADMA, EFOR,
+  FDS, PCOR, SGRY, four of them up since and back through other lists; 20 of the 50 rows never on 3-SETUPS have ADR under 4%
+  and can never beat it; risk: the list grows now that the first-day low removes fewer). Also answered: an inside day needs
+  3 candles like the coil (mother + 2); the same ticker can be on 1-EP/GAP and 1-UPDAY from different days (26 are), never
+  from the same day; RKLB was never in the 50 EMA undercut table (1 close under it).
+- **Answered Nov 14, no change: why RKLB is on no list.** Start day Nov 9 2026 (Launches' Start days table, confirmed Nov
+  10); on 1-UPDAY and 2-POOL Nov 10 (+6.5%, the first close over the 50 EMA; low 54.96); Nov 11 +5.5% raised its line to
+  63.20 (the flaw fixed today); Nov 13 closed 61.53 -> off 1-UPDAY ("closed below the up-day low 63.2": with the first-day
+  low 54.96 it would have stayed) and off 2-POOL the same day (the Friday refresh: under the 200 SMA 78.28). Never an EP gap
+  (no 5%+ gap closing over the 50 EMA); no launch (under the 200 SMA). Offered: put it back on 1-UPDAY by hand, or Follow it.
+- **Answered Nov 14, no change: AXGN Nov 10 2026 was not a coil for the code** (bars fetched with radar-tools `long`: the
+  175 saved symbols + AXGN). Nov 5 wide day (51.85 / 47.57); Nov 6 inside it but its body 68% of the range (max 50%) -> it
+  became the new mother day; Nov 9 high over Nov 6's; Nov 10 low 49.23 under Nov 9's 49.48: inCnt 0. By eye Nov 6, 9, 10 sit
+  inside the Nov 5 bar (closes 50.02, 50.64, 50.89), then +15.2% Nov 11. Offered, no go: keep the wide mother day while
+  later days stay inside it. Also seen: no Watchlist scan was saved on Nov 10 (setups commits go Nov 9 -> Nov 11).
+- **Open, the user to decide (asked Nov 14: "what can be done so this kind of stocks doesnt stay on that list", VIR)**: VIR
+  gapped Nov 9 2026 (+7.7%, 4.2x, close 13.65, gap-day low 13.11, pre-gap close 12.21), closed 12.12 on Nov 12 (the gap
+  erased) and 9.96 on Nov 13 (-17.8%, ~9x, 10.6% under the 50 EMA 11.14); still on 1-EP/GAP (1 close under the 50 EMA).
+  Offered: A. a close under the gap day's low (the existing switch; would remove 8 of 54 today incl. shallow retests TREX,
+  ICLR, SMG); B. a close under the pre-gap close = the gap fully erased (VIR and NXT of the 30 names with long bars; TREX, SMG
+  stay): RECOMMENDED; C. one close 1 ADR+ under the 50 EMA. Not built. Also noted, no go: a returning stock keeps its EP tag
+  (EXTR, TLN came back through 2-POOL without it).
+- **Answered Nov 14, no change**: the coil column: on Launches it is the optional "Coil buy" (⚙ Columns, type coil), not shown
+  by default and not named "Other entries" (the user could not find it; offered: a standing Coil buy column on Launches: no
+  go); the Watchlist's "Other entries" (and Pattern, Rel vol, Added, Themes) are hidden on a phone held upright (class c2,
+  under 560 px; offered to show it: no go). Why MOD / CBRS / KLAR / CGON / VKTX were not on 1-EP/GAP on Nov 13 (MOD, CBRS
+  under the 50 EMA; KLAR, CGON, VKTX no 5% gap; KLAR, VKTX under 30% over the 52-week low). The standard filters are checked
+  at the up day's own close.
+
+- **LIVE (the user's "go live", Fri Nov 13 2026 ~0:50 AM ET, branch claude/watchlist-launch-column-filters-ia4hqf, merge
+  754cbb1): Days 21H / Days 62H, two columns and + Filter.** The user: "days of from 21 day high and days of from 62 day",
+  "i just want to see if its been 3 days since that day or 5 days", "highest closing price day is considered high day",
+  "make column name short". (1) radar/pipeline.py high_ago(): stocks.json `hc21_ago` / `hc62_ago` = sessions since the
+  highest CLOSE of the last 21 / 62 sessions (0 = the last close; the newest day on a tie), `hc21_date` / `hc62_date`,
+  `close_high_62` (None with fewer sessions). (2) docs/index.html: catalog columns "Days 21H" / "Days 62H" (hiAgo; hover: the
+  high, its date, the distance), on every stock table's column list and in + Filter, which starts as "at most" for these two
+  (xfOp0). In the session (LIVE_ON): a live price over that close reads 0d, else the stored count + 1, so it follows the
+  5-minute live updates from 9:30 (the user asked "as of 930 am or end of day ... twice a day or every 1hr?": answered: every
+  5 minutes in the session, settled by the evening build). A display only: no rule, buy point or alert reads it. Rules
+  workbook: one row. Tested: the page with the Nov 12 files and stand-in values (236 Launches / 100 Watchlist rows right, both
+  filters, no page errors), again after merging main; high_ago on made-up series only. No `--regress`, no 2-year check, no
+  Launches rebuild (nothing in launch.py changed). radar-day `daily` started after the push to fill the Nov 12 close.
+  **First check Fri Nov 13**: stocks.json has `hc21_ago`; in the session the counts read one more than at the close (or 0d
+  over the high); after the evening build they match the charts.
+  **After the refresh (radar-day `daily`, 05:53 UTC Nov 13, the Nov 12 close), checked on the real file**: 3,275 of 3,299 stocks
+  have `hc21_ago`, 3,257 `hc62_ago` (the rest too newly listed: a dash); the 146 with Days 21H = 0 all closed at their 21-day
+  closing high; the 62-day count is never under the 21-day one. By hand: NVDA 16d (221.26, Oct 21) and 27d (238.48, Oct 6);
+  AMD 0d (585.30, Nov 12) / 27d (650.40, Oct 6); MBGL 0d / 0d; RKLB 1d (66.15, Nov 11) / 61d (78.61, Aug 18).
+  Good to know: 61d on Days 62H (20d on Days 21H) is the oldest day of the window: a stock falling the whole time reads it
+  (told the user). Go live met another session's go live on main: rules/scanner_rules.xlsx conflicted (a binary file) and was
+  rebuilt with `python3 rules/make_rules.py` from the merged make_rules.py; the merged page re-tested.
+- **Decided with the user**: days, not %; the high day = the highest CLOSING day; short names (offered "Days off 21D high" /
+  "Days off 62D high" as longer names: no answer, the short ones stay).
+- **Test only**: nothing (the branch is merged).
+- **Open / first check Fri Nov 13**: in the session the counts read one more than at the close, or 0d with the price over the
+  high close (LIVE_ON; not seen live yet); after the evening build they match the charts. Nothing else open from this session.
+
 ## Status at the end of the session "Radar: full portal review, build continued (Nov 12)" (Wed Nov 11 2026 evening - Fri Nov 13 ~1:30 AM ET; session_01PkbDajtNcuGe22aVKWcF77)
 
 (An older copy of this section, as it stood before this wrap-up, was moved to HANDOFF_ARCHIVE.md by the Days 21H / Days 62H
@@ -270,156 +445,6 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   out of the branch (tools: none saved). A `long` run replaces the file: the list is now 176 symbols (the 161 + BETA FLY GLOB
   MRVL WRBY FBIN PAR VSAT ITT RLAY + TTEK LUNR LSCC AVGO SONO). picks.yml's guard keeps an older-close rebuild out: run it
   again when the list did not change after a go live.
-
-## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 ~0:30 - 2 AM ET, continued Sat Nov 14 2026; session_01PkbDahhagkKkQ2rkgKsLuZ)
-
-- **LIVE (the user's "go live", Sat Nov 14 2026 ~1 PM ET, branch claude/watchlist-launch-column-filters-ia4hqf, commit d1a2b9a):
-  1-UPDAY holds the low of the FIRST day it came on the list.** The user: "what about if one stock did up 1st day lets say 6%
-  next day another 5%, if 3rd day it closed below 2nd days low would it take it off from list?", "it should have counted the
-  low of 1st day it got into our table", "1# fix it". Before: each repeat up day replaced the row's `low` with that day's low
-  (and the stock left on a close under it). Now (scanner/run.py step): a repeat up day keeps the row's `low` and `first_day`;
-  it still moves the row to that day's section and restarts the 15 days (`added`). Once, rows from before (no `first_day`)
-  get the low of the day they came on, from the state log's last "added" (43 of the 136 rows on Nov 13 had a raised line:
-  CGON, UPBD, ELAN, WWW ...). The portal's Watchlist rule text and the rules workbook (1-UPDAY row) follow. Not touched:
-  Launches, alerts, 3-SETUPS; 1-EP/GAP has no low rule (`delete_below_gap_low` is false).
-  Tested with made-up bars only (this session can't fetch real bars): +6%, +5%, then a close 1% under day 2's low: main
-  removes it, the fix keeps it (line 29.40, not 31.47); a close under day 1's low leaves in both; the one-time repair
-  restores the day-1 low. No `--regress` (launch.py untouched), no 2-year check. scanner.yml was NOT re-run (Saturday: no new
-  session to process). **First check Mon Nov 16 after the evening scan**: scanner/state.json 1-UPDAY rows have `first_day`;
-  the 43 rows' `low` went down to their first day's; the removals "closed below the up-day low" quote the first day's low.
-- **LIVE (the user's "task1 # go live", Sat Nov 14 2026 ~2 PM ET, same branch, commit e797659): 1-EP/GAP has no 15-day limit.**
-  The user: "lets take that 15 day clock, we dont need it there". scanner/run.py step: "15 trading days with no setup" now
-  removes from 1-UPDAY only; an EP gap stays until 2 closes in a row under the 50 EMA (`delete_below_gap_low` is still false).
-  The portal's Watchlist rule text and the rules workbook (1-EP/GAP row) follow. Tested with made-up bars: a gap stock quiet
-  over its 50 EMA leaves on day 15 on main, stays with the change; the 1-UPDAY stock still leaves on day 15. Why (the list's
-  log since Oct 5): 71 added, 17 removed, only 3 by the 15 days (RXO, XP, BRZE: nothing lost), 14 by the 50 EMA; an EP
-  stock with ADR 3.5-4% could never reach 3-SETUPS (ADR 4%+) and always expired. Takes effect at the Mon Nov 16 evening scan.
-- **LIVE (the user's "3#task go live", Sat Nov 14 2026 ~1:40 PM ET, same branch, commits 42a536b + 6789ee6, merge bdbe3b5):
-  Other entries as a column on every list table.** The user: "i need you add other entries as a column in all watchlist
-  tabs" (they could not find the coil / Other entries on Launches, nor on the phone). (1) scanner/launch.py follow(): every
-  Launches / laggard / 50 EMA undercut row carries `other_entries` (the Watchlist's `entries`: flag_trendline, coil,
-  pullback_tight_day, level, bigger_base, flat_top; breakout left out). (2) docs/index.html: catalog column and + Filter
-  "Other entries" (`otherOf`: the Launches row's other_entries, else the Watchlist row's entries, else its coil; text
-  filter: has "coil"); AUTO_X: the Launches, 50 EMA undercut and laggards tables get it once by itself, after Away (LAY._auto
-  marks; the x in the column list takes it off for good; "Reset this table" brings it back); the Watchlist's Other entries
-  no longer has class c2 (it was hidden under 560 px). Display only. Tested: `--regress` "every agreed example reads the
-  same"; the page on desktop / phone, fresh and with a saved layout, all 5 Watchlist lists, no page errors. Launches rebuilt
-  (picks.yml, 1:42 PM ET, the Nov 13 close): 225 rows carry other_entries, 49 non-empty (TMDX coil 96.45 + level 97.56,
-  ELAN coil 26.91, ZM flat top 100.65). Rules workbook: one row.
-- **LIVE (the user's "go live", Sat Nov 14 2026 ~2:50 PM ET, same branch, commit 6fb1b40, merge 15c1f57): an x next to the
-  ticker on 1-EP/GAP and 1-UPDAY.** The user: "i need to add x button next to tickers for ep/gap and upday so if i see some
-  wrong i can delete it myself". docs/index.html: the button on those two lists (removeListed, after a confirm) saves
-  setups/picks.json `removed_lists` {list: {symbol: {added, at}}} with the Follow key; hidden at once on every device
-  (wlGone: PICKS + localStorage 'radar-wl-removed'; wlRows). scanner/run.py step: the evening scan takes a row off whose
-  `added` is at or before the removed one ("removed by you (the x on the Watchlist)"); a new gap / up day on a later day
-  puts it back. picks.yml gate: such a save rebuilds nothing. The stock's other lists keep it. Until the evening scan the
-  list's count on its button, the Scan lists and TREND still include it. Tested: the page on desktop / phone with a
-  stand-in for the GitHub save (x on 54 / 135 rows, none on 2-POOL, the row gone, a second browser hides it, no page
-  errors); the scan with made-up bars (removed rows leave, one comes back on a new gap 4 sessions later). Rules workbook:
-  one row. **First check**: the user's first real x (picks.json has removed_lists; the Monday scan logs "removed by you").
-- **LIVE (the user's "do volume 2x+ go live on ep/gap", Sat Nov 14 2026 ~3:30 PM ET, same branch, commits 2f4e62b + the 2x
-  one): 1-EP/GAP entry = a gap of more than 5%, relative volume 2x+ (was 2.5x), AND the gap day closes up 5%+.** The user:
-  "do we have requirement that ep/gap day has to close above 5%?" (no: only the open and the volume were checked), "put that
-  as a requirement it has to close above 5% for the day!!!". scanner/settings.json EP-GAPUP-BREAKOUT {gap_pct 5, rel_vol 2,
-  close_chg_pct 5}; scanner/screens.py (chg >= close_chg_pct). A gap that fades goes on 1-UPDAY if it still closes up 4%+.
-  Rows already on the list are not touched. The portal's rule text and the rules workbook follow. Tested with made-up gap
-  stocks (8% gap: close +9% on EP; +4.5% -> 1-UPDAY; +1% -> no list; 2.2x on EP, 1.8x -> 1-UPDAY). Real data, the close
-  rule only: of the 45 names that came on 1-EP/GAP in the 11 saved scans Oct 29 - Nov 13, one would have been kept off:
-  CHYM Nov 5 2026 (gap +6.4%, closed +1.0% at 30.18; 33.55 on Nov 13, +11%): told the user. The 2x volume was NOT measured
-  (how many more names): **first check** the 1-EP/GAP additions of the Mon Nov 16 scan. Not touched: the EP alerts
-  (radar/alerts.py), Launches.
-- **LIVE (the user's "task6# go live", Sat Nov 14 2026 ~2:35 PM ET, same branch, commit 155080e, merge 60af082): "inside day"
-  in Other entries.** The user on AXGN Nov 11-13 2026 ("it looks coil to me am i missing something?"): "lets call this kind
-  of days inside days, all coil rules apply, so when i check in column other entries it should show it as inside day... if
-  both is true it shows strongest one which is coil". scanner/msf.py inside_days(): a mother day, then 2+ days in a row
-  inside its high and low WHATEVER their bodies, the close over the 200 SMA; buy = the last inside day's high, stop = the
-  mother day's low. run.py entries (inside_day, inside_day_stop) and launch.py other_entries (inside_day), ONLY when there
-  is no coil. Display only: no alert; the Coil buy column / filter stay the strict coil. AXGN: Nov 12 (-5.5%, body 4.2% vs
-  half its ADR 2.8%) is why the coil counted 1 of 2; inside day 51.48 (Nov 9), 51.10 (Nov 10), 57.46 (Nov 13). `--regress`
-  "every agreed example reads the same". Launches rebuilt (picks.yml 2:37 PM ET, the Nov 13 close): 235 rows, 4 coils, 22
-  inside days, AXGN "inside day 57.46". About 5x as frequent as coils (told the user; some loose: YOU buy 58.99, mother low
-  51.27). The Watchlist lists get it at the Mon Nov 16 scan.
-- **LIVE (the user's "task2# agree with that solution.. go live", Sat Nov 14 2026 ~3:10 PM ET, commit 6295e78, merge 4c5a2bb):
-  1-EP/GAP: off on a close below the pre-gap close.** scanner/run.py: every EP row carries `pre_close` (the close before the
-  gap; the FIRST gap's while it is on the list; old rows get it once from the bar before their `added` day); settings
-  `delete_below_pre_gap_close: true`; removal text "closed below the pre-gap close X (the gap is given back)". VIR: pre-gap
-  close 12.21 (Nov 6), gap Nov 9, closed 12.12 Nov 12 -> off, a day before -17.8% to 9.96. A dip under the gap day's low
-  that holds inside the gap stays (TREX, SMG, ICLR). Tested on the real long bars (175 symbols, the last 30 sessions, with
-  and without): VIR and NXT (96.02) leave Nov 12, MOH Nov 9 (203.35 under 207.85; 209.49 on Nov 13); the one-time backfill
-  on the saved state removes VIR and NXT. **First check Mon Nov 16**: state.json EP rows have pre_close; VIR / NXT leave if
-  still under. The portal's rule text and the rules workbook follow.
-- **LIVE (the user's "go live", Sat Nov 14 2026 ~3:40 PM ET, same branch, commit 117c201): the Launches tab's ticker search
-  covers every table.** The user (RKLB): "when i search rklb in launch it should show in any of those 3 tables (now it only
-  pulls names from launch tables)". docs/index.html: #ln-search ("Find a ticker") also filters the 50 EMA undercut and
-  Start days tables; #ln-found next to it says "RKLB": Launches n · 50 EMA undercut n · Start days n ↓ · Watchlist: its
-  lists / not on a list. Tested on desktop / phone (RKLB, AXGN, a partial, no match, cleared), no page errors. Rules
-  workbook: one row. The user followed RKLB that afternoon (a pick, Launches row grade You, 2:52 PM ET); confirmed to them:
-  with the first-day low 54.96 RKLB would still be on 1-UPDAY (Nov 13 close 61.53; its first close under the 50 EMA 62.36).
-- **LIVE (the user's "go live", Sat Nov 14 2026 ~4:40 PM ET, same branch, commits a378575 + 3781a0c): two page changes on the
-  Launches tab.** (1) The ticker search shows each table's match under the box: the user: "you didnt do that search ticker
-  correctly, if i search ticker, it has to pull that ticker from all tables under launch tab" (the tables were filtered, but
-  the Start days match sat two cards down and the "Start days 1 ↓" note was missed). #ln-found now holds buttons, e.g.
-  "Start days: RKLB · Nov 9 · +10.9% · close $58.86 ↓" / "50 EMA undercut: CNH · launched Nov 9 ↓", that scroll to that
-  table. Offered, no answer: one combined result table at the top instead. (2) **Download for TradingView on the Start days
-  table** ("i need download tradingview for this table as well"): #ln-sd-dl, the rows on screen (search and column filters
-  applied), one ###Start day <date> section per start day, newest first. Tested on desktop / phone: 45 rows, 5 sections;
-  with RKLB searched only RKLB; no page errors. Offered: the same button on the 50 EMA undercut table.
-- **Asked Nov 14, no go yet: take the 15 trading days off 1-UPDAY too?** My answer: yes (since Oct 5 it removed 5: ADMA, EFOR,
-  FDS, PCOR, SGRY, four of them up since and back through other lists; 20 of the 50 rows never on 3-SETUPS have ADR under 4%
-  and can never beat it; risk: the list grows now that the first-day low removes fewer). Also answered: an inside day needs
-  3 candles like the coil (mother + 2); the same ticker can be on 1-EP/GAP and 1-UPDAY from different days (26 are), never
-  from the same day; RKLB was never in the 50 EMA undercut table (1 close under it).
-- **Answered Nov 14, no change: why RKLB is on no list.** Start day Nov 9 2026 (Launches' Start days table, confirmed Nov
-  10); on 1-UPDAY and 2-POOL Nov 10 (+6.5%, the first close over the 50 EMA; low 54.96); Nov 11 +5.5% raised its line to
-  63.20 (the flaw fixed today); Nov 13 closed 61.53 -> off 1-UPDAY ("closed below the up-day low 63.2": with the first-day
-  low 54.96 it would have stayed) and off 2-POOL the same day (the Friday refresh: under the 200 SMA 78.28). Never an EP gap
-  (no 5%+ gap closing over the 50 EMA); no launch (under the 200 SMA). Offered: put it back on 1-UPDAY by hand, or Follow it.
-- **Answered Nov 14, no change: AXGN Nov 10 2026 was not a coil for the code** (bars fetched with radar-tools `long`: the
-  175 saved symbols + AXGN). Nov 5 wide day (51.85 / 47.57); Nov 6 inside it but its body 68% of the range (max 50%) -> it
-  became the new mother day; Nov 9 high over Nov 6's; Nov 10 low 49.23 under Nov 9's 49.48: inCnt 0. By eye Nov 6, 9, 10 sit
-  inside the Nov 5 bar (closes 50.02, 50.64, 50.89), then +15.2% Nov 11. Offered, no go: keep the wide mother day while
-  later days stay inside it. Also seen: no Watchlist scan was saved on Nov 10 (setups commits go Nov 9 -> Nov 11).
-- **Open, the user to decide (asked Nov 14: "what can be done so this kind of stocks doesnt stay on that list", VIR)**: VIR
-  gapped Nov 9 2026 (+7.7%, 4.2x, close 13.65, gap-day low 13.11, pre-gap close 12.21), closed 12.12 on Nov 12 (the gap
-  erased) and 9.96 on Nov 13 (-17.8%, ~9x, 10.6% under the 50 EMA 11.14); still on 1-EP/GAP (1 close under the 50 EMA).
-  Offered: A. a close under the gap day's low (the existing switch; would remove 8 of 54 today incl. shallow retests TREX,
-  ICLR, SMG); B. a close under the pre-gap close = the gap fully erased (VIR and NXT of the 30 names with long bars; TREX, SMG
-  stay): RECOMMENDED; C. one close 1 ADR+ under the 50 EMA. Not built. Also noted, no go: a returning stock keeps its EP tag
-  (EXTR, TLN came back through 2-POOL without it).
-- **Answered Nov 14, no change**: the coil column: on Launches it is the optional "Coil buy" (⚙ Columns, type coil), not shown
-  by default and not named "Other entries" (the user could not find it; offered: a standing Coil buy column on Launches: no
-  go); the Watchlist's "Other entries" (and Pattern, Rel vol, Added, Themes) are hidden on a phone held upright (class c2,
-  under 560 px; offered to show it: no go). Why MOD / CBRS / KLAR / CGON / VKTX were not on 1-EP/GAP on Nov 13 (MOD, CBRS
-  under the 50 EMA; KLAR, CGON, VKTX no 5% gap; KLAR, VKTX under 30% over the 52-week low). The standard filters are checked
-  at the up day's own close.
-
-- **LIVE (the user's "go live", Fri Nov 13 2026 ~0:50 AM ET, branch claude/watchlist-launch-column-filters-ia4hqf, merge
-  754cbb1): Days 21H / Days 62H, two columns and + Filter.** The user: "days of from 21 day high and days of from 62 day",
-  "i just want to see if its been 3 days since that day or 5 days", "highest closing price day is considered high day",
-  "make column name short". (1) radar/pipeline.py high_ago(): stocks.json `hc21_ago` / `hc62_ago` = sessions since the
-  highest CLOSE of the last 21 / 62 sessions (0 = the last close; the newest day on a tie), `hc21_date` / `hc62_date`,
-  `close_high_62` (None with fewer sessions). (2) docs/index.html: catalog columns "Days 21H" / "Days 62H" (hiAgo; hover: the
-  high, its date, the distance), on every stock table's column list and in + Filter, which starts as "at most" for these two
-  (xfOp0). In the session (LIVE_ON): a live price over that close reads 0d, else the stored count + 1, so it follows the
-  5-minute live updates from 9:30 (the user asked "as of 930 am or end of day ... twice a day or every 1hr?": answered: every
-  5 minutes in the session, settled by the evening build). A display only: no rule, buy point or alert reads it. Rules
-  workbook: one row. Tested: the page with the Nov 12 files and stand-in values (236 Launches / 100 Watchlist rows right, both
-  filters, no page errors), again after merging main; high_ago on made-up series only. No `--regress`, no 2-year check, no
-  Launches rebuild (nothing in launch.py changed). radar-day `daily` started after the push to fill the Nov 12 close.
-  **First check Fri Nov 13**: stocks.json has `hc21_ago`; in the session the counts read one more than at the close (or 0d
-  over the high); after the evening build they match the charts.
-  **After the refresh (radar-day `daily`, 05:53 UTC Nov 13, the Nov 12 close), checked on the real file**: 3,275 of 3,299 stocks
-  have `hc21_ago`, 3,257 `hc62_ago` (the rest too newly listed: a dash); the 146 with Days 21H = 0 all closed at their 21-day
-  closing high; the 62-day count is never under the 21-day one. By hand: NVDA 16d (221.26, Oct 21) and 27d (238.48, Oct 6);
-  AMD 0d (585.30, Nov 12) / 27d (650.40, Oct 6); MBGL 0d / 0d; RKLB 1d (66.15, Nov 11) / 61d (78.61, Aug 18).
-  Good to know: 61d on Days 62H (20d on Days 21H) is the oldest day of the window: a stock falling the whole time reads it
-  (told the user). Go live met another session's go live on main: rules/scanner_rules.xlsx conflicted (a binary file) and was
-  rebuilt with `python3 rules/make_rules.py` from the merged make_rules.py; the merged page re-tested.
-- **Decided with the user**: days, not %; the high day = the highest CLOSING day; short names (offered "Days off 21D high" /
-  "Days off 62D high" as longer names: no answer, the short ones stay).
-- **Test only**: nothing (the branch is merged).
-- **Open / first check Fri Nov 13**: in the session the counts read one more than at the close, or 0d with the price over the
-  high close (LIVE_ON; not seen live yet); after the evening build they match the charts. Nothing else open from this session.
 
 ## Status of the session "Radar: MBGL / AVEX miss (Nov 12)" (Thu Nov 12 - Fri Nov 13 2026; session_01PkbDaiSjzGPJPtohD3UF2C)
 
