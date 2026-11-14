@@ -271,7 +271,28 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   MRVL WRBY FBIN PAR VSAT ITT RLAY + TTEK LUNR LSCC AVGO SONO). picks.yml's guard keeps an older-close rebuild out: run it
   again when the list did not change after a go live.
 
-## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 2026, ~0:30 - 2 AM ET; session_01PkbDahhagkKkQ2rkgKsLuZ)
+## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 ~0:30 - 2 AM ET, continued Sat Nov 14 2026; session_01PkbDahhagkKkQ2rkgKsLuZ)
+
+- **LIVE (the user's "go live", Sat Nov 14 2026 ~1 PM ET, branch claude/watchlist-launch-column-filters-ia4hqf, commit d1a2b9a):
+  1-UPDAY holds the low of the FIRST day it came on the list.** The user: "what about if one stock did up 1st day lets say 6%
+  next day another 5%, if 3rd day it closed below 2nd days low would it take it off from list?", "it should have counted the
+  low of 1st day it got into our table", "1# fix it". Before: each repeat up day replaced the row's `low` with that day's low
+  (and the stock left on a close under it). Now (scanner/run.py step): a repeat up day keeps the row's `low` and `first_day`;
+  it still moves the row to that day's section and restarts the 15 days (`added`). Once, rows from before (no `first_day`)
+  get the low of the day they came on, from the state log's last "added" (43 of the 136 rows on Nov 13 had a raised line:
+  CGON, UPBD, ELAN, WWW ...). The portal's Watchlist rule text and the rules workbook (1-UPDAY row) follow. Not touched:
+  Launches, alerts, 3-SETUPS; 1-EP/GAP has no low rule (`delete_below_gap_low` is false).
+  Tested with made-up bars only (this session can't fetch real bars): +6%, +5%, then a close 1% under day 2's low: main
+  removes it, the fix keeps it (line 29.40, not 31.47); a close under day 1's low leaves in both; the one-time repair
+  restores the day-1 low. No `--regress` (launch.py untouched), no 2-year check. scanner.yml was NOT re-run (Saturday: no new
+  session to process). **First check Mon Nov 16 after the evening scan**: scanner/state.json 1-UPDAY rows have `first_day`;
+  the 43 rows' `low` went down to their first day's; the removals "closed below the up-day low" quote the first day's low.
+- **Answered Nov 14, no change**: the coil column: on Launches it is the optional "Coil buy" (⚙ Columns, type coil), not shown
+  by default and not named "Other entries" (the user could not find it; offered: a standing Coil buy column on Launches: no
+  go); the Watchlist's "Other entries" (and Pattern, Rel vol, Added, Themes) are hidden on a phone held upright (class c2,
+  under 560 px; offered to show it: no go). Why MOD / CBRS / KLAR / CGON / VKTX were not on 1-EP/GAP on Nov 13 (MOD, CBRS
+  under the 50 EMA; KLAR, CGON, VKTX no 5% gap; KLAR, VKTX under 30% over the 52-week low). The standard filters are checked
+  at the up day's own close.
 
 - **LIVE (the user's "go live", Fri Nov 13 2026 ~0:50 AM ET, branch claude/watchlist-launch-column-filters-ia4hqf, merge
   754cbb1): Days 21H / Days 62H, two columns and + Filter.** The user: "days of from 21 day high and days of from 62 day",
