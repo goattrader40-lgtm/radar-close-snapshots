@@ -86,7 +86,10 @@ class Stock:
             return hits
         gap = 100 * (self.o[i] / self.c[i - 1] - 1)
         chg = 100 * (c / self.c[i - 1] - 1)
-        if std and gap > X["EP-GAPUP-BREAKOUT"]["gap_pct"] and self.relvol[i] >= X["EP-GAPUP-BREAKOUT"]["rel_vol"]:
+        # the gap day also has to CLOSE up 5%+ (the user, Nov 14 2026: a gap that fades is no EP; an up day of 4%+ still
+        # goes on 1-UPDAY)
+        if std and gap > X["EP-GAPUP-BREAKOUT"]["gap_pct"] and self.relvol[i] >= X["EP-GAPUP-BREAKOUT"]["rel_vol"] \
+                and chg >= X["EP-GAPUP-BREAKOUT"].get("close_chg_pct", 0):
             hits.append("EP-GAPUP-BREAKOUT")
         if std and chg >= X["HOTTEST STOCKS"]["chg_pct"] and self.relvol[i] >= X["HOTTEST STOCKS"]["rel_vol"]:
             hits.append("HOTTEST STOCKS")

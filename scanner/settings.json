@@ -33,7 +33,8 @@
   },
 
   "screeners": {
-    "EP-GAPUP-BREAKOUT": {"gap_pct": 5, "rel_vol": 2.5},
+    "EP-GAPUP-BREAKOUT": {"gap_pct": 5, "rel_vol": 2, "close_chg_pct": 5,
+                          "_close_chg_pct": "the gap day must also CLOSE up this much or more vs the day before (the user, Nov 14 2026: 'it has to close above 5% for the day'); 0 = off"},
     "HOTTEST STOCKS": {"chg_pct": 4, "rel_vol": 1},
     "50 EMA FIRST CLOSE": {"closes_below_before": 2},
     "MOMENTUM-1W": {"perf_pct": 10, "bars": 5},
