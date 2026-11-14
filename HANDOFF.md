@@ -328,6 +328,31 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   CHYM Nov 5 2026 (gap +6.4%, closed +1.0% at 30.18; 33.55 on Nov 13, +11%): told the user. The 2x volume was NOT measured
   (how many more names): **first check** the 1-EP/GAP additions of the Mon Nov 16 scan. Not touched: the EP alerts
   (radar/alerts.py), Launches.
+- **LIVE (the user's "task6# go live", Sat Nov 14 2026 ~2:35 PM ET, same branch, commit 155080e, merge 60af082): "inside day"
+  in Other entries.** The user on AXGN Nov 11-13 2026 ("it looks coil to me am i missing something?"): "lets call this kind
+  of days inside days, all coil rules apply, so when i check in column other entries it should show it as inside day... if
+  both is true it shows strongest one which is coil". scanner/msf.py inside_days(): a mother day, then 2+ days in a row
+  inside its high and low WHATEVER their bodies, the close over the 200 SMA; buy = the last inside day's high, stop = the
+  mother day's low. run.py entries (inside_day, inside_day_stop) and launch.py other_entries (inside_day), ONLY when there
+  is no coil. Display only: no alert; the Coil buy column / filter stay the strict coil. AXGN: Nov 12 (-5.5%, body 4.2% vs
+  half its ADR 2.8%) is why the coil counted 1 of 2; inside day 51.48 (Nov 9), 51.10 (Nov 10), 57.46 (Nov 13). `--regress`
+  "every agreed example reads the same". Launches rebuilt (picks.yml 2:37 PM ET, the Nov 13 close): 235 rows, 4 coils, 22
+  inside days, AXGN "inside day 57.46". About 5x as frequent as coils (told the user; some loose: YOU buy 58.99, mother low
+  51.27). The Watchlist lists get it at the Mon Nov 16 scan.
+- **LIVE (the user's "task2# agree with that solution.. go live", Sat Nov 14 2026 ~3:10 PM ET, commit 6295e78, merge 4c5a2bb):
+  1-EP/GAP: off on a close below the pre-gap close.** scanner/run.py: every EP row carries `pre_close` (the close before the
+  gap; the FIRST gap's while it is on the list; old rows get it once from the bar before their `added` day); settings
+  `delete_below_pre_gap_close: true`; removal text "closed below the pre-gap close X (the gap is given back)". VIR: pre-gap
+  close 12.21 (Nov 6), gap Nov 9, closed 12.12 Nov 12 -> off, a day before -17.8% to 9.96. A dip under the gap day's low
+  that holds inside the gap stays (TREX, SMG, ICLR). Tested on the real long bars (175 symbols, the last 30 sessions, with
+  and without): VIR and NXT (96.02) leave Nov 12, MOH Nov 9 (203.35 under 207.85; 209.49 on Nov 13); the one-time backfill
+  on the saved state removes VIR and NXT. **First check Mon Nov 16**: state.json EP rows have pre_close; VIR / NXT leave if
+  still under. The portal's rule text and the rules workbook follow.
+- **Answered Nov 14, no change: why RKLB is on no list.** Start day Nov 9 2026 (Launches' Start days table, confirmed Nov
+  10); on 1-UPDAY and 2-POOL Nov 10 (+6.5%, the first close over the 50 EMA; low 54.96); Nov 11 +5.5% raised its line to
+  63.20 (the flaw fixed today); Nov 13 closed 61.53 -> off 1-UPDAY ("closed below the up-day low 63.2": with the first-day
+  low 54.96 it would have stayed) and off 2-POOL the same day (the Friday refresh: under the 200 SMA 78.28). Never an EP gap
+  (no 5%+ gap closing over the 50 EMA); no launch (under the 200 SMA). Offered: put it back on 1-UPDAY by hand, or Follow it.
 - **Answered Nov 14, no change: AXGN Nov 10 2026 was not a coil for the code** (bars fetched with radar-tools `long`: the
   175 saved symbols + AXGN). Nov 5 wide day (51.85 / 47.57); Nov 6 inside it but its body 68% of the range (max 50%) -> it
   became the new mother day; Nov 9 high over Nov 6's; Nov 10 low 49.23 under Nov 9's 49.48: inCnt 0. By eye Nov 6, 9, 10 sit
