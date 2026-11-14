@@ -317,6 +317,17 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   stand-in for the GitHub save (x on 54 / 135 rows, none on 2-POOL, the row gone, a second browser hides it, no page
   errors); the scan with made-up bars (removed rows leave, one comes back on a new gap 4 sessions later). Rules workbook:
   one row. **First check**: the user's first real x (picks.json has removed_lists; the Monday scan logs "removed by you").
+- **LIVE (the user's "do volume 2x+ go live on ep/gap", Sat Nov 14 2026 ~3:30 PM ET, same branch, commits 2f4e62b + the 2x
+  one): 1-EP/GAP entry = a gap of more than 5%, relative volume 2x+ (was 2.5x), AND the gap day closes up 5%+.** The user:
+  "do we have requirement that ep/gap day has to close above 5%?" (no: only the open and the volume were checked), "put that
+  as a requirement it has to close above 5% for the day!!!". scanner/settings.json EP-GAPUP-BREAKOUT {gap_pct 5, rel_vol 2,
+  close_chg_pct 5}; scanner/screens.py (chg >= close_chg_pct). A gap that fades goes on 1-UPDAY if it still closes up 4%+.
+  Rows already on the list are not touched. The portal's rule text and the rules workbook follow. Tested with made-up gap
+  stocks (8% gap: close +9% on EP; +4.5% -> 1-UPDAY; +1% -> no list; 2.2x on EP, 1.8x -> 1-UPDAY). Real data, the close
+  rule only: of the 45 names that came on 1-EP/GAP in the 11 saved scans Oct 29 - Nov 13, one would have been kept off:
+  CHYM Nov 5 2026 (gap +6.4%, closed +1.0% at 30.18; 33.55 on Nov 13, +11%): told the user. The 2x volume was NOT measured
+  (how many more names): **first check** the 1-EP/GAP additions of the Mon Nov 16 scan. Not touched: the EP alerts
+  (radar/alerts.py), Launches.
 - **Answered Nov 14, no change: AXGN Nov 10 2026 was not a coil for the code** (bars fetched with radar-tools `long`: the
   175 saved symbols + AXGN). Nov 5 wide day (51.85 / 47.57); Nov 6 inside it but its body 68% of the range (max 50%) -> it
   became the new mother day; Nov 9 high over Nov 6's; Nov 10 low 49.23 under Nov 9's 49.48: inCnt 0. By eye Nov 6, 9, 10 sit
