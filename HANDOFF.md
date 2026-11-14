@@ -355,6 +355,20 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   lists / not on a list. Tested on desktop / phone (RKLB, AXGN, a partial, no match, cleared), no page errors. Rules
   workbook: one row. The user followed RKLB that afternoon (a pick, Launches row grade You, 2:52 PM ET); confirmed to them:
   with the first-day low 54.96 RKLB would still be on 1-UPDAY (Nov 13 close 61.53; its first close under the 50 EMA 62.36).
+- **LIVE (the user's "go live", Sat Nov 14 2026 ~4:40 PM ET, same branch, commits a378575 + 3781a0c): two page changes on the
+  Launches tab.** (1) The ticker search shows each table's match under the box: the user: "you didnt do that search ticker
+  correctly, if i search ticker, it has to pull that ticker from all tables under launch tab" (the tables were filtered, but
+  the Start days match sat two cards down and the "Start days 1 ↓" note was missed). #ln-found now holds buttons, e.g.
+  "Start days: RKLB · Nov 9 · +10.9% · close $58.86 ↓" / "50 EMA undercut: CNH · launched Nov 9 ↓", that scroll to that
+  table. Offered, no answer: one combined result table at the top instead. (2) **Download for TradingView on the Start days
+  table** ("i need download tradingview for this table as well"): #ln-sd-dl, the rows on screen (search and column filters
+  applied), one ###Start day <date> section per start day, newest first. Tested on desktop / phone: 45 rows, 5 sections;
+  with RKLB searched only RKLB; no page errors. Offered: the same button on the 50 EMA undercut table.
+- **Asked Nov 14, no go yet: take the 15 trading days off 1-UPDAY too?** My answer: yes (since Oct 5 it removed 5: ADMA, EFOR,
+  FDS, PCOR, SGRY, four of them up since and back through other lists; 20 of the 50 rows never on 3-SETUPS have ADR under 4%
+  and can never beat it; risk: the list grows now that the first-day low removes fewer). Also answered: an inside day needs
+  3 candles like the coil (mother + 2); the same ticker can be on 1-EP/GAP and 1-UPDAY from different days (26 are), never
+  from the same day; RKLB was never in the 50 EMA undercut table (1 close under it).
 - **Answered Nov 14, no change: why RKLB is on no list.** Start day Nov 9 2026 (Launches' Start days table, confirmed Nov
   10); on 1-UPDAY and 2-POOL Nov 10 (+6.5%, the first close over the 50 EMA; low 54.96); Nov 11 +5.5% raised its line to
   63.20 (the flaw fixed today); Nov 13 closed 61.53 -> off 1-UPDAY ("closed below the up-day low 63.2": with the first-day
