@@ -306,6 +306,17 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   same"; the page on desktop / phone, fresh and with a saved layout, all 5 Watchlist lists, no page errors. Launches rebuilt
   (picks.yml, 1:42 PM ET, the Nov 13 close): 225 rows carry other_entries, 49 non-empty (TMDX coil 96.45 + level 97.56,
   ELAN coil 26.91, ZM flat top 100.65). Rules workbook: one row.
+- **LIVE (the user's "go live", Sat Nov 14 2026 ~2:50 PM ET, same branch, commit 6fb1b40, merge 15c1f57): an x next to the
+  ticker on 1-EP/GAP and 1-UPDAY.** The user: "i need to add x button next to tickers for ep/gap and upday so if i see some
+  wrong i can delete it myself". docs/index.html: the button on those two lists (removeListed, after a confirm) saves
+  setups/picks.json `removed_lists` {list: {symbol: {added, at}}} with the Follow key; hidden at once on every device
+  (wlGone: PICKS + localStorage 'radar-wl-removed'; wlRows). scanner/run.py step: the evening scan takes a row off whose
+  `added` is at or before the removed one ("removed by you (the x on the Watchlist)"); a new gap / up day on a later day
+  puts it back. picks.yml gate: such a save rebuilds nothing. The stock's other lists keep it. Until the evening scan the
+  list's count on its button, the Scan lists and TREND still include it. Tested: the page on desktop / phone with a
+  stand-in for the GitHub save (x on 54 / 135 rows, none on 2-POOL, the row gone, a second browser hides it, no page
+  errors); the scan with made-up bars (removed rows leave, one comes back on a new gap 4 sessions later). Rules workbook:
+  one row. **First check**: the user's first real x (picks.json has removed_lists; the Monday scan logs "removed by you").
 - **Answered Nov 14, no change: AXGN Nov 10 2026 was not a coil for the code** (bars fetched with radar-tools `long`: the
   175 saved symbols + AXGN). Nov 5 wide day (51.85 / 47.57); Nov 6 inside it but its body 68% of the range (max 50%) -> it
   became the new mother day; Nov 9 high over Nov 6's; Nov 10 low 49.23 under Nov 9's 49.48: inCnt 0. By eye Nov 6, 9, 10 sit
