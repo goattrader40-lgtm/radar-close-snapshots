@@ -5312,7 +5312,7 @@ defCalc('industry_perf', {
     /* the Watchlist's "Other entries" for any stock table (the user, Nov 14 2026: "add other entries as a column in all
        watchlist tabs"): the Launches row's other_entries (launch.py, from the Nov 14 build on; before: its coil), else the
        Watchlist row's entries. Added once by itself to the Launches tables (AUTO_X) */
-    ['other', 'Other entries', 'Launches', 'The other setups next to the buy point, as on the Watchlist: coil (its buy), flag trendline, pullback tight day, level, bigger base, flat top, each with its price. A display only: nothing alerts on it. As a filter: has "coil"', ['other'], (s) => cTxt(otherOf(s) || null)],
+    ['other', 'Other entries', 'Launches', 'The other setups next to the buy point, as on the Watchlist: coil (its buy), inside day (2+ days inside a mother day whatever their bodies, shown when there is no coil), flag trendline, pullback tight day, level, bigger base, flat top, each with its price. A display only: nothing alerts on it. As a filter: has "coil"', ['other'], (s) => cTxt(otherOf(s) || null)],
     ['coil_away', 'Away (coil buy)', 'Launches', 'How far the coil\'s buy is over the price (coil, coiled)', ['coil_away'], (s) => { const k = COILK(s), v = k ? vsPct(k.buy, pxOf(s)) : null; return cNum(v, p1(v, true)); }],
     ['w_list', 'Watchlist list', 'Watchlist', 'Which Watchlist lists it is on', [], (s) => { const w = WK(s); return cTxt(w ? w.lists.join(', ') : null); }],
     ['w_section', 'Watchlist section', 'Watchlist', 'Its section on the Watchlist (3-SETUPS: Triggered today / Ready / Setting up)', [], (s) => { const w = WK(s); return cTxt(w && w.row ? w.row.section || null : null); }],

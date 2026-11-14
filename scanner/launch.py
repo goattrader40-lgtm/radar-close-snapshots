@@ -2112,6 +2112,9 @@ def follow(a, i0, i, pick=False):
         # A display field only
         other_entries={k: v for k, v in dict(
             flag_trendline=fnum(r.tlLive), coil=fnum(r.early),
+            # "inside day" (msf.inside_days: 2+ days inside a mother day whatever their bodies, over the 200 SMA), only
+            # when there is no coil: the coil is the stronger read (the user, Nov 14 2026)
+            inside_day=(msf.inside_days(st.h, st.l, i)[0] if r.early != r.early and st.c[i] > st.sma200[i] else None),
             pullback_tight_day=fnum(r.hlTrig) if not r.hlDone else None,
             level=fnum(r.cLvTrig), bigger_base=fnum(r.cBigBuy), flat_top=fnum(r.cFTBuy)).items() if v is not None},
         # the day of the base: sessions since the launch or the leg's breakout (ANF: Aug 26 = day 0, Sep 10 day 10,
