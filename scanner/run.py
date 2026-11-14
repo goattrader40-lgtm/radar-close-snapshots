@@ -127,6 +127,20 @@ def step(state, d, stocks, cfg, cal, log):
         lists[name].pop(sym, None)
         log.append(dict(date=d, list=name, sym=sym, action="removed", why=why))
 
+    # 1-UPDAY rows from before Nov 14 2026 carry the low of their LATEST up day: once, put back the low of the day they
+    # came on the list (the last "added" in the log; rows without one, or without that bar, keep what they have)
+    came = {}
+    for x in log:
+        if x["list"] == "1-UPDAY":
+            came[x["sym"]] = x["date"] if x["action"] == "added" else None
+    for sym, e in lists["1-UPDAY"].items():
+        st = today.get(sym)
+        if "first_day" not in e and st is not None:
+            d0 = came.get(sym) if came.get(sym) in st.pos else None
+            e["first_day"] = d0 or e.get("added")
+            if d0:
+                e["low"] = round(float(st.l[st.pos[d0]]), 4)
+
     # 1) deletes
     nb = L["delete_after_closes_below_ema50"]
     for name in LISTS:
@@ -171,7 +185,12 @@ def step(state, d, stocks, cfg, cal, log):
             lists["1-EP/GAP"][sym].update(added=d, promoted=False)   # a repeat gap moves it to today's section
         elif "HOTTEST STOCKS" in h:
             chg = round(100 * (st.c[i] / st.c[i - 1] - 1), 1)
-            add("1-UPDAY", sym, dict(section=d, low=round(float(st.l[i]), 4), why=f"+{chg}%, rel vol {st.relvol[i]:.1f}"))
+            # the line it must hold = the low of the FIRST day it came on the list: a later up day moves it to today's
+            # section and restarts the 15 days, but no longer raises the line (the user, Nov 14 2026: "it should have
+            # counted the low of 1st day it got into our table"; before: up 6%, up 5%, then a close under the 2nd day's
+            # low took it off)
+            first = sym not in lists["1-UPDAY"]
+            add("1-UPDAY", sym, dict(section=d, why=f"+{chg}%, rel vol {st.relvol[i]:.1f}", **(dict(low=round(float(st.l[i]), 4), first_day=d) if first else {})))
             lists["1-UPDAY"][sym].update(added=d, promoted=False)
         if "50 EMA FIRST CLOSE" in h and not chased(st, i) and sym not in lists["2-POOL"]:
             add("2-POOL", sym, dict(section="50 EMA reclaim", why="first close back above the 50 EMA"))

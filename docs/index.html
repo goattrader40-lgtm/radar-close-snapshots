@@ -3091,7 +3091,7 @@ defCalc('industry_perf', {
       '1-EP/GAP': ['a gap up of more than ' + X['EP-GAPUP-BREAKOUT'].gap_pct + '% at the open with relative volume ' + X['EP-GAPUP-BREAKOUT'].rel_vol + '× or more. No 200 SMA rule. Section = the gap day (a new gap moves it to the newer section).',
         nb + ' closes in a row below the 50 EMA' + (Ls.delete_below_gap_low ? ', a close below the gap day\'s low' : '') + ', or ' + nd + ' trading days without reaching 3-SETUPS.'],
       '1-UPDAY': ['up ' + X['HOTTEST STOCKS'].chg_pct + '% or more on the day with relative volume ' + X['HOTTEST STOCKS'].rel_vol + '× or more. No 200 SMA rule. Section = the up day.',
-        nb + ' closes in a row below the 50 EMA' + (Ls.delete_below_upday_low ? ', a close below the up day\'s low' : '') + ', or ' + nd + ' trading days without reaching 3-SETUPS.'],
+        nb + ' closes in a row below the 50 EMA' + (Ls.delete_below_upday_low ? ', a close below the low of the day it came on the list (a later up day moves it to that day\'s section and restarts the ' + nd + ' days, but doesn\'t raise that low)' : '') + ', or ' + nd + ' trading days without reaching 3-SETUPS.'],
       '2-POOL': ['a first close back above the 50 EMA after ' + X['50 EMA FIRST CLOSE'].closes_below_before + '+ closes below it (section "50 EMA reclaim"), or, refreshed every ' + day +
         ', the momentum leaders: up ' + X['MOMENTUM-1W'].perf_pct + '%+ in a week, ' + X['MOMENTUM-1M'].perf_pct + '%+ in a month, ' + X['MOMENTUM-3M'].perf_pct + '%+ in 3 months or ' +
         M6.perf_pct + '%+ in 6 months' + (M6.above_sma200 ? ' (that one also above the 200 SMA' + (M6.min_pct_above_52w_low ? ' and ' + M6.min_pct_above_52w_low + '%+ over its 52-week low' : '') + ')' : '') + ' (section "Momentum").',
