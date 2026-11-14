@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - name: Only a TREND removal? (the TREND list is the portal's own; nothing to rebuild)
+      - name: Only a TREND or 1-EP/GAP / 1-UPDAY removal? (nothing to rebuild)
         id: gate
         run: |
           python3 - <<'PY'
@@ -35,7 +35,8 @@ jobs:
               old = subprocess.run(["git", "show", "HEAD~1:setups/picks.json"], capture_output=True, text=True)
               try:
                   a, b = json.loads(old.stdout), json.load(open("setups/picks.json"))
-                  a.pop("removed_trend", None); b.pop("removed_trend", None)
+                  for k in ("removed_trend", "removed_lists"):   # removed_lists: the x on 1-EP/GAP / 1-UPDAY (the evening scan reads it)
+                      a.pop(k, None); b.pop(k, None)
                   go = a != b
               except Exception:
                   go = True
