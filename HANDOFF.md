@@ -294,6 +294,23 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   over its 50 EMA leaves on day 15 on main, stays with the change; the 1-UPDAY stock still leaves on day 15. Why (the list's
   log since Oct 5): 71 added, 17 removed, only 3 by the 15 days (RXO, XP, BRZE: nothing lost), 14 by the 50 EMA; an EP
   stock with ADR 3.5-4% could never reach 3-SETUPS (ADR 4%+) and always expired. Takes effect at the Mon Nov 16 evening scan.
+- **LIVE (the user's "3#task go live", Sat Nov 14 2026 ~1:40 PM ET, same branch, commits 42a536b + 6789ee6, merge bdbe3b5):
+  Other entries as a column on every list table.** The user: "i need you add other entries as a column in all watchlist
+  tabs" (they could not find the coil / Other entries on Launches, nor on the phone). (1) scanner/launch.py follow(): every
+  Launches / laggard / 50 EMA undercut row carries `other_entries` (the Watchlist's `entries`: flag_trendline, coil,
+  pullback_tight_day, level, bigger_base, flat_top; breakout left out). (2) docs/index.html: catalog column and + Filter
+  "Other entries" (`otherOf`: the Launches row's other_entries, else the Watchlist row's entries, else its coil; text
+  filter: has "coil"); AUTO_X: the Launches, 50 EMA undercut and laggards tables get it once by itself, after Away (LAY._auto
+  marks; the x in the column list takes it off for good; "Reset this table" brings it back); the Watchlist's Other entries
+  no longer has class c2 (it was hidden under 560 px). Display only. Tested: `--regress` "every agreed example reads the
+  same"; the page on desktop / phone, fresh and with a saved layout, all 5 Watchlist lists, no page errors. Launches rebuilt
+  (picks.yml, 1:42 PM ET, the Nov 13 close): 225 rows carry other_entries, 49 non-empty (TMDX coil 96.45 + level 97.56,
+  ELAN coil 26.91, ZM flat top 100.65). Rules workbook: one row.
+- **Answered Nov 14, no change: AXGN Nov 10 2026 was not a coil for the code** (bars fetched with radar-tools `long`: the
+  175 saved symbols + AXGN). Nov 5 wide day (51.85 / 47.57); Nov 6 inside it but its body 68% of the range (max 50%) -> it
+  became the new mother day; Nov 9 high over Nov 6's; Nov 10 low 49.23 under Nov 9's 49.48: inCnt 0. By eye Nov 6, 9, 10 sit
+  inside the Nov 5 bar (closes 50.02, 50.64, 50.89), then +15.2% Nov 11. Offered, no go: keep the wide mother day while
+  later days stay inside it. Also seen: no Watchlist scan was saved on Nov 10 (setups commits go Nov 9 -> Nov 11).
 - **Open, the user to decide (asked Nov 14: "what can be done so this kind of stocks doesnt stay on that list", VIR)**: VIR
   gapped Nov 9 2026 (+7.7%, 4.2x, close 13.65, gap-day low 13.11, pre-gap close 12.21), closed 12.12 on Nov 12 (the gap
   erased) and 9.96 on Nov 13 (-17.8%, ~9x, 10.6% under the 50 EMA 11.14); still on 1-EP/GAP (1 close under the 50 EMA).
