@@ -287,6 +287,20 @@ climax tops; dying trends; the walk through the live Launches list of Nov 5-9), 
   restores the day-1 low. No `--regress` (launch.py untouched), no 2-year check. scanner.yml was NOT re-run (Saturday: no new
   session to process). **First check Mon Nov 16 after the evening scan**: scanner/state.json 1-UPDAY rows have `first_day`;
   the 43 rows' `low` went down to their first day's; the removals "closed below the up-day low" quote the first day's low.
+- **LIVE (the user's "task1 # go live", Sat Nov 14 2026 ~2 PM ET, same branch, commit e797659): 1-EP/GAP has no 15-day limit.**
+  The user: "lets take that 15 day clock, we dont need it there". scanner/run.py step: "15 trading days with no setup" now
+  removes from 1-UPDAY only; an EP gap stays until 2 closes in a row under the 50 EMA (`delete_below_gap_low` is still false).
+  The portal's Watchlist rule text and the rules workbook (1-EP/GAP row) follow. Tested with made-up bars: a gap stock quiet
+  over its 50 EMA leaves on day 15 on main, stays with the change; the 1-UPDAY stock still leaves on day 15. Why (the list's
+  log since Oct 5): 71 added, 17 removed, only 3 by the 15 days (RXO, XP, BRZE: nothing lost), 14 by the 50 EMA; an EP
+  stock with ADR 3.5-4% could never reach 3-SETUPS (ADR 4%+) and always expired. Takes effect at the Mon Nov 16 evening scan.
+- **Open, the user to decide (asked Nov 14: "what can be done so this kind of stocks doesnt stay on that list", VIR)**: VIR
+  gapped Nov 9 2026 (+7.7%, 4.2x, close 13.65, gap-day low 13.11, pre-gap close 12.21), closed 12.12 on Nov 12 (the gap
+  erased) and 9.96 on Nov 13 (-17.8%, ~9x, 10.6% under the 50 EMA 11.14); still on 1-EP/GAP (1 close under the 50 EMA).
+  Offered: A. a close under the gap day's low (the existing switch; would remove 8 of 54 today incl. shallow retests TREX,
+  ICLR, SMG); B. a close under the pre-gap close = the gap fully erased (VIR and NXT of the 30 names with long bars; TREX, SMG
+  stay): RECOMMENDED; C. one close 1 ADR+ under the 50 EMA. Not built. Also noted, no go: a returning stock keeps its EP tag
+  (EXTR, TLN came back through 2-POOL without it).
 - **Answered Nov 14, no change**: the coil column: on Launches it is the optional "Coil buy" (⚙ Columns, type coil), not shown
   by default and not named "Other entries" (the user could not find it; offered: a standing Coil buy column on Launches: no
   go); the Watchlist's "Other entries" (and Pattern, Rel vol, Added, Themes) are hidden on a phone held upright (class c2,
