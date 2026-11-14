@@ -2955,8 +2955,9 @@ defCalc('industry_perf', {
       if (!(opt && opt.keepPick)) { if (on) doc.picks[sym] = { added: (opt && opt.added) || nyIso(), from: (opt && opt.from) || 'Watchlist ' + S.wl }; else delete doc.picks[sym]; }
       if (opt && opt.remove) { doc.removed = doc.removed || {}; doc.removed[sym] = { launch: opt.remove, at: nyIso() }; }
       if (opt && opt.removeSetup) { doc.removed_setups = doc.removed_setups || {}; doc.removed_setups[sym] = { added: opt.removeSetup, at: nyIso() }; }
+      if (opt && opt.removeList) { doc.removed_lists = doc.removed_lists || {}; const rl = (doc.removed_lists[opt.removeList.list] = doc.removed_lists[opt.removeList.list] || {}); rl[sym] = { added: opt.removeList.added, at: nyIso() }; }
       if (opt && opt.removeTrend !== undefined) { doc.removed_trend = doc.removed_trend || {}; doc.removed_trend[sym] = { added: opt.removeTrend, at: nyIso() }; }
-      const body = { message: (opt && opt.removeTrend !== undefined ? 'Remove ' + sym + ' from TREND' : opt && opt.removeSetup ? 'Remove ' + sym + ' from 3-SETUPS' : opt && opt.remove ? 'Remove ' + sym + ' from Launches' : (on ? 'Follow ' : 'Stop following ') + sym) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
+      const body = { message: (opt && opt.removeList ? 'Remove ' + sym + ' from ' + opt.removeList.list : opt && opt.removeTrend !== undefined ? 'Remove ' + sym + ' from TREND' : opt && opt.removeSetup ? 'Remove ' + sym + ' from 3-SETUPS' : opt && opt.remove ? 'Remove ' + sym + ' from Launches' : (on ? 'Follow ' : 'Stop following ') + sym) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
       if (sha) body.sha = sha;
       const p = await fetch(url, { method: 'PUT', headers: hd, body: JSON.stringify(body) });
       if (p.ok) return true;
@@ -2990,6 +2991,29 @@ defCalc('industry_perf', {
       if (await savePick(r.symbol, pickedNow().has(r.symbol), { removeSetup: r.added, keepPick: true })) {
         const g = s3Gone(); g[r.symbol] = r.added; try { localStorage.setItem(S3GONE, JSON.stringify(g)); } catch (e) { /* private window */ }
         toast(r.symbol + ' removed from 3-SETUPS: it comes back only when it comes on 1-EP/GAP, 1-UPDAY or 2-POOL again.');
+      }
+    } catch (e) { toast('Not saved: ' + e.message + '.'); }
+    draw();
+  };
+  /* ✕ on 1-EP/GAP and 1-UPDAY (the user, Nov 14 2026: "add x button next to tickers for ep/gap and upday so if i see some
+     wrong i can delete it myself"): saved to setups/picks.json "removed_lists" {list: {symbol: {added, at}}}; hidden here
+     right away on every device, and the evening scan (scanner/run.py) takes the row off the list. A new gap / up day on a
+     later day puts the stock back (its added day is later) */
+  const WLGONE = 'radar-wl-removed';
+  const wlGone = (list) => {
+    const out = {};
+    Object.entries(((PICKS && PICKS.removed_lists) || {})[list] || {}).forEach(([s, v]) => { if (v && v.added !== undefined) out[s] = v.added; });
+    try { Object.assign(out, (JSON.parse(localStorage.getItem(WLGONE) || '{}') || {})[list] || {}); } catch (e) { /* private window */ }
+    return out;
+  };
+  const removeListed = async (r, btn) => {
+    const list = S.wl;
+    btn.disabled = true; btn.textContent = 'Removing…';
+    try {
+      if (await savePick(r.symbol, pickedNow().has(r.symbol), { removeList: { list, added: r.added || '' }, keepPick: true })) {
+        let g = {}; try { g = JSON.parse(localStorage.getItem(WLGONE) || '{}') || {}; } catch (e) { /* private window */ }
+        (g[list] = g[list] || {})[r.symbol] = r.added || ''; try { localStorage.setItem(WLGONE, JSON.stringify(g)); } catch (e) { /* private window */ }
+        toast(r.symbol + ' removed from ' + list + ' on every device: it comes back only on a new ' + (list === '1-EP/GAP' ? 'gap' : 'up day') + ' on a later day. Its other lists keep it.');
       }
     } catch (e) { toast('Not saved: ' + e.message + '.'); }
     draw();
@@ -3064,8 +3088,8 @@ defCalc('industry_perf', {
   const wlRows = (symMap) => {
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
     if (!doc || !doc.lists) return [];
-    const gone3 = S.wl === '3-SETUPS' ? s3Gone() : {};
-    return (S.wl === 'TREND' ? trendSrc(doc) : (doc.lists[S.wl] || [])).filter((r) => !(gone3[r.symbol] && (r.added || '') <= gone3[r.symbol])).map((r, i) => {
+    const gone3 = S.wl === '3-SETUPS' ? s3Gone() : {}, goneL = S.wl.startsWith('1-') ? wlGone(S.wl) : {};
+    return (S.wl === 'TREND' ? trendSrc(doc) : (doc.lists[S.wl] || [])).filter((r) => !(gone3[r.symbol] && (r.added || '') <= gone3[r.symbol]) && !(goneL[r.symbol] !== undefined && (r.added || '') <= goneL[r.symbol])).map((r, i) => {
       const m = symMap.get(r.symbol);
       const price = m && num(m.price) !== null ? num(m.price) : num(r.close);
       const ent = r.entries || {};
@@ -3200,6 +3224,12 @@ defCalc('industry_perf', {
         rmT.setAttribute('aria-label', rmT.title);
         rmT.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from TREND?')) removeTrend(r, rmT); });
         key.append(rmT);
+      }
+      if (S.wl === '1-EP/GAP' || S.wl === '1-UPDAY') {
+        const rmL = h('button', 'tgr-lite tgr-follow', '✕'); rmL.type = 'button'; rmL.title = 'Remove ' + r.symbol + ' from ' + S.wl + ' (it comes back only on a new ' + (S.wl === '1-EP/GAP' ? 'gap' : 'up day') + ' on a later day; its other lists keep it)';
+        rmL.setAttribute('aria-label', rmL.title);
+        rmL.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from ' + S.wl + '?')) removeListed(r, rmL); });
+        key.append(rmL);
       }
       if (S.wl === '3-SETUPS') {
         const rm = h('button', 'tgr-lite tgr-follow', '✕'); rm.type = 'button'; rm.title = 'Remove ' + r.symbol + ' from 3-SETUPS (it comes back only when it comes on a feeder list again)';

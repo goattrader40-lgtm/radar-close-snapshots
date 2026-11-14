@@ -141,6 +141,15 @@ def step(state, d, stocks, cfg, cal, log):
             if d0:
                 e["low"] = round(float(st.l[st.pos[d0]]), 4)
 
+    # your x on 1-EP/GAP and 1-UPDAY (the user, Nov 14 2026: "add x button next to tickers for ep/gap and upday so if i see
+    # some wrong i can delete it myself"): setups/picks.json "removed_lists" {list: {symbol: {added}}}: the row you saw
+    # (its added day) leaves; a new gap / up day on a later day puts the stock back
+    for name, gone in (state.get("_removed_lists") or {}).items():
+        for sym, g in (gone or {}).items():
+            e = lists.get(name, {}).get(sym) if name in ("1-EP/GAP", "1-UPDAY") else None
+            if e and (e.get("added") or "") <= ((g or {}).get("added") or ""):
+                remove(name, sym, "removed by you (the x on the Watchlist)")
+
     # 1) deletes
     nb = L["delete_after_closes_below_ema50"]
     for name in LISTS:
@@ -407,6 +416,10 @@ def main():
         state["_prev3"] = {r["symbol"] for r in json.load(open(os.path.join(OUT, "latest.json")))["lists"].get("3-SETUPS", [])}
     except Exception:
         state["_prev3"] = set()
+    try:                                                # your x on 1-EP/GAP / 1-UPDAY (the portal saves it in picks.json)
+        state["_removed_lists"] = json.load(open(os.path.join(OUT, "picks.json"))).get("removed_lists") or {}
+    except Exception:
+        state["_removed_lists"] = {}
     for d in days:
         step(state, d, stocks, cfg, cal, log)
         print(d, {n_: len(state["lists"][n_]) for n_ in LISTS})
@@ -417,6 +430,7 @@ def main():
     state["log"] = [x for x in log if x["date"] >= cutoff]
     state["_cal"] = cal
     state.pop("_prev3", None)
+    state.pop("_removed_lists", None)
     write_outputs(state, stocks, cfg, P, state["log"], last)
     state.pop("_cal")
     with open(STATE, "w") as f:
