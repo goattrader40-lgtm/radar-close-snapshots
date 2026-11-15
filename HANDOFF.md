@@ -198,6 +198,23 @@ the four 1-list rule changes (they were tested on made-up bars and on the ~175 l
   the start day's low and the 21 EMA), not the third condition: of the 31 extra stocks it removes, 23 were not runners and
   8 were. No answer yet: the rule stays as it is until they say otherwise. Offered: an alert for the GLOB type (started,
   dipped holding its gap, back over the start day's low and the 21 EMA: 8 of 15 ran 10%+); the theme check.
+- **Open, found Nov 15 on TOST (Fri Nov 13 2026), the user: "couple flaws", "information is messed up": explained, nothing
+  changed, each needs a go.** TOST (launch Nov 4, C; top 36.01 Nov 4, lower highs 35.99 35.56 35.20 34.67 34.37 34.37; Nov 13
+  low 33.40, close 34.68 +3.5% on 0.8x) broke its flag line, held its breakout level 33.53 and reclaimed the 10 / 21 EMA.
+  (1) **The bull flag was not read**: flag_at draws the line from the top keeping every high under it; Nov 5's 35.99 next
+  to the 36.01 top makes it almost flat (35.84 on Nov 13); the user's line along the lower highs is ~34.05. The other flag
+  tests pass (1.8 ADRs deep, a 6 ADR pole, 5 lower highs); flag_shape also returned None (not looked into further). A main
+  pattern: explain, replay the agreed flags, ask about the 2-year check. (2) **The retest was not read on Nov 13**: the
+  engine counted it Nov 10 (low 33.57) and Nov 11 (33.34) and allows another only on a lower low; Nov 12 closed 33.52, a
+  cent under the level, Nov 13 reclaimed it: the alerts (their own rules) sent "RETEST HOLDING into the close" at 3:45 PM,
+  the Launches row showed no trigger and "Holding after the launch attempt", so no 3-SETUPS "Triggered today" (it is on
+  TREND, Up 1d, 1-UPDAY and 2-POOL). (3) **What the alerts fired is not shown on the Launches row.** (4) **Days 21H / the
+  21-day closing high can be a day off**: radar/pipeline.py rebuilds closes from each day's % change, a drift under 1%:
+  TOST reads 6d (Nov 5, 35.12) where the bars say 7d (Nov 4, 35.37); 3 of the 175 long-bar stocks have the wrong day (TOST,
+  TRU 4d vs 16d, VFC), 12 have the 21-day closing high off by 0.5%+ (it also feeds the EP alert's 21-day-closing-high
+  rule). (5) The Watchlist rows of the 1-lists read the MSF engine (TOST: Base forming, buy 37.20), the Launches row the
+  launch engine (Base top 36.02): two reads of one stock. Suggested order: the flag line, the retest after a close under
+  the level, the alerts on the row; then real closes for the day counts.
 - **Open, the user asked for my suggestion (Nov 15): the logic of what takes a stock off the Start days table.** Numbers
   (421 start days on the ~175 long-bar stocks, ~2 years, the 30% rule on; "ran" = 15%+ within 20 sessions; base rate 42%;
   the rule only matters inside the table's 5 sessions): the old rule (close under the pre-start close) takes 21% off, the
