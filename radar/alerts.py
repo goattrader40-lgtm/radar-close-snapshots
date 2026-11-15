@@ -546,7 +546,7 @@ def find(live, doc, now=None):
 def find_start(live, doc, now, sent=()):
     """the START DAY as it happens (the user, Nov 13 2026: "do alerts go live"; RKLB Nov 9 2026: "clear downtrending stock, november
     9th was a start point upward"): a stock that closed under its 21 or 50 EMA after a downtrend (launch.json start_watch, from the
-    last close) trades over its 21 EMA, up 1 ADR+ on a volume pace of 1x+, over the high of any violent red candle of the last 5
+    last close) trades over its 21 EMA, up 1 ADR+ (or 4%+ with 0.8 ADR+) on a volume pace of 1x+, over the high of any violent red candle of the last 5
     sessions, in the top half of today's range and over its 5-minute opening range high (the user's entry; the stop: today's low).
     Any liquid stock, on the list or not. From 9:35. Tags: launch size under the 200 SMA; after a reset (AMD Sep 8 2026)"""
     out = []
@@ -559,7 +559,9 @@ def find_start(live, doc, now, sent=()):
             continue
         price, chg, rv, op, hi = q[0], q[1], q[4], q[5], q[7]
         e21, e50, adr, red, u200, rs_n, rs_lv, first, tvs = w[:9]
-        if not (price > e21 and chg >= R.get("start_adr", 1) * adr and rv >= R.get("start_rv", 1) and price > (red or 0)):
+        # up 1 ADR+, or up 4%+ with 0.8 ADR+ (the user, Nov 15 2026: ZETA Nov 9, TTEK Oct 15; the rules come with launch.json)
+        move = chg >= R.get("start_adr", 1) * adr or ("start_pct" in R and chg >= max(R["start_pct"], R.get("start_pct_adr", 0.8) * adr))
+        if not (price > e21 and move and rv >= R.get("start_rv", 1) and price > (red or 0)):
             continue
         orh, low = opening_range_high(sym), chart_low_today(sym)
         if not orh or not low or not price > orh or (hi and price < (hi + low) / 2):

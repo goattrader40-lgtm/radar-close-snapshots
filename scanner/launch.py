@@ -164,10 +164,10 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # 9 2026: "its range stock... still in box... maybe if it breakout of this range then its a launch day"); it also
          # relabels NBIS Aug 12 2026 an attempt. OPEN: the no-gap first day takes ATRC Jun 26 2026, so the agreed Jul 24 reads
          # as its follow-through
-         # the start day, shown next to the launch and in its own list (not a launch rule): up start_adr ADRs on start_rv x volume
+         # the start day, shown next to the launch and in its own list (not a launch rule): up start_adr ADRs, or start_pct % and start_pct_adr ADRs, on start_rv x volume
          # through the 21 & 50 EMA, or a start_gap % gap opening over both; start_look = how far back a launch's trend start is
          # looked for; start_list_days = how long a start day stays on the Start days list
-         start_adr=1, start_rv=1, start_gap=5, start_look=40, start_list_days=5,
+         start_adr=1, start_pct=4, start_pct_adr=0.8, start_rv=1, start_gap=5, start_look=40, start_list_days=5,
          first_day=1, first_gap=5, first_rv=1.3, first_adr_nogap=1.8, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2,
          # the list ON / OFF read from the user's AMD 2026 charts (Nov 13 2026: "i can visually know when stock will go down"):
          # adr_look: the ADR minimum is tested on the highest 20-day ADR of the last 63 sessions, not on today's alone: the
@@ -369,6 +369,11 @@ class Arr:
         st = self.st
         return any(self.chg[d] <= -L["red_adr"] * (st.adr[d] if st.adr[d] > 0 else 5.0) and st.c[i] <= st.h[d] for d in range(max(1, i - L["red_look"]), i))
 
+    def start_move(self, i):
+        """the start day's move: up start_adr ADRs (1), or up start_pct % (4) that is also start_pct_adr ADRs (0.8)"""
+        adr = self.st.adr[i]
+        return bool(self.chg[i] >= L["start_adr"] * adr or self.chg[i] >= max(L["start_pct"], L["start_pct_adr"] * adr))
+
     def start_raw(self, i):
         """the start day's own tests, without "the first one" (Nov 13 2026: the close over the 21 EMA, the 50 EMA not needed; after
         a downtrend; not inside a violent red candle). A later such day is the confirmation, or the reset start (AMD Sep 8 2026)"""
@@ -385,7 +390,12 @@ class Arr:
                   # in any stock close to their 52 week low; it can be below the day before but to get alerted and to get to
                   # the start table it has to pass"): the start day's CLOSE 30%+ over the 52-week low (NU Nov 13 2026: 17.9%)
                   and c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100)
-                  and ((self.chg[i] >= L["start_adr"] * st.adr[i] and self.clpos[i] >= L["min_clpos"])
+                  # the move: up 1 ADR+, OR up 4%+ with 0.8 ADR+ (the user, Nov 15 2026: ZETA Nov 9 2026, +4.5% on 2.2x with an
+                  # ADR of 5.39% = 0.84 ADR, missed the 1 ADR alone; 4% and 0.8 ADR alone would have lost TTEK Oct 15 2026, +3.5%
+                  # with a 2.8% ADR, the user's "start is 15th october after downtrend 1st day start"; "yes lets do that"). On 175
+                  # stocks over 2 years: 1,319 start days (was 1,228), ran 20%+ 27% (26%), failed 32% (32%); every start of the
+                  # 1 ADR rule stays; a stock moving 8% a day still needs +6.4%)
+                  and ((self.start_move(i) and self.clpos[i] >= L["min_clpos"])
                        or (self.chg[i] >= L["gap_keep"] * self.gap[i] and self.gap[i] >= L["start_gap"] and st.o[i] > self.e21[i])))
         self._sr[i] = ok
         return ok
