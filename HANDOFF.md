@@ -189,6 +189,15 @@ the four 1-list rule changes (they were tested on made-up bars and on the ~175 l
   start_fields). Tested on desktop / phone with a stand-in for the save (x on all 28 rows, the row gone, a second browser
   hides it, the sort, no page errors); `--regress` same. Launches rebuilt (the Nov 13 close): 4 of the 28 start days closed
   over their 21D high (SONO +6.7%), 24 under (RKLB -13.7%, MOD -11.9%, AMD -8.7%). Rules workbook: one row.
+- **LIVE (the user's "go live", Sun Nov 15 2026 ~1:40 PM ET, commit d35d9ce): in the Columns box a click on a column marked
+  "added" takes it off again.** The user: "21 day closing high, i cant take it off from columns, weird" (the Start days
+  table): the green "added" chip only ever added; the x was only in the "In this table" list further down. The chip now
+  reads "added · click to remove" and calls delCol. Page-tested before the push on the merged page (desktop / phone, Start
+  days and Launches tables, both tables still fill, no page errors).
+- **The user's question "which option makes sense based on these numbers" (Nov 15): my answer: the LIVE fail rule** (under
+  the start day's low and the 21 EMA), not the third condition: of the 31 extra stocks it removes, 23 were not runners and
+  8 were. No answer yet: the rule stays as it is until they say otherwise. Offered: an alert for the GLOB type (started,
+  dipped holding its gap, back over the start day's low and the 21 EMA: 8 of 15 ran 10%+); the theme check.
 - **Open, the user asked for my suggestion (Nov 15): the logic of what takes a stock off the Start days table.** Numbers
   (421 start days on the ~175 long-bar stocks, ~2 years, the 30% rule on; "ran" = 15%+ within 20 sessions; base rate 42%;
   the rule only matters inside the table's 5 sessions): the old rule (close under the pre-start close) takes 21% off, the
