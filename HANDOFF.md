@@ -174,6 +174,33 @@ the four 1-list rule changes (they were tested on made-up bars and on the ~175 l
   TTEK, LUNR, LSCC, AMD, ZM, SONO). The table's note on the portal now says the 21 EMA (the 50 EMA = the confirmation).
   Seen in the same rebuild, NOT from this change: EMBJ (launch Nov 10, B) left Launches because Yahoo served 1 bar for it
   that day (a renamed ticker's history): it should come back when Yahoo serves the history again: to check.
+- **OUTAGE, my mistake (Sun Nov 15 2026, 11:43 AM - 12:57 PM ET, about 75 minutes): the portal's code did not load.** The
+  fail-rule go live (6bb992d) put "the start day's low" inside a single-quoted text string in docs/index.html: the
+  apostrophe ended the string, a syntax error, every tab empty. I had only run `--regress` for that change, not the page.
+  Found while testing the next change; fixed in 0c75a07 ("the low of the start day"). **Lesson for every session: any edit
+  of docs/index.html gets a page load test (Playwright, no page errors) before the push, even a one-line text change.**
+- **LIVE (the user's "task 3 and task 4 do it test it then go live", Sun Nov 15 2026 ~1:00 PM ET, merge dc9141f): the Start
+  days x and the column "Start day over 21D high".** (1) An x next to every ticker of the Start days table ("so any tickers
+  doesnt look to me manually i can delete from start list"): picks.json `removed_starts` {symbol: {date}}; hidden on every
+  device (sdGone / sdKept), left out of the TradingView file and of the search line; a later start day shows again;
+  picks.yml gate: no rebuild. (2) Column "Start day over 21D high" ("showing in column if it was closing above 21d highest
+  close"; first named "Over 21D high", the user: "needs to be for start day so column name needs to be different"): Yes /
+  No + % of the start day's close vs the highest close of the 21 sessions before it (launch.json `date_vs_hc21_pct`,
+  start_fields). Tested on desktop / phone with a stand-in for the save (x on all 28 rows, the row gone, a second browser
+  hides it, the sort, no page errors); `--regress` same. Launches rebuilt (the Nov 13 close): 4 of the 28 start days closed
+  over their 21D high (SONO +6.7%), 24 under (RKLB -13.7%, MOD -11.9%, AMD -8.7%). Rules workbook: one row.
+- **Open, the user asked for my suggestion (Nov 15): the logic of what takes a stock off the Start days table.** Numbers
+  (421 start days on the ~175 long-bar stocks, ~2 years, the 30% rule on; "ran" = 15%+ within 20 sessions; base rate 42%;
+  the rule only matters inside the table's 5 sessions): the old rule (close under the pre-start close) takes 21% off, the
+  LIVE rule (close under the start day's low and the 21 EMA) 28%, the user's tuned idea (those two AND under the pre-start
+  close) 21%; stocks kept ran 48-51%, stocks taken off ~20%, whatever the rule. The 31 "GLOB type" rows (under the start low
+  and the 21 EMA but holding the gap) ran 26%. The user's ideas checked on the 37 GLOB-type cases of the last 260 sessions:
+  a rising 21 EMA after the start: no difference; the dip staying clear of the pre-start day's BODY (by the lows): 4 of 5
+  were winners (AEHR, SMCI, PACS, RKLB) vs 4 of 31 when it went in, but it drops GLOB (low 34.60 vs 34.70) and APLD (+69%);
+  by closes it IS the third condition. 15 of the 37 bounced back while holding the gap, 8 ran 10%+ (APLD Apr 8 2026 +69%,
+  AEHR Jul 15 +49%, SMCI Jul 22 +48%, GLOB Oct 1 +36%, PACS Apr 8 +21%). GLOB bounced on its 5th session after the start,
+  the day the table drops it by age. The theme check (was the theme advancing) not done. My suggestion: see the chat of
+  Nov 15; the user to decide.
 - **LIVE (the user's "below low of start day and below 21 ema both has to be true, go live do it", Sun Nov 15 2026 ~11:45 AM
   ET, same branch, merge 6bb992d): the Start days table's fail rule.** A row leaves after 5 sessions ("getting old agreed")
   or sooner when the start FAILS: a close under the start day's LOW that is also under the 21 EMA, both together ("start
