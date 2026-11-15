@@ -2241,8 +2241,17 @@ def move_ended(a, last, i):
 
 def start_holds(a, k, i):
     """the move a start day (bar k) began is still on at bar i: no close under the close it started from, and not ended by the
-    50 EMA rule (move_ended)"""
+    50 EMA rule (move_ended). For the "start <date>" line under a launch (GLOB Oct 2-7 2026: "testing gap holding up")"""
     return bool(i > k and (a.st.c[k + 1:i + 1] >= a.st.c[k - 1]).all() and not move_ended(a, k, i + 1))
+
+
+def start_listed(a, k, i):
+    """a start day (bar k) still belongs in the Start days table at bar i. It FAILS, and leaves the table, on a close under
+    the start day's LOW that is also under the 21 EMA, both together (the user, Nov 15 2026: "start failing should mean
+    closing below the start day, very simple approach, thats the whole point, but that has to be below 21 ema as well";
+    before: a close under the close of the day before the start day), or when the 50 EMA rule ends the move"""
+    c, lo = a.st.c, a.st.l[k]
+    return bool(i > k and not any(c[j] < lo and c[j] < a.e21[j] for j in range(k + 1, i + 1)) and not move_ended(a, k, i + 1))
 
 
 def trend_start(a, i0):
@@ -2861,7 +2870,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         i = len(st.dates) - 1
         if st.dates[i] != today:
             continue
-        k = next((m for m in range(i, max(a.start, i - L["start_list_days"]), -1) if a.start_day(m) and (m == i or start_holds(a, m, i))), None)
+        k = next((m for m in range(i, max(a.start, i - L["start_list_days"]), -1) if a.start_day(m) and (m == i or start_listed(a, m, i))), None)
         if k is None:
             continue
         gs_, gn_ = best_group(s, T, groups, GS)
