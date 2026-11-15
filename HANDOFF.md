@@ -174,10 +174,17 @@ the four 1-list rule changes (they were tested on made-up bars and on the ~175 l
   TTEK, LUNR, LSCC, AMD, ZM, SONO). The table's note on the portal now says the 21 EMA (the 50 EMA = the confirmation).
   Seen in the same rebuild, NOT from this change: EMBJ (launch Nov 10, B) left Launches because Yahoo served 1 bar for it
   that day (a renamed ticker's history): it should come back when Yahoo serves the history again: to check.
-- **Open, explained Nov 15, no go yet: when a start day FAILS.** Today (start_holds): off the Start days table on a close
-  under the close of the day BEFORE the start day, or after 5 sessions (agreed: "getting old agreed"). The user: "start
+- **LIVE (the user's "below low of start day and below 21 ema both has to be true, go live do it", Sun Nov 15 2026 ~11:45 AM
+  ET, same branch, merge 6bb992d): the Start days table's fail rule.** A row leaves after 5 sessions ("getting old agreed")
+  or sooner when the start FAILS: a close under the start day's LOW that is also under the 21 EMA, both together ("start
   failing should mean closing below the start day, very simple approach, thats the whole point, but that has to be below 21
-  ema as well". My reading, to confirm: a close under the start day's LOW and under the 21 EMA.
+  ema as well"); before: a close under the close of the day before the start day. scanner/launch.py `start_listed` (the
+  table only). **My choice, told the user: the "start <date>" line under a launch keeps the older rule (`start_holds`)**,
+  because with the new one GLOB's agreed start Oct 1 2026 (launch Oct 22; Oct 2-7 "testing gap holding up") would fail on Oct
+  2 (35.10 under its start low 36.82 and its 21 EMA 36.22): ask again if they want one rule for both. `--regress` "every
+  agreed example reads the same". Long-bar stocks, last 75 sessions: 599 listed stock-days -> 577. Launches rebuilt (the Nov
+  13 close): Start days 32 -> 28, out: CRWV (start Nov 11 at 60.77, now 53.13), COHR (Nov 11, 234.51 -> 218.15), CNH, PLAB
+  (Nov 9). The portal note and the rules workbook follow. EMBJ still off Launches (Yahoo's 1 bar): to check Monday.
 - **LIVE (the user's "go live", Sat Nov 14 2026 ~4:40 PM ET, same branch, commits a378575 + 3781a0c): two page changes on the
   Launches tab.** (1) The ticker search shows each table's match under the box: the user: "you didnt do that search ticker
   correctly, if i search ticker, it has to pull that ticker from all tables under launch tab" (the tables were filtered, but
