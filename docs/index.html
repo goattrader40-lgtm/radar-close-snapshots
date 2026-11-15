@@ -5571,9 +5571,11 @@ defCalc('industry_perf', {
         list.forEach((c) => {
           if (!q && c[2] !== grp) { grp = c[2]; res.append(h('div', 'col-grp', grp)); }
           const added = have.has('x:' + c[0]), here = !added && c[4].some((a) => def.includes(a) && !L.off.includes(a));
-          const b = h('button', 'col-item' + (added ? ' on' : ''), c[1]); b.type = 'button'; b.title = c[3];
-          b.append(h('span', 'tgr-lbl', added ? ' added' : here ? ' (already in this table)' : (q ? ' · ' + c[2] : '')));
-          b.addEventListener('click', (e) => { e.stopPropagation(); const L2 = layOf(t); if (!L2.order.includes('x:' + c[0])) { L2.order.splice(1, 0, 'x:' + c[0]); laySet(t, L2); } re(); });
+          const b = h('button', 'col-item' + (added ? ' on' : ''), c[1]); b.type = 'button'; b.title = (added ? 'Click to take this column off the table. ' : '') + c[3];
+          b.append(h('span', 'tgr-lbl', added ? ' added · click to remove' : here ? ' (already in this table)' : (q ? ' · ' + c[2] : '')));
+          /* a click adds the column; a click on one marked "added" takes it off again (the user, Nov 15 2026: "i cant take it
+             off from columns, weird": the green "added" chip did nothing) */
+          b.addEventListener('click', (e) => { e.stopPropagation(); const L2 = layOf(t); if (!L2.order.includes('x:' + c[0])) { L2.order.splice(1, 0, 'x:' + c[0]); laySet(t, L2); } else delCol(t, 'x:' + c[0]); re(); });
           res.append(b);
         });
         if (!list.length) res.append(h('div', 'tgr-lbl', 'No column matches "' + inp.value + '".'));
