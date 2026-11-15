@@ -216,6 +216,7 @@ jobs:
             for id in $(gh run list --workflow radar-day.yml --status in_progress --json databaseId -q '.[].databaseId'); do gh run cancel $id; done
             sleep 20; gh workflow run radar-day.yml --ref main -f mode=day
           fi
+          case "$CMD" in listdays\ *) set -- ${CMD#listdays }; python3 tools/fastmove_fetch_days.py /tmp/fd "$1" "$2" "$3" "$4" && python3 radar/publish.py --branch fastmove-data "fastmove list days $4" /tmp/fd/*;; esac   # the Watchlist lists' stock-days (tools/fastmove_days.json.gz): "listdays days|hours START END TAG"
           case "$CMD" in widebars\ *) set -- ${CMD#widebars }; python3 tools/fastmove_fetch_wide.py /tmp/fw "$1" "$2" "$3" && python3 radar/publish.py --branch fastmove-data "fastmove wide bars $3" /tmp/fw/*;; esac   # the wide stock list (tools/fastmove_universe.txt): "widebars START END TAG" -> branch fastmove-data
           case "$CMD" in bars\ *) set -- ${CMD#bars }; python3 tools/fastmove_fetch_bars.py /tmp/fm "$1" "$2" "$3" "$4" && python3 radar/publish.py --branch fastmove-data "fastmove bars $3" /tmp/fm/*;; esac   # 1-minute bars for the fast-move backtest (not the portal): "bars START END TAG SYM,SYM,..." -> branch fastmove-data
           if [ "${{ inputs.cmd }}" = "alpaca" ]; then python3 radar/probe_alpaca.py /tmp/probe_alpaca.json AAPL,NVDA,CRWD,CIEN,TSLA,BE,AAOI,MU,AMD,PLTR && python3 radar/publish.py "alpaca probe" /tmp/probe_alpaca.json; fi
