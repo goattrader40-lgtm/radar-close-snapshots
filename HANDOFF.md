@@ -158,6 +158,26 @@ the four 1-list rule changes (they were tested on made-up bars and on the ~175 l
   lists / not on a list. Tested on desktop / phone (RKLB, AXGN, a partial, no match, cleared), no page errors. Rules
   workbook: one row. The user followed RKLB that afternoon (a pick, Launches row grade You, 2:52 PM ET); confirmed to them:
   with the first-day low 54.96 RKLB would still be on 1-UPDAY (Nov 13 close 61.53; its first close under the 50 EMA 62.36).
+- **LIVE (the user's "1#go live", Sun Nov 15 2026 ~11:20 AM ET, same branch, commit b99bcf2, merge 3548e91): a start day's
+  close must be 30%+ over the 52-week low.** The user: "in order stocks gets to start list it had to go above 30% above 52
+  week low ... its your flaw in design", "30% rule is the point, we are not interested in any stock close to their 52 week
+  low, stock can be below the day before but in order to get alerted and stocks gets to our starts list table it has to
+  pass that requirement", "we are not interested in dead bounces!!!!". Found on the START DAY alert's first live day (Fri Nov
+  13): 3 start days, 0 alerts: NU (+11.7%, over its ORH 12.39) blocked by the alerts' 30% gate (18.0% over 11.20) while the
+  table, built Nov 12 without that gate, showed it; MOD never traded over its ORH 146.50 (the day's high: by design); HROW
+  was not on the start watch. My first suggestion (exempt the alert) was the wrong way round. scanner/launch.py start_raw:
+  `c[i] >= low52 * 1.3`: the Start days table, the "start <date>" line under a launch, the reset start, the start watch's
+  "first". `--regress` "every agreed example reads the same". Launches rebuilt (picks.yml, the Nov 13 close): Start days 45
+  -> 32 (out: UBER 11.1%, HONA, AVGO Nov 10 14.6%, HROW, NU, CEG, NRG, AVAV, FN, FLR, MTZ, EQPT, TLN 29.8%); 25 Launches rows
+  and 3 50 EMA rows lost their "start" line (APP Nov 4, TMDX, SMG, LYFT, POOL, SPOT ...; FDS Jun 26 -> Jul 1). **AVGO Nov 10
+  2026 was a start day the user agreed on Nov 12: told them twice; they chose the rule** (the other agreed ones pass: RKLB,
+  TTEK, LUNR, LSCC, AMD, ZM, SONO). The table's note on the portal now says the 21 EMA (the 50 EMA = the confirmation).
+  Seen in the same rebuild, NOT from this change: EMBJ (launch Nov 10, B) left Launches because Yahoo served 1 bar for it
+  that day (a renamed ticker's history): it should come back when Yahoo serves the history again: to check.
+- **Open, explained Nov 15, no go yet: when a start day FAILS.** Today (start_holds): off the Start days table on a close
+  under the close of the day BEFORE the start day, or after 5 sessions (agreed: "getting old agreed"). The user: "start
+  failing should mean closing below the start day, very simple approach, thats the whole point, but that has to be below 21
+  ema as well". My reading, to confirm: a close under the start day's LOW and under the 21 EMA.
 - **LIVE (the user's "go live", Sat Nov 14 2026 ~4:40 PM ET, same branch, commits a378575 + 3781a0c): two page changes on the
   Launches tab.** (1) The ticker search shows each table's match under the box: the user: "you didnt do that search ticker
   correctly, if i search ticker, it has to pull that ticker from all tables under launch tab" (the tables were filtered, but
