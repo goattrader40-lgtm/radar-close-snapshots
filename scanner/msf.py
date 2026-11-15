@@ -1130,13 +1130,24 @@ def run_symbol(bars, bench_close, p):
 def inside_days(h, l, i, need=2, look=260):
     """The "inside day" entry (the user, Nov 14 2026, AXGN Nov 11-13 2026: "lets call this kind of days inside days, all
     coil rules apply"): a mother day, then `need`+ days in a row inside its high and low, WHATEVER their bodies (the coil
-    wants small bodies and starts again from a day that has a big one). Returns (buy = the last inside day's high,
-    stop = the mother day's low) at bar i, else (None, None). Plain Python: display only, the engine's coil is untouched."""
+    wants small bodies and starts again from a day that has a big one). The buy = the last inside day's high, the stop =
+    the mother day's low. ONCE the price trades over that buy the entry has triggered and is used up: nothing is shown
+    again until a new mother day (the user, Nov 15 2026, TOST: inside the Nov 4 2026 bar from Nov 5, the buy came down to
+    34.37 by Nov 12, Nov 13 ran through it to 35.23: "this was three days ago, its gone!!!!"; before, the Nov 13 day,
+    still inside the Nov 4 bar, re-armed it at its own high 35.23).
+    Returns (buy, stop, triggered) at bar i: buy / stop while armed, else None; triggered = the buy that today's high took
+    out, else None. Plain Python: display only, the engine's coil is untouched."""
     k0 = max(0, i - look)
-    mh, ml, n = h[k0], l[k0], 0
+    mh, ml, n, buy, spent, trig = h[k0], l[k0], 0, None, False, None
     for k in range(k0 + 1, i + 1):
         if h[k] <= mh and l[k] >= ml:
             n += 1
-        else:
-            mh, ml, n = h[k], l[k], 0
-    return (float(h[i]), float(ml)) if n >= need else (None, None)
+            trig = None
+            if buy is not None and h[k] > buy:
+                trig, buy, spent = float(buy), None, True
+            elif not spent and n >= need:
+                buy = float(h[k])
+        else:                       # out of the mother day: a new mother day; over the armed buy = the entry triggered today
+            trig = float(buy) if buy is not None and h[k] > buy else None
+            mh, ml, n, buy, spent = h[k], l[k], 0, None, False
+    return (buy, float(ml) if buy is not None else None, trig)
