@@ -1053,6 +1053,7 @@
             <th class="num"><button class="tgr-th" data-sort="date_close" title="That day's close">Close</button></th>
             <th class="num"><button class="tgr-th" data-sort="px" title="Live during market hours, else the last close">Price</button></th>
             <th class="num"><button class="tgr-th" data-sort="since" title="The price vs the start day's close">Since</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_vs_hc21_pct" title="Did the start day close above the highest close of the 21 sessions before it? Yes / No, and by how much">Start day over 21D high</button></th>
             <th class="num"><button class="tgr-th" data-sort="date_vs_200_pct" title="Where the start day closed vs its 200-day SMA">vs 200 SMA</button></th>
             <th class="num"><button class="tgr-th" data-sort="adr_pct">ADR</button></th>
             <th><button class="tgr-th" data-sort="on" title="Whether the stock is on Launches already">On</button></th>
@@ -2958,8 +2959,9 @@ defCalc('industry_perf', {
       if (opt && opt.remove) { doc.removed = doc.removed || {}; doc.removed[sym] = { launch: opt.remove, at: nyIso() }; }
       if (opt && opt.removeSetup) { doc.removed_setups = doc.removed_setups || {}; doc.removed_setups[sym] = { added: opt.removeSetup, at: nyIso() }; }
       if (opt && opt.removeList) { doc.removed_lists = doc.removed_lists || {}; const rl = (doc.removed_lists[opt.removeList.list] = doc.removed_lists[opt.removeList.list] || {}); rl[sym] = { added: opt.removeList.added, at: nyIso() }; }
+      if (opt && opt.removeStart) { doc.removed_starts = doc.removed_starts || {}; doc.removed_starts[sym] = { date: opt.removeStart, at: nyIso() }; }
       if (opt && opt.removeTrend !== undefined) { doc.removed_trend = doc.removed_trend || {}; doc.removed_trend[sym] = { added: opt.removeTrend, at: nyIso() }; }
-      const body = { message: (opt && opt.removeList ? 'Remove ' + sym + ' from ' + opt.removeList.list : opt && opt.removeTrend !== undefined ? 'Remove ' + sym + ' from TREND' : opt && opt.removeSetup ? 'Remove ' + sym + ' from 3-SETUPS' : opt && opt.remove ? 'Remove ' + sym + ' from Launches' : (on ? 'Follow ' : 'Stop following ') + sym) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
+      const body = { message: (opt && opt.removeStart ? 'Remove ' + sym + ' from Start days' : opt && opt.removeList ? 'Remove ' + sym + ' from ' + opt.removeList.list : opt && opt.removeTrend !== undefined ? 'Remove ' + sym + ' from TREND' : opt && opt.removeSetup ? 'Remove ' + sym + ' from 3-SETUPS' : opt && opt.remove ? 'Remove ' + sym + ' from Launches' : (on ? 'Follow ' : 'Stop following ') + sym) + ' (portal)', content: b64(JSON.stringify(doc, null, 1) + '\n'), branch: 'main' };
       if (sha) body.sha = sha;
       const p = await fetch(url, { method: 'PUT', headers: hd, body: JSON.stringify(body) });
       if (p.ok) return true;
@@ -3016,6 +3018,28 @@ defCalc('industry_perf', {
         let g = {}; try { g = JSON.parse(localStorage.getItem(WLGONE) || '{}') || {}; } catch (e) { /* private window */ }
         (g[list] = g[list] || {})[r.symbol] = r.added || ''; try { localStorage.setItem(WLGONE, JSON.stringify(g)); } catch (e) { /* private window */ }
         toast(r.symbol + ' removed from ' + list + ' on every device: it comes back only on a new ' + (list === '1-EP/GAP' ? 'gap' : 'up day') + ' on a later day. Its other lists keep it.');
+      }
+    } catch (e) { toast('Not saved: ' + e.message + '.'); }
+    draw();
+  };
+  /* ✕ on the Start days table (the user, Nov 15 2026: "i want to add x sign so any tickers doesnt look to me manually i can
+     delete from start list"): saved to setups/picks.json "removed_starts" {symbol: {date, at}}; that start day is hidden on
+     every device (the table is rebuilt each evening from launch.json, so the page hides it); a later start day shows again */
+  const SDGONE = 'radar-start-removed';
+  const sdGone = () => {
+    const out = {};
+    Object.entries((PICKS && PICKS.removed_starts) || {}).forEach(([s, v]) => { if (v && v.date) out[s] = v.date; });
+    try { Object.assign(out, JSON.parse(localStorage.getItem(SDGONE) || '{}') || {}); } catch (e) { /* private window */ }
+    return out;
+  };
+  const sdKept = (r, g) => !(g[r.symbol] && r.date <= g[r.symbol]);
+  const removeStart = async (r, btn) => {
+    btn.disabled = true; btn.textContent = 'Removing…';
+    try {
+      if (await savePick(r.symbol, pickedNow().has(r.symbol), { removeStart: r.date, keepPick: true })) {
+        let g = {}; try { g = JSON.parse(localStorage.getItem(SDGONE) || '{}') || {}; } catch (e) { /* private window */ }
+        g[r.symbol] = r.date; try { localStorage.setItem(SDGONE, JSON.stringify(g)); } catch (e) { /* private window */ }
+        toast(r.symbol + ' removed from Start days on every device. A new start day of it on a later day shows again.');
       }
     } catch (e) { toast('Not saved: ' + e.message + '.'); }
     draw();
@@ -3459,6 +3483,8 @@ defCalc('industry_perf', {
       markSort(table, spec);
     } else markSort(table, { key: '', dir: -1 });
   };
+  /* Start days: did the start day close above the highest close of the 21 sessions before it (launch.json date_vs_hc21_pct) */
+  const hc21Cell = (r) => { const v = num(r.date_vs_hc21_pct); const td = h('td', 'num nw' + (v === null ? '' : v > 0 ? ' tgr-up' : ''), v === null ? '—' : (v > 0 ? 'Yes ' : 'No ') + p1(v, true)); if (v !== null) td.title = 'The start day closed ' + Math.abs(v).toFixed(1) + '% ' + (v > 0 ? 'above' : 'under') + ' the highest close of the 21 sessions before it'; return td; };
   const tkCell = (sym, tvs) => { const td = h('td', 'key'); const a = h('a', 'tgr-tk', sym); a.href = tv(tvs || sym); a.target = TVTAB; td.append(a); return td; };
   const gradeCell = (g) => { const td = h('td', ''); if (g) td.append(h('span', 'tgr-grade g' + g[0], g)); else td.textContent = '—'; return td; };
   /* the kind of launch day: the strongest one it fits, then the others (your request, Nov 2 2026) */
@@ -3564,7 +3590,7 @@ defCalc('industry_perf', {
       else {
         /* each table's matches right here, as buttons that jump to the row's table (the user, Nov 14 2026: "if i search ticker
            it has to pull that ticker from all tables under launch tab": the Start days match sat two cards further down) */
-        const u = LAG ? [] : (doc.ema50_undercut || []).filter(kept).filter((r) => r.symbol.includes(lq)), sd = LAG ? [] : (doc.start_days || []).filter((r) => r.symbol.includes(lq));
+        const u = LAG ? [] : (doc.ema50_undercut || []).filter(kept).filter((r) => r.symbol.includes(lq)), sdG0 = sdGone(), sd = LAG ? [] : (doc.start_days || []).filter((r) => sdKept(r, sdG0)).filter((r) => r.symbol.includes(lq));
         const w = WK(lq), dm = (d) => (d ? fDate(d).replace(/, \d{4}$/, '') : '');
         const jump = (txt, card, tip) => { const b = h('button', 'tgr-lite', txt); b.type = 'button'; b.title = tip; b.addEventListener('click', () => { const c = $(card); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); return b; };
         const bits = [h('span', '', '"' + lq + '": ' + (LAG ? 'Launch laggards ' : 'Launches ') + rows.length + (rows.length ? ' (below)' : ''))];
@@ -3733,21 +3759,27 @@ defCalc('industry_perf', {
        the day it happens; not a launch, the Launches list is unchanged */
     {
       const st = $('#ln-sd-table'), stb = st.querySelector('tbody'); stb.replaceChildren();
-      const ss = doc ? (doc.start_days || []).filter((r) => !lq || r.symbol.includes(lq)).map((r) => {
+      const sdG = sdGone(), ss = doc ? (doc.start_days || []).filter((r) => sdKept(r, sdG)).filter((r) => !lq || r.symbol.includes(lq)).map((r) => {
         const m = symMap.get(r.symbol);
         const px = m && num(m.price) !== null ? num(m.price) : r.price;
         return Object.assign({}, r, { px, since: px && r.date_close ? r2((px / r.date_close - 1) * 100) : r.since_pct, on: r.on || '' });
       }) : [];
       $('#ln-sd-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : '—';
-      $('#ln-sd-note').textContent = 'The day a stock turns up out of a downtrend: 6+ of the 10 closes before under a falling 21 EMA, the day before it closed under its 21 or 50 EMA, that day it closes over the 21 EMA (the 50 EMA is not needed: the first close over it is the confirmation), up 1 ADR or more on 1× volume or more in the top half of the day (or a 5%+ gap that opens over the 21 EMA and keeps half of it), over the high of any violent red candle of the 5 sessions before; only the first such day of a move. Over or under the 200 SMA; the same liquidity and ADR minimums as a launch, and its close 30%+ over the 52-week low (your 30% rule: the day before may be closer to the low). Listed for 5 sessions; off sooner when the start fails: a close under the start day's low that is also under the 21 EMA. Not a launch: the big day that follows (the 200 SMA cross, the earnings gap) still makes the Launches list, with this day shown under its date as "start".';
+      $('#ln-sd-note').textContent = 'The day a stock turns up out of a downtrend: 6+ of the 10 closes before under a falling 21 EMA, the day before it closed under its 21 or 50 EMA, that day it closes over the 21 EMA (the 50 EMA is not needed: the first close over it is the confirmation), up 1 ADR or more on 1× volume or more in the top half of the day (or a 5%+ gap that opens over the 21 EMA and keeps half of it), over the high of any violent red candle of the 5 sessions before; only the first such day of a move. Over or under the 200 SMA; the same liquidity and ADR minimums as a launch, and its close 30%+ over the 52-week low (your 30% rule: the day before may be closer to the low). Listed for 5 sessions; off sooner when the start fails: a close under the low of the start day that is also under the 21 EMA. Not a launch: the big day that follows (the 200 SMA cross, the earnings gap) still makes the Launches list, with this day shown under its date as "start".';
       sortRows(st, ss, null, ['symbol', 'date', 'group', 'on'], '');
       S.sdShown = ss;
-      if (doc && !ss.length) noRows(stb, 12, lq ? 'No "' + lq + '" in this table.' : doc.start_days ? 'No start day in the last 5 sessions.' : 'Fills in after the next evening scan.');
+      if (doc && !ss.length) noRows(stb, 13, lq ? 'No "' + lq + '" in this table.' : doc.start_days ? 'No start day in the last 5 sessions.' : 'Fills in after the next evening scan.');
       ss.forEach((r) => {
         const tr = h('tr');
-        tr.append(tkCell(r.symbol, r.tv), h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), pctCell(r.date_chg_pct, 0),
+        const keyS = tkCell(r.symbol, r.tv);
+        const rmS = h('button', 'tgr-lite tgr-follow', '✕'); rmS.type = 'button'; rmS.title = 'Remove ' + r.symbol + ' from Start days (a new start day of it on a later day shows again)';
+        rmS.setAttribute('aria-label', rmS.title);
+        rmS.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from Start days?')) removeStart(r, rmS); });
+        keyS.append(rmS);
+        tr.append(keyS, h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), pctCell(r.date_chg_pct, 0),
           h('td', 'num' + (r.date_gap_pct >= 2 ? ' tgr-up' : ''), p1(r.date_gap_pct, true)), h('td', 'num' + (r.date_rel_vol >= 1.5 ? ' tgr-up' : ''), fX(r.date_rel_vol)),
           h('td', 'num', fPrice(r.date_close)), h('td', 'num', fPrice(r.px)), h('td', 'num ' + tone(r.since), p1(r.since, true)),
+          hc21Cell(r),
           h('td', 'num ' + tone(r.date_vs_200_pct), p1(r.date_vs_200_pct, true)), h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
           h('td', 'nw', r.on || (r.launch_day ? 'launch day' : '—')), h('td', '', (r.group || '—') + ' · ' + (r.group_status || '')));
         stb.append(tr);

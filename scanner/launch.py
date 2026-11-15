@@ -819,7 +819,10 @@ def start_fields(a, k, pre):
     st = a.st
     return {pre: st.dates[k], pre + "_chg_pct": fnum(a.chg[k], 1), pre + "_gap_pct": fnum(a.gap[k], 1), pre + "_rel_vol": fnum(a.rv[k], 1),
             pre + "_close": fnum(st.c[k]), pre + "_ema21": fnum(a.e21[k]), pre + "_ema50": fnum(a.e50[k]),
-            pre + "_vs_200_pct": fnum(100 * (st.c[k] / a.s200[k] - 1), 0)}
+            pre + "_vs_200_pct": fnum(100 * (st.c[k] / a.s200[k] - 1), 0),
+            # the start day's close vs the highest close of the 21 sessions before it (the user, Nov 15 2026: "showing in
+            # column if it was closing above 21d highest close"): over 0 = it closed above that high
+            pre + "_vs_hc21_pct": fnum(100 * (st.c[k] / st.c[k - 21:k].max() - 1), 1) if k >= 21 else None}
 
 
 def launch_row(sym, a, i, gstat, gname, S):
