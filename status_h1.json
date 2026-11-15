@@ -1,0 +1,300 @@
+{
+ "start": "2025-05-14",
+ "end": "2026-05-14",
+ "feed": "sip",
+ "symbols": {
+  "IWM": {
+   "bars": 97623,
+   "pages": 20,
+   "days": 251
+  },
+  "SPY": {
+   "bars": 97834,
+   "pages": 23,
+   "days": 251
+  },
+  "QQQ": {
+   "bars": 97800,
+   "pages": 23,
+   "days": 251
+  },
+  "SMH": {
+   "bars": 97431,
+   "pages": 14,
+   "days": 251
+  },
+  "IGV": {
+   "bars": 97345,
+   "pages": 12,
+   "days": 251
+  },
+  "SOXX": {
+   "bars": 97386,
+   "pages": 14,
+   "days": 251
+  },
+  "XLK": {
+   "bars": 97431,
+   "pages": 13,
+   "days": 251
+  },
+  "AMD": {
+   "bars": 97705,
+   "pages": 21,
+   "days": 251
+  },
+  "NVDA": {
+   "bars": 97878,
+   "pages": 24,
+   "days": 251
+  },
+  "AVGO": {
+   "bars": 97719,
+   "pages": 19,
+   "days": 251
+  },
+  "MRVL": {
+   "bars": 97514,
+   "pages": 16,
+   "days": 251
+  },
+  "COHR": {
+   "bars": 96938,
+   "pages": 12,
+   "days": 251
+  },
+  "MU": {
+   "bars": 97685,
+   "pages": 20,
+   "days": 251
+  },
+  "AMAT": {
+   "bars": 97250,
+   "pages": 12,
+   "days": 251
+  },
+  "SMCI": {
+   "bars": 97731,
+   "pages": 20,
+   "days": 251
+  },
+  "KLAC": {
+   "bars": 85241,
+   "pages": 9,
+   "days": 251
+  },
+  "LRCX": {
+   "bars": 97400,
+   "pages": 12,
+   "days": 251
+  },
+  "ARM": {
+   "bars": 97222,
+   "pages": 13,
+   "days": 251
+  },
+  "ALAB": {
+   "bars": 97189,
+   "pages": 13,
+   "days": 251
+  },
+  "CRDO": {
+   "bars": 97319,
+   "pages": 14,
+   "days": 251
+  },
+  "ON": {
+   "bars": 97378,
+   "pages": 12,
+   "days": 251
+  },
+  "QCOM": {
+   "bars": 97379,
+   "pages": 13,
+   "days": 251
+  },
+  "ASML": {
+   "bars": 93534,
+   "pages": 12,
+   "days": 251
+  },
+  "TSM": {
+   "bars": 97541,
+   "pages": 18,
+   "days": 251
+  },
+  "INTC": {
+   "bars": 97814,
+   "pages": 22,
+   "days": 251
+  },
+  "APP": {
+   "bars": 97369,
+   "pages": 14,
+   "days": 251
+  },
+  "SHOP": {
+   "bars": 97445,
+   "pages": 12,
+   "days": 251
+  },
+  "NET": {
+   "bars": 95496,
+   "pages": 11,
+   "days": 251
+  },
+  "CRWD": {
+   "bars": 96853,
+   "pages": 12,
+   "days": 251
+  },
+  "SNOW": {
+   "bars": 97155,
+   "pages": 12,
+   "days": 251
+  },
+  "PLTR": {
+   "bars": 97736,
+   "pages": 22,
+   "days": 251
+  },
+  "DDOG": {
+   "bars": 97126,
+   "pages": 11,
+   "days": 251
+  },
+  "ZS": {
+   "bars": 94260,
+   "pages": 11,
+   "days": 251
+  },
+  "NOW": {
+   "bars": 91573,
+   "pages": 13,
+   "days": 251
+  },
+  "CRM": {
+   "bars": 97381,
+   "pages": 13,
+   "days": 251
+  },
+  "VRT": {
+   "bars": 97395,
+   "pages": 13,
+   "days": 251
+  },
+  "PANW": {
+   "bars": 97350,
+   "pages": 12,
+   "days": 251
+  },
+  "DELL": {
+   "bars": 97388,
+   "pages": 13,
+   "days": 251
+  },
+  "ORCL": {
+   "bars": 97705,
+   "pages": 19,
+   "days": 251
+  },
+  "ANET": {
+   "bars": 97396,
+   "pages": 12,
+   "days": 251
+  },
+  "CLS": {
+   "bars": 96269,
+   "pages": 12,
+   "days": 251
+  },
+  "COIN": {
+   "bars": 97672,
+   "pages": 19,
+   "days": 251
+  },
+  "NBIS": {
+   "bars": 97549,
+   "pages": 19,
+   "days": 251
+  },
+  "CRWV": {
+   "bars": 97716,
+   "pages": 20,
+   "days": 251
+  },
+  "MSTR": {
+   "bars": 97744,
+   "pages": 20,
+   "days": 251
+  },
+  "HOOD": {
+   "bars": 97707,
+   "pages": 20,
+   "days": 251
+  },
+  "SOFI": {
+   "bars": 97773,
+   "pages": 21,
+   "days": 251
+  },
+  "MARA": {
+   "bars": 97745,
+   "pages": 20,
+   "days": 251
+  },
+  "TSLA": {
+   "bars": 97884,
+   "pages": 24,
+   "days": 251
+  },
+  "UBER": {
+   "bars": 97480,
+   "pages": 14,
+   "days": 251
+  },
+  "RKLB": {
+   "bars": 97631,
+   "pages": 20,
+   "days": 251
+  },
+  "IONQ": {
+   "bars": 97697,
+   "pages": 21,
+   "days": 251
+  },
+  "META": {
+   "bars": 97656,
+   "pages": 17,
+   "days": 251
+  },
+  "NFLX": {
+   "bars": 96851,
+   "pages": 17,
+   "days": 251
+  },
+  "AAPL": {
+   "bars": 97669,
+   "pages": 19,
+   "days": 251
+  },
+  "AMZN": {
+   "bars": 97726,
+   "pages": 20,
+   "days": 251
+  },
+  "MSFT": {
+   "bars": 97599,
+   "pages": 18,
+   "days": 251
+  },
+  "GOOGL": {
+   "bars": 97656,
+   "pages": 19,
+   "days": 251
+  }
+ },
+ "errors": [],
+ "seconds": 225.7,
+ "have_keys": true
+}

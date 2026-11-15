@@ -1,0 +1,13 @@
+{
+ "mode": "days",
+ "start": "2025-08-01",
+ "end": "2026-02-18",
+ "feed": "sip",
+ "errors": [],
+ "tasks": 639,
+ "done": 639,
+ "pages": 1178,
+ "rows": 2751095,
+ "seconds": 297.2,
+ "have_keys": true
+}

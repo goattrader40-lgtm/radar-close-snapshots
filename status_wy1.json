@@ -1,0 +1,1725 @@
+{
+ "start": "2025-11-14",
+ "end": "2026-11-14",
+ "feed": "sip",
+ "symbols": {
+  "BWET": {
+   "bars": 15997,
+   "pages": 3,
+   "days": 251
+  },
+  "IAI": {
+   "bars": 17466,
+   "pages": 4,
+   "days": 251
+  },
+  "FDN": {
+   "bars": 27809,
+   "pages": 8,
+   "days": 251
+  },
+  "GRID": {
+   "bars": 29523,
+   "pages": 9,
+   "days": 251
+  },
+  "IHF": {
+   "bars": 26401,
+   "pages": 7,
+   "days": 251
+  },
+  "IPAY": {
+   "bars": 8610,
+   "pages": 2,
+   "days": 251
+  },
+  "IHI": {
+   "bars": 31504,
+   "pages": 10,
+   "days": 251
+  },
+  "ICLN": {
+   "bars": 31508,
+   "pages": 11,
+   "days": 251
+  },
+  "IYT": {
+   "bars": 29252,
+   "pages": 9,
+   "days": 251
+  },
+  "ITA": {
+   "bars": 30931,
+   "pages": 10,
+   "days": 251
+  },
+  "ITB": {
+   "bars": 31445,
+   "pages": 10,
+   "days": 251
+  },
+  "IYZ": {
+   "bars": 31092,
+   "pages": 10,
+   "days": 251
+  },
+  "JETS": {
+   "bars": 31522,
+   "pages": 11,
+   "days": 251
+  },
+  "KBE": {
+   "bars": 31532,
+   "pages": 10,
+   "days": 251
+  },
+  "OIH": {
+   "bars": 30501,
+   "pages": 9,
+   "days": 251
+  },
+  "KIE": {
+   "bars": 31396,
+   "pages": 10,
+   "days": 251
+  },
+  "PEJ": {
+   "bars": 9641,
+   "pages": 2,
+   "days": 251
+  },
+  "PAVE": {
+   "bars": 31454,
+   "pages": 10,
+   "days": 251
+  },
+  "REM": {
+   "bars": 29907,
+   "pages": 8,
+   "days": 251
+  },
+  "XBI": {
+   "bars": 31587,
+   "pages": 12,
+   "days": 251
+  },
+  "XHB": {
+   "bars": 31380,
+   "pages": 10,
+   "days": 251
+  },
+  "XLB": {
+   "bars": 31564,
+   "pages": 11,
+   "days": 251
+  },
+  "XLC": {
+   "bars": 31559,
+   "pages": 11,
+   "days": 251
+  },
+  "XLF": {
+   "bars": 31586,
+   "pages": 14,
+   "days": 251
+  },
+  "XLE": {
+   "bars": 31585,
+   "pages": 16,
+   "days": 251
+  },
+  "XLI": {
+   "bars": 31565,
+   "pages": 11,
+   "days": 251
+  },
+  "XLP": {
+   "bars": 31566,
+   "pages": 11,
+   "days": 251
+  },
+  "XLRE": {
+   "bars": 31556,
+   "pages": 11,
+   "days": 251
+  },
+  "XLV": {
+   "bars": 31564,
+   "pages": 11,
+   "days": 251
+  },
+  "XLU": {
+   "bars": 31575,
+   "pages": 12,
+   "days": 251
+  },
+  "XPH": {
+   "bars": 14361,
+   "pages": 3,
+   "days": 251
+  },
+  "XLY": {
+   "bars": 31563,
+   "pages": 11,
+   "days": 251
+  },
+  "XRT": {
+   "bars": 31542,
+   "pages": 10,
+   "days": 251
+  },
+  "XME": {
+   "bars": 31447,
+   "pages": 10,
+   "days": 251
+  },
+  "AAL": {
+   "bars": 31609,
+   "pages": 16,
+   "days": 251
+  },
+  "AAON": {
+   "bars": 28875,
+   "pages": 9,
+   "days": 251
+  },
+  "ADI": {
+   "bars": 31548,
+   "pages": 11,
+   "days": 251
+  },
+  "AEIS": {
+   "bars": 28602,
+   "pages": 8,
+   "days": 251
+  },
+  "AEHR": {
+   "bars": 31134,
+   "pages": 12,
+   "days": 251
+  },
+  "AFRM": {
+   "bars": 31568,
+   "pages": 12,
+   "days": 251
+  },
+  "AAOI": {
+   "bars": 31572,
+   "pages": 17,
+   "days": 251
+  },
+  "AKAM": {
+   "bars": 31385,
+   "pages": 11,
+   "days": 251
+  },
+  "AG": {
+   "bars": 31618,
+   "pages": 16,
+   "days": 251
+  },
+  "ALK": {
+   "bars": 31449,
+   "pages": 11,
+   "days": 251
+  },
+  "ALNY": {
+   "bars": 31223,
+   "pages": 10,
+   "days": 251
+  },
+  "ALGM": {
+   "bars": 31015,
+   "pages": 10,
+   "days": 251
+  },
+  "AN": {
+   "bars": 23556,
+   "pages": 6,
+   "days": 251
+  },
+  "ANF": {
+   "bars": 30535,
+   "pages": 10,
+   "days": 251
+  },
+  "APH": {
+   "bars": 31561,
+   "pages": 11,
+   "days": 251
+  },
+  "APLD": {
+   "bars": 31624,
+   "pages": 19,
+   "days": 251
+  },
+  "AMKR": {
+   "bars": 31563,
+   "pages": 13,
+   "days": 251
+  },
+  "ARE": {
+   "bars": 30808,
+   "pages": 10,
+   "days": 251
+  },
+  "ARW": {
+   "bars": 25727,
+   "pages": 7,
+   "days": 251
+  },
+  "ASST": {
+   "bars": 31617,
+   "pages": 16,
+   "days": 251
+  },
+  "ARWR": {
+   "bars": 30955,
+   "pages": 10,
+   "days": 251
+  },
+  "ASX": {
+   "bars": 31557,
+   "pages": 13,
+   "days": 251
+  },
+  "ASTS": {
+   "bars": 31612,
+   "pages": 19,
+   "days": 251
+  },
+  "AVAV": {
+   "bars": 31451,
+   "pages": 12,
+   "days": 251
+  },
+  "ATI": {
+   "bars": 30591,
+   "pages": 10,
+   "days": 251
+  },
+  "AVT": {
+   "bars": 28472,
+   "pages": 9,
+   "days": 251
+  },
+  "AXGN": {
+   "bars": 28228,
+   "pages": 8,
+   "days": 251
+  },
+  "AXSM": {
+   "bars": 27462,
+   "pages": 7,
+   "days": 251
+  },
+  "AXON": {
+   "bars": 31286,
+   "pages": 11,
+   "days": 251
+  },
+  "AXTI": {
+   "bars": 31555,
+   "pages": 16,
+   "days": 251
+  },
+  "BAX": {
+   "bars": 31553,
+   "pages": 11,
+   "days": 251
+  },
+  "BBWI": {
+   "bars": 31553,
+   "pages": 11,
+   "days": 251
+  },
+  "BE": {
+   "bars": 31603,
+   "pages": 17,
+   "days": 251
+  },
+  "BLDR": {
+   "bars": 31148,
+   "pages": 10,
+   "days": 251
+  },
+  "BKR": {
+   "bars": 31560,
+   "pages": 11,
+   "days": 251
+  },
+  "BOOT": {
+   "bars": 26738,
+   "pages": 8,
+   "days": 251
+  },
+  "BRKR": {
+   "bars": 30838,
+   "pages": 10,
+   "days": 251
+  },
+  "BROS": {
+   "bars": 31528,
+   "pages": 11,
+   "days": 251
+  },
+  "BTSG": {
+   "bars": 30843,
+   "pages": 10,
+   "days": 251
+  },
+  "BWXT": {
+   "bars": 30121,
+   "pages": 9,
+   "days": 251
+  },
+  "CACI": {
+   "bars": 26912,
+   "pages": 7,
+   "days": 251
+  },
+  "CAI": {
+   "bars": 31139,
+   "pages": 10,
+   "days": 251
+  },
+  "CAKE": {
+   "bars": 30032,
+   "pages": 9,
+   "days": 251
+  },
+  "BMNR": {
+   "bars": 31626,
+   "pages": 22,
+   "days": 251
+  },
+  "CBRS": {
+   "bars": 16039,
+   "pages": 9,
+   "days": 128
+  },
+  "CAVA": {
+   "bars": 31499,
+   "pages": 11,
+   "days": 251
+  },
+  "CDNA": {
+   "bars": 28679,
+   "pages": 8,
+   "days": 251
+  },
+  "CDE": {
+   "bars": 31609,
+   "pages": 14,
+   "days": 251
+  },
+  "CDNS": {
+   "bars": 31539,
+   "pages": 11,
+   "days": 251
+  },
+  "CDW": {
+   "bars": 30378,
+   "pages": 10,
+   "days": 251
+  },
+  "CELH": {
+   "bars": 31567,
+   "pages": 13,
+   "days": 251
+  },
+  "CEG": {
+   "bars": 31567,
+   "pages": 13,
+   "days": 251
+  },
+  "CGNX": {
+   "bars": 30906,
+   "pages": 10,
+   "days": 251
+  },
+  "CHTR": {
+   "bars": 31412,
+   "pages": 11,
+   "days": 251
+  },
+  "CHYM": {
+   "bars": 31496,
+   "pages": 11,
+   "days": 251
+  },
+  "CNC": {
+   "bars": 31496,
+   "pages": 11,
+   "days": 251
+  },
+  "CLF": {
+   "bars": 31583,
+   "pages": 12,
+   "days": 251
+  },
+  "CNH": {
+   "bars": 31554,
+   "pages": 11,
+   "days": 251
+  },
+  "CIEN": {
+   "bars": 31534,
+   "pages": 12,
+   "days": 251
+  },
+  "COKE": {
+   "bars": 26212,
+   "pages": 7,
+   "days": 251
+  },
+  "CORT": {
+   "bars": 29020,
+   "pages": 9,
+   "days": 251
+  },
+  "COMP": {
+   "bars": 31552,
+   "pages": 11,
+   "days": 251
+  },
+  "CORZ": {
+   "bars": 31575,
+   "pages": 12,
+   "days": 251
+  },
+  "CPNG": {
+   "bars": 31574,
+   "pages": 14,
+   "days": 251
+  },
+  "CRL": {
+   "bars": 27808,
+   "pages": 8,
+   "days": 251
+  },
+  "CRS": {
+   "bars": 29445,
+   "pages": 9,
+   "days": 251
+  },
+  "CRCL": {
+   "bars": 31620,
+   "pages": 20,
+   "days": 251
+  },
+  "CVLT": {
+   "bars": 27350,
+   "pages": 8,
+   "days": 251
+  },
+  "CVNA": {
+   "bars": 31555,
+   "pages": 12,
+   "days": 251
+  },
+  "CSGP": {
+   "bars": 31513,
+   "pages": 11,
+   "days": 251
+  },
+  "DAVE": {
+   "bars": 26178,
+   "pages": 6,
+   "days": 251
+  },
+  "DASH": {
+   "bars": 31552,
+   "pages": 11,
+   "days": 251
+  },
+  "DHT": {
+   "bars": 31395,
+   "pages": 11,
+   "days": 251
+  },
+  "CYTK": {
+   "bars": 30565,
+   "pages": 10,
+   "days": 251
+  },
+  "DK": {
+   "bars": 29765,
+   "pages": 9,
+   "days": 251
+  },
+  "DINO": {
+   "bars": 31288,
+   "pages": 10,
+   "days": 251
+  },
+  "DLTR": {
+   "bars": 31311,
+   "pages": 10,
+   "days": 251
+  },
+  "DOCN": {
+   "bars": 31362,
+   "pages": 11,
+   "days": 251
+  },
+  "DT": {
+   "bars": 31547,
+   "pages": 11,
+   "days": 251
+  },
+  "DVA": {
+   "bars": 27190,
+   "pages": 8,
+   "days": 251
+  },
+  "DKNG": {
+   "bars": 31579,
+   "pages": 12,
+   "days": 251
+  },
+  "DUOL": {
+   "bars": 31138,
+   "pages": 11,
+   "days": 251
+  },
+  "DY": {
+   "bars": 29285,
+   "pages": 9,
+   "days": 251
+  },
+  "EAT": {
+   "bars": 29843,
+   "pages": 9,
+   "days": 251
+  },
+  "ELF": {
+   "bars": 31295,
+   "pages": 11,
+   "days": 251
+  },
+  "EGO": {
+   "bars": 31443,
+   "pages": 11,
+   "days": 251
+  },
+  "EME": {
+   "bars": 29094,
+   "pages": 8,
+   "days": 251
+  },
+  "ECHO": {
+   "bars": 31496,
+   "pages": 12,
+   "days": 251
+  },
+  "ENPH": {
+   "bars": 31587,
+   "pages": 13,
+   "days": 251
+  },
+  "ENTG": {
+   "bars": 31196,
+   "pages": 10,
+   "days": 251
+  },
+  "EPAM": {
+   "bars": 29584,
+   "pages": 9,
+   "days": 251
+  },
+  "EQX": {
+   "bars": 31577,
+   "pages": 12,
+   "days": 251
+  },
+  "ETN": {
+   "bars": 31562,
+   "pages": 11,
+   "days": 251
+  },
+  "ESI": {
+   "bars": 30981,
+   "pages": 10,
+   "days": 251
+  },
+  "ESTC": {
+   "bars": 30821,
+   "pages": 10,
+   "days": 251
+  },
+  "ETSY": {
+   "bars": 31522,
+   "pages": 10,
+   "days": 251
+  },
+  "FCFS": {
+   "bars": 21876,
+   "pages": 5,
+   "days": 251
+  },
+  "FBIN": {
+   "bars": 30824,
+   "pages": 10,
+   "days": 251
+  },
+  "FDXF": {
+   "bars": 14143,
+   "pages": 5,
+   "days": 117
+  },
+  "EXPE": {
+   "bars": 30825,
+   "pages": 10,
+   "days": 251
+  },
+  "FFIV": {
+   "bars": 30227,
+   "pages": 10,
+   "days": 251
+  },
+  "FIG": {
+   "bars": 31599,
+   "pages": 16,
+   "days": 251
+  },
+  "FICO": {
+   "bars": 31131,
+   "pages": 11,
+   "days": 251
+  },
+  "FIS": {
+   "bars": 31531,
+   "pages": 11,
+   "days": 251
+  },
+  "FIGR": {
+   "bars": 31502,
+   "pages": 12,
+   "days": 251
+  },
+  "FLEX": {
+   "bars": 31507,
+   "pages": 11,
+   "days": 251
+  },
+  "FLR": {
+   "bars": 31117,
+   "pages": 10,
+   "days": 251
+  },
+  "FIX": {
+   "bars": 31044,
+   "pages": 10,
+   "days": 251
+  },
+  "FND": {
+   "bars": 31170,
+   "pages": 10,
+   "days": 251
+  },
+  "FLUT": {
+   "bars": 31356,
+   "pages": 11,
+   "days": 251
+  },
+  "FN": {
+   "bars": 31125,
+   "pages": 10,
+   "days": 251
+  },
+  "FORM": {
+   "bars": 30575,
+   "pages": 10,
+   "days": 251
+  },
+  "FPS": {
+   "bars": 24518,
+   "pages": 10,
+   "days": 196
+  },
+  "FRO": {
+   "bars": 31496,
+   "pages": 12,
+   "days": 251
+  },
+  "FOUR": {
+   "bars": 30737,
+   "pages": 10,
+   "days": 251
+  },
+  "FSLR": {
+   "bars": 31410,
+   "pages": 11,
+   "days": 251
+  },
+  "FROG": {
+   "bars": 31152,
+   "pages": 10,
+   "days": 251
+  },
+  "FTAI": {
+   "bars": 30942,
+   "pages": 10,
+   "days": 251
+  },
+  "FTI": {
+   "bars": 31373,
+   "pages": 10,
+   "days": 251
+  },
+  "FTNT": {
+   "bars": 31561,
+   "pages": 11,
+   "days": 251
+  },
+  "FUTU": {
+   "bars": 30963,
+   "pages": 10,
+   "days": 251
+  },
+  "FSLY": {
+   "bars": 31540,
+   "pages": 13,
+   "days": 251
+  },
+  "GEV": {
+   "bars": 31577,
+   "pages": 13,
+   "days": 251
+  },
+  "GDDY": {
+   "bars": 30766,
+   "pages": 10,
+   "days": 251
+  },
+  "GFS": {
+   "bars": 31509,
+   "pages": 12,
+   "days": 251
+  },
+  "GKOS": {
+   "bars": 26919,
+   "pages": 8,
+   "days": 251
+  },
+  "GH": {
+   "bars": 30973,
+   "pages": 10,
+   "days": 251
+  },
+  "GLXY": {
+   "bars": 31585,
+   "pages": 13,
+   "days": 251
+  },
+  "GLW": {
+   "bars": 31566,
+   "pages": 15,
+   "days": 251
+  },
+  "GMAB": {
+   "bars": 31231,
+   "pages": 10,
+   "days": 251
+  },
+  "GME": {
+   "bars": 31603,
+   "pages": 14,
+   "days": 251
+  },
+  "GPN": {
+   "bars": 31179,
+   "pages": 10,
+   "days": 251
+  },
+  "GRAL": {
+   "bars": 29451,
+   "pages": 8,
+   "days": 250
+  },
+  "GTLB": {
+   "bars": 31560,
+   "pages": 12,
+   "days": 251
+  },
+  "GNRC": {
+   "bars": 29670,
+   "pages": 9,
+   "days": 251
+  },
+  "HBM": {
+   "bars": 31571,
+   "pages": 11,
+   "days": 251
+  },
+  "GWRE": {
+   "bars": 29799,
+   "pages": 9,
+   "days": 251
+  },
+  "HNGE": {
+   "bars": 29444,
+   "pages": 9,
+   "days": 251
+  },
+  "HONA": {
+   "bars": 12609,
+   "pages": 5,
+   "days": 107
+  },
+  "HIMS": {
+   "bars": 31621,
+   "pages": 17,
+   "days": 251
+  },
+  "HL": {
+   "bars": 31611,
+   "pages": 14,
+   "days": 251
+  },
+  "HRI": {
+   "bars": 25438,
+   "pages": 7,
+   "days": 251
+  },
+  "HPQ": {
+   "bars": 31575,
+   "pages": 12,
+   "days": 251
+  },
+  "HPE": {
+   "bars": 31567,
+   "pages": 14,
+   "days": 251
+  },
+  "HTFL": {
+   "bars": 28983,
+   "pages": 9,
+   "days": 251
+  },
+  "HWM": {
+   "bars": 31328,
+   "pages": 10,
+   "days": 251
+  },
+  "HUT": {
+   "bars": 31591,
+   "pages": 12,
+   "days": 251
+  },
+  "ICLR": {
+   "bars": 28548,
+   "pages": 8,
+   "days": 251
+  },
+  "IESC": {
+   "bars": 27335,
+   "pages": 7,
+   "days": 251
+  },
+  "INIO": {
+   "bars": 14210,
+   "pages": 5,
+   "days": 114
+  },
+  "ILMN": {
+   "bars": 30853,
+   "pages": 10,
+   "days": 251
+  },
+  "INSM": {
+   "bars": 31187,
+   "pages": 10,
+   "days": 251
+  },
+  "HUBS": {
+   "bars": 31313,
+   "pages": 11,
+   "days": 251
+  },
+  "IOT": {
+   "bars": 31541,
+   "pages": 11,
+   "days": 251
+  },
+  "IONS": {
+   "bars": 30859,
+   "pages": 10,
+   "days": 251
+  },
+  "IRON": {
+   "bars": 24927,
+   "pages": 6,
+   "days": 251
+  },
+  "IRTC": {
+   "bars": 24966,
+   "pages": 7,
+   "days": 251
+  },
+  "JBL": {
+   "bars": 30632,
+   "pages": 10,
+   "days": 251
+  },
+  "IREN": {
+   "bars": 31623,
+   "pages": 23,
+   "days": 251
+  },
+  "IT": {
+   "bars": 30476,
+   "pages": 10,
+   "days": 251
+  },
+  "KMX": {
+   "bars": 31179,
+   "pages": 10,
+   "days": 251
+  },
+  "KRMN": {
+   "bars": 31135,
+   "pages": 10,
+   "days": 251
+  },
+  "KTOS": {
+   "bars": 31556,
+   "pages": 13,
+   "days": 251
+  },
+  "KVYO": {
+   "bars": 31339,
+   "pages": 11,
+   "days": 251
+  },
+  "KEYS": {
+   "bars": 30553,
+   "pages": 10,
+   "days": 251
+  },
+  "LAD": {
+   "bars": 25987,
+   "pages": 7,
+   "days": 251
+  },
+  "KYMR": {
+   "bars": 27470,
+   "pages": 8,
+   "days": 251
+  },
+  "LFUS": {
+   "bars": 26303,
+   "pages": 7,
+   "days": 251
+  },
+  "LITE": {
+   "bars": 31571,
+   "pages": 16,
+   "days": 251
+  },
+  "LKQ": {
+   "bars": 31219,
+   "pages": 10,
+   "days": 251
+  },
+  "LSCC": {
+   "bars": 30787,
+   "pages": 10,
+   "days": 251
+  },
+  "LTH": {
+   "bars": 30780,
+   "pages": 10,
+   "days": 251
+  },
+  "LYFT": {
+   "bars": 31590,
+   "pages": 12,
+   "days": 251
+  },
+  "LUNR": {
+   "bars": 31599,
+   "pages": 16,
+   "days": 251
+  },
+  "LQDA": {
+   "bars": 30695,
+   "pages": 10,
+   "days": 251
+  },
+  "M": {
+   "bars": 31567,
+   "pages": 11,
+   "days": 251
+  },
+  "MDGL": {
+   "bars": 27277,
+   "pages": 7,
+   "days": 251
+  },
+  "MCHP": {
+   "bars": 31557,
+   "pages": 11,
+   "days": 251
+  },
+  "MDLN": {
+   "bars": 28673,
+   "pages": 10,
+   "days": 229
+  },
+  "MHK": {
+   "bars": 28282,
+   "pages": 8,
+   "days": 251
+  },
+  "MMED": {
+   "bars": 20033,
+   "pages": 6,
+   "days": 176
+  },
+  "MDB": {
+   "bars": 31551,
+   "pages": 12,
+   "days": 251
+  },
+  "MNDY": {
+   "bars": 30942,
+   "pages": 10,
+   "days": 251
+  },
+  "MOD": {
+   "bars": 30440,
+   "pages": 10,
+   "days": 251
+  },
+  "MOH": {
+   "bars": 29085,
+   "pages": 9,
+   "days": 251
+  },
+  "MKSI": {
+   "bars": 30215,
+   "pages": 9,
+   "days": 251
+  },
+  "MOS": {
+   "bars": 31570,
+   "pages": 12,
+   "days": 251
+  },
+  "MP": {
+   "bars": 31601,
+   "pages": 15,
+   "days": 251
+  },
+  "MPWR": {
+   "bars": 31020,
+   "pages": 11,
+   "days": 251
+  },
+  "MPC": {
+   "bars": 31360,
+   "pages": 10,
+   "days": 251
+  },
+  "MTSI": {
+   "bars": 29919,
+   "pages": 9,
+   "days": 251
+  },
+  "MTZ": {
+   "bars": 29966,
+   "pages": 9,
+   "days": 251
+  },
+  "MXL": {
+   "bars": 30729,
+   "pages": 11,
+   "days": 251
+  },
+  "NCLH": {
+   "bars": 31585,
+   "pages": 13,
+   "days": 251
+  },
+  "MRNA": {
+   "bars": 31594,
+   "pages": 14,
+   "days": 251
+  },
+  "NTAP": {
+   "bars": 31157,
+   "pages": 10,
+   "days": 251
+  },
+  "NRG": {
+   "bars": 31303,
+   "pages": 10,
+   "days": 251
+  },
+  "NTSK": {
+   "bars": 31461,
+   "pages": 11,
+   "days": 251
+  },
+  "NTRA": {
+   "bars": 30411,
+   "pages": 9,
+   "days": 251
+  },
+  "NU": {
+   "bars": 31575,
+   "pages": 14,
+   "days": 251
+  },
+  "NXT": {
+   "bars": 31228,
+   "pages": 10,
+   "days": 251
+  },
+  "NVT": {
+   "bars": 31134,
+   "pages": 10,
+   "days": 251
+  },
+  "NXPI": {
+   "bars": 31359,
+   "pages": 10,
+   "days": 251
+  },
+  "OC": {
+   "bars": 29228,
+   "pages": 9,
+   "days": 251
+  },
+  "OKTA": {
+   "bars": 31509,
+   "pages": 11,
+   "days": 251
+  },
+  "OSCR": {
+   "bars": 31585,
+   "pages": 13,
+   "days": 251
+  },
+  "ONTO": {
+   "bars": 29867,
+   "pages": 9,
+   "days": 251
+  },
+  "P": {
+   "bars": 31442,
+   "pages": 11,
+   "days": 251
+  },
+  "OKLO": {
+   "bars": 31615,
+   "pages": 18,
+   "days": 251
+  },
+  "PCVX": {
+   "bars": 29331,
+   "pages": 9,
+   "days": 251
+  },
+  "PBF": {
+   "bars": 31312,
+   "pages": 11,
+   "days": 251
+  },
+  "PINS": {
+   "bars": 31563,
+   "pages": 12,
+   "days": 251
+  },
+  "PENG": {
+   "bars": 30222,
+   "pages": 11,
+   "days": 251
+  },
+  "PEGA": {
+   "bars": 30664,
+   "pages": 10,
+   "days": 251
+  },
+  "PL": {
+   "bars": 31581,
+   "pages": 16,
+   "days": 251
+  },
+  "PRAX": {
+   "bars": 27893,
+   "pages": 7,
+   "days": 251
+  },
+  "PODD": {
+   "bars": 30366,
+   "pages": 10,
+   "days": 251
+  },
+  "POWL": {
+   "bars": 29667,
+   "pages": 9,
+   "days": 251
+  },
+  "PRIM": {
+   "bars": 29132,
+   "pages": 9,
+   "days": 251
+  },
+  "QLYS": {
+   "bars": 27229,
+   "pages": 8,
+   "days": 251
+  },
+  "Q": {
+   "bars": 31128,
+   "pages": 10,
+   "days": 251
+  },
+  "QXO": {
+   "bars": 31563,
+   "pages": 12,
+   "days": 251
+  },
+  "PWR": {
+   "bars": 31428,
+   "pages": 11,
+   "days": 251
+  },
+  "RAL": {
+   "bars": 28944,
+   "pages": 9,
+   "days": 251
+  },
+  "RBRK": {
+   "bars": 31528,
+   "pages": 12,
+   "days": 251
+  },
+  "RBLX": {
+   "bars": 31565,
+   "pages": 13,
+   "days": 251
+  },
+  "RGEN": {
+   "bars": 28282,
+   "pages": 8,
+   "days": 251
+  },
+  "RH": {
+   "bars": 29857,
+   "pages": 9,
+   "days": 251
+  },
+  "RIOT": {
+   "bars": 31614,
+   "pages": 15,
+   "days": 251
+  },
+  "RDDT": {
+   "bars": 31549,
+   "pages": 13,
+   "days": 251
+  },
+  "RKT": {
+   "bars": 31597,
+   "pages": 13,
+   "days": 251
+  },
+  "RIVN": {
+   "bars": 31622,
+   "pages": 17,
+   "days": 251
+  },
+  "RMBS": {
+   "bars": 31092,
+   "pages": 11,
+   "days": 251
+  },
+  "RRX": {
+   "bars": 28754,
+   "pages": 9,
+   "days": 251
+  },
+  "RNG": {
+   "bars": 30751,
+   "pages": 10,
+   "days": 251
+  },
+  "ROIV": {
+   "bars": 31520,
+   "pages": 10,
+   "days": 251
+  },
+  "RVMD": {
+   "bars": 31140,
+   "pages": 10,
+   "days": 251
+  },
+  "RVTY": {
+   "bars": 29341,
+   "pages": 9,
+   "days": 251
+  },
+  "SAIA": {
+   "bars": 28786,
+   "pages": 9,
+   "days": 251
+  },
+  "RYTM": {
+   "bars": 26734,
+   "pages": 7,
+   "days": 251
+  },
+  "SANM": {
+   "bars": 28397,
+   "pages": 8,
+   "days": 251
+  },
+  "S": {
+   "bars": 31578,
+   "pages": 12,
+   "days": 251
+  },
+  "SE": {
+   "bars": 31549,
+   "pages": 12,
+   "days": 251
+  },
+  "SARO": {
+   "bars": 30842,
+   "pages": 10,
+   "days": 251
+  },
+  "SEI": {
+   "bars": 31305,
+   "pages": 10,
+   "days": 251
+  },
+  "SGI": {
+   "bars": 30629,
+   "pages": 10,
+   "days": 251
+  },
+  "SFM": {
+   "bars": 31028,
+   "pages": 10,
+   "days": 251
+  },
+  "SIMO": {
+   "bars": 29000,
+   "pages": 9,
+   "days": 251
+  },
+  "SITM": {
+   "bars": 29670,
+   "pages": 9,
+   "days": 251
+  },
+  "SKHY": {
+   "bars": 11268,
+   "pages": 8,
+   "days": 90
+  },
+  "SMTC": {
+   "bars": 30976,
+   "pages": 11,
+   "days": 251
+  },
+  "SOLS": {
+   "bars": 31240,
+   "pages": 10,
+   "days": 251
+  },
+  "SM": {
+   "bars": 31516,
+   "pages": 11,
+   "days": 251
+  },
+  "SPXC": {
+   "bars": 24863,
+   "pages": 6,
+   "days": 251
+  },
+  "SPCX": {
+   "bars": 13533,
+   "pages": 11,
+   "days": 108
+  },
+  "SNDK": {
+   "bars": 31610,
+   "pages": 21,
+   "days": 251
+  },
+  "STLD": {
+   "bars": 30063,
+   "pages": 9,
+   "days": 251
+  },
+  "STM": {
+   "bars": 31557,
+   "pages": 14,
+   "days": 251
+  },
+  "STX": {
+   "bars": 31555,
+   "pages": 14,
+   "days": 251
+  },
+  "SUPN": {
+   "bars": 29822,
+   "pages": 9,
+   "days": 251
+  },
+  "SWKS": {
+   "bars": 31456,
+   "pages": 11,
+   "days": 251
+  },
+  "TEAM": {
+   "bars": 31513,
+   "pages": 12,
+   "days": 251
+  },
+  "STRL": {
+   "bars": 31038,
+   "pages": 10,
+   "days": 251
+  },
+  "TENB": {
+   "bars": 31029,
+   "pages": 10,
+   "days": 251
+  },
+  "TEM": {
+   "bars": 31595,
+   "pages": 15,
+   "days": 251
+  },
+  "TGTX": {
+   "bars": 30759,
+   "pages": 10,
+   "days": 251
+  },
+  "TER": {
+   "bars": 31535,
+   "pages": 12,
+   "days": 251
+  },
+  "TLN": {
+   "bars": 30895,
+   "pages": 10,
+   "days": 251
+  },
+  "TREX": {
+   "bars": 30624,
+   "pages": 10,
+   "days": 251
+  },
+  "TRU": {
+   "bars": 30631,
+   "pages": 10,
+   "days": 251
+  },
+  "TSCO": {
+   "bars": 31554,
+   "pages": 11,
+   "days": 251
+  },
+  "TSEM": {
+   "bars": 31437,
+   "pages": 12,
+   "days": 251
+  },
+  "TPL": {
+   "bars": 28315,
+   "pages": 8,
+   "days": 251
+  },
+  "TTAN": {
+   "bars": 30091,
+   "pages": 10,
+   "days": 251
+  },
+  "TTD": {
+   "bars": 31609,
+   "pages": 15,
+   "days": 251
+  },
+  "TTMI": {
+   "bars": 31374,
+   "pages": 11,
+   "days": 251
+  },
+  "TVTX": {
+   "bars": 30203,
+   "pages": 10,
+   "days": 251
+  },
+  "TWLO": {
+   "bars": 31350,
+   "pages": 11,
+   "days": 251
+  },
+  "TXG": {
+   "bars": 31380,
+   "pages": 11,
+   "days": 251
+  },
+  "TWST": {
+   "bars": 30714,
+   "pages": 10,
+   "days": 251
+  },
+  "U": {
+   "bars": 31574,
+   "pages": 13,
+   "days": 251
+  },
+  "UAL": {
+   "bars": 31570,
+   "pages": 12,
+   "days": 251
+  },
+  "TXN": {
+   "bars": 31556,
+   "pages": 11,
+   "days": 251
+  },
+  "UNF": {
+   "bars": 21336,
+   "pages": 6,
+   "days": 251
+  },
+  "UPST": {
+   "bars": 31602,
+   "pages": 13,
+   "days": 251
+  },
+  "UMC": {
+   "bars": 31516,
+   "pages": 13,
+   "days": 251
+  },
+  "URI": {
+   "bars": 30111,
+   "pages": 9,
+   "days": 251
+  },
+  "VG": {
+   "bars": 31586,
+   "pages": 14,
+   "days": 251
+  },
+  "VICR": {
+   "bars": 29395,
+   "pages": 8,
+   "days": 251
+  },
+  "VKTX": {
+   "bars": 31488,
+   "pages": 12,
+   "days": 251
+  },
+  "VIAV": {
+   "bars": 31516,
+   "pages": 12,
+   "days": 251
+  },
+  "VSAT": {
+   "bars": 30967,
+   "pages": 10,
+   "days": 251
+  },
+  "VLO": {
+   "bars": 31498,
+   "pages": 11,
+   "days": 251
+  },
+  "VST": {
+   "bars": 31559,
+   "pages": 13,
+   "days": 251
+  },
+  "VSH": {
+   "bars": 30815,
+   "pages": 11,
+   "days": 251
+  },
+  "WCC": {
+   "bars": 28058,
+   "pages": 8,
+   "days": 251
+  },
+  "W": {
+   "bars": 31337,
+   "pages": 10,
+   "days": 251
+  },
+  "VSXY": {
+   "bars": 31030,
+   "pages": 10,
+   "days": 251
+  },
+  "WING": {
+   "bars": 30553,
+   "pages": 10,
+   "days": 251
+  },
+  "WDC": {
+   "bars": 31581,
+   "pages": 17,
+   "days": 251
+  },
+  "WHR": {
+   "bars": 31215,
+   "pages": 10,
+   "days": 251
+  },
+  "WRBY": {
+   "bars": 31203,
+   "pages": 10,
+   "days": 251
+  },
+  "WSO": {
+   "bars": 28435,
+   "pages": 9,
+   "days": 251
+  },
+  "WULF": {
+   "bars": 31611,
+   "pages": 17,
+   "days": 251
+  },
+  "XP": {
+   "bars": 31526,
+   "pages": 11,
+   "days": 251
+  },
+  "WWD": {
+   "bars": 28300,
+   "pages": 8,
+   "days": 251
+  },
+  "XPO": {
+   "bars": 29037,
+   "pages": 9,
+   "days": 251
+  },
+  "ZETA": {
+   "bars": 31602,
+   "pages": 15,
+   "days": 251
+  },
+  "Z": {
+   "bars": 31406,
+   "pages": 11,
+   "days": 251
+  }
+ },
+ "errors": [],
+ "seconds": 1165.5,
+ "have_keys": true
+}

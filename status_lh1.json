@@ -1,0 +1,454 @@
+{
+ "mode": "hours",
+ "start": "2025-07-15",
+ "end": "2026-11-15",
+ "feed": "sip",
+ "errors": [
+  {
+   "task": [
+    "",
+    [
+     "ORIC",
+     "ORKA",
+     "OSCR"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "OVV",
+     "OWL",
+     "OXY"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "PARR",
+     "PATH",
+     "PAY"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "PCTY",
+     "PCVX",
+     "PD"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "PFGC",
+     "PGNY",
+     "PGY"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "PL",
+     "PLAB",
+     "PLSE"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "POWL",
+     "PPLI",
+     "PPTA"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "PRGS",
+     "PRIM",
+     "PRKS"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "PSX",
+     "PTC",
+     "PTCT"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "PVH",
+     "PWP",
+     "PWR"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "QNST",
+     "QS",
+     "QTWO"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "RAPP",
+     "RARE",
+     "RBLX"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "RDNT",
+     "RDW",
+     "REAL"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "RGEN",
+     "RGLD",
+     "RGTI"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "RKT",
+     "RLAY",
+     "RMBS"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "RRC",
+     "RRX",
+     "RSI"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "RXO",
+     "RYAN",
+     "RYTM"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "SBAC",
+     "SBET",
+     "SBH"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "SEDG",
+     "SEI",
+     "SEZL"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "SGRY",
+     "SHAK",
+     "SHC"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "SITE",
+     "SKE",
+     "SKM"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "SLDE",
+     "SLG",
+     "SLM"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "SMPL",
+     "SMR",
+     "SMTC"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "SNEX",
+     "SNPS",
+     "SNX"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "SQM",
+     "SRAD",
+     "SRPT"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "STEP",
+     "STLD",
+     "STM"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "STX",
+     "SUPN",
+     "SVM"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "SYNA",
+     "SYRE",
+     "TAC"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "TDW",
+     "TEAM",
+     "TECH"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "TEVA",
+     "TEX",
+     "TFPM"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "TIC",
+     "TIGO",
+     "TIGR"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "TNDM",
+     "TNGX",
+     "TNK"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "TREX",
+     "TRI",
+     "TRIP"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "TTAN",
+     "TTI",
+     "TTMI"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "TYL",
+     "TYRA",
+     "U"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "UMC",
+     "UNFI",
+     "UNIT"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "USAR",
+     "USAS",
+     "UTHR"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "VC",
+     "VCEL",
+     "VCTR"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "VET",
+     "VFC",
+     "VG"
+    ]
+   ],
+   "error": "out of time"
+  },
+  {
+   "task": [
+    "",
+    [
+     "VIRT",
+     "VISN",
+     "VIST"
+    ]
+   ],
+   "error": "out of time"
+  }
+ ],
+ "tasks": 142,
+ "done": 90,
+ "pages": 9287,
+ "rows": 1693782,
+ "seconds": 2762.6,
+ "have_keys": true
+}
