@@ -381,6 +381,10 @@ class Arr:
                   and (c[i - 1] < self.e21[i - 1] or c[i - 1] < self.e50[i - 1]) and c[i] > self.e21[i]
                   and sum(1 for k in range(i - n, i) if c[k] < self.e21[k]) >= L["start_down"] and self.e21[i - 1] < self.e21[i - 1 - n]
                   and not self.red_inside(i)
+                  # your 30% rule holds for a start day too (the user, Nov 15 2026: "30% rule is the point, we are not interested
+                  # in any stock close to their 52 week low; it can be below the day before but to get alerted and to get to
+                  # the start table it has to pass"): the start day's CLOSE 30%+ over the 52-week low (NU Nov 13 2026: 17.9%)
+                  and c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100)
                   and ((self.chg[i] >= L["start_adr"] * st.adr[i] and self.clpos[i] >= L["min_clpos"])
                        or (self.chg[i] >= L["gap_keep"] * self.gap[i] and self.gap[i] >= L["start_gap"] and st.o[i] > self.e21[i])))
         self._sr[i] = ok
