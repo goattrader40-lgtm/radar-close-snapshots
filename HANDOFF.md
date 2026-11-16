@@ -64,8 +64,37 @@ alone.
   When the Gainers rows showed with "4% + Above ORH-5min" (from live_history.json, which logs at 5%+): AVEX 9:37 -> the 9:40
   read, MOH 9:38, TSCO / POWL 9:52, FUN 10:31, BILL 10:34; the table is up to 5 minutes late and the opening range highs
   first arrive with the 9:40 read (levels.py runs after the 5-minute update from 9:36); the page polls every 90 seconds.
-- **In work, test branch only (the user's "yes test it")**: the Gainers table faster: the opening range highs at ~9:36, the
-  stocks up 2%+ re-read every minute, the page polling faster in that window. See the end of this section when done.
+- **LIVE (the user's "go lvie both", Mon Nov 16 2026 ~2:00 PM ET, commits 0bc5e9d + f77e1b9): two changes. FIRST CHECK Tue Nov
+  17 at 9:36 AM ET: neither has run on live prices.**
+  1. **The movers every minute, 9:36-10:30** (the user, on the Gainers tab with "up 4%+ and Above ORH-5min": "is there anyway
+     we can have every 1min after 5min close"; AVEX over its range high 12.64 at 9:37, shown with the 9:40 read). New
+     radar/movers.py: the stocks up 2%+ (in the last full read or an earlier minute, or with an opening range today) are
+     re-read and put on top of the last full update -> live.json with `fast_at` / `fast_n` (`saved_at` stays the full
+     read's); radar/day.py `movers_once` runs it after fast_once in `movers_window` (9:36-10:30), then levels.py (so the
+     opening range highs come at 9:36, not with the 9:40 read), and publishes both each minute. docs/index.html: the 20-second
+     check runs to 10:30 (was 10:00); the live line adds "stocks up 2%+ from <time> (every minute to 10:30)". The alerts do
+     not read the merged file (they keep live.json's full read and live_fast.json). Tested: stand-in quotes (under 2% not
+     read, a stock that fell back still followed, an older quote ignored); a REAL read on a copy (radar-tools `moverstest`
+     -> radar-data movers_test.json: 360 movers in 1.2 s); the page on desktop / phone, no page errors. NOT seen: the 9:36
+     run reading ~300 opening ranges inside the minute, the step inside the day job, a minute tick running long. Check
+     Tuesday: live.json has fast_at between the 5-minute marks from 9:36; levels.json saved_at ~9:36-9:37; the day job's
+     later ticks on time. A stock that jumps from under 2% inside one 5-minute gap still waits for the next full read
+     (offered: 1% in that window, not built).
+  2. **Gap out of base: a 1x volume pace all day, 2x gets its own alert** (the user: "i want to drop 2x to 1x, and when it gets
+     to 2x it can alert me"). KVYO Nov 16 2026: base top 22.20 alert 9:35 (right), 9:50 "OUT, vol 1.1x under 2x", then
+     "1-min / 5-min high broke" (22.72) only at 12:30 with the volume at 2.0x and the price at 23.76: the rule "after 9:50
+     a trigger needs 2x" held them (the user's chart: the break around 10:30; not confirmed: no minute record, radar-tools
+     `replay` gives nothing for a stock not in launch.json `watch`). radar/alerts.py find_gob: the buy and the 9:50 check at
+     `gob_rv` (1), the new key `:gob2x` "gap out of base: volume now 2.0x" at `gob_rv20` (2) from 9:50, only after a gap
+     alert that did not already say 2x+; the "out at 9:50" words only before 9:50. Page legend and BOX_OF (gob2x), rules
+     workbook. Tested with KVYO's numbers through find_gob (9:46, 9:50 at 1.1x and 0.8x, 10:31, 12:30) and the page load;
+     no `--regress` (launch.py untouched), no Launches rebuild, no 2-year check (an alert threshold). The running day job
+     keeps the old alerts.py until its next start: in effect from Tue Nov 17.
+- **Explained, no change**: the morning breakout box (Alerts tab) is the 1-minute version of the same idea with its own
+  rules (5%+, 1x, over PDH and ORH, above the 200 SMA / 50 EMA, 10 > 21 > 50; the user has saved no settings): MOH 9:38, CNC
+  9:39, TSCO 9:52 (it crossed its range high 37.88 at +3.9%: the 5% rule made it late). Suggested: 4% there (the user's
+  to save on the tab). Seen, not changed: a followed stock's plain breakout alert fired on a gap-out-of-base day (KVYO
+  9:35) though the legend says it stays quiet; the 1-minute checks stop 12:00-3:00.
 
 ## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 ~0:30 - 2 AM ET and Sat Nov 14 2026 ~noon - 5 PM ET; session_01PkbDahhagkKkQ2rkgKsLuZ)
 
