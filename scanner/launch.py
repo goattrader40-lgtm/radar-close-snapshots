@@ -91,7 +91,7 @@ from screens import roll_mean  # noqa: E402
 
 L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=3, power_gap=8, power_chg=10, power_ext200=10 ** 6, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=10 ** 6, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
          near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
-         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5,
+         near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_first=1, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5,
          lag_rv=2, lag_under200=60,
          # max_ext200 / power_ext200 = no limit (the user, Nov 10 2026: "it can be a launch.. I don't have any rule like that",
          # "stocks can keep going up"; XNCR Nov 4 2026, 79% over its 200 SMA the day before; was 28% / 50% for a power day)
@@ -1462,6 +1462,19 @@ def follow(a, i0, i, pick=False):
     body = lambda lo, hi: float(np.maximum(st.o[lo:hi], st.c[lo:hi]).max())
     rlv = (i0, min(body(i0 - 20, i0), st.h[i0 - 20:i0].max()), float(st.h[i0 - 20:i0].max())) \
         if i0 >= 20 and c[i0] > st.h[i0 - 20:i0].max() else None
+    # a launch can clear an older, higher top too (the user, Nov 16 2026, AZTA: launched Nov 11 2026 at 48.90 over its Oct 6 top
+    # 46.41, 26 sessions back, body top 43.76 = that day's open; the 20-day level was 41.27-41.71, so the Nov 12-13 retest of
+    # 43.76-46.41, low 43.15, was never seen): the 6- or 3-month high when the close cleared it, its bodies from 20 sessions
+    # before that top. The level in play is the higher one while the close holds over its bodies, else the 20-day one (SPOT
+    # Oct 28 2026 at 536.98 under its older 565.00; ACN Oct 7 2026 at 195.00 under 199.65): chosen after the loop
+    rlv_hi = None
+    if rlv:
+        for n_ in BASES[:2]:
+            if i0 >= n_ and c[i0] > st.h[i0 - n_:i0].max() > rlv[2] * 1.001:
+                k_ = i0 - n_ + int(np.argmax(st.h[i0 - n_:i0]))
+                rlv_hi = (i0, min(body(max(0, k_ - 20), i0), float(st.h[k_])), float(st.h[k_]))
+                break
+    rlv0 = rlv
     dry_done, dry_day, flag_day, fline = False, None, None, None        # one dry-up entry per base (ANF: Oct 5 2026, not again)
     ftop, fshape = None, None
     weak_bo, thru_day = None, None                          # a weak breakout (day, top) waiting for its follow-through
@@ -1608,6 +1621,8 @@ def follow(a, i0, i, pick=False):
                 back_day, back_from, off_since, off_why, stall = j, off_since, None, None, None
         if st.h[j] > H:
             H, last_new, armed, dry_done = st.h[j], j, True, False
+    if rlv_hi and rlv is rlv0 and (i == i0 or c[i0 + 1 + int(np.argmin(st.l[i0 + 1:i + 1]))] > rlv_hi[1]):
+        rlv = rlv_hi                  # the day of the pullback's low closed over the higher level's bodies: that level is in play
     hi = st.h[i0:i + 1].max()
     status = "Riding" if c[i] >= a.e21[i] else "Below 21 EMA"
     fl = flag_at(a, i)
@@ -1619,6 +1634,13 @@ def follow(a, i0, i, pick=False):
     flag_bo = flag_day == i
     # tomorrow's base tops (the smaller and the larger base): buy points when above today's close
     tops = [b for b in (base_ok(a, i + 1, sp) for sp in L["base_spans"]) if b and c[i] < b[0]]
+    # a top the stock closed decisively over (more than 0.5%) in the last 3 sessions is used up: base_top leaves those 3
+    # sessions out (the push into the top), so the day that broke it was forgotten and the old top came back as a fresh
+    # "Base top" (the user, Nov 16 2026, AZTA: the Nov 11 launch closed 48.90 over 46.41, Nov 16 alerted "breakout: Base
+    # top 46.41, nothing traded above it for 431 sessions, leg 2"). A poke that closed back under, or a close within 0.5%
+    # (a breakout with caution, the top stays the trigger), keeps it; so does a FAILED breakout
+    tops = [b for b in tops if c[max(0, i - 2):i + 1].max() <= b[0] * (1 + L["caution_pct"] / 100)
+            or (failed and failed[2] >= i - 2)]     # a failed breakout: the top is the trigger again
     if len(tops) == 2 and max(tops)[0] <= min(tops)[0] * (1 + 0.5 * _adr(st, i) / 100):
         tops = [max(tops)]          # two highs within half an ADR are one level, the higher (CAI Oct 2026: 32.77 / 32.89)
     # the buy point = the nearest trigger above today's close: your MSF pattern's pivot, the flag's trendline or
@@ -1676,7 +1698,7 @@ def follow(a, i0, i, pick=False):
         breakout: drifting at the base high is consolidating, GMAB Sep 23 - Oct 1), after closing 1.25+ ADRs away from
         the level, the low at the level (undercut and reclaim: GMAB Oct 2, from 35.90 down to 33.72 under 34.63)"""
         ak = _adr(st, k)
-        return bool(rlv and 3 <= k - rlv[0] <= L["retest_days"]
+        return bool(rlv and L["retest_first"] <= k - rlv[0] <= L["retest_days"]
                     and rlv[1] * (1 - 1.5 * ak / 100) <= st.l[k] <= max(rlv[2], rlv[1] * (1 + ak / 400))
                     and st.l[k] <= st.h[rlv[0]:k].max() * (1 - 1.5 * ak / 100)
                     and c[rlv[0]:k].max() >= rlv[1] * (1 + 1.25 * ak / 100))
@@ -1697,13 +1719,15 @@ def follow(a, i0, i, pick=False):
     # the retest's day: the pullback's new low reclaimed (GMAB Oct 2), or testing the level while every close since the
     # first touch held over the 21 EMA (ACN Oct 5-7 2026 at its old base top 195.00-197.63, closes over the 21 EMA
     # 187-188: Oct 7 closed 196.64 back over 195.00, the buy at the close; ANF Aug 17-18 closed under it: no retest)
-    rday = lambda k: bool(hit(k) and (st.l[k] <= st.l[rlv[0] + 1:k].min()
+    rday = lambda k: bool(hit(k) and (st.l[k] <= st.l[rlv[0] + 1:k].min(initial=np.inf)
                                       or (first is not None and first <= k and (c[first:k + 1] > a.e21[first:k + 1]).all())))
     rdays = [k for k in range(rlv[0] + 1, i + 1) if rday(k)] if rlv else []
     done = rdays[0] if rdays else None
     # one per breakout, unless a later one undercuts the earlier's low and reclaims again (CAI 2026: Sep 3 at 23.62, then
     # Sep 10 down to 23.20 under the 23.66 base high and the 21 EMA, closed back over both)
-    retest = bool(held and rdays and rdays[-1] == i and all(st.l[i] < st.l[k] for k in rdays[:-1]))
+    # ... or the stock closed back under the level in between and reclaims it (the user, Nov 16 2026: "if nov 12th failed nov
+    # 13th would be retest"; GMAB Oct 1 2026 closed 34.55 under 34.63, Oct 2 held)
+    retest = bool(held and rdays and rdays[-1] == i and all(st.l[i] < st.l[k] or (c[k + 1:i] < rlv[1]).any() for k in rdays[:-1]))
     retest_ema = retest_on(i)[1] if retest else []
 
     # the two 21 EMA entries in the base, once per pullback (none after a retest of the breakout level in it)
@@ -1797,7 +1821,7 @@ def follow(a, i0, i, pick=False):
             ema21_watch = "retest"
     # tomorrow's zone, for the heads-up during the day (the buy alert itself waits for the close): until a retest held
     zone = [fnum(rlv[1] * (1 - 1.5 * adr / 100)), fnum(max(rlv[2], rlv[1] * (1 + adr / 400)))] \
-        if held and 2 <= i - rlv[0] < L["retest_days"] else None
+        if rlv and (held or i == rlv[0]) and L["retest_first"] - 1 <= i - rlv[0] < L["retest_days"] else None
     # the push out of the 10 / 21 EMA with a gap, within 5 sessions of the retest's first touch, held or not: the day
     # before still at the EMAs (closing within an ADR of the 10 EMA, over the 50 EMA), it opens over that day's candle
     # (its open and close) and closes over the trigger, the highest of that candle, the 10 and 21 EMA and the breakout
@@ -2157,7 +2181,7 @@ def follow(a, i0, i, pick=False):
         retest_need_low=fnum(st.h[rlv[0]:i + 1].max() * (1 - 1.5 * adr / 100)) if zone else None,
         retest_away=bool(c[rlv[0]:i + 1].max() >= rlv[1] * (1 + 1.25 * adr / 100)) if zone else None,
         retest_tried=st.dates[first] if first is not None else None,
-        retest_low=fnum(st.l[rlv[0] + 1:i + 1].min()) if zone else None,          # tomorrow's low has to undercut it,
+        retest_low=fnum(st.l[rlv[0] + 1:i + 1].min()) if zone and i > rlv[0] else None,          # tomorrow's low has to undercut it,
         retest_testing=bool(zone and first is not None and (c[first:i + 1] > a.e21[first:i + 1]).all()),   # unless testing over the 21 EMA
         push_level=fnum(push_level) if push_level else None, push_today=push_day == i,
         adr_pct=fnum(adr, 2), ema10=fnum(a.e10[i]), ema50=fnum(a.e50[i]), day_open=fnum(st.o[i]),
