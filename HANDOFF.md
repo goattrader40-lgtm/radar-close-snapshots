@@ -49,6 +49,24 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: missing earnings on the list (Nov 16)" (Mon Nov 16 2026, from ~9:25 AM ET; session_01PkbDajdEo2jtmt5tLkCvv4; in progress)
+
+- **LIVE (the user's "nvda earnings go live", Mon Nov 16 2026 ~11:20 AM ET, commit 29a7ffc): the Earnings tab has no market cap
+  ceiling.** The user sent the Earnings Whispers card of the week of Nov 16 ("howcome most of these as an example $nvda missing
+  from our earnings list"). Found: nothing broken; of its 83 names 15 were on our list, 17 are not in stocks.json, 51 fail the
+  user's Earnings rules (37 on ADR 3.5%: HD, DIS, WMT, TGT ...), and NVDA ($3,925B, ADR 4.09%) failed only the `max_mcap` 2e12
+  of scanner/settings.json "earnings": a ceiling agreed Nov 2 for the scans ("no $2T+ stocks"), copied into the Earnings rules
+  on Nov 3, not one of the tab's six boxes and not in its "Who" text. The user: "fix that ceiling for earnings only". Removed
+  from "earnings" only ("standard" keeps it: the scans, Watchlist, Launches, group rank unchanged). Tested on the Nov 13 close:
+  NVDA is the only stock it adds (AAPL, MSFT, GOOGL, AMZN, TSM fail the ADR). earnings.yml run by hand 11:24 AM ET: 111 rows, 0
+  errors, NVDA on Tue Nov 17 after the close. Rules workbook: the Earnings "Who shows" row. No page file touched.
+- **Answered, no change**: POWL was on the list all along (Mon Nov 16 after close; in the "Under the 200-day SMA" table, -34.6%).
+  When the Gainers rows showed with "4% + Above ORH-5min" (from live_history.json, which logs at 5%+): AVEX 9:37 -> the 9:40
+  read, MOH 9:38, TSCO / POWL 9:52, FUN 10:31, BILL 10:34; the table is up to 5 minutes late and the opening range highs
+  first arrive with the 9:40 read (levels.py runs after the 5-minute update from 9:36); the page polls every 90 seconds.
+- **In work, test branch only (the user's "yes test it")**: the Gainers table faster: the opening range highs at ~9:36, the
+  stocks up 2%+ re-read every minute, the page polling faster in that window. See the end of this section when done.
+
 ## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 ~0:30 - 2 AM ET and Sat Nov 14 2026 ~noon - 5 PM ET; session_01PkbDahhagkKkQ2rkgKsLuZ)
 
 **In one line: the Days 21H / 62H columns (Nov 13), then on Sat Nov 14 nine go lives on the Watchlist's 1-lists and the Launches
