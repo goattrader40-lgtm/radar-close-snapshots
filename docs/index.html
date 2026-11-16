@@ -3615,7 +3615,7 @@ defCalc('industry_perf', {
       ['Liquid: ', 'price $' + lqd.min_price + '+, a 20-day average of $' + lqd.min_dollar_vol_20d_millions + 'M+ and ' + g0.format(lqd.min_avg_vol_20d) + '+ shares a day, ADR ' + lqd.min_adr + '%+.'],
       ['One at a time: ', 'another launch of the same stock within ' + lr.dedupe_days + ' sessions counts only after it closed under the 21 EMA, or when it grades higher.'],
       ['Your picks: ', 'the Follow button on the Watchlist tab; followed from the close you add them at, launch day or not.'],
-      ['Gap out of base (a buy point): ', 'a stock on this list closed at or under its base high (the base top or your MSF pattern\'s pivot; not a flag line or a pop) and opens above it. Only with an ADR of ' + (lr.gob_min_adr || 4) + '%+, ' + g0.format(lr.gob_min_shares || 600000) + '+ shares and $' + (lr.gob_min_dv || 30) + 'M+ a day (20-day averages) and a $' + (lr.gob_min_mcap || 700) + 'M+ market cap. The entry: over the 1- or 5-minute opening range high, the stop its low, with a volume pace of ' + (lr.gob_rv || 1) + '×+ at the buy; out at 9:50 if the volume pace isn\'t ' + (lr.gob_rv20 || 2) + '× by then, whatever the trade. Phone alerts: the gap, each trigger with its stop, and the 9:50 check; its plain breakout alert stays quiet that day.'],
+      ['Gap out of base (a buy point): ', 'a stock on this list closed at or under its base high (the base top or your MSF pattern\'s pivot; not a flag line or a pop) and opens above it. Only with an ADR of ' + (lr.gob_min_adr || 4) + '%+, ' + g0.format(lr.gob_min_shares || 600000) + '+ shares and $' + (lr.gob_min_dv || 30) + 'M+ a day (20-day averages) and a $' + (lr.gob_min_mcap || 700) + 'M+ market cap. The entry: over the 1- or 5-minute opening range high, the stop its low, with a volume pace of ' + (lr.gob_rv || 1) + '×+ at the buy, all day; out at 9:50 if the volume pace isn\'t ' + (lr.gob_rv || 1) + '× by then, whatever the trade (your rule, Nov 16 2026: 1×, was 2×). Phone alerts: the gap, each trigger with its stop, the 9:50 check, and one more when the volume pace reaches ' + (lr.gob_rv20 || 2) + '×; its plain breakout alert stays quiet that day.'],
       ['Off the list: ', 'a launch leaves after 2 closes in a row under the 50 EMA (your rule, Nov 10 2026; that day it shows in the 50 EMA undercut tab below: a close back over it the next session is an entry and puts it back), or while neither its 21 nor its 50 EMA is rising (vs 5 sessions before); it comes back the day it breaks out again (a base, a flag, a falling range, a launch-size day) over both EMAs: the status says BACK ON THE LIST (AMD Apr 8 2026); or while its last 2 closes are under the 200-day SMA (your rule, Nov 3 2026: it comes back the first close it is over it again; not a laggard, which is under it by design); or ' + (lr.off_days || 62) + ' sessions from its highest point without a new high (a $60 high with the stock at $55 now: counted from the $60 day), your picks too; or when its ADR (20 days) drops under ' + (lr.off_adr || 3.2) + '% (a launch day needs ' + lqd.min_adr + '%+; TECH: 0.2% after its Jun 25 gap); or when the same stock launches again (the newest launch replaces it). ✕ on any row removes it by hand: a pick is no longer followed, a launch leaves with its alerts until it launches again on a later day. The first close under the 21 EMA is only the exit signal: the stock stays. Lone wolves are only hidden (tick the box to show them).'],
     ] : []).map(([k, v]) => { const d = h('div', ''); d.append(h('strong', '', k), document.createTextNode(v)); return d; }));
     $('#ln-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : st('launch').status === 'error' ? 'Could not load the launches' : '—';
@@ -3917,10 +3917,10 @@ defCalc('industry_perf', {
       const inside = (r.pattern || '').startsWith('Pop out of the consolidation');   /* an entry inside the base, not a new leg (ANF Oct 5 2026) */
       /* gap out of base (your rule, Nov 1 2026): closed at or under its base high (the base top or a pattern's pivot, not a flag line
          or a pop) and opened above it; the entry is the 1- or 5-minute opening range high (the phone alerts give both, with their
-         stops), out at 9:50 if the volume pace isn't 2×. Its breakout alert stays quiet that day */
+         stops), out at 9:50 if the volume pace isn't 1× (the user, Nov 16 2026; 2× gets its own alert). Its breakout alert stays quiet that day */
       const gl = r.gap_base_level;
       if (gl && r.gap_base_ok && op && (r.price || 0) <= gl && op > gl) {
-        if (price > gl && rv >= (R.gob_rv || 1)) out.push([r.symbol + ':gapbase', r.symbol + ' GAP OUT OF BASE', 'opened ' + fPrice(op) + ', ' + f1(100 * (op / gl - 1)) + ' over its base high ' + fPrice(gl) + ' (' + (r.gap_base_pattern || 'Base top') + ') · now ' + fPrice(price) + ' · ' + f1(chg) + vol + ' · the entry: over the 1- or 5-minute opening range high, the stop its low; out at 9:50 if the volume pace isn\'t 2×', r.tv]);
+        if (price > gl && rv >= (R.gob_rv || 1)) out.push([r.symbol + ':gapbase', r.symbol + ' GAP OUT OF BASE', 'opened ' + fPrice(op) + ', ' + f1(100 * (op / gl - 1)) + ' over its base high ' + fPrice(gl) + ' (' + (r.gap_base_pattern || 'Base top') + ') · now ' + fPrice(price) + ' · ' + f1(chg) + vol + ' · the entry: over the 1- or 5-minute opening range high, the stop its low; out at 9:50 if the volume pace isn\'t ' + (R.gob_rv || 1) + '×', r.tv]);
         return;
       }
       /* "touched its buy point, back under" comes from the GitHub job only, once today's 1-minute chart confirms the trade over
@@ -4147,7 +4147,7 @@ defCalc('industry_perf', {
   const BOXES = [['m', '⏰', 'Pre-market'], ['o', '📈', 'Morning breakouts'], ['l', '🚀', 'Launching now'], ['p', '🎯', 'Pattern breakouts'], ['e', '⚡', 'Episodic pivots'],
     ['b', '↩️', 'Pullback entries'], ['h', '👀', 'Heads-ups'], ['g', '👥', 'Groups & news']];
   const BOX_OF = { power: 'e', catalyst: 'l', launch: 'l', stars: 'l', reversal: 'l', laggard: 'l',
-    breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
+    breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', gob2x: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
     ep: 'e',
     retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b', ema21hold: 'b', ema50hold: 'b', bolight: 'h', bowide: 'h',
     early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', eodheld: 'g', eodlost: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g', mbo: 'o' };
@@ -5990,7 +5990,7 @@ defCalc('industry_perf', {
       const age = (Date.now() - new Date(LIVE.saved_at).getTime()) / 60000;
       const late = marketOpen() && age > 15;
       dot.className = 'tgr-ldot ' + (late ? 'warn' : 'ok');
-      tx.textContent = (late ? 'Live prices are ' + Math.round(age) + ' minutes old (the GitHub job may be running late)' : 'Live: prices from ' + fTime(LIVE.saved_at) + ' ET, updated about every 5 minutes') + chk;
+      tx.textContent = (late ? 'Live prices are ' + Math.round(age) + ' minutes old (the GitHub job may be running late)' : 'Live: prices from ' + fTime(LIVE.saved_at) + ' ET, updated about every 5 minutes' + (LIVE.fast_at && LIVE.fast_at > LIVE.saved_at ? ' · stocks up 2%+ from ' + fTime(LIVE.fast_at) + ' ET (every minute to 10:30)' : '')) + chk;
     } else {
       dot.className = 'tgr-ldot';
       const openSoon = !marketOpen() && b.asof !== todayNY();
@@ -6000,11 +6000,11 @@ defCalc('industry_perf', {
   $('#live-reload').addEventListener('click', () => refresh(true));
   document.addEventListener('visibilitychange', () => { if (!document.hidden && (!lastCheck || Date.now() - lastCheck > 60000)) refresh(false); });
   setInterval(() => { if (!document.hidden || alertsOn) refresh(false); }, 90000);    /* alerts on: keep checking in a background tab */
-  /* 8:45-10:00 ET on weekdays (the grades, then the open's alerts): every 20 seconds (the user, Nov 4 2026: the 9:31
+  /* 8:45-10:30 ET on weekdays (the grades, the open's alerts, then to 10:30 the movers' 1-minute prices: the user, Nov 16 2026): every 20 seconds (the user, Nov 4 2026: the 9:31
      heads-ups showed a minute or two late; "let's make sure it does"), key or not (tipSha: unchanged checks are free) */
   setInterval(() => {
     const n = nyNow();
-    if (Date.now() < RL_UNTIL || ['Sat', 'Sun'].includes(n.wd) || n.m < 525 || n.m > 600 || (document.hidden && !alertsOn)) return;
+    if (Date.now() < RL_UNTIL || ['Sat', 'Sun'].includes(n.wd) || n.m < 525 || n.m > 630 || (document.hidden && !alertsOn)) return;
     if (lastCheck && Date.now() - lastCheck < 15000) return;
     refresh(false);
   }, 20000);

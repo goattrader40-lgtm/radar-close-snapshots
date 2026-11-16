@@ -9,6 +9,8 @@ Timeline (ET, trading days):
   8:25, 8:40   start the "Pre-market scan" workflow (if today's scan isn't saved yet)
   8:45, 8:55, 9:00, 9:10, 9:20   start the "Code grader" workflow after that update's pre-market prices (in by 9:05)
   9:30-4:10    every 5 minutes: live prices -> live.json on the radar-data branch
+  9:36-10:30   every minute in between: the stocks up 2%+ re-read for the portal's tables, and their opening ranges
+               (radar/movers.py, radar/levels.py) -> live.json with "fast_at", levels.json
   9:31-12:00, 3:00-4:00   every minute in between: the launch watch list and the followed launches (radar/fast.py),
                for the big gap-up alerts and the breakouts
                (catalyst gaps, power days, A+/A launches; 9:31-9:34 their early heads-ups, before the volume
@@ -258,6 +260,36 @@ def fast_once():
         sh(sys.executable, os.path.join(HERE, "publish.py"), "alerts " + now().strftime("%F %H:%M"), os.path.join(OUT, "alerts.json"))
 
 
+def movers_window(x):
+    """the movers are re-read every minute from the opening range's close to 10:30 (the user, Nov 16 2026: the Gainers tab
+    with "Above ORH-5min" showed a 9:37 break at 9:40)"""
+    return (9, 36) <= x < (10, 30)
+
+
+def movers_once():
+    """between the live updates: the stocks up 2%+ re-read (radar/movers.py) on top of the last full update, the new
+    movers' opening ranges (radar/levels.py: the first ones at 9:36, not with the 9:40 update), both published for the
+    portal's tables. The alerts don't read this file"""
+    need = [os.path.join(OUT, f) for f in ("live.json", "base_stocks.json")]
+    if not all(os.path.exists(f) for f in need):
+        return
+    pub = os.path.join(OUT, "pub")
+    os.makedirs(pub, exist_ok=True)
+    out = os.path.join(pub, "live.json")
+    load_levels()
+    r = sh(sys.executable, os.path.join(HERE, "movers.py"), need[0], os.path.join(OUT, "live_fast.json"), os.path.join(OUT, "levels.json"),
+           os.path.join(OUT, "base_volprofile.json"), os.path.join(OUT, "sipcal.json"), need[1], out, check=False)
+    if r.returncode:
+        log("movers:", (r.stderr or r.stdout).strip()[-300:])
+        return
+    files = [out]
+    r2 = sh(sys.executable, os.path.join(HERE, "levels.py"), out, os.path.join(OUT, "levels.json"), check=False)
+    if r2.returncode == 0 and os.path.exists(os.path.join(OUT, "levels.json")):
+        files.append(os.path.join(OUT, "levels.json"))
+    log((r.stdout or "").strip()[-200:], "·", (r2.stdout or r2.stderr).strip()[-120:])
+    sh(sys.executable, os.path.join(HERE, "publish.py"), "live movers " + now().strftime("%F %H:%M"), *files, check=False)
+
+
 def daily():
     os.makedirs(OUT, exist_ok=True)
     os.makedirs(WORK, exist_ok=True)
@@ -467,6 +499,11 @@ def day():
                     fast_once()                           # 9:31-9:34 the early heads-ups, then the big gap-ups and breakouts
                 except Exception as e:
                     log("1-minute check failed:", e)
+                if movers_window(hm(t)):
+                    try:
+                        movers_once()                     # the Gainers tab's movers, every minute to 10:30
+                    except Exception as e:
+                        log("movers check failed:", e)
         # close snapshot at 4:06, then the daily refresh
         if hm(t) >= (16, 6) and snap_started is None:
             snap_started = t
