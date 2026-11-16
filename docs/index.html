@@ -5990,7 +5990,7 @@ defCalc('industry_perf', {
       const age = (Date.now() - new Date(LIVE.saved_at).getTime()) / 60000;
       const late = marketOpen() && age > 15;
       dot.className = 'tgr-ldot ' + (late ? 'warn' : 'ok');
-      tx.textContent = (late ? 'Live prices are ' + Math.round(age) + ' minutes old (the GitHub job may be running late)' : 'Live: prices from ' + fTime(LIVE.saved_at) + ' ET, updated about every 5 minutes') + chk;
+      tx.textContent = (late ? 'Live prices are ' + Math.round(age) + ' minutes old (the GitHub job may be running late)' : 'Live: prices from ' + fTime(LIVE.saved_at) + ' ET, updated about every 5 minutes' + (LIVE.fast_at && LIVE.fast_at > LIVE.saved_at ? ' · stocks up 2%+ from ' + fTime(LIVE.fast_at) + ' ET (every minute to 10:30)' : '')) + chk;
     } else {
       dot.className = 'tgr-ldot';
       const openSoon = !marketOpen() && b.asof !== todayNY();
@@ -6000,11 +6000,11 @@ defCalc('industry_perf', {
   $('#live-reload').addEventListener('click', () => refresh(true));
   document.addEventListener('visibilitychange', () => { if (!document.hidden && (!lastCheck || Date.now() - lastCheck > 60000)) refresh(false); });
   setInterval(() => { if (!document.hidden || alertsOn) refresh(false); }, 90000);    /* alerts on: keep checking in a background tab */
-  /* 8:45-10:00 ET on weekdays (the grades, then the open's alerts): every 20 seconds (the user, Nov 4 2026: the 9:31
+  /* 8:45-10:30 ET on weekdays (the grades, the open's alerts, then to 10:30 the movers' 1-minute prices: the user, Nov 16 2026): every 20 seconds (the user, Nov 4 2026: the 9:31
      heads-ups showed a minute or two late; "let's make sure it does"), key or not (tipSha: unchanged checks are free) */
   setInterval(() => {
     const n = nyNow();
-    if (Date.now() < RL_UNTIL || ['Sat', 'Sun'].includes(n.wd) || n.m < 525 || n.m > 600 || (document.hidden && !alertsOn)) return;
+    if (Date.now() < RL_UNTIL || ['Sat', 'Sun'].includes(n.wd) || n.m < 525 || n.m > 630 || (document.hidden && !alertsOn)) return;
     if (lastCheck && Date.now() - lastCheck < 15000) return;
     refresh(false);
   }, 20000);

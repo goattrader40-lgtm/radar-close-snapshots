@@ -36,6 +36,11 @@ jobs:
             python3 radar/publish.py "volume probe" /tmp/probe_vol.json
           fi
           if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi
+          if [ "${{ inputs.cmd }}" = "moverstest" ]; then   # the movers' 1-minute read on a copy of the live files (market hours) -> radar-data movers_test.json
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && mkdir -p /tmp/mv
+            for f in live.json levels.json volprofile.json stocks.json; do git show origin/radar-data:$f > /tmp/mv/$f; done
+            python3 radar/probe_movers.py /tmp/mv /tmp/movers_test.json 3 && python3 radar/publish.py "movers test" /tmp/movers_test.json
+          fi
           if [ "${{ inputs.cmd }}" = "premarket" ]; then python3 radar/day.py premarket; fi
           if [ "${{ inputs.cmd }}" = "etfs" ]; then python3 radar/day.py etfs; fi
           if [ "${{ inputs.cmd }}" = "trades" ]; then python3 radar/probe_trades.py /tmp/probe_trades.json AMD INTC MU SNDK COHR SMCI WDC PLTR && python3 radar/publish.py "trades probe" /tmp/probe_trades.json; fi
