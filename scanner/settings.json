@@ -10,9 +10,8 @@
   },
 
   "earnings": {
-    "_about": "Who shows on the Earnings tab (radar/earnings.py), checked on the last close before the stock first comes on the week's list. Your rules, Nov 3 2026.",
+    "_about": "Who shows on the Earnings tab (radar/earnings.py), checked on the last close before the stock first comes on the week's list. Your rules, Nov 3 2026. No market cap ceiling here (the user, Nov 16 2026: NVDA was missing; the $2T ceiling stays on the scans only).",
     "min_mcap": 700e6,
-    "max_mcap": 2e12,
     "min_dollar_vol_20d_millions": 30,
     "min_avg_vol_20d": 600000,
     "min_price": 10,
