@@ -167,7 +167,7 @@ As of Nov 4, 2026. Source of truth: `scanner/launch.py`, `scanner/settings.json`
 | Push out of the 21 EMA | After a retest, a push out of the 21 EMA with a gap (not while still under a flag's falling line) | The gap open | No |
 | Double breakout | The base top and a falling line inside the base broken the same day | The base top | Yes |
 | 3rd try (ascending triangle) | 1st try = the base high, a 2nd try within 0.25 ADR of it after a real pullback, then a shallower pullback (higher lows) | The base high on the 3rd try | Yes |
-| Gap out of base | Opens over last night's base high (base top or a pattern pivot); needs ADR 4%+, 600K+ shares a day | Over the 1- or 5-minute opening range high, stop its low; out at 9:50 if the volume pace isn't 2x | - |
+| Gap out of base | Opens over last night's base high (base top or a pattern pivot); needs ADR 4%+, 600K+ shares a day | Over the 1- or 5-minute opening range high, stop its low, with a volume pace of 1x+ all day; out at 9:50 if the volume pace isn't 1x (the user, Nov 16 2026: 'drop 2x to 1x, and when it gets to 2x it can alert me'; was 2x: KVYO Nov 16 2026 was over its range high 22.72 in the morning at 1.1-2x and the 1- / 5-min alerts only came at 12:30 at 23.76); one more alert when the volume pace reaches 2x | - |
 | MSF pattern pivot | Your MSF engine's pattern (High tight flag, Flat base, Cup with handle, ...) | The pattern's pivot | Yes |
 | Which one is shown | The nearest trigger above the price | - | - |
 | Exit signal | The first close below the 21 EMA | - | - |
