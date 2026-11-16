@@ -900,6 +900,7 @@ def run(O, H, L, C, V, B, P):
 
     # state (Pine `var`)
     motherHi = NAN; motherLo = NAN; motherC = NAN; inCnt = 0
+    coilZoneLo = NAN                  # the lowest low of the coil's inside days so far (the zone rule, Nov 15 2026)
     zzDir = 1; zzHi = NAN; zzLo = NAN; sh1 = NAN; sh2 = NAN; sl1 = NAN; sl2 = NAN
     lastBO = NAI; failS = NAI; failBar = NAI
     firedS = NAI; tlFiredS = NAI
@@ -921,10 +922,15 @@ def run(O, H, L, C, V, B, P):
         # coil: mother bar + inside days
         cBodyPct = 100 * (max(o_, c_) / min(o_, c_) - 1)
         insideTight = (not isna(motherHi)) and h_ <= motherHi and l_ >= motherLo and (P[K_coilBodyX] >= 1.0 or abs(c_ - o_) <= P[K_coilBodyX] * (h_ - l_)) and (P[K_coilBodyAdr] <= 0 or cBodyPct <= P[K_coilBodyAdr] * adr[i])
+        # the zone rule (the user, Nov 15 2026: "apply zone rule here too"; as the inside day): once the coil has its inside
+        # days, a later day under their lowest low drifts out of the zone: the coil ends and has to form again from that day
+        if insideTight and inCnt >= int(P[K_coilInside]) and l_ < coilZoneLo:
+            insideTight = False
         if insideTight:
             inCnt += 1
+            coilZoneLo = l_ if inCnt == 1 else min(coilZoneLo, l_)
         else:
-            motherHi = h_; motherLo = l_; motherC = c_; inCnt = 0
+            motherHi = h_; motherLo = l_; motherC = c_; inCnt = 0; coilZoneLo = NAN
         rngAvg = rngAvg10[i - 1] if i >= 1 else NAN
         tightDay = abs(c_ - o_) <= P[K_tightBodyX] * (h_ - l_) and ((P[K_tightUseRng] <= 0) or (h_ - l_) <= P[K_tightRangeX] * rngAvg)
 
