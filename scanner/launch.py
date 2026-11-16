@@ -1639,8 +1639,15 @@ def follow(a, i0, i, pick=False):
     # "Base top" (the user, Nov 16 2026, AZTA: the Nov 11 launch closed 48.90 over 46.41, Nov 16 alerted "breakout: Base
     # top 46.41, nothing traded above it for 431 sessions, leg 2"). A poke that closed back under, or a close within 0.5%
     # (a breakout with caution, the top stays the trigger), keeps it; so does a FAILED breakout
-    tops = [b for b in tops if c[max(0, i - 2):i + 1].max() <= b[0] * (1 + L["caution_pct"] / 100)
-            or (failed and failed[2] >= i - 2)]     # a failed breakout: the top is the trigger again
+    # used up = a breakout the engine counted: the launch day itself, or a base breakout of that top, closing more than 0.5%
+    # over it; NOT a close over a smaller top inside a bigger base that was no breakout (the user, Nov 16 2026, APPN Oct 9-13
+    # 2026: still trying its 20-day high 39.67 under the Aug 31 top 44.06)
+    def used_up(b):
+        dec = b[0] * (1 + L["caution_pct"] / 100)
+        if i - i0 <= 2 and b[1] < i0 and c[i0] > dec:
+            return True
+        return bool(bo and i - bo[0] <= 2 and bo[2] == b[1] and c[bo[0]] > dec and not (failed and failed[2] == bo[0]))
+    tops = [b for b in tops if not used_up(b)]
     if len(tops) == 2 and max(tops)[0] <= min(tops)[0] * (1 + 0.5 * _adr(st, i) / 100):
         tops = [max(tops)]          # two highs within half an ADR are one level, the higher (CAI Oct 2026: 32.77 / 32.89)
     # the buy point = the nearest trigger above today's close: your MSF pattern's pivot, the flag's trendline or
