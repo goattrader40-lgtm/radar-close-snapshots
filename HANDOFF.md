@@ -198,6 +198,34 @@ the four 1-list rule changes (they were tested on made-up bars and on the ~175 l
   the start day's low and the 21 EMA), not the third condition: of the 31 extra stocks it removes, 23 were not runners and
   8 were. No answer yet: the rule stays as it is until they say otherwise. Offered: an alert for the GLOB type (started,
   dipped holding its gap, back over the start day's low and the 21 EMA: 8 of 15 ran 10%+); the theme check.
+- **LIVE (the user: "this recommendation accepted", "apply zone rule here too", "fix only line thing, dont touch other parts",
+  "run the test provide result and go live on that"; Sun Nov 15 2026 ~7:15 PM ET, same branch, merge 6b8f20a): three
+  scan changes, no page file touched.**
+  1. **Bull flag: where the falling line starts** (scanner/launch.py flag_anchor, L flag_twin 0.05): the line starts at the
+     day after the top when that day's high is within 0.05 ADR under the top's (TOST: top Nov 4 2026 36.01, Nov 5 35.99: the
+     line was 35.84 on Nov 13, now 34.05). 0.25 ADR moved the agreed CAI Sep 14, ZS Oct 21, TTAN Oct 30 2026: not used.
+     `--regress` same. **2-year check, asked first and run on main and on the branch the same evening** (probe_catalyst
+     buy_points.current): flag 747 -> 786; ran 10% 53 -> 54%, ran 20% 25 -> 25%, failed 39 -> 39%, median +0.3 -> +0.3;
+     "flag, decisive" 601 -> 630 (56 / 27 / 37 -> 56 / 27 / 36); all buy points 6,171 -> 6,205, 50 / 24 / 42 unchanged.
+     Launches after the rebuild (the Nov 13 close): EQX, ISRG, SRAD lost their flag line as the next trigger (Base top now),
+     POOL's pennant line 222.66 -> 221.68, NTSK's 25.93 -> 22.45 (close 21.75). TOST Nov 13 is STILL no flag for the scan:
+     lower lows on 2 of 5 pullback days (the rule: more than half) and the pullback's volume 1.14x (the rule: 1.1x or less):
+     told the user, who chose to leave those.
+  2. **Inside day: the zone, and used up on a trigger** (scanner/msf.py inside_days -> buy, stop, triggered): the inside days
+     make a zone (their highest high / lowest low); a later day under it ends the pattern; a day over the buy is the
+     trigger ("inside day triggered <buy>" that day, then nothing). TOST: buy 35.56 Nov 6, 35.20 Nov 9, gone Nov 10 (33.57);
+     AXGN 51.48 / 51.10 Nov 9-10, triggered Nov 11, 57.46 Nov 13. Launches: inside days 22 -> 4 (AXGN, CNXC, BBY, NAVN), 2
+     "triggered" (PAY 34.30, PRMB 24.00). My first two tries were wrong (any day inside the mother bar kept it armed; then
+     "each day inside the day before": the user: "not a good suggestion").
+  3. **Coil: the zone rule too** (msf.py run_symbol coilZoneLo): a later day under the lowest low of the coil's inside days
+     ends it. Long-bar stocks, ~2 years: 916 coil days -> 793; the removed ones did as well as the kept (over the buy next
+     day 59% vs 53%, ran 5%+ in 5 sessions 45% vs 44%): told the user. Launches: coils 4 -> 3 (LFST gone).
+  Rules workbook: three rows. **The user's rule from now (Nov 15): "before you fix anything you gotta tell me and i confirm
+  1st": explain and wait for the confirmation before building, on a test branch too.**
+- **Still open from the TOST review (each needs the user's confirmation first)**: Days 21H / the 21-day closing high from
+  real closes (TOST 6d, should be 7d: the user asked how it is coded, "dont change"); the retest after a close under the
+  level; the day's alerts on the Launches row; one read for the Watchlist 1-lists and Launches; the Columns chip
+  "(already in this table)" that does nothing for a built-in column (the user: "no action needed").
 - **Open, found Nov 15 on TOST (Fri Nov 13 2026), the user: "couple flaws", "information is messed up": explained, nothing
   changed, each needs a go.** TOST (launch Nov 4, C; top 36.01 Nov 4, lower highs 35.99 35.56 35.20 34.67 34.37 34.37; Nov 13
   low 33.40, close 34.68 +3.5% on 0.8x) broke its flag line, held its breakout level 33.53 and reclaimed the 10 / 21 EMA.
