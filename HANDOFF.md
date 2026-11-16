@@ -49,6 +49,52 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: Start days stay on until they fail + 0.8 ADR start (BILL, Nov 16)" (Mon Nov 16 2026, ~11:30 AM - 4:30 PM ET; session_01PkbDakpheN6wD5vCKyUvBf; in progress)
+
+- **LIVE (the user's "go live", Mon Nov 16 2026 ~4:25 PM ET, branch claude/youthful-brahmagupta-i7nqxp, merge 01d562b): the
+  Start days table keeps a start day like a launch, and the start day's move takes 4%+ with 0.8 ADR+.** Four parts:
+  1. **No age limit** (was 5 sessions, "getting old agreed" Nov 15). The user: "i want start days act like launch day meaning i
+     dont want them disappear from list unless criterias i put becomes invalidated", "take this rule off, so they will stay
+     alive!!!". scanner/launch.py L start_list_days = 0 (0 = no limit).
+  2. **No 50 EMA rule on the table** (was: 2 closes in a row under the 50 EMA, in the first 10 sessions only when also under the
+     close before the start day). The user: "if stock coming out of correction it could be 2 times below 50 ema but still
+     above start day". start_listed = the fail rule (a close under the start day's low that is also under the 21 EMA) + 62
+     sessions from its highest point without a new high ("keep it"). WRBY Apr 14 2026 (start 23.14, low 21.03) closed under
+     its 50 EMA Apr 23 - May 6 without closing under 21.03, +23% May 7: the old rule took it off Apr 29, now it stays.
+     The user's other idea, 2 or 3 closes under the 21 EMA, was measured and not taken (~179 stocks, 403 start days Nov 2024 -
+     Sep 2026, 205 ran 15%+ within 40 sessions; runners still on the table when they ran: 50 EMA rule 131, 2 closes under the
+     21 EMA 117, 3 closes 124, the 50 EMA from session 21 137, no 50 EMA rule 140).
+  3. **Only the newest start day counts**: when it fails the stock is off the table, an older start day does not come back (the
+     user: "if newer start day fails it should get off the list (bcs its below start and below 21 ema!!!"). Before, the table
+     fell back to an older start still holding (~1,180 stock-days in 12 months on the ~179 stocks).
+  4. **The start day's move: up 1 ADR+, OR up 4%+ that is also 0.8 ADR+** (the user's Nov 15 choice in the session "Radar: MBGL
+     / AVEX miss (Nov 12)", branch test/start4pct 3b9d5b4, never live until now: "yes lets go with 4% and 0.8adr", then "yes
+     lets do that what you highlighed" for the version that keeps TTEK Oct 15). ZETA Nov 9 2026 (+4.5% on 2.2x, ADR 5.39% = 0.84
+     ADR) is a start day; TTEK Oct 15 (+3.5%, 1.24 ADR) stays one. In the scan (start_raw, start_move) AND the live START DAY
+     alert (radar/alerts.py find_start reads start_pct / start_pct_adr from launch.json rules): simulated +4.5% at 0.83 ADR
+     alerts, +3.9% at 0.72 ADR does not, +5.5% as before. That session's 2-year numbers: 1,228 -> 1,319 start days, ran 20%+ 26%
+     -> 27%, failed 32% -> 32%.
+  Kept, the user's answers: the 3.5% ADR minimum to get on ("3.5% is fine"); no ADR rule to take a row off (buyouts like DV
+  0.2%, BWIN, SLN 0.4%, BRZE 0.7% stay: told the user); your x; a newer start replaces the row. Not touched: Launches, the
+  "start <date>" line under a launch (start_holds), the 1-lists. The page note on the Start days table and the rules
+  workbook (two rows: "Start day: the move", "Start days table: no age limit, no 50 EMA rule, the newest start only") follow.
+  Tested: `--regress` "every agreed example reads the same"; the full-market dry run (radar-tools launchdry, the Nov 13 close):
+  the table 28 -> 205 rows (all 28 stay; new recent: ZETA Nov 9, OSCR Nov 9, TNGX Nov 10, DPC Nov 12; ages 0-4: 32, 5-10: 34,
+  11-20: 31, 21-40: 36, 41-62: 14, older: 58, the oldest TXG Oct 20 2025 +343%, PEB Nov 7 2025, DNTH Jan 13 2026, NAVN Mar 26
+  2026; 86 already on Launches); the page with 205 rows on desktop / phone, no errors, and the merged page with the live file.
+  No 2-year check (a table rule; the move change brought its own numbers). **First check Tue Nov 17**: the evening scan's
+  launch.json start_days (~200 rows, rules start_list_days 0, start_pct 4); the START DAY alerts of the session (0.8 ADR ones).
+- **Answered, no change**: why BILL is on Launches: its Aug 13 2026 launch (base breakout +5.4% on 2.1x, close 51.31, C), off
+  Sep 23 (2 closes under the 50 EMA), back on Oct 15 by the reset start (3 lower highs since the Aug 13 top 52.60, range 5.5% ->
+  3.3%, closed 46.92 over the last lower high 45.88 and both EMAs); without the reset rule it would be back Nov 2 (flag line
+  49.50); new high Nov 9 = 61 sessions after the top (one short of the 62-session rule). BILL's only start day since Oct 1 was
+  Oct 15 (+6.2%, 1.1x). Seen, offered, no answer: the reset's "3 lower highs" are weak for BILL (Aug 28 50.35, Sep 15 50.33 two
+  cents lower with a higher Sep 3 50.89 between, Oct 12 45.88); the Launches row does not show "back on <date>" (off Sep 23 -
+  Oct 15 is invisible).
+- Data: radar-tools `long` re-run with BILL added (long_bars.json: 179 symbols).
+- **The other session "Radar: MBGL / AVEX miss (Nov 12)"** (session_01PkbDaiSjzGPJPtohD3UF2C) is idle waiting for /wrapup; its
+  0.8 ADR change is live through this go live (test/start4pct can be deleted).
+
 ## Status of the session "Radar: missing earnings on the list (Nov 16)" (Mon Nov 16 2026, from ~9:25 AM ET; session_01PkbDajdEo2jtmt5tLkCvv4; in progress)
 
 - **LIVE (the user's "nvda earnings go live", Mon Nov 16 2026 ~11:20 AM ET, commit 29a7ffc): the Earnings tab has no market cap
