@@ -166,8 +166,10 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # as its follow-through
          # the start day, shown next to the launch and in its own list (not a launch rule): up start_adr ADRs on start_rv x volume
          # through the 21 & 50 EMA, or a start_gap % gap opening over both; start_look = how far back a launch's trend start is
-         # looked for; start_list_days = how long a start day stays on the Start days list
-         start_adr=1, start_rv=1, start_gap=5, start_look=40, start_list_days=5,
+         # looked for; start_list_days = how long a start day stays on the Start days list (0 = no age limit: it stays until the
+         # start fails or its move ends, like a launch; the user, Nov 16 2026: "take this rule off, so they will stay alive!!!";
+         # was 5 sessions, "getting old agreed" Nov 15)
+         start_adr=1, start_rv=1, start_gap=5, start_look=40, start_list_days=0,
          first_day=1, first_gap=5, first_rv=1.3, first_adr_nogap=1.8, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2,
          # the list ON / OFF read from the user's AMD 2026 charts (Nov 13 2026: "i can visually know when stock will go down"):
          # adr_look: the ADR minimum is tested on the highest 20-day ADR of the last 63 sessions, not on today's alone: the
@@ -2879,8 +2881,10 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         G.append(dict(group=g[5:] + " area" if g.startswith("area:") else g, status=STATUS[int(stt[-1])], members=len(ms), above_21ema_pct=fnum(100 * sh21[-1], 0),
                       median_1m_pct=fnum(m21[-1], 1), trending_days=since if since is not None else 0, recent_launches=launches))
     G.sort(key=lambda x: (-["Not trending", "Turning up", "Leading"].index(x["status"]), -(x["median_1m_pct"] or -999)))
-    # Start days (the user, Nov 12 2026): every liquid stock whose start day came in the last 5 sessions and still holds, the
-    # newest per stock, so the turn shows the day it happens and not weeks later at the launch
+    # Start days (the user, Nov 12 2026): every liquid stock whose start day still holds, the newest per stock, so the turn shows
+    # the day it happens and not weeks later at the launch. No age limit (the user, Nov 16 2026: "i want start days act like launch
+    # day meaning i dont want them disappear from list unless criterias i put becomes invalidated"; was 5 sessions): a row leaves
+    # only when the start fails or its move ends (start_listed), on your x (the page), or for a newer start day of the stock
     on_l, on_g = {r["symbol"] for r in rows}, {r["symbol"] for r in lag}
     starts = []
     for s, a in A.items():
@@ -2888,7 +2892,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         i = len(st.dates) - 1
         if st.dates[i] != today:
             continue
-        k = next((m for m in range(i, max(a.start, i - L["start_list_days"]), -1) if a.start_day(m) and (m == i or start_listed(a, m, i))), None)
+        lo = max(a.start, i - L["start_list_days"]) if L["start_list_days"] else a.start
+        k = next((m for m in range(i, lo, -1) if a.start_day(m) and (m == i or start_listed(a, m, i))), None)
         if k is None:
             continue
         gs_, gn_ = best_group(s, T, groups, GS)
