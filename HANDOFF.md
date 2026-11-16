@@ -82,7 +82,9 @@ alone.
   the table 28 -> 205 rows (all 28 stay; new recent: ZETA Nov 9, OSCR Nov 9, TNGX Nov 10, DPC Nov 12; ages 0-4: 32, 5-10: 34,
   11-20: 31, 21-40: 36, 41-62: 14, older: 58, the oldest TXG Oct 20 2025 +343%, PEB Nov 7 2025, DNTH Jan 13 2026, NAVN Mar 26
   2026; 86 already on Launches); the page with 205 rows on desktop / phone, no errors, and the merged page with the live file.
-  No 2-year check (a table rule; the move change brought its own numbers). **First check Tue Nov 17**: the evening scan's
+  No 2-year check (a table rule; the move change brought its own numbers). Launches rebuilt after the push (picks.yml, 4:27 PM
+  ET, the Nov 16 close, 158fe1d): Start days 194 rows (rules start_list_days 0, start_pct 4), BILL Oct 15 (+22.8%), ZETA Nov 9,
+  RKLB Nov 9, WRBY Nov 5 on; the newest HUBS Nov 16. **First check Tue Nov 17**: the evening scan's
   launch.json start_days (~200 rows, rules start_list_days 0, start_pct 4); the START DAY alerts of the session (0.8 ADR ones).
 - **Answered, no change**: why BILL is on Launches: its Aug 13 2026 launch (base breakout +5.4% on 2.1x, close 51.31, C), off
   Sep 23 (2 closes under the 50 EMA), back on Oct 15 by the reset start (3 lower highs since the Aug 13 top 52.60, range 5.5% ->
