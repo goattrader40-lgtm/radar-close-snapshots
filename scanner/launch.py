@@ -116,7 +116,7 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          #   stays (ARM Apr 10 2026, 1.0 ADR over); less redraws the line (PGY Aug 11 2026, 0.57 ADR over: its line then runs
          #   through that high, the break is Aug 21, not Aug 13; was 0.5)
          attempt=1, attempt_near=1.5, attempt_pop_pct=1, off50_closes=2, ema_rising=1, ema_rise_days=1, ema_grace=2, ema_grace_under=5, range_min=23, range_max=90, range_depth=8, range_after_launch=5, hold_days=10, off_failed_bo=1,
-         fail_days=2, flag_fail_adr=0.75, base_look=756,
+         fail_days=2, flag_fail_adr=0.75, flag_twin=0.05, base_look=756,
          # one close under is enough for the 50 EMA undercut & reclaim (the user, Nov 11 2026: "change it, one
          # close is ok for undercut reclaim"; COHR Mar 31 2026: Mar 30 closed 219.65 under its 50 EMA 235.59, Mar 31 down to
          # 220.20 and closed 238.21 back over it; was 2 closes)
@@ -876,10 +876,12 @@ def flag_at(a, i):
     # gapped only -0.4 ADR: its flag Apr 13)
     if any(100 * (st.o[k] / c[k - 1] - 1) <= -0.7 * _adr(st, k) and a.chg[k] <= -_adr(st, k) and a.rv[k] >= 1.3 for k in range(t + 1, i + 1)):
         return None
-    slope = flag_line(a, t, i - 1)                 # today's line: through the highs up to yesterday
-    if slope >= 0:
+    # the line starts at the day after the top when that day's high is almost the top's (flag_anchor: TOST Nov 4-5 2026)
+    ta = flag_anchor(a, t)
+    slope = flag_line(a, ta, i - 1)                # today's line: through the highs up to yesterday
+    if slope is None or slope >= 0:
         return None
-    line = h[t] + slope * (i - t)
+    line = h[ta] + slope * (i - ta)
     # it holds its 21 EMA (no close half an ADR under it: APPN Sep 8-11 2026 fell 1.4 ADRs under it from its Aug 31
     # high, a drop and bounce, no flag; SMCI Jun 2023 -0.2, ANF Aug 2026 -0.4) and closes above the 50 EMA; unless (your
     # rule, Nov 1 2026) its falling line is intact (no close over it since the top) and the line is in the upper half of
@@ -896,7 +898,7 @@ def flag_at(a, i):
     shape = flag_shape(a, t, i)
     if not shape:
         return None
-    return t, depth, line, h[t] + flag_line(a, t, i) * (i + 1 - t), shape     # tomorrow's: and today's; "bull flag" / "pennant"
+    return t, depth, line, h[ta] + flag_line(a, ta, i) * (i + 1 - ta), shape     # tomorrow's: and today's; "bull flag" / "pennant"
 
 
 def momentum_start(a, i):
@@ -958,11 +960,22 @@ def line_intact(a, t, i):
     the day before i (each day's line: through the highs up to the day before it); AEHR Mar 9 2026 closed over its 2-day
     line, before there was a flag"""
     st = a.st
+    ta = flag_anchor(a, t)
     for k in range(t + L["flag_days"] + 1, i):
-        s_ = flag_line(a, t, k - 1)
-        if s_ is not None and st.c[k] > st.h[t] + s_ * (k - t):
+        s_ = flag_line(a, ta, k - 1)
+        if s_ is not None and st.c[k] > st.h[ta] + s_ * (k - ta):
             return False
     return True
+
+
+def flag_anchor(a, t):
+    """where a flag's falling line starts: the top t, or the day after it when that day's high is almost the top's (within
+    flag_twin of an ADR under it): two highs side by side make the line from the top nearly flat, and no pullback can break
+    it (the user, Nov 15 2026, TOST: top Nov 4 2026 36.01, Nov 5 35.99, then 35.56 35.20 34.67 34.37 34.37: the line from the
+    top sat at 35.84 on Nov 13, the line along the lower highs at 34.05, and the close 34.68 broke it)"""
+    st = a.st
+    k = t + 1
+    return k if k < len(st.h) and st.h[k] < st.h[t] and st.h[k] >= st.h[t] * (1 - L["flag_twin"] * _adr(st, t) / 100) else t
 
 
 def flag_line(a, t, upto):
@@ -2121,7 +2134,9 @@ def follow(a, i0, i, pick=False):
             flag_trendline=fnum(r.tlLive), coil=fnum(r.early),
             # "inside day" (msf.inside_days: 2+ days inside a mother day whatever their bodies, over the 200 SMA), only
             # when there is no coil: the coil is the stronger read (the user, Nov 14 2026)
-            inside_day=(msf.inside_days(st.h, st.l, i)[0] if r.early != r.early and st.c[i] > st.sma200[i] else None),
+            # (once the price trades over that buy it has triggered and is used up: "inside day triggered" that day, then nothing)
+            **(lambda v: dict(inside_day=fnum(v[0]), inside_day_triggered=fnum(v[2])))(
+                msf.inside_days(st.h, st.l, i) if r.early != r.early and st.c[i] > st.sma200[i] else (None, None, None)),
             pullback_tight_day=fnum(r.hlTrig) if not r.hlDone else None,
             level=fnum(r.cLvTrig), bigger_base=fnum(r.cBigBuy), flat_top=fnum(r.cFTBuy)).items() if v is not None},
         # the day of the base: sessions since the launch or the leg's breakout (ANF: Aug 26 = day 0, Sep 10 day 10,
