@@ -1621,8 +1621,11 @@ def follow(a, i0, i, pick=False):
                 back_day, back_from, off_since, off_why, stall = j, off_since, None, None, None
         if st.h[j] > H:
             H, last_new, armed, dry_done = st.h[j], j, True, False
-    if rlv_hi and rlv is rlv0 and (i == i0 or c[i0 + 1 + int(np.argmin(st.l[i0 + 1:i + 1]))] > rlv_hi[1]):
-        rlv = rlv_hi                  # the day of the pullback's low closed over the higher level's bodies: that level is in play
+    # the higher level is in play until the pullback's low comes down into the 20-day level's zone (SPOT Oct 28 2026 536.74,
+    # ACN Oct 6 2026 192.58); a dip under the higher level that stays over the lower one is its undercut (CAI Aug 18 2026:
+    # 20.78 under 21.30, over 20.11; Aug 19 back over it: the user, "18th undercut of retest and 19th is retest and hold day")
+    if rlv_hi and rlv is rlv0 and (i == i0 or st.l[i0 + 1:i + 1].min() > max(rlv0[2], rlv0[1] * (1 + _adr(st, i) / 400))):
+        rlv = rlv_hi
     hi = st.h[i0:i + 1].max()
     status = "Riding" if c[i] >= a.e21[i] else "Below 21 EMA"
     fl = flag_at(a, i)
@@ -1707,7 +1710,9 @@ def follow(a, i0, i, pick=False):
         ak = _adr(st, k)
         return bool(rlv and L["retest_first"] <= k - rlv[0] <= L["retest_days"]
                     and rlv[1] * (1 - 1.5 * ak / 100) <= st.l[k] <= max(rlv[2], rlv[1] * (1 + ak / 400))
-                    and st.l[k] <= st.h[rlv[0]:k].max() * (1 - 1.5 * ak / 100)
+                    # (a down day's own high counts: it came before the low. APPN Oct 16 2026 opened 44.33, up to 45.00, down
+                    # to 40.18, closed 41.17: the user, "appn october 16th and 19th")
+                    and st.l[k] <= max(st.h[rlv[0]:k].max(), st.h[k] if c[k] < st.o[k] else 0) * (1 - 1.5 * ak / 100)
                     and c[rlv[0]:k].max() >= rlv[1] * (1 + 1.25 * ak / 100))
 
     def retest_on(k):
@@ -1734,7 +1739,9 @@ def follow(a, i0, i, pick=False):
     # Sep 10 down to 23.20 under the 23.66 base high and the 21 EMA, closed back over both)
     # ... or the stock closed back under the level in between and reclaims it (the user, Nov 16 2026: "if nov 12th failed nov
     # 13th would be retest"; GMAB Oct 1 2026 closed 34.55 under 34.63, Oct 2 held)
-    retest = bool(held and rdays and rdays[-1] == i and all(st.l[i] < st.l[k] or (c[k + 1:i] < rlv[1]).any() for k in rdays[:-1]))
+    # every day that touches the zone and closes back over the level is a retest held (the user, Nov 16 2026, SPOT Oct 28 & 29
+    # 2026: "anytime it touches that area its called retest/holding"; before: once, or again on a lower low)
+    retest = bool(held and rdays and rdays[-1] == i)
     retest_ema = retest_on(i)[1] if retest else []
 
     # the two 21 EMA entries in the base, once per pullback (none after a retest of the breakout level in it)
