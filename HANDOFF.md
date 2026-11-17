@@ -93,6 +93,14 @@ alone.
   back on), 0 page errors. Rules workbook: 2 rows. **Not seen on live prices: check Wed Nov 18** (alerts.json lost / back keys
   ending :mbo, :mboback items). The other boxes still come back silently ("holding again" note, no alert): offered the same
   alert there, no answer.
+- **LIVE (the user's "go live", Tue Nov 17 2026 ~11:55 AM ET): the Earnings tab's saved ADR minimum is 3%** (was 3.5%;
+  earnings/rules.json on main, the user's saved rules: only min_adr changed, saved_at / by updated). The user: "why acm wasnt
+  in my earnings reactions today", "drop adr to 3% so i dont miss stuff like this anymore". ACM (reported Nov 17 before the
+  open, +10%, EP alert 9:35) has ADR 3.09%. Eligible stocks 794 -> 977. **My mistake, corrected with the user**: I first said
+  ACM also failed "30% over the 52-week low": that is the DEFAULT (scanner/settings.json); the user's saved rule is 0% since
+  Nov 9, so only the ADR kept it off (read earnings.json `rules`, not the defaults). The 52-week-low test on the pre-market
+  price (the user's "lets apply that") was therefore not needed and NOT built. No code changed; defaults and the rules
+  workbook unchanged (they describe the defaults). earnings.yml run by hand after the push: see below.
 - **Seen, told the user**: a 5-minute high read an hour later is 0.1-1% HIGHER than the 9:36 read for 16 of 205 stocks (SMWB
   8.90 -> 9.00, ECG 84.86 -> 85.35), from either chart: Yahoo adds late prints to the first bars. So a high read in the first
   minutes can be a little low (a stock shows "above" a few cents early); the 1- and 2-minute highs are read again at 9:32 /
