@@ -534,7 +534,7 @@
       <label class="tgr-f">20-day avg volume ≥ <input class="tgr-num" type="number" inputmode="decimal" step="100" min="0" data-param="g_avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K shares</label>
       <button class="tgr-lite" id="g-reset" type="button">Reset to my defaults</button>
     </div>
-    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. <b>Scan</b>: the whole market, or only the names of one of your lists (Launches with its 50 EMA undercut tab, My picks = the stocks you follow, Launch laggards, 3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP, TREND: the names their own tabs show); the filters then apply inside that list and the theme and industry tables below count only its names; kept in this browser. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. Gap = today's open vs yesterday's close (off unless you fill it in; while it's set, a stock without an open yet is left out: Yahoo leaves an NYSE stock's open empty for its first ~10 minutes). Rel vol = today's volume ÷ the average of the last 20 trading days: during market hours by this time of day (volume from 9:30 to now vs the same stretch on those days), after the close the full day; it's rough in the first 5 minutes. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list. <b>+ Filter</b> also has the morning breakout levels, each Over it / Under it: Yesterday's high (PDH), 5-min opening range high (ORH: from 9:36, for the stocks up 2%+), 21-day closing high (the highest close of the last 21 sessions) and EMA stack (live: 10 over 21, 21 over 50, 50 over the 200 SMA …); while one of these is set, a stock without its value is left out.</p>
+    <p class="tgr-note" id="g-count-line"><span class="em" id="g-count">—</span> stocks pass these filters. <b>Scan</b>: the whole market, or only the names of one of your lists (Launches with its 50 EMA undercut tab, My picks = the stocks you follow, Launch laggards, 3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP, TREND: the names their own tabs show); the filters then apply inside that list and the theme and industry tables below count only its names; kept in this browser. Switch to Losers to see drops of that size instead; the other filters apply the same way (untick Above 200-day SMA and Above 50-day EMA to see breakdowns). Clear a box to turn that filter off. Gap = today's open vs yesterday's close (off unless you fill it in; while it's set, a stock without an open yet is left out: Yahoo leaves an NYSE stock's open empty for its first ~10 minutes). Rel vol = today's volume ÷ the average of the last 20 trading days: during market hours by this time of day (volume from 9:30 to now vs the same stretch on those days), after the close the full day; it's rough in the first 5 minutes. ADR% = 20-day average of (high ÷ low − 1). A stock with no value for a filter (no ADR% yet for most non-US listings, no 200-day SMA or 50-day EMA for a recent IPO) isn't dropped by it. Click a theme or industry below to narrow the list. <b>+ Filter</b> also has the morning breakout levels, each Over it / Under it: Yesterday's high (PDH), Above ORH (the opening range high, for the stocks up 2%+: pick 1min, 2min or 5min on its chip; from 9:31 / 9:32 / 9:36), 21-day closing high (the highest close of the last 21 sessions) and EMA stack (live: 10 over 21, 21 over 50, 50 over the 200 SMA …); while one of these is set, a stock without its value is left out.</p>
     <div class="tgr-moves" id="g-moves"><span class="tgr-lbl">Group moves today (3+ tight members pass):</span> <span class="tgr-chips" id="g-moves-list"></span></div>
     <div class="tgr-bar">
       <span class="tgr-ctl"><span class="tgr-lbl">Industry list</span>
@@ -1108,13 +1108,13 @@
       <p class="tgr-note" id="ln-alert-speed"></p>
       <details class="tgr-legend tgr-more" id="mbo-wrap" data-key="mbo" open><summary>📈 Morning breakouts: your settings</summary>
       <div class="tgr-filters" id="mbo-box" role="group" aria-label="Morning breakout alert settings">
-        <span class="tgr-lbl" style="flex-basis:100%">Any stock trading over yesterday's high and the 5-minute opening range high, up on the day on volume, between the times below: GitHub's job checks every minute and the alert shows here (📈 box, sound and pop-up; no phone yet). One alert when one stock fires, one batch alert when several fire in the same minute. Each stock once a day. Saved in your repo: set them before 9:25 ET.</span>
+        <span class="tgr-lbl" style="flex-basis:100%">Any stock trading over yesterday's high and the opening range high you pick (1, 2 or 5 minutes), up on the day on volume, between the times below: GitHub's job checks every minute and the alert shows here (📈 box, sound and pop-up; no phone yet). One alert when one stock fires, one batch alert when several fire in the same minute. Each stock once a day. Saved in your repo: set them before 9:25 ET.</span>
         <label class="tgr-f"><input type="checkbox" data-mbo="on"> On</label>
         <label class="tgr-f">From <input class="tgr-num mbo-time" type="time" step="60" data-mbo="start" aria-label="Start, ET"> to <input class="tgr-num mbo-time" type="time" step="60" data-mbo="end" aria-label="End, ET"> ET</label>
         <label class="tgr-f">Up ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" max="100" data-mbo="min_chg" aria-label="Minimum % up on the day"> %</label>
         <label class="tgr-f">Rel vol ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" max="50" data-mbo="min_rv" aria-label="Minimum relative volume for the time of day"> ×</label>
         <label class="tgr-f"><input type="checkbox" data-mbo="over_pdh"> Over yesterday's high</label>
-        <label class="tgr-f"><input type="checkbox" data-mbo="over_orh"> Over the 5-min opening range high</label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="over_orh"> Over the <select class="tgr-num" data-mbo="orh_min" aria-label="Opening range, minutes" title="Which opening range: the first 1, 2 or 5 minutes"><option value="1">1-min</option><option value="2">2-min</option><option value="5">5-min</option></select> opening range high</label>
         <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-mbo="price" aria-label="Minimum price, dollars"></label>
         <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-mbo="mcap_b" aria-label="Minimum market cap, $ billions"> B</label>
         <label class="tgr-f">Avg vol 20D ≥ <input class="tgr-num" type="number" inputmode="decimal" step="50" min="0" data-mbo="avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K</label>
@@ -2363,9 +2363,10 @@ defCalc('industry_perf', {
   /* 📈 morning breakouts (the user, Nov 9 2026: "it has to be adjustable"; "I would adjust the criteria by 9:20-9:25"):
      saved to alerts/morning.json on main with your GitHub key (like the Graded gappers rules); radar/alerts.py reads them
      every 2 minutes (load_morning: the same ranges; out of range = the default). An empty box turns that filter off. The
-     defaults: 9:35-10:30, up 5%+, Rel vol 1+, over yesterday's high and the 5-minute opening range high, your Gainers
+     defaults: 9:35-10:30, up 5%+, Rel vol 1+, over yesterday's high and the 5-minute opening range high (orh_min: 1, 2 or
+     5, the user, Nov 17 2026; the job starts no earlier than 9:31 / 9:32 / 9:35, when that range is complete), your Gainers
      tab's liquidity with ADR 4%+, 30% over the 52-week low, over the 200 SMA and the 50 EMA, 10 EMA over the 21, 21 over the 50 */
-  const MBO_DEF = { on: true, start: '09:35', end: '10:30', min_chg: 5, min_rv: 1, over_pdh: true, over_orh: true, price: 5, mcap_b: 0.7, avgvol_k: 700,
+  const MBO_DEF = { on: true, start: '09:35', end: '10:30', min_chg: 5, min_rv: 1, over_pdh: true, over_orh: true, orh_min: 5, price: 5, mcap_b: 0.7, avgvol_k: 700,
     dvol_m: 30, adr: 4, low52: 30, above200: true, above50: true, e10_e21: true, e21_e50: true, e50_s200: false, x: [] };
   const MBO_NUM = { min_chg: [0, 100, 'Up', '', '%'], min_rv: [0, 50, 'Rel vol', '', '×'], price: [0, 10000, 'Price', '$', ''], mcap_b: [0, 5000, 'Mkt cap', '$', 'B'],
     avgvol_k: [0, 100000, 'Avg vol 20D', '', 'K'], dvol_m: [0, 100000, '$ vol 20D', '$', 'M'], adr: [0, 50, 'ADR', '', '%'], low52: [0, 1000, '52W low', '', '%'] };
@@ -2400,6 +2401,7 @@ defCalc('industry_perf', {
     Object.keys(MBO_NUM).forEach((k) => { if (!(k in MBS)) return; const v = MBS[k] === null ? null : num(MBS[k]); if (v === null || (v >= MBO_NUM[k][0] && v <= MBO_NUM[k][1])) o[k] = v; });
     MBO_BOOL.forEach((k) => { if (typeof MBS[k] === 'boolean') o[k] = MBS[k]; });
     ['start', 'end'].forEach((k) => { if (tOk(MBS[k])) o[k] = MBS[k]; });
+    if ([1, 2, 5].includes(MBS.orh_min)) o.orh_min = MBS.orh_min;
     o.x = (Array.isArray(MBS.x) ? MBS.x : []).filter((f) => f && MBO_X[f.id] && mxOk(f)).map((f) => Object.assign({}, f));
     return o;
   };
@@ -2407,13 +2409,14 @@ defCalc('industry_perf', {
     .concat(['start', 'end'].filter((k) => !tOk(R[k]) || R[k] < '09:30' || R[k] > '16:00')).concat(tOk(R.start) && tOk(R.end) && R.end < R.start ? ['end'] : []);
   const mboSame = (a, b) => Object.keys(MBO_DEF).every((k) => (k === 'x' ? JSON.stringify(a.x || []) === JSON.stringify(b.x || []) : String(a[k]) === String(b[k])));
   const t12 = (t) => { const [H, M] = String(t).split(':').map(Number); return ((H % 12) || 12) + ':' + String(M).padStart(2, '0'); };
+  const orhStart = (R) => ({ 1: '09:31', 2: '09:32' }[R.orh_min] || '09:35');   /* the first minute that opening range is complete */
   const mboText = (R) => {
     if (!R.on) return 'Off.';
-    const st = R.over_orh && R.start < '09:35' ? '09:35' : R.start, x = [];
+    const st = R.over_orh && R.start < orhStart(R) ? orhStart(R) : R.start, x = [];
     if (R.min_chg !== null) x.push('up ' + R.min_chg + '%+');
     if (R.min_rv !== null) x.push('Rel vol ' + R.min_rv + '×+');
     if (R.over_pdh) x.push('over yesterday\'s high');
-    if (R.over_orh) x.push('over the 5-min opening range high');
+    if (R.over_orh) x.push('over the ' + (R.orh_min || 5) + '-min opening range high');
     if (R.price !== null) x.push('$' + R.price + '+');
     if (R.mcap_b !== null) x.push('market cap $' + (R.mcap_b < 1 ? Math.round(R.mcap_b * 1000) + 'M' : R.mcap_b + 'B') + '+');
     if (R.avgvol_k !== null) x.push(R.avgvol_k + 'K+ shares');
@@ -2515,7 +2518,8 @@ defCalc('industry_perf', {
     bad.forEach((k) => { const L = MBO_NUM[k]; line(L ? L[2] + ' must be ' + L[3] + L[0] + ' to ' + L[3] + L[1] + ' ' + L[4] + ' (or empty: off): fix it to save.' : 'The times must be 9:30 to 4:00 PM, the end after the start: fix them to save.', 'pmr-warn'); });
     const changed = !mboSame(MBE, saved);
     $('#mbo-save').disabled = !changed || !!bad.length;
-    if (MBE.over_orh && MBE.start < '09:35') line('Starts at 9:35: the 5-minute opening range is complete then.');
+    if (MBE.over_orh && MBE.start < orhStart(MBE)) line('Starts at ' + t12(orhStart(MBE)) + ': the ' + (MBE.orh_min || 5) + '-minute opening range is complete then.');
+    else if (MBE.over_orh && MBE.orh_min !== 5 && MBE.start > orhStart(MBE)) line('The ' + MBE.orh_min + '-minute opening range is complete at ' + t12(orhStart(MBE)) + ': set From to ' + t12(orhStart(MBE)) + ' to get its breaks from then (now from ' + t12(MBE.start) + ').');
     line('Now: ' + mboText(saved));
     if (changed && !bad.length) line('After Save: ' + mboText(MBE));
     line(changed ? 'Not saved yet: Save, and the job uses them within 2 minutes.' : MBS && MBS.saved_at ? 'Saved ' + fDate(MBS.saved_at) + ' ' + nyHm(MBS.saved_at) + ' ET: the job uses them within 2 minutes.' : 'Your defaults (nothing saved yet).');
@@ -5283,8 +5287,10 @@ defCalc('industry_perf', {
   const PGK = (s) => by('g', rowsOf('premarket'), (a) => { const t0 = todayNY(); return new Map(a.filter((x) => (x.graded === true || x.graded === 'true') && x.scan_date === t0 && x.grade).map((x) => [x.symbol, x])); }).get(s) || null;
   const PMK = (s) => (PML && PML.rows && PML.date === todayNY() ? PML.rows[s] || null : null);
   const pxOf = (s) => { const r = SK(s); return r ? num(r.price) : null; };
-  /* today's 5-minute opening range high (radar/levels.py -> radar-data levels.json, today only) */
-  const orhOf = (s) => { const d = LEV && LEV.date === todayNY() && LEV.rows ? LEV.rows[s] : null; return d ? num(d[0]) : null; };
+  /* today's opening range high: the 5-minute one, or the 1- / 2-minute one (radar/levels.py -> radar-data levels.json,
+     today only: rows {sym: [high 5, low 5, high 1, high 2]}; a range not finished yet is empty) */
+  const orhM = (f) => (f && [1, 2].includes(Number(f.m)) ? Number(f.m) : 5);
+  const orhOf = (s, m) => { const d = LEV && LEV.date === todayNY() && LEV.rows ? LEV.rows[s] : null; return d ? num(d[m === 1 ? 2 : m === 2 ? 3 : 0]) : null; };
   /* the price over (true) / under (false) a level; null = no level or no price (left out while the filter is set) */
   const overLvl = (s, lv) => { const p = pxOf(s), v = num(lv); return p !== null && v ? p > v : null; };
   /* Days 21H / Days 62H: sessions since the highest close of the last n sessions, [value, cell] */
@@ -5325,7 +5331,7 @@ defCalc('industry_perf', {
        the price now vs yesterday's high, today's 5-minute opening range high (radar/levels.py: the stocks up 2%+, from
        9:36), the 21-day closing high (stocks.json close_high_21) and the EMA stack; as a filter "Over it / Under it" */
     ['pdh', 'Yesterday\'s high (PDH)', 'Price', 'The price now vs yesterday\'s high (regular hours). As a filter: Over it / Under it', ['vs_pdh'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.high_1d) : null; return cNum(v, p1(v, true), tone(v), r && r.high_1d ? 'Yesterday\'s high ' + fPrice(r.high_1d) : 'No high for yesterday'); }],
-    ['orh', '5-min opening range high (ORH)', 'Price', 'The price now vs today\'s 9:30-9:35 high (from 9:36, for the stocks up 2%+ at a 5-minute update). As a filter: Over it / Under it', [], (s) => { const o = orhOf(s), v = o ? vsPct(pxOf(s), o) : null; return cNum(v, p1(v, true), tone(v), o ? '5-min opening range high ' + fPrice(o) : 'No opening range: from 9:36, for the stocks up 2%+'); }],
+    ['orh', '5-min opening range high (ORH)', 'Price', 'The price now vs today\'s opening range high, for the stocks up 2%+. As a filter (Above ORH) you pick the range on the chip: 1min = the 9:30 minute (from 9:31), 2min = 9:30-9:32 (from 9:32), 5min = 9:30-9:35 (from 9:36). As a column: the 5-minute one', [], (s) => { const o = orhOf(s), v = o ? vsPct(pxOf(s), o) : null; return cNum(v, p1(v, true), tone(v), o ? '5-min opening range high ' + fPrice(o) : 'No opening range: from 9:36, for the stocks up 2%+'); }],
     ['hc21', '21-day closing high', 'Price', 'The price now vs the highest close of the last 21 sessions (as the EP rule). As a filter: Over it / Under it', [], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.close_high_21) : null; return cNum(v, p1(v, true), tone(v), r && r.close_high_21 ? '21-day closing high ' + fPrice(r.close_high_21) : ''); }],
     /* sessions since the highest close of the last 21 / 62 sessions (the user, Nov 13 2026: "if its been 3 days since that
        day or 5 days", "highest closing price day is considered high day", "make column name short"); stocks.json hc21_ago /
@@ -5641,7 +5647,7 @@ defCalc('industry_perf', {
     pm_grade: { k: 'cat', opts: ['A', 'B', 'C', 'F', 'A or B'].map((o) => [o, (s) => { const g = PGK(s); return !!g && o.split(' or ').includes(g.grade); }]) },
     l_grade: { k: 'cat', opts: ['A+', 'A', 'B', 'C', 'A+ or A', 'A+, A or B'].map((o) => [o, (s) => { const r = LK(s); return !!(r && r.grade) && o.replace(', ', ' or ').split(' or ').includes(r.grade); }]) },
     pdh: { k: 'cat', opts: [['Over it', (s) => overLvl(s, (SK(s) || {}).high_1d) === true], ['Under it', (s) => overLvl(s, (SK(s) || {}).high_1d) === false]] },
-    orh: { k: 'cat', opts: [['Over it', (s) => overLvl(s, orhOf(s)) === true], ['Under it', (s) => overLvl(s, orhOf(s)) === false]] },
+    orh: { k: 'cat', opts: [['Over it', (s, f) => overLvl(s, orhOf(s, orhM(f))) === true], ['Under it', (s, f) => overLvl(s, orhOf(s, orhM(f))) === false]] },
     hc21: { k: 'cat', opts: [['Over it', (s) => overLvl(s, (SK(s) || {}).close_high_21) === true], ['Under it', (s) => overLvl(s, (SK(s) || {}).close_high_21) === false]] },
     emastack: { k: 'cat', opts: [['10 over 21', (s) => !!(stackOf(s) || {}).a], ['21 over 50', (s) => !!(stackOf(s) || {}).b], ['50 over the 200 SMA', (s) => (stackOf(s) || {}).c === true],
       ['10 > 21 > 50', (s) => { const k = stackOf(s); return !!(k && k.a && k.b); }], ['10 > 21 > 50 > 200 SMA', (s) => { const k = stackOf(s); return !!(k && k.a && k.b && k.c === true); }]] },
@@ -5658,16 +5664,19 @@ defCalc('industry_perf', {
   const xfOk = (list, s) => (list || []).every((f) => {
     if (f.col || !xfOn(f) || !CAT.has(f.id)) return true;
     const sp = xfSpec(f.id);
-    if (sp.k === 'cat') { const o = sp.opts.find((x) => x[0] === f.v); return !o || o[1](s); }
+    if (sp.k === 'cat') { const o = sp.opts.find((x) => x[0] === f.v); return !o || o[1](s, f); }
     const r = xfVal(f.id, s);
     if (sp.k === 'text') return txtOk(r && r[1] ? r[1].textContent : '', f);
     return numOk(r ? num(r[0]) : null, f);
   });
   /* the level filters read as a yes / no question (the user, Nov 12 2026: "it should be ORH 5min above or not"; was
      "5-min opening range high (ORH) is Over it"). The saved values stay 'Over it' / 'Under it' */
-  const LVLF = { pdh: 'Above PDH', orh: 'Above ORH-5min', hc21: 'Above 21D closing high' };   /* short names (the user: "above orh-5min is better than this so long filter name") */
+  /* short names (the user: "above orh-5min is better than this so long filter name"). One ORH filter, its range picked on
+     the chip (the user, Nov 17 2026: "above orh, then when i put it does 1min, if i put 2min it does 2 mins, if i put 5min
+     it does 5min, so basically just 1 filter"): f.m = 1 / 2 / 5, a filter saved before that is the 5-minute one */
+  const LVLF = { pdh: 'Above PDH', orh: 'Above ORH', hc21: 'Above 21D closing high' };
   const LVLO = { 'Over it': 'Yes', 'Under it': 'No' };
-  const xfName = (f) => (f.col ? f.name : LVLF[f.id] || (CAT.get(f.id) || [])[1] || f.id);
+  const xfName = (f) => (f.col ? f.name : f.id === 'orh' ? 'Above ORH-' + orhM(f) + 'min' : LVLF[f.id] || (CAT.get(f.id) || [])[1] || f.id);
   const xfDesc = (f) => { const t = f.col ? f.t : xfSpec(f.id).k; return xfName(f) + (t === 'cat' && !f.col && LVLF[f.id] ? ': ' + (LVLO[f.v] || f.v) : t === 'cat' ? ' is ' + f.v : t === 'text' ? ' ' + ({ is: 'is', not: 'has no' }[f.op] || 'has') + ' "' + f.v + '"' : ' ' + (f.op === '<=' ? '≤' : '≥') + ' ' + f.v); };
   const xfText = (list) => (list || []).filter((f) => !f.col && xfOn(f) && CAT.has(f.id)).map(xfDesc);
   /* the table's own columns (f.col): Gainers from the stock's row (so the counts and the theme / industry tables follow),
@@ -5720,7 +5729,14 @@ defCalc('industry_perf', {
         const c = f.col ? null : CAT.get(f.id); if (!f.col && !c) return;
         const kind = f.col ? f.t : xfSpec(f.id).k, chip = h('span', 'xf-chip' + (xfOn(f) ? ' on' : ''));
         chip.title = (c ? c[3] : 'This table\'s ' + f.name + ' column, as it shows') + (kind === 'cat' ? '' : ' (empty box = off; a stock without a value is left out while it is set)');
-        chip.append(h('b', '', xfName(f)));
+        const orhF = !f.col && f.id === 'orh';
+        chip.append(h('b', '', orhF ? 'Above ORH-' : xfName(f)));
+        if (orhF) {                                              /* the range: 1min / 2min / 5min */
+          const ms = h('select', 'xf-op'); ms.title = 'Which opening range: the first 1, 2 or 5 minutes'; ms.setAttribute('aria-label', 'Opening range, minutes');
+          [1, 2, 5].forEach((n) => { const o = h('option', '', n + 'min'); o.value = String(n); ms.append(o); });
+          ms.value = String(orhM(f)); ms.addEventListener('change', () => { f.m = Number(ms.value); changed(); });
+          chip.append(ms);
+        }
         let inp;
         if (kind === 'cat') {
           const lvl = !f.col && !!LVLF[f.id];
@@ -5795,7 +5811,7 @@ defCalc('industry_perf', {
       const nz = (x) => String(x).toLowerCase().replace(/[\s\-]+/g, ''), hit = (text) => text.toLowerCase().includes(q) || nz(text).includes(nz(q));
       const mine = own().filter((o) => hit(o.name)).sort((a, b) => rank(a.name) - rank(b.name));
       const ownIds = new Set(mine.filter((o) => o.add.id).map((o) => o.add.id));
-      const cat = CATL.filter((c) => !ownIds.has(c[0]) && hit(c[1] + ' ' + c[2] + ' ' + c[3] + (LVLF[c[0]] ? ' ' + LVLF[c[0]] + ' over above' : ''))).sort((a, b) => rank(a[1]) - rank(b[1])).map((c) => ({ name: LVLF[c[0]] || c[1], add: { id: c[0], op: xfOp0(c[0]), v: null }, kind: xfSpec(c[0]).k, grp: c[2], tip: c[3] }));
+      const cat = CATL.filter((c) => !ownIds.has(c[0]) && hit(c[1] + ' ' + c[2] + ' ' + c[3] + (LVLF[c[0]] ? ' ' + LVLF[c[0]] + ' over above' + (c[0] === 'orh' ? ' 1min 2min 5min 1-min 2-min' : '') : ''))).sort((a, b) => rank(a[1]) - rank(b[1])).map((c) => ({ name: c[0] === 'orh' ? 'Above ORH (1min / 2min / 5min)' : LVLF[c[0]] || c[1], add: Object.assign({ id: c[0], op: xfOp0(c[0]), v: null }, c[0] === 'orh' ? { m: 5 } : {}), kind: xfSpec(c[0]).k, grp: c[2], tip: c[3] }));
       const item = (o, tag) => {
         const i = L().findIndex((f) => same(f, o.add)), b = h('button', 'col-item' + (i >= 0 ? ' on' : ''), (i >= 0 ? '✓ ' : '') + o.name); b.type = 'button'; b.title = i >= 0 ? 'Added: click to remove it' : (o.tip || 'This table\'s column, as it shows');
         b.append(h('span', 'tgr-lbl', i >= 0 ? ' added · click to remove' : tag ? ' · ' + tag : ''));
@@ -5833,7 +5849,7 @@ defCalc('industry_perf', {
   let PMEV = null;    /* the news behind today's theme event (the 8:45 grading -> pm_event.json) */
   let PMN = null;     /* the 8:05 / 8:35 news runs (radar/codegrade.py news -> pmnews.json): the News column before 8:45 */
   let CGL = null;     /* the code grader's daily log: its W (laggard watch) names for the W-crossed-the-200 alerts */
-  let LEV = null;     /* today's 5-minute opening ranges of the movers (radar/levels.py): the + Filter "5-min opening range high" */
+  let LEV = null;     /* today's 1- / 2- / 5-minute opening ranges of the movers (radar/levels.py): the + Filter "Above ORH" */
   let PICKS = null, GRPS = {}, SRV = null, LNBT = null, REV = null, EARN = null, ETF = null, PML = null, LIVE = null, LIVE_ON = false, BASE = null, lastSha = null, lastBuilt = null, lastCheck = null, loadErr = null, lastMain = 0;
   const REVOF = (sym) => (REV && REV.rows ? REV.rows[sym] : null);
   const fTime = (iso) => { const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); };

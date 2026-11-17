@@ -11,7 +11,7 @@ full update, in an earlier minute's read, or already holding an opening range to
 list's rows radar/fast.py just read (live_fast.json), replace the last full update's rows; every other stock keeps the
 price of the last full update. The result is live.json as the portal reads it, with "fast_at" (this read's time) and
 "fast_n" (how many rows are from it); "saved_at" stays the full update's time. Run by radar/day.py after fast.py, from
-9:36 to 10:30; day.py then reads the new movers' opening ranges (levels.py) and publishes both. A stock that jumps from
+9:31 to 10:30 (9:36 until Nov 17 2026: "start 931", for the 1- and 2-minute opening range highs); day.py then reads the new movers' opening ranges (levels.py) and publishes both. A stock that jumps from
 under min_chg% inside one 5-minute gap waits for the next full update. Nothing here feeds the alerts: they keep
 reading live.json's full update and live_fast.json as before.
 """

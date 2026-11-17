@@ -10,7 +10,7 @@ stocks.json must be the base the live job used that morning (the last close befo
 the 4:06 PM refresh. Every stock that can pass the settings' liquidity / ADR (with 30% room for the day's move on the
 price rules) gets its 1-minute chart of the last 2 sessions from Yahoo; then each minute from the start to the end of the
 window the alert's own tests run on what was known at that minute (the price = the last finished bar's close, the volume
-so far with the job's Rel vol curve, yesterday's high, the 5-minute opening range, today's low so far). The first minute
+so far with the job's Rel vol curve, yesterday's high, the 1- / 2- / 5-minute opening range (orh_min=1 ...), today's low so far). The first minute
 a stock passes is when it would have alerted (the live check runs every minute; its quotes are Yahoo's, these are the
 1-minute bars' closes, so a few cents and a minute can differ). The SYMs given (the user's examples) also get the reason
 they didn't alert, minute by minute. The fired stocks and the SYMs get the alert's news (today's, else the last 2
@@ -57,7 +57,7 @@ def main():
         if "=" in x and not x.startswith("--"):
             k, v = x.split("=", 1)
             if k in M:
-                M[k] = (v == "1") if isinstance(MORNING_DEF.get(k), bool) else (None if v == "off" else v if k in ("start", "end") else float(v))
+                M[k] = (int(float(v)) if int(float(v)) in (1, 2) else 5) if k == "orh_min" else (v == "1") if isinstance(MORNING_DEF.get(k), bool) else (None if v == "off" else v if k in ("start", "end") else float(v))
     day = datetime.date.fromisoformat(opt["--day"]) if "--day" in opt else datetime.datetime.now(NY).date()
     SL = json.load(open(stocks_p))
     S = {s["symbol"]: s for s in SL}
@@ -102,7 +102,7 @@ def main():
             continue
         pd = max(x[0].date() for x in prev)
         pdh = max(x[2] for x in prev if x[0].date() == pd)
-        rng = [x for x in tod if x[0] < tod[0][0] + datetime.timedelta(minutes=5)]
+        rng = [x for x in tod if x[0] < tod[0][0] + datetime.timedelta(minutes=M.get("orh_min") or 5)]
         orh, orl = max(x[2] for x in rng), min(x[3] for x in rng)
         prev_c = st.get("price")
         op = tod[0][1]
@@ -127,7 +127,7 @@ def main():
                         why[sym].append([f"{m:%H:%M}", "ALERT"])
                     break
                 r = (f"not over yesterday's high ${pdh:.2f}" if M.get("over_pdh") and price <= pdh else
-                     f"not over the 5-min opening range high ${orh:.2f}" if M.get("over_orh") and price <= orh else
+                     f"not over the {M.get('orh_min') or 5}-min opening range high ${orh:.2f}" if M.get("over_orh") and price <= orh else
                      next((x_fails(f, st, q, lv) for f in M.get("x") or [] if f["id"] == "hc21" and x_fails(f, st, q, lv)), "levels"))
             if sym in why and r != last_reason:
                 why[sym].append([f"{m:%H:%M}", f"${price:.2f} ({q[1]:+.1f}%, vol {rv if rv is not None else '—'}x): {r}"])

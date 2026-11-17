@@ -901,11 +901,14 @@ def update_holding(state, found, live, doc, now):
 # phone yet (the user: "I don't do the phone thing yet"). The settings: alerts/morning.json on main, saved by the portal's
 # Save button (like the Graded gappers rules); none saved = these defaults. Each stock once a day.
 MORNING_DEF = {"on": True, "start": "09:35", "end": "10:30", "min_chg": 5.0, "min_rv": 1.0, "over_pdh": True, "over_orh": True,
-               "price": 5.0, "mcap_b": 0.7, "avgvol_k": 700.0, "dvol_m": 30.0, "adr": 4.0, "low52": 30.0,
+               "orh_min": 5, "price": 5.0, "mcap_b": 0.7, "avgvol_k": 700.0, "dvol_m": 30.0, "adr": 4.0, "low52": 30.0,
                "above200": True, "above50": True, "e10_e21": True, "e21_e50": True, "e50_s200": False}
 MORNING_NUM = {"min_chg": (0, 100), "min_rv": (0, 50), "price": (0, 10000), "mcap_b": (0, 5000), "avgvol_k": (0, 100000),
                "dvol_m": (0, 100000), "adr": (0, 50), "low52": (0, 1000)}     # an empty box (null) = that filter off
 MORNING_BOOL = ("on", "over_pdh", "over_orh", "above200", "above50", "e10_e21", "e21_e50", "e50_s200")
+# the opening range the alert tests (the user, Nov 17 2026: "when i put it does 1min, if i put 2min it does 2 mins, if i put
+# 5min it does 5min"; alerts/morning.json "orh_min", 5 when not saved) and the first minute it is complete
+ORH_START = {1: (9, 31), 2: (9, 32), 5: (9, 35)}
 PAGE_ONLY = {"mbo"}             # kinds shown on the portal only (no phone push)
 MORNING_FETCH = 80              # new stocks' levels (yesterday's high, the opening range) read a run, the biggest movers first
 MORNING_NEWS_BUDGET = 35        # seconds a run for the alerts' news
@@ -965,8 +968,9 @@ def load_morning(path):
     for k in MORNING_BOOL:
         if isinstance(doc.get(k), bool):
             M[k] = doc[k]
+    M["orh_min"] = doc.get("orh_min") if doc.get("orh_min") in ORH_START and not isinstance(doc.get("orh_min"), bool) else 5
     s, e = hhmm(doc.get("start"), (9, 35)), hhmm(doc.get("end"), (10, 30))
-    s = max(s, (9, 35) if M["over_orh"] else (9, 31))     # the 5-minute opening range is complete at 9:35
+    s = max(s, ORH_START[M["orh_min"]] if M["over_orh"] else (9, 31))     # the 1- / 2- / 5-minute opening range is complete at 9:31 / 9:32 / 9:35
     e = min(max(e, s), (16, 0))
     M["start"], M["end"] = f"{s[0]:02d}:{s[1]:02d}", f"{e[0]:02d}:{e[1]:02d}"
     M["x"] = morning_x(doc)
@@ -1128,10 +1132,12 @@ def morning_why_not(st, q, M):
     return ""
 
 
-def morning_levels(sym, today=None):
-    """yesterday's regular-session high and today's 5-minute opening range (9:30-9:35) and day's low so far, from Yahoo's
-    5-minute chart of the last 2 sessions: {pdh, orh, orl, low, pd} or None"""
-    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=2d&interval=5m"
+def morning_levels(sym, today=None, n=5):
+    """yesterday's regular-session high and today's n-minute opening range (5: 9:30-9:35, from Yahoo's 5-minute chart as
+    before; 1 or 2: the first 1 or 2 minutes, from its 1-minute chart) and day's low so far, of the last 2 sessions:
+    {pdh, orh, orl, low, pd, n} or None"""
+    n = n if n in (1, 2) else 5
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=2d&interval={'5m' if n == 5 else '1m'}"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
         with urllib.request.urlopen(req, timeout=15) as r:
@@ -1150,8 +1156,9 @@ def morning_levels(sym, today=None):
         if not prev or not tod or (tod[0][0].hour, tod[0][0].minute) != (9, 30):
             return None
         pd = max(prev)
-        return {"pdh": round(max(prev[pd]), 4), "orh": round(tod[0][1], 4), "orl": round(tod[0][2], 4),
-                "low": round(min(x[2] for x in tod), 4), "pd": pd.isoformat()}
+        rng = tod[:1] if n == 5 else [x for x in tod if (x[0].hour, x[0].minute) < (9, 30 + n)]
+        return {"pdh": round(max(prev[pd]), 4), "orh": round(max(x[1] for x in rng), 4), "orl": round(min(x[2] for x in rng), 4),
+                "low": round(min(x[2] for x in tod), 4), "pd": pd.isoformat(), "n": n}
     except Exception:
         return None
 
@@ -1195,7 +1202,7 @@ def morning_alert(sym, st, q, lv, M):
         return None
     adr = st.get("adr_20") or 0
     over = [f"yesterday's high ${lv['pdh']:.2f}"] if M.get("over_pdh") and lv else []
-    over += [f"the 5-min opening range high ${lv['orh']:.2f}"] if M.get("over_orh") and lv else []
+    over += [f"the {M.get('orh_min') or 5}-min opening range high ${lv['orh']:.2f}"] if M.get("over_orh") and lv else []
     msg = f"${price:.2f} · {chg:+.1f}% · vol {rv:.1f}x for the time of day" + (f" · over {' and '.join(over)}" if over else "")
     if lv and lv.get("low"):
         risk = 100 * (price / lv["low"] - 1)
@@ -1225,23 +1232,25 @@ def news_words(x):
 
 def check_morning(cands, state, M, live, S, E, now, sent):
     """the candidates whose levels are broken: [(key, title, msg, 'high', tv)], each stock once a day; the levels are
-    read once a day per stock (after 9:36 the opening range is final) and kept in alerts.json (mbo_lv); a stock that
-    fires gets its day's low read again (the stop)"""
+    read once a day per stock (a minute after the opening range closes it is final: 9:36 for the 5-minute one, 9:32 / 9:33
+    for the 1- / 2-minute ones) and kept in alerts.json (mbo_lv); levels kept for another range (the setting changed
+    during the morning) are read again; a stock that fires gets its day's low read again (the stop)"""
     import concurrent.futures
-    lvs = state.setdefault("mbo_lv", {})
+    n = M.get("orh_min") or 5
+    state["mbo_lv"] = lvs = {k: v for k, v in (state.get("mbo_lv") or {}).items() if (v.get("n") or 5) == n}
     todo = [s for s in cands if f"{s}:mbo" not in sent]
     before = set(lvs)                                       # levels read at an earlier check (their day's low is old)
     hc = any(f["id"] == "hc21" for f in M.get("x") or [])     # the 21-day closing high only when a + Filter needs it
     need = [s for s in todo if s not in lvs or (hc and "hc21" not in lvs[s])][:MORNING_FETCH]
 
     def lev(s_):
-        lv_ = dict(lvs[s_]) if s_ in lvs else morning_levels(s_, now.date())
+        lv_ = dict(lvs[s_]) if s_ in lvs else morning_levels(s_, now.date(), n)
         if lv_ and hc and "hc21" not in lv_:
             lv_["hc21"] = close_high_21(s_, now.date())
         return lv_
     with concurrent.futures.ThreadPoolExecutor(8) as ex:
         got = dict(zip(need, ex.map(lev, need)))
-    final = (now.hour, now.minute) >= (9, 36)
+    final = (now.hour, now.minute) >= (9, 31 + n)
     fired, recheck = [], []
     for sym in todo:
         lv = got.get(sym) or lvs.get(sym)
@@ -1255,7 +1264,7 @@ def check_morning(cands, state, M, live, S, E, now, sent):
             print(f"{sym}:mbo: ${q[0]:.2f} not over yesterday's high {lv.get('pdh')} / the opening range high {lv.get('orh')} yet")
     if recheck:                                         # levels from an earlier check: the day's low now
         with concurrent.futures.ThreadPoolExecutor(8) as ex:
-            fresh = dict(zip([r[0] for r in recheck], ex.map(lambda s_: morning_levels(s_, now.date()), [r[0] for r in recheck])))
+            fresh = dict(zip([r[0] for r in recheck], ex.map(lambda s_: morning_levels(s_, now.date(), n), [r[0] for r in recheck])))
         for sym, a, lv in recheck:
             if fresh.get(sym):
                 lv = dict(lv, low=fresh[sym]["low"])     # (the 21-day closing high and the levels as they were)
@@ -1490,7 +1499,7 @@ def main():
             state["sent"].append(key)
             continue
         passed.append((key, title, msg, prio, tvs))
-    # the morning breakouts: the levels (yesterday's high, the 5-minute opening range) and the news, then their own
+    # the morning breakouts: the levels (yesterday's high, the 1- / 2- / 5-minute opening range) and the news, then their own
     # alerts, apart from the caps and the group moves below (they don't take the other alerts' places)
     mb = []
     if mb_cands:

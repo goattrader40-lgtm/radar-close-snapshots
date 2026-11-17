@@ -9,7 +9,7 @@ Timeline (ET, trading days):
   8:25, 8:40   start the "Pre-market scan" workflow (if today's scan isn't saved yet)
   8:45, 8:55, 9:00, 9:10, 9:20   start the "Code grader" workflow after that update's pre-market prices (in by 9:05)
   9:30-4:10    every 5 minutes: live prices -> live.json on the radar-data branch
-  9:36-10:30   every minute in between: the stocks up 2%+ re-read for the portal's tables, and their opening ranges
+  9:31-10:30   every minute in between: the stocks up 2%+ re-read for the portal's tables, and their opening ranges
                (radar/movers.py, radar/levels.py) -> live.json with "fast_at", levels.json
   9:31-12:00, 3:00-4:00   every minute in between: the launch watch list and the followed launches (radar/fast.py),
                for the big gap-up alerts and the breakouts
@@ -118,9 +118,9 @@ def live_once():
     if r.returncode:
         return False
     files = [os.path.join(OUT, "live.json")]
-    # the movers' 5-minute opening range, for the portal's + Filter "5-min opening range high (ORH)" (radar/levels.py;
-    # the user, Nov 9 2026), from 9:36
-    if (9, 36) <= hm(now()) < (16, 0):
+    # the movers' 1- / 2- / 5-minute opening ranges, for the portal's + Filter "Above ORH" (radar/levels.py; the user,
+    # Nov 9 2026; from 9:31 with the 1-minute range: Nov 17 2026)
+    if (9, 31) <= hm(now()) < (16, 0):
         load_levels()
         r2 = sh(sys.executable, os.path.join(HERE, "levels.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "levels.json"), check=False)
         log((r2.stdout or r2.stderr).strip()[-200:])
@@ -261,14 +261,14 @@ def fast_once():
 
 
 def movers_window(x):
-    """the movers are re-read every minute from the opening range's close to 10:30 (the user, Nov 16 2026: the Gainers tab
-    with "Above ORH-5min" showed a 9:37 break at 9:40)"""
-    return (9, 36) <= x < (10, 30)
+    """the movers are re-read every minute from 9:31 to 10:30 (the user, Nov 16 2026: the Gainers tab with "Above ORH-5min"
+    showed a 9:37 break at 9:40; Nov 17 2026: "start 931", for the 1- and 2-minute opening range highs)"""
+    return (9, 31) <= x < (10, 30)
 
 
 def movers_once():
     """between the live updates: the stocks up 2%+ re-read (radar/movers.py) on top of the last full update, the new
-    movers' opening ranges (radar/levels.py: the first ones at 9:36, not with the 9:40 update), both published for the
+    movers' opening ranges (radar/levels.py: the 1-minute ones at 9:31, the 2-minute at 9:32, the 5-minute at 9:36), both published for the
     portal's tables. The alerts don't read this file"""
     need = [os.path.join(OUT, f) for f in ("live.json", "base_stocks.json")]
     if not all(os.path.exists(f) for f in need):
