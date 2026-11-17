@@ -49,7 +49,24 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Status of the session "Radar: Start days stay on until they fail + 0.8 ADR start (BILL, Nov 16)" (Mon Nov 16 2026, ~11:30 AM - 8:30 PM ET; session_01PkbDakpheN6wD5vCKyUvBf; in progress)
+## Status at the end of the session "Radar: Start days stay on until they fail + 0.8 ADR start (BILL, Nov 16)" (Mon Nov 16 2026 ~11:30 AM - 10:15 PM ET; session_01PkbDakpheN6wD5vCKyUvBf)
+
+**In one line: the Start days table now works like Launches: no age limit, no 50 EMA rule, the newest start only, fresh from Nov
+1 2026, off on a close 1 ADR under the start close (early) or 1 ADR under the 21 EMA after a 2 ADR run (late), 43 sessions
+without a new high; the start day's move is 1 ADR or 4%+ with 0.8 ADR; the note folds. Three go lives, all on main, the portal
+rebuilt (47 rows). Nothing left on a test branch. FIRST THING NEXT SESSION: Tue Nov 17's 4:40 PM scan (the first real run of the
+1 ADR lines: who left, who stayed; LSCC -0.9 ADR and MTCH -0.5 ADR were one red day from the line) and the first live START DAY
+alerts under the 0.8 ADR rule (alerts.json `:start` keys).**
+
+- **The Start days rules as they stand (scanner/launch.py L; rules/SCANNER_RULES.md)**: ON = the 9 start-day tests, the move = up
+  1 ADR+, or up 4%+ that is also 0.8 ADR+ (ZETA Nov 9 2026). OFF = a close under the start day's low that is also under the 21 EMA;
+  a close 1 ADR+ under the start day's close (QNT Nov 6 -> off Nov 16); once it has closed 2 ADR+ over the start close, a close
+  1 ADR+ under the 21 EMA; 43 sessions from its highest point without a new high; the user's x; a newer start day replaces it
+  (and when that one fails the stock is off). No age limit, no 50 EMA rule, no ADR floor to stay (buyouts like BWIN stay until a
+  line fires). Shown: start days from Nov 1 2026 only.
+- **Open / the user to decide**: none from this session. Offered, no answer: "back on <date>" under a launch date on the Launches
+  row (BILL: off Sep 23 - Oct 15 is invisible); a tighter reset (BILL's 3 lower highs are weak). Not built, measured: a "2 ADR off
+  the top close under the 21 EMA" line (loses MU / TWLO); "back under both EMAs = off" (loses 35 runners).
 
 - **LIVE (the user's "go live", Mon Nov 16 2026 ~4:25 PM ET, branch claude/youthful-brahmagupta-i7nqxp, merge 01d562b): the
   Start days table keeps a start day like a launch, and the start day's move takes 4%+ with 0.8 ADR+.** Four parts:
