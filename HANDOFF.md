@@ -114,6 +114,17 @@ alone.
   QNT / VOYG / PL off, LSCC / MTCH / ZETA / RKLB on. The portal shows the new table. Not touched: the START DAY alert, the
   "start <date>" line under launches, Launches. Scratch scripts of the measurements: this session's scratchpad only (decide.py,
   behave.py, late.py, late2.py, both.py: the numbers are in the rules rows).
+- **LIVE (the user's "go live", Mon Nov 16 2026 ~10:00 PM ET, merge a7048c0): the Start days table's no-new-high window is 43
+  sessions** (about 2 months; the user: "62 sessions is like 3 months"). Launches keep their 62 (L off_days); the table has its
+  own L start_stale_days = 43 (stale(days=)). With the 1 ADR lines in place a tidy-up rule only: on 570 start days 62 removed 0,
+  43 removed 4, none wrongly. `--regress` same; the merged page tested; the table unchanged tonight. Rules workbook: one row.
+- **Measured for the user, no rule built (Nov 16 evening)**: LSCC / MTCH look-alikes in history. LSCC-like (ran, then 2 ADR back
+  from the best close under the 21 EMA within 8 sessions): 16 cases, 50% made a new high within 40 sessions, only 12% of those
+  after a fresh start day (MU Aug 2025 +73%, TWLO, WRBY ground back up; ZETA Nov 2024 -39%, CELH, TEM never). MTCH-like (small
+  start, under both EMAs within 5 sessions): 50 cases, 82% new high (the base rate 83%), 71% without a new start day (MGNI, SPHR,
+  GLXY, MSTR +47-66%). So "they'll make a new start day if alive" does not hold and no extra line was added; the 1 ADR lines
+  handle a further fade. A "2 ADR off the top close under the 21 EMA" line was measured too (runners kept 62% -> 57%, loses MU and
+  TWLO, takes LSCC off): not built.
 - **Answered, no change**: why BILL is on Launches: its Aug 13 2026 launch (base breakout +5.4% on 2.1x, close 51.31, C), off
   Sep 23 (2 closes under the 50 EMA), back on Oct 15 by the reset start (3 lower highs since the Aug 13 top 52.60, range 5.5% ->
   3.3%, closed 46.92 over the last lower high 45.88 and both EMAs); without the reset rule it would be back Nov 2 (flag line
