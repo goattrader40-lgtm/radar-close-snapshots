@@ -177,6 +177,10 @@ alone.
   Aug 14, 17 retest, Aug 18 undercut, Aug 19 reclaim; COHR Mar 9, AMD Jun 11. `--regress`: 53 lines differed, no agreed read lost;
   tools/expected_reads.txt rewritten at the go live. **No 2-year check: the user's decision ("i dont think we need 3#")**; I had
   recommended it (it adds retest days after every launch).
+  **Launches rebuilt after the go live** (picks.yml, 7:28 PM ET Nov 16, the Nov 16 close): 213 launches; AZTA "Retest of the
+  breakout level 43.76-46.41 held", no buy point, zone 39.68-46.41, no gap-out-of-base level; 8 rows read a retest that day
+  (AZTA ZETA CYRX SG GXO MOS EL VSXY), 1 the breakout undercut & reclaim (DLTR). **First check Tue Nov 17**: the retest /
+  reclaim alerts in alerts.json (how many a day now that every touch counts), and no "breakout" on a just-broken top.
 - **Told the user, no answer**: with "every touch", AZTA Nov 16 (low 44.32, close 47.22) also reads "retest held" and would send
   the 3:45 PM alert, though they had said Nov 16 was "just confirmation".
 - **Open, for another session (the user: "leave that alone")**: a GAP retest rule (AEHR Feb 12-17 2026: back to where it gapped
