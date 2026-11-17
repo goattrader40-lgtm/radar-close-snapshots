@@ -212,22 +212,7 @@ jobs:
           case "$CMD" in earnprobe\ *) python3 radar/probe_earnings.py /tmp/probe_earnings.json ${CMD#earnprobe } && python3 radar/publish.py "earnings source check" /tmp/probe_earnings.json;; esac
           case "$CMD" in long\ *) python3 radar/probe_long.py /tmp/long_bars.json ${CMD#long } && python3 radar/publish.py "long history" /tmp/long_bars.json;; esac
           case "$CMD" in replay\ *) python3 radar/probe_replay.py /tmp/probe_replay.json ${CMD#replay } && python3 radar/publish.py "alert replay" /tmp/probe_replay.json;; esac
-          if [ "${{ inputs.cmd }}" = "eventtest" ]; then   # the bellwether event (radar/event.py) from the live Earnings tab -> radar-data events_test.json (the portal doesn't read it)
-            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
-            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:earnings.json > /tmp/rd/earnings.json
-            git show origin/radar-data:events_test.json > /tmp/rd/events_prev.json 2>/dev/null || echo '{}' > /tmp/rd/events_prev.json
-            python3 radar/event.py build radar/bellwethers.json /tmp/rd/earnings.json /tmp/rd/stocks.json /tmp/events_test.json /tmp/rd/events_prev.json && python3 radar/publish.py "event test build" /tmp/events_test.json
-          fi
-          case "$CMD" in eventreplay\ *)   # a past report read again ("eventreplay NVDA 2026-08-26" or "eventreplay NVDA prev") -> radar-data events_replay.json
-            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
-            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
-            python3 radar/event.py replay radar/bellwethers.json /tmp/rd/stocks.json /tmp/events_replay.json ${CMD#eventreplay } && python3 radar/publish.py "event replay" /tmp/events_replay.json;;
-          esac
-          case "$CMD" in links\ *)   # a probe: the direct links of a bellwether from the SEC annual reports ("links NVDA GOOGL SPCX") -> radar-data probe_links.json
-            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
-            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
-            python3 radar/probe_links.py /tmp/rd/stocks.json /tmp/probe_links.json ${CMD#links } && python3 radar/publish.py "links probe" /tmp/probe_links.json;;
-          esac
+          bash radar/tools_event.sh   # eventtest, "eventreplay SYM DAY|prev", "links SYM ..." (the event links; the commands live there: this block is at GitHub's size limit)
           if [ "${{ inputs.cmd }}" = "alerttest" ]; then
             if [ -z "$NTFY_TOPIC" ]; then echo "NTFY_TOPIC secret is not set"; exit 1; fi
             curl -s -H "Title: Radar alerts are on" -H "Tags: white_check_mark" -d "Test from your Theme & Group Radar. Launch, power-day and breakout alerts will arrive here during market hours." "https://ntfy.sh/$NTFY_TOPIC" > /dev/null && echo sent

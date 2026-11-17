@@ -1,5 +1,5 @@
 {
- "_note": "The bellwether map (the user, Nov 17 2026: 'logic and rationale should be accurate linking ... it has to be very clear'). A bellwether's report moves the stocks tied to it. Every link is written out: the tier and the reason, one stock at a time. A stock of a theme with no entry here has NO link and gets no reason. Tiers: direct = a named deal with the bellwether (it owns a stake, buys from it, sells to it, or a named joint program); step = its product goes into the bellwether's systems or the data centers built around them, without a named deal between the two; rival = sells against it (good news for one can be bad for the other); spend = no tie to the bellwether itself, it moves with the same customers' AI data-center spending. radar/event.py reads it; the Pre-market tab's Event card and the alerts' 'why' line show it.",
+ "_note": "The bellwether map (the user, Nov 17 2026: 'logic and rationale should be accurate linking ... it has to be very clear'). A bellwether's report moves the stocks tied to it. Every link is written out: the tier and the reason, one stock at a time. A stock of a theme with no entry here has NO link and gets no reason. Tiers: direct = a named deal with the bellwether (it owns a stake, buys from it, sells to it, or a named joint program); step = its product goes into the bellwether's systems or the data centers built around them, without a named deal between the two; rival = sells against it (good news for one can be bad for the other); spend = no tie to the bellwether itself, it moves with the same customers' AI data-center spending. Only the 1st impact is used (the user, Nov 17 2026: 'im only interested in 1st direct impact ones'): the tiers in 'first' (direct ties and rivals); the step / spend entries stay written here but get no card row and no reason. 'names' = how the bellwether's own report would name a linked company: a sentence of the report that names it is the strongest reason of all. radar/event.py reads it; the Pre-market tab's Event card and the alerts' 'why' line show it.",
  "tiers": {
   "direct": "Direct tie",
   "step": "One step away",
@@ -36,13 +36,14 @@
      "label": "networking",
      "find": [
       "networking revenue",
-      "networking",
-      "spectrum-x",
+      "spectrum",
       "infiniband",
-      "nvlink"
+      "nvlink",
+      "ethernet",
+      "co-packaged"
      ],
      "also": [
-      "ethernet",
+      "networking",
       "quantum-x",
       "connectx",
       "bluefield"
@@ -120,10 +121,10 @@
       "gb300",
       "\\bdell\\b",
       "supermicro",
-      "hewlett packard"
+      "hewlett packard",
+      "\\bhpe\\b"
      ],
      "also": [
-      "\\bhpe\\b",
       "system (builders|makers|partners)",
       "\\bodms?\\b",
       "ai factor(y|ies)"
@@ -761,7 +762,50 @@
       ]
      }
     }
-   ]
+   ],
+   "names": {
+    "CRWV": "CoreWeave",
+    "NBIS": "Nebius",
+    "IREN": "IREN",
+    "COHR": "Coherent",
+    "LITE": "Lumentum",
+    "FN": "Fabrinet",
+    "GLW": "Corning",
+    "MU": "Micron",
+    "TSM": "TSMC|Taiwan Semiconductor",
+    "INTC": "Intel",
+    "ARM": "Arm",
+    "AMD": "AMD",
+    "AVGO": "Broadcom",
+    "ANET": "Arista",
+    "MRVL": "Marvell",
+    "NOK": "Nokia",
+    "CSCO": "Cisco",
+    "ALAB": "Astera",
+    "HPE": "HPE|Hewlett Packard",
+    "DELL": "Dell",
+    "SMCI": "Supermicro|Super Micro",
+    "FLEX": "Flex",
+    "NTAP": "NetApp",
+    "P": "Everpure|Pure Storage",
+    "AMKR": "Amkor",
+    "NVTS": "Navitas",
+    "MPWR": "Monolithic Power|MPS",
+    "ON": "onsemi",
+    "TXN": "Texas Instruments",
+    "STM": "STMicroelectronics",
+    "ADI": "Analog Devices",
+    "POWI": "Power Integrations",
+    "QCOM": "Qualcomm",
+    "VRT": "Vertiv",
+    "ETN": "Eaton",
+    "TT": "Trane",
+    "DLR": "Digital Realty"
+   }
   }
- }
+ },
+ "first": [
+  "direct",
+  "rival"
+ ]
 }

@@ -36,7 +36,9 @@ BOILER = re.compile(r"forward-looking|risks and uncertainties|non-gaap (financia
                     r"undue reliance|no obligation to update|form 10-[kq]|\bsec\b filings", re.I)
 CUT = re.compile(r"CONDENSED CONSOLIDATED|About NVIDIA|Certain statements in this|Non-GAAP Measures|Safe Harbor", re.I)
 CHANGE = re.compile(r"\b(record|grew|growth|up \d|down \d|increase[ds]?|decrease[ds]?|declined?|driven by|ramp|doubl|tripl|"
-                    r"expect(s|ed)?|strong|surpass|exceed|accelerat|sold out|constrain|commit)", re.I)
+                    r"expect(s|ed)?|strong|surpass|exceed|accelerat|sold out|constrain|commitments (increased|were|of)|arriving|in (full )?production|"
+                    r"announced|revealed|launched|unveiled|expanded|partner)", re.I)
+MIN_SCORE = 3                # a sentence needs one of the topic's strong words (or three weak ones) to be quoted
 CALLISH = re.compile(r"\b(says?|said|sees?|expects?|ceo|cfo|call|guid|outlook|forecast|demand|orders?|backlog)\b", re.I)
 
 
@@ -92,7 +94,8 @@ def filing_docs(sec, sym, day_from, day_to):
             return None
         base = f"https://www.sec.gov/Archives/edgar/data/{c}/{f['accessionNumber'][i].replace('-', '')}/"
         names = [x["name"] for x in json.loads(E.retry(lambda: E.http(base + "index.json", E.SEC_UA)))["directory"]["item"]]
-        htm = [n for n in names if n.lower().endswith((".htm", ".html")) and "index" not in n.lower() and n != f["primaryDocument"][i]]
+        htm = [n for n in names if n.lower().endswith((".htm", ".html")) and "index" not in n.lower() and n != f["primaryDocument"][i]
+               and not re.match(r"R\d+\.htm", n)]                 # R1.htm ...: the filing's data pages, not a document
         docs = []
         for n in htm[:6]:
             time.sleep(0.2)
@@ -139,10 +142,10 @@ def said_for(docs, topics):
         cand = []
         for s, kind, url, k in pool:
             hits = [w for p, w in pats if p.search(s)]
-            if not hits:
+            if sum(hits) < MIN_SCORE:
                 continue
             sc = sum(hits) + (2 if re.search(r"\$\s?\d|\d\s?%|\d (billion|million)", s) else 0) \
-                + (1 if CHANGE.search(s) else 0) + (0.5 if kind == "CFO commentary" else 0) - (1 if len(s) > 320 else 0) - k / 2000
+                + (1 if CHANGE.search(s) else 0) + (0.5 if kind == "CFO commentary" else 0) - (2 if len(s) > 320 else 0) - k / 2000
             cand.append((sc, s, kind, url))
         cand.sort(key=lambda x: -x[0])
         keep, seen = [], set()
@@ -156,6 +159,20 @@ def said_for(docs, topics):
                 break
         if keep:
             out[t] = keep
+    return out
+
+
+def named_for(docs, names):
+    """{sym: {text, src, url}}: the report's sentence that names the linked company itself (the strongest reason)"""
+    out = {}
+    pool = [(s, d["kind"], d["url"]) for d in docs for s in sentences(d["text"])]
+    for sym, pat in (names or {}).items():
+        p = re.compile(r"(?<![A-Za-z])(" + pat + r")(?![A-Za-z])")
+        cand = [(2 * bool(re.search(r"\$\s?\d|\d\s?%|\d (billion|million)", s)) + bool(CHANGE.search(s)) - len(s) / 400, s, kind, url)
+                for s, kind, url in pool if p.search(s)]
+        if cand:
+            _, s, kind, url = max(cand)
+            out[sym] = {"text": short(s), "src": kind, "url": url, "topic": "named"}
     return out
 
 
@@ -229,7 +246,7 @@ def quote_move(q, now):
     return [round((px / ref - 1) * 100, 2), kind, round(px, 4)]
 
 
-def assemble(B, m, row, S, said, heard, mv, status):
+def assemble(B, m, row, S, said, heard, mv, status, named=None, first=("direct", "rival")):
     """the event: its links (theme by theme, each stock with tier, reason and move), and the one-line reasons"""
     res = result_line(row) if status == "out" else ""
     bm = mv.get(B)
@@ -243,12 +260,14 @@ def assemble(B, m, row, S, said, heard, mv, status):
         hs = [dict(x, topic=m["topics"][t]["label"]) for t in L["topics"] for x in (heard.get(t) or [])[:1]][:2]
         st = []
         for sym, (tier, why) in L["stocks"].items():
-            if sym not in S:
+            if sym not in S or tier not in first:              # the 1st impact only (the user, Nov 17 2026)
                 continue
-            st.append({"sym": sym, "tier": tier, "why": why, "mv": mv.get(sym)})
+            st.append({"sym": sym, "tier": tier, "why": why, "mv": mv.get(sym), "named": (named or {}).get(sym)})
             if sym not in best or TIERS.index(tier) < TIERS.index(best[sym][0]):
                 best[sym] = (tier, why, L, qs, hs)
         st.sort(key=lambda x: TIERS.index(x["tier"]))
+        if not st:
+            continue
         links.append({"theme": L["theme"], "why": L["why"], "topics": [m["topics"][t]["label"] for t in L["topics"]],
                       "said": qs, "heard": hs, "stocks": st})
         if status != "due":
@@ -256,7 +275,10 @@ def assemble(B, m, row, S, said, heard, mv, status):
     alerts = {}
     if status != "due":
         for sym, (tier, why, L, qs, hs) in best.items():
-            alerts[sym] = f"{lead}. {sym}, {TIER_WORDS[tier]}: {why}" + said_words(m["name"], qs, hs, m["topics"][L["topics"][0]]["label"])
+            nm = (named or {}).get(sym)
+            alerts[sym] = f"{lead}. {sym}, {TIER_WORDS[tier]}: {why}" + (
+                f" {m['name']} named it in its report: “{short(nm['text'], 260)}” ({nm['src']})" if nm
+                else said_words(m["name"], qs, hs, m["topics"][L["topics"][0]]["label"]))
     return links, alerts, themes, lead
 
 
@@ -298,21 +320,21 @@ def build(bw, earn, S, prev, now):
             continue
         eid = f"{B}:{row['date']}"
         status = "due" if now.isoformat() < row["report_at"] else "out" if (row.get("reported") or row.get("rel_url")) else "waiting"
-        said, heard, docs, filed = {}, {}, [], None
+        said, heard, docs, filed, named = {}, {}, [], None, {}
         old = pv.get(eid) or {}
         if status != "due":
             if old.get("gv") == GV and len(old.get("docs") or []) >= 2:
-                said, docs, filed = old.get("said_all") or {}, old["docs"], old.get("filed")
+                said, docs, filed, named = old.get("said_all") or {}, old["docs"], old.get("filed"), old.get("named") or {}
             else:
                 try:
                     sec = sec or E.SEC()
                     fd = filing_docs(sec, B, row["date"], next_session(row["date"]))
                     if fd and fd["docs"]:
-                        said = said_for(fd["docs"], m["topics"])
+                        said, named = said_for(fd["docs"], m["topics"]), named_for(fd["docs"], m.get("names"))
                         docs, filed = [{"url": d["url"], "kind": d["kind"]} for d in fd["docs"]], fd["filed"]
                 except Exception as e:
                     errors.append(f"sec {B}: {e!r}"[:160])
-                    said, docs, filed = old.get("said_all") or {}, old.get("docs") or [], old.get("filed")
+                    said, docs, filed, named = old.get("said_all") or {}, old.get("docs") or [], old.get("filed"), old.get("named") or {}
             try:
                 arts = E.feed([B], datetime.datetime.fromisoformat(row["report_at"]).replace(tzinfo=NY), now).get(B, [])
                 heard = heard_for(arts, m["topics"], datetime.datetime.fromisoformat(row["report_at"]).replace(tzinfo=NY).isoformat())
@@ -321,15 +343,16 @@ def build(bw, earn, S, prev, now):
                 heard = old.get("heard_all") or {}
             if docs and status == "waiting":
                 status = "out"
-        linked = sorted({s for L in m["links"] for s in L["stocks"] if s in S})
+        first = tuple(bw.get("first") or ("direct", "rival"))
+        linked = sorted({s for L in m["links"] for s, v in L["stocks"].items() if s in S and v[0] in first})
         mv = yahoo_moves([B] + linked, now, errors)
         if not mv and old.get("moves"):
             mv = old["moves"]
-        links, alerts, themes, lead = assemble(B, m, row, S, said, heard, mv, status)
+        links, alerts, themes, lead = assemble(B, m, row, S, said, heard, mv, status, named, first)
         events.append({"id": eid, "gv": GV, "sym": B, "name": m["name"], "kind": "earnings", "date": row["date"], "when": row.get("when"),
                        "when_words": when_words(row), "react_day": react, "status": status, "what": m["what"], "lead": lead,
                        "result": result_line(row) if status == "out" else "", "read": row.get("read") if status == "out" else None,
-                       "filed": filed, "docs": docs, "said_all": said, "heard_all": heard, "moves": mv, "moves_at": now.isoformat(timespec="minutes"),
+                       "filed": filed, "docs": docs, "said_all": said, "named": named, "heard_all": heard, "moves": mv, "moves_at": now.isoformat(timespec="minutes"),
                        "links": links, "alerts": alerts, "themes": themes})
     return {"built_at": now.isoformat(timespec="seconds"), "tiers": bw.get("tiers") or {}, "events": events, "errors": errors[:20]}
 
@@ -359,8 +382,9 @@ def replay(bw, S, B, day):
     amc = filed.hour >= 15
     row = {"date": filed.date().isoformat(), "when": "amc" if amc else "bmo", "report_at": fd["filed"][:16]}
     react = window(row)[2]
-    said = said_for(fd["docs"], m["topics"])
-    linked = sorted({s for L in m["links"] for s in L["stocks"] if s in S})
+    said, named = said_for(fd["docs"], m["topics"]), named_for(fd["docs"], m.get("names"))
+    first = tuple(bw.get("first") or ("direct", "rival"))
+    linked = sorted({s for L in m["links"] for s, v in L["stocks"].items() if s in S and v[0] in first})
     mv = {}
     try:
         y = E.Y()
@@ -378,12 +402,12 @@ def replay(bw, S, B, day):
             mv = {s: v for s, v in ex.map(one, [B] + linked) if v}
     except (Exception, SystemExit) as e:
         errors.append(f"bars: {e!r}"[:160])
-    links, alerts, themes, lead = assemble(B, m, row, S, said, {}, mv, "waiting")
+    links, alerts, themes, lead = assemble(B, m, row, S, said, {}, mv, "waiting", named, first)
     head = next((d["text"][:500] for d in fd["docs"] if d["kind"] == "press release"), "")
     ev = {"id": f"{B}:{row['date']}", "gv": GV, "sym": B, "name": m["name"], "kind": "earnings", "date": row["date"], "when": row["when"],
           "when_words": when_words(row), "react_day": react, "status": "out", "replay": True, "what": m["what"], "lead": lead, "result": "",
           "headline": head, "filed": fd["filed"], "docs": [{"url": d["url"], "kind": d["kind"], "chars": len(d["text"]), "sentences": len(sentences(d["text"]))} for d in fd["docs"]],
-          "said_all": said, "heard_all": {}, "moves": mv, "links": links, "alerts": alerts, "themes": themes}
+          "said_all": said, "named": named, "heard_all": {}, "moves": mv, "links": links, "alerts": alerts, "themes": themes}
     return {"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "tiers": bw.get("tiers") or {}, "events": [ev], "errors": errors}
 
 
