@@ -52,8 +52,9 @@ def chart(sym, interval, today):
 
 def opening_range(sym, today, done=5):
     """[high 5, low 5, high 1, high 2] of today's first minutes: the 1- and 2-minute highs from Yahoo's 1-minute chart
-    (ranges_of); the 5-minute pair, from 9:36, from its 5-minute chart's 9:30 bar as before (the two charts' 5-minute highs
-    differed for 15 of 201 stocks on Nov 17 2026, by 0.1-1%: the 5-minute filter keeps its source). False = no 9:30
+    (ranges_of); the 5-minute pair, from 9:36, from its 5-minute chart's 9:30 bar as before (the 5-minute filter keeps its
+    source. Seen Nov 17 2026: a read an hour later gives a 0.1-1% higher 5-minute high than the 9:36 read for 16 of 205
+    stocks, from either chart: Yahoo adds late prints to the first bars, so a high read in the first minutes can be low). False = no 9:30
     5-minute bar (asked at 9:36 or later); None = not read (try again)"""
     try:
         row = ranges_of(chart(sym, "1m", today), min(done, 4))
