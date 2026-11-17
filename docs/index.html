@@ -4025,9 +4025,15 @@ defCalc('industry_perf', {
   let actx = null;
   const TONES = { e: [[660, 0], [990, 0.11], [1480, 0.22]], l: [[880, 0], [1320, 0.18]], p: [[1047, 0, 0.6]], b: [[784, 0], [587, 0.2]],
     g: [[440, 0], [440, 0.22]], h: [[1568, 0, 0.2, 0.08]], m: [[523, 0], [659, 0.16], [784, 0.32, 0.5]],
-    o: [[784, 0], [1047, 0.14], [1319, 0.28], [1568, 0.42, 0.5]] };   /* 📈 Morning breakout: four quick rising notes */
+    o: [[784, 0], [1047, 0.14], [1319, 0.28], [1568, 0.42, 0.5]],     /* 📈 Morning breakout: four quick rising notes */
+    s: [[587, 0], [880, 0.16], [1175, 0.32, 0.5]] };                   /* START DAY: three rising notes at full volume */
+  /* the START DAY alert sounds like an important one (the user, Nov 17 2026: "does it make sound bcs its important one...
+     and say volume?"): it stays in the 👀 Heads-ups box, but has its own chime (a heads-up's is a short quiet tick), the voice
+     says "Start day, R K L B, volume 1.8 times" (was "Heads up, R K L B") and it is announced right after the EPs */
+  const isStart = (b) => / START DAY\b/.test(String((b && b.title) || ''));
+  const sndOf = (b) => (isStart(b) ? 's' : b.box);
   const BOX_SAY = { m: 'Pre-market', l: 'Launching now', p: 'Pattern breakout', e: 'Episodic pivot', b: 'Pullback entry', h: 'Heads up', g: 'Group move', o: 'Morning breakout' };
-  const BOX_RANK = { e: 0, o: 1, l: 2, p: 3, b: 4, g: 5, h: 6, m: 7 };
+  const BOX_RANK = { e: 0, s: 0.5, o: 1, l: 2, p: 3, b: 4, g: 5, h: 6, m: 7 };
   const chime = (box) => {
     try {
       actx = actx || new (window.AudioContext || window.webkitAudioContext)();
@@ -4086,6 +4092,7 @@ defCalc('industry_perf', {
     if (b.say) return b.say;
     const full = String(b.title || '') + ' — ' + String(b.body || '');
     if (/ POWER DAY/.test(b.title)) { const n = (/^★+/.exec(b.title) || [''])[0].length; return 'Power day' + (n ? ', ' + STARS_SAY[Math.min(n, 3)] : '') + (b.sym ? ', ' + b.sym.split('').join(' ') : '') + volSay(full); }
+    if (isStart(b)) return 'Start day' + (b.sym ? ', ' + b.sym.split('').join(' ') : '') + volSay(full);
     if (/ W (CROSSING THE 200|closed over its 200)/.test(b.title)) return 'W ' + (/CROSSING/.test(b.title) ? 'crossing' : 'closed over') + ' the two hundred, ' + (b.sym || '').split('').join(' ');
     if (b.box === 'g') { const m = / GROUP MOVE: ([^(]+)/.exec(b.title); return 'Group move' + (m ? ', ' + m[1].trim().replace(/&/g, 'and') : ''); }
     if (/^MORNING BREAKOUTS \(/.test(b.title)) { const m = /\((\d+)\)/.exec(b.title); return 'Morning breakouts, ' + (m ? m[1] : 'several') + ' stocks'; }   /* the batch (the user, Nov 9 2026) */
@@ -4100,8 +4107,9 @@ defCalc('industry_perf', {
   const announce = (list) => {
     if (!list || !list.length) return;
     const nst = (b) => (/^★+/.exec(b.title) || [''])[0].length;
-    list.sort((a, c) => ((a.box === 'e' ? 0 : 1) - (c.box === 'e' ? 0 : 1)) || (nst(c) - nst(a)) || (BOX_RANK[a.box] - BOX_RANK[c.box]));
-    const kinds = [...new Set(list.map((b) => b.box))].sort((a, c) => BOX_RANK[a] - BOX_RANK[c]).slice(0, 3);
+    const top = (b) => (b.box === 'e' ? 0 : isStart(b) ? 1 : 2);      /* the EPs first, then the start days */
+    list.sort((a, c) => (top(a) - top(c)) || (nst(c) - nst(a)) || (BOX_RANK[sndOf(a)] - BOX_RANK[sndOf(c)]));
+    const kinds = [...new Set(list.map(sndOf))].sort((a, c) => BOX_RANK[a] - BOX_RANK[c]).slice(0, 3);
     kinds.forEach((k, i) => setTimeout(() => chime(k), i * 800));
     const words = list.slice(0, 3).map(sayOf).join('. ') + (list.length > 3 ? '. And ' + (list.length - 3) + ' more.' : '.');   /* the parts end without a period */
     setTimeout(() => say(words), 700 + 800 * (kinds.length - 1));
@@ -4778,10 +4786,11 @@ defCalc('industry_perf', {
       ['p', 'WING B breakout: Base top', '$173.21 over the base top $170.37 · vol 0.8x for the time of day (light) · base 5 days', 'WING:breakout'],
       ['o', 'CDNA MORNING BREAKOUT +6.4%', '$83.57 · +6.4% · vol 2.0x for the time of day', 'CDNA:mbo'],
       ['b', 'SPOT RETEST HOLDING into the close', 'vol 0.9x', 'SPOT:retest'],
+      ['h', 'RKLB START DAY: over its 21 EMA after a downtrend', '+7.6% (1.2 ADR) · vol 1.8x for the time of day', 'RKLB:start'],
       ['h', 'AAL EARLY: catalyst gap', '', 'AAL:early'], ['g', 'grp', '', 'grp:x']];
     EX.forEach(([bx, ti, bo, k], i) => setTimeout(() => {
-      chime(bx);
-      setTimeout(() => say(bx === 'h' || bx === 'g' ? BOX_SAY[bx] : sayOf({ box: bx, title: ti, body: bo, key: k, sym: tickerOfTitle(ti) })), 600);
+      chime(sndOf({ box: bx, title: ti }));
+      setTimeout(() => say((bx === 'h' || bx === 'g') && !isStart({ title: ti }) ? BOX_SAY[bx] : sayOf({ box: bx, title: ti, body: bo, key: k, sym: tickerOfTitle(ti) })), 600);
     }, 400 + i * 5200));
   });
   $('#ln-alert-voice').addEventListener('click', () => {

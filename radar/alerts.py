@@ -577,7 +577,7 @@ def find_start(live, doc, now, sent=()):
         out.append((f"{sym}:start", f"{sym} START DAY: over its 21 EMA after a downtrend",
                     f"{chg:+.1f}% ({chg / adr:.1f} ADR) · vol {rv:.1f}x for the time of day · ${price:.2f} over the 21 EMA ${e21:.2f} (the last close's), "
                     f"{conf} · over the 5-min opening range high ${orh:.2f} · stop: today's low ${low:.2f} ({100 * (price / low - 1) / adr:.1f} ADR)"
-                    + (f" · over the red candle's high ${red:.2f}" if red else "") + tag, "high" if tag else "default", tvs))
+                    + (f" · over the red candle's high ${red:.2f}" if red else "") + tag, "high", tvs))   # always high on the phone (the user, Nov 17 2026: "its important one"; was high only with a tag)
     return out
 
 
