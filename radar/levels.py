@@ -7,7 +7,8 @@ The user (Nov 9 2026): the criteria of the morning breakout alert (over yesterda
 high ...) as + Filter choices on the Gainers & losers tab, "so I can track the list there". Nov 17 2026: one filter,
 "above orh, then when i put it does 1min, if i put 2min it does 2 mins, if i put 5min it does 5min", "start 931".
 Yesterday's high is in stocks.json (high_1d) and the 21-day closing high too (close_high_21); the opening range needs
-today's chart, so this reads Yahoo's 1-minute chart for every stock up min_chg% or more (2 by default) in the live prices
+today's chart, so this reads Yahoo's 1-minute chart (the 1- and 2-minute highs) and, as before, its 5-minute chart (the
+5-minute range) for every stock up min_chg% or more (2 by default) in the live prices
 and keeps levels.json {date, saved_at, rows: {sym: [high 5-min, low 5-min, high 1-min, high 2-min]}, part: {sym: minutes
 read so far}} on radar-data, next to live.json (the 5-minute pair first, as before; a range not finished yet is null).
 The 1-minute high (the 9:30 bar) is read from 9:31, the 2-minute one (9:30-9:32) from 9:32, the 5-minute one (9:30-9:35)
@@ -33,25 +34,35 @@ def ranges_of(bars, done):
     return [*rng(5), rng(1)[0], rng(2)[0]]
 
 
+def chart(sym, interval, today):
+    """today's first 5 minutes from Yahoo's chart: [(minutes after 9:30, high, low)]"""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=1d&interval={interval}"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
+    with urllib.request.urlopen(req, timeout=15) as r:
+        res = json.load(r)["chart"]["result"][0]
+    qd = res["indicators"]["quote"][0]
+    bars = []
+    for t, hi, lo in zip(res.get("timestamp") or [], qd.get("high") or [], qd.get("low") or []):
+        d = datetime.datetime.fromtimestamp(t, NY)
+        m = (d.hour - 9) * 60 + d.minute - 30
+        if d.date() == today and 0 <= m < 5 and hi and lo:
+            bars.append((m, hi, lo))
+    return bars
+
+
 def opening_range(sym, today, done=5):
-    """[high 5, low 5, high 1, high 2] of today's first minutes from Yahoo's 1-minute chart (ranges_of); False = no bar in
-    the first 5 minutes (asked at 9:36 or later); None = not read (try again)"""
-    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=1d&interval=1m"
+    """[high 5, low 5, high 1, high 2] of today's first minutes: the 1- and 2-minute highs from Yahoo's 1-minute chart
+    (ranges_of); the 5-minute pair, from 9:36, from its 5-minute chart's 9:30 bar as before (the two charts' 5-minute highs
+    differed for 15 of 201 stocks on Nov 17 2026, by 0.1-1%: the 5-minute filter keeps its source). False = no 9:30
+    5-minute bar (asked at 9:36 or later); None = not read (try again)"""
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
-        with urllib.request.urlopen(req, timeout=15) as r:
-            res = json.load(r)["chart"]["result"][0]
-        qd = res["indicators"]["quote"][0]
-        bars = []
-        for t, hi, lo in zip(res.get("timestamp") or [], qd.get("high") or [], qd.get("low") or []):
-            d = datetime.datetime.fromtimestamp(t, NY)
-            m = (d.hour - 9) * 60 + d.minute - 30
-            if d.date() == today and 0 <= m < 5 and hi and lo:
-                bars.append((m, hi, lo))
-        row = ranges_of(bars, done)
-        if all(v is None for v in row):
-            return False if done >= 5 else None
-        return row
+        row = ranges_of(chart(sym, "1m", today), min(done, 4))
+        if done >= 5:
+            b5 = [b for b in chart(sym, "5m", today) if b[0] == 0]
+            if not b5:
+                return False
+            row[0], row[1] = round(b5[0][1], 4), round(b5[0][2], 4)
+        return row if any(v is not None for v in row) else None
     except Exception:
         return None
 
