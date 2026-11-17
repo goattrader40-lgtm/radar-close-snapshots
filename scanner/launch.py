@@ -1781,6 +1781,18 @@ def follow(a, i0, i, pick=False):
         return bool(m is not None and 2 <= k_ - m <= 5 and c[k_] > rlv[1] and all(c[x] > a.e50[x] for x in range(m, k_ + 1))
                     and c[rlv[0] + 1:m].max(initial=0) >= rlv[1] * (1 + 1.25 * _adr(st, m) / 100))   # it advanced first
     reclaim_bo = bool(rlv and bo_reclaim(i) and not any(bo_reclaim(x) for x in range(rlv[0] + 2, i)))
+
+    # ... and after ONE close under the level, when the day back over it stays in the retest zone (its low) without the dip a
+    # retest needs (the user, Nov 16 2026, CAI Aug 18-19 2026: closed 20.97 under 21.30, then opened 21.92 = its low, closed
+    # 22.76: "maybe we call this breakout undercut reclaim, as we do for 21 ema undercuts: that day it started in the zone").
+    # A day that already reads as a retest held keeps that name (GMAB Oct 2, ACN Oct 7 2026)
+    def bo_reclaim1(k_):
+        m = under_since(k_ - 1)
+        ak = _adr(st, k_)
+        return bool(m is not None and k_ - m == 1 and c[k_] > rlv[1] and c[k_] > a.e50[k_] and c[m] > a.e50[m] and c[k_] > a.e21[k_]
+                    and rlv[1] * (1 - 1.5 * ak / 100) <= st.l[k_] <= max(rlv[2], rlv[1] * (1 + ak / 400))
+                    and c[rlv[0]:m].max(initial=0) >= rlv[1] * (1 + 1.25 * ak / 100))
+    reclaim1 = bool(rlv and not reclaim_bo and not retest and bo_reclaim1(i))
     m_bo = under_since(i - 1) if reclaim_bo else None
     m_now = under_since(i)
     # tomorrow's: under the level now (within 5 sessions), holding over the 50 EMA, no reclaim of this breakout yet
@@ -1788,6 +1800,8 @@ def follow(a, i0, i, pick=False):
     reclaim_level = rlv[1] if (m_now is not None and 1 <= i - m_now <= 4 and all(c[x] > a.e50[x] for x in range(m_now, i + 1))
                                and c[rlv[0] + 1:m_now].max(initial=0) >= rlv[1] * (1 + 1.25 * _adr(st, m_now) / 100)
                                and not any(bo_reclaim(x) for x in range(rlv[0] + 2, i + 1))) else None
+    if rlv and reclaim_level is None and m_now == i and c[i] > a.e50[i] and c[rlv[0]:i].max(initial=0) >= rlv[1] * (1 + 1.25 * adr / 100):
+        reclaim_level = rlv[1]        # the 1st close under today: tomorrow back over it is the one-close reclaim (CAI Aug 18 2026)
     # the 50 EMA undercut & reclaim (an entry, like the 21 EMA one): the 2 closes before under the 50 EMA (no depth limit,
     # your OK Nov 1 2026), today the low under it and under the open, the close back over it in the upper half of the day,
     # in the base (AEHR Mar 31 2026: Mar 27 & 30 under 33.79 / 33.64, down to 33.00, closed 37.08 over 33.78)
@@ -2130,7 +2144,7 @@ def follow(a, i0, i, pick=False):
     if att and att_conf == i:
         stage += f" · confirms the launch attempt of {st.dates[i0]}: closed over {att[0]:.2f}"
     if reclaim_level and not off_now:
-        stage += (f" · under its breakout level {rlv[1]:.2f} since {st.dates[m_now]} ({i - m_now + 1} closes), holding over the 50 EMA: "
+        stage += (f" · under its breakout level {rlv[1]:.2f} since {st.dates[m_now]} ({i - m_now + 1} close{'' if i == m_now else 's'}), holding over the 50 EMA: "
                   f"a breakout undercut & reclaim setup, the buy is a close back over it")
     elif m_now is not None and i - m_now <= 4:
         # before the setup (the user, Nov 1 2026: the status should say it): the 1st close back under the level after an
@@ -2140,6 +2154,14 @@ def follow(a, i0, i, pick=False):
         elif i == m_now and c[i] > a.e50[i]:
             stage += (f" · closed back under its breakout level {rlv[1]:.2f} (1st close): a 2nd close under, holding over the 50 EMA, "
                       f"sets up a breakout undercut & reclaim")
+    # the one-close breakout undercut & reclaim: the status itself when the day has no other read, else added to it (CAI Aug
+    # 19 2026 stays the bull flag breakout; AMD Jun 11 2026 stays the 21 EMA undercut & reclaim on a strong day)
+    if reclaim1 and not off_now and not u200:
+        txt = f"closed {c[i]:.2f} back over the breakout level {rlv[1]:.2f} after 1 close under it ({st.dates[i - 1]}), the low {st.l[i]:.2f} in its retest zone"
+        if stage.startswith(("Holding", "In the base", "Riding", "Running", "Consolidation")):
+            stage = "Breakout undercut & reclaim (entry): " + txt
+        else:
+            stage += " · also the breakout undercut & reclaim: " + txt
     out = dict(
         stage=stage, stage_since=since, msf_pattern=msf_pat, breakouts=nbo, top_tries=ntries, top_tries_note=tries_txt,
         ema21_today=reclaim, ema21_watch=ema21_watch,
@@ -2187,7 +2209,7 @@ def follow(a, i0, i, pick=False):
         vol_build=fnum(st.v[i - 4:i + 1].mean() / st.v[i - 54:i - 4].mean(), 2) if i >= 54 else None,
         base_from=bfrom, base_len=blen, base_low_pct=fnum(bdeep, 1) if bdeep is not None else None,
         base_low_adr=fnum(bdeep_adr, 1) if bdeep_adr is not None else None,
-        breakout_reclaim_today=reclaim_bo, reclaim_level=fnum(reclaim_level) if reclaim_level else None,
+        breakout_reclaim_today=bool(reclaim_bo or (reclaim1 and not off_now and not u200)), reclaim_level=fnum(reclaim_level) if reclaim_level else None,
         retest_today=retest, retest_ema=retest_ema, retest_level=fnum(rlv[1]) if rlv else None, retest_level_wick=fnum(rlv[2]) if rlv else None,
         retest_from=st.dates[rlv[0]] if rlv else None, retest_zone=zone, tight_days=tight, tight_level=fnum(tlv) if tight >= 2 else None,
         # for the retest alerts during the day (radar/alerts.py), with the zone: the low has to get this far under the
