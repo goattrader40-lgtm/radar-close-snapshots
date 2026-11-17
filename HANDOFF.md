@@ -51,7 +51,7 @@ alone.
 
 ## Status of the session "Radar: why AVEX isn't on the EP watchlist (Nov 17)" (Tue Nov 17 2026, from ~1:25 PM ET; session_01PkbDameNZtixLSWb6F7Thg; in progress)
 
-- **LIVE (the user's "go live for two changes already tested", Tue Nov 17 2026 ~3:10 PM ET, commit 9cd7f74): two changes.**
+- **LIVE (the user's "go live for two changes already tested", Tue Nov 17 2026 ~2:55 PM ET, commit 9cd7f74): two changes.**
   1. **The Watchlist's relative volume is on 20 days (was 10)**: the day's volume vs the average of the 20 sessions before, for
      the 1-EP/GAP 2x and the 1-UPDAY 1x tests and the Rel vol saved on the Watchlist rows (scanner/screens.py REL_VOL_DAYS,
      scanner/settings.json screeners.rel_vol_days 20, set in run.py build). The user: "Tradingview shows 200 rvol ... for rvol it
@@ -77,7 +77,7 @@ alone.
   alert (FRVO no gap; both under the 200 SMA stand-in and under the 21-session closing high); the START DAY alert went live Nov
   13, after both. The lists show about 4:27-4:35 PM ET (Nov 16: 4:27 / 4:28). The user does NOT want start days added to the
   table during the day ("its ok the way its now, as long as it fires alert").
-- **LIVE (the user's "go live", Tue Nov 17 2026 ~3:20 PM ET, commit fdef44c): the START DAY alert sounds like an important
+- **LIVE (the user's "go live", Tue Nov 17 2026 ~3:15 PM ET, commit fdef44c): the START DAY alert sounds like an important
   alert** (the user: "does it make sound bcs its important one... and say volume?", "test it for sound"). docs/index.html: its
   own chime (TONES s: three rising notes at full volume; a heads-up's is one short quiet tick), the voice says "Start day, R K L
   B, volume 1.8 times" (sayOf / isStart; was "Heads up, R K L B", no volume), announced right after the EPs (announce, sndOf),
