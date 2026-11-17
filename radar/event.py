@@ -1,0 +1,417 @@
+#!/usr/bin/env python3
+"""Event links: when a bellwether reports, which stocks are tied to it, why, and what the bellwether itself said about them.
+
+  python3 radar/event.py build  <bellwethers.json> <earnings.json> <stocks.json> <out events.json> [previous events.json]
+  python3 radar/event.py replay <bellwethers.json> <stocks.json> <out> SYM YYYY-MM-DD|prev   (a past report, read again)
+
+The user, Nov 17 2026 (NVDA's report): "it has major implications for all companies depend on nvda ... our code should be
+able to connect dots"; "logic and rationale should be accurate linking"; "reason of alert has to be clear explanation ...
+price and volume makes me decide, new direct link, fundamental news helps conviction". By code, no Claude:
+  the links   radar/bellwethers.json: every linked stock written out with its tier (direct tie / one step away / rival / same
+              spending) and the reason. A stock without an entry has no link and gets no reason.
+  the event   the bellwether is on the Earnings tab (earnings.json): the event runs from the morning of its report to 8 PM ET
+              of the reaction session (a report after the close: the next session).
+  what it     its own words, quoted: the results filing at the SEC (8-K item 2.02): every exhibit, so NVIDIA's press release
+  said        AND its CFO commentary. Each topic of the map (networking, the AI clouds, supply, power ...) keeps the 2
+              sentences that say most about it (the topic's words, a number, a change). No sentence = "nothing in the
+              release". The earnings call itself is not on the SEC and no free source carries it: the news feed's headlines
+              about the bellwether since the report (Alpaca / Benzinga, which carry the call's main remarks) are matched to
+              the same topics and shown as "heard", marked as a headline, not a quote.
+  the moves   Yahoo quotes of every linked stock (after hours on the evening, pre-market, live); the page refreshes them
+              from its own pre-market / live files.
+  the reason  for each linked stock one line: the event and its result, the stock's tie, the bellwether's sentence about that
+              tie. radar/alerts.py puts it on that stock's alerts during the reaction session ("why:"); the Pre-market
+              tab's Event card shows all of it.
+"""
+import concurrent.futures as cf, datetime, html, json, os, re, sys, time, urllib.parse
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import earnings as E  # noqa: E402
+
+NY = E.NY
+GV = 1                       # the reader's version: a change re-reads the filing
+TIERS = ["direct", "rival", "step", "spend"]
+TIER_WORDS = {"direct": "direct tie", "step": "one step away", "rival": "rival", "spend": "same spending, no tie"}
+BOILER = re.compile(r"forward-looking|risks and uncertainties|non-gaap (financial )?measures?|conference call|webcast|safe harbor|"
+                    r"trademarks?|copyright|reconciliation|investor relations|for (more|further) information|press releases?|"
+                    r"undue reliance|no obligation to update|form 10-[kq]|\bsec\b filings", re.I)
+CUT = re.compile(r"CONDENSED CONSOLIDATED|About NVIDIA|Certain statements in this|Non-GAAP Measures|Safe Harbor", re.I)
+CHANGE = re.compile(r"\b(record|grew|growth|up \d|down \d|increase[ds]?|decrease[ds]?|declined?|driven by|ramp|doubl|tripl|"
+                    r"expect(s|ed)?|strong|surpass|exceed|accelerat|sold out|constrain|commit)", re.I)
+CALLISH = re.compile(r"\b(says?|said|sees?|expects?|ceo|cfo|call|guid|outlook|forecast|demand|orders?|backlog)\b", re.I)
+
+
+def money(v):
+    if v is None:
+        return "?"
+    return f"${v / 1e9:.1f}B" if abs(v) >= 1e9 else f"${v / 1e6:.0f}M"
+
+
+def next_session(d):
+    d = datetime.date.fromisoformat(d) if isinstance(d, str) else d
+    while True:
+        d += datetime.timedelta(days=1)
+        if E.trading(d):
+            return d.isoformat()
+
+
+def window(row):
+    """(start, end, reaction day): from the morning of the report to 8 PM ET of the session that reacts to it"""
+    react = row["date"] if row.get("when") == "bmo" else next_session(row["date"])
+    return row["date"] + "T00:00", react + "T20:00", react
+
+
+def when_words(row):
+    d = datetime.date.fromisoformat(row["date"])
+    w = {"bmo": "before the open", "amc": "after the close"}.get(row.get("when"), "")
+    return f"{d:%a %b} {d.day}" + (" " + w if w else "")
+
+
+# ───────── the filing: every exhibit of the results 8-K ─────────
+def clean(raw):
+    t = re.sub(r"(?is)<(script|style).*?</\1>", " ", raw)
+    t = re.sub(r"(?i)</(p|li|div|tr|h[1-6]|table)>|<br\s*/?>", " ¶ ", t)
+    t = re.sub(r"<[^>]+>", " ", t)
+    return re.sub(r"[ \t\r\n\xa0]+", " ", html.unescape(t)).strip()
+
+
+def filing_docs(sec, sym, day_from, day_to):
+    """the results filing (8-K item 2.02, or a 6-K) accepted between the two days (ISO): {filed, docs: [{url, kind, text}]}"""
+    c = sec.cik.get(sym.upper())
+    if not c:
+        return None
+    sub = json.loads(E.retry(lambda: E.http(f"https://data.sec.gov/submissions/CIK{c:010d}.json", E.SEC_UA)))
+    f = sub["filings"]["recent"]
+    for i, form in enumerate(f["form"]):
+        if form not in ("8-K", "6-K") or (form == "8-K" and "2.02" not in (f["items"][i] or "")):
+            continue
+        acc_t = datetime.datetime.fromisoformat(f["acceptanceDateTime"][i].replace("Z", "+00:00")).astimezone(NY)
+        d = acc_t.date().isoformat()
+        if d > day_to:
+            continue
+        if d < day_from:
+            return None
+        base = f"https://www.sec.gov/Archives/edgar/data/{c}/{f['accessionNumber'][i].replace('-', '')}/"
+        names = [x["name"] for x in json.loads(E.retry(lambda: E.http(base + "index.json", E.SEC_UA)))["directory"]["item"]]
+        htm = [n for n in names if n.lower().endswith((".htm", ".html")) and "index" not in n.lower() and n != f["primaryDocument"][i]]
+        docs = []
+        for n in htm[:6]:
+            time.sleep(0.2)
+            try:
+                txt = clean(E.http(base + n, E.SEC_UA).decode("utf-8", "replace"))
+            except Exception:
+                continue
+            if len(txt) < 1500:
+                continue
+            kind = "CFO commentary" if re.search(r"CFO Commentary", txt[:800], re.I) else "press release"
+            docs.append({"url": base + n, "kind": kind, "text": txt})
+        return {"filed": acc_t.isoformat(timespec="minutes"), "docs": docs}
+    return None
+
+
+def sentences(text):
+    m = CUT.search(text, 1500)
+    body = text[:m.start()] if m else text
+    out = []
+    for part in re.split(r"\s*¶\s*", body):
+        for s in re.split(r"(?<=[a-z0-9%\)”\"])[.!?]\s+(?=[A-Z“\"$])", part):
+            s = s.strip(" ·•-–—")
+            if not (50 <= len(s) <= 460) or BOILER.search(s):
+                continue
+            if sum(ch.isalpha() or ch == " " for ch in s) < 0.72 * len(s):       # a table row, not a sentence
+                continue
+            out.append(s if s[-1] in ".!?" else s + ".")
+    return out
+
+
+def short(s, n=300):
+    return s if len(s) <= n else s[:n].rsplit(" ", 1)[0].rstrip(",;:") + " …"
+
+
+def said_for(docs, topics):
+    """{topic: [{text, src, url}]}: the bellwether's own sentences that say most about each topic, at most 2"""
+    pool = []
+    for d in docs:
+        for k, s in enumerate(sentences(d["text"])):
+            pool.append((s, d["kind"], d["url"], k))
+    out = {}
+    for t, spec in topics.items():
+        pats = [(re.compile(p, re.I), 3) for p in spec["find"]] + [(re.compile(p, re.I), 1) for p in spec.get("also") or []]
+        cand = []
+        for s, kind, url, k in pool:
+            hits = [w for p, w in pats if p.search(s)]
+            if not hits:
+                continue
+            sc = sum(hits) + (2 if re.search(r"\$\s?\d|\d\s?%|\d (billion|million)", s) else 0) \
+                + (1 if CHANGE.search(s) else 0) + (0.5 if kind == "CFO commentary" else 0) - (1 if len(s) > 320 else 0) - k / 2000
+            cand.append((sc, s, kind, url))
+        cand.sort(key=lambda x: -x[0])
+        keep, seen = [], set()
+        for sc, s, kind, url in cand:
+            key = re.sub(r"\W+", "", s.lower())[:50]
+            if key in seen:
+                continue
+            seen.add(key)
+            keep.append({"text": short(s), "src": kind, "url": url})
+            if len(keep) == 2:
+                break
+        if keep:
+            out[t] = keep
+    return out
+
+
+def heard_for(arts, topics, since):
+    """{topic: [{text, src, url}]} from the news feed's headlines about the bellwether since the report, at most 2 a topic"""
+    out = {}
+    ts = lambda n: datetime.datetime.fromisoformat(str(n.get("created_at") or "1970-01-01T00:00:00Z").replace("Z", "+00:00")).astimezone(NY)
+    A = [n for n in arts if ts(n).isoformat() >= since and len(n.get("symbols") or []) <= 4 and n.get("headline")]
+    for t, spec in topics.items():
+        pats = [re.compile(p, re.I) for p in spec["find"] + (spec.get("also") or [])]
+        cand = []
+        for n in A:
+            hl = html.unescape(n["headline"])
+            hits = sum(1 for p in pats if p.search(hl))
+            if hits:
+                cand.append((hits + (2 if CALLISH.search(hl) else 0), ts(n), hl, n))
+        cand.sort(key=lambda x: (-x[0], x[1]))
+        keep, seen = [], set()
+        for _, tm, hl, n in cand:
+            key = re.sub(r"\W+", "", hl.lower())[:40]
+            if key in seen:
+                continue
+            seen.add(key)
+            keep.append({"text": short(hl, 220), "src": f"{n.get('source') or 'news'} {tm:%b} {tm.day} {tm:%H:%M} ET", "url": n.get("url") or ""})
+            if len(keep) == 2:
+                break
+        if keep:
+            out[t] = keep
+    return out
+
+
+# ───────── the result, the moves ─────────
+def result_line(r):
+    p = []
+    if r.get("rev_act"):
+        s = "revenue " + money(r["rev_act"])
+        if r.get("rev_est"):
+            s += f" vs {money(r['rev_est'])} est"
+            if r.get("rev_surprise") is not None:
+                s += f" ({r['rev_surprise']:+.1f}%)"
+        if r.get("rev_growth") is not None:
+            s += f", {r['rev_growth']:+.0f}% y/y"
+        p.append(s)
+    if r.get("eps_act") is not None:
+        p.append(f"EPS {r['eps_act']:.2f}" + (f" vs {r['eps_est']:.2f} est" if r.get("eps_est") is not None else ""))
+    g = r.get("guide") or {}
+    if g.get("mid"):
+        p.append(("next quarter's" if g.get("kind") == "q" else "the year's") + " revenue guide " + money(g["mid"])
+                 + (f" ({g['vs_street']:+.1f}% vs the street)" if g.get("vs_street") is not None else ""))
+    elif g.get("dir") in ("raised", "lowered", "reaffirmed"):
+        p.append("guidance " + g["dir"])
+    return "; ".join(p)
+
+
+def quote_move(q, now):
+    """(move %, kind, price) the way the Earnings tab reads a quote: pre-market, live, after hours, else the close"""
+    st = q.get("marketState") or ""
+    reg, prv = q.get("regularMarketPrice"), q.get("regularMarketPreviousClose")
+    pre, post = q.get("preMarketPrice"), q.get("postMarketPrice")
+    pre_t, post_t, reg_t = q.get("preMarketTime") or 0, q.get("postMarketTime") or 0, q.get("regularMarketTime") or 0
+    if st == "PRE" or (st in ("PREPRE", "CLOSED") and pre and pre_t > reg_t and now.hour < 10):
+        px, kind, ref = pre, "pre-market", reg
+    elif st == "REGULAR":
+        px, kind, ref = reg, "live", prv
+    elif post and post_t > reg_t:
+        px, kind, ref = post, "after hours", reg
+    else:
+        px, kind, ref = reg, "close", prv
+    if not (px and ref):
+        return None
+    return [round((px / ref - 1) * 100, 2), kind, round(px, 4)]
+
+
+def assemble(B, m, row, S, said, heard, mv, status):
+    """the event: its links (theme by theme, each stock with tier, reason and move), and the one-line reasons"""
+    res = result_line(row) if status == "out" else ""
+    bm = mv.get(B)
+    head = f"{B} earnings ({when_words(row)})"
+    lead = head + (": " + res if res else " are out" if status != "due" else "")
+    if bm and status != "due":
+        lead += f"; {B} {bm[0]:+.1f}% {bm[1]}"
+    links, best, themes = [], {}, {}
+    for L in m["links"]:
+        qs = [dict(x, topic=m["topics"][t]["label"]) for t in L["topics"] for x in (said.get(t) or [])[:1]][:2]
+        hs = [dict(x, topic=m["topics"][t]["label"]) for t in L["topics"] for x in (heard.get(t) or [])[:1]][:2]
+        st = []
+        for sym, (tier, why) in L["stocks"].items():
+            if sym not in S:
+                continue
+            st.append({"sym": sym, "tier": tier, "why": why, "mv": mv.get(sym)})
+            if sym not in best or TIERS.index(tier) < TIERS.index(best[sym][0]):
+                best[sym] = (tier, why, L, qs, hs)
+        st.sort(key=lambda x: TIERS.index(x["tier"]))
+        links.append({"theme": L["theme"], "why": L["why"], "topics": [m["topics"][t]["label"] for t in L["topics"]],
+                      "said": qs, "heard": hs, "stocks": st})
+        if status != "due":
+            themes[L["theme"]] = lead + ". " + L["why"] + said_words(m["name"], qs, hs, m["topics"][L["topics"][0]]["label"])
+    alerts = {}
+    if status != "due":
+        for sym, (tier, why, L, qs, hs) in best.items():
+            alerts[sym] = f"{lead}. {sym}, {TIER_WORDS[tier]}: {why}" + said_words(m["name"], qs, hs, m["topics"][L["topics"][0]]["label"])
+    return links, alerts, themes, lead
+
+
+def said_words(name, qs, hs, label):
+    if qs:
+        q = qs[0]
+        return f" {name} on {q['topic']}: “{short(q['text'], 240)}” ({q['src']})"
+    if hs:
+        return f" Heard on {hs[0]['topic']}: {hs[0]['text']} ({hs[0]['src']}, a headline)"
+    return f" {name}'s release says nothing on {label}."
+
+
+def yahoo_moves(syms, now, errors):
+    try:
+        y = E.Y()
+        Q = y.quotes([s.replace(".", "-") for s in syms])
+    except (Exception, SystemExit) as e:
+        errors.append(f"quotes: {e!r}"[:160])
+        return {}
+    out = {}
+    for s in syms:
+        q = Q.get(s.replace(".", "-"))
+        mv = quote_move(q, now) if q else None
+        if mv:
+            out[s] = mv
+    return out
+
+
+def build(bw, earn, S, prev, now):
+    rows = {r["sym"]: r for r in earn.get("rows", [])}
+    pv = {e["id"]: e for e in (prev or {}).get("events", [])}
+    errors, events, sec = [], [], None
+    for B, m in bw["bellwethers"].items():
+        row = rows.get(B)
+        if not row or not row.get("report_at"):
+            continue
+        start, end, react = window(row)
+        if not (start <= now.isoformat()[:16] <= end):
+            continue
+        eid = f"{B}:{row['date']}"
+        status = "due" if now.isoformat() < row["report_at"] else "out" if (row.get("reported") or row.get("rel_url")) else "waiting"
+        said, heard, docs, filed = {}, {}, [], None
+        old = pv.get(eid) or {}
+        if status != "due":
+            if old.get("gv") == GV and len(old.get("docs") or []) >= 2:
+                said, docs, filed = old.get("said_all") or {}, old["docs"], old.get("filed")
+            else:
+                try:
+                    sec = sec or E.SEC()
+                    fd = filing_docs(sec, B, row["date"], next_session(row["date"]))
+                    if fd and fd["docs"]:
+                        said = said_for(fd["docs"], m["topics"])
+                        docs, filed = [{"url": d["url"], "kind": d["kind"]} for d in fd["docs"]], fd["filed"]
+                except Exception as e:
+                    errors.append(f"sec {B}: {e!r}"[:160])
+                    said, docs, filed = old.get("said_all") or {}, old.get("docs") or [], old.get("filed")
+            try:
+                arts = E.feed([B], datetime.datetime.fromisoformat(row["report_at"]).replace(tzinfo=NY), now).get(B, [])
+                heard = heard_for(arts, m["topics"], datetime.datetime.fromisoformat(row["report_at"]).replace(tzinfo=NY).isoformat())
+            except Exception as e:
+                errors.append(f"news feed {B}: {e!r}"[:160])
+                heard = old.get("heard_all") or {}
+            if docs and status == "waiting":
+                status = "out"
+        linked = sorted({s for L in m["links"] for s in L["stocks"] if s in S})
+        mv = yahoo_moves([B] + linked, now, errors)
+        if not mv and old.get("moves"):
+            mv = old["moves"]
+        links, alerts, themes, lead = assemble(B, m, row, S, said, heard, mv, status)
+        events.append({"id": eid, "gv": GV, "sym": B, "name": m["name"], "kind": "earnings", "date": row["date"], "when": row.get("when"),
+                       "when_words": when_words(row), "react_day": react, "status": status, "what": m["what"], "lead": lead,
+                       "result": result_line(row) if status == "out" else "", "read": row.get("read") if status == "out" else None,
+                       "filed": filed, "docs": docs, "said_all": said, "heard_all": heard, "moves": mv, "moves_at": now.isoformat(timespec="minutes"),
+                       "links": links, "alerts": alerts, "themes": themes})
+    return {"built_at": now.isoformat(timespec="seconds"), "tiers": bw.get("tiers") or {}, "events": events, "errors": errors[:20]}
+
+
+# ───────── a past report read again (the test of the reader and of the links) ─────────
+def daily(y, sym, d0, d1):
+    p1 = int(datetime.datetime.combine(d0, datetime.time(), NY).timestamp())
+    p2 = int(datetime.datetime.combine(d1, datetime.time(), NY).timestamp())
+    j = y.get(f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(sym.replace('.', '-'))}?period1={p1}&period2={p2}&interval=1d")
+    r = j["chart"]["result"][0]
+    q = ((r.get("indicators") or {}).get("quote") or [{}])[0]
+    return [(datetime.datetime.fromtimestamp(t, NY).date().isoformat(), o, c) for t, o, c in
+            zip(r.get("timestamp") or [], q.get("open") or [], q.get("close") or []) if o and c]
+
+
+def replay(bw, S, B, day):
+    m = bw["bellwethers"][B]
+    errors = []
+    sec = E.SEC()
+    if day == "prev":                      # the newest results filing more than a week old: the report before this one
+        fd = filing_docs(sec, B, "1900-01-01", (datetime.datetime.now(NY).date() - datetime.timedelta(days=7)).isoformat())
+    else:
+        fd = filing_docs(sec, B, day, next_session(day))
+    if not fd:
+        return {"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "events": [], "errors": [f"no results filing of {B} on {day}"]}
+    filed = datetime.datetime.fromisoformat(fd["filed"])
+    amc = filed.hour >= 15
+    row = {"date": filed.date().isoformat(), "when": "amc" if amc else "bmo", "report_at": fd["filed"][:16]}
+    react = window(row)[2]
+    said = said_for(fd["docs"], m["topics"])
+    linked = sorted({s for L in m["links"] for s in L["stocks"] if s in S})
+    mv = {}
+    try:
+        y = E.Y()
+        rd = datetime.date.fromisoformat(react)
+
+        def one(s):
+            try:
+                bars = daily(y, s, rd - datetime.timedelta(days=8), rd + datetime.timedelta(days=1))
+                i = next(k for k, b in enumerate(bars) if b[0] == react)
+                pc = bars[i - 1][2]
+                return s, [round((bars[i][2] / pc - 1) * 100, 2), "that session, close to close", round(bars[i][2], 4), round((bars[i][1] / pc - 1) * 100, 2)]
+            except Exception:
+                return s, None
+        with cf.ThreadPoolExecutor(6) as ex:
+            mv = {s: v for s, v in ex.map(one, [B] + linked) if v}
+    except (Exception, SystemExit) as e:
+        errors.append(f"bars: {e!r}"[:160])
+    links, alerts, themes, lead = assemble(B, m, row, S, said, {}, mv, "waiting")
+    head = next((d["text"][:500] for d in fd["docs"] if d["kind"] == "press release"), "")
+    ev = {"id": f"{B}:{row['date']}", "gv": GV, "sym": B, "name": m["name"], "kind": "earnings", "date": row["date"], "when": row["when"],
+          "when_words": when_words(row), "react_day": react, "status": "out", "replay": True, "what": m["what"], "lead": lead, "result": "",
+          "headline": head, "filed": fd["filed"], "docs": [{"url": d["url"], "kind": d["kind"], "chars": len(d["text"]), "sentences": len(sentences(d["text"]))} for d in fd["docs"]],
+          "said_all": said, "heard_all": {}, "moves": mv, "links": links, "alerts": alerts, "themes": themes}
+    return {"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "tiers": bw.get("tiers") or {}, "events": [ev], "errors": errors}
+
+
+def main():
+    mode = sys.argv[1]
+    bw = json.load(open(sys.argv[2]))
+    if mode == "build":
+        earn, S = json.load(open(sys.argv[3])), {s["symbol"]: s for s in json.load(open(sys.argv[4]))}
+        prev = None
+        if len(sys.argv) > 6:
+            try:
+                prev = json.load(open(sys.argv[6]))
+            except Exception:
+                prev = None
+        out = build(bw, earn, S, prev, datetime.datetime.now(NY))
+        json.dump(out, open(sys.argv[5], "w"), separators=(",", ":"))
+    else:
+        S = {s["symbol"]: s for s in json.load(open(sys.argv[3]))}
+        out = replay(bw, S, sys.argv[5].upper(), sys.argv[6])
+        json.dump(out, open(sys.argv[4], "w"), separators=(",", ":"))
+    for e in out["events"]:
+        print(e["id"], e["status"], "| docs", len(e["docs"]), "| topics said", sorted(e["said_all"]), "| heard", sorted(e["heard_all"]),
+              "| linked stocks", len(e["alerts"]) or sum(len(L["stocks"]) for L in e["links"]), "| moves", len(e["moves"]))
+    if not out["events"]:
+        print("no event now")
+    for x in out["errors"]:
+        print("error:", x)
+
+
+if __name__ == "__main__":
+    main()

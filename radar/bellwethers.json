@@ -1,0 +1,767 @@
+{
+ "_note": "The bellwether map (the user, Nov 17 2026: 'logic and rationale should be accurate linking ... it has to be very clear'). A bellwether's report moves the stocks tied to it. Every link is written out: the tier and the reason, one stock at a time. A stock of a theme with no entry here has NO link and gets no reason. Tiers: direct = a named deal with the bellwether (it owns a stake, buys from it, sells to it, or a named joint program); step = its product goes into the bellwether's systems or the data centers built around them, without a named deal between the two; rival = sells against it (good news for one can be bad for the other); spend = no tie to the bellwether itself, it moves with the same customers' AI data-center spending. radar/event.py reads it; the Pre-market tab's Event card and the alerts' 'why' line show it.",
+ "tiers": {
+  "direct": "Direct tie",
+  "step": "One step away",
+  "rival": "Rival",
+  "spend": "Same spending, no tie"
+ },
+ "bellwethers": {
+  "NVDA": {
+   "name": "NVIDIA",
+   "what": "NVIDIA sells most of the chips, networking and rack designs that AI data centers are built on. Its Data Center revenue and its guide for next quarter are the best single reading of how much the big buyers are spending, so its report moves its suppliers, its customers, its rivals and everyone building the data centers.",
+   "topics": {
+    "outlook": {
+     "label": "the outlook",
+     "find": [
+      "revenue is expected to be",
+      "outlook for the (first|second|third|fourth) quarter",
+      "gross margins? (is|are) expected"
+     ],
+     "also": []
+    },
+    "datacenter": {
+     "label": "Data Center revenue",
+     "find": [
+      "data center revenue",
+      "data center compute",
+      "record data center"
+     ],
+     "also": [
+      "blackwell",
+      "rubin"
+     ]
+    },
+    "networking": {
+     "label": "networking",
+     "find": [
+      "networking revenue",
+      "networking",
+      "spectrum-x",
+      "infiniband",
+      "nvlink"
+     ],
+     "also": [
+      "ethernet",
+      "quantum-x",
+      "connectx",
+      "bluefield"
+     ]
+    },
+    "optics": {
+     "label": "optics",
+     "find": [
+      "co-packaged optic",
+      "silicon photonic",
+      "photonic",
+      "optical",
+      "lumentum"
+     ],
+     "also": [
+      "coherent corp"
+     ]
+    },
+    "clouds": {
+     "label": "the AI clouds",
+     "find": [
+      "neocloud",
+      "coreweave",
+      "nebius",
+      "iren\\b",
+      "ai cloud",
+      "gpu cloud"
+     ],
+     "also": [
+      "lambda",
+      "cloud partners?",
+      "cloud providers?",
+      "cloud service providers?",
+      "hyperscal"
+     ]
+    },
+    "supply": {
+     "label": "supply",
+     "find": [
+      "supply commitments?",
+      "purchase commitments?",
+      "purchase obligations?",
+      "tsmc",
+      "cowos",
+      "advanced packaging",
+      "amkor",
+      "arizona"
+     ],
+     "also": [
+      "inventor(y|ies)",
+      "supply constrain",
+      "capacity"
+     ]
+    },
+    "memory": {
+     "label": "memory",
+     "find": [
+      "\\bhbm",
+      "high-bandwidth memory"
+     ],
+     "also": [
+      "memory",
+      "micron",
+      "sk hynix",
+      "samsung"
+     ]
+    },
+    "systems": {
+     "label": "servers and racks",
+     "find": [
+      "rack-scale",
+      "nvl72",
+      "nvl144",
+      "gb200",
+      "gb300",
+      "\\bdell\\b",
+      "supermicro",
+      "hewlett packard"
+     ],
+     "also": [
+      "\\bhpe\\b",
+      "system (builders|makers|partners)",
+      "\\bodms?\\b",
+      "ai factor(y|ies)"
+     ]
+    },
+    "power": {
+     "label": "power and cooling",
+     "find": [
+      "800 ?v",
+      "gigawatt",
+      "liquid-cool",
+      "liquid cool",
+      "vertiv"
+     ],
+     "also": [
+      "\\bpower\\b",
+      "cooling",
+      "energy",
+      "data center capacity"
+     ]
+    },
+    "custom": {
+     "label": "custom chips and rivals",
+     "find": [
+      "nvlink fusion",
+      "custom (silicon|chips?|asics?|accelerators?)",
+      "\\basics?\\b",
+      "\\bintel\\b"
+     ],
+     "also": [
+      "x86",
+      "marvell",
+      "broadcom",
+      "\\bamd\\b"
+     ]
+    },
+    "china": {
+     "label": "China",
+     "find": [
+      "china",
+      "\\bh20\\b",
+      "export (control|licen)"
+     ],
+     "also": []
+    }
+   },
+   "links": [
+    {
+     "theme": "Neoclouds & AI Hosting",
+     "topics": [
+      "clouds",
+      "datacenter",
+      "outlook"
+     ],
+     "why": "The AI clouds rent out NVIDIA chips. NVIDIA is their supplier, in two cases their shareholder, and it has promised to buy CoreWeave's unsold capacity. Strong NVIDIA demand and guide = their customers are still buying computing time; any word from NVIDIA on these partners is news for them.",
+     "stocks": {
+      "CRWV": [
+       "direct",
+       "NVIDIA owns about 11% of CoreWeave (it added $2B of stock in early 2026), sells it the chips its cloud runs on, and has agreed to buy CoreWeave's unsold capacity through April 2032 ($6.3B)."
+      ],
+      "NBIS": [
+       "direct",
+       "NVIDIA invested $2B in Nebius (March 2026) and holds its shares; Nebius's cloud runs on NVIDIA chips and it is to deploy NVIDIA's new Rubin systems."
+      ],
+      "IREN": [
+       "direct",
+       "IREN buys NVIDIA chips for its AI cloud, including for its $9.7B, 5-year Microsoft contract: it is a customer of NVIDIA."
+      ],
+      "APLD": [
+       "step",
+       "Applied Digital builds and leases data centers that CoreWeave fills with NVIDIA chips: its tenant's business is renting NVIDIA computing."
+      ],
+      "CORZ": [
+       "step",
+       "Core Scientific hosts CoreWeave's NVIDIA machines in its data centers (multi-year contracts): its revenue follows CoreWeave's build-out."
+      ],
+      "GLXY": [
+       "step",
+       "Galaxy leases its Helios data-center site in Texas to CoreWeave for NVIDIA machines."
+      ],
+      "CIFR": [
+       "step",
+       "Cipher leases data-center capacity for AI computing (its largest deal: a 15-year lease to Amazon's AWS): the machines its tenants install are mostly NVIDIA."
+      ],
+      "WULF": [
+       "step",
+       "TeraWulf leases data-center capacity for AI computing (Fluidstack, backed by Google): demand for its sites follows demand for AI chips."
+      ],
+      "HUT": [
+       "step",
+       "Hut 8 builds and leases data-center capacity for AI computing: demand for its sites follows demand for AI chips."
+      ],
+      "BTDR": [
+       "spend",
+       "A bitcoin miner turning sites into AI data centers: no deal with NVIDIA, it trades with the AI-hosting group."
+      ],
+      "CLSK": [
+       "spend",
+       "A bitcoin miner turning sites into AI data centers: no deal with NVIDIA, it trades with the AI-hosting group."
+      ],
+      "RIOT": [
+       "spend",
+       "A bitcoin miner turning sites into AI data centers: no deal with NVIDIA, it trades with the AI-hosting group."
+      ],
+      "MARA": [
+       "spend",
+       "A bitcoin miner with early AI-hosting plans: no deal with NVIDIA, it trades with the AI-hosting group."
+      ]
+     }
+    },
+    {
+     "theme": "AI Networking",
+     "topics": [
+      "networking",
+      "custom",
+      "datacenter"
+     ],
+     "why": "Every NVIDIA chip sold has to be wired to the others. NVIDIA's own networking line (Spectrum-X, InfiniBand, NVLink) reports with it, and the connectivity makers either sell parts into those NVIDIA systems or sell the competing network.",
+     "stocks": {
+      "ALAB": [
+       "direct",
+       "Astera Labs' retimer chips are built into NVIDIA's own server platforms (HGX, MGX, Blackwell), and it is a named partner of NVIDIA's NVLink Fusion program: more NVIDIA systems shipped = more Astera chips."
+      ],
+      "MRVL": [
+       "direct",
+       "NVIDIA invested $2B in Marvell (March 2026) and the two work together on NVLink Fusion and optics; Marvell's optical chips sit in the links between NVIDIA machines. Marvell also designs the cloud giants' own AI chips, which compete with NVIDIA's."
+      ],
+      "NOK": [
+       "direct",
+       "NVIDIA holds a stake in Nokia (a $1B investment, 2025) and the two build AI-based mobile networks together; Nokia's optical gear also links data centers."
+      ],
+      "CSCO": [
+       "direct",
+       "Cisco sells NVIDIA-based AI systems to companies and builds NVIDIA's Spectrum-X networking chips into its own switches: a named partner."
+      ],
+      "CRDO": [
+       "step",
+       "Credo's active electrical cables connect the servers and switches inside AI clusters, NVIDIA-based ones included; its customers are the cloud giants that buy NVIDIA's chips. No named deal with NVIDIA itself."
+      ],
+      "ANET": [
+       "rival",
+       "Arista's Ethernet switches compete with NVIDIA's own networking for the same AI clusters, and are also installed next to NVIDIA chips at the cloud giants: NVIDIA's networking number shows how that fight is going."
+      ],
+      "AVGO": [
+       "rival",
+       "Broadcom designs the cloud giants' own AI chips (Google's and others') and sells the Ethernet chips that compete with NVIDIA's networking: the main alternative to NVIDIA."
+      ],
+      "HPE": [
+       "direct",
+       "HPE builds and sells NVIDIA-based AI servers and, through Juniper, the networks around them: a named NVIDIA system partner."
+      ],
+      "CLS": [
+       "step",
+       "Celestica builds AI switches and servers for the cloud giants (mostly around their own chips, not NVIDIA's): it follows the same data-center build-out."
+      ],
+      "PENG": [
+       "step",
+       "Penguin Solutions builds and runs NVIDIA-based AI clusters for companies and labs."
+      ]
+     }
+    },
+    {
+     "theme": "Optics & CPO",
+     "topics": [
+      "optics",
+      "networking",
+      "datacenter"
+     ],
+     "why": "The links between AI machines are turning from copper to light. NVIDIA has put $4B into its two laser suppliers and builds their parts into its own switches; the rest of the group makes the optical parts that go around NVIDIA systems.",
+     "stocks": {
+      "COHR": [
+       "direct",
+       "NVIDIA invested $2B in Coherent (March 2026), holds its shares, and has a multi-billion-dollar commitment to buy its lasers and optical parts for NVIDIA's own switches."
+      ],
+      "LITE": [
+       "direct",
+       "NVIDIA invested $2B in Lumentum (March 2026, preferred stock) and has a multi-billion-dollar commitment to buy its lasers for NVIDIA's own optical switches."
+      ],
+      "FN": [
+       "direct",
+       "Fabrinet builds optical parts for NVIDIA: NVIDIA was 16% of Fabrinet's revenue in its last fiscal year (28% the year before)."
+      ],
+      "GLW": [
+       "direct",
+       "Corning is a named partner in NVIDIA's co-packaged optics switches (fiber and connectors), and its fiber goes into the AI data centers themselves."
+      ],
+      "MTSI": [
+       "step",
+       "MACOM's chips drive the optical modules and active copper cables used between AI machines. No named deal with NVIDIA."
+      ],
+      "SMTC": [
+       "step",
+       "Semtech's chips go into the active copper cables and optical modules of AI racks; its outlook has moved with NVIDIA's rack design choices before."
+      ],
+      "TSEM": [
+       "step",
+       "Tower makes the silicon-photonics chips for the optical module makers that supply AI data centers."
+      ],
+      "AAOI": [
+       "step",
+       "Applied Opto sells optical modules to the cloud giants (not to NVIDIA) for the same AI build-out."
+      ],
+      "CIEN": [
+       "step",
+       "Ciena's optical systems connect AI data centers to each other: it follows the build-out, not NVIDIA's own orders."
+      ],
+      "AXTI": [
+       "step",
+       "AXT makes the wafers the lasers are grown on: two steps from NVIDIA (AXT -> laser makers -> optical modules)."
+      ],
+      "TTMI": [
+       "step",
+       "TTM makes the circuit boards for AI servers and networking gear."
+      ],
+      "MXL": [
+       "step",
+       "MaxLinear sells optical chips for data-center links: a small player in the same build-out."
+      ],
+      "VIAV": [
+       "spend",
+       "Viavi sells the test gear the optical makers use: it follows their production, no tie to NVIDIA."
+      ],
+      "POET": [
+       "spend",
+       "POET is an early-stage optical-chip maker with no NVIDIA business: it trades with the group."
+      ]
+     }
+    },
+    {
+     "theme": "AI Chips & CPUs",
+     "topics": [
+      "supply",
+      "custom",
+      "datacenter",
+      "china"
+     ],
+     "why": "NVIDIA's own suppliers, partners and rivals in AI chips.",
+     "stocks": {
+      "TSM": [
+       "direct",
+       "TSMC manufactures and packages every advanced NVIDIA chip: NVIDIA's revenue and supply commitments are TSMC's orders."
+      ],
+      "INTC": [
+       "direct",
+       "NVIDIA is one of Intel's largest shareholders (a $5B investment in 2025) and the two are building PC and data-center chips together."
+      ],
+      "ARM": [
+       "direct",
+       "NVIDIA's own processors (Grace, Vera) are built on Arm's designs, so NVIDIA pays Arm royalties on them."
+      ],
+      "AMD": [
+       "rival",
+       "AMD is NVIDIA's direct rival in AI chips: NVIDIA's result shows the size of the market both sell into; a share gain by one is the other's loss."
+      ],
+      "AVGO": [
+       "rival",
+       "Broadcom designs the cloud giants' own AI chips and sells competing networking chips: the main alternative to NVIDIA."
+      ]
+     }
+    },
+    {
+     "theme": "Memory & Storage",
+     "topics": [
+      "memory",
+      "supply",
+      "datacenter"
+     ],
+     "why": "Each NVIDIA AI chip is packaged with high-bandwidth memory, and the AI data centers need storage around them.",
+     "stocks": {
+      "MU": [
+       "direct",
+       "Micron supplies the high-bandwidth memory (HBM) packaged with NVIDIA's AI chips: more NVIDIA chips = more Micron memory."
+      ],
+      "SNDK": [
+       "spend",
+       "SanDisk's flash storage goes into AI data centers: it follows the build-out, no named deal with NVIDIA."
+      ],
+      "WDC": [
+       "spend",
+       "Western Digital's hard drives store the data in the cloud giants' data centers: same customers, no tie to NVIDIA."
+      ],
+      "STX": [
+       "spend",
+       "Seagate's hard drives store the data in the cloud giants' data centers: same customers, no tie to NVIDIA."
+      ]
+     }
+    },
+    {
+     "theme": "AI Servers & ODMs",
+     "topics": [
+      "systems",
+      "datacenter",
+      "supply"
+     ],
+     "why": "These companies build NVIDIA's chips into the servers and racks customers actually buy: NVIDIA's shipments are their shipments a few weeks later.",
+     "stocks": {
+      "DELL": [
+       "direct",
+       "Dell is one of the largest builders of NVIDIA-based AI servers (the 'Dell AI Factory with NVIDIA'): its AI server orders follow NVIDIA's shipments."
+      ],
+      "SMCI": [
+       "direct",
+       "Super Micro builds NVIDIA-based AI servers and racks: most of its revenue is NVIDIA systems."
+      ],
+      "HPE": [
+       "direct",
+       "HPE builds and sells NVIDIA-based AI servers: a named NVIDIA system partner."
+      ],
+      "FLEX": [
+       "direct",
+       "Flex is a named partner for the power parts of NVIDIA's 800-volt rack design and builds AI racks and power gear."
+      ],
+      "NTAP": [
+       "direct",
+       "NetApp is a named storage partner in NVIDIA's AI data platform: its storage is sold next to NVIDIA systems."
+      ],
+      "P": [
+       "direct",
+       "Everpure (the former Pure Storage) is a named storage partner in NVIDIA's AI data platform: its storage is sold next to NVIDIA systems."
+      ],
+      "JBL": [
+       "step",
+       "Jabil builds AI racks and parts for the cloud giants: it follows the same build-out."
+      ],
+      "CLS": [
+       "step",
+       "Celestica builds AI switches and servers for the cloud giants (mostly around their own chips, not NVIDIA's)."
+      ],
+      "SANM": [
+       "step",
+       "Sanmina builds server and networking hardware for the same data-center customers."
+      ]
+     }
+    },
+    {
+     "theme": "Semi Test & Packaging",
+     "topics": [
+      "supply",
+      "memory",
+      "datacenter"
+     ],
+     "why": "More AI chips and more memory per chip mean more packaging, testing and inspection steps.",
+     "stocks": {
+      "AMKR": [
+       "direct",
+       "Amkor is NVIDIA's named partner for packaging and testing its chips in Arizona."
+      ],
+      "TER": [
+       "step",
+       "Teradyne's testers check AI chips and high-bandwidth memory; NVIDIA's own chips are mostly tested on a rival's machines, so the link is AI chip volume, not an NVIDIA order."
+      ],
+      "ONTO": [
+       "step",
+       "Onto's inspection tools are used in the advanced packaging (at TSMC and others) that NVIDIA's chips need."
+      ],
+      "CAMT": [
+       "step",
+       "Camtek's inspection tools are used on high-bandwidth memory and advanced packaging, both driven by NVIDIA's chips."
+      ],
+      "NVMI": [
+       "step",
+       "Nova's measuring tools are used at the chip makers that build AI chips and memory."
+      ],
+      "FORM": [
+       "step",
+       "FormFactor's probe cards test high-bandwidth memory at the memory makers that supply NVIDIA."
+      ],
+      "AEHR": [
+       "step",
+       "Aehr's burn-in systems test AI processors for a cloud customer's own chips, not NVIDIA's: it follows AI chip volume."
+      ],
+      "ENTG": [
+       "spend",
+       "Entegris sells materials to all chip makers: it follows chip production in general."
+      ],
+      "COHU": [
+       "spend",
+       "Cohu's test handlers serve mostly auto and industrial chips: a weak link to AI."
+      ]
+     }
+    },
+    {
+     "theme": "Wafer Fab Equipment",
+     "topics": [
+      "supply",
+      "memory",
+      "outlook"
+     ],
+     "why": "Two steps from NVIDIA: when NVIDIA commits to more supply, TSMC and the memory makers buy more machines.",
+     "stocks": {
+      "ASML": [
+       "step",
+       "ASML sells the lithography machines TSMC and the memory makers need to build NVIDIA's chips and their memory: two steps away."
+      ],
+      "AMAT": [
+       "step",
+       "Applied Materials sells chip-making and packaging machines to TSMC and the memory makers: two steps away."
+      ],
+      "LRCX": [
+       "step",
+       "Lam Research sells chip-making machines, strong in memory (HBM): two steps away."
+      ],
+      "KLAC": [
+       "step",
+       "KLA sells inspection machines to TSMC and the memory makers, including for advanced packaging: two steps away."
+      ]
+     }
+    },
+    {
+     "theme": "Semi Subsystems",
+     "topics": [
+      "supply",
+      "outlook"
+     ],
+     "why": "Three steps from NVIDIA: they sell parts to the machine makers above.",
+     "stocks": {
+      "UCTT": [
+       "spend",
+       "Ultra Clean sells parts to the chip-machine makers (Lam, Applied): three steps from NVIDIA."
+      ],
+      "ICHR": [
+       "spend",
+       "Ichor sells parts to the chip-machine makers (Lam, Applied): three steps from NVIDIA."
+      ],
+      "MKSI": [
+       "spend",
+       "MKS sells parts to the chip-machine makers: three steps from NVIDIA."
+      ]
+     }
+    },
+    {
+     "theme": "GaN & SiC Power",
+     "topics": [
+      "power",
+      "systems"
+     ],
+     "why": "NVIDIA's next racks run on 800 volts and need new power chips.",
+     "stocks": {
+      "NVTS": [
+       "direct",
+       "NVIDIA selected Navitas (May 2025) to develop the power chips for its 800-volt rack design: a named partner, still early in revenue."
+      ]
+     }
+    },
+    {
+     "theme": "Analog & Auto Semis",
+     "topics": [
+      "power",
+      "systems",
+      "datacenter"
+     ],
+     "why": "Only the power-chip makers in this group are tied to NVIDIA; the auto and industrial names are not.",
+     "stocks": {
+      "MPWR": [
+       "direct",
+       "Monolithic Power's power modules feed NVIDIA's AI chips on the board, and it is a named partner for the 800-volt design: its data-center sales follow NVIDIA's shipments."
+      ],
+      "ON": [
+       "direct",
+       "onsemi is a named partner for NVIDIA's 800-volt rack power design (July 2025): still early in revenue."
+      ],
+      "TXN": [
+       "direct",
+       "Texas Instruments is a named partner for NVIDIA's 800-volt rack power design: a small part of TI's business."
+      ],
+      "STM": [
+       "direct",
+       "STMicro is a named partner for NVIDIA's 800-volt rack power design: a small part of its business."
+      ],
+      "ADI": [
+       "direct",
+       "Analog Devices is a named partner for NVIDIA's 800-volt rack power design: a small part of its business."
+      ],
+      "POWI": [
+       "direct",
+       "Power Integrations is a named partner for NVIDIA's 800-volt rack power design: still early in revenue."
+      ],
+      "QCOM": [
+       "direct",
+       "Qualcomm is building data-center processors that plug into NVIDIA's systems through NVLink Fusion, and is also bringing out its own AI chips against NVIDIA."
+      ],
+      "RMBS": [
+       "step",
+       "Rambus's memory-interface chips go into every AI server's memory: it follows server volume."
+      ],
+      "LSCC": [
+       "step",
+       "Lattice's small control chips go into AI servers: it follows server volume."
+      ]
+     }
+    },
+    {
+     "theme": "Data Center Power & Cooling",
+     "topics": [
+      "power",
+      "datacenter",
+      "outlook"
+     ],
+     "why": "Every NVIDIA rack needs power gear and liquid cooling built to NVIDIA's designs: NVIDIA's guide is next quarter's demand for this equipment.",
+     "stocks": {
+      "VRT": [
+       "direct",
+       "Vertiv builds the power and liquid-cooling systems to NVIDIA's own reference designs (including the new Rubin and 800-volt designs): a named partner."
+      ],
+      "ETN": [
+       "direct",
+       "Eaton is a named partner for the power systems of NVIDIA's 800-volt design and its AI-factory blueprint."
+      ],
+      "TT": [
+       "direct",
+       "Trane is a named contributor to NVIDIA's AI-factory blueprint (cooling plants for gigawatt sites)."
+      ],
+      "NVT": [
+       "step",
+       "nVent sells liquid-cooling and power-distribution gear for AI racks, designed around NVIDIA systems."
+      ],
+      "GEV": [
+       "step",
+       "GE Vernova sells the turbines and grid equipment that power new AI data centers."
+      ],
+      "MOD": [
+       "spend",
+       "Modine sells data-center cooling: it follows the build-out, no tie to NVIDIA."
+      ],
+      "HUBB": [
+       "spend",
+       "Hubbell sells electrical equipment for data centers and the grid: it follows the build-out."
+      ],
+      "POWL": [
+       "spend",
+       "Powell sells switchgear for data centers and utilities: it follows the build-out."
+      ],
+      "JCI": [
+       "spend",
+       "Johnson Controls sells data-center cooling: it follows the build-out."
+      ],
+      "CAT": [
+       "spend",
+       "Caterpillar sells generators and turbines for data-center power: a small part of its business."
+      ],
+      "CMI": [
+       "spend",
+       "Cummins sells backup generators for data centers: a small part of its business."
+      ],
+      "AMSC": [
+       "spend",
+       "American Superconductor sells power electronics, some to data centers: it follows the build-out."
+      ]
+     }
+    },
+    {
+     "theme": "Data Center Builders & REITs",
+     "topics": [
+      "power",
+      "datacenter",
+      "outlook"
+     ],
+     "why": "They own or build the buildings the NVIDIA machines go into: they follow the spending, not NVIDIA's own orders.",
+     "stocks": {
+      "DLR": [
+       "direct",
+       "Digital Realty hosts NVIDIA's AI Factory Research Center at its Virginia site and leases space for NVIDIA-based systems."
+      ],
+      "EQIX": [
+       "step",
+       "Equinix leases data-center space where companies run NVIDIA-based systems."
+      ],
+      "IRM": [
+       "spend",
+       "Iron Mountain leases data-center space: it follows the build-out."
+      ],
+      "FIX": [
+       "spend",
+       "Comfort Systems installs the cooling and electrical work in new data centers."
+      ],
+      "EME": [
+       "spend",
+       "EMCOR installs the electrical and mechanical work in new data centers."
+      ],
+      "STRL": [
+       "spend",
+       "Sterling does the site work for new data centers."
+      ],
+      "MTZ": [
+       "spend",
+       "MasTec builds power and fiber lines to new data centers."
+      ],
+      "PWR": [
+       "spend",
+       "Quanta builds the power lines and substations new data centers need."
+      ],
+      "DY": [
+       "spend",
+       "Dycom lays the fiber to new data centers."
+      ]
+     }
+    },
+    {
+     "theme": "Power Generation (AI Power)",
+     "topics": [
+      "power",
+      "outlook"
+     ],
+     "why": "No tie to NVIDIA: they sell electricity to the data centers, so they move with the size of the build-out.",
+     "stocks": {
+      "CEG": [
+       "spend",
+       "Constellation sells power to the cloud giants' data centers under long contracts."
+      ],
+      "VST": [
+       "spend",
+       "Vistra sells power in the markets where the data centers are being built."
+      ],
+      "TLN": [
+       "spend",
+       "Talen sells power directly to Amazon's data centers."
+      ],
+      "NRG": [
+       "spend",
+       "NRG sells power in Texas and the East, where the data centers are being built."
+      ]
+     }
+    },
+    {
+     "theme": "Fuel Cells & On-site Power",
+     "topics": [
+      "power",
+      "outlook"
+     ],
+     "why": "No tie to NVIDIA: on-site power for data centers that cannot wait for the grid.",
+     "stocks": {
+      "BE": [
+       "spend",
+       "Bloom's fuel cells power AI data centers on site (Oracle, utilities): it follows the build-out."
+      ]
+     }
+    }
+   ]
+  }
+ }
+}
