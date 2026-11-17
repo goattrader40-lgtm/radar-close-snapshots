@@ -77,9 +77,18 @@ alone.
   alert (FRVO no gap; both under the 200 SMA stand-in and under the 21-session closing high); the START DAY alert went live Nov
   13, after both. The lists show about 4:27-4:35 PM ET (Nov 16: 4:27 / 4:28). The user does NOT want start days added to the
   table during the day ("its ok the way its now, as long as it fires alert").
-- **Test only (the user's "test it for sound", Nov 17 2026)**: the START DAY alert sounding like an important alert (the voice
-  "Start day, <ticker>, volume X times", a louder chime than a heads-up, the phone at high priority every time; today it is a
-  👀 heads-up: "Heads up, R K L B", no volume spoken, normal phone priority). See the branch ccr-8bc885ea-m5ftq7.
+- **LIVE (the user's "go live", Tue Nov 17 2026 ~3:20 PM ET, commit fdef44c): the START DAY alert sounds like an important
+  alert** (the user: "does it make sound bcs its important one... and say volume?", "test it for sound"). docs/index.html: its
+  own chime (TONES s: three rising notes at full volume; a heads-up's is one short quiet tick), the voice says "Start day, R K L
+  B, volume 1.8 times" (sayOf / isStart; was "Heads up, R K L B", no volume), announced right after the EPs (announce, sndOf),
+  and a START DAY example in the Alerts tab's sound test. radar/alerts.py find_start: the phone alert at high priority every
+  time (was high only with the "new trend after a reset" / "launch size" tag). It stays in the 👀 Heads-ups box; its rules and
+  text are unchanged. Tested: the page's own sound test in a browser with the sound and voice captured (START DAY 587 / 880 /
+  1175 Hz at full volume and "Start day, R K L B, volume 1.8 times"; the plain heads-up still its quiet tick and "Heads up");
+  0 page errors. Rules workbook: 1 row. **Not seen: a real START DAY alert on live prices; the phone priority starts Wed Nov 18**
+  (the running day job keeps Tuesday's alerts.py until its next start). No `--regress`, no Launches rebuild, no 2-year check
+  (how an alert sounds).
+- **Test only**: nothing.
 
 ## Status of the session "Radar: opening range 1/2/5-min choice (Nov 17)" (Tue Nov 17 2026, from ~10:10 AM ET; session_01PkbDajetWCG8Sskm5kAjad; in progress)
 
