@@ -1113,8 +1113,8 @@
         <label class="tgr-f">From <input class="tgr-num mbo-time" type="time" step="60" data-mbo="start" aria-label="Start, ET"> to <input class="tgr-num mbo-time" type="time" step="60" data-mbo="end" aria-label="End, ET"> ET</label>
         <label class="tgr-f">Up ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" max="100" data-mbo="min_chg" aria-label="Minimum % up on the day"> %</label>
         <label class="tgr-f">Rel vol ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" max="50" data-mbo="min_rv" aria-label="Minimum relative volume for the time of day"> ×</label>
-        <label class="tgr-f"><input type="checkbox" data-mbo="over_pdh"> Over yesterday's high</label>
-        <label class="tgr-f"><input type="checkbox" data-mbo="over_orh"> Over the <select class="tgr-num" data-mbo="orh_min" aria-label="Opening range, minutes" title="Which opening range: the first 1, 2 or 5 minutes"><option value="1">1-min</option><option value="2">2-min</option><option value="5">5-min</option></select> opening range high</label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="over_pdh"> <span title="Over yesterday's high (regular hours)">Above PDH</span></label>
+        <label class="tgr-f"><input type="checkbox" data-mbo="over_orh"> <span title="Over the opening range high: the first 1, 2 or 5 minutes">Above ORH-</span><select class="tgr-num" data-mbo="orh_min" aria-label="Opening range, minutes" title="Which opening range: the first 1, 2 or 5 minutes"><option value="1">1min</option><option value="2">2min</option><option value="5">5min</option></select></label>
         <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-mbo="price" aria-label="Minimum price, dollars"></label>
         <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-mbo="mcap_b" aria-label="Minimum market cap, $ billions"> B</label>
         <label class="tgr-f">Avg vol 20D ≥ <input class="tgr-num" type="number" inputmode="decimal" step="50" min="0" data-mbo="avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K</label>
@@ -2415,8 +2415,8 @@ defCalc('industry_perf', {
     const st = R.over_orh && R.start < orhStart(R) ? orhStart(R) : R.start, x = [];
     if (R.min_chg !== null) x.push('up ' + R.min_chg + '%+');
     if (R.min_rv !== null) x.push('Rel vol ' + R.min_rv + '×+');
-    if (R.over_pdh) x.push('over yesterday\'s high');
-    if (R.over_orh) x.push('over the ' + (R.orh_min || 5) + '-min opening range high');
+    if (R.over_pdh) x.push('Above PDH');
+    if (R.over_orh) x.push('Above ORH-' + (R.orh_min || 5) + 'min');
     if (R.price !== null) x.push('$' + R.price + '+');
     if (R.mcap_b !== null) x.push('market cap $' + (R.mcap_b < 1 ? Math.round(R.mcap_b * 1000) + 'M' : R.mcap_b + 'B') + '+');
     if (R.avgvol_k !== null) x.push(R.avgvol_k + 'K+ shares');
