@@ -546,7 +546,7 @@ def find(live, doc, now=None):
 def find_start(live, doc, now, sent=()):
     """the START DAY as it happens (the user, Nov 13 2026: "do alerts go live"; RKLB Nov 9 2026: "clear downtrending stock, november
     9th was a start point upward"): a stock that closed under its 21 or 50 EMA after a downtrend (launch.json start_watch, from the
-    last close) trades over its 21 EMA, up 1 ADR+ on a volume pace of 1x+, over the high of any violent red candle of the last 5
+    last close) trades over its 21 EMA, up 1 ADR+ (or 4%+ with 0.8 ADR+) on a volume pace of 1x+, over the high of any violent red candle of the last 5
     sessions, in the top half of today's range and over its 5-minute opening range high (the user's entry; the stop: today's low).
     Any liquid stock, on the list or not. From 9:35. Tags: launch size under the 200 SMA; after a reset (AMD Sep 8 2026)"""
     out = []
@@ -559,7 +559,9 @@ def find_start(live, doc, now, sent=()):
             continue
         price, chg, rv, op, hi = q[0], q[1], q[4], q[5], q[7]
         e21, e50, adr, red, u200, rs_n, rs_lv, first, tvs = w[:9]
-        if not (price > e21 and chg >= R.get("start_adr", 1) * adr and rv >= R.get("start_rv", 1) and price > (red or 0)):
+        # up 1 ADR+, or up 4%+ with 0.8 ADR+ (the user, Nov 15 2026: ZETA Nov 9, TTEK Oct 15; the rules come with launch.json)
+        move = chg >= R.get("start_adr", 1) * adr or ("start_pct" in R and chg >= max(R["start_pct"], R.get("start_pct_adr", 0.8) * adr))
+        if not (price > e21 and move and rv >= R.get("start_rv", 1) and price > (red or 0)):
             continue
         orh, low = opening_range_high(sym), chart_low_today(sym)
         if not orh or not low or not price > orh or (hi and price < (hi + low) / 2):
@@ -643,21 +645,29 @@ def find_gob(live, doc, now=None):
         pat = r.get("gap_base_pattern") or "Base top"
         base = f"opened ${op:.2f}, {100 * (op / gl - 1):+.1f}% over its base high ${gl:.2f} ({pat})"
         tail = f" · vol {rv:.1f}x for the time of day" + since(r)
+        # the volume pace your rule needs (the user, Nov 16 2026: "I want to drop 2x to 1x, and when it gets to 2x it can
+        # alert me"; KVYO that day: 1.1x at 9:50, over its opening range high $22.72 later in the morning, and the 1- / 5-min
+        # alerts only came at 12:30 with the volume at 2.0x and the price at $23.76): 1x+ all day (gob_rv), at the 9:50
+        # check too; 2x+ (gob_rv20) is a notice of its own from 9:50
+        need, big = R.get("gob_rv", 1), R.get("gob_rv20", 2)
         if 20 <= m <= 60:                               # 9:50-10:30: the volume check (sent only after a gap alert)
-            ok = rv >= R.get("gob_rv20", 2)
-            out.append((f"{sym}:gob950", f"{sym} gap out of base: " + (f"keep it, vol {rv:.1f}x at 9:50" if ok else f"OUT, vol {rv:.1f}x under 2x at 9:50"),
-                        f"your rule: a volume pace of 2x+ by 20 minutes after the open, else out whatever the trade · ${price:.2f} ({chg:+.1f}%) · {base}"
+            ok = rv >= need
+            out.append((f"{sym}:gob950", f"{sym} gap out of base: " + (f"keep it, vol {rv:.1f}x at 9:50" if ok else f"OUT, vol {rv:.1f}x under {need:g}x at 9:50"),
+                        f"your rule: a volume pace of {need:g}x+ by 20 minutes after the open, else out whatever the trade ({big:g}x+ gets its own alert) · ${price:.2f} ({chg:+.1f}%) · {base}"
                         + since(r), "default" if ok else "high", tvs))
         if price <= gl:
             continue                                    # back under its base high: the gap failed, no buy
-        if rv < (R.get("gob_rv", 1) if m < 20 else R.get("gob_rv20", 2)):
-            continue                                    # the volume pace your rule needs at the buy: 1x+, after 9:50 2x+
+        if rv < need:
+            continue                                    # the volume pace your rule needs at the buy: 1x+
         out.append((f"{sym}:gapbase", f"{sym} GAP OUT OF BASE", f"{base} · now ${price:.2f} ({chg:+.1f}%)" + tail
-                    + " · the entry: over the 1-minute or the 5-minute opening range high, the stop its low; out at 9:50 if the volume pace isn't 2x",
+                    + f" · the entry: over the 1-minute or the 5-minute opening range high, the stop its low; out at 9:50 if the volume pace isn't {need:g}x",
                     "default", tvs))
         out.append((f"{sym}:gob1", f"{sym} gap out of base: 1-min high broke", base + tail, "high", tvs))
         if m >= 5:
             out.append((f"{sym}:gob5", f"{sym} gap out of base: 5-min high broke", base + tail, "high", tvs))
+        if m >= 20 and rv >= big:                       # after a gap alert only (main())
+            out.append((f"{sym}:gob2x", f"{sym} gap out of base: volume now {rv:.1f}x", f"the volume pace reached {big:g}x+ · ${price:.2f} ({chg:+.1f}%) · {base}"
+                        + since(r), "default", tvs))
     return out
 
 
@@ -1372,14 +1382,19 @@ def main():
         state["sent"].append(a_[0])
     passed = []
     for key, title, msg, prio, tvs in new:
-        if title is not None and key.endswith((":gapbase", ":gob1", ":gob5", ":gob950")):
+        if title is not None and key.endswith((":gapbase", ":gob1", ":gob5", ":gob950", ":gob2x")):
             # gap out of base: the opening ranges from today's 1-minute chart; the 9:50 check only after a gap alert
             sym_ = key.split(":")[0]
             if key.endswith(":gob950"):
-                # only for a gap alerted before 9:50 (after 9:50 a trigger already needs 2x+)
+                # only for a gap alerted before 9:50
                 if not any(it.get("key") == f"{sym_}:{k_}" and it.get("time", "99:99") < "09:50"
                            for it in state.get("items", []) for k_ in ("gapbase", "gob1", "gob5")):
                     continue
+            elif key.endswith(":gob2x"):
+                # the volume reached 2x: only for a gap already alerted today, at an earlier check
+                gi_ = [it for it in state.get("items", []) for k_ in ("gapbase", "gob1", "gob5") if it.get("key") == f"{sym_}:{k_}"]
+                if not gi_ or any(float(v_) >= 2 for it in gi_ for v_ in re.findall(r"vol (\d+(?:\.\d+)?)x", it.get("msg", ""))):
+                    continue                            # no gap alert yet, or one that already said 2x+
             else:
                 if sym_ not in gbars:
                     gbars[sym_] = gob_bars(sym_)
@@ -1399,7 +1414,7 @@ def main():
                     risk = 100 * (rg[0] / rg[1] - 1)
                     msg = (f"${q_[0]:.2f} over the {n_}-minute opening range high ${rg[0]:.2f} · stop ${rg[1]:.2f}, its low: risk {risk:.1f}%"
                            f" = {risk / adr_:.1f} ADR" + (" (over your 0.7 ADR)" if risk / adr_ > 0.7 else "") + " · " + msg
-                           + " · out at 9:50 if the volume pace isn't 2x")
+                           + (" · out at 9:50 if the volume pace isn't 1x" if (now.hour, now.minute) < (9, 50) else ""))
         if title is not None and key.endswith(":retest"):
             # today's low (1-minute chart) came into the zone, after a real pullback; with the EMA, the low at it
             sym_ = key.split(":")[0]

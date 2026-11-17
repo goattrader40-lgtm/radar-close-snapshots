@@ -49,6 +49,101 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: Start days stay on until they fail + 0.8 ADR start (BILL, Nov 16)" (Mon Nov 16 2026, ~11:30 AM - 4:30 PM ET; session_01PkbDakpheN6wD5vCKyUvBf; in progress)
+
+- **LIVE (the user's "go live", Mon Nov 16 2026 ~4:25 PM ET, branch claude/youthful-brahmagupta-i7nqxp, merge 01d562b): the
+  Start days table keeps a start day like a launch, and the start day's move takes 4%+ with 0.8 ADR+.** Four parts:
+  1. **No age limit** (was 5 sessions, "getting old agreed" Nov 15). The user: "i want start days act like launch day meaning i
+     dont want them disappear from list unless criterias i put becomes invalidated", "take this rule off, so they will stay
+     alive!!!". scanner/launch.py L start_list_days = 0 (0 = no limit).
+  2. **No 50 EMA rule on the table** (was: 2 closes in a row under the 50 EMA, in the first 10 sessions only when also under the
+     close before the start day). The user: "if stock coming out of correction it could be 2 times below 50 ema but still
+     above start day". start_listed = the fail rule (a close under the start day's low that is also under the 21 EMA) + 62
+     sessions from its highest point without a new high ("keep it"). WRBY Apr 14 2026 (start 23.14, low 21.03) closed under
+     its 50 EMA Apr 23 - May 6 without closing under 21.03, +23% May 7: the old rule took it off Apr 29, now it stays.
+     The user's other idea, 2 or 3 closes under the 21 EMA, was measured and not taken (~179 stocks, 403 start days Nov 2024 -
+     Sep 2026, 205 ran 15%+ within 40 sessions; runners still on the table when they ran: 50 EMA rule 131, 2 closes under the
+     21 EMA 117, 3 closes 124, the 50 EMA from session 21 137, no 50 EMA rule 140).
+  3. **Only the newest start day counts**: when it fails the stock is off the table, an older start day does not come back (the
+     user: "if newer start day fails it should get off the list (bcs its below start and below 21 ema!!!"). Before, the table
+     fell back to an older start still holding (~1,180 stock-days in 12 months on the ~179 stocks).
+  4. **The start day's move: up 1 ADR+, OR up 4%+ that is also 0.8 ADR+** (the user's Nov 15 choice in the session "Radar: MBGL
+     / AVEX miss (Nov 12)", branch test/start4pct 3b9d5b4, never live until now: "yes lets go with 4% and 0.8adr", then "yes
+     lets do that what you highlighed" for the version that keeps TTEK Oct 15). ZETA Nov 9 2026 (+4.5% on 2.2x, ADR 5.39% = 0.84
+     ADR) is a start day; TTEK Oct 15 (+3.5%, 1.24 ADR) stays one. In the scan (start_raw, start_move) AND the live START DAY
+     alert (radar/alerts.py find_start reads start_pct / start_pct_adr from launch.json rules): simulated +4.5% at 0.83 ADR
+     alerts, +3.9% at 0.72 ADR does not, +5.5% as before. That session's 2-year numbers: 1,228 -> 1,319 start days, ran 20%+ 26%
+     -> 27%, failed 32% -> 32%.
+  Kept, the user's answers: the 3.5% ADR minimum to get on ("3.5% is fine"); no ADR rule to take a row off (buyouts like DV
+  0.2%, BWIN, SLN 0.4%, BRZE 0.7% stay: told the user); your x; a newer start replaces the row. Not touched: Launches, the
+  "start <date>" line under a launch (start_holds), the 1-lists. The page note on the Start days table and the rules
+  workbook (two rows: "Start day: the move", "Start days table: no age limit, no 50 EMA rule, the newest start only") follow.
+  Tested: `--regress` "every agreed example reads the same"; the full-market dry run (radar-tools launchdry, the Nov 13 close):
+  the table 28 -> 205 rows (all 28 stay; new recent: ZETA Nov 9, OSCR Nov 9, TNGX Nov 10, DPC Nov 12; ages 0-4: 32, 5-10: 34,
+  11-20: 31, 21-40: 36, 41-62: 14, older: 58, the oldest TXG Oct 20 2025 +343%, PEB Nov 7 2025, DNTH Jan 13 2026, NAVN Mar 26
+  2026; 86 already on Launches); the page with 205 rows on desktop / phone, no errors, and the merged page with the live file.
+  No 2-year check (a table rule; the move change brought its own numbers). Launches rebuilt after the push (picks.yml, 4:27 PM
+  ET, the Nov 16 close, 158fe1d): Start days 194 rows (rules start_list_days 0, start_pct 4), BILL Oct 15 (+22.8%), ZETA Nov 9,
+  RKLB Nov 9, WRBY Nov 5 on; the newest HUBS Nov 16. **First check Tue Nov 17**: the evening scan's
+  launch.json start_days (~200 rows, rules start_list_days 0, start_pct 4); the START DAY alerts of the session (0.8 ADR ones).
+- **Answered, no change**: why BILL is on Launches: its Aug 13 2026 launch (base breakout +5.4% on 2.1x, close 51.31, C), off
+  Sep 23 (2 closes under the 50 EMA), back on Oct 15 by the reset start (3 lower highs since the Aug 13 top 52.60, range 5.5% ->
+  3.3%, closed 46.92 over the last lower high 45.88 and both EMAs); without the reset rule it would be back Nov 2 (flag line
+  49.50); new high Nov 9 = 61 sessions after the top (one short of the 62-session rule). BILL's only start day since Oct 1 was
+  Oct 15 (+6.2%, 1.1x). Seen, offered, no answer: the reset's "3 lower highs" are weak for BILL (Aug 28 50.35, Sep 15 50.33 two
+  cents lower with a higher Sep 3 50.89 between, Oct 12 45.88); the Launches row does not show "back on <date>" (off Sep 23 -
+  Oct 15 is invisible).
+- Data: radar-tools `long` re-run with BILL added (long_bars.json: 179 symbols).
+- **The other session "Radar: MBGL / AVEX miss (Nov 12)"** (session_01PkbDaiSjzGPJPtohD3UF2C) is idle waiting for /wrapup; its
+  0.8 ADR change is live through this go live (test/start4pct can be deleted).
+
+## Status of the session "Radar: missing earnings on the list (Nov 16)" (Mon Nov 16 2026, from ~9:25 AM ET; session_01PkbDajdEo2jtmt5tLkCvv4; in progress)
+
+- **LIVE (the user's "nvda earnings go live", Mon Nov 16 2026 ~11:20 AM ET, commit 29a7ffc): the Earnings tab has no market cap
+  ceiling.** The user sent the Earnings Whispers card of the week of Nov 16 ("howcome most of these as an example $nvda missing
+  from our earnings list"). Found: nothing broken; of its 83 names 15 were on our list, 17 are not in stocks.json, 51 fail the
+  user's Earnings rules (37 on ADR 3.5%: HD, DIS, WMT, TGT ...), and NVDA ($3,925B, ADR 4.09%) failed only the `max_mcap` 2e12
+  of scanner/settings.json "earnings": a ceiling agreed Nov 2 for the scans ("no $2T+ stocks"), copied into the Earnings rules
+  on Nov 3, not one of the tab's six boxes and not in its "Who" text. The user: "fix that ceiling for earnings only". Removed
+  from "earnings" only ("standard" keeps it: the scans, Watchlist, Launches, group rank unchanged). Tested on the Nov 13 close:
+  NVDA is the only stock it adds (AAPL, MSFT, GOOGL, AMZN, TSM fail the ADR). earnings.yml run by hand 11:24 AM ET: 111 rows, 0
+  errors, NVDA on Tue Nov 17 after the close. Rules workbook: the Earnings "Who shows" row. No page file touched.
+- **Answered, no change**: POWL was on the list all along (Mon Nov 16 after close; in the "Under the 200-day SMA" table, -34.6%).
+  When the Gainers rows showed with "4% + Above ORH-5min" (from live_history.json, which logs at 5%+): AVEX 9:37 -> the 9:40
+  read, MOH 9:38, TSCO / POWL 9:52, FUN 10:31, BILL 10:34; the table is up to 5 minutes late and the opening range highs
+  first arrive with the 9:40 read (levels.py runs after the 5-minute update from 9:36); the page polls every 90 seconds.
+- **LIVE (the user's "go lvie both", Mon Nov 16 2026 ~2:00 PM ET, commits 0bc5e9d + f77e1b9): two changes. FIRST CHECK Tue Nov
+  17 at 9:36 AM ET: neither has run on live prices.**
+  1. **The movers every minute, 9:36-10:30** (the user, on the Gainers tab with "up 4%+ and Above ORH-5min": "is there anyway
+     we can have every 1min after 5min close"; AVEX over its range high 12.64 at 9:37, shown with the 9:40 read). New
+     radar/movers.py: the stocks up 2%+ (in the last full read or an earlier minute, or with an opening range today) are
+     re-read and put on top of the last full update -> live.json with `fast_at` / `fast_n` (`saved_at` stays the full
+     read's); radar/day.py `movers_once` runs it after fast_once in `movers_window` (9:36-10:30), then levels.py (so the
+     opening range highs come at 9:36, not with the 9:40 read), and publishes both each minute. docs/index.html: the 20-second
+     check runs to 10:30 (was 10:00); the live line adds "stocks up 2%+ from <time> (every minute to 10:30)". The alerts do
+     not read the merged file (they keep live.json's full read and live_fast.json). Tested: stand-in quotes (under 2% not
+     read, a stock that fell back still followed, an older quote ignored); a REAL read on a copy (radar-tools `moverstest`
+     -> radar-data movers_test.json: 360 movers in 1.2 s); the page on desktop / phone, no page errors. NOT seen: the 9:36
+     run reading ~300 opening ranges inside the minute, the step inside the day job, a minute tick running long. Check
+     Tuesday: live.json has fast_at between the 5-minute marks from 9:36; levels.json saved_at ~9:36-9:37; the day job's
+     later ticks on time. A stock that jumps from under 2% inside one 5-minute gap still waits for the next full read
+     (offered: 1% in that window, not built).
+  2. **Gap out of base: a 1x volume pace all day, 2x gets its own alert** (the user: "i want to drop 2x to 1x, and when it gets
+     to 2x it can alert me"). KVYO Nov 16 2026: base top 22.20 alert 9:35 (right), 9:50 "OUT, vol 1.1x under 2x", then
+     "1-min / 5-min high broke" (22.72) only at 12:30 with the volume at 2.0x and the price at 23.76: the rule "after 9:50
+     a trigger needs 2x" held them (the user's chart: the break around 10:30; not confirmed: no minute record, radar-tools
+     `replay` gives nothing for a stock not in launch.json `watch`). radar/alerts.py find_gob: the buy and the 9:50 check at
+     `gob_rv` (1), the new key `:gob2x` "gap out of base: volume now 2.0x" at `gob_rv20` (2) from 9:50, only after a gap
+     alert that did not already say 2x+; the "out at 9:50" words only before 9:50. Page legend and BOX_OF (gob2x), rules
+     workbook. Tested with KVYO's numbers through find_gob (9:46, 9:50 at 1.1x and 0.8x, 10:31, 12:30) and the page load;
+     no `--regress` (launch.py untouched), no Launches rebuild, no 2-year check (an alert threshold). The running day job
+     keeps the old alerts.py until its next start: in effect from Tue Nov 17.
+- **Explained, no change**: the morning breakout box (Alerts tab) is the 1-minute version of the same idea with its own
+  rules (5%+, 1x, over PDH and ORH, above the 200 SMA / 50 EMA, 10 > 21 > 50; the user has saved no settings): MOH 9:38, CNC
+  9:39, TSCO 9:52 (it crossed its range high 37.88 at +3.9%: the 5% rule made it late). Suggested: 4% there (the user's
+  to save on the tab). Seen, not changed: a followed stock's plain breakout alert fired on a gap-out-of-base day (KVYO
+  9:35) though the legend says it stays quiet; the 1-minute checks stop 12:00-3:00.
+
 ## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 ~0:30 - 2 AM ET and Sat Nov 14 2026 ~noon - 5 PM ET; session_01PkbDahhagkKkQ2rkgKsLuZ)
 
 **In one line: the Days 21H / 62H columns (Nov 13), then on Sat Nov 14 nine go lives on the Watchlist's 1-lists and the Launches

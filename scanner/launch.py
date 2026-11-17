@@ -164,10 +164,12 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # 9 2026: "its range stock... still in box... maybe if it breakout of this range then its a launch day"); it also
          # relabels NBIS Aug 12 2026 an attempt. OPEN: the no-gap first day takes ATRC Jun 26 2026, so the agreed Jul 24 reads
          # as its follow-through
-         # the start day, shown next to the launch and in its own list (not a launch rule): up start_adr ADRs on start_rv x volume
+         # the start day, shown next to the launch and in its own list (not a launch rule): up start_adr ADRs, or start_pct % and start_pct_adr ADRs, on start_rv x volume
          # through the 21 & 50 EMA, or a start_gap % gap opening over both; start_look = how far back a launch's trend start is
-         # looked for; start_list_days = how long a start day stays on the Start days list
-         start_adr=1, start_rv=1, start_gap=5, start_look=40, start_list_days=5,
+         # looked for; start_list_days = how long a start day stays on the Start days list (0 = no age limit: it stays until the
+         # start fails or its move ends, like a launch; the user, Nov 16 2026: "take this rule off, so they will stay alive!!!";
+         # was 5 sessions, "getting old agreed" Nov 15)
+         start_adr=1, start_pct=4, start_pct_adr=0.8, start_rv=1, start_gap=5, start_look=40, start_list_days=0,
          first_day=1, first_gap=5, first_rv=1.3, first_adr_nogap=1.8, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2,
          # the list ON / OFF read from the user's AMD 2026 charts (Nov 13 2026: "i can visually know when stock will go down"):
          # adr_look: the ADR minimum is tested on the highest 20-day ADR of the last 63 sessions, not on today's alone: the
@@ -369,6 +371,11 @@ class Arr:
         st = self.st
         return any(self.chg[d] <= -L["red_adr"] * (st.adr[d] if st.adr[d] > 0 else 5.0) and st.c[i] <= st.h[d] for d in range(max(1, i - L["red_look"]), i))
 
+    def start_move(self, i):
+        """the start day's move: up start_adr ADRs (1), or up start_pct % (4) that is also start_pct_adr ADRs (0.8)"""
+        adr = self.st.adr[i]
+        return bool(self.chg[i] >= L["start_adr"] * adr or self.chg[i] >= max(L["start_pct"], L["start_pct_adr"] * adr))
+
     def start_raw(self, i):
         """the start day's own tests, without "the first one" (Nov 13 2026: the close over the 21 EMA, the 50 EMA not needed; after
         a downtrend; not inside a violent red candle). A later such day is the confirmation, or the reset start (AMD Sep 8 2026)"""
@@ -385,7 +392,12 @@ class Arr:
                   # in any stock close to their 52 week low; it can be below the day before but to get alerted and to get to
                   # the start table it has to pass"): the start day's CLOSE 30%+ over the 52-week low (NU Nov 13 2026: 17.9%)
                   and c[i] >= st.low52[i] * (1 + L["min_above_low52"] / 100)
-                  and ((self.chg[i] >= L["start_adr"] * st.adr[i] and self.clpos[i] >= L["min_clpos"])
+                  # the move: up 1 ADR+, OR up 4%+ with 0.8 ADR+ (the user, Nov 15 2026: ZETA Nov 9 2026, +4.5% on 2.2x with an
+                  # ADR of 5.39% = 0.84 ADR, missed the 1 ADR alone; 4% and 0.8 ADR alone would have lost TTEK Oct 15 2026, +3.5%
+                  # with a 2.8% ADR, the user's "start is 15th october after downtrend 1st day start"; "yes lets do that"). On 175
+                  # stocks over 2 years: 1,319 start days (was 1,228), ran 20%+ 27% (26%), failed 32% (32%); every start of the
+                  # 1 ADR rule stays; a stock moving 8% a day still needs +6.4%)
+                  and ((self.start_move(i) and self.clpos[i] >= L["min_clpos"])
                        or (self.chg[i] >= L["gap_keep"] * self.gap[i] and self.gap[i] >= L["start_gap"] and st.o[i] > self.e21[i])))
         self._sr[i] = ok
         return ok
@@ -2327,9 +2339,12 @@ def start_listed(a, k, i):
     """a start day (bar k) still belongs in the Start days table at bar i. It FAILS, and leaves the table, on a close under
     the start day's LOW that is also under the 21 EMA, both together (the user, Nov 15 2026: "start failing should mean
     closing below the start day, very simple approach, thats the whole point, but that has to be below 21 ema as well";
-    before: a close under the close of the day before the start day), or when the 50 EMA rule ends the move"""
+    before: a close under the close of the day before the start day), or after 62 sessions from its highest point without a
+    new high (the list rule; the user, Nov 16 2026: "keep it"). No 50 EMA rule (the user, Nov 16 2026: "if stock coming out of
+    correction it could be 2 times below 50 ema but still above start day": WRBY Apr 14 2026, start 23.14, low 21.03, closed
+    under its 50 EMA Apr 23 - May 6 without closing under 21.03, then +23% May 7; the 50 EMA rule had taken it off Apr 29)"""
     c, lo = a.st.c, a.st.l[k]
-    return bool(i > k and not any(c[j] < lo and c[j] < a.e21[j] for j in range(k + 1, i + 1)) and not move_ended(a, k, i + 1))
+    return bool(i > k and not any(c[j] < lo and c[j] < a.e21[j] for j in range(k + 1, i + 1)) and not stale(a, k, i))
 
 
 def trend_start(a, i0):
@@ -2939,8 +2954,11 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         G.append(dict(group=g[5:] + " area" if g.startswith("area:") else g, status=STATUS[int(stt[-1])], members=len(ms), above_21ema_pct=fnum(100 * sh21[-1], 0),
                       median_1m_pct=fnum(m21[-1], 1), trending_days=since if since is not None else 0, recent_launches=launches))
     G.sort(key=lambda x: (-["Not trending", "Turning up", "Leading"].index(x["status"]), -(x["median_1m_pct"] or -999)))
-    # Start days (the user, Nov 12 2026): every liquid stock whose start day came in the last 5 sessions and still holds, the
-    # newest per stock, so the turn shows the day it happens and not weeks later at the launch
+    # Start days (the user, Nov 12 2026): every liquid stock whose start day still holds, the newest per stock, so the turn shows
+    # the day it happens and not weeks later at the launch. No age limit (the user, Nov 16 2026: "i want start days act like launch
+    # day meaning i dont want them disappear from list unless criterias i put becomes invalidated"; was 5 sessions): a row leaves
+    # only when the start fails or 62 sessions pass without a new high (start_listed), on your x (the page), or for a newer start
+    # day of the stock
     on_l, on_g = {r["symbol"] for r in rows}, {r["symbol"] for r in lag}
     starts = []
     for s, a in A.items():
@@ -2948,8 +2966,12 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         i = len(st.dates) - 1
         if st.dates[i] != today:
             continue
-        k = next((m for m in range(i, max(a.start, i - L["start_list_days"]), -1) if a.start_day(m) and (m == i or start_listed(a, m, i))), None)
-        if k is None:
+        # only the NEWEST start day of the stock counts: when it fails the stock is off the table, an older start day does not
+        # come back (the user, Nov 16 2026: "if newer start day fails it should get off the list (bcs its below start and
+        # below 21 ema!!!")
+        lo = max(a.start, i - L["start_list_days"]) if L["start_list_days"] else a.start
+        k = next((m for m in range(i, lo, -1) if a.start_day(m)), None)
+        if k is None or not (k == i or start_listed(a, k, i)):
             continue
         gs_, gn_ = best_group(s, T, groups, GS)
         d = dict(symbol=s, tv=run.tv_symbol(s, st.exchange), sessions=i - k, price=fnum(st.c[i]), since_pct=fnum(100 * (st.c[i] / st.c[k] - 1), 1),
