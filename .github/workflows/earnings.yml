@@ -54,4 +54,8 @@ jobs:
           git show origin/radar-data:earnings.json > /tmp/rd/earnings_prev.json 2>/dev/null || echo '{}' > /tmp/rd/earnings_prev.json
           git show origin/radar-data:pmnews.json > /tmp/rd/pmnews.json 2>/dev/null || echo '{}' > /tmp/rd/pmnews.json
           python3 radar/earnings.py /tmp/rd/stocks.json /tmp/rd/earnings_prev.json /tmp/earnings.json /tmp/rd/pmnews.json
-          python3 radar/publish.py "earnings $(TZ=America/New_York date '+%F %H:%M')" /tmp/earnings.json
+          # the event links (radar/event.py): a bellwether of radar/bellwethers.json on the tab -> radar-data events.json
+          # (the Pre-market tab's Event card, the alerts' "why" line); never at the cost of the Earnings tab
+          git show origin/radar-data:events.json > /tmp/rd/events_prev.json 2>/dev/null || echo '{}' > /tmp/rd/events_prev.json
+          python3 radar/event.py build radar/bellwethers.json /tmp/earnings.json /tmp/rd/stocks.json /tmp/events.json /tmp/rd/events_prev.json || rm -f /tmp/events.json
+          python3 radar/publish.py "earnings $(TZ=America/New_York date '+%F %H:%M')" /tmp/earnings.json $( [ -f /tmp/events.json ] && echo /tmp/events.json )

@@ -1321,6 +1321,23 @@ def check_morning(cands, state, M, live, S, E, now, sent):
     return out
 
 
+def event_reasons(path, today):
+    """({sym: reason}, {theme: reason}) of the bellwether events whose reaction session is today (radar-data events.json)"""
+    try:
+        evs = json.load(open(path)).get("events") or []
+    except Exception as e:
+        print(f"no events file: {e}", file=sys.stderr)
+        return {}, {}
+    by_sym, by_theme = {}, {}
+    for e in evs:
+        if e.get("status") == "out" and e.get("react_day") == today:
+            for k, v in (e.get("alerts") or {}).items():
+                by_sym.setdefault(k, v)
+            for k, v in (e.get("themes") or {}).items():
+                by_theme.setdefault(k, v)
+    return by_sym, by_theme
+
+
 def send(topic, title, msg, prio, tvs):
     req = urllib.request.Request(f"https://ntfy.sh/{topic}", data=msg.encode(), method="POST", headers={
         "Title": title.encode("ascii", "replace").decode(), "Priority": prio, "Tags": "chart_with_upwards_trend",
@@ -1599,7 +1616,14 @@ def main():
         out_.append(((f"mbatch{now:%H%M}:mbo", f"MORNING BREAKOUTS ({len(mb)}): " + ", ".join(a[0].split(":")[0] for a in mb),
                       " · ".join(a[1].replace(" MORNING BREAKOUT", "") + " " + a[2].split(" · ")[0] for a in mb), "high", ""), False))
     out_ += [(a, False) for a in mbk]
+    # the event links (radar/event.py, the user Nov 17 2026: "reason of alert has to be clear explanation"): on the session that
+    # reacts to a bellwether's report, an alert on a stock with a 1st-impact link to it (radar/bellwethers.json) ends with the
+    # event, the stock's tie and the bellwether's own sentence about it; a GROUP MOVE of a linked theme with the theme's
+    ev_sym, ev_theme = event_reasons(sys.argv[sys.argv.index("--events") + 1], today) if "--events" in sys.argv else ({}, {})
     for (key, title, msg, prio, tvs), is_grouped in out_:
+        why_ = ev_theme.get(key[4:]) if key.startswith("grp:") else ev_sym.get(key.split(":")[0])
+        if why_ and not key.startswith("summary:"):
+            msg += " · why: " + why_
         line = f"{now:%H:%M} {title}: {msg}"
         it = {"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs,
               "kind": "summary" if key.startswith("summary:") else "trigger" if is_trigger(key, title) else "heads-up",
