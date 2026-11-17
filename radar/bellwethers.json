@@ -1,5 +1,5 @@
 {
- "_note": "The bellwether map (the user, Nov 17 2026: 'logic and rationale should be accurate linking ... it has to be very clear'). A bellwether's report moves the stocks tied to it. Every link is written out: the tier and the reason, one stock at a time. A stock of a theme with no entry here has NO link and gets no reason. Tiers: direct = a named deal with the bellwether (it owns a stake, buys from it, sells to it, or a named joint program); step = its product goes into the bellwether's systems or the data centers built around them, without a named deal between the two; rival = sells against it (good news for one can be bad for the other); spend = no tie to the bellwether itself, it moves with the same customers' AI data-center spending. Only the 1st impact is used (the user, Nov 17 2026: 'im only interested in 1st direct impact ones'): the tiers in 'first' (direct ties and rivals); the step / spend entries stay written here but get no card row and no reason. 'names' = how the bellwether's own report would name a linked company: a sentence of the report that names it is the strongest reason of all. radar/event.py reads it; the Pre-market tab's Event card and the alerts' 'why' line show it.",
+ "_note": "The bellwether map (the user, Nov 17 2026: 'logic and rationale should be accurate linking ... it has to be very clear'). A bellwether's report moves the stocks tied to it. Every link is written out: the tier and the reason, one stock at a time. A stock of a theme with no entry here has NO link and gets no reason. Tiers: direct = a named deal with the bellwether (it owns a stake, buys from it, sells to it, or a named joint program); step = its product goes into the bellwether's systems or the data centers built around them, without a named deal between the two; rival = sells against it (good news for one can be bad for the other); spend = no tie to the bellwether itself, it moves with the same customers' AI data-center spending. Only the 1st impact is used (the user, Nov 17 2026: 'im only interested in 1st direct impact ones'): the tiers in 'first' (direct ties and rivals); the step / spend entries stay written here but get no card row and no reason. A stock's third entry, when there, is its own list of topics (TSMC: supply; AMD: Data Center revenue). 'names' = how the bellwether's own report would name a linked company: a sentence of the report that names it is the strongest reason of all. radar/event.py reads it; the Pre-market tab's Event card and the alerts' 'why' line show it.",
  "tiers": {
   "direct": "Direct tie",
   "step": "One step away",
@@ -169,6 +169,18 @@
       "export (control|licen)"
      ],
      "also": []
+    },
+    "cpu": {
+     "label": "its own processors",
+     "find": [
+      "vera cpus?",
+      "grace",
+      "\\barm\\b",
+      "x86"
+     ],
+     "also": [
+      "\\bcpus?\\b"
+     ]
     }
    },
    "links": [
@@ -246,11 +258,20 @@
      "stocks": {
       "ALAB": [
        "direct",
-       "Astera Labs' retimer chips are built into NVIDIA's own server platforms (HGX, MGX, Blackwell), and it is a named partner of NVIDIA's NVLink Fusion program: more NVIDIA systems shipped = more Astera chips."
+       "Astera Labs' retimer chips are built into NVIDIA's own server platforms (HGX, MGX, Blackwell), and it is a named partner of NVIDIA's NVLink Fusion program: more NVIDIA systems shipped = more Astera chips.",
+       [
+        "custom",
+        "networking"
+       ]
       ],
       "MRVL": [
        "direct",
-       "NVIDIA invested $2B in Marvell (March 2026) and the two work together on NVLink Fusion and optics; Marvell's optical chips sit in the links between NVIDIA machines. Marvell also designs the cloud giants' own AI chips, which compete with NVIDIA's."
+       "NVIDIA invested $2B in Marvell (March 2026) and the two work together on NVLink Fusion and optics; Marvell's optical chips sit in the links between NVIDIA machines. Marvell also designs the cloud giants' own AI chips, which compete with NVIDIA's.",
+       [
+        "custom",
+        "optics",
+        "networking"
+       ]
       ],
       "NOK": [
        "direct",
@@ -266,15 +287,27 @@
       ],
       "ANET": [
        "rival",
-       "Arista's Ethernet switches compete with NVIDIA's own networking for the same AI clusters, and are also installed next to NVIDIA chips at the cloud giants: NVIDIA's networking number shows how that fight is going."
+       "Arista's Ethernet switches compete with NVIDIA's own networking for the same AI clusters, and are also installed next to NVIDIA chips at the cloud giants: NVIDIA's networking number shows how that fight is going.",
+       [
+        "networking",
+        "datacenter"
+       ]
       ],
       "AVGO": [
        "rival",
-       "Broadcom designs the cloud giants' own AI chips (Google's and others') and sells the Ethernet chips that compete with NVIDIA's networking: the main alternative to NVIDIA."
+       "Broadcom designs the cloud giants' own AI chips (Google's and others') and sells the Ethernet chips that compete with NVIDIA's networking: the main alternative to NVIDIA.",
+       [
+        "custom",
+        "datacenter"
+       ]
       ],
       "HPE": [
        "direct",
-       "HPE builds and sells NVIDIA-based AI servers and, through Juniper, the networks around them: a named NVIDIA system partner."
+       "HPE builds and sells NVIDIA-based AI servers and, through Juniper, the networks around them: a named NVIDIA system partner.",
+       [
+        "systems",
+        "datacenter"
+       ]
       ],
       "CLS": [
        "step",
@@ -365,23 +398,44 @@
      "stocks": {
       "TSM": [
        "direct",
-       "TSMC manufactures and packages every advanced NVIDIA chip: NVIDIA's revenue and supply commitments are TSMC's orders."
+       "TSMC manufactures and packages every advanced NVIDIA chip: NVIDIA's revenue and supply commitments are TSMC's orders.",
+       [
+        "supply",
+        "datacenter"
+       ]
       ],
       "INTC": [
        "direct",
-       "NVIDIA is one of Intel's largest shareholders (a $5B investment in 2025) and the two are building PC and data-center chips together."
+       "NVIDIA is one of Intel's largest shareholders (a $5B investment in 2025) and the two are building PC and data-center chips together.",
+       [
+        "cpu",
+        "custom",
+        "datacenter"
+       ]
       ],
       "ARM": [
        "direct",
-       "NVIDIA's own processors (Grace, Vera) are built on Arm's designs, so NVIDIA pays Arm royalties on them."
+       "NVIDIA's own processors (Grace, Vera) are built on Arm's designs, so NVIDIA pays Arm royalties on them.",
+       [
+        "cpu",
+        "datacenter"
+       ]
       ],
       "AMD": [
        "rival",
-       "AMD is NVIDIA's direct rival in AI chips: NVIDIA's result shows the size of the market both sell into; a share gain by one is the other's loss."
+       "AMD is NVIDIA's direct rival in AI chips: NVIDIA's result shows the size of the market both sell into; a share gain by one is the other's loss.",
+       [
+        "datacenter",
+        "outlook"
+       ]
       ],
       "AVGO": [
        "rival",
-       "Broadcom designs the cloud giants' own AI chips and sells competing networking chips: the main alternative to NVIDIA."
+       "Broadcom designs the cloud giants' own AI chips and sells competing networking chips: the main alternative to NVIDIA.",
+       [
+        "custom",
+        "datacenter"
+       ]
       ]
      }
     },
@@ -396,7 +450,11 @@
      "stocks": {
       "MU": [
        "direct",
-       "Micron supplies the high-bandwidth memory (HBM) packaged with NVIDIA's AI chips: more NVIDIA chips = more Micron memory."
+       "Micron supplies the high-bandwidth memory (HBM) packaged with NVIDIA's AI chips: more NVIDIA chips = more Micron memory.",
+       [
+        "memory",
+        "supply"
+       ]
       ],
       "SNDK": [
        "spend",
@@ -423,15 +481,27 @@
      "stocks": {
       "DELL": [
        "direct",
-       "Dell is one of the largest builders of NVIDIA-based AI servers (the 'Dell AI Factory with NVIDIA'): its AI server orders follow NVIDIA's shipments."
+       "Dell is one of the largest builders of NVIDIA-based AI servers (the 'Dell AI Factory with NVIDIA'): its AI server orders follow NVIDIA's shipments.",
+       [
+        "systems",
+        "datacenter"
+       ]
       ],
       "SMCI": [
        "direct",
-       "Super Micro builds NVIDIA-based AI servers and racks: most of its revenue is NVIDIA systems."
+       "Super Micro builds NVIDIA-based AI servers and racks: most of its revenue is NVIDIA systems.",
+       [
+        "systems",
+        "datacenter"
+       ]
       ],
       "HPE": [
        "direct",
-       "HPE builds and sells NVIDIA-based AI servers: a named NVIDIA system partner."
+       "HPE builds and sells NVIDIA-based AI servers: a named NVIDIA system partner.",
+       [
+        "systems",
+        "datacenter"
+       ]
       ],
       "FLEX": [
        "direct",
@@ -439,11 +509,17 @@
       ],
       "NTAP": [
        "direct",
-       "NetApp is a named storage partner in NVIDIA's AI data platform: its storage is sold next to NVIDIA systems."
+       "NetApp is a named storage partner in NVIDIA's AI data platform: its storage is sold next to NVIDIA systems.",
+       [
+        "datacenter"
+       ]
       ],
       "P": [
        "direct",
-       "Everpure (the former Pure Storage) is a named storage partner in NVIDIA's AI data platform: its storage is sold next to NVIDIA systems."
+       "Everpure (the former Pure Storage) is a named storage partner in NVIDIA's AI data platform: its storage is sold next to NVIDIA systems.",
+       [
+        "datacenter"
+       ]
       ],
       "JBL": [
        "step",
@@ -470,7 +546,10 @@
      "stocks": {
       "AMKR": [
        "direct",
-       "Amkor is NVIDIA's named partner for packaging and testing its chips in Arizona."
+       "Amkor is NVIDIA's named partner for packaging and testing its chips in Arizona.",
+       [
+        "supply"
+       ]
       ],
       "TER": [
        "step",
@@ -604,7 +683,11 @@
       ],
       "QCOM": [
        "direct",
-       "Qualcomm is building data-center processors that plug into NVIDIA's systems through NVLink Fusion, and is also bringing out its own AI chips against NVIDIA."
+       "Qualcomm is building data-center processors that plug into NVIDIA's systems through NVLink Fusion, and is also bringing out its own AI chips against NVIDIA.",
+       [
+        "custom",
+        "cpu"
+       ]
       ],
       "RMBS": [
        "step",
@@ -801,7 +884,8 @@
     "ETN": "Eaton",
     "TT": "Trane",
     "DLR": "Digital Realty"
-   }
+   },
+   "relevant": "data center|AI factor|rack|Rubin|Blackwell|network|optic|photonic|cloud|supply|manufactur|packag|GPU|CPU|infrastructure|AI-RAN|inference|training|memory|power|cooling|NVLink|server|storage"
   }
  },
  "first": [

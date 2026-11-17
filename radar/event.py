@@ -162,17 +162,20 @@ def said_for(docs, topics):
     return out
 
 
-def named_for(docs, names):
-    """{sym: {text, src, url}}: the report's sentence that names the linked company itself (the strongest reason)"""
+def named_for(docs, names, relevant=None):
+    """{sym: {text, src, url}}: the report's sentence that names the linked company itself (the strongest reason); only a
+    sentence about the business the link is about (the map's 'relevant' words: a line on laptops is no reason for Dell's
+    AI servers)"""
     out = {}
-    pool = [(s, d["kind"], d["url"]) for d in docs for s in sentences(d["text"])]
+    rel = re.compile(relevant, re.I) if relevant else None
+    pool = [(s, d["kind"], d["url"]) for d in docs for s in sentences(d["text"]) if not rel or rel.search(s)]
     for sym, pat in (names or {}).items():
         p = re.compile(r"(?<![A-Za-z])(" + pat + r")(?![A-Za-z])")
         cand = [(2 * bool(re.search(r"\$\s?\d|\d\s?%|\d (billion|million)", s)) + bool(CHANGE.search(s)) - len(s) / 400, s, kind, url)
                 for s, kind, url in pool if p.search(s)]
         if cand:
             _, s, kind, url = max(cand)
-            out[sym] = {"text": short(s), "src": kind, "url": url, "topic": "named"}
+            out[sym] = {"text": short(s, 380), "src": kind, "url": url, "topic": "named"}
     return out
 
 
@@ -227,6 +230,22 @@ def result_line(r):
     return "; ".join(p)
 
 
+def own_words(said, row):
+    """the result in the bellwether's own sentences, for the hours before the Earnings tab has read the report: its
+    Data Center (first topic) sentence and its outlook sentence, the outlook's $ figure against the saved estimate"""
+    p = []
+    for t in ("datacenter", "outlook"):
+        if said.get(t):
+            p.append(short(said[t][0]["text"], 200).rstrip("."))
+    out = "; ".join(p)
+    g = re.search(r"expected to be \$\s?(\d[\d,.]*)\s*(billion|million)", (said.get("outlook") or [{}])[0].get("text", ""), re.I)
+    est = (row.get("nq") or {}).get("rev")
+    if g and est:
+        v = float(g.group(1).replace(",", "")) * (1e9 if g.group(2).lower() == "billion" else 1e6)
+        out += f" ({(v / est - 1) * 100:+.1f}% vs the {money(est)} estimate)"
+    return out
+
+
 def quote_move(q, now):
     """(move %, kind, price) the way the Earnings tab reads a quote: pre-market, live, after hours, else the close"""
     st = q.get("marketState") or ""
@@ -248,7 +267,7 @@ def quote_move(q, now):
 
 def assemble(B, m, row, S, said, heard, mv, status, named=None, first=("direct", "rival")):
     """the event: its links (theme by theme, each stock with tier, reason and move), and the one-line reasons"""
-    res = result_line(row) if status == "out" else ""
+    res = (result_line(row) or own_words(said, row)) if status == "out" else ""
     bm = mv.get(B)
     head = f"{B} earnings ({when_words(row)})"
     lead = head + (": " + res if res else " are out" if status != "due" else "")
@@ -259,12 +278,17 @@ def assemble(B, m, row, S, said, heard, mv, status, named=None, first=("direct",
         qs = [dict(x, topic=m["topics"][t]["label"]) for t in L["topics"] for x in (said.get(t) or [])[:1]][:2]
         hs = [dict(x, topic=m["topics"][t]["label"]) for t in L["topics"] for x in (heard.get(t) or [])[:1]][:2]
         st = []
-        for sym, (tier, why) in L["stocks"].items():
+        for sym, v in L["stocks"].items():
+            tier, why = v[0], v[1]
             if sym not in S or tier not in first:              # the 1st impact only (the user, Nov 17 2026)
                 continue
-            st.append({"sym": sym, "tier": tier, "why": why, "mv": mv.get(sym), "named": (named or {}).get(sym)})
+            tp = v[2] if len(v) > 2 else L["topics"]           # the stock's own topics, else the theme's
+            q1 = [dict(x, topic=m["topics"][t]["label"]) for t in tp for x in (said.get(t) or [])[:1]][:1] if len(v) > 2 else qs
+            h1 = [dict(x, topic=m["topics"][t]["label"]) for t in tp for x in (heard.get(t) or [])[:1]][:1] if len(v) > 2 else hs
+            st.append({"sym": sym, "tier": tier, "why": why, "mv": mv.get(sym), "named": (named or {}).get(sym),
+                       "said": q1[:1] if len(v) > 2 else None})
             if sym not in best or TIERS.index(tier) < TIERS.index(best[sym][0]):
-                best[sym] = (tier, why, L, qs, hs)
+                best[sym] = (tier, why, {"topics": tp}, q1, h1)
         st.sort(key=lambda x: TIERS.index(x["tier"]))
         if not st:
             continue
@@ -330,7 +354,7 @@ def build(bw, earn, S, prev, now):
                     sec = sec or E.SEC()
                     fd = filing_docs(sec, B, row["date"], next_session(row["date"]))
                     if fd and fd["docs"]:
-                        said, named = said_for(fd["docs"], m["topics"]), named_for(fd["docs"], m.get("names"))
+                        said, named = said_for(fd["docs"], m["topics"]), named_for(fd["docs"], m.get("names"), m.get("relevant"))
                         docs, filed = [{"url": d["url"], "kind": d["kind"]} for d in fd["docs"]], fd["filed"]
                 except Exception as e:
                     errors.append(f"sec {B}: {e!r}"[:160])
@@ -338,6 +362,7 @@ def build(bw, earn, S, prev, now):
             try:
                 arts = E.feed([B], datetime.datetime.fromisoformat(row["report_at"]).replace(tzinfo=NY), now).get(B, [])
                 heard = heard_for(arts, m["topics"], datetime.datetime.fromisoformat(row["report_at"]).replace(tzinfo=NY).isoformat())
+                print(B, "news feed:", len(arts), "headlines since the report,", sum(len(v) for v in heard.values()), "matched a topic")
             except Exception as e:
                 errors.append(f"news feed {B}: {e!r}"[:160])
                 heard = old.get("heard_all") or {}
@@ -351,7 +376,7 @@ def build(bw, earn, S, prev, now):
         links, alerts, themes, lead = assemble(B, m, row, S, said, heard, mv, status, named, first)
         events.append({"id": eid, "gv": GV, "sym": B, "name": m["name"], "kind": "earnings", "date": row["date"], "when": row.get("when"),
                        "when_words": when_words(row), "react_day": react, "status": status, "what": m["what"], "lead": lead,
-                       "result": result_line(row) if status == "out" else "", "read": row.get("read") if status == "out" else None,
+                       "result": (result_line(row) or own_words(said, row)) if status == "out" else "", "read": row.get("read") if status == "out" else None,
                        "filed": filed, "docs": docs, "said_all": said, "named": named, "heard_all": heard, "moves": mv, "moves_at": now.isoformat(timespec="minutes"),
                        "links": links, "alerts": alerts, "themes": themes})
     return {"built_at": now.isoformat(timespec="seconds"), "tiers": bw.get("tiers") or {}, "events": events, "errors": errors[:20]}
@@ -382,7 +407,7 @@ def replay(bw, S, B, day):
     amc = filed.hour >= 15
     row = {"date": filed.date().isoformat(), "when": "amc" if amc else "bmo", "report_at": fd["filed"][:16]}
     react = window(row)[2]
-    said, named = said_for(fd["docs"], m["topics"]), named_for(fd["docs"], m.get("names"))
+    said, named = said_for(fd["docs"], m["topics"]), named_for(fd["docs"], m.get("names"), m.get("relevant"))
     first = tuple(bw.get("first") or ("direct", "rival"))
     linked = sorted({s for L in m["links"] for s, v in L["stocks"].items() if s in S and v[0] in first})
     mv = {}
