@@ -49,6 +49,38 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: why AVEX isn't on the EP watchlist (Nov 17)" (Tue Nov 17 2026, from ~1:25 PM ET; session_01PkbDameNZtixLSWb6F7Thg; in progress)
+
+- **LIVE (the user's "go live for two changes already tested", Tue Nov 17 2026 ~3:10 PM ET, commit 9cd7f74): two changes.**
+  1. **The Watchlist's relative volume is on 20 days (was 10)**: the day's volume vs the average of the 20 sessions before, for
+     the 1-EP/GAP 2x and the 1-UPDAY 1x tests and the Rel vol saved on the Watchlist rows (scanner/screens.py REL_VOL_DAYS,
+     scanner/settings.json screeners.rel_vol_days 20, set in run.py build). The user: "Tradingview shows 200 rvol ... for rvol it
+     should 20". Launches, Start days and the portal's Rel vol column were already on 20. Measured (radar-tools `rvdays` ->
+     radar-data probe_rvdays.json, scanner/probe_rvdays.py; 30 sessions Oct 7 - Nov 17, 2,912 stocks): 1-EP/GAP 82 -> 81 (only
+     FSLY Oct 9: 3.29x on 10 days, 1.95x on 20); 1-UPDAY 793 -> 799 (86 join, 80 leave, all near 1x: LSCC Nov 11 0.94x -> 1.18x
+     joins, LQDA Nov 11 1.54x -> 0.93x leaves). **First check: the Tue Nov 17 evening scan** (setups/latest.json settings
+     screeners.rel_vol_days 20; the "why" of new rows carries the 20-day figure).
+  2. **Start days is the list START DAYS on the Watchlist tab, next to 1-EP/GAP** (the user: "can we move start day to watchlist
+     next to ep/gap watchlist", "do it"; my recommendation was move, not show in both). docs/index.html: the card #ln-sd-card
+     moved from the Launches tab to the Watchlist tab, shown when the list picker is on START DAYS (the list's own table, rules,
+     Section and + Filter are hidden then; the ticker box filters it); drawStartDays is its own function (was a block of
+     drawLaunches); the Launches search shows a Start days match as a button that opens it on the Watchlist tab. Same rules,
+     columns, x, download and note; it reads launch.json start_days and does NOT feed 3-SETUPS. The Launches tab now has
+     Launching today, Launches, 50 EMA undercut, Trending groups, History test.
+  Tested: the page on desktop / phone with the live files (46 rows, sort, the ticker filter, back to 1-EP/GAP 49 rows, the jump
+  from the Launches search; 0 page errors). Rules workbook: 2 rows. No `--regress` (launch.py untouched; this session has no
+  long bars), no Launches rebuild (told the user, launch.py untouched), no 2-year check (a list threshold and a page move).
+- **Answered, no change**: AVEX is not on 1-EP/GAP because its gap day Nov 12 2026 (gap +12.5%, +13.4%, close 13.76) closed under
+  its 50 EMA 13.93 ("every list needs a close above the 50 EMA"); FRVO Nov 9 2026 (+26.0%, gap +0.1%, close 11.38, 50 EMA 13.03)
+  had no gap and is under the 50 EMA too (it passed 1-UPDAY's move and volume). Both are on Start days (the user: "its good
+  that its on start day"). Offered, not taken up: dropping the 50 EMA test for 1-EP/GAP / 1-UPDAY. Neither would be an EP
+  alert (FRVO no gap; both under the 200 SMA stand-in and under the 21-session closing high); the START DAY alert went live Nov
+  13, after both. The lists show about 4:27-4:35 PM ET (Nov 16: 4:27 / 4:28). The user does NOT want start days added to the
+  table during the day ("its ok the way its now, as long as it fires alert").
+- **Test only (the user's "test it for sound", Nov 17 2026)**: the START DAY alert sounding like an important alert (the voice
+  "Start day, <ticker>, volume X times", a louder chime than a heads-up, the phone at high priority every time; today it is a
+  👀 heads-up: "Heads up, R K L B", no volume spoken, normal phone priority). See the branch ccr-8bc885ea-m5ftq7.
+
 ## Status of the session "Radar: opening range 1/2/5-min choice (Nov 17)" (Tue Nov 17 2026, from ~10:10 AM ET; session_01PkbDajetWCG8Sskm5kAjad; in progress)
 
 - **LIVE (the user's "go live", Tue Nov 17 2026 ~10:45 AM ET, branch claude/loving-wozniak-p738we): ONE "Above ORH" filter with a
