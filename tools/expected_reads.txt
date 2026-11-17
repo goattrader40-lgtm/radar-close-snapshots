@@ -506,3 +506,8 @@ AMD from 2026-09-21 (launch)
   2026-10-12 c 594.24 | leg 2 | Off the list since 2026-10-12: the end of the cycle: it stalled at its highs (658.52 on 2026-10-06, warning 2026-10-08), then closed under the 21 EMA. Back on when it breaks out (a base, a flag, a falling range, a launch-size day) over the 50 EMA with the 21 or the 50 EMA rising | next buy point 621.84 Bull flag (trendline)
   2026-10-13 c 605.53 | leg 2 | Off the list since 2026-10-12: the end of the cycle: it stalled at its highs (658.52 on 2026-10-06, warning 2026-10-08), then closed under the 21 EMA. Back on when it breaks out (a base, a flag, a falling range, a launch-size day) over the 50 EMA with the 21 or the 50 EMA rising | next buy point 614.51 Bull flag (trendline)
   2026-10-14 c 570.82 | leg 2 | Off the list since 2026-10-12: the end of the cycle: it stalled at its highs (658.52 on 2026-10-06, warning 2026-10-08), then closed under the 21 EMA. Back on when it breaks out (a base, a flag, a falling range, a launch-size day) over the 50 EMA with the 21 or the 50 EMA rising | next buy point 607.17 Bull flag (trendline)
+AZTA from 2026-11-11 (launch)
+  2026-11-11 c 48.90 | leg 1 | Launch day, cleared its 20-month base | next buy point None Qullamaggie breakout
+  2026-11-12 c 43.86 | leg 1 | Retest of the breakout level 43.76-46.41 (bodies-wicks) held | next buy point None 
+  2026-11-13 c 45.65 | leg 1 | Retest of the breakout level 43.76-46.41 (bodies-wicks) held | next buy point None 
+  2026-11-16 c 47.22 | leg 1 | Retest of the breakout level 43.76-46.41 (bodies-wicks) held | next buy point None 

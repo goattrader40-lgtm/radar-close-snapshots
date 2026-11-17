@@ -144,7 +144,11 @@ alone.
   to save on the tab). Seen, not changed: a followed stock's plain breakout alert fired on a gap-out-of-base day (KVYO
   9:35) though the legend says it stays quiet; the 1-minute checks stop 12:00-3:00.
 
-## Status of the session "Radar: AZTA breakout alert (Nov 16)" (Mon Nov 16 2026 ~11:30 AM ET - Tue Nov 17; session_01PkbDajZLtZ51Kk895bqYFw)
+## Status at the end of the session "Radar: AZTA breakout alert (Nov 16)" (Mon Nov 16 2026 ~11:30 AM ET - Tue Nov 17; session_01PkbDajZLtZ51Kk895bqYFw)
+
+**In one line: the retest after a launch re-read (4 parts, one go live), all on main, nothing left on a test branch. FIRST THING
+NEXT SESSION: how many retest / reclaim alerts came on Tue Nov 17 (alerts.json), the first live session with a retest every day.**
+
 
 - **LIVE (the user's "yes all looks good go live", Nov 17 2026; branch claude/practical-archimedes-o1zddh merged with main): the
   retest after a launch, and a broken base top is no breakout again** (scanner/launch.py only; radar/alerts.py and the page
@@ -181,13 +185,16 @@ alone.
   breakout level 43.76-46.41 held", no buy point, zone 39.68-46.41, no gap-out-of-base level; 8 rows read a retest that day
   (AZTA ZETA CYRX SG GXO MOS EL VSXY), 1 the breakout undercut & reclaim (DLTR). **First check Tue Nov 17**: the retest /
   reclaim alerts in alerts.json (how many a day now that every touch counts), and no "breakout" on a just-broken top.
+- **Cleared up with the user after the go live**: "every touch" = every DAY: one retest alert per stock per day (the 3:45 PM
+  "RETEST HOLDING", plus at most one "pulling back to its breakout level" heads-up); 3 days in a row = 3 alerts ("if it
+  happens 3 days in a row we get three alerts": yes). Before: only the first day, or a later day on a lower low.
+- **Test only**: nothing. AZTA Nov 11-16 2026 is in tools/examples.txt (added at the wrap-up; expected reads rewritten).
 - **Told the user, no answer**: with "every touch", AZTA Nov 16 (low 44.32, close 47.22) also reads "retest held" and would send
   the 3:45 PM alert, though they had said Nov 16 was "just confirmation".
 - **Open, for another session (the user: "leave that alone")**: a GAP retest rule (AEHR Feb 12-17 2026: back to where it gapped
   from on Feb 11 and held; the scan only knows the retest of a broken base top).
 - **Not done**: the alert text "nothing traded above it for N sessions" is still false for a top poked in the last 3 sessions
-  (WRBY 31.75 over 31.50 on Nov 11 2026): offered, not taken up. AZTA is not in tools/examples.txt (offer "add it to the
-  examples"). long_bars.json now has 185 symbols (+ AZTA CDW GEO HNGE AMRX GCT WAT).
+  (WRBY 31.75 over 31.50 on Nov 11 2026): offered, not taken up. long_bars.json now has 185 symbols (+ AZTA CDW GEO HNGE AMRX GCT WAT).
 
 ## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 ~0:30 - 2 AM ET and Sat Nov 14 2026 ~noon - 5 PM ET; session_01PkbDahhagkKkQ2rkgKsLuZ)
 
@@ -839,6 +846,11 @@ before merging and re-test the merged page.
 - **Tops** are named by their reach: a 1-, 3- or 6-month high. A bigger base's high right above is named (VEEV Oct 9:
   out of its 1-month base 291.40 and the falling line, closed 296.13 under its 6-month high 296.24: a double
   breakout, not out of the main base; RPD Oct 22 out of 13.87, its 6-month high 14.80 broken the next day).
+- **Retest, as agreed Nov 16-17 2026 (AZTA; details in that session's status)**: after a launch the level is the highest top
+  it closed over (AZTA 43.76-46.41, its Oct 6 top), the 20-day one once the pullback reaches it (SPOT Oct 28, ACN Oct 7); from
+  the day after the breakout; every day that touches the zone and closes over the body top is a retest with its alert (SPOT
+  Oct 28 & 29, APPN Oct 16 & 19, CAI Aug 14 & 17); one close under and back over, the low in the zone, is the breakout
+  undercut & reclaim (CAI Aug 18-19, COHR Mar 9); a top already broken is no breakout again (DOCU Sep 1, AXTI May 27).
 - **Retest** of the breakout level (bodies or wicks): after a real pullback, the low back at the level, the close over
   it and the 21 EMA, and over the 10 EMA unless the low tested the 21 EMA (ARM Mar 30 no; Mar 31 yes + 10 EMA; Apr 7
   yes + 21 EMA; GMAB Oct 2, ACN Oct 7, CAI Sep 3 / Sep 10, SPOT Oct 28, ANF Oct 23). The stock must move up the first
