@@ -77,7 +77,7 @@ alone.
   high"), also in its "Now:" / "After Save:" lines (the user: "why you didnt do same wording for both", "do both above pdh
   and above orh (then your mins)"). Page wording only (docs/index.html); the alert messages are NOT changed (the user:
   "sound alerts message we are not changing"). Tested: the box on the page, 0 page errors.
-- **LIVE (the user's "go live", Tue Nov 17 2026 ~12:30 PM ET): the 📈 Morning breakouts box holds only what still meets the
+- **LIVE (the user's "go live", Tue Nov 17 2026 ~11:40 AM ET): the 📈 Morning breakouts box holds only what still meets the
   settings; a stock back on alerts.** The user: "it was supposed to be in true state, meaning when it gets out it takes out of
   box, when it gets back in it just alerts that its back in" (TSCO Nov 17: alerted 9:45 at 38.72 over PDH 38.58 and ORH 38.38,
   at 11:20 38.29 and still in the box). The Nov 5 rule ("whatever doesn't hold, it has to be taken from that box") was live for
