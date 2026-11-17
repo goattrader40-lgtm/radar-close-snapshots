@@ -223,6 +223,11 @@ jobs:
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
             python3 radar/event.py replay radar/bellwethers.json /tmp/rd/stocks.json /tmp/events_replay.json ${CMD#eventreplay } && python3 radar/publish.py "event replay" /tmp/events_replay.json;;
           esac
+          case "$CMD" in links\ *)   # a probe: the direct links of a bellwether from the SEC annual reports ("links NVDA GOOGL SPCX") -> radar-data probe_links.json
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+            mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
+            python3 radar/probe_links.py /tmp/rd/stocks.json /tmp/probe_links.json ${CMD#links } && python3 radar/publish.py "links probe" /tmp/probe_links.json;;
+          esac
           if [ "${{ inputs.cmd }}" = "alerttest" ]; then
             if [ -z "$NTFY_TOPIC" ]; then echo "NTFY_TOPIC secret is not set"; exit 1; fi
             curl -s -H "Title: Radar alerts are on" -H "Tags: white_check_mark" -d "Test from your Theme & Group Radar. Launch, power-day and breakout alerts will arrive here during market hours." "https://ntfy.sh/$NTFY_TOPIC" > /dev/null && echo sent
