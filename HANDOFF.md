@@ -110,8 +110,8 @@ alone.
   1, 12 by the 1 ADR line, 0 by the late line that day); the page on desktop / phone, no errors, with the dry file and the
   merged page with the live file. Rules workbook: 2 rows. No 2-year check (table rules). **The portal's table is NOT rebuilt
   yet**: picks.yml ran twice after the push (01:17 and 01:28 UTC, both green, nothing saved: most likely the guard, Yahoo's
-  evening bars without the Nov 16 close); a retry is scheduled ~02:50 UTC; else the Tue Nov 17 4:40 PM scan applies the rules
-  (expected: ~47 rows, none before Nov 1, QNT / VOYG / PL off). Not touched: the START DAY alert, the
+  evening bars without the Nov 16 close); the retry at 02:52 UTC (9:52 PM ET, 8d5bda0) SAVED: 47 rows, none before Nov 1,
+  QNT / VOYG / PL off, LSCC / MTCH / ZETA / RKLB on. The portal shows the new table. Not touched: the START DAY alert, the
   "start <date>" line under launches, Launches. Scratch scripts of the measurements: this session's scratchpad only (decide.py,
   behave.py, late.py, late2.py, both.py: the numbers are in the rules rows).
 - **Answered, no change**: why BILL is on Launches: its Aug 13 2026 launch (base breakout +5.4% on 2.1x, close 51.31, C), off
