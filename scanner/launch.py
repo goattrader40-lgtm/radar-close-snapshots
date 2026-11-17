@@ -175,6 +175,9 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # start_late_adv / start_late_adr: once the start has run start_late_adv ADRs, a close start_late_adr ADRs under the 21 EMA
          # takes it off the table (Nov 17 2026)
          start_late_adv=2, start_late_adr=1,
+         # start_stale_days: off the Start days table after that many sessions without a new high (Launches keep off_days = 62;
+         # the user, Nov 17 2026: "do that 43 sessions, 62 sessions is like 3 months"; on 570 start days 62 removed 0, 43 removed 4)
+         start_stale_days=43,
          first_day=1, first_gap=5, first_rv=1.3, first_adr_nogap=1.8, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2,
          # the list ON / OFF read from the user's AMD 2026 charts (Nov 13 2026: "i can visually know when stock will go down"):
          # adr_look: the ADR minimum is tested on the highest 20-day ADR of the last 63 sessions, not on today's alone: the
@@ -2366,7 +2369,7 @@ def start_listed(a, k, i):
         if (c[j] < lo and c[j] < a.e21[j]) or c[j] < line or (ran and c[j] < a.e21[j] * (1 - L["start_late_adr"] * ad / 100)):
             return False
         ran = ran or c[j] >= adv
-    return bool(i > k and not stale(a, k, i))
+    return bool(i > k and not stale(a, k, i, days=L["start_stale_days"]))
 
 
 def trend_start(a, i0):
@@ -2510,14 +2513,14 @@ def removed_setups_of(path):
         return {}
 
 
-def stale(a, i0, last, top=None):
+def stale(a, i0, last, top=None, days=None):
     """off the list (your rule, Nov 1 2026): 62 sessions from its highest point without a new high, at any time since the
     launch (or your pick; top = the base top a pick started under). A $60 high 5 days ago with the stock at $55 today
     counts from the $60 day. Once off, it stays off (a new launch on a later day is a new row)"""
     h = a.st.h[i0:last + 1]
     m = np.maximum.accumulate(np.concatenate(([top if top else h[0]], h[1:])))
     new = [0] + [k for k in range(1, h.size) if m[k] > m[k - 1]] + [h.size - 1]
-    return any(b - a_ >= L["off_days"] for a_, b in zip(new, new[1:]))
+    return any(b - a_ >= (days or L["off_days"]) for a_, b in zip(new, new[1:]))
 
 
 def removed_of(path):
