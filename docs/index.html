@@ -614,6 +614,22 @@
 
   <!-- ───────── Tab 3: pre-market gappers ───────── -->
   <section class="tgr-page" id="premarket" role="tabpanel" aria-labelledby="tab-premarket" hidden>
+    <div class="tgr-card tgr-hc" id="evl-card" hidden>
+      <div class="tgr-cardhead">
+        <h2 id="evl-h">Event</h2>
+        <span class="tgr-lbl" id="evl-time">—</span>
+      </div>
+      <p class="tgr-note" id="evl-line"></p>
+      <details class="tgr-legend tgr-more" data-key="evlinks"><summary>What an event is, and which stocks are linked</summary>
+      <p class="tgr-note">An event = a bellwether reports: a company whose results move the stocks tied to it (NVIDIA first). The card is up from the morning of its report to the evening of the session that reacts to it. Only the 1st impact is listed: a <b>direct tie</b> (the bellwether owns a stake in the stock, buys from it, sells to it, or runs a named program with it) or a <b>rival</b>. Every link is written out with its reason; a stock without one is not listed. "What it said" is the bellwether's own sentence from its results filing at the SEC (the press release and the CFO commentary): first a sentence that names the stock, else its sentence on the business the link is about. Nothing is searched or written by Claude. Moves: after hours on the evening, then the pre-market scan, then the live prices. On the reaction session an alert on a listed stock ends with the same reason ("why:"). Price and volume decide; this is the reason next to them.</p>
+      </details>
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="evl-table">
+          <thead><tr><th>Ticker</th><th class="num">Move</th><th>Link</th><th>Why it is linked</th><th>What it said</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
     <div class="tgr-card tgr-hc" id="pme-card" hidden>
       <div class="tgr-cardhead">
         <h2 id="pme-h">Theme event</h2>
@@ -2786,6 +2802,60 @@ defCalc('industry_perf', {
   };
   $('#pme-show').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { PMESHOW = b.dataset.v; draw(); } });
   $('#pme-copy').addEventListener('click', () => { const t = ($('#pme-card').dataset.syms || '').split(',').filter(Boolean); if (t.length && navigator.clipboard) navigator.clipboard.writeText(t.join(',')).then(() => { $('#pme-count').textContent = t.length + ' tickers copied'; }).catch(() => {}); });
+  /* Event links (the user, Nov 17 2026, NVDA's report: "our code should be able connect dots", "reason ... has to be clear
+     explanation", "im only interested in 1st direct impact ones"): radar/event.py -> events.json. A bellwether of
+     radar/bellwethers.json reports: the stocks with a written 1st-impact link to it, each with its tie, the reason and the
+     bellwether's own sentence from its SEC results filing. Nothing here changes a grade, a list or a rule. */
+  const drawEvLinks = () => {
+    const card = $('#evl-card'), today = todayNY();
+    const ev = EVL && Array.isArray(EVL.events) ? EVL.events.find((e) => e.date <= today && today <= e.react_day) : null;
+    card.hidden = !ev;
+    if (!ev) return;
+    const tiers = EVL.tiers || {}, by = new Map(((BASE && BASE.stocks) || []).map((r) => [r.symbol, r]));
+    const pct = (x) => (x > 0 ? '+' : '') + Number(x).toFixed(1) + '%';
+    /* the move: the live prices in today's session, else today's pre-market scan, else the build's own quote */
+    const react = today === ev.react_day && ev.status !== 'due';   /* the evening of an after-close report: the build's after-hours quote, not the day's session */
+    const mvOf = (sym) => {
+      if (react && LIVE && LIVE.session === today && LIVE.rows && LIVE.rows[sym]) return [LIVE.rows[sym][1], 'live'];
+      if (react && PML && PML.date === today && PML.rows && PML.rows[sym]) return [PML.rows[sym][1], 'pre-market'];
+      return (ev.moves || {})[sym] || null;
+    };
+    $('#evl-h').textContent = 'Event: ' + ev.name + ' earnings';
+    $('#evl-time').textContent = ev.when_words + (ev.status === 'due' ? ' · not out yet' : '') + ' · reaction session ' + fDate(ev.react_day);
+    const ln = $('#evl-line'); ln.replaceChildren();
+    const bm = mvOf(ev.sym);
+    if (ev.status === 'due') ln.append(h('b', '', ev.sym + ' reports ' + ev.when_words + '. '));
+    else {
+      ln.append(h('b', '', ev.sym + ': '), ev.result || 'the report is out, not read yet');
+      if (bm) ln.append('; ', h('b', tone(bm[0]), ev.sym + ' ' + pct(bm[0])), ' ' + bm[1]);
+      ln.append('. ');
+      (ev.docs || []).forEach((d) => { if (!/^https:\/\//.test(d.url)) return; const l = h('a', '', '📰 ' + d.kind); l.href = d.url; l.target = '_blank'; l.rel = 'noopener'; ln.append(l, ' '); });
+    }
+    const rows = [], seen = new Set();
+    (ev.links || []).forEach((L) => (L.stocks || []).forEach((x) => { if (seen.has(x.sym)) return; seen.add(x.sym); rows.push(Object.assign({ theme: L.theme, tsaid: (L.said || [])[0] }, x, { mv: mvOf(x.sym) })); }));
+    const up = rows.filter((r) => r.mv && r.mv[0] >= 2).length, dn = rows.filter((r) => r.mv && r.mv[0] <= -2).length;
+    ln.append(h('span', 'tgr-lbl', rows.length + ' stocks with a 1st-impact link · ' + up + ' up 2%+ · ' + dn + ' down 2%+' + (ev.what ? ' · ' + ev.what : '')));
+    rows.sort((a, b) => (b.mv ? b.mv[0] : -99) - (a.mv ? a.mv[0] : -99));
+    const tb = $('#evl-table tbody'); tb.replaceChildren();
+    rows.forEach((r) => {
+      const tr = h('tr'), key = h('td', 'key'), st = by.get(r.sym);
+      const a = h('a', 'tgr-tk', r.sym); a.href = tv((st && st.tv_symbol) || r.sym); a.target = TVTAB; key.append(a);
+      const mv = h('td', 'num ' + (r.mv ? tone(r.mv[0]) : ''), r.mv ? pct(r.mv[0]) : '—');
+      if (r.mv) mv.title = r.mv[1];
+      const tie = h('td'); tie.append(h('b', '', tiers[r.tier] || r.tier), h('br'), h('span', 'tgr-lbl', r.theme));
+      const why = h('td', '', r.why); why.style.whiteSpace = 'normal'; why.style.minWidth = '260px';
+      const sd = h('td'); sd.style.whiteSpace = 'normal'; sd.style.minWidth = '300px';
+      const q = r.named || (r.said && r.said[0]) || r.tsaid;
+      if (ev.status === 'due') sd.append(h('span', 'tgr-lbl', 'after the report'));
+      else if (!q) sd.append(h('span', 'tgr-lbl', 'Nothing in its release on this.'));
+      else {
+        sd.append(h('b', '', r.named ? 'Named: ' : 'On ' + q.topic + ': '), '“' + q.text + '”');
+        if (/^https:\/\//.test(q.url || '')) { const l = h('a', '', ' 📰'); l.href = q.url; l.target = '_blank'; l.rel = 'noopener'; l.title = q.src; sd.append(l); }
+      }
+      tr.append(key, mv, tie, why, sd);
+      tb.append(tr);
+    });
+  };
   const drawPmLive = (symMap) => {
     syncPm();
     const table = $('#pml-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
@@ -2800,6 +2870,7 @@ defCalc('industry_perf', {
     const xk = PMF.dir === 'down' ? 'pmd' : 'pmu';
     const allPm = pmRows();
     drawPmEvent(allPm);
+    drawEvLinks();
     /* Scan: the whole market or one of your lists (the event card above keeps the whole market) */
     const ss = scanSet(SCAN.pm);
     drawScanSeg('pml-scan', SCAN.pm);
@@ -5873,6 +5944,7 @@ defCalc('industry_perf', {
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
   let CGR = null;     /* the code grades (radar/codegrade.py, test next to Claude's) */
   let PMEV = null;    /* the news behind today's theme event (the 8:45 grading -> pm_event.json) */
+  let EVL = null;     /* the event links (radar/event.py -> events.json): a bellwether's report and the stocks tied to it */
   let PMN = null;     /* the 8:05 / 8:35 news runs (radar/codegrade.py news -> pmnews.json): the News column before 8:45 */
   let CGL = null;     /* the code grader's daily log: its W (laggard watch) names for the W-crossed-the-200 alerts */
   let LEV = null;     /* today's 1- / 2- / 5-minute opening ranges of the movers (radar/levels.py): the + Filter "Above ORH" */
@@ -5993,6 +6065,7 @@ defCalc('industry_perf', {
       CGL = await getJson(sha, 'codegrade_log.json').catch(() => CGL);
       PMN = await getJson(sha, 'pmnews.json').catch(() => PMN);
       PMEV = await getJson(sha, 'pm_event.json').catch(() => PMEV);
+      EVL = await getJson(sha, 'events.json').catch(() => EVL);
       CGR = await getJson(sha, 'codegrade.json').catch(() => CGR);     /* the code grades, next to Claude's (test) */     /* the Earnings tab (radar/earnings.py) */     /* the job's alerts, incl. its 1-minute gap-up checks */
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {

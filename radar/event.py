@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import earnings as E  # noqa: E402
 
 NY = E.NY
-GV = 1                       # the reader's version: a change re-reads the filing
+GV = 2                       # the reader's version: a change re-reads the filing
 TIERS = ["direct", "rival", "step", "spend"]
 TIER_WORDS = {"direct": "direct tie", "step": "one step away", "rival": "rival", "spend": "same spending, no tie"}
 BOILER = re.compile(r"forward-looking|risks and uncertainties|non-gaap (financial )?measures?|conference call|webcast|safe harbor|"
@@ -105,7 +105,8 @@ def filing_docs(sec, sym, day_from, day_to):
                 continue
             if len(txt) < 1500:
                 continue
-            kind = "CFO commentary" if re.search(r"CFO Commentary", txt[:800], re.I) else "press release"
+            kind = ("supplemental data" if "supplement" in n.lower() else "CFO commentary" if re.search(r"CFO Commentary", txt[:800], re.I)
+                    else "press release")
             docs.append({"url": base + n, "kind": kind, "text": txt})
         return {"filed": acc_t.isoformat(timespec="minutes"), "docs": docs}
     return None
