@@ -3998,7 +3998,7 @@ defCalc('industry_perf', {
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
     'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close', 'mbo', 'ema21hold', 'ema50hold']);
-  const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : kind === 'retest' ? / \+ /.test(title || '') /* with an EMA at the level (Nov 10 2026); alone a heads-up */ : TRIGGERS.has(kind); };
+  const isTrigger = (key, title) => { if (String(key).startsWith('grp:') || /^★/.test(title || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : kind === 'retest' ? / \+ /.test(title || '') /* with an EMA at the level (Nov 10 2026); alone a heads-up */ : /^mboback/.test(kind) /* a morning breakout back on (Nov 17 2026) */ || TRIGGERS.has(kind); };
   /* a few words per kind for the group-move lines (radar/alerts.py KIND_WORDS) */
   const KIND_WORDS = { retest: 'retest holding', zone: 'in the retest zone', ema21: '21 EMA retest', ema21bl: '21 EMA + breakout level', ema21zone: 'at the 21 EMA',
     breakout: 'breakout', touch: 'touched the buy point', confirm: 'breakout confirmed', power: 'power day', catalyst: 'catalyst gap', basebreak: 'base high cleared',
@@ -4137,7 +4137,7 @@ defCalc('industry_perf', {
   const tabOfKey = (key, doc, launched) => {
     const [sym, kind] = String(key).split(':'), on = (k) => !!doc && (doc[k] || []).some((r) => r.symbol === sym);
     if (kind === 'pmclaude' || kind === 'pmcode') return 'P';                       /* the pre-market grades */
-    if (kind === 'mbo') return 'O';                                                  /* the morning breakouts: any stock, their own filter */
+    if (kind === 'mbo' || /^mboback/.test(kind || '')) return 'O';                                                  /* the morning breakouts: any stock, their own filter */
     if (kind === 'w200' || kind === 'w200now' || kind === 'w200close') return 'G';   /* a W name: a laggard until it closes over the 200 */
     if (kind === 'laggard') return 'G';
     if (on('launches')) return 'L';
@@ -4157,6 +4157,7 @@ defCalc('industry_perf', {
     early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', eodheld: 'g', eodlost: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g', mbo: 'o' };
   const boxOfKey = (key, title) => {
     const [a, kind] = String(key).split(':'), t = String(title || '');
+    if (/^mboback/.test(kind || '')) return 'o';                                                       /* a morning breakout back on: its line is in the log only (place) */
     if (a === 'grp' || / GROUP MOVE/.test(t) || /\(after the close\)/.test(t)) return 'g';            /* group moves, the after-close heads-ups */
     if (kind === 's3' && /retest|21 EMA/i.test(t)) return 'b';                                         /* a 3-SETUPS 21 EMA retest / retest held */
     return BOX_OF[kind] || 'h';
@@ -4186,7 +4187,7 @@ defCalc('industry_perf', {
       const gm = loadDay('gm', '{}');
       const hm = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' });
       const addGm = (key, title, t) => { const sym = symOf(key); (grpOf.get(sym) || []).forEach((g) => { gm[g] = gm[g] || []; if (!gm[g].some((x) => x[0] === sym)) gm[g].push([sym, kindWords(key, title), t]); }); };
-      ((SRV && SRV.date === todayNY() && SRV.items) || []).forEach((it) => { if (!/^(summary|grp):/.test(it.key) && !/:mbo$/.test(it.key)) addGm(it.key, it.title, it.time); });   /* the morning breakouts aren't group moves */
+      ((SRV && SRV.date === todayNY() && SRV.items) || []).forEach((it) => { if (!/^(summary|grp):/.test(it.key) && !/:mbo(back\d*)?$/.test(it.key)) addGm(it.key, it.title, it.time); });   /* the morning breakouts aren't group moves */
       /* a theme and a group with the same stocks alerting are one move: the better-ranked one names it */
       const pctG = new Map(((ldocA && ldocA.group_rank && ldocA.group_rank.rows) || []).map((r) => [r.group, r.pct || 0]));
       const oneMove = (g) => { const ss = (gm[g] || []).map((x) => x[0]).sort().join(','); return !Object.keys(gm).some((h) => h !== g && (gm[h] || []).map((x) => x[0]).sort().join(',') === ss && ((pctG.get(h) || 0) > (pctG.get(g) || 0) || ((pctG.get(h) || 0) === (pctG.get(g) || 0) && h < g))); };
@@ -4477,7 +4478,12 @@ defCalc('industry_perf', {
     /* where a line sits now, and why (step: 'down-l' to 🚀, 'down-h' to 👀, 'up' shown in ⚡, '' its own box) */
     const place = (x) => {
       const b = boxOf0(x);
-      if (!b || !'lepb'.includes(b)) return [b, ''];
+      /* the 📈 morning breakouts follow the same rule (the user, Nov 17 2026: "it was supposed to be in true state, meaning
+         when it gets out it takes out of box, when it gets back in it just alerts that its back in"; TSCO that day): one
+         that stops meeting your settings steps down to 👀, back on it returns to 📈; the "BACK ON" alert's own line is in
+         the log only (the stock's first line is the one in the box) */
+      if (/:mboback/.test(lineKey(x))) return ['', ''];
+      if (!b || !'lepbo'.includes(b)) return [b, ''];
       if (!x.startsWith('🔔 ')) return ['h', ''];                  /* a heads-up: 👀 */
       const k = lineKey(x), sym = symK(x), lost = !!lostOf(k);
       if (b === 'e') {
@@ -4495,11 +4501,12 @@ defCalc('industry_perf', {
     const boxOf = (x) => place(x)[0];
     const hm12 = (hm) => { const [H, M] = String(hm).split(':').map(Number); return ((H % 12) || 12) + ':' + String(M).padStart(2, '0') + ' ' + (H < 12 ? 'AM' : 'PM'); };
     const holdNote = (x) => {
-      if (!x.startsWith('🔔 ') || !'lepb'.includes(boxOf0(x) || 'x')) return '';
+      if (!x.startsWith('🔔 ') || !'lepbo'.includes(boxOf0(x) || 'x') || /:mboback/.test(lineKey(x))) return '';
       const k = lineKey(x), l = lostOf(k), bk = backOf(k), st = place(x)[1], when = (v) => hm12(v.at) + (v.price ? ' (' + fPrice(v.price) + ')' : '');
       if (st === 'up') return ' · ↑ now in ⚡ Episodic pivots';
       if (l && st === 'ep') return ' · no longer meets the power day rules since ' + when(l) + ', still meets an episodic pivot\'s (volume pace 3x+): stays in ⚡';
       if (l && st === 'down-l') return ' · ↓ no longer meets the power day / EP rules since ' + when(l) + ': down to 🚀 Launching now (still meets a launch\'s rules)';
+      if (l && boxOf0(x) === 'o') return ' · ↓ no longer meets your morning breakout settings since ' + when(l) + ': down to 👀 Heads-ups';
       if (l) return ' · ↓ no longer holding since ' + when(l) + ': down to 👀 Heads-ups';
       return bk ? ' · ↑ holding again since ' + when(bk) + ': back in its box' : '';
     };

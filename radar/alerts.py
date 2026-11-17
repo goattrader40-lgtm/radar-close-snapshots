@@ -875,7 +875,7 @@ def update_holding(state, found, live, doc, now):
     for it in state.get("items", []):
         key = it.get("key", "")
         if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "summary:")) or key.endswith(":mbo"):
-            continue                                    # (a morning breakout stays in its box: a one-time morning call)
+            continue                                    # (the morning breakouts: morning_holding, on the user's settings)
         seen.add(key)
         q = (live.get("rows") or {}).get(key.split(":")[0])
         px = round(q[0], 2) if q and q[0] else None
@@ -909,7 +909,8 @@ MORNING_BOOL = ("on", "over_pdh", "over_orh", "above200", "above50", "e10_e21", 
 # the opening range the alert tests (the user, Nov 17 2026: "when i put it does 1min, if i put 2min it does 2 mins, if i put
 # 5min it does 5min"; alerts/morning.json "orh_min", 5 when not saved) and the first minute it is complete
 ORH_START = {1: (9, 31), 2: (9, 32), 5: (9, 35)}
-PAGE_ONLY = {"mbo"}             # kinds shown on the portal only (no phone push)
+PAGE_ONLY = ("mbo",)            # kinds shown on the portal only (no phone push): mbo, and mboback... (back in its box)
+MORNING_BACK_EVERY = 15         # minutes between two "back on" alerts of one stock (the user, Nov 17 2026)
 MORNING_FETCH = 80              # new stocks' levels (yesterday's high, the opening range) read a run, the biggest movers first
 MORNING_NEWS_BUDGET = 35        # seconds a run for the alerts' news
 # + Filter (the user, Nov 9 2026: "add filter to that part so I can add other filters as well, let's say above the 21-day
@@ -1219,6 +1220,42 @@ def morning_alert(sym, st, q, lv, M):
     return f"{sym} MORNING BREAKOUT {chg:+.1f}%", msg
 
 
+def morning_holding(state, M, live, S, now):
+    """today's morning breakouts that still meet the user's settings (the user, Nov 17 2026: the box "was supposed to be in
+    true state, meaning when it gets out it takes out of box, when it gets back in it just alerts that its back in"; TSCO
+    that day: alerted 9:45 at $38.72 over $38.58 and $38.38, at 11:20 $38.29 and still in the box). Holding = every
+    criterion of the box the user chose ("whatever i choose in that filters"): % up, Rel vol, the levels, the price and
+    trend rules, the + Filters; not the time window. state lost / back, as update_holding keeps them for the other boxes
+    (the portal moves a lost one to Heads-ups and back). A stock back on gets one alert (key SYM:mbobackHHMM, portal
+    only), at most one every MORNING_BACK_EVERY minutes. A stock without a live row, a stocks row or its kept levels in
+    this run stays as it was. Returns the back-on alerts [(key, title, msg, 'high', tv)]"""
+    lost, back, lvs = state.setdefault("lost", {}), state.setdefault("back", {}), state.get("mbo_lv") or {}
+    last, t, out, seen = state.setdefault("mbo_back", {}), f"{now:%H:%M}", [], set()
+    mins = lambda x: int(x[:2]) * 60 + int(x[3:5])
+    for it in state.get("items", []):
+        key = it.get("key", "")
+        if not key.endswith(":mbo") or key.startswith("mbatch") or key in seen:
+            continue
+        seen.add(key)
+        sym = key.split(":")[0]
+        q, st, lv = (live.get("rows") or {}).get(sym), S.get(sym), lvs.get(sym)
+        if not q or not q[0] or q[1] is None or not st or not lv:
+            continue
+        a = None if morning_why_not(st, q, M) else morning_alert(sym, st, q, lv, M)
+        px = round(q[0], 2)
+        if a and key in lost:
+            back[key] = {"at": t, "price": px}
+            del lost[key]
+            if sym not in last or mins(t) - mins(last[sym]) >= MORNING_BACK_EVERY:
+                last[sym] = t
+                out.append((f"{sym}:mboback{now:%H%M}", f"{sym} MORNING BREAKOUT BACK ON {q[1]:+.1f}%",
+                            f"meets your morning breakout settings again (first alert {it.get('time', '')}) · " + a[1],
+                            "high", st.get("tv_symbol") or sym))
+        elif not a and key not in lost:
+            lost[key] = {"at": t, "price": px}
+    return out
+
+
 def news_words(x):
     """the alert's news line from codegrade.stock_news"""
     if not x:
@@ -1321,7 +1358,7 @@ def main():
     # the morning breakouts (any stock; the user's settings, alerts/morning.json): the stocks whose live quote passes now
     M = load_morning(sys.argv[sys.argv.index("--morning") + 1]) if "--morning" in sys.argv else None
     mb_cands, S_all, E_all = [], {}, {}
-    if M and not early and in_morning(M, now):
+    if M and M.get("on") and not early and (in_morning(M, now) or any(k.endswith(":mbo") for k in sent)):
         for name in ("base_stocks.json", "stocks.json"):
             p = os.path.join(os.path.dirname(os.path.abspath(launch_p)), name)
             if os.path.exists(p):
@@ -1507,6 +1544,13 @@ def main():
             mb = check_morning(mb_cands, state, M, live, S_all, E_all, now, sent)
         except Exception as e:                      # never at the cost of the other alerts
             print(f"morning breakouts: {e!r}", file=sys.stderr)
+    # which of today's morning breakouts still meet the settings (the portal's box holds only those), and the ones back on
+    mbk = []
+    if M and M.get("on") and S_all:
+        try:
+            mbk = morning_holding(state, M, live, S_all, now)
+        except Exception as e:
+            print(f"morning breakouts holding: {e!r}", file=sys.stderr)
     # triggers (the buys) always get their own alert, up to MAX_TRIGGERS a run; the heads-ups fill what is left of
     # MAX_PER_RUN and the rest are grouped into one alert that still names each one, its kind and price. Every alert's
     # full text is saved in alerts.json either way, so the portal's log shows each one (grouped ones without a pop-up)
@@ -1554,6 +1598,7 @@ def main():
         out_ += [(a, True) for a in mb]
         out_.append(((f"mbatch{now:%H%M}:mbo", f"MORNING BREAKOUTS ({len(mb)}): " + ", ".join(a[0].split(":")[0] for a in mb),
                       " · ".join(a[1].replace(" MORNING BREAKOUT", "") + " " + a[2].split(" · ")[0] for a in mb), "high", ""), False))
+    out_ += [(a, False) for a in mbk]
     for (key, title, msg, prio, tvs), is_grouped in out_:
         line = f"{now:%H:%M} {title}: {msg}"
         it = {"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs,
@@ -1562,7 +1607,7 @@ def main():
         if is_grouped:
             it["grouped"] = True
         state.setdefault("items", []).append(it)
-        if topic and not is_grouped and key.split(":", 1)[-1] not in PAGE_ONLY:     # the morning breakouts: the portal only
+        if topic and not is_grouped and not key.split(":", 1)[-1].startswith(PAGE_ONLY):     # the morning breakouts: the portal only
             try:
                 send(topic, title, msg, prio, tvs)
             except Exception as e:
