@@ -18,7 +18,7 @@ hdr = {"APCA-API-KEY-ID": os.environ.get("ALPACA_KEY_ID", ""), "APCA-API-SECRET-
 items, tok, t0 = [], None, time.time()
 try:
     for _ in range(20):
-        q = {"symbols": ",".join(syms), "start": a.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        q = {"symbols": ",".join(x for x in syms if "_" not in x), "start": a.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
              "end": b.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "limit": 50, "sort": "desc"}
         if tok:
             q["page_token"] = tok
@@ -34,17 +34,36 @@ except Exception as e:
     res["alpaca"] = {"ok": False, "error": repr(e)[:300], "items": items}
 
 ua = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
-yh = {}
-for s in syms:
+import email.utils, re
+yh, rss = {}, {}
+for s in syms:              # a ticker, or a topic in words written with _ ("Medicaid_work_requirements")
+    q_ = s.replace("_", " ") if "_" in s else s
     try:
-        u = "https://query1.finance.yahoo.com/v1/finance/search?" + urllib.parse.urlencode({"q": s, "quotesCount": 0, "newsCount": 12})
+        u = "https://query1.finance.yahoo.com/v1/finance/search?" + urllib.parse.urlencode({"q": q_, "quotesCount": 0, "newsCount": 40})
         with urllib.request.urlopen(urllib.request.Request(u, headers=ua), timeout=20) as r:
             d = json.load(r)
         yh[s] = [{"at": datetime.datetime.fromtimestamp(n.get("providerPublishTime", 0), NY).isoformat(), "title": n.get("title"),
                   "publisher": n.get("publisher"), "link": n.get("link"), "tickers": n.get("relatedTickers")} for n in d.get("news", [])]
     except Exception as e:
         yh[s] = {"error": repr(e)[:200]}
+    if "_" not in s:        # Yahoo's per-ticker RSS feed (more items than the search, no ticker tags)
+        try:
+            u = "https://feeds.finance.yahoo.com/rss/2.0/headline?" + urllib.parse.urlencode({"s": s, "region": "US", "lang": "en-US"})
+            with urllib.request.urlopen(urllib.request.Request(u, headers=ua), timeout=20) as r:
+                x = r.read().decode("utf-8", "replace")
+            its = []
+            for it in re.findall(r"<item>(.*?)</item>", x, re.S):
+                g = lambda t: (re.search(rf"<{t}>(.*?)</{t}>", it, re.S) or [None, ""])[1].replace("<![CDATA[", "").replace("]]>", "").strip()
+                try:
+                    at = email.utils.parsedate_to_datetime(g("pubDate")).astimezone(NY).isoformat()
+                except Exception:
+                    at = g("pubDate")
+                its.append({"at": at, "title": g("title"), "link": g("link")})
+            rss[s] = its
+        except Exception as e:
+            rss[s] = {"error": repr(e)[:200]}
     time.sleep(0.3)
+res["yahoo_rss"] = rss
 res["yahoo"] = yh
 json.dump(res, open(out, "w"), indent=1)
 print(json.dumps({"alpaca": {k: v for k, v in res["alpaca"].items() if k != "items"}, "yahoo": {s: (len(v) if isinstance(v, list) else v) for s, v in yh.items()}}))
