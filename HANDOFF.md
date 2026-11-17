@@ -100,7 +100,8 @@ alone.
   ACM also failed "30% over the 52-week low": that is the DEFAULT (scanner/settings.json); the user's saved rule is 0% since
   Nov 9, so only the ADR kept it off (read earnings.json `rules`, not the defaults). The 52-week-low test on the pre-market
   price (the user's "lets apply that") was therefore not needed and NOT built. No code changed; defaults and the rules
-  workbook unchanged (they describe the defaults). earnings.yml run by hand after the push: see below.
+  workbook unchanged (they describe the defaults). earnings.yml run by hand after the push (11:50 AM ET): 115 -> 122 rows, 0
+  errors, ACM on (reported Nov 16 after the close, reaction +12.6%, read Mixed).
 - **Seen, told the user**: a 5-minute high read an hour later is 0.1-1% HIGHER than the 9:36 read for 16 of 205 stocks (SMWB
   8.90 -> 9.00, ECG 84.86 -> 85.35), from either chart: Yahoo adds late prints to the first bars. So a high read in the first
   minutes can be a little low (a stock shows "above" a few cents early); the 1- and 2-minute highs are read again at 9:32 /
