@@ -72,6 +72,11 @@ alone.
   search, the Alerts box; 0 page errors); a REAL read on the branch (radar-tools `moverstest`, now with a fresh read of every
   mover: 209 stocks' ranges in 3.2 s). Rules workbook: 3 rows. No `--regress` (launch.py untouched), no Launches rebuild, no
   2-year check (a filter and an alert setting).
+- **LIVE (the user's "go live", Tue Nov 17 2026, later that morning): the morning breakout box uses the + Filter's wording**:
+  "Above PDH" (was "Over yesterday's high") and "Above ORH-[1min / 2min / 5min]" (was "Over the [1-min] opening range
+  high"), also in its "Now:" / "After Save:" lines (the user: "why you didnt do same wording for both", "do both above pdh
+  and above orh (then your mins)"). Page wording only (docs/index.html); the alert messages are NOT changed (the user:
+  "sound alerts message we are not changing"). Tested: the box on the page, 0 page errors.
 - **Seen, told the user**: a 5-minute high read an hour later is 0.1-1% HIGHER than the 9:36 read for 16 of 205 stocks (SMWB
   8.90 -> 9.00, ECG 84.86 -> 85.35), from either chart: Yahoo adds late prints to the first bars. So a high read in the first
   minutes can be a little low (a stock shows "above" a few cents early); the 1- and 2-minute highs are read again at 9:32 /
