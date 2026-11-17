@@ -77,6 +77,22 @@ alone.
   high"), also in its "Now:" / "After Save:" lines (the user: "why you didnt do same wording for both", "do both above pdh
   and above orh (then your mins)"). Page wording only (docs/index.html); the alert messages are NOT changed (the user:
   "sound alerts message we are not changing"). Tested: the box on the page, 0 page errors.
+- **LIVE (the user's "go live", Tue Nov 17 2026 ~12:30 PM ET): the 📈 Morning breakouts box holds only what still meets the
+  settings; a stock back on alerts.** The user: "it was supposed to be in true state, meaning when it gets out it takes out of
+  box, when it gets back in it just alerts that its back in" (TSCO Nov 17: alerted 9:45 at 38.72 over PDH 38.58 and ORH 38.38,
+  at 11:20 38.29 and still in the box). The Nov 5 rule ("whatever doesn't hold, it has to be taken from that box") was live for
+  🚀 ⚡ 🎯 ↩️ only; the morning box had been built Nov 9 as "a one-time morning call" (the builder's choice). Now:
+  radar/alerts.py morning_holding: holding = EVERY setting of the box (the user: "whatever i choose in that filters": % up,
+  Rel vol, Above PDH, Above ORH, the price / trend rules, the + Filters; not the time window), checked all day at each live
+  update on the levels kept at the alert (mbo_lv); state lost / back for SYM:mbo; back on = one alert "SYM MORNING BREAKOUT
+  BACK ON" (key SYM:mbobackHHMM, portal only), at most one every 15 minutes a stock (MORNING_BACK_EVERY; the user: "return
+  alert at most once", read as agreeing to the 15 minutes: told them, to correct if they meant once a day). docs/index.html:
+  the 📈 box steps down to 👀 Heads-ups (↓) and back like the other boxes; the BACK ON line is in the log only. Tested: TSCO's
+  day through morning_holding with the saved settings (out 11:20, back 11:40 with the alert, a 2nd return 10 minutes later
+  silent, out on Rel vol 0.8x with the price over both levels); the page with the day's real alerts.json (holding, stopped,
+  back on), 0 page errors. Rules workbook: 2 rows. **Not seen on live prices: check Wed Nov 18** (alerts.json lost / back keys
+  ending :mbo, :mboback items). The other boxes still come back silently ("holding again" note, no alert): offered the same
+  alert there, no answer.
 - **Seen, told the user**: a 5-minute high read an hour later is 0.1-1% HIGHER than the 9:36 read for 16 of 205 stocks (SMWB
   8.90 -> 9.00, ECG 84.86 -> 85.35), from either chart: Yahoo adds late prints to the first bars. So a high read in the first
   minutes can be a little low (a stock shows "above" a few cents early); the 1- and 2-minute highs are read again at 9:32 /
