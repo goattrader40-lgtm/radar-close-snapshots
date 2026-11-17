@@ -811,6 +811,160 @@ def best_headline(sym, name, arts, kinds=None):
             else when.strftime("%b %-d %-I:%M %p ET"), "ts": when.isoformat(timespec="minutes")}
 
 
+# ───────── the alerts after the open (the user, Nov 16-17 2026, MOH +11% with CNC / ELV / HUM on a Medicaid work-rule
+# delay: "when i see breaking out and news there!!!", "news just adds extra layer") ─────────
+# Yahoo Finance is the second headline source next to Alpaca's feed (which never carried the Medicaid story): its search
+# gives a ticker's newest items with the publish time, the publisher and the tickers the story is tagged with.
+YAHOO_UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
+YAHOO_N = 20                # items a ticker (the search's newest)
+
+
+def yahoo_one(sym):
+    u = "https://query1.finance.yahoo.com/v1/finance/search?" + urllib.parse.urlencode({"q": sym, "quotesCount": 0, "newsCount": YAHOO_N})
+    with urllib.request.urlopen(urllib.request.Request(u, headers=YAHOO_UA), timeout=8) as r:
+        d = json.load(r)
+    out = []
+    for n in d.get("news") or []:
+        if not n.get("providerPublishTime") or not n.get("title"):
+            continue
+        at = datetime.datetime.fromtimestamp(n["providerPublishTime"], datetime.timezone.utc)
+        out.append({"headline": n["title"], "created_at": at.strftime("%Y-%m-%dT%H:%M:%SZ"), "source": n.get("publisher") or "Yahoo",
+                    "url": n.get("link") or "", "symbols": [str(t).upper() for t in n.get("relatedTickers") or []], "via": "yahoo"})
+    return out
+
+
+def yahoo_headlines(syms, t_from, t_to, budget=12):
+    """{SYM: [articles, in the shape of Alpaca's]} published in (t_from, t_to], from Yahoo's search (a few stocks at a
+    time: one call each); a stock Yahoo doesn't answer for in time is left out"""
+    import concurrent.futures
+    syms, out, bad = sorted(set(syms))[:40], {}, 0
+    if not syms:
+        return out
+    ex = concurrent.futures.ThreadPoolExecutor(6)
+    fut = {ex.submit(yahoo_one, s): s for s in syms}
+    try:
+        for f in concurrent.futures.as_completed(fut, timeout=budget):
+            try:
+                out[fut[f]] = [n for n in f.result() if t_from < art_time(n) <= t_to]
+            except Exception as e:
+                bad += 1
+                print("yahoo", fut[f], repr(e)[:100])
+    except concurrent.futures.TimeoutError:
+        print("yahoo headlines: out of time")
+    ex.shutdown(wait=False, cancel_futures=True)
+    print("yahoo headlines:", sum(len(v) for v in out.values()), "for", len(out), "of", len(syms), "stocks" + (f", {bad} failed" if bad else ""))
+    return out
+
+
+def art_time(n):
+    return datetime.datetime.fromisoformat((n.get("created_at") or "1970-01-01T00:00:00Z").replace("Z", "+00:00"))
+
+
+def all_headlines(syms, t_from, t_to, yahoo=True, budget=12):
+    """Alpaca's and Yahoo's headlines for these stocks, one list a stock (the same story from both: once), oldest first"""
+    try:
+        H = headlines(syms, t_from, t_to)
+    except Exception as ex:
+        H = {}
+        print("alert headlines:", repr(ex)[:160])
+    if yahoo:
+        try:
+            Y = yahoo_headlines(syms, t_from, t_to, budget)
+        except Exception as ex:
+            Y = {}
+            print("yahoo headlines:", repr(ex)[:160])
+        norm = lambda t: re.sub(r"[^a-z0-9]+", " ", (t or "").lower()).strip()
+        for s_, arts in Y.items():
+            have = {norm(n.get("headline")) for n in H.get(s_) or []}
+            H.setdefault(s_, []).extend(n for n in arts if norm(n["headline"]) not in have)
+    for s_ in H:
+        H[s_].sort(key=lambda n: n.get("created_at") or "")
+    return H
+
+
+# the story behind a move: a headline that says the stock (or its group) is moving and why. Not a view piece, a market
+# wrap or a list of movers; a story that doesn't name the stock counts only when it is tagged with it and with another
+# stock of its theme / group (the Barron's story of Nov 16 2026 names Molina and Centene and is tagged CNC, ELV, MOH)
+MOVE = re.compile(r"\b(?:higher|lower|jump\w*|surg\w*|soar\w*|climb\w*|rall(?:y|ies|ied|ying)|ris(?:e|es|ing)|rose|gain(?:s|ed|ing)?|pop(?:s|ped)?|"
+                  r"spik\w*|rebound\w*|bounc\w*|slid\w*|sink\w*|sank|tumbl\w*|drop(?:s|ped|ping)?|fall(?:s|ing)?|fell|plung\w*|slump\w*|"
+                  r"boost\w*|lift(?:s|ed|ing)?|sell-?off)\b", re.I)
+MARKET = re.compile(r"\b(?:dow|s&p|s&amp;p|nasdaq|wall street|stock market|russell 2000|treasur\w+|bitcoin)\b", re.I)
+VIEW = re.compile(r"\?\s*$|^after \w+'?s? \d|fair value|valuation|buy or sell|top .{0,20}pick|better (?:value|buy)|great choice|"
+                  r"since (?:the )?last earnings|years? from now|in \d+ years|dividend stocks?|here'?s what|what to know|story has changed", re.I)
+VIEWS = ("simply wall st", "trefis", "zacks", "motley fool", "tikr", "24/7 wall st", "insider monkey", "marketbeat")   # views, not news
+MAX_TAGS = 8                # a story tagged with more tickers than this is a round-up
+
+
+def story_ok(n):
+    """a headline that can be the reason for a move: it says something moved, and it is no view / market wrap / list"""
+    t = (n.get("headline") or "").strip()
+    return bool(t) and bool(MOVE.search(t) or WHY.search(t)) and not (LIST_ART.search(t) or MARKET.search(t) or NOISE.search(t) or OPINION.search(t)
+                                                                      or VIEW.search(t) or (n.get("source") or "").lower().startswith(VIEWS))
+
+
+def story_covers(n, syms, S):
+    """the stocks of `syms` this story is about: named in the headline, or tagged (a story with few tags only)"""
+    t, tags = n.get("headline") or "", set(n.get("symbols") or [])
+    named = {p for p in syms if mentions(t, p, (S.get(p) or {}).get("name"))}
+    return named | ((tags & set(syms)) if len(tags) <= MAX_TAGS else set()), named
+
+
+def when_words(at, ref):
+    """9:32 AM ET on the day `ref`, else Nov 13 5:10 PM ET"""
+    at = at.astimezone(NY)
+    return at.strftime("%-I:%M %p ET") if at.date() == ref.date() else at.strftime("%b %-d %-I:%M %p ET")
+
+
+def story_dict(n, kind, covers, ref):
+    at = art_time(n)
+    return {"kind": kind, "title": (n.get("headline") or "").strip(), "source": n.get("source") or "news", "url": n.get("url") or "",
+            "at": when_words(at, ref), "ts": at.astimezone(NY).isoformat(timespec="minutes"), "covers": sorted(covers)}
+
+
+def peers_of(sym, S):
+    """the stocks that share a theme or a tight industry group with it (itself included)"""
+    st = S.get(sym) or {}
+    mine = {t for t in str(st.get("themes") or "").split(" | ") if t} | ({st["group"]} if st.get("group") and "· other" not in st["group"] else set())
+    if not mine:
+        return {sym}
+    return {sym} | {x for x, v in S.items() if mine & ({t for t in str(v.get("themes") or "").split(" | ") if t} | ({v["group"]} if v.get("group") else set()))}
+
+
+def move_story(sym, S, arts, ref):
+    """the story behind this stock's move among `arts` (since the last close): one about its group first ("Group news":
+    2+ stocks of its theme / group in it), else one about the stock alone ("Why it moves"); the first report of that kind"""
+    peers, got = peers_of(sym, S), []
+    for n in arts or []:
+        if not story_ok(n):
+            continue
+        covers, named = story_covers(n, peers, S)
+        if sym not in covers or (sym not in named and len(covers) < 2):
+            continue
+        got.append((0 if len(covers) >= 2 else 1, n.get("created_at") or "", n, covers))
+    if not got:
+        return None
+    cls, _, n, covers = min(got, key=lambda x: x[:2])
+    return story_dict(n, "Group news" if cls == 0 else "Why it moves", covers, ref)
+
+
+def group_story(members, alerting, S, H, ref):
+    """the story behind a group move: a headline about 2+ stocks of the group, one of them alerting today; the first one"""
+    seen, got = set(), []
+    for sym in alerting:
+        for n in H.get(sym) or []:
+            k = n.get("url") or n.get("headline")
+            if k in seen or not story_ok(n):
+                continue
+            seen.add(k)
+            covers, _ = story_covers(n, members, S)
+            if len(covers) >= 2 and covers & set(alerting):
+                got.append((n.get("created_at") or "", n, covers))
+    if not got:
+        return None
+    _, n, covers = min(got, key=lambda x: x[0])
+    return story_dict(n, "Group news", covers, ref)
+
+
 def use_headlines(allr, H, S):
     """each gapper's own headline goes on its row ("headline"); when the SEC had nothing of its own (weak news) and the
     headline is an event (a deal, a sale, an FDA item, a buyback, an offering, earnings, an analyst up/downgrade), the
@@ -979,20 +1133,17 @@ def use_earlier(r, x):
              sources=([x["url"]] if x.get("url") else []) + [u for u in r.get("sources") or [] if u != x.get("url")][:2])
 
 
-def stock_news(syms, S, E=None, now=None, budget=40):
+def stock_news(syms, S, E=None, now=None, budget=40, yahoo=False):
     """the news for a morning breakout alert (radar/alerts.py, the user Nov 9 2026): today's own (the SEC since the last
-    close, the Earnings tab, its own headline), else its fundamental news of the last 2 sessions ->
-    {sym: {catalyst, reason, url, earlier}}; stocks past the budget: {checked: False}"""
+    close, the Earnings tab, its own headline), else the story behind the move (move_story: its group's or its own; with
+    yahoo=True from Yahoo's headlines too: the user, Nov 16 2026), else its fundamental news of the last 2 sessions ->
+    {sym: {catalyst, reason, url, earlier, why, today}}; today = a reason from today's news; stocks past the budget:
+    {checked: False}"""
     now = now or datetime.datetime.now(NY)
     day = now.date().isoformat()
     t_from = last_close_time(day)
     w_from, w_to = earlier_window(day)
-    try:
-        H = headlines(syms, w_from, now)
-    except Exception as ex:
-        H = {}
-        print("alert headlines:", repr(ex)[:160])
-    ts = lambda n: datetime.datetime.fromisoformat((n.get("created_at") or "1970-01-01T00:00:00Z").replace("Z", "+00:00"))
+    H = all_headlines(syms, w_from, now, yahoo=yahoo)
     out, t0 = {}, time.time()
     for sym in syms:
         if time.time() - t0 > budget:
@@ -1000,17 +1151,36 @@ def stock_news(syms, S, E=None, now=None, budget=40):
             continue
         st = S.get(sym) or {}
         nw, _ = news_of(sym, "up", st.get("mcap_b"), E or {}, t_from, now, day)
-        hl = best_headline(sym, st.get("name"), [n for n in H.get(sym) or [] if ts(n) > t_from])
+        today = [n for n in H.get(sym) or [] if art_time(n) > t_from]
+        hl = best_headline(sym, st.get("name"), today)
         if hl and weak_news(nw) and hl["kind"] not in MINOR:
             nw.update(catalyst=hl["kind"] + " (headline)", reason=f"{hl['title']} ({hl['source']} {hl['at']})", sources=[hl["url"]] + (nw.get("sources") or [])[:2])
+        why = move_story(sym, S, today, now)
+        own = not weak_news(nw) or nw["catalyst"].startswith("After earnings")     # a reason of its own (a report counts)
         x = None
-        if earlier_ok(nw):
-            x = earlier_one(sym, st.get("name"), st.get("mcap_b"), [n for n in H.get(sym) or [] if ts(n) <= w_to], w_from, w_to, day)
+        if why and weak_news(nw):                       # nothing of its own today: the story is the reason
+            nw.update(catalyst=why["kind"], reason=f"{why['title']} ({why['source']} {why['at']})", sources=[why["url"]])
+            why = dict(why, used=True)
+        elif earlier_ok(nw):
+            x = earlier_one(sym, st.get("name"), st.get("mcap_b"), [n for n in H.get(sym) or [] if art_time(n) <= w_to], w_from, w_to, day)
             if x:
                 use_earlier(nw, x)
         out[sym] = {"checked": True, "catalyst": nw["catalyst"], "reason": nw["reason"], "url": (nw.get("sources") or [""])[0],
-                    "earlier": x, "weak": weak_news(nw) and not x}
+                    "earlier": x, "weak": weak_news(nw) and not x, "why": why, "today": own or bool(why)}
     return out
+
+
+def late_reason(sym, S, arts, ref):
+    """a reason that came out after the alert (the follow-up check): the story behind the move, else the stock's own event
+    headline (a deal, a sale, an FDA item, earnings, an up/downgrade ...) -> story_dict or None"""
+    why = move_story(sym, S, arts, ref)
+    if why:
+        return why
+    hl = best_headline(sym, (S.get(sym) or {}).get("name"), arts)
+    if hl and hl["kind"] not in MINOR:
+        n = next((n for n in arts if (n.get("headline") or "").strip() == hl["title"]), None)
+        return story_dict(n, hl["kind"], {sym}, ref) if n else None
+    return None
 
 
 def log(cg_path, log_path):

@@ -1218,9 +1218,103 @@ def news_words(x):
         return ""
     if not x.get("checked"):
         return " · news: not checked in time (the Pre-market tab's News column has the 5%+ gappers)"
+    wait = "" if x.get("today", True) else " · no reason in today's news yet: re-checked every 15 min"
     if x.get("weak"):
-        return " · news: nothing of its own today or the last 2 sessions (" + str(x.get("catalyst") or "") + ")"
-    return " · news: " + str(x.get("catalyst") or "") + ": " + str(x.get("reason") or "")[:260] + (f" · 📰 {x['url']}" if x.get("url") else "")
+        return " · news: nothing of its own today or the last 2 sessions (" + str(x.get("catalyst") or "") + ")" + wait
+    why = x.get("why")
+    also = f" · group news: {why['title'][:160]} ({why['source']} {why['at']})" if why and not why.get("used") and why["kind"] == "Group news" else ""
+    return " · news: " + str(x.get("catalyst") or "") + ": " + str(x.get("reason") or "")[:260] + also + (f" · 📰 {x['url']}" if x.get("url") else "") + wait
+
+
+# ───────── the reason on the alerts after the open (the user, Nov 16-17 2026: MOH's morning breakout said only its Nov 12
+# news while CNC, ELV and HUM were up with it on a Medicaid work-rule delay; "news just adds extra layer") ─────────
+# A morning breakout and a GROUP MOVE alert look up the newest headlines (Alpaca and Yahoo) when they fire. When there
+# is no reason in today's news yet, the stock / group is checked again every WHY_EVERY minutes until WHY_UNTIL, and the
+# reason comes as its own "NEWS" alert when a headline shows up (the Medicaid story reached Yahoo at 1:01 PM, 3 hours
+# after the alerts). On the phone only when it explains a GROUP MOVE (the morning breakouts are on the portal only).
+WHY_EVERY = 15                  # minutes between the checks for a reason that was not out at the alert
+WHY_UNTIL = (15, 50)            # the last check
+GROUP_NEWS_BUDGET = 10          # seconds a run for the group alerts' headlines
+_NO_PUSH = set()                # keys of this run that stay on the portal
+_STOCKS = {}
+
+
+def stocks_all(launch_p):
+    """{symbol: its row} from the stocks file the live job keeps next to launch.json (names, themes, groups)"""
+    if not _STOCKS:
+        d = os.path.dirname(os.path.abspath(launch_p))
+        for name in ("base_stocks.json", "stocks.json"):
+            try:
+                _STOCKS.update({x["symbol"]: x for x in json.load(open(os.path.join(d, name)))})
+                break
+            except Exception:
+                pass
+    return _STOCKS
+
+
+def group_members(g, S):
+    return {x for x, v in S.items() if g in [t for t in str(v.get("themes") or "").split(" | ") if t] or v.get("group") == g}
+
+
+def story_words(st):
+    return f"{st['title'][:200]} ({st['source']} {st['at']})" + (f" · 📰 {st['url']}" if st.get("url") else "")
+
+
+def group_reasons(gm_new, state, S, now):
+    """{group: " · news: ..."} for the GROUP MOVE alerts of this run: the first headline since the last close about 2+
+    stocks of the group; a group without one goes on the list checked again later (state["why"])"""
+    import codegrade
+    syms = sorted({x[0] for lst in gm_new.values() for x in lst})
+    H = codegrade.all_headlines(syms, codegrade.last_close_time(now.date().isoformat()), now, budget=GROUP_NEWS_BUDGET)
+    out = {}
+    for g, lst in gm_new.items():
+        al = [x[0] for x in lst]
+        st = codegrade.group_story(group_members(g, S) | set(al), al, S, H, now)
+        if st:
+            out[g] = " · news: " + story_words(st)
+        else:
+            out[g] = f" · news: none about the group yet: re-checked every {WHY_EVERY} min"
+            state.setdefault("why", {})["grp:" + g] = {"t": f"{now:%H:%M}", "syms": al, "what": f"GROUP MOVE {now:%H:%M} ({', '.join(al)})", "push": True}
+    return out
+
+
+def news_followups(state, S, now):
+    """the reasons that came out after their alert: [(key, title, msg, prio, tv)], one alert a story (the group's and
+    its stocks' alerts it explains named in it). Runs every WHY_EVERY minutes while something is waiting"""
+    W = state.get("why") or {}
+    hm = now.hour * 60 + now.minute
+    if not W or (now.hour, now.minute) > WHY_UNTIL or hm - state.get("why_at", -999) < WHY_EVERY - 1:
+        return []
+    state["why_at"] = hm
+    import codegrade
+    for k, w in W.items():                              # a group move that grew since its alert: the newer stocks too
+        if k.startswith("grp:"):
+            w["syms"] = sorted(set(w["syms"]) | {it["key"].split(":")[0] for it in state.get("items", [])
+                                                 if k[4:] in (it.get("groups") or []) and not it["key"].startswith(("grp:", "summary:"))})[:8]
+    syms = sorted({x for w in W.values() for x in w["syms"]})
+    H = codegrade.all_headlines(syms, codegrade.last_close_time(now.date().isoformat()), now, budget=20)
+    found = {}                                          # the story's link -> (the story, the waiting alerts it explains)
+    for k, w in W.items():
+        if k.startswith("grp:"):
+            st = codegrade.group_story(group_members(k[4:], S) | set(w["syms"]), w["syms"], S, H, now)
+        else:
+            st = codegrade.late_reason(k, S, [n for n in H.get(k) or []], now)
+        if st:
+            found.setdefault(st["url"] or st["title"], (st, []))[1].append(k)
+    out = []
+    for st, keys in found.values():
+        grp = [k[4:] for k in keys if k.startswith("grp:")]
+        names = sorted({x for k in keys for x in W[k]["syms"]} | (set(st["covers"]) if grp else set()))
+        label = (grp[0] + ": " if grp else "") + ", ".join(names[:6])
+        key = "grp:news:" + (grp[0] if grp else "+".join(sorted(k for k in keys)))
+        msg = story_words(st) + " · the reason behind today's " + " · ".join(W[k]["what"] for k in sorted(keys, key=lambda k: W[k]["t"]))
+        if not any(W[k].get("push") for k in keys):
+            _NO_PUSH.add(key)
+        tv = (S.get(keys[0]) or {}).get("tv_symbol") or keys[0] if len(keys) == 1 and not grp else ""
+        out.append((key, "NEWS: " + label, msg, "high", tv))
+        for k in keys:
+            W.pop(k, None)
+    return out
 
 
 def check_morning(cands, state, M, live, S, E, now, sent):
@@ -1265,13 +1359,15 @@ def check_morning(cands, state, M, live, S, E, now, sent):
         return []
     try:
         import codegrade
-        NWS = codegrade.stock_news([f[0] for f in fired], S, E, now, budget=MORNING_NEWS_BUDGET)
+        NWS = codegrade.stock_news([f[0] for f in fired], S, E, now, budget=MORNING_NEWS_BUDGET, yahoo=True)
     except Exception as ex:
         print("morning news:", repr(ex)[:160], file=sys.stderr)
         NWS = {}
     out = []
     for sym, (title, msg), lv in fired:
         out.append((f"{sym}:mbo", title, msg + news_words(NWS.get(sym)), "high", S[sym].get("tv_symbol") or sym))
+        if (NWS.get(sym) or {}).get("checked") and not NWS[sym].get("today"):     # no reason yet: checked again later
+            state.setdefault("why", {})[sym] = {"t": f"{now:%H:%M}", "syms": [sym], "what": f"{sym} morning breakout {now:%H:%M}", "push": False}
     return out
 
 
@@ -1527,12 +1623,16 @@ def main():
                 msg += f" · {g.upper()} MOVE: also {others}"
             tagged.append(((key, title, msg, prio, tvs), g_))
         out_ = tagged
-        for g, lst in gm.items():
+        gm_new = {g: lst for g, lst in gm.items() if f"grp:{g}" not in state["sent"]}
+        try:                                            # the reason: the newest headlines about the group (Alpaca, Yahoo)
+            why_g = group_reasons(gm_new, state, stocks_all(launch_p), now) if gm_new else {}
+        except Exception as e:                          # never at the cost of the alert
+            print(f"group news: {e!r}", file=sys.stderr)
+            why_g = {}
+        for g, lst in gm_new.items():
             gk = f"grp:{g}"
-            if gk in state["sent"]:
-                continue
             out_.append(((gk, f"GROUP MOVE: {group_label(doc, g)}: " + ", ".join(x[0] for x in lst),
-                          " · ".join(f"{x[0]} {x[1]} {x[2]}" for x in lst) + f" · {len(lst)} stocks of {g} alerting today",
+                          " · ".join(f"{x[0]} {x[1]} {x[2]}" for x in lst) + f" · {len(lst)} stocks of {g} alerting today" + why_g.get(g, ""),
                           "high", ""), False))
     if grouped:
         names = " · ".join(short(a) for a in grouped)
@@ -1545,6 +1645,12 @@ def main():
         out_ += [(a, True) for a in mb]
         out_.append(((f"mbatch{now:%H%M}:mbo", f"MORNING BREAKOUTS ({len(mb)}): " + ", ".join(a[0].split(":")[0] for a in mb),
                       " · ".join(a[1].replace(" MORNING BREAKOUT", "") + " " + a[2].split(" · ")[0] for a in mb), "high", ""), False))
+    # a reason that came out after its alert (the 5-minute checks only: the 1-minute ones stay quick)
+    if not fast and not early and state.get("why"):
+        try:
+            out_ += [(a, False) for a in news_followups(state, stocks_all(launch_p), now)]
+        except Exception as e:                          # never at the cost of the alerts
+            print(f"news follow-ups: {e!r}", file=sys.stderr)
     for (key, title, msg, prio, tvs), is_grouped in out_:
         line = f"{now:%H:%M} {title}: {msg}"
         it = {"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs,
@@ -1553,7 +1659,7 @@ def main():
         if is_grouped:
             it["grouped"] = True
         state.setdefault("items", []).append(it)
-        if topic and not is_grouped and key.split(":", 1)[-1] not in PAGE_ONLY:     # the morning breakouts: the portal only
+        if topic and not is_grouped and key.split(":", 1)[-1] not in PAGE_ONLY and key not in _NO_PUSH:     # the morning breakouts: the portal only
             try:
                 send(topic, title, msg, prio, tvs)
             except Exception as e:
