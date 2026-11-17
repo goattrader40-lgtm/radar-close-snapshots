@@ -219,6 +219,18 @@ NEXT SESSION: how many retest / reclaim alerts came on Tue Nov 17 (alerts.json),
 - **Test only**: nothing. AZTA Nov 11-16 2026 is in tools/examples.txt (added at the wrap-up; expected reads rewritten).
 - **Told the user, no answer**: with "every touch", AZTA Nov 16 (low 44.32, close 47.22) also reads "retest held" and would send
   the 3:45 PM alert, though they had said Nov 16 was "just confirmation".
+- **Open, agreed in principle, to build in a NEW session (Nov 17 2026): the reason on the after-the-open alerts.** MOH Nov 16
+  2026 (+11.3%, the 9:38 AM morning breakout; CNC, HUM, ELV up with it: a Medicaid work-requirement delay) alerted with only
+  its Nov 12 news. The user: "when i see breaking out and news there!!!", "news just adds extra layer", price and volume come
+  first. To build, by code (no Claude): when a morning breakout / GROUP MOVE alert fires, look up that stock's newest headlines
+  since the last close and put the reason on the alert. Checked with radar-tools `news` (radar-data probe_news.json): the
+  Alpaca feed the code reads NEVER had the Medicaid story; Yahoo did ("Medicaid Work Requirement Delay Pushes Molina, Centene
+  Stocks Higher", Barron's, under MOH / CNC / ELV), but probe_news.py does not record Yahoo's publish time: so Yahoo has to
+  be a second source, and its timestamps captured first. **Asked, not done: a 2-3 month history check** of groups moving
+  together under 5% at the open, up or down (3+ stocks of one theme / group gapping 2-5%: how often, how they did after, and
+  whether a headline was out before the open); the pre-market group check is NOT to be built unless that shows an edge.
+  Pre-market prices are not stored historically: use the open vs the prior close from the daily bars. Gap-downs are already
+  covered like gap-ups for 5%+ gappers (Nov 16: 11 up, 104 down; the group line; the Theme event card).
 - **Open, for another session (the user: "leave that alone")**: a GAP retest rule (AEHR Feb 12-17 2026: back to where it gapped
   from on Feb 11 and held; the scan only knows the retest of a broken base top).
 - **Not done**: the alert text "nothing traded above it for N sessions" is still false for a top poked in the last 3 sessions
