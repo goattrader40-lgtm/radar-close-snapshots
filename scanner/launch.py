@@ -172,6 +172,9 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # start_off_adr: off the Start days table on a close that many ADRs under the start day's close (Nov 17 2026); start_from: the
          # table shows no start day before this date (the user, Nov 17 2026: "i want to start it fresh and see how it does")
          start_adr=1, start_pct=4, start_pct_adr=0.8, start_rv=1, start_gap=5, start_look=40, start_list_days=0, start_off_adr=1, start_from="2026-11-01",
+         # start_late_adv / start_late_adr: once the start has run start_late_adv ADRs, a close start_late_adr ADRs under the 21 EMA
+         # takes it off the table (Nov 17 2026)
+         start_late_adv=2, start_late_adr=1,
          first_day=1, first_gap=5, first_rv=1.3, first_adr_nogap=1.8, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2,
          # the list ON / OFF read from the user's AMD 2026 charts (Nov 13 2026: "i can visually know when stock will go down"):
          # adr_look: the ADR minimum is tested on the highest 20-day ADR of the last 63 sessions, not on today's alone: the
@@ -2350,8 +2353,20 @@ def start_listed(a, k, i):
     # 750 start days Nov 2024 - Sep 2026 on 314 stocks: 71% of the losers (never +5% in 40 sessions) closed 1 ADR+ under within 5
     # sessions, 24% of the winners (15%+); the 21 EMA separated them less well. QNT Nov 6 2026 (37.57, ADR 9.1%, line 34.17): off
     # Nov 16 at 31.75; VOYG Nov 9 (27.90, line 25.36): off Nov 16 at 25.01; HOOD Apr 9 2025, MU Aug 8 2025, LITE Jan 20 2026 kept
-    line = c[k] * (1 - L["start_off_adr"] * (a.st.adr[k] if a.st.adr[k] > 0 else 5.0) / 100)
-    return bool(i > k and not any((c[j] < lo and c[j] < a.e21[j]) or c[j] < line for j in range(k + 1, i + 1)) and not stale(a, k, i))
+    ad = a.st.adr[k] if a.st.adr[k] > 0 else 5.0
+    line = c[k] * (1 - L["start_off_adr"] * ad / 100)
+    # the LATE line (the user, Nov 17 2026: "stock can go 30-40% up after start day, but later if it fades i dont want it on my
+    # list"): once the stock has closed start_late_adv ADRs+ over the start close, one close start_late_adr ADRs+ under the 21
+    # EMA takes it off (a pullback touches the 21 EMA, a fade falls through it). 629 start days with 80 sessions after: of its
+    # removals 26% made a new high within 20 sessions (2 closes under the 50 EMA 30%, 2 closes under the 21 EMA 46%), 8 days
+    # after the top, 3.7 ADR given back
+    adv = c[k] * (1 + L["start_late_adv"] * ad / 100)
+    ran = False
+    for j in range(k + 1, i + 1):
+        if (c[j] < lo and c[j] < a.e21[j]) or c[j] < line or (ran and c[j] < a.e21[j] * (1 - L["start_late_adr"] * ad / 100)):
+            return False
+        ran = ran or c[j] >= adv
+    return bool(i > k and not stale(a, k, i))
 
 
 def trend_start(a, i0):
