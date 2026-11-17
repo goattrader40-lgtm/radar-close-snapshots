@@ -49,7 +49,7 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
-## Status of the session "Radar: Start days stay on until they fail + 0.8 ADR start (BILL, Nov 16)" (Mon Nov 16 2026, ~11:30 AM - 4:30 PM ET; session_01PkbDakpheN6wD5vCKyUvBf; in progress)
+## Status of the session "Radar: Start days stay on until they fail + 0.8 ADR start (BILL, Nov 16)" (Mon Nov 16 2026, ~11:30 AM - 8:30 PM ET; session_01PkbDakpheN6wD5vCKyUvBf; in progress)
 
 - **LIVE (the user's "go live", Mon Nov 16 2026 ~4:25 PM ET, branch claude/youthful-brahmagupta-i7nqxp, merge 01d562b): the
   Start days table keeps a start day like a launch, and the start day's move takes 4%+ with 0.8 ADR+.** Four parts:
@@ -86,6 +86,31 @@ alone.
   ET, the Nov 16 close, 158fe1d): Start days 194 rows (rules start_list_days 0, start_pct 4), BILL Oct 15 (+22.8%), ZETA Nov 9,
   RKLB Nov 9, WRBY Nov 5 on; the newest HUBS Nov 16. **First check Tue Nov 17**: the evening scan's
   launch.json start_days (~200 rows, rules start_list_days 0, start_pct 4); the START DAY alerts of the session (0.8 ADR ones).
+- **LIVE (the user's "go live", Mon Nov 16 2026 ~8:17 PM ET, merge ed395a8): four more Start days changes.**
+  1. **The note folds away** ("▶ What a start day is, and what takes it off the table", closed until clicked, remembered per
+     browser like the other boxes; the user: "make it that i can minimize it as others").
+  2. **The early line: off on a close 1 ADR+ under the start day's close** (L start_off_adr = 1). The user: QNT, VOYG, LSCC,
+     MTCH "obvious failures", "we need better rule what takes it off". Measured on 750 start days (Nov 2024 - Sep 2026, 314 stocks
+     incl. every stock of the Nov 16 table): 71% of the losers (never +5% in 40 sessions) close 1 ADR+ under the start close
+     within 5 sessions, 24% of the winners (ran 15%+); 2 closes under the 21 EMA split them 65% / 24% (worse). Runners still on
+     the table when they ran: 65% (the live rule alone 71%; the user's "2 closes under the 21 EMA, or under the 50 EMA when the 21
+     is over the 50" 60%; half the start day's move given back 60%; 0.5 ADR 51%, chosen against: it took BILL Oct 16, HOOD, MU, LITE
+     off before their runs). QNT Nov 6 (37.57, ADR 9.1%, line 34.17) off Nov 16; VOYG, PL, AEVA, ZLAB, TDW, AMLX Nov 16, RH Nov 6,
+     OUST Nov 5, CENX Nov 13, SONO Nov 12. LSCC (-0.9 ADR) and MTCH (-0.5) stay until their next red close: the user asked
+     twice; "back under both EMAs = off" was measured and refused (35 more runners lost: HOOD, NFLX, SPOT Apr 2025, TWLO; only 1 of
+     them came back with a new start day before its run; it takes RKLB Nov 9 off).
+  3. **Fresh start: the table shows no start day before Nov 1 2026** (L start_from; "i want to start it fresh and see how it does").
+  4. **The late line: once a start has closed 2 ADR+ over its start close, one close 1 ADR+ under the 21 EMA takes it off** (L
+     start_late_adv = 2, start_late_adr = 1; the user: "stock can go 30-40% up after start day, but later if it fades i dont want
+     it on my list"). 629 start days with 80 sessions after: removed too early (a new high within 20 sessions) 26%, 8 days after
+     the top, 3.7 ADR given back; 2 closes under the 50 EMA 30% / 10 days; 2 closes under the 21 EMA 46% / 7 days (the user
+     asked; told them the 50 EMA has the better data, then found this one better still); trailing 3 ADR stop 26% / 9 days.
+     MU Aug 8 2025 off Nov 20 (after the run), LITE Jan 20 2026 off Mar 6 (after +120%), HOOD Apr 2025 kept.
+  Tested: `--regress` same; the full-market dry runs on the branch (the Nov 16 close): the table 194 -> 47 rows (135 before Nov
+  1, 12 by the 1 ADR line, 0 by the late line that day); the page on desktop / phone, no errors, with the dry file and the
+  merged page with the live file. Rules workbook: 2 rows. No 2-year check (table rules). Not touched: the START DAY alert, the
+  "start <date>" line under launches, Launches. Scratch scripts of the measurements: this session's scratchpad only (decide.py,
+  behave.py, late.py, late2.py, both.py: the numbers are in the rules rows).
 - **Answered, no change**: why BILL is on Launches: its Aug 13 2026 launch (base breakout +5.4% on 2.1x, close 51.31, C), off
   Sep 23 (2 closes under the 50 EMA), back on Oct 15 by the reset start (3 lower highs since the Aug 13 top 52.60, range 5.5% ->
   3.3%, closed 46.92 over the last lower high 45.88 and both EMAs); without the reset rule it would be back Nov 2 (flag line
