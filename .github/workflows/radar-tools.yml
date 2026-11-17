@@ -36,6 +36,10 @@ jobs:
             python3 radar/publish.py "volume probe" /tmp/probe_vol.json
           fi
           if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi
+          case "$CMD" in movercheck*)   # the morning breakout's rules on the last N sessions, uptrend vs the rest, same-day outcome ("movercheck 35") -> radar-data probe_mover.json
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && mkdir -p /tmp/mc
+            git show origin/radar-data:stocks.json > /tmp/mc/stocks.json && git show origin/radar-data:volprofile.json > /tmp/mc/volprofile.json
+            python3 radar/probe_mover.py /tmp/mc/stocks.json /tmp/mc/volprofile.json /tmp/probe_mover.json ${CMD#movercheck} && python3 radar/publish.py "mover check" /tmp/probe_mover.json;; esac
           if [ "${{ inputs.cmd }}" = "moverstest" ]; then   # the movers' 1-minute read on a copy of the live files (market hours) -> radar-data movers_test.json
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && mkdir -p /tmp/mv
             for f in live.json levels.json volprofile.json stocks.json; do git show origin/radar-data:$f > /tmp/mv/$f; done
