@@ -49,6 +49,36 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: opening range 1/2/5-min choice (Nov 17)" (Tue Nov 17 2026, from ~10:10 AM ET; session_01PkbDajetWCG8Sskm5kAjad; in progress)
+
+- **LIVE (the user's "go live", Tue Nov 17 2026 ~10:45 AM ET, branch claude/loving-wozniak-p738we): ONE "Above ORH" filter with a
+  1min / 2min / 5min picker, the same picker in the morning breakout box, the minute reads from 9:31. FIRST CHECK Wed Nov 18 at
+  9:31-9:37 AM ET: none of it has run on a live open** (the running day job keeps Tuesday's code until its next start).
+  The user: "above orh, then when i put it does 1min, if i put 2min it does 2 mins, if i put 5min it does 5min, so basically
+  just 1 filter", "same for alerts", "start 931".
+  1. **+ Filter (every tab)**: the chip "Above ORH-[1min / 2min / 5min]: any / Yes / No" (docs/index.html: f.m on the filter,
+     orhM / orhOf(s, m)); a filter saved before is the 5-minute one; the ORH column stays the 5-minute high.
+  2. **radar/levels.py**: levels.json rows are now [high 5, low 5, high 1, high 2] (+ `part`: the stocks read before 9:36).
+     The 1-minute high (the 9:30 bar) from 9:31, the 2-minute (9:30-9:32) from 9:32, both from Yahoo's 1-minute chart; the
+     5-minute pair from 9:36 from its 5-minute chart, as before. A stock is read again only when its next range is finished.
+  3. **radar/day.py**: movers_window and the levels step start at 9:31 (were 9:36).
+  4. **Morning breakout** (radar/alerts.py, the Alerts tab box): `orh_min` 1 / 2 / 5 in alerts/morning.json (5 when not
+     saved); the window starts no earlier than 9:31 / 9:32 / 9:35; the alert names the range; 5 reads the 5-minute chart as
+     before, 1 / 2 the 1-minute chart (morning_levels n); levels kept for another range are read again. The user's saved From
+     is 9:35: the box tells them to set 9:31 / 9:32 (not changed for them). radar-tools `morning orh_min=1 start=09:31`
+     replays it.
+  Tested: stand-in runs minute by minute (levels.py 9:30-9:50, load_morning, morning_levels, check_morning after a range
+  change); the page on desktop / phone (old filter = 5min, the choice kept after a reload, each range its own high, the
+  search, the Alerts box; 0 page errors); a REAL read on the branch (radar-tools `moverstest`, now with a fresh read of every
+  mover: 209 stocks' ranges in 3.2 s). Rules workbook: 3 rows. No `--regress` (launch.py untouched), no Launches rebuild, no
+  2-year check (a filter and an alert setting).
+- **Seen, told the user**: a 5-minute high read an hour later is 0.1-1% HIGHER than the 9:36 read for 16 of 205 stocks (SMWB
+  8.90 -> 9.00, ECG 84.86 -> 85.35), from either chart: Yahoo adds late prints to the first bars. So a high read in the first
+  minutes can be a little low (a stock shows "above" a few cents early); the 1- and 2-minute highs are read again at 9:32 /
+  9:36. Offered, not built: one more read of all the ranges around 9:45.
+- **Check Wed Nov 18**: levels.json saved_at ~9:31 with rows [null, null, high 1, null], the 2-minute highs at 9:32, the
+  5-minute ones at 9:36 and `part` empty after; live.json fast_at from 9:31; the day job's ticks on time 9:31-9:36.
+
 ## Status at the end of the session "Radar: Start days stay on until they fail + 0.8 ADR start (BILL, Nov 16)" (Mon Nov 16 2026 ~11:30 AM - 10:15 PM ET; session_01PkbDakpheN6wD5vCKyUvBf)
 
 **In one line: the Start days table now works like Launches: no age limit, no 50 EMA rule, the newest start only, fresh from Nov
@@ -339,7 +369,7 @@ NEXT SESSION: how many retest / reclaim alerts came on Tue Nov 17 (alerts.json),
 | Live alerts (phone, ntfy) | radar/alerts.py (every 5 min, 1 min at the open/close via radar/fast.py), radar/eod_alerts.py (after the close; also the 3-SETUPS Ready list as one text file) |
 | Desktop alerts | the portal (docs/index.html) while it is open: launches, breakouts, and every 3-SETUPS trigger |
 | 📈 Morning breakouts (portal only) | radar/alerts.py check_morning (any stock, 9:35-10:30 by default); the user's settings and + Filters: alerts/morning.json on main (Alerts tab, Save); replay: radar-tools `morning` |
-| Opening ranges (+ Filter "ORH") | radar/levels.py from day.py's 5-minute live update, 9:36 on -> radar-data levels.json (stocks up 2%+) |
+| Opening ranges (+ Filter "Above ORH" 1min / 2min / 5min) | radar/levels.py from day.py's live updates and minute reads, 9:31 on -> radar-data levels.json (stocks up 2%+) |
 | Data branch | `radar-data`: stocks.json, long_bars.json, probe_catalyst.json, alerts.json, gradelog.json |
 
 GitHub jobs: `scanner.yml` (4:40 PM ET: Watchlist + Launches), `picks.yml` "Follow picks" (rebuilds Launches; run it
