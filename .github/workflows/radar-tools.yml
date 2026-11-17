@@ -58,6 +58,12 @@ jobs:
             git add setups/launch.json setups/launch_backtest.json
             git diff --cached --quiet || { git commit -q -m "launches $(TZ=America/New_York date +%F)"; git pull -q --rebase origin main; git push -q; }
           fi
+          if [ "${{ inputs.cmd }}" = "rvdays" ]; then
+            # the Watchlist's relative volume on 20 days vs 10: who joins / leaves 1-EP/GAP and 1-UPDAY -> radar-data probe_rvdays.json
+            pip install --quiet numba numpy pandas
+            python3 scanner/fetch.py /tmp/bars.json.gz
+            python3 scanner/probe_rvdays.py --bars /tmp/bars.json.gz --out /tmp/probe_rvdays.json --days 30 && python3 radar/publish.py "rel vol 10 vs 20 days" /tmp/probe_rvdays.json
+          fi
           if [ "${{ inputs.cmd }}" = "setups3" ]; then
             # the 2-year check of the new 3-SETUPS (scanner/probe_setups3.py) -> radar-data probe_setups3.json
             pip install --quiet numba numpy pandas

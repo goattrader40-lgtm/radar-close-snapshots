@@ -85,6 +85,7 @@ def build(D, cfg):
     p = msf.params(base=P)
     bench = {b[0]: b[4] for b in D["bars"]["SPY"]}
     S = cfg["standard"]
+    screens.REL_VOL_DAYS = int(cfg["screeners"].get("rel_vol_days", 20))
     stocks = {}
     for sym, bars in D["bars"].items():
         mc = D["market_cap"].get(sym, 0)

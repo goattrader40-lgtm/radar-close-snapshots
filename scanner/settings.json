@@ -46,7 +46,8 @@
                         "_range_vs_avg10_max": "today's high-low range at most 0.8 x the average range of the previous 10 days (same as MSF 'Tight day: range <= X x 10-day avg range'); 0 = off"},
     "PULLBACK TO 21EMA-MAIN": {"ema": 21, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
     "PULLBACK TO 50EMA": {"ema": 50, "max_above_ema_pct": 3, "above_sma200": true, "ema21_over_ema50": true},
-    "rel_vol_days": 10
+    "rel_vol_days": 20,
+    "_rel_vol_days": "relative volume = the day's volume vs the average of this many sessions before it; 20, the same as Launches, Start days and TradingView (the user, Nov 17 2026: 'for rvol it should 20'; was 10)"
   },
 
   "lists": {

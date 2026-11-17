@@ -27,6 +27,9 @@ def roll_ext(x, n, fn):
     return out
 
 
+REL_VOL_DAYS = 20      # scanner/settings.json screeners.rel_vol_days (run.py build sets it)
+
+
 class Stock:
     """Everything the screeners and lists need for one symbol, for every bar."""
 
@@ -43,10 +46,12 @@ class Stock:
         # the liquidity rule: 20-day average shares and $ traded (your rule, Nov 2 2026; was 30-day)
         self.avgv20 = roll_mean(self.v, 20)
         self.dv20 = roll_mean(self.c * self.v, 20) / 1e6
-        prev10 = np.full(self.v.size, np.nan)
-        prev10[1:] = roll_mean(self.v, 10)[:-1]
+        # relative volume = the day's volume vs the average of the REL_VOL_DAYS sessions before it: 20, the same as
+        # Launches, Start days and the portal's Rel vol column (the user, Nov 17 2026: "for rvol it should 20"; was 10)
+        prevN = np.full(self.v.size, np.nan)
+        prevN[1:] = roll_mean(self.v, REL_VOL_DAYS)[:-1]
         with np.errstate(divide="ignore", invalid="ignore"):
-            self.relvol = self.v / prev10
+            self.relvol = self.v / prevN
         rng = self.h - self.l
         self.rng_avg10_prev = np.full(rng.size, np.nan)   # average day range of the previous 10 days
         self.rng_avg10_prev[1:] = roll_mean(rng, 10)[:-1]

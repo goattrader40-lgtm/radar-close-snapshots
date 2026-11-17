@@ -814,7 +814,7 @@
         <span class="tgr-lbl" id="wl-time">—</span>
       </div>
       <div class="tgr-bar">
-        <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button><button data-v="TREND" aria-pressed="false" title="Every name on the four lists and on Launches in a trend now: Up, Turn up, Reclaim or Resting (live in the session)">TREND</button></span>
+        <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button><button data-v="START DAYS" aria-pressed="false" title="The day a stock turns up out of a downtrend (its own rules; it may still be under the 50 EMA). Moved here from the Launches tab on Nov 17 2026">START DAYS</button><button data-v="TREND" aria-pressed="false" title="Every name on the four lists and on Launches in a trend now: Up, Turn up, Reclaim or Resting (live in the session)">TREND</button></span>
         <label class="tgr-f"><span class="tgr-lbl" id="wl-sec-lbl">Section</span> <select class="tgr-search" id="wl-sec" aria-label="Section"></select></label>
         <input class="tgr-search" id="wl-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
         <span class="tgr-flt" data-f="wl"></span>
@@ -871,6 +871,34 @@
           <tbody></tbody>
         </table>
         <div class="tgr-state dash-skeleton" data-for="setups"></div>
+      </div>
+    </div>
+    <div class="tgr-card" id="ln-sd-card" hidden>
+      <div class="tgr-cardhead">
+        <h2>Start days</h2>
+        <span class="tgr-lbl" id="ln-sd-time">—</span>
+        <button class="tgr-lite" id="ln-sd-dl" type="button" title="Saves the Start days rows on screen (the ticker search and your column filters applied) as a file for TradingView, one section per start day: Watchlist menu → Import list">Download for TradingView</button>
+      </div>
+      <details class="tgr-legend tgr-more" data-key="startdays"><summary>What a start day is, and what takes it off the table</summary><p class="tgr-note" id="ln-sd-note"></p></details>
+      <div class="tgr-scroll">
+        <table class="tgr-table" id="ln-sd-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="date" title="The day it closed back over the 21 and the 50 EMA">Start day</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_chg_pct" title="That day's move">Day</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_gap_pct" title="That day's gap at the open">Gap</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_rel_vol" title="That day's volume vs its 20-day average">Vol</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_close" title="That day's close">Close</button></th>
+            <th class="num"><button class="tgr-th" data-sort="px" title="Live during market hours, else the last close">Price</button></th>
+            <th class="num"><button class="tgr-th" data-sort="since" title="The price vs the start day's close">Since</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_vs_hc21_pct" title="Did the start day close above the highest close of the 21 sessions before it? Yes / No, and by how much">Start day over 21D high</button></th>
+            <th class="num"><button class="tgr-th" data-sort="date_vs_200_pct" title="Where the start day closed vs its 200-day SMA">vs 200 SMA</button></th>
+            <th class="num"><button class="tgr-th" data-sort="adr_pct">ADR</button></th>
+            <th><button class="tgr-th" data-sort="on" title="Whether the stock is on Launches already">On</button></th>
+            <th><button class="tgr-th" data-sort="group">Theme</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
       </div>
     </div>
     <div class="tgr-card" id="wl-changes-card">
@@ -957,7 +985,7 @@
         <select class="tgr-search" id="ln-type" aria-label="Launch type" style="max-width:11em"><option value="all">All types</option><option>Launch</option><option>Power day</option><option>Catalyst</option><option>Reversal</option><option>Delayed</option><option>Follower</option><option>Your pick</option></select>
         <label class="tgr-f"><input type="checkbox" id="ln-wolf" checked> Show lone wolves</label>
         <span class="tgr-flt" data-f="ln"></span>
-        <input class="tgr-search" id="ln-search" type="search" placeholder="Find a ticker" aria-label="Find a ticker in the Launches, 50 EMA undercut and Start days tables" title="Searches the Launches table, the 50 EMA undercut table and the Start days table; the line next to it says where the ticker is, your Watchlist lists included">
+        <input class="tgr-search" id="ln-search" type="search" placeholder="Find a ticker" aria-label="Find a ticker in the Launches and 50 EMA undercut tables" title="Searches the Launches table and the 50 EMA undercut table (a Start days match is a button that opens it on the Watchlist tab); the line next to it says where the ticker is, your Watchlist lists included">
         <span class="tgr-lbl" id="ln-found" aria-live="polite"></span>
         <button class="tgr-lite" id="ln-dl" type="button" title="Saves the rows on screen (your filters applied) as a file for TradingView: Watchlist menu → Import list">Download for TradingView</button>
       </div>
@@ -1029,34 +1057,6 @@
             <th class="num"><button class="tgr-th" data-sort="px" title="Live during market hours, else the last close">Price</button></th>
             <th class="num"><button class="tgr-th" data-sort="vs50" title="The price vs the 50 EMA of the last close">vs 50 EMA</button></th>
             <th class="num"><button class="tgr-th" data-sort="today">Today</button></th>
-            <th><button class="tgr-th" data-sort="group">Theme</button></th>
-          </tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="tgr-card" id="ln-sd-card">
-      <div class="tgr-cardhead">
-        <h2>Start days</h2>
-        <span class="tgr-lbl" id="ln-sd-time">—</span>
-        <button class="tgr-lite" id="ln-sd-dl" type="button" title="Saves the Start days rows on screen (the ticker search and your column filters applied) as a file for TradingView, one section per start day: Watchlist menu → Import list">Download for TradingView</button>
-      </div>
-      <details class="tgr-legend tgr-more" data-key="startdays"><summary>What a start day is, and what takes it off the table</summary><p class="tgr-note" id="ln-sd-note"></p></details>
-      <div class="tgr-scroll">
-        <table class="tgr-table" id="ln-sd-table">
-          <thead><tr>
-            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
-            <th><button class="tgr-th" data-sort="date" title="The day it closed back over the 21 and the 50 EMA">Start day</button></th>
-            <th class="num"><button class="tgr-th" data-sort="date_chg_pct" title="That day's move">Day</button></th>
-            <th class="num"><button class="tgr-th" data-sort="date_gap_pct" title="That day's gap at the open">Gap</button></th>
-            <th class="num"><button class="tgr-th" data-sort="date_rel_vol" title="That day's volume vs its 20-day average">Vol</button></th>
-            <th class="num"><button class="tgr-th" data-sort="date_close" title="That day's close">Close</button></th>
-            <th class="num"><button class="tgr-th" data-sort="px" title="Live during market hours, else the last close">Price</button></th>
-            <th class="num"><button class="tgr-th" data-sort="since" title="The price vs the start day's close">Since</button></th>
-            <th class="num"><button class="tgr-th" data-sort="date_vs_hc21_pct" title="Did the start day close above the highest close of the 21 sessions before it? Yes / No, and by how much">Start day over 21D high</button></th>
-            <th class="num"><button class="tgr-th" data-sort="date_vs_200_pct" title="Where the start day closed vs its 200-day SMA">vs 200 SMA</button></th>
-            <th class="num"><button class="tgr-th" data-sort="adr_pct">ADR</button></th>
-            <th><button class="tgr-th" data-sort="on" title="Whether the stock is on Launches already">On</button></th>
             <th><button class="tgr-th" data-sort="group">Theme</button></th>
           </tr></thead>
           <tbody></tbody>
@@ -3172,17 +3172,58 @@ defCalc('industry_perf', {
     try { if (localStorage.getItem(key) === 'closed') box.open = false; } catch (e) { /* no storage: stays open */ }
     box.addEventListener('toggle', () => { try { localStorage.setItem(key, box.open ? 'open' : 'closed'); } catch (e) { /* ignore */ } });
   });
+  /* The Start days table lives on the Watchlist tab as the list START DAYS, next to 1-EP/GAP (the user, Nov 17 2026: "can we
+     move start day to watchlist next to ep/gap watchlist"; it sat under the 50 EMA undercut table on Launches). Its rules,
+     columns, ✕, download and note are unchanged; it reads launch.json start_days and does not feed 3-SETUPS */
+  const sdCount = () => { const d = st('launch').status === 'ok' ? st('launch').data : null; if (!d || !d.start_days) return null; const g = sdGone(); return d.start_days.filter((r) => sdKept(r, g)).length; };
+  /* Start days (the user, Nov 12 2026: "as long as it did breakthrough 21/50 changed the tide that day with volume its the
+     start day"): every liquid stock whose newest start day still holds, shown the day it happens; no age limit and no 50 EMA
+     rule (Nov 16 2026: it stays until the start fails, like a launch); not a launch, the Launches list is unchanged */
+  const drawStartDays = (symMap, lq) => {
+    const doc = st('launch').status === 'ok' ? st('launch').data : null;
+    const sdT = $('#ln-sd-table'), stb = sdT.querySelector('tbody'); stb.replaceChildren();
+    const sdG = sdGone(), ss = doc ? (doc.start_days || []).filter((r) => sdKept(r, sdG)).filter((r) => !lq || r.symbol.includes(lq)).map((r) => {
+      const m = symMap.get(r.symbol);
+      const px = m && num(m.price) !== null ? num(m.price) : r.price;
+      return Object.assign({}, r, { px, since: px && r.date_close ? r2((px / r.date_close - 1) * 100) : r.since_pct, on: r.on || '' });
+    }) : [];
+    $('#ln-sd-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : '—';
+    $('#ln-sd-note').textContent = 'The day a stock turns up out of a downtrend: 6+ of the 10 closes before under a falling 21 EMA, the day before it closed under its 21 or 50 EMA, that day it closes over the 21 EMA (the 50 EMA is not needed: the first close over it is the confirmation), up 1 ADR or more, or up 4% or more that is also 0.8 ADR or more (ZETA Nov 9 2026: +4.5% with a 5.4% ADR), on 1× volume or more in the top half of the day (or a 5%+ gap that opens over the 21 EMA and keeps half of it), over the high of any violent red candle of the 5 sessions before; only the first such day of a move. Over or under the 200 SMA; the same liquidity and ADR minimums as a launch, and its close 30%+ over the 52-week low (your 30% rule: the day before may be closer to the low). It stays on the table like a launch, with no age limit, until the start fails: a close under the low of the start day that is also under the 21 EMA, or a close 1 ADR or more under the start day\'s close (the start given back: QNT Nov 6 2026 at 37.57 with a 9.1% ADR, off Nov 16 at 31.75; closes under the 21 or 50 EMA alone do not count); or, once it has run 2 ADR or more over the start day\'s close, a close 1 ADR or more under the 21 EMA (a pullback touches the 21 EMA, a fade falls through it); or 43 sessions (about 2 months) from its highest point without a new high; or you remove it with the x. A newer start day of the same stock replaces it, and when that newer one fails the stock is off (the older one does not come back). Fresh start: no start day before Nov 1, 2026 is shown. Not a launch: the big day that follows (the 200 SMA cross, the earnings gap) still makes the Launches list, with this day shown under its date as "start".';
+    sortRows(sdT, ss, null, ['symbol', 'date', 'group', 'on'], '');
+    S.sdShown = ss;
+    if (doc && !ss.length) noRows(stb, 13, lq ? 'No "' + lq + '" in this table.' : doc.start_days ? 'No start day holding now.' : 'Fills in after the next evening scan.');
+    ss.forEach((r) => {
+      const tr = h('tr');
+      const keyS = tkCell(r.symbol, r.tv);
+      const rmS = h('button', 'tgr-lite tgr-follow', '✕'); rmS.type = 'button'; rmS.title = 'Remove ' + r.symbol + ' from Start days (a new start day of it on a later day shows again)';
+      rmS.setAttribute('aria-label', rmS.title);
+      rmS.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from Start days?')) removeStart(r, rmS); });
+      keyS.append(rmS);
+      tr.append(keyS, h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), pctCell(r.date_chg_pct, 0),
+        h('td', 'num' + (r.date_gap_pct >= 2 ? ' tgr-up' : ''), p1(r.date_gap_pct, true)), h('td', 'num' + (r.date_rel_vol >= 1.5 ? ' tgr-up' : ''), fX(r.date_rel_vol)),
+        h('td', 'num', fPrice(r.date_close)), h('td', 'num', fPrice(r.px)), h('td', 'num ' + tone(r.since), p1(r.since, true)),
+        hc21Cell(r),
+        h('td', 'num ' + tone(r.date_vs_200_pct), p1(r.date_vs_200_pct, true)), h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
+        h('td', 'nw', r.on || (r.launch_day ? 'launch day' : '—')), h('td', '', (r.group || '—') + ' · ' + (r.group_status || '')));
+      stb.append(tr);
+    });
+  };
   const drawWatchlist = (symMap) => {
     drawAlog(loadDay('log', '[]'));
     const table = $('#wl-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
     setState('wl-table', ['setups']);
+    /* START DAYS: its own table (below) in place of the list's table, rules and filters; the ticker box filters it */
+    const SD = S.wl === 'START DAYS';
+    [$('#wl-note'), $('#wl-rules-box'), $('#wl-legend'), $('#wl-about-box'), table.closest('.tgr-scroll'), $('#wl-sec').closest('label'), document.querySelector('.tgr-flt[data-f="wl"]'), $('#wl-dl')].forEach((el) => { if (el) el.hidden = SD; });
+    $('#ln-sd-card').hidden = !SD;
+    if (SD) drawStartDays(symMap, S.wlq.toUpperCase());
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
     WLD = doc ? doc.date : null;
     const all = wlRows(symMap);
     /* today's triggers on a read from an earlier close: a 3-SETUPS row holding one moves to the triggered part */
     const LT = WLD && WLD < todayNY() ? liveTrigs() : new Map();
     all.forEach((r) => { const ts = LT.get(r.symbol); r.lt = ts || null; if (S.wl === '3-SETUPS' && ts && ts.some((t) => !t.lost)) r.section = 'Triggered today'; });
-    document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = b.dataset.v === 'TREND' ? (doc ? (S.wl === 'TREND' ? all.length : trendSrc(doc).length) : null) : doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
+    document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = b.dataset.v === 'START DAYS' ? sdCount() : b.dataset.v === 'TREND' ? (doc ? (S.wl === 'TREND' ? all.length : trendSrc(doc).length) : null) : doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
     $('#wl-time').textContent = doc ? 'Scan of the ' + fDate(doc.date) + ' close' : st('setups').status === 'error' ? 'Could not load the lists' : '—';
     const rules = wlRules(S.wl, doc && doc.settings), rbox = $('#wl-rules');
     $('#wl-rules-sum').textContent = 'The rules of ' + S.wl;
@@ -3537,7 +3578,6 @@ defCalc('industry_perf', {
     $('#ln-live-h').textContent = LAG ? 'Laggards launching today' : 'Launching today';
     $('#ln-h').textContent = LAG ? 'Launch laggards' : 'Launches';
     $('#ln-u50-card').hidden = LAG;
-    $('#ln-sd-card').hidden = LAG;
     const live = LAG ? lagLive(doc) : lnLive(doc);
     $('#ln-live-time').textContent = LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : marketOpen() ? 'Waiting for the first live update' : 'Live during market hours';
     $('#ln-live-note').textContent = !doc ? '' : (doc.watch ? Object.keys(doc.watch).length : 0) + ' stocks on watch from the ' + fDate(doc.date) + ' close. ' +
@@ -3601,7 +3641,8 @@ defCalc('industry_perf', {
         if (!LAG) {
           if (u.length) u.slice(0, 4).forEach((r) => bits.push(jump('50 EMA undercut: ' + r.symbol + ' · launched ' + dm(r.date) + ' ↓', '#ln-u50-card', 'Go to the 50 EMA undercut table')));
           else bits.push(h('span', '', '50 EMA undercut 0'));
-          if (sd.length) sd.slice(0, 4).forEach((r) => bits.push(jump('Start days: ' + r.symbol + ' · ' + dm(r.date) + ' · ' + p1(r.date_chg_pct, true) + ' · close ' + fPrice(r.date_close) + ' ↓', '#ln-sd-card', 'Go to the Start days table')));
+          if (sd.length) sd.slice(0, 4).forEach((r) => { const bS = h('button', 'tgr-lite', 'Start days: ' + r.symbol + ' · ' + dm(r.date) + ' · ' + p1(r.date_chg_pct, true) + ' · close ' + fPrice(r.date_close) + ' →'); bS.type = 'button'; bS.title = 'Open the Start days list on the Watchlist tab';
+            bS.addEventListener('click', () => { S.wl = 'START DAYS'; S.wlsec = ''; S.wlq = r.symbol; const wq = $('#wl-search'); if (wq) wq.value = r.symbol; showTab('watchlist'); }); bits.push(bS); });
           else bits.push(h('span', '', 'Start days 0'));
         }
         bits.push(h('span', '', 'Watchlist: ' + (w ? w.lists.join(', ') : 'not on a list')));
@@ -3756,37 +3797,6 @@ defCalc('industry_perf', {
           h('td', 'num', fPrice(r.ema50)), h('td', 'num', fPrice(r.px)), h('td', 'num ' + tone(r.vs50), p1(r.vs50, true)), pctCell(r.today, 0),
           h('td', '', (r.group_now || r.group || '—') + ' · ' + (r.group_status_now || r.group_status || '')));
         utb.append(tr);
-      });
-    }
-    /* Start days (the user, Nov 12 2026: "as long as it did breakthrough 21/50 changed the tide that day with volume its the
-       start day"): every liquid stock whose newest start day still holds, shown the day it happens; no age limit and no 50 EMA
-       rule (Nov 16 2026: it stays until the start fails, like a launch); not a launch, the Launches list is unchanged */
-    {
-      const st = $('#ln-sd-table'), stb = st.querySelector('tbody'); stb.replaceChildren();
-      const sdG = sdGone(), ss = doc ? (doc.start_days || []).filter((r) => sdKept(r, sdG)).filter((r) => !lq || r.symbol.includes(lq)).map((r) => {
-        const m = symMap.get(r.symbol);
-        const px = m && num(m.price) !== null ? num(m.price) : r.price;
-        return Object.assign({}, r, { px, since: px && r.date_close ? r2((px / r.date_close - 1) * 100) : r.since_pct, on: r.on || '' });
-      }) : [];
-      $('#ln-sd-time').textContent = doc ? 'After the ' + fDate(doc.date) + ' close' : '—';
-      $('#ln-sd-note').textContent = 'The day a stock turns up out of a downtrend: 6+ of the 10 closes before under a falling 21 EMA, the day before it closed under its 21 or 50 EMA, that day it closes over the 21 EMA (the 50 EMA is not needed: the first close over it is the confirmation), up 1 ADR or more, or up 4% or more that is also 0.8 ADR or more (ZETA Nov 9 2026: +4.5% with a 5.4% ADR), on 1× volume or more in the top half of the day (or a 5%+ gap that opens over the 21 EMA and keeps half of it), over the high of any violent red candle of the 5 sessions before; only the first such day of a move. Over or under the 200 SMA; the same liquidity and ADR minimums as a launch, and its close 30%+ over the 52-week low (your 30% rule: the day before may be closer to the low). It stays on the table like a launch, with no age limit, until the start fails: a close under the low of the start day that is also under the 21 EMA, or a close 1 ADR or more under the start day\'s close (the start given back: QNT Nov 6 2026 at 37.57 with a 9.1% ADR, off Nov 16 at 31.75; closes under the 21 or 50 EMA alone do not count); or, once it has run 2 ADR or more over the start day\'s close, a close 1 ADR or more under the 21 EMA (a pullback touches the 21 EMA, a fade falls through it); or 43 sessions (about 2 months) from its highest point without a new high; or you remove it with the x. A newer start day of the same stock replaces it, and when that newer one fails the stock is off (the older one does not come back). Fresh start: no start day before Nov 1, 2026 is shown. Not a launch: the big day that follows (the 200 SMA cross, the earnings gap) still makes the Launches list, with this day shown under its date as "start".';
-      sortRows(st, ss, null, ['symbol', 'date', 'group', 'on'], '');
-      S.sdShown = ss;
-      if (doc && !ss.length) noRows(stb, 13, lq ? 'No "' + lq + '" in this table.' : doc.start_days ? 'No start day holding now.' : 'Fills in after the next evening scan.');
-      ss.forEach((r) => {
-        const tr = h('tr');
-        const keyS = tkCell(r.symbol, r.tv);
-        const rmS = h('button', 'tgr-lite tgr-follow', '✕'); rmS.type = 'button'; rmS.title = 'Remove ' + r.symbol + ' from Start days (a new start day of it on a later day shows again)';
-        rmS.setAttribute('aria-label', rmS.title);
-        rmS.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from Start days?')) removeStart(r, rmS); });
-        keyS.append(rmS);
-        tr.append(keyS, h('td', 'nw', fDate(r.date).replace(/, \d{4}$/, '')), pctCell(r.date_chg_pct, 0),
-          h('td', 'num' + (r.date_gap_pct >= 2 ? ' tgr-up' : ''), p1(r.date_gap_pct, true)), h('td', 'num' + (r.date_rel_vol >= 1.5 ? ' tgr-up' : ''), fX(r.date_rel_vol)),
-          h('td', 'num', fPrice(r.date_close)), h('td', 'num', fPrice(r.px)), h('td', 'num ' + tone(r.since), p1(r.since, true)),
-          hc21Cell(r),
-          h('td', 'num ' + tone(r.date_vs_200_pct), p1(r.date_vs_200_pct, true)), h('td', 'num' + (num(r.adr_pct) !== null && r.adr_pct < 3.5 ? ' tgr-dn' : ''), num(r.adr_pct) === null ? '—' : num(r.adr_pct).toFixed(1) + '%'),
-          h('td', 'nw', r.on || (r.launch_day ? 'launch day' : '—')), h('td', '', (r.group || '—') + ' · ' + (r.group_status || '')));
-        stb.append(tr);
       });
     }
     /* trending groups */
