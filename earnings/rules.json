@@ -1,10 +1,10 @@
 {
- "saved_at": "2026-11-09T17:31:41",
- "by": "portal",
+ "saved_at": "2026-11-17T11:47:18",
+ "by": "session (the user, Nov 17 2026: ADR 3%, ACM was missing)",
  "min_mcap": 700000000,
  "min_dollar_vol_20d_millions": 30,
  "min_avg_vol_20d": 600000,
  "min_price": 10,
- "min_adr": 3.5,
+ "min_adr": 3,
  "min_pct_above_52w_low": 0
 }
