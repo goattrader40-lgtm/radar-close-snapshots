@@ -108,7 +108,10 @@ alone.
      MU Aug 8 2025 off Nov 20 (after the run), LITE Jan 20 2026 off Mar 6 (after +120%), HOOD Apr 2025 kept.
   Tested: `--regress` same; the full-market dry runs on the branch (the Nov 16 close): the table 194 -> 47 rows (135 before Nov
   1, 12 by the 1 ADR line, 0 by the late line that day); the page on desktop / phone, no errors, with the dry file and the
-  merged page with the live file. Rules workbook: 2 rows. No 2-year check (table rules). Not touched: the START DAY alert, the
+  merged page with the live file. Rules workbook: 2 rows. No 2-year check (table rules). **The portal's table is NOT rebuilt
+  yet**: picks.yml ran twice after the push (01:17 and 01:28 UTC, both green, nothing saved: most likely the guard, Yahoo's
+  evening bars without the Nov 16 close); a retry is scheduled ~02:50 UTC; else the Tue Nov 17 4:40 PM scan applies the rules
+  (expected: ~47 rows, none before Nov 1, QNT / VOYG / PL off). Not touched: the START DAY alert, the
   "start <date>" line under launches, Launches. Scratch scripts of the measurements: this session's scratchpad only (decide.py,
   behave.py, late.py, late2.py, both.py: the numbers are in the rules rows).
 - **Answered, no change**: why BILL is on Launches: its Aug 13 2026 launch (base breakout +5.4% on 2.1x, close 51.31, C), off
