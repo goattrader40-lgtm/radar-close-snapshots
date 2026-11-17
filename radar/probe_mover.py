@@ -87,7 +87,7 @@ def expected(curve, scale, m):
     return e * scale if e > 0 else None
 
 
-def simulate(mins, s, curve, scale):
+def simulate(mins, s, curve, scale, min_chg=None, day=None):
     """mins: [(minute since 9:30, o, h, l, c, v)] of one session, sorted. The first minute the rules pass -> a result row"""
     if not mins or mins[0][0] > 2:
         return None                                     # no bar at the open (a halt, a late open)
@@ -105,7 +105,7 @@ def simulate(mins, s, curve, scale):
         chg = 100 * (c / s["prev_close"] - 1)
         exp = expected(curve, scale, m + 1)
         rv = vol / exp if exp else None
-        if chg < M["min_chg"] or rv is None or rv < M["min_rv"] or c < M["price"] or c < s["low52"] * (1 + M["low52"] / 100):
+        if chg < (M["min_chg"] if min_chg is None else min_chg) or rv is None or rv < M["min_rv"] or c < M["price"] or c < s["low52"] * (1 + M["low52"] / 100):
             continue
         if not (c > s["pdh"] and c > orh):
             continue
@@ -121,15 +121,18 @@ def simulate(mins, s, curve, scale):
         if e21 <= e50:
             why.append("21 EMA not over the 50")
         after = mins[k + 1:]
-        if not after:
-            return None
-        close = after[-1][4]
-        hit = any(y[3] < low for y in after)
+        if day:                                         # the session's own close and low (the minute bars end at 10:31)
+            close, hit, mx = day["c"], day["l"] < low, None
+        else:
+            if not after:
+                return None
+            close, hit, mx = after[-1][4], any(y[3] < low for y in after), max(y[2] for y in after)
         risk = c - low
+        gap = 100 * (mins[0][1] / s["prev_close"] - 1)
         return {"time": f"{9 + (30 + m + 1) // 60}:{(30 + m + 1) % 60:02d}", "entry": round(c, 2), "chg": round(chg, 1), "rv": round(rv, 2),
                 "orh": round(orh, 2), "stop": round(low, 2), "risk_pct": round(100 * risk / c, 1), "group": "other" if why else "uptrend", "why": why,
                 "no_sma200": s["sma200"] is None, "stop_hit": hit, "close_pct": round(100 * (close / c - 1), 1),
-                "max_pct": round(100 * (max(y[2] for y in after) / c - 1), 1),
+                "max_pct": round(100 * (mx / c - 1), 1) if mx else None, "gap": round(gap, 1),
                 "r": -1.0 if hit else (round((close - c) / risk, 2) if risk > 0 else 0.0),
                 "under_entry": close < c, "under_orh": close < orh, "adr": round(s["adr"], 1)}
     return None
@@ -142,7 +145,7 @@ def summary(rows):
     med = lambda v: sorted(v)[len(v) // 2]
     return {"n": n, "stop_hit_pct": round(100 * sum(r["stop_hit"] for r in rows) / n), "closed_under_entry_pct": round(100 * sum(r["under_entry"] for r in rows) / n),
             "closed_under_orh_pct": round(100 * sum(r["under_orh"] for r in rows) / n), "avg_close_pct": round(sum(r["close_pct"] for r in rows) / n, 2),
-            "median_close_pct": med([r["close_pct"] for r in rows]), "avg_max_pct": round(sum(r["max_pct"] for r in rows) / n, 2),
+            "median_close_pct": med([r["close_pct"] for r in rows]), "avg_max_pct": round(sum(r["max_pct"] or 0 for r in rows) / n, 2),
             "avg_r": round(sum(r["r"] for r in rows) / n, 2), "closed_up_2pct_plus": round(100 * sum(r["close_pct"] >= 2 for r in rows) / n)}
 
 
@@ -162,6 +165,8 @@ def report(rows):
 def main():
     stocks_p, prof_p, out_p = sys.argv[1:4]
     days = int(sys.argv[4]) if len(sys.argv) > 4 else 35
+    thr = [float(x) for x in sys.argv[5].split(",")] if len(sys.argv) > 5 else None     # "2,3,4,5": each as the rule's % up
+    lo_chg = min(thr) if thr else M["min_chg"]
     S = {s["symbol"]: s for s in json.load(open(stocks_p))}
     prof = json.load(open(prof_p))["rows"]
     uni = sorted(k for k, s in S.items() if (s.get("mcap_b") or 0) >= 0.4 and (s.get("avg_vol_20") or 0) >= 350000 and (s.get("price") or 0) >= 3
@@ -190,7 +195,8 @@ def main():
             s = day_stats(bars, i)
             if not s or not static_ok(s, (st.get("mcap_b") or 0) * s["prev_close"] / (st.get("price") or s["prev_close"])):
                 continue
-            if bars[i]["h"] >= s["prev_close"] * (1 + M["min_chg"] / 100) and bars[i]["h"] > s["pdh"]:
+            if bars[i]["h"] >= s["prev_close"] * (1 + lo_chg / 100) and bars[i]["h"] > s["pdh"]:
+                s["day"] = {"c": bars[i]["c"], "l": bars[i]["l"], "h": bars[i]["h"]}
                 s["scale"] = s["avg_vol"] / st["avg_vol_20"] if st.get("avg_vol_20") else 1
                 cands[d][sym] = s
     print("candidates a day:", {d: len(v) for d, v in cands.items()}, flush=True)
@@ -205,7 +211,7 @@ def main():
         got = {}
         for i in range(0, len(syms), 25):
             got.update(alpaca({"symbols": ",".join(syms[i:i + 25]), "timeframe": "1Min", "feed": "sip", "adjustment": "split", "limit": 10000,
-                               "start": z(o), "end": z(c - datetime.timedelta(seconds=1))}))
+                               "start": z(o), "end": z((o + datetime.timedelta(minutes=62)) if thr else (c - datetime.timedelta(seconds=1)))}))
         for sym in syms:
             mins = []
             for b in got.get(sym) or []:
@@ -214,11 +220,19 @@ def main():
                 if 0 <= m < 390:
                     mins.append((m, b["o"], b["h"], b["l"], b["c"], b["v"]))
             mins.sort()
-            r = simulate(mins, cands[d][sym], prof.get(sym), cands[d][sym]["scale"])
-            if r:
-                r.update(date=d, sym=sym)
-                rows.append(r)
+            for th in (thr or [None]):
+                r = simulate(mins, cands[d][sym], prof.get(sym), cands[d][sym]["scale"], th, cands[d][sym]["day"] if thr else None)
+                if r:
+                    r.update(date=d, sym=sym, thr=th)
+                    rows.append(r)
         print(d, len(syms), "candidates,", sum(1 for r in rows if r["date"] == d), "alerts", flush=True)
+    if thr:
+        out = {"built_at": now.isoformat(timespec="seconds"), "sessions": sess, "rules": M, "thresholds": thr, "window": "9:35-10:30",
+               "note": "each threshold is the rule's % up on its own: the first minute that passes it; the outcome from the session's close and low",
+               "summary": {str(th): report([r for r in rows if r["thr"] == th]) for th in thr}, "rows": rows}
+        json.dump(out, open(out_p, "w"), separators=(",", ":"))
+        print(json.dumps({k: {g: v[g]["all"] for g in ("uptrend", "other")} for k, v in out["summary"].items()}, indent=1))
+        return
     out = {"built_at": now.isoformat(timespec="seconds"), "sessions": sess, "rules": M, "window": "9:35-10:30",
            "note": "Rel vol from today's volume curves scaled to each day's 20-day average (an approximation); market cap = today's moved with the price",
            "summary": report(rows), "per_day": {d: {g: sum(1 for r in rows if r["date"] == d and r["group"] == g) for g in ("uptrend", "other")} for d in sess},
