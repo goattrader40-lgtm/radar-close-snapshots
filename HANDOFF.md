@@ -144,6 +144,51 @@ alone.
   to save on the tab). Seen, not changed: a followed stock's plain breakout alert fired on a gap-out-of-base day (KVYO
   9:35) though the legend says it stays quiet; the 1-minute checks stop 12:00-3:00.
 
+## Status of the session "Radar: AZTA breakout alert (Nov 16)" (Mon Nov 16 2026 ~11:30 AM ET - Tue Nov 17; session_01PkbDajZLtZ51Kk895bqYFw)
+
+- **LIVE (the user's "yes all looks good go live", Nov 17 2026; branch claude/practical-archimedes-o1zddh merged with main): the
+  retest after a launch, and a broken base top is no breakout again** (scanner/launch.py only; radar/alerts.py and the page
+  untouched; rules workbook: 4 rows). Found on AZTA: launched Nov 11 2026 (gap to 46.55, high 50.06, close 48.90) over its Oct 6
+  top 46.41 (that day's open 43.76 = the body top); Nov 12 low 43.52 close 43.86, Nov 13 low 43.15 close 45.65; Nov 16 at 10:50
+  the phone said "B breakout: Base top 46.41, nothing traded above it for 431 sessions, 1st breakout since the launch, leg 2".
+  The user: "today was supposed to be retest", "we have rule ... retests previous highs body open and close, and closes above".
+  1. **The launch's retest level = the highest top it closed over** (the 6- or 3-month high when it cleared it, bodies from 20
+     sessions before that top; before: only the 20 sessions before the launch, AZTA 41.27-41.71). The higher level stays in play
+     until the pullback's low comes into the 20-day level's zone (SPOT Oct 28 2026 536.74, ACN Oct 6 2026 192.58: their agreed
+     retests are unchanged); a dip under the higher level that stays over the lower one is its undercut (CAI Aug 18 2026).
+  2. **A retest counts from the day after the breakout** (L retest_first=1; was the 3rd session), **every day that touches the
+     zone and closes over the body top is a retest** (the user on SPOT Oct 28 & 29 2026: "anytime it touches that area its called
+     retest/holding, but i would need alert for that": the existing 3:45 PM "RETEST HOLDING" alert is per day), and a down day's
+     own high counts for the 1.5 ADR pullback (APPN Oct 16 2026). The two other tests STAY (1.5 ADRs off the high since the
+     breakout; a close 1.25 ADRs over the level first): the user asked "dont you think all 3 tests needed?", my answer: keep 2
+     and 3. So GMAB Sep 24 2026 and CAI Aug 12-13 2026 are still no retest (the user had called them retests: not raised again).
+  3. **A base top broken in the last 3 sessions by a breakout the scan counted** (the launch day, or a base breakout, closing
+     more than 0.5% over it) **is no buy point**: no breakout / touched / gap-out-of-base alert on it (base_top leaves the last 3
+     sessions out, so the old top came back as fresh). Kept: a poke that closed back under, a caution close, a failed breakout,
+     and a close over a 20-day high inside a bigger base that was no breakout (APPN Oct 9-13 2026 keeps 39.67: my first build
+     dropped it, the user: "october 12th and 13th was trying breakout last 20 days high inside same base"). The user agreed DOCU
+     Sep 1 (65.25), AXTI May 27 (134.00), AEHR Feb 12-13 2026 (31.84).
+  4. **Breakout undercut & reclaim after ONE close under the level**, when the day back over it keeps its low in the retest zone
+     and is no retest by itself (the user on CAI Aug 18-19 2026: "maybe we call this breakout undercut reclaim, as we do for 21 ema
+     undercuts"): added to another read of that day (CAI Aug 19 stays the bull flag breakout, AMD Jun 11 2026 the 21 EMA undercut
+     & reclaim), the status itself otherwise (COHR Mar 9 2026); reclaim_level is set the evening of the 1st close under, so the
+     "back over its breakout level" heads-up and the 3:45 PM alert fire that day.
+  Reads the user agreed: AZTA Nov 12 & 13 retest; ACN Oct 7 retest, Oct 8 push; SPOT Oct 28 & 29 retest; APPN Oct 16 & 19; CAI
+  Aug 14, 17 retest, Aug 18 undercut, Aug 19 reclaim; COHR Mar 9, AMD Jun 11. `--regress`: 53 lines differed, no agreed read lost;
+  tools/expected_reads.txt rewritten at the go live. **No 2-year check: the user's decision ("i dont think we need 3#")**; I had
+  recommended it (it adds retest days after every launch).
+  **Launches rebuilt after the go live** (picks.yml, 7:28 PM ET Nov 16, the Nov 16 close): 213 launches; AZTA "Retest of the
+  breakout level 43.76-46.41 held", no buy point, zone 39.68-46.41, no gap-out-of-base level; 8 rows read a retest that day
+  (AZTA ZETA CYRX SG GXO MOS EL VSXY), 1 the breakout undercut & reclaim (DLTR). **First check Tue Nov 17**: the retest /
+  reclaim alerts in alerts.json (how many a day now that every touch counts), and no "breakout" on a just-broken top.
+- **Told the user, no answer**: with "every touch", AZTA Nov 16 (low 44.32, close 47.22) also reads "retest held" and would send
+  the 3:45 PM alert, though they had said Nov 16 was "just confirmation".
+- **Open, for another session (the user: "leave that alone")**: a GAP retest rule (AEHR Feb 12-17 2026: back to where it gapped
+  from on Feb 11 and held; the scan only knows the retest of a broken base top).
+- **Not done**: the alert text "nothing traded above it for N sessions" is still false for a top poked in the last 3 sessions
+  (WRBY 31.75 over 31.50 on Nov 11 2026): offered, not taken up. AZTA is not in tools/examples.txt (offer "add it to the
+  examples"). long_bars.json now has 185 symbols (+ AZTA CDW GEO HNGE AMRX GCT WAT).
+
 ## Status at the end of the session "Radar: 21-day / 62-day high columns (Nov 13)" (Fri Nov 13 ~0:30 - 2 AM ET and Sat Nov 14 2026 ~noon - 5 PM ET; session_01PkbDahhagkKkQ2rkgKsLuZ)
 
 **In one line: the Days 21H / 62H columns (Nov 13), then on Sat Nov 14 nine go lives on the Watchlist's 1-lists and the Launches
