@@ -890,7 +890,7 @@ MOVE = re.compile(r"\b(?:higher|lower|jump\w*|surg\w*|soar\w*|climb\w*|rall(?:y|
                   r"boost\w*|lift(?:s|ed|ing)?|sell-?off)\b", re.I)
 MARKET = re.compile(r"\b(?:dow|s&p|s&amp;p|nasdaq|wall street|stock market|russell 2000|treasur\w+|bitcoin)\b", re.I)
 VIEW = re.compile(r"\?\s*$|^after \w+'?s? \d|fair value|valuation|buy or sell|top .{0,20}pick|better (?:value|buy)|great choice|"
-                  r"since (?:the )?last earnings|years? from now|in \d+ years|dividend stocks?|here'?s what|what to know|story has changed", re.I)
+                  r"since (?:the )?last earnings|years? from now|in \d+ years|dividend stocks?|deep dive|here'?s what|what to know|story has changed", re.I)
 VIEWS = ("simply wall st", "trefis", "zacks", "motley fool", "tikr", "24/7 wall st", "insider monkey", "marketbeat")   # views, not news
 MAX_TAGS = 8                # a story tagged with more tickers than this is a round-up
 
