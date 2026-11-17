@@ -169,7 +169,9 @@ L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr
          # looked for; start_list_days = how long a start day stays on the Start days list (0 = no age limit: it stays until the
          # start fails or its move ends, like a launch; the user, Nov 16 2026: "take this rule off, so they will stay alive!!!";
          # was 5 sessions, "getting old agreed" Nov 15)
-         start_adr=1, start_pct=4, start_pct_adr=0.8, start_rv=1, start_gap=5, start_look=40, start_list_days=0,
+         # start_off_adr: off the Start days table on a close that many ADRs under the start day's close (Nov 17 2026); start_from: the
+         # table shows no start day before this date (the user, Nov 17 2026: "i want to start it fresh and see how it does")
+         start_adr=1, start_pct=4, start_pct_adr=0.8, start_rv=1, start_gap=5, start_look=40, start_list_days=0, start_off_adr=1, start_from="2026-11-01",
          first_day=1, first_gap=5, first_rv=1.3, first_adr_nogap=1.8, follow_thru=1, climax_ext=90, pop21=1, pop21_gap=2,
          # the list ON / OFF read from the user's AMD 2026 charts (Nov 13 2026: "i can visually know when stock will go down"):
          # adr_look: the ADR minimum is tested on the highest 20-day ADR of the last 63 sessions, not on today's alone: the
@@ -2344,7 +2346,12 @@ def start_listed(a, k, i):
     correction it could be 2 times below 50 ema but still above start day": WRBY Apr 14 2026, start 23.14, low 21.03, closed
     under its 50 EMA Apr 23 - May 6 without closing under 21.03, then +23% May 7; the 50 EMA rule had taken it off Apr 29)"""
     c, lo = a.st.c, a.st.l[k]
-    return bool(i > k and not any(c[j] < lo and c[j] < a.e21[j] for j in range(k + 1, i + 1)) and not stale(a, k, i))
+    # and (the user, Nov 17 2026: "ok lets do 1adr") a close start_off_adr ADRs+ under the start day's close: the start given back.
+    # 750 start days Nov 2024 - Sep 2026 on 314 stocks: 71% of the losers (never +5% in 40 sessions) closed 1 ADR+ under within 5
+    # sessions, 24% of the winners (15%+); the 21 EMA separated them less well. QNT Nov 6 2026 (37.57, ADR 9.1%, line 34.17): off
+    # Nov 16 at 31.75; VOYG Nov 9 (27.90, line 25.36): off Nov 16 at 25.01; HOOD Apr 9 2025, MU Aug 8 2025, LITE Jan 20 2026 kept
+    line = c[k] * (1 - L["start_off_adr"] * (a.st.adr[k] if a.st.adr[k] > 0 else 5.0) / 100)
+    return bool(i > k and not any((c[j] < lo and c[j] < a.e21[j]) or c[j] < line for j in range(k + 1, i + 1)) and not stale(a, k, i))
 
 
 def trend_start(a, i0):
@@ -2971,7 +2978,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         # below 21 ema!!!")
         lo = max(a.start, i - L["start_list_days"]) if L["start_list_days"] else a.start
         k = next((m for m in range(i, lo, -1) if a.start_day(m)), None)
-        if k is None or not (k == i or start_listed(a, k, i)):
+        if k is None or st.dates[k] < L["start_from"] or not (k == i or start_listed(a, k, i)):
             continue
         gs_, gn_ = best_group(s, T, groups, GS)
         d = dict(symbol=s, tv=run.tv_symbol(s, st.exchange), sessions=i - k, price=fnum(st.c[i]), since_pct=fnum(100 * (st.c[i] / st.c[k] - 1), 1),
