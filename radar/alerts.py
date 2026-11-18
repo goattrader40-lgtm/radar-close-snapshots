@@ -131,15 +131,22 @@ def kind_words(key, title=""):
     return KIND_WORDS.get(kind, kind)
 
 
+GROUP_FROM = "09:45"          # group moves count the alerts from this time (the user, Nov 18 2026: "just move slot to 940 or 945")
+
+
 def group_moves(doc, state, alerts_now, now):
     """the user (Nov 3 2026, RPD and QLYS both in Cybersecurity at 3:46 PM): 2+ stocks of the same theme or tight
     industry group alerting the same day is a group move. Returns {group: [(sym, words, time), ...]} for the groups with
-    2+ stocks, from today's alerts so far plus this run's; the loose "· other" industries don't count"""
+    2+ stocks, from today's alerts so far plus this run's; the loose "· other" industries don't count. Only the alerts from
+    9:45 count (GROUP_FROM; the user, Nov 18 2026): the 9:35 batch of pullback heads-ups spent the day's one alert of 6
+    groups that morning (Cybersecurity at 9:35 on NTSK, SAIL, RPD in their retest zones, 30 minutes before its real move).
+    The stocks' own alerts are not changed"""
     loose = {r["group"] for r in (doc.get("group_rank") or {}).get("rows", []) if r.get("loose")}
     seen = {}
     past = [(it["key"], it.get("title"), it.get("time")) for it in state.get("items", [])
-            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith(":mbo")]
-    for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now]:
+            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith(":mbo")
+            and it.get("time", "99:99") >= GROUP_FROM]
+    for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now if f"{now:%H:%M}" >= GROUP_FROM]:
         sym = key.split(":")[0]
         for g in _GROUPS.get(sym, []):
             if g in loose or "· other" in g:
