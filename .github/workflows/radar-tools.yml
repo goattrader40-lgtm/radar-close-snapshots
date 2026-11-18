@@ -207,12 +207,6 @@ jobs:
             mkdir -p /tmp/rd && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json
             python3 scanner/probe_runners.py /tmp/rd/stocks.json /tmp/probe_runners.json 8 && python3 radar/publish.py "runners vs the 21-day high" /tmp/probe_runners.json
           fi
-          if [ "${{ inputs.cmd }}" = "themeup" ]; then   # the THEME MOVING UP alert replayed on the last month's 5-minute charts -> probe_themeup.json
-            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
-            mkdir -p /tmp/rd && for f in stocks themes; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
-            cp setups/launch.json /tmp/rd/launch.json
-            python3 radar/probe_themeup.py /tmp/rd/stocks.json /tmp/rd/themes.json /tmp/rd/launch.json /tmp/probe_themeup.json && python3 radar/publish.py "theme moving up replay" /tmp/probe_themeup.json
-          fi
           case "$CMD" in news\ *) python3 radar/probe_news.py /tmp/probe_news.json ${CMD#news } && python3 radar/publish.py "news probe" /tmp/probe_news.json;; esac   # "news FROM TO SYM ..." (Alpaca / Yahoo headlines)
           case "$CMD" in reltext*) git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && git show origin/radar-data:earnings.json > /tmp/earn_now.json && python3 radar/probe_reltext.py /tmp/earn_now.json /tmp/probe_reltext.json ${CMD#reltext} && python3 radar/publish.py "earnings release texts" /tmp/probe_reltext.json;; esac
           case "$CMD" in earnprobe\ *) python3 radar/probe_earnings.py /tmp/probe_earnings.json ${CMD#earnprobe } && python3 radar/publish.py "earnings source check" /tmp/probe_earnings.json;; esac

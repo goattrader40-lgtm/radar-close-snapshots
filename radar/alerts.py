@@ -72,10 +72,9 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               27 2023). The buy is the close; the scan after the close confirms it
               The retest alone is a heads-up; holding over the breakout level too (today's low within 1 ADR over
               it) it is a trigger, "RETEST + BREAKOUT LEVEL" (the user's RPD Nov 3 2026: 2 confluences)
-  theme up    THEME MOVING UP / GROUP MOVING UP (the user, Nov 18 2026: Cybersecurity, 10 of 13 up 5%+ between 9:53 and 10:12
-              with no alert of its own): 3+ tight members (fit 0.7+) of a theme, or of a tight industry group, up 3%+ on
-              the day at the same 5-minute update, whatever lists they are on (theme_moves). Once a day per theme, and once
-              more when twice as many are up. From 9:35, the full updates only (the 1-minute check reads a few stocks)
+  theme up    THEME MOVING UP / GROUP MOVING UP (the user, Nov 18 2026: Cybersecurity, PANW 9:53, CRWD 10:07, S 10:10, with
+              no alert of its own): 3+ tight members (fit 0.7+) of a theme, or of a tight industry group, with a morning
+              breakout today, from either morning box (theme_breakouts). Once a day per theme; on the phone too
 Triggers (the buys, TRIGGERS) always get their own push, up to MAX_TRIGGERS a run, after today's 1-minute chart checks;
 heads-ups fill the rest of MAX_PER_RUN and the others are grouped into one push naming each. Every alert's full text
 is saved in alerts.json items (kind trigger / heads-up / summary, grouped) for the portal's log.
@@ -90,7 +89,7 @@ MAX_TRIGGERS = 15             # triggers a run that always get their own push (a
 # the buys (the user, Nov 3 2026: "so it gets my attention"); everything else is a heads-up. The 21 EMA retest alone is a
 # heads-up (the user: "21 ema retest is not a strong sign by itself"); with the breakout level under it (ema21bl) a trigger
 TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "breakout", "retest", "reclaimbo2",
-            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep", "mbo"}
+            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep", "mbo", "mbo2"}
 
 
 def is_trigger(key, title=""):
@@ -121,7 +120,7 @@ KIND_WORDS = {"retest": "retest holding", "zone": "in the retest zone", "ema21":
               "reclaimbo2": "breakout undercut & reclaim", "ema50back": "back over the 50 EMA", "ema50": "50 EMA undercut & reclaim",
               "push": "push", "pop": "pop", "gapbase": "gap out of base", "gob1": "gap out of base", "gob5": "gap out of base",
               "s3": "3-SETUPS trigger", "early": "early gap", "near": "gapping to the buy point", "ep": "episodic pivot",
-              "mbo": "morning breakout"}
+              "mbo": "morning breakout", "mbo2": "breakout, not in trend"}
 
 
 def kind_words(key, title=""):
@@ -144,7 +143,7 @@ def group_moves(doc, state, alerts_now, now):
     loose = {r["group"] for r in (doc.get("group_rank") or {}).get("rows", []) if r.get("loose")}
     seen = {}
     past = [(it["key"], it.get("title"), it.get("time")) for it in state.get("items", [])
-            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith(":mbo")]
+            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith((":mbo", ":mbo2")) and ":mbo2back" not in it["key"]]
     for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now]:
         sym = key.split(":")[0]
         if (_ADR.get(sym) or 0) < GROUP_MIN_ADR:          # MD 3.73%, WAT 3.42%, BSY 3.20% on Nov 18 2026: not counted
@@ -176,10 +175,13 @@ def group_label(doc, g):
     return f"{g} ({tier}#{r['rank']}/{r['of']}, {r.get('members')} stocks)"
 
 
-# a theme moving up (the user, Nov 18 2026): the stocks of a theme up together, read from the live prices of every member,
-# not from the alerts (the GROUP MOVE alert above counts stocks that alerted: Cybersecurity's was spent at 9:35 on three
-# pullback heads-ups, and PANW, CRWD, OKTA, QLYS, under their 50 EMA and on no list, could not alert at all)
-THEME_UP = {"min_n": 3, "min_chg": 3.0, "fit": 0.7, "more": 2, "min_share": 0.0, "groups": True}   # min_share: of its tight members; groups: the industry groups too
+# a theme moving up (the user, Nov 18 2026): 3+ stocks of one theme with a morning breakout today (over yesterday's high and
+# the opening range high, on volume: either morning box). The GROUP MOVE alert above counts stocks that alerted on the
+# followed lists: Cybersecurity's was spent at 9:35 on three pullback heads-ups, and PANW, CRWD, S, TENB, under their 50
+# EMA and on no list, could not alert at all. A first version counted the members up 3%+: about 30 alerts a day on the
+# last 22 sessions (the user: "i m looking for real alerts")
+THEME_MIN = 3                 # morning breakouts of one theme that make the alert
+THEME_FIT = 0.7               # a tight member
 
 
 def theme_members(themes, stocks, fit=0.7):
@@ -203,52 +205,36 @@ def theme_members(themes, stocks, fit=0.7):
     return out
 
 
-def theme_moves(live, members, state, now, R=None, doc=None):
-    """the THEME MOVING UP alerts of this update: [(key, title, msg, prio, tvs)]. state["thm"] keeps how many were up at
-    each theme's alert (the second alert comes at twice that). A theme and a group with the same stocks up are one alert
-    (the theme names it); the other one counts as sent"""
-    R = R or THEME_UP
-    rows, sent, memo = live.get("rows") or {}, set(state.get("sent") or []), state.setdefault("thm", {})
-    cand = []
-    for (kind, name), syms in members.items():
-        up = sorted(((rows[s][1], s) for s in syms if rows.get(s) and rows[s][0] and rows[s][1] is not None and rows[s][1] >= R["min_chg"]), reverse=True)
-        if len(up) < R["min_n"] or len(up) < R.get("min_share", 0) * len(syms) or (kind == "group" and not R.get("groups", True)):
-            continue
-        key = f"thm:{name}"
-        if key not in sent:
-            cand.append((kind, name, key, syms, up, False))
-        elif key + ":more" not in sent and len(up) >= R["more"] * (memo.get(name) or {}).get("n", 10 ** 6):
-            cand.append((kind, name, key + ":more", syms, up, True))
-    # the same stocks up under two names: the theme first, then the smaller one (the bigger share of its members)
-    cand.sort(key=lambda c: (c[0] != "theme", -len(c[4]) / len(c[3]), c[1]))
+def theme_breakouts(state, new, members, live, now, doc=None):
+    """the THEME MOVING UP alerts of this check: [(key, title, msg, prio, tvs)]. `new` = this check's morning breakouts
+    [(key, title, msg, ...)] of both boxes; the earlier ones are in state items. A theme and an industry group with the
+    same stocks are one alert (the theme names it); a name whose stocks all are in an alert already sent counts as sent"""
+    rows, sent, t = live.get("rows") or {}, set(state.get("sent") or []), f"{now:%H:%M}"
+    when = {}
+    for key, tm in [(it.get("key", ""), it.get("time", "")) for it in state.get("items", [])] + [(a[0], t) for a in new]:
+        if key.endswith((":mbo", ":mbo2")) and not key.startswith("mbatch"):
+            when.setdefault(key.split(":")[0], tm)
+    if len(when) < THEME_MIN:
+        return []
+    hit = {k: sorted((s for s in syms if s in when), key=lambda s: when[s]) for k, syms in members.items()}
+    hit = {k: v for k, v in hit.items() if len(v) >= THEME_MIN}
+    seen = [frozenset(v) for (_, name), v in hit.items() if f"thm:{name}" in sent]
     rank = {r.get("group"): r for r in ((doc or {}).get("group_rank") or {}).get("rows", [])}
-    # a move already alerted today under another name (the Cybersecurity theme, then the Cybersecurity industry group with
-    # no stock the theme's alert doesn't have): no second alert
-    seen = [frozenset(s for s in syms if rows.get(s) and rows[s][1] is not None and rows[s][1] >= R["min_chg"])
-            for (_, name), syms in members.items() if f"thm:{name}" in sent]
-    upset = lambda syms: frozenset(s for s in syms if rows.get(s) and rows[s][1] is not None and rows[s][1] >= R["min_chg"])
-    seen2 = [upset(syms) for (_, name), syms in members.items() if f"thm:{name}:more" in sent]      # the second alerts, the same way
     out = []
-    for kind, name, key, syms, up, more in cand:
-        ss = frozenset(s for _, s in up)
-        if not more:
-            memo[name] = {"n": len(up), "at": f"{now:%H:%M}"}
-        if any(ss <= x for x in (seen2 if more else seen)):
+    for (kind, name), v in sorted(hit.items(), key=lambda x: (x[0][0] != "theme", -len(x[1]) / len(members[x[0]]), x[0][1])):
+        key = f"thm:{name}"
+        if key in sent:
+            continue
+        if any(frozenset(v) <= x for x in seen):
             state.setdefault("sent", []).append(key)        # the same move under its other name
             continue
-        (seen2 if more else seen).append(ss)
-        every = [rows[s][1] for s in syms if rows.get(s) and rows[s][1] is not None]
+        seen.append(frozenset(v))
         r = rank.get(name)
         tier = "" if not r else (" (" + ("★ Top " if r.get("tier") == "Top" else "Strong " if r.get("tier") == "Strong" else "") + f"#{r['rank']}/{r['of']})")
-        title = (f"{'THEME' if kind == 'theme' else 'GROUP'} MOVING UP: {name}{tier}: "
-                 + ("now " if more else "") + f"{len(up)} of {len(syms)} up {R['min_chg']:g}%+")
-        msg = " · ".join(f"{s} +{c:.1f}%" + (f" vol {rows[s][4]:.1f}x" if len(rows[s]) > 4 and rows[s][4] else "") for c, s in up[:12])
-        if len(up) > 12:
-            msg += f" · and {len(up) - 12} more"
-        if every:
-            msg += f" · all {len(every)} members average {sum(every) / len(every):+.1f}%"
-        if more:
-            msg += f" · first alert {(memo.get(name) or {}).get('at', '')} with {(memo.get(name) or {}).get('n', '')}"
+        title = f"{'THEME' if kind == 'theme' else 'GROUP'} MOVING UP: {name}{tier}: {len(v)} morning breakouts: " + ", ".join(v)
+        msg = " · ".join(f"{s} {when[s]}" + (f" {rows[s][1]:+.1f}%" if rows.get(s) and rows[s][1] is not None else "")
+                         + (f" vol {rows[s][4]:.1f}x" if rows.get(s) and len(rows[s]) > 4 and rows[s][4] else "") for s in v)
+        msg += f" · {len(v)} of the {len(members[(kind, name)])} stocks of {name} broke out this morning (over yesterday's high and the opening range high)"
         out.append((key, title, msg, "high", ""))
     return out
 
@@ -965,7 +951,7 @@ def update_holding(state, found, live, doc, now):
     lost, back, held, seen = state.setdefault("lost", {}), state.setdefault("back", {}), [], set()
     for it in state.get("items", []):
         key = it.get("key", "")
-        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "thm:", "summary:")) or key.endswith(":mbo"):
+        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "thm:", "summary:")) or key.endswith((":mbo", ":mbo2")):
             continue                                    # (the morning breakouts: morning_holding, on the user's settings)
         seen.add(key)
         q = (live.get("rows") or {}).get(key.split(":")[0])
@@ -999,7 +985,7 @@ MORNING_NUM = {"min_chg": (0, 100), "min_rv": (0, 50), "price": (0, 10000), "mca
 MORNING_BOOL = ("on", "over_pdh", "over_orh", "above200", "above50", "e10_e21", "e21_e50", "e50_s200")
 # the opening range the alert tests (the user, Nov 17 2026: "when i put it does 1min, if i put 2min it does 2 mins, if i put
 # 5min it does 5min"; alerts/morning.json "orh_min", 5 when not saved) and the first minute it is complete
-ORH_START = {1: (9, 31), 2: (9, 32), 5: (9, 35)}
+ORH_START = {1: (9, 31), 2: (9, 32), 3: (9, 33), 5: (9, 35)}     # 3: the user, Nov 18 2026
 PAGE_ONLY = ("mbo",)            # kinds shown on the portal only (no phone push): mbo, and mboback... (back in its box)
 MORNING_BACK_EVERY = 15         # minutes between two "back on" alerts of one stock (the user, Nov 17 2026)
 MORNING_FETCH = 80              # new stocks' levels (yesterday's high, the opening range) read a run, the biggest movers first
@@ -1068,6 +1054,46 @@ def load_morning(path):
     M["x"] = morning_x(doc)
     M["saved_at"] = doc.get("saved_at", "")
     return M
+
+
+# the second morning box (the user, Nov 18 2026): the same breakout for the stocks NOT in trend ("another tab alerts for stocks
+# not in trend, basically not eligible for setups i have in morning breakout alerts": PANW, CRWD, QLYS, TENB, S under their 50
+# EMA that day). Its own settings, alerts/morning2.json, saved by the portal's second box; none saved = a copy of the first
+# box's with the trend boxes off. A stock that passes the first box's trend boxes at the live price belongs to the first
+# box and is left out here; one that already fired there does not fire here
+MORNING_TREND = ("above200", "above50", "e10_e21", "e21_e50", "e50_s200")
+MORNING_NAME = {"mbo": "MORNING BREAKOUT", "mbo2": "BREAKOUT, NOT IN TREND"}
+
+
+def load_morning2(path, M1):
+    try:
+        ok = bool(path) and os.path.exists(path) and isinstance(json.load(open(path)), dict) and bool(json.load(open(path)))
+    except Exception:
+        ok = False
+    if ok:
+        return load_morning(path)
+    M = dict(M1 or load_morning(None), x=list((M1 or {}).get("x") or []), saved_at="")
+    for k in MORNING_TREND:
+        M[k] = False
+    return M
+
+
+def morning_trend_ok(st, price, M):
+    """True when the first box has a trend box ticked and the stock passes every ticked one at this price (a stock in
+    trend: the first box's)"""
+    if not any(M.get(k) for k in MORNING_TREND) or not price:
+        return False
+    sma = st.get("sma200")
+    if M.get("above200") and sma and price <= sma:
+        return False
+    if M.get("above50") or M.get("e10_e21") or M.get("e21_e50") or M.get("e50_s200"):
+        e = live_emas(st, price)
+        if not e:
+            return False
+        if (M.get("above50") and price <= e[2]) or (M.get("e10_e21") and e[0] <= e[1]) or (M.get("e21_e50") and e[1] <= e[2]) \
+                or (M.get("e50_s200") and sma and e[2] <= sma):
+            return False
+    return True
 
 
 def in_morning(M, now):
@@ -1226,9 +1252,9 @@ def morning_why_not(st, q, M):
 
 def morning_levels(sym, today=None, n=5):
     """yesterday's regular-session high and today's n-minute opening range (5: 9:30-9:35, from Yahoo's 5-minute chart as
-    before; 1 or 2: the first 1 or 2 minutes, from its 1-minute chart) and day's low so far, of the last 2 sessions:
+    before; 1, 2 or 3: the first 1, 2 or 3 minutes, from its 1-minute chart) and day's low so far, of the last 2 sessions:
     {pdh, orh, orl, low, pd, n} or None"""
-    n = n if n in (1, 2) else 5
+    n = n if n in (1, 2, 3) else 5
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=2d&interval={'5m' if n == 5 else '1m'}"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
@@ -1283,7 +1309,7 @@ def find_morning(live, S, M, now):
     return sorted(out, key=lambda s: -(live["rows"][s][1] or 0))
 
 
-def morning_alert(sym, st, q, lv, M):
+def morning_alert(sym, st, q, lv, M, kind="mbo"):
     """(title, msg) of one morning breakout, or None when the levels aren't broken"""
     price, chg, rv = q[0], q[1], q[4]
     if M.get("over_pdh") and not (lv and lv.get("pdh") and price > lv["pdh"]):
@@ -1308,10 +1334,10 @@ def morning_alert(sym, st, q, lv, M):
     th = [t for t in str(st.get("themes") or "").split(" | ") if t]
     if th or st.get("group"):
         msg += " · theme " + (th[0] if th else st.get("group"))
-    return f"{sym} MORNING BREAKOUT {chg:+.1f}%", msg
+    return f"{sym} {MORNING_NAME[kind]} {chg:+.1f}%", msg
 
 
-def morning_holding(state, M, live, S, now):
+def morning_holding(state, M, live, S, now, kind="mbo"):
     """today's morning breakouts that still meet the user's settings (the user, Nov 17 2026: the box "was supposed to be in
     true state, meaning when it gets out it takes out of box, when it gets back in it just alerts that its back in"; TSCO
     that day: alerted 9:45 at $38.72 over $38.58 and $38.38, at 11:20 $38.29 and still in the box). Holding = every
@@ -1320,27 +1346,27 @@ def morning_holding(state, M, live, S, now):
     (the portal moves a lost one to Heads-ups and back). A stock back on gets one alert (key SYM:mbobackHHMM, portal
     only), at most one every MORNING_BACK_EVERY minutes. A stock without a live row, a stocks row or its kept levels in
     this run stays as it was. Returns the back-on alerts [(key, title, msg, 'high', tv)]"""
-    lost, back, lvs = state.setdefault("lost", {}), state.setdefault("back", {}), state.get("mbo_lv") or {}
-    last, t, out, seen = state.setdefault("mbo_back", {}), f"{now:%H:%M}", [], set()
+    lost, back, lvs = state.setdefault("lost", {}), state.setdefault("back", {}), state.get(f"{kind}_lv") or {}
+    last, t, out, seen = state.setdefault(f"{kind}_back", {}), f"{now:%H:%M}", [], set()
     mins = lambda x: int(x[:2]) * 60 + int(x[3:5])
     for it in state.get("items", []):
         key = it.get("key", "")
-        if not key.endswith(":mbo") or key.startswith("mbatch") or key in seen:
+        if not key.endswith(f":{kind}") or key.startswith("mbatch") or key in seen:
             continue
         seen.add(key)
         sym = key.split(":")[0]
         q, st, lv = (live.get("rows") or {}).get(sym), S.get(sym), lvs.get(sym)
         if not q or not q[0] or q[1] is None or not st or not lv:
             continue
-        a = None if morning_why_not(st, q, M) else morning_alert(sym, st, q, lv, M)
+        a = None if morning_why_not(st, q, M) else morning_alert(sym, st, q, lv, M, kind)
         px = round(q[0], 2)
         if a and key in lost:
             back[key] = {"at": t, "price": px}
             del lost[key]
             if sym not in last or mins(t) - mins(last[sym]) >= MORNING_BACK_EVERY:
                 last[sym] = t
-                out.append((f"{sym}:mboback{now:%H%M}", f"{sym} MORNING BREAKOUT BACK ON {q[1]:+.1f}%",
-                            f"meets your morning breakout settings again (first alert {it.get('time', '')}) · " + a[1],
+                out.append((f"{sym}:{kind}back{now:%H%M}", f"{sym} {MORNING_NAME[kind]}{',' if kind == 'mbo2' else ''} BACK ON {q[1]:+.1f}%",
+                            f"meets your {'morning breakout' if kind == 'mbo' else 'not-in-trend breakout'} settings again (first alert {it.get('time', '')}) · " + a[1],
                             "high", st.get("tv_symbol") or sym))
         elif not a and key not in lost:
             lost[key] = {"at": t, "price": px}
@@ -1358,15 +1384,15 @@ def news_words(x):
     return " · news: " + str(x.get("catalyst") or "") + ": " + str(x.get("reason") or "")[:260] + (f" · 📰 {x['url']}" if x.get("url") else "")
 
 
-def check_morning(cands, state, M, live, S, E, now, sent):
+def check_morning(cands, state, M, live, S, E, now, sent, kind="mbo"):
     """the candidates whose levels are broken: [(key, title, msg, 'high', tv)], each stock once a day; the levels are
     read once a day per stock (a minute after the opening range closes it is final: 9:36 for the 5-minute one, 9:32 / 9:33
     for the 1- / 2-minute ones) and kept in alerts.json (mbo_lv); levels kept for another range (the setting changed
     during the morning) are read again; a stock that fires gets its day's low read again (the stop)"""
     import concurrent.futures
     n = M.get("orh_min") or 5
-    state["mbo_lv"] = lvs = {k: v for k, v in (state.get("mbo_lv") or {}).items() if (v.get("n") or 5) == n}
-    todo = [s for s in cands if f"{s}:mbo" not in sent]
+    state[f"{kind}_lv"] = lvs = {k: v for k, v in (state.get(f"{kind}_lv") or {}).items() if (v.get("n") or 5) == n}
+    todo = [s for s in cands if f"{s}:{kind}" not in sent]
     before = set(lvs)                                       # levels read at an earlier check (their day's low is old)
     hc = any(f["id"] == "hc21" for f in M.get("x") or [])     # the 21-day closing high only when a + Filter needs it
     need = [s for s in todo if s not in lvs or (hc and "hc21" not in lvs[s])][:MORNING_FETCH]
@@ -1385,18 +1411,18 @@ def check_morning(cands, state, M, live, S, E, now, sent):
         if got.get(sym) and final:
             lvs[sym] = got[sym]
         q = live["rows"][sym]
-        a = morning_alert(sym, S[sym], q, lv, M)
+        a = morning_alert(sym, S[sym], q, lv, M, kind)
         if a:
             (recheck if sym in before else fired).append((sym, a, lv))
         elif lv:
-            print(f"{sym}:mbo: ${q[0]:.2f} not over yesterday's high {lv.get('pdh')} / the opening range high {lv.get('orh')} yet")
+            print(f"{sym}:{kind}: ${q[0]:.2f} not over yesterday's high {lv.get('pdh')} / the opening range high {lv.get('orh')} yet")
     if recheck:                                         # levels from an earlier check: the day's low now
         with concurrent.futures.ThreadPoolExecutor(8) as ex:
             fresh = dict(zip([r[0] for r in recheck], ex.map(lambda s_: morning_levels(s_, now.date(), n), [r[0] for r in recheck])))
         for sym, a, lv in recheck:
             if fresh.get(sym):
                 lv = dict(lv, low=fresh[sym]["low"])     # (the 21-day closing high and the levels as they were)
-                a = morning_alert(sym, S[sym], live["rows"][sym], lv, M) or a
+                a = morning_alert(sym, S[sym], live["rows"][sym], lv, M, kind) or a
             fired.append((sym, a, lv))
     if not fired:
         return []
@@ -1408,7 +1434,7 @@ def check_morning(cands, state, M, live, S, E, now, sent):
         NWS = {}
     out = []
     for sym, (title, msg), lv in fired:
-        out.append((f"{sym}:mbo", title, msg + news_words(NWS.get(sym)), "high", S[sym].get("tv_symbol") or sym))
+        out.append((f"{sym}:{kind}", title, msg + news_words(NWS.get(sym)), "high", S[sym].get("tv_symbol") or sym))
     return out
 
 
@@ -1448,8 +1474,10 @@ def main():
     low52_of(launch_p)                  # the stocks file: 52-week lows, 200 SMAs and each stock's groups (3-SETUPS tiers)
     # the morning breakouts (any stock; the user's settings, alerts/morning.json): the stocks whose live quote passes now
     M = load_morning(sys.argv[sys.argv.index("--morning") + 1]) if "--morning" in sys.argv else None
-    mb_cands, S_all, E_all = [], {}, {}
-    if M and M.get("on") and not early and (in_morning(M, now) or any(k.endswith(":mbo") for k in sent)):
+    M2 = load_morning2(sys.argv[sys.argv.index("--morning2") + 1] if "--morning2" in sys.argv else None, M) if M else None
+    mb_cands, mb2_cands, S_all, E_all = [], [], {}, {}
+    if M and not early and ((M.get("on") and in_morning(M, now)) or (M2.get("on") and in_morning(M2, now))
+                            or any(k.endswith((":mbo", ":mbo2")) for k in sent)):
         for name in ("base_stocks.json", "stocks.json"):
             p = os.path.join(os.path.dirname(os.path.abspath(launch_p)), name)
             if os.path.exists(p):
@@ -1463,7 +1491,10 @@ def main():
         gr_ = (doc.get("group_rank") or {})
         _MCTX["rs"] = gr_.get("rs") or {}
         _MCTX["gr"] = {(g.get("kind"), g.get("group")): g for g in gr_.get("rows") or []}
-        mb_cands = find_morning(live, S_all, M, now)
+        mb_cands = find_morning(live, S_all, M, now) if M.get("on") else []
+        # the second box: the stocks not in trend (they fail a trend box the first box has ticked) that didn't fire there
+        mb2_cands = [s_ for s_ in (find_morning(live, S_all, M2, now) if M2.get("on") else [])
+                     if f"{s_}:mbo" not in sent and not morning_trend_ok(S_all[s_], live["rows"][s_][0], M)]
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
     if not early:
         try:
@@ -1635,13 +1666,20 @@ def main():
             mb = check_morning(mb_cands, state, M, live, S_all, E_all, now, sent)
         except Exception as e:                      # never at the cost of the other alerts
             print(f"morning breakouts: {e!r}", file=sys.stderr)
+    mb2 = []
+    if mb2_cands:
+        try:
+            mb2 = check_morning([s_ for s_ in mb2_cands if s_ not in {a[0].split(":")[0] for a in mb}], state, M2, live, S_all, E_all, now, sent, "mbo2")
+        except Exception as e:
+            print(f"breakouts not in trend: {e!r}", file=sys.stderr)
     # which of today's morning breakouts still meet the settings (the portal's box holds only those), and the ones back on
     mbk = []
-    if M and M.get("on") and S_all:
-        try:
-            mbk = morning_holding(state, M, live, S_all, now)
-        except Exception as e:
-            print(f"morning breakouts holding: {e!r}", file=sys.stderr)
+    for M_, kind_ in ((M, "mbo"), (M2, "mbo2")):
+        if M_ and M_.get("on") and S_all:
+            try:
+                mbk += morning_holding(state, M_, live, S_all, now, kind_)
+            except Exception as e:
+                print(f"morning breakouts holding ({kind_}): {e!r}", file=sys.stderr)
     # triggers (the buys) always get their own alert, up to MAX_TRIGGERS a run; the heads-ups fill what is left of
     # MAX_PER_RUN and the rest are grouped into one alert that still names each one, its kind and price. Every alert's
     # full text is saved in alerts.json either way, so the portal's log shows each one (grouped ones without a pop-up)
@@ -1678,17 +1716,15 @@ def main():
             out_.append(((gk, f"GROUP MOVE: {group_label(doc, g)}: " + ", ".join(x[0] for x in lst),
                           " · ".join(f"{x[0]} {x[1]} {x[2]}" for x in lst) + f" · {len(lst)} stocks of {g} alerting today",
                           "high", ""), False))
-    # a theme moving up (the user, Nov 18 2026): 3+ tight members up 3%+ at this update; the full updates only, from 9:35
-    if not early and not fast:
+    # a theme moving up (the user, Nov 18 2026): 3+ stocks of one theme with a morning breakout today, from either box
+    if (mb or mb2) and S_all:
         try:
             d_ = os.path.dirname(os.path.abspath(launch_p))
             tp_ = next((os.path.join(d_, n) for n in ("base_themes.json", "themes.json") if os.path.exists(os.path.join(d_, n))), None)
-            sp_ = next((os.path.join(d_, n) for n in ("base_stocks.json", "stocks.json") if os.path.exists(os.path.join(d_, n))), None)
-            if tp_ and sp_:
-                mem_ = theme_members(json.load(open(tp_)), json.load(open(sp_)), THEME_UP["fit"])
-                out_ += [(a, False) for a in theme_moves(live, mem_, state, now, doc=doc)]
+            mem_ = theme_members(json.load(open(tp_)) if tp_ else [], list(S_all.values()), THEME_FIT)
+            out_ += [(a, False) for a in theme_breakouts(state, mb + mb2, mem_, live, now, doc)]
         except Exception as e:                      # never at the cost of the other alerts
-            print(f"theme moves: {e!r}", file=sys.stderr)
+            print(f"theme moving up: {e!r}", file=sys.stderr)
     if grouped:
         names = " · ".join(short(a) for a in grouped)
         out_.append(((f"summary:{now:%H%M}", f"{len(grouped)} more heads-ups (in the portal's alert log)", names, "default", ""), False))
@@ -1700,6 +1736,12 @@ def main():
         out_ += [(a, True) for a in mb]
         out_.append(((f"mbatch{now:%H%M}:mbo", f"MORNING BREAKOUTS ({len(mb)}): " + ", ".join(a[0].split(":")[0] for a in mb),
                       " · ".join(a[1].replace(" MORNING BREAKOUT", "") + " " + a[2].split(" · ")[0] for a in mb), "high", ""), False))
+    if len(mb2) == 1:
+        out_.append((mb2[0], False))
+    elif mb2:
+        out_ += [(a, True) for a in mb2]
+        out_.append(((f"mbatch2{now:%H%M}:mbo2", f"BREAKOUTS, NOT IN TREND ({len(mb2)}): " + ", ".join(a[0].split(":")[0] for a in mb2),
+                      " · ".join(a[1].replace(" BREAKOUT, NOT IN TREND", "") + " " + a[2].split(" · ")[0] for a in mb2), "high", ""), False))
     out_ += [(a, False) for a in mbk]
     for (key, title, msg, prio, tvs), is_grouped in out_:
         line = f"{now:%H:%M} {title}: {msg}"

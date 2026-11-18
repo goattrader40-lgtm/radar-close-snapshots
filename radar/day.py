@@ -213,15 +213,19 @@ def load_history():
 def morning_args():
     """the morning breakout settings (alerts/morning.json on main, saved by the portal; none = the defaults) and the
     Earnings tab (the alerts' news), as alerts.py arguments; re-read every 2 minutes (the user saves them before 9:25)"""
-    p, pe = os.path.join(OUT, "morning.json"), os.path.join(OUT, "earnings_now.json")
+    p, p2, pe = os.path.join(OUT, "morning.json"), os.path.join(OUT, "morning2.json"), os.path.join(OUT, "earnings_now.json")
     if not (os.path.exists(p) and time.time() - os.path.getmtime(p) < 120):
         txt = main_file("alerts/morning.json")
         open(p, "w").write(txt if txt else "{}")
+        # the second box, the stocks not in trend (the user, Nov 18 2026): alerts/morning2.json; none saved = "{}" = a copy
+        # of the first box's settings with the trend boxes off (alerts.py load_morning2)
+        txt = main_file("alerts/morning2.json")
+        open(p2, "w").write(txt if txt else "{}")
     if not (os.path.exists(pe) and time.time() - os.path.getmtime(pe) < 600):
         txt = data_file("earnings.json")
         if txt:
             open(pe, "w").write(txt)
-    return ["--morning", p] + (["--earnings", pe] if os.path.exists(pe) else [])
+    return ["--morning", p, "--morning2", p2] + (["--earnings", pe] if os.path.exists(pe) else [])
 
 
 def premarket_args():
@@ -247,7 +251,7 @@ def fast_once():
     out = os.path.join(OUT, "live_fast.json")
     load_opens()
     mo = morning_args()
-    r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, *mo[:2], check=False)
+    r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, *mo[:4], check=False)
     if r.returncode:
         log("fast:", (r.stderr or r.stdout).strip()[-300:])
         return
