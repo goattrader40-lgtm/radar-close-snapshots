@@ -236,6 +236,8 @@ def result_line(r):
     if r.get("eps_act") is not None:
         p.append(f"EPS {r['eps_act']:.2f}" + (f" vs {r['eps_est']:.2f} est" if r.get("eps_est") is not None else ""))
     g = r.get("guide") or {}
+    if g.get("mid") and abs(g.get("vs_street") or 0) > 12:
+        g = {}                               # a guide read 12%+ off the street is most likely another figure (TGT Nov 18 2026: -15%)
     if g.get("mid"):
         p.append(("next quarter's" if g.get("kind") == "q" else "the year's") + " revenue guide " + money(g["mid"])
                  + (f" ({g['vs_street']:+.1f}% vs the street)" if g.get("vs_street") is not None else ""))
@@ -290,9 +292,11 @@ def load_words(map_path):
         return {"themes": {}, "niches": {}, "generic": {}}
 
 
-def members(S, T):
-    """the tradable stocks of a theme, the largest first"""
-    return sorted((k for k, s in S.items() if T in TE.themes_of(s) and TE.tradable(s)), key=lambda k: -(S[k].get("mcap_b") or 0))
+def members(S, T, any_adr=False):
+    """the tradable stocks of a theme, the largest first (any_adr: the liquid ones whatever their ADR: a theme's bellwether is
+    often a giant under your 3% ADR, Walmart for Retail)"""
+    ok = (lambda s: (s.get("mcap_b") or 0) >= TE.MCAP_MIN and (s.get("dvol_20_m") or 0) >= TE.DVOL_MIN) if any_adr else TE.tradable
+    return sorted((k for k, s in S.items() if T in TE.themes_of(s) and ok(s)), key=lambda k: -(S[k].get("mcap_b") or 0))
 
 
 def all_bellwethers(bw, S, themes, W):
@@ -304,7 +308,7 @@ def all_bellwethers(bw, S, themes, W):
     for t in themes or []:
         if t.get("category") == "Auto groups":
             continue
-        for sym in members(S, t["theme"])[:2]:
+        for sym in members(S, t["theme"], True)[:2]:
             home.setdefault(sym, []).append(t["theme"])
     for sym, Ts in home.items():
         if sym in B:
@@ -318,7 +322,7 @@ def all_bellwethers(bw, S, themes, W):
             for n, spec in ((W.get("niches") or {}).get(T) or {}).items():
                 topics[f"niche:{T}:{n}"] = {"label": n, "find": spec["find"], "also": []}
         rank = ["largest", "second-largest"]
-        what = " ".join(f"{nm} is the {rank[min(members(S, T).index(sym), 1)]} stock of your {T} theme." for T in Ts) + \
+        what = " ".join(f"{nm} is the {rank[min(members(S, T, True).index(sym), 1)]} stock of your {T} theme." for T in Ts) + \
             " Its report is the first reading of that business for the whole group: no map is written for it, the links are its theme."
         B[sym] = {"name": nm, "auto": True, "home": Ts, "what": what, "topics": topics, "lead": ["recurring", "revenue", "outlook"],
                   "names": {}, "links": []}
@@ -353,6 +357,8 @@ def accel_words(row):
     g, gp, gg = row.get("rev_growth"), row.get("rev_prev_growth"), (row.get("guide") or {}).get("growth")
     if g is None:
         return ""
+    if abs((row.get("guide") or {}).get("vs_street") or 0) > 12 or (row.get("guide") or {}).get("kind") != "q":
+        gg = None                            # only next quarter's guide, and only one read close to the street
     p = []
     if gp is not None:
         p.append(f"the quarter before {gp:+.0f}% y/y: " + ("speeding up" if g - gp >= 1 else "slowing" if gp - g >= 1 else "steady"))
