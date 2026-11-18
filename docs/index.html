@@ -622,7 +622,7 @@
       <div class="tgr-copybar" id="evl-pickbar" hidden><b>Reports now</b><span class="tgr-seg" id="evl-pick" aria-label="Which report"></span></div>
       <p class="tgr-note" id="evl-line"></p>
       <details class="tgr-legend tgr-more" data-key="evlinks"><summary>What an event is, and which stocks are linked</summary>
-      <p class="tgr-note">An event = a bellwether reports: a company whose results move the stocks tied to it (NVIDIA, Microsoft, Google, Amazon, Meta). When several report the same evening, a button for each. The card is up from the morning of its report to the evening of the session that reacts to it. Only the 1st impact is listed: a <b>direct tie</b> (the bellwether owns a stake in the stock, buys from it, sells to it, or runs a named program with it) or a <b>rival</b>. Every link is written out with its reason; a stock without one is not listed. A 📄 after the reason opens the linked company's own annual report where it names the bellwether (hover for the sentence); a link without it is one the two companies do not name in their reports, written only where the deal is public. "What it said" is the bellwether's own sentence from its results filing at the SEC (the press release and the CFO commentary): first a sentence that names the stock, else its sentence on the business the link is about. Nothing is searched or written by Claude. Moves: after hours on the evening, then the pre-market scan, then the live prices. On the reaction session an alert on a listed stock ends with the same reason ("why:"). Price and volume decide; this is the reason next to them.</p>
+      <p class="tgr-note">An event = a bellwether reports: a company whose results move the stocks tied to it. When several report the same evening, a button for each. The card is up from the morning of its report to the evening of the session that reacts to it. Two levels, the direct links on top. <b>Level 1</b>: a <b>direct tie</b> (the bellwether owns a stake in the stock, buys from it, sells to it, or runs a named program with it) or a <b>rival</b>, each written out with its reason. <b>Level 2, the same theme</b>: <b>same business</b> = the other stocks of the bellwether's own theme, with its sentence on their niche when it has one; <b>its theme is in the report</b> = the main stocks of another of your themes when the report has a sentence about that business with a figure in it. No direct tie is claimed at level 2: for a peer the report means either demand for the whole group or business taken from it, and "moving with / against" under the link says which way its price reads it. Suppliers of suppliers are not listed. The bellwethers: the written maps (NVIDIA, Microsoft, Google, Amazon, Meta) and the two largest stocks of each of your themes. The line on top adds whether its revenue growth is speeding up or slowing (against the quarter before, and against what its guide implies) and where the report grows fastest. A 📄 after the reason opens the linked company's own annual report where it names the bellwether (hover for the sentence); a link without it is one the two companies do not name in their reports, written only where the deal is public. "What it said" is the bellwether's own sentence from its results filing at the SEC (the press release and the CFO commentary): first a sentence that names the stock, else its sentence on the business the link is about. Nothing is searched or written by Claude. Moves: after hours on the evening, then the pre-market scan, then the live prices. On the reaction session an alert on a listed stock ends with the same reason ("why:"). Price and volume decide; this is the reason next to them.</p>
       </details>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="evl-table">
@@ -2840,8 +2840,12 @@ defCalc('industry_perf', {
     const rows = [], seen = new Set();
     (ev.links || []).forEach((L) => (L.stocks || []).forEach((x) => { if (seen.has(x.sym)) return; seen.add(x.sym); rows.push(Object.assign({ theme: L.theme, tsaid: (L.said || [])[0] }, x, { mv: mvOf(x.sym) })); }));
     const up = rows.filter((r) => r.mv && r.mv[0] >= 2).length, dn = rows.filter((r) => r.mv && r.mv[0] <= -2).length;
-    ln.append(h('span', 'tgr-lbl', rows.length + ' stocks with a 1st-impact link · ' + up + ' up 2%+ · ' + dn + ' down 2%+' + (ev.what ? ' · ' + ev.what : '')));
-    rows.sort((a, b) => (b.mv ? b.mv[0] : -99) - (a.mv ? a.mv[0] : -99));
+    const n1 = rows.filter((r) => r.level !== 2).length;
+    /* where it is growing fastest (the report's own growth figures, topic by topic) */
+    if (ev.status !== 'due' && (ev.fastest || []).length) { ln.append(h('b', '', 'Growing fastest: '), ev.fastest.map((f) => f.label + ' +' + Math.round(f.pct) + '%' + (f.accel ? ' (accelerating)' : '')).join(', ') + '. '); }
+    ln.append(h('span', 'tgr-lbl', n1 + ' with a direct tie or a rival · ' + (rows.length - n1) + ' of the same theme · ' + up + ' up 2%+ · ' + dn + ' down 2%+' + (ev.what ? ' · ' + ev.what : '')));
+    /* your order (Nov 18 2026): the direct links on top, then the same theme; inside each, the biggest move first */
+    rows.sort((a, b) => ((a.level === 2) - (b.level === 2)) || ((b.mv ? b.mv[0] : -99) - (a.mv ? a.mv[0] : -99)));
     const tb = $('#evl-table tbody'); tb.replaceChildren();
     rows.forEach((r) => {
       const tr = h('tr'), key = h('td', 'key'), st = by.get(r.sym);
@@ -2849,6 +2853,11 @@ defCalc('industry_perf', {
       const mv = h('td', 'num ' + (r.mv ? tone(r.mv[0]) : ''), r.mv ? pct(r.mv[0]) : '—');
       if (r.mv) mv.title = r.mv[1];
       const tie = h('td'); tie.append(h('b', '', tiers[r.tier] || r.tier), h('br'), h('span', 'tgr-lbl', r.theme));
+      /* a peer: with the bellwether or against it (the group's demand, or business taken from it: its own price tells) */
+      if (r.level === 2 && bm && r.mv && ev.status !== 'due' && Math.abs(bm[0]) >= 1 && Math.abs(r.mv[0]) >= 1) {
+        const same = (bm[0] > 0) === (r.mv[0] > 0);
+        tie.append(h('br'), h('span', same ? 'tgr-lbl' : 'tgr-dn', same ? 'moving with ' + ev.sym : 'moving against ' + ev.sym));
+      }
       const why = h('td', '', r.why); why.style.whiteSpace = 'normal'; why.style.minWidth = '260px';
       /* the proof: the stock's own annual report naming the bellwether (hover for its sentence, click for the report) */
       if (r.ev && /^https:\/\//.test(r.ev.url || '')) { const l = h('a', '', ' 📄 its ' + (r.ev.form || 'report')); l.href = r.ev.url; l.target = '_blank'; l.rel = 'noopener'; l.title = 'Its own ' + (r.ev.form || 'annual report') + ' (' + fDate(r.ev.filed) + '): “' + r.ev.text + '”'; why.append(l); }
