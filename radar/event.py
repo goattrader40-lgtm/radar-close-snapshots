@@ -148,7 +148,7 @@ def said_for(docs, topics):
             if sum(hits) < MIN_SCORE:
                 continue
             sc = sum(hits) + (2 if re.search(r"\$\s?\d|\d\s?%|\d (billion|million)", s) else 0) \
-                + (1 if CHANGE.search(s) else 0) + (0.5 if kind == "CFO commentary" else 0) - (2 if len(s) > 320 else 0) - k / 2000
+                + (1 if CHANGE.search(s) else 0) + (0.5 if kind == "CFO commentary" else 0) - (2 if len(s) > 320 else 0) - (2 if s[0] in "“\"" else 0) - k / 2000      # the plain statement before the quoted remark
             cand.append((sc, s, kind, url))
         cand.sort(key=lambda x: -x[0])
         keep, seen = [], set()
