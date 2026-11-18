@@ -48,11 +48,12 @@ def kind_of(s, n, ctx):
     if re.search(r"\d{1,2}(\.\d+)?\s?%", s) and re.search(r"revenue|net sales|\bsales\b|receivable", low) \
             and re.search(r"customer|accounted for|represented|comprised|sales to|distributor|partner", low):
         return "store %" if STORE.search(s) else "customer %"
-    if re.search(n + r"(?:[^.;]|\.(?=\d)){0,90}\b(invested|purchased|acquired|holds?|owns?|agreed to (purchase|invest)|right to (purchase|acquire)|subscribed)\b(?:[^.;]|\.(?=\d)){0,90}"
-                 r"(shares|stock|warrants?|equity|notes|\$)", s) \
-            or re.search(r"(issu(ed|ance)|s(old|ale)|grant(ed)?)(?:[^.;]|\.(?=\d)){0,120}(shares|stock|warrants?)(?:[^.;]|\.(?=\d)){0,80}\bto " + n, s) \
-            or re.search(r"(investment|invested)(?:[^.;]|\.(?=\d)){0,40}\b(by|from) " + n, s) or re.search(n + r"('s)? (Warrants?|Investment|Shares)\b", s) \
-            or re.search(r"(warrants?|right)(?:[^.;]|\.(?=\d)){0,60}(issued|granted)?(?:[^.;]|\.(?=\d)){0,20}\bto " + n + r"(?:[^.;]|\.(?=\d)){0,80}(purchase|acquire)", s):
+    G = r"(?:[^.;]|\.(?=\d))"
+    SH = r"(?i:shares|stock|warrants?|equity|notes)"
+    if re.search(n + G + r"{0,90}\b(?i:invested|purchased|acquired|holds?|owns?|agreed to (?:purchase|invest)|right to (?:purchase|acquire)|subscribed)\b" + G + r"{0,90}(?:" + SH + r"|\$)", s) \
+            or re.search(r"(?i:issu(?:ed|ance)|sold|sale|grant(?:ed)?)" + G + r"{0,140}" + SH + G + r"{0,140}\bto " + n, s) \
+            or re.search(r"(?i:investment|invested)" + G + r"{0,40}\b(?:by|from) " + n, s) or re.search(n + r"(?:'s)? (?:Warrants?|Investment|Shares)\b", s) \
+            or re.search(r"(?i:warrants?|right)" + G + r"{0,80}\bto " + n + G + r"{0,80}(?i:purchase|acquire)", s):
         return "stake"
     if re.search(r"compet", low) or re.search(r"compet", ctx[-350:].lower()):
         return "rival"
