@@ -96,7 +96,7 @@ alone.
   desktop / phone with that record (the split boxes, each box edited and reset alone, every voice line, 5 tabs, 0 page
   errors), again after the merge with main. Rules workbook: 3 new rows, 3 changed. No `--regress`, no Launches rebuild
   (launch.py untouched), no 2-year check (alerts and settings).
-- **LIVE (the user's "go live", Wed Nov 18 2026 ~5:20 PM ET, commit 8ba96bf): the two morning boxes run from their own From
+- **LIVE (the user's "go live", Wed Nov 18 2026 ~4:55 PM ET, commit 8ba96bf): the two morning boxes run from their own From
   time, 9:31 at the earliest** (the user: "if i choose 932 or 933 meaning 3 orh breakout it should sound around 934 or 935...
   its every 1min"). Found: main() held the morning breakouts to 9:35 with every other alert (`not early`), though the Nov 17
   change let the box take a 9:31 / 9:32 start: a 1- or 2-minute range never fired before 9:35. radar/alerts.py: that gate is
