@@ -885,7 +885,241 @@
     "TT": "Trane",
     "DLR": "Digital Realty"
    },
-   "relevant": "data center|AI factor|rack|Rubin|Blackwell|network|optic|photonic|cloud|supply|manufactur|packag|GPU|CPU|infrastructure|AI-RAN|inference|training|memory|power|cooling|NVLink|server|storage"
+   "relevant": "data center|AI factor|rack|Rubin|Blackwell|network|optic|photonic|cloud|supply|manufactur|packag|GPU|CPU|infrastructure|AI-RAN|inference|training|memory|power|cooling|NVLink|server|storage",
+   "lead": [
+    "datacenter",
+    "outlook"
+   ]
+  },
+  "MSFT": {
+   "name": "Microsoft",
+   "lead": [
+    "cloud",
+    "capex",
+    "commit"
+   ],
+   "relevant": "data ?cent(er|re)|capital expenditures|capex|infrastructure|capacity|cloud|\\bAI\\b|chips?|silicon|GPU|TPU|compute|gigawatt|power|servers?|network|backlog|lease",
+   "what": "Microsoft is one of the four companies paying for the AI build-out. Its Azure growth says how much AI computing its customers are buying, and its capital spending is the order book of the chip, networking and data-center suppliers and of the AI clouds it rents capacity from. Its spending guide for the next quarter is given on the earnings call, not in the release.",
+   "topics": {
+    "cloud": {
+     "label": "Azure and the Microsoft Cloud",
+     "find": [
+      "azure and other cloud services",
+      "microsoft cloud revenue",
+      "microsoft cloud"
+     ],
+     "also": [
+      "intelligent cloud",
+      "azure"
+     ]
+    },
+    "capex": {
+     "label": "capital spending and capacity",
+     "find": [
+      "capital expenditures",
+      "additions to property and equipment",
+      "finance leases",
+      "data ?cent(er|re) capacity",
+      "capacity constrain"
+     ],
+     "also": [
+      "capacity",
+      "data ?cent(er|re)s?",
+      "infrastructure"
+     ]
+    },
+    "commit": {
+     "label": "its order book",
+     "find": [
+      "remaining performance obligation",
+      "commercial bookings",
+      "contracted"
+     ],
+     "also": [
+      "backlog",
+      "openai"
+     ]
+    },
+    "ai": {
+     "label": "AI demand",
+     "find": [
+      "ai business",
+      "ai (demand|capacity|infrastructure|revenue|platform)",
+      "copilot",
+      "openai",
+      "foundry"
+     ],
+     "also": [
+      "\\bai\\b"
+     ]
+    }
+   },
+   "names": {},
+   "links": []
+  },
+  "GOOGL": {
+   "name": "Alphabet (Google)",
+   "lead": [
+    "capex",
+    "cloud"
+   ],
+   "relevant": "data ?cent(er|re)|capital expenditures|capex|infrastructure|capacity|cloud|\\bAI\\b|chips?|silicon|GPU|TPU|compute|gigawatt|power|servers?|network|backlog|lease",
+   "what": "Google is one of the four companies paying for the AI build-out, and the one that runs mostly on its own AI chips (TPUs, built with Broadcom). Its capital spending and its Cloud growth and backlog are the order book of its chip, networking and data-center suppliers.",
+   "topics": {
+    "capex": {
+     "label": "capital spending",
+     "find": [
+      "capital expenditures",
+      "capex",
+      "technical infrastructure",
+      "purchases of property and equipment"
+     ],
+     "also": [
+      "data ?cent(er|re)s?",
+      "servers",
+      "capacity",
+      "infrastructure"
+     ]
+    },
+    "cloud": {
+     "label": "Google Cloud",
+     "find": [
+      "google cloud revenues?",
+      "google cloud",
+      "cloud backlog",
+      "backlog"
+     ],
+     "also": [
+      "cloud"
+     ]
+    },
+    "ai": {
+     "label": "AI demand and its own chips",
+     "find": [
+      "\\btpus?\\b",
+      "gemini",
+      "ai infrastructure",
+      "tokens",
+      "compute"
+     ],
+     "also": [
+      "\\bai\\b"
+     ]
+    }
+   },
+   "names": {},
+   "links": []
+  },
+  "AMZN": {
+   "name": "Amazon",
+   "lead": [
+    "cloud",
+    "capex",
+    "outlook"
+   ],
+   "relevant": "data ?cent(er|re)|capital expenditures|capex|infrastructure|capacity|cloud|\\bAI\\b|chips?|silicon|GPU|TPU|compute|gigawatt|power|servers?|network|backlog|lease",
+   "what": "Amazon's AWS is the largest cloud and one of the four companies paying for the AI build-out. AWS growth and backlog, the power and data-center capacity it adds, and its own chips (Trainium, built with Marvell and others) are the order book of its chip, connectivity and data-center suppliers.",
+   "topics": {
+    "cloud": {
+     "label": "AWS",
+     "find": [
+      "aws segment sales",
+      "aws (revenue|sales|growth|backlog)",
+      "amazon web services",
+      "backlog"
+     ],
+     "also": [
+      "\\baws\\b"
+     ]
+    },
+    "capex": {
+     "label": "capital spending and capacity",
+     "find": [
+      "purchases of property and equipment",
+      "capital expenditures",
+      "gigawatts?",
+      "power capacity",
+      "capital investments?"
+     ],
+     "also": [
+      "data ?cent(er|re)s?",
+      "capacity",
+      "infrastructure"
+     ]
+    },
+    "chips": {
+     "label": "its own chips and AI partners",
+     "find": [
+      "trainium",
+      "custom (ai )?(chips?|silicon)",
+      "graviton",
+      "anthropic",
+      "project rainier",
+      "nvidia"
+     ],
+     "also": [
+      "bedrock",
+      "\\bai\\b"
+     ]
+    },
+    "outlook": {
+     "label": "the outlook",
+     "find": [
+      "net sales are expected to be",
+      "operating income is expected"
+     ],
+     "also": []
+    }
+   },
+   "names": {},
+   "links": []
+  },
+  "META": {
+   "name": "Meta",
+   "lead": [
+    "capex",
+    "outlook"
+   ],
+   "relevant": "data ?cent(er|re)|capital expenditures|capex|infrastructure|capacity|cloud|\\bAI\\b|chips?|silicon|GPU|TPU|compute|gigawatt|power|servers?|network|backlog|lease",
+   "what": "Meta is one of the four companies paying for the AI build-out, and it states its capital-spending range for the year, and the direction of the next year's, in the release itself. That range is the order book of its chip, networking and data-center suppliers and of the AI clouds it rents capacity from.",
+   "topics": {
+    "capex": {
+     "label": "capital spending",
+     "find": [
+      "capital expenditures",
+      "capex"
+     ],
+     "also": [
+      "infrastructure",
+      "data ?cent(er|re)s?",
+      "compute",
+      "capacity"
+     ]
+    },
+    "outlook": {
+     "label": "the outlook",
+     "find": [
+      "total revenue to be in the range",
+      "total expenses"
+     ],
+     "also": [
+      "expect"
+     ]
+    },
+    "ai": {
+     "label": "AI",
+     "find": [
+      "superintelligence",
+      "meta ai",
+      "ai (infrastructure|capacity|investments?)"
+     ],
+     "also": [
+      "\\bai\\b"
+     ]
+    }
+   },
+   "names": {},
+   "links": []
   }
  },
  "first": [

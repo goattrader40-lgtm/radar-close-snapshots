@@ -231,20 +231,52 @@ def result_line(r):
     return "; ".join(p)
 
 
-def own_words(said, row):
-    """the result in the bellwether's own sentences, for the hours before the Earnings tab has read the report: its
-    Data Center (first topic) sentence and its outlook sentence, the outlook's $ figure against the saved estimate"""
+OUTLOOK = [re.compile(r"expected to be (?:between |in the range of )?\$\s?(\d[\d,.]*)\s*(billion|million)?\s*(?:and|to|-|–)\s*\$?\s?(\d[\d,.]*)\s*(billion|million)", re.I),
+           re.compile(r"(?:revenue|net sales)[^.]{0,60}in the range of \$\s?(\d[\d,.]*)\s*(billion|million)?\s*(?:and|to|-|–)\s*\$?\s?(\d[\d,.]*)\s*(billion|million)", re.I),
+           re.compile(r"expected to be \$\s?(\d[\d,.]*)\s*(billion|million)", re.I)]
+
+
+def outlook_mid(text):
+    """the midpoint, in dollars, of a revenue outlook sentence ('$130.0 billion, plus or minus 3%', 'between $206.0 billion
+    and $213.0 billion', 'in the range of $56-59 billion')"""
+    u = lambda x: 1e9 if (x or "").lower() == "billion" else 1e6
+    for k, p in enumerate(OUTLOOK):
+        g = p.search(text or "")
+        if not g:
+            continue
+        if k == 2:
+            return float(g.group(1).replace(",", "")) * u(g.group(2))
+        a, b = float(g.group(1).replace(",", "")), float(g.group(3).replace(",", ""))
+        return (a * u(g.group(2) or g.group(4)) + b * u(g.group(4))) / 2
+    return None
+
+
+def own_words(said, row, lead=("datacenter", "outlook"), n=2):
+    """the result in the bellwether's own sentences: the first sentence of each of its lead topics (the map's "lead": NVIDIA
+    Data Center revenue and the outlook; a cloud giant its capital spending and its cloud), the outlook's $ figure
+    against the saved estimate"""
     p = []
-    for t in ("datacenter", "outlook"):
-        if said.get(t):
-            p.append(short(said[t][0]["text"], 200).rstrip("."))
-    out = "; ".join(p)
-    g = re.search(r"expected to be \$\s?(\d[\d,.]*)\s*(billion|million)", (said.get("outlook") or [{}])[0].get("text", ""), re.I)
-    est = (row.get("nq") or {}).get("rev")
-    if g and est:
-        v = float(g.group(1).replace(",", "")) * (1e9 if g.group(2).lower() == "billion" else 1e6)
-        out += f" ({(v / est - 1) * 100:+.1f}% vs the {money(est)} estimate)"
-    return out
+    for t in lead:
+        if said.get(t) and len(p) < n:
+            x = short(said[t][0]["text"], 200).rstrip(".")
+            if t == "outlook":
+                v, est = outlook_mid(said[t][0]["text"]), (row.get("nq") or {}).get("rev")
+                if v and est and 0.5 < v / est < 2:
+                    x += f" ({(v / est - 1) * 100:+.1f}% vs the {money(est)} estimate)"
+            if x not in p:
+                p.append(x)
+    return "; ".join(p)
+
+
+def lead_words(m, said, row):
+    """the Earnings tab's reading (revenue, EPS, guide vs the estimates) with the bellwether's key sentence; before the tab
+    has read the report, its own sentences alone"""
+    lead = tuple(m.get("lead") or ("datacenter", "outlook"))
+    res = result_line(row)
+    if not res:
+        return own_words(said, row, lead)
+    key = own_words(said, row, lead[:1], 1)
+    return res + ("; " + key if key else "")
 
 
 def quote_move(q, now):
@@ -268,7 +300,7 @@ def quote_move(q, now):
 
 def assemble(B, m, row, S, said, heard, mv, status, named=None, first=("direct", "rival")):
     """the event: its links (theme by theme, each stock with tier, reason and move), and the one-line reasons"""
-    res = (result_line(row) or own_words(said, row)) if status == "out" else ""
+    res = lead_words(m, said, row) if status == "out" else ""
     bm = mv.get(B)
     head = f"{B} earnings ({when_words(row)})"
     lead = head + (": " + res if res else " are out" if status != "due" else "")
@@ -332,10 +364,67 @@ def yahoo_moves(syms, now, errors):
     return out
 
 
-def build(bw, earn, S, prev, now):
+def own_rows(bw, rows, prev, now, errors, force=()):
+    """a row like the Earnings tab's for each bellwether the tab doesn't carry (your Earnings rules leave MSFT and GOOGL out:
+    ADR under 3%): the report day and time from Yahoo, the estimates saved before the report (Yahoo moves on after it), then
+    the release read with the tab's own reader (revenue, EPS, guidance). Kept in events.json ("own_rows") from 10 days before
+    the report to the end of its reaction session. A results filing accepted today sets the day whatever Yahoo's date says"""
+    need = [b for b in bw["bellwethers"] if b not in rows or b in force]
+    old = {k: v for k, v in ((prev or {}).get("own_rows") or {}).items() if k in need and now.isoformat()[:16] <= window(v)[1]}
+    if not need:
+        return {}
+    out, today, sec = dict(old), now.date().isoformat(), None
+    try:
+        y = E.Y()
+        Q = y.quotes([b.replace(".", "-") for b in need])
+    except (Exception, SystemExit) as e:
+        errors.append(f"own rows, quotes: {e!r}"[:160])
+        return out
+    for b in need:
+        r = out.get(b)
+        if not r and b in force and b in rows:                 # the test: the tab's day and time, none of its reading
+            r = out[b] = dict({k: rows[b].get(k) for k in ("sym", "date", "when", "time", "report_at", "nq", "rev_est", "eps_est", "rev_yago")}, own=True)
+        if not r:
+            ts = (Q.get(b.replace(".", "-")) or {}).get("earningsTimestamp")
+            if not ts:
+                continue
+            t = datetime.datetime.fromtimestamp(ts, NY)
+            if not (-1 <= (t.date() - now.date()).days <= 10):
+                continue
+            w = "bmo" if t.hour < 12 else "amc" if t.hour >= 15 else "dmh"
+            r = out[b] = {"sym": b, "own": True, "date": t.date().isoformat(), "when": w, "time": t.strftime("%H:%M"),
+                          "report_at": t.date().isoformat() + ("T07:00" if w == "bmo" else "T16:00" if w == "amc" else "T12:00")}
+        try:
+            if not r.get("est_frozen") and now.isoformat() < r["report_at"]:
+                hist, trend = y.summary(b.replace(".", "-"))
+                t0 = trend.get("0q") or {}
+                r.update(eps_est=t0.get("eps"), eps_yago=t0.get("eps_yago"), rev_est=t0.get("rev"), rev_yago=t0.get("rev_yago"),
+                         nq=trend.get("+1q"), fy=trend.get("0y"), est_at=now.isoformat(timespec="minutes"))
+            if not r.get("rel_url") and r["date"] >= today or (not r.get("rel_url") and now.isoformat() >= r["report_at"]):
+                sec = sec or E.SEC()
+                rel = sec.release(b, today if r["date"] > today else r["date"])
+                time.sleep(0.2)
+                if rel:
+                    ft = datetime.datetime.fromisoformat(rel["filed"])
+                    if ft.date().isoformat() != r["date"]:                  # out on another day than Yahoo's date
+                        w = "bmo" if ft.hour < 12 else "amc" if ft.hour >= 15 else "dmh"
+                        r.update(date=ft.date().isoformat(), when=w, report_at=rel["filed"][:16])
+                    E.use_release(r, rel)
+                    if r.get("rel_eps") is not None:
+                        r["eps_act"] = r["rel_eps"]
+                    r["rev_surprise"], r["rev_growth"] = E.pct(r.get("rev_act"), r.get("rev_est")), E.pct(r.get("rev_act"), r.get("rev_yago"))
+                    r.pop("headline", None)
+        except (Exception, SystemExit) as e:
+            errors.append(f"own row {b}: {e!r}"[:160])
+    return out
+
+
+def build(bw, earn, S, prev, now, force=()):
     rows = {r["sym"]: r for r in earn.get("rows", [])}
     pv = {e["id"]: e for e in (prev or {}).get("events", [])}
     errors, events, sec = [], [], None
+    own = own_rows(bw, rows, prev, now, errors, force)
+    rows.update(own)
     for B, m in bw["bellwethers"].items():
         row = rows.get(B)
         if not row or not row.get("report_at"):
@@ -345,7 +434,7 @@ def build(bw, earn, S, prev, now):
             continue
         eid = f"{B}:{row['date']}"
         status = "due" if now.isoformat() < row["report_at"] else "out" if (row.get("reported") or row.get("rel_url")) else "waiting"
-        said, heard, docs, filed, named = {}, {}, [], None, {}
+        said, heard, docs, filed, named, feed_n = {}, {}, [], None, {}, None
         old = pv.get(eid) or {}
         if status != "due":
             if old.get("gv") == GV and len(old.get("docs") or []) >= 2:
@@ -363,7 +452,7 @@ def build(bw, earn, S, prev, now):
             try:
                 arts = E.feed([B], datetime.datetime.fromisoformat(row["report_at"]).replace(tzinfo=NY), now).get(B, [])
                 heard = heard_for(arts, m["topics"], datetime.datetime.fromisoformat(row["report_at"]).replace(tzinfo=NY).isoformat())
-                print(B, "news feed:", len(arts), "headlines since the report,", sum(len(v) for v in heard.values()), "matched a topic")
+                feed_n = len(arts)
             except Exception as e:
                 errors.append(f"news feed {B}: {e!r}"[:160])
                 heard = old.get("heard_all") or {}
@@ -377,10 +466,11 @@ def build(bw, earn, S, prev, now):
         links, alerts, themes, lead = assemble(B, m, row, S, said, heard, mv, status, named, first)
         events.append({"id": eid, "gv": GV, "sym": B, "name": m["name"], "kind": "earnings", "date": row["date"], "when": row.get("when"),
                        "when_words": when_words(row), "react_day": react, "status": status, "what": m["what"], "lead": lead,
-                       "result": (result_line(row) or own_words(said, row)) if status == "out" else "", "read": row.get("read") if status == "out" else None,
-                       "filed": filed, "docs": docs, "said_all": said, "named": named, "heard_all": heard, "moves": mv, "moves_at": now.isoformat(timespec="minutes"),
+                       "result": lead_words(m, said, row) if status == "out" else "", "read": row.get("read") if status == "out" else None,
+                       "filed": filed, "docs": docs, "said_all": said, "named": named, "heard_all": heard, "feed_n": feed_n, "own_row": bool(row.get("own")),
+                       "moves": mv, "moves_at": now.isoformat(timespec="minutes"),
                        "links": links, "alerts": alerts, "themes": themes})
-    return {"built_at": now.isoformat(timespec="seconds"), "tiers": bw.get("tiers") or {}, "events": events, "errors": errors[:20]}
+    return {"built_at": now.isoformat(timespec="seconds"), "tiers": bw.get("tiers") or {}, "events": events, "own_rows": own, "errors": errors[:20]}
 
 
 # ───────── a past report read again (the test of the reader and of the links) ─────────
@@ -428,10 +518,10 @@ def replay(bw, S, B, day):
             mv = {s: v for s, v in ex.map(one, [B] + linked) if v}
     except (Exception, SystemExit) as e:
         errors.append(f"bars: {e!r}"[:160])
-    links, alerts, themes, lead = assemble(B, m, row, S, said, {}, mv, "waiting", named, first)
+    links, alerts, themes, lead = assemble(B, m, row, S, said, {}, mv, "out", named, first)
     head = next((d["text"][:500] for d in fd["docs"] if d["kind"] == "press release"), "")
     ev = {"id": f"{B}:{row['date']}", "gv": GV, "sym": B, "name": m["name"], "kind": "earnings", "date": row["date"], "when": row["when"],
-          "when_words": when_words(row), "react_day": react, "status": "out", "replay": True, "what": m["what"], "lead": lead, "result": "",
+          "when_words": when_words(row), "react_day": react, "status": "out", "replay": True, "what": m["what"], "lead": lead, "result": lead_words(m, said, row),
           "headline": head, "filed": fd["filed"], "docs": [{"url": d["url"], "kind": d["kind"], "chars": len(d["text"]), "sentences": len(sentences(d["text"]))} for d in fd["docs"]],
           "said_all": said, "named": named, "heard_all": {}, "moves": mv, "links": links, "alerts": alerts, "themes": themes}
     return {"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "tiers": bw.get("tiers") or {}, "events": [ev], "errors": errors}
@@ -443,16 +533,25 @@ def main():
     if mode == "build":
         earn, S = json.load(open(sys.argv[3])), {s["symbol"]: s for s in json.load(open(sys.argv[4]))}
         prev = None
-        if len(sys.argv) > 6:
+        rest = [a for a in sys.argv[6:] if not a.startswith("--")]
+        if rest:
             try:
-                prev = json.load(open(sys.argv[6]))
+                prev = json.load(open(rest[0]))
             except Exception:
                 prev = None
-        out = build(bw, earn, S, prev, datetime.datetime.now(NY))
+        force = tuple(a[6:].upper() for a in sys.argv if a.startswith("--own="))     # a test: read this one without the Earnings tab's row
+        out = build(bw, earn, S, prev, datetime.datetime.now(NY), force)
         json.dump(out, open(sys.argv[5], "w"), separators=(",", ":"))
-    else:
+    else:                                    # replay <map> <stocks> <out> SYM DAY|prev [SYM DAY|prev ...]
         S = {s["symbol"]: s for s in json.load(open(sys.argv[3]))}
-        out = replay(bw, S, sys.argv[5].upper(), sys.argv[6])
+        out = {"built_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "tiers": bw.get("tiers") or {}, "events": [], "errors": []}
+        a = sys.argv[5:]
+        for k in range(0, len(a) - 1, 2):
+            try:
+                o = replay(bw, S, a[k].upper(), a[k + 1])
+                out["events"] += o["events"]; out["errors"] += o["errors"]
+            except (Exception, SystemExit) as e:
+                out["errors"].append(f"{a[k]}: {e!r}"[:200])
         json.dump(out, open(sys.argv[4], "w"), separators=(",", ":"))
     for e in out["events"]:
         print(e["id"], e["status"], "| docs", len(e["docs"]), "| topics said", sorted(e["said_all"]), "| heard", sorted(e["heard_all"]),
