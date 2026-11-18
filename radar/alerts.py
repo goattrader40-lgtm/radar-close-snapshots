@@ -78,7 +78,8 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
 Triggers (the buys, TRIGGERS) always get their own push, up to MAX_TRIGGERS a run, after today's 1-minute chart checks;
 heads-ups fill the rest of MAX_PER_RUN and the others are grouped into one push naming each. Every alert's full text
 is saved in alerts.json items (kind trigger / heads-up / summary, grouped) for the portal's log.
-Nothing but the early heads-ups is sent before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
+Nothing but the early heads-ups and the two morning breakout boxes (from their own From time, 9:31 at the earliest) is sent
+before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free phone app:
 subscribe to the topic in the NTFY_TOPIC secret.
 """
 import datetime, json, os, re, sys, urllib.request, zoneinfo
@@ -1451,6 +1452,9 @@ def check_morning(cands, state, M, live, S, E, now, sent, kind="mbo"):
                 lv = dict(lv, low=fresh[sym]["low"])     # (the 21-day closing high and the levels as they were)
                 a = morning_alert(sym, S[sym], live["rows"][sym], lv, M, kind) or a
             fired.append((sym, a, lv))
+    for sym, _, lv in fired:                            # the levels at the alert stay with it (the box's true state reads them:
+        if lv and sym not in lvs:                       # a stock that fired in the range's first minute had none kept)
+            lvs[sym] = lv
     if not fired:
         return []
     try:
@@ -1503,7 +1507,10 @@ def main():
     M = load_morning(sys.argv[sys.argv.index("--morning") + 1]) if "--morning" in sys.argv else None
     M2 = load_morning2(sys.argv[sys.argv.index("--morning2") + 1] if "--morning2" in sys.argv else None, M) if M else None
     mb_cands, mb2_cands, S_all, E_all = [], [], {}, {}
-    if M and not early and ((M.get("on") and in_morning(M, now)) or (M2.get("on") and in_morning(M2, now))
+    # (from each box's own From time, 9:31 at the earliest, in the 1-minute check: the 9:35 rule below is for the other alerts.
+    # The user, Nov 18 2026: "if i choose 932 or 933 meaning 3 orh breakout it should sound around 934 or 935... its every
+    # 1min"; until then the box took a 9:31-9:33 start and the job still held the morning breakouts to 9:35)
+    if M and ((M.get("on") and in_morning(M, now)) or (M2.get("on") and in_morning(M2, now))
                             or any(k.endswith((":mbo", ":mbo2")) for k in sent)):
         for name in ("base_stocks.json", "stocks.json"):
             p = os.path.join(os.path.dirname(os.path.abspath(launch_p)), name)
