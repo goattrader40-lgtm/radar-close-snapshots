@@ -72,6 +72,10 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               27 2023). The buy is the close; the scan after the close confirms it
               The retest alone is a heads-up; holding over the breakout level too (today's low within 1 ADR over
               it) it is a trigger, "RETEST + BREAKOUT LEVEL" (the user's RPD Nov 3 2026: 2 confluences)
+  theme up    THEME MOVING UP / GROUP MOVING UP (the user, Nov 18 2026: Cybersecurity, 10 of 13 up 5%+ between 9:53 and 10:12
+              with no alert of its own): 3+ tight members (fit 0.7+) of a theme, or of a tight industry group, up 3%+ on
+              the day at the same 5-minute update, whatever lists they are on (theme_moves). Once a day per theme, and once
+              more when twice as many are up. From 9:35, the full updates only (the 1-minute check reads a few stocks)
 Triggers (the buys, TRIGGERS) always get their own push, up to MAX_TRIGGERS a run, after today's 1-minute chart checks;
 heads-ups fill the rest of MAX_PER_RUN and the others are grouped into one push naming each. Every alert's full text
 is saved in alerts.json items (kind trigger / heads-up / summary, grouped) for the portal's log.
@@ -90,7 +94,7 @@ TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "
 
 
 def is_trigger(key, title=""):
-    if key.startswith("grp:"):                          # a group move (2+ stocks of a theme / group alerting today)
+    if key.startswith(("grp:", "thm:")):                # a group move (2+ stocks of a theme / group alerting today); a theme moving up
         return True
     kind = key.split(":", 1)[1] if ":" in key else ""
     if kind == "ema21":                                  # the 21 EMA undercut & reclaim (2 closes under: strong) is one
@@ -134,7 +138,7 @@ def group_moves(doc, state, alerts_now, now):
     loose = {r["group"] for r in (doc.get("group_rank") or {}).get("rows", []) if r.get("loose")}
     seen = {}
     past = [(it["key"], it.get("title"), it.get("time")) for it in state.get("items", [])
-            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:")) and not it["key"].endswith(":mbo")]
+            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith(":mbo")]
     for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now]:
         sym = key.split(":")[0]
         for g in _GROUPS.get(sym, []):
@@ -162,6 +166,81 @@ def group_label(doc, g):
         return g
     tier = ("★ Top " if r.get("tier") == "Top" else "Strong " if r.get("tier") == "Strong" else "")
     return f"{g} ({tier}#{r['rank']}/{r['of']}, {r.get('members')} stocks)"
+
+
+# a theme moving up (the user, Nov 18 2026): the stocks of a theme up together, read from the live prices of every member,
+# not from the alerts (the GROUP MOVE alert above counts stocks that alerted: Cybersecurity's was spent at 9:35 on three
+# pullback heads-ups, and PANW, CRWD, OKTA, QLYS, under their 50 EMA and on no list, could not alert at all)
+THEME_UP = {"min_n": 3, "min_chg": 3.0, "fit": 0.7, "more": 2}
+
+
+def theme_members(themes, stocks, fit=0.7):
+    """{("theme" | "group", name): [tight members]}: a theme's members with a fit of 0.7+ (themes.json scores), a tight
+    industry group's with a group score of 0.7+ (stocks.json group / group_score; the loose "· other" ones have no group)"""
+    out = {}
+    for t in themes or []:
+        syms = []
+        for x in str(t.get("scores") or "").split():
+            sym, _, sc = x.partition(":")
+            try:
+                if float(sc) >= fit:
+                    syms.append(sym)
+            except ValueError:
+                pass
+        if t.get("theme") and syms:
+            out[("theme", t["theme"])] = syms
+    for s in stocks or []:
+        if s.get("group") and "· other" not in s["group"] and (s.get("group_score") or 0) >= fit:
+            out.setdefault(("group", s["group"]), []).append(s["symbol"])
+    return out
+
+
+def theme_moves(live, members, state, now, R=None, doc=None):
+    """the THEME MOVING UP alerts of this update: [(key, title, msg, prio, tvs)]. state["thm"] keeps how many were up at
+    each theme's alert (the second alert comes at twice that). A theme and a group with the same stocks up are one alert
+    (the theme names it); the other one counts as sent"""
+    R = R or THEME_UP
+    rows, sent, memo = live.get("rows") or {}, set(state.get("sent") or []), state.setdefault("thm", {})
+    cand = []
+    for (kind, name), syms in members.items():
+        up = sorted(((rows[s][1], s) for s in syms if rows.get(s) and rows[s][0] and rows[s][1] is not None and rows[s][1] >= R["min_chg"]), reverse=True)
+        if len(up) < R["min_n"]:
+            continue
+        key = f"thm:{name}"
+        if key not in sent:
+            cand.append((kind, name, key, syms, up, False))
+        elif key + ":more" not in sent and len(up) >= R["more"] * (memo.get(name) or {}).get("n", 10 ** 6):
+            cand.append((kind, name, key + ":more", syms, up, True))
+    # the same stocks up under two names: the theme first, then the smaller one (the bigger share of its members)
+    cand.sort(key=lambda c: (c[0] != "theme", -len(c[4]) / len(c[3]), c[1]))
+    rank = {r.get("group"): r for r in ((doc or {}).get("group_rank") or {}).get("rows", [])}
+    # a move already alerted today under another name (the Cybersecurity theme, then the Cybersecurity industry group with
+    # no stock the theme's alert doesn't have): no second alert
+    seen = [frozenset(s for s in syms if rows.get(s) and rows[s][1] is not None and rows[s][1] >= R["min_chg"])
+            for (_, name), syms in members.items() if f"thm:{name}" in sent]
+    out = []
+    for kind, name, key, syms, up, more in cand:
+        ss = frozenset(s for _, s in up)
+        if not more:
+            memo[name] = {"n": len(up), "at": f"{now:%H:%M}"}
+            if any(ss <= x for x in seen):
+                state.setdefault("sent", []).append(key)    # the same move under its other name
+                continue
+        seen.append(ss)
+        every = [rows[s][1] for s in syms if rows.get(s) and rows[s][1] is not None]
+        r = rank.get(name)
+        tier = "" if not r else (" (" + ("★ Top " if r.get("tier") == "Top" else "Strong " if r.get("tier") == "Strong" else "") + f"#{r['rank']}/{r['of']})")
+        title = (f"{'THEME' if kind == 'theme' else 'GROUP'} MOVING UP: {name}{tier}: "
+                 + ("now " if more else "") + f"{len(up)} of {len(syms)} up {R['min_chg']:g}%+")
+        msg = " · ".join(f"{s} +{c:.1f}%" + (f" vol {rows[s][4]:.1f}x" if len(rows[s]) > 4 and rows[s][4] else "") for c, s in up[:12])
+        if len(up) > 12:
+            msg += f" · and {len(up) - 12} more"
+        if every:
+            msg += f" · all {len(every)} members average {sum(every) / len(every):+.1f}%"
+        if more:
+            msg += f" · first alert {(memo.get(name) or {}).get('at', '')} with {(memo.get(name) or {}).get('n', '')}"
+        out.append((key, title, msg, "high", ""))
+    return out
 
 
 def confluence_level(r, price, low):
@@ -874,7 +953,7 @@ def update_holding(state, found, live, doc, now):
     lost, back, held, seen = state.setdefault("lost", {}), state.setdefault("back", {}), [], set()
     for it in state.get("items", []):
         key = it.get("key", "")
-        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "summary:")) or key.endswith(":mbo"):
+        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "thm:", "summary:")) or key.endswith(":mbo"):
             continue                                    # (the morning breakouts: morning_holding, on the user's settings)
         seen.add(key)
         q = (live.get("rows") or {}).get(key.split(":")[0])
@@ -888,7 +967,7 @@ def update_holding(state, found, live, doc, now):
             lost[key] = {"at": t, "price": px}
     # and every trigger its rules find right now, sent or not: a power day / EP that stops holding steps down to a launch
     # when the stock still meets a launch's rules (EPAM Nov 5: volume pace 3.6x at the close, under 4x; still an A launch)
-    now_ = sorted({a[0] for a in found if is_trigger(a[0], a[1]) and not a[0].startswith(("grp:", "summary:"))})
+    now_ = sorted({a[0] for a in found if is_trigger(a[0], a[1]) and not a[0].startswith(("grp:", "thm:", "summary:"))})
     state["hold"] = {"at": t, "keys": held, "now": now_}
 
 
@@ -1587,6 +1666,17 @@ def main():
             out_.append(((gk, f"GROUP MOVE: {group_label(doc, g)}: " + ", ".join(x[0] for x in lst),
                           " · ".join(f"{x[0]} {x[1]} {x[2]}" for x in lst) + f" · {len(lst)} stocks of {g} alerting today",
                           "high", ""), False))
+    # a theme moving up (the user, Nov 18 2026): 3+ tight members up 3%+ at this update; the full updates only, from 9:35
+    if not early and not fast:
+        try:
+            d_ = os.path.dirname(os.path.abspath(launch_p))
+            tp_ = next((os.path.join(d_, n) for n in ("base_themes.json", "themes.json") if os.path.exists(os.path.join(d_, n))), None)
+            sp_ = next((os.path.join(d_, n) for n in ("base_stocks.json", "stocks.json") if os.path.exists(os.path.join(d_, n))), None)
+            if tp_ and sp_:
+                mem_ = theme_members(json.load(open(tp_)), json.load(open(sp_)), THEME_UP["fit"])
+                out_ += [(a, False) for a in theme_moves(live, mem_, state, now, doc=doc)]
+        except Exception as e:                      # never at the cost of the other alerts
+            print(f"theme moves: {e!r}", file=sys.stderr)
     if grouped:
         names = " · ".join(short(a) for a in grouped)
         out_.append(((f"summary:{now:%H%M}", f"{len(grouped)} more heads-ups (in the portal's alert log)", names, "default", ""), False))
