@@ -49,6 +49,25 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: Cybertruck morning breakout alerts (Nov 18)" (Wed Nov 18 2026, from ~2:50 PM ET; session_01PkbDaivTc9D2kGvMMYMMLt; in progress)
+
+- **LIVE (the user's "ok go live", Wed Nov 18 2026 ~4:20 PM ET, merge 8b4b75b of test/movers11): the movers every minute 9:31-11:00
+  (was to 10:30), and a "How often prices update" note on Groups & themes and Gainers & losers.** The user: "these 936-1030 can
+  you do 932-11 am", "yes do 931", "put both places so i know how often prices gets updated". radar/day.py movers_window
+  (9,31)-(11,0); docs/index.html: the 20-second page check to 11:00 (n.m > 660), the live line "every minute to 11:00", the note
+  (data-upd, under the controls of both tabs, filled in drawLiveLine with the last full / 2%+ update time). Morning breakout
+  alerts (their own 9:35-10:30 window) and Launches untouched. Tested: movers_window 9:30 no / 9:31 / 10:59 yes / 11:00 no; the
+  page on desktop / phone with the live data (both notes, 0 page errors). Rules workbook: 1 row. No `--regress`, no Launches
+  rebuild, no 2-year check (a timing). **FIRST CHECK Thu Nov 19**: live.json fast_at keeps moving every minute 10:30-11:00.
+  My mistake, corrected with the user: I first wrote the 1-minute window starts 9:36 (it is 9:31 since Nov 17).
+- **Answered, no change**: none of the Cybersecurity stocks (CRWD PANW FTNT ZS NET OKTA S RBRK TENB QLYS SAIL NTSK RPD FROG,
+  +6-15% Nov 18) gave a morning breakout: the move built after 10:00 on Rel vol 0.4-0.9x (OKTA TENB QLYS SAIL RPD RBRK NET),
+  CRWD / PANW / ZS under the 50 EMA, S / TENB / OKTA / QLYS 10 EMA under the 21; NTSK met every setting at 10:37 (after the
+  10:30 end). The user's saved settings (alerts/morning.json, 9:24 AM): 9:35-10:30, 2%+, Rel vol 1x, the trend rules. Offered,
+  no answer: Rel vol 0.7x, an 11:00 end, no 10 > 21, a group-move alert. Neoclouds on the Gainers tab (4%+, Rel vol 0.8x): only
+  RIOT (+7.9%) passed at 2:50 PM, HUT +6.2% at 0.76x; the miners +2.5-3.7%. **Open**: the user says more neoclouds were 4%+ when
+  they looked: asked for a screenshot (not seen in our data; live_history logs only 5%+).
+
 ## Status of the session "Radar: why AVEX isn't on the EP watchlist (Nov 17)" (Tue Nov 17 2026, from ~1:25 PM ET; session_01PkbDameNZtixLSWb6F7Thg; in progress)
 
 - **LIVE (the user's "go live for two changes already tested", Tue Nov 17 2026 ~2:55 PM ET, commit 9cd7f74): two changes.**
