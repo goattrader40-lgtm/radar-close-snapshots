@@ -171,7 +171,7 @@ def group_label(doc, g):
 # a theme moving up (the user, Nov 18 2026): the stocks of a theme up together, read from the live prices of every member,
 # not from the alerts (the GROUP MOVE alert above counts stocks that alerted: Cybersecurity's was spent at 9:35 on three
 # pullback heads-ups, and PANW, CRWD, OKTA, QLYS, under their 50 EMA and on no list, could not alert at all)
-THEME_UP = {"min_n": 3, "min_chg": 3.0, "fit": 0.7, "more": 2}
+THEME_UP = {"min_n": 3, "min_chg": 3.0, "fit": 0.7, "more": 2, "min_share": 0.0, "groups": True}   # min_share: of its tight members; groups: the industry groups too
 
 
 def theme_members(themes, stocks, fit=0.7):
@@ -204,7 +204,7 @@ def theme_moves(live, members, state, now, R=None, doc=None):
     cand = []
     for (kind, name), syms in members.items():
         up = sorted(((rows[s][1], s) for s in syms if rows.get(s) and rows[s][0] and rows[s][1] is not None and rows[s][1] >= R["min_chg"]), reverse=True)
-        if len(up) < R["min_n"]:
+        if len(up) < R["min_n"] or len(up) < R.get("min_share", 0) * len(syms) or (kind == "group" and not R.get("groups", True)):
             continue
         key = f"thm:{name}"
         if key not in sent:

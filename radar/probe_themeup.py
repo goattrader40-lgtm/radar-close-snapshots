@@ -50,8 +50,12 @@ def main():
     days = sorted({d for b in B.values() if b for d in b})
     # the close of the session before, per stock and day
     prev = {s: {d: (b[days[i - 1]][-1][1] if i and days[i - 1] in b else None) for i, d in enumerate(days)} for s, b in B.items() if b}
-    variants = [(n, c) for c in (3.0, 4.0, 5.0) for n in (3, 4, 5)]
-    res = {f"{n} stocks up {c:g}%+": {"days": [], "alerts": []} for n, c in variants}
+    # (stocks, % up, share of the theme's tight members, industry groups too)
+    variants = ([(n, c, 0.0, True) for c in (3.0, 4.0, 5.0) for n in (3, 5)]
+                + [(3, c, sh, g) for c in (3.0, 4.0, 5.0) for sh in (0.5, 0.67) for g in (True, False)]
+                + [(3, c, 0.0, False) for c in (3.0, 5.0)])
+    label = lambda n, c, sh, g: f"{n} stocks up {c:g}%+" + (f", {sh:.0%}+ of the theme" if sh else "") + ("" if g else ", themes only")
+    res = {label(*v): {"days": [], "alerts": []} for v in variants}
     for d in days[1:]:
         y, m, dd = map(int, d.split("-"))
         last = {s: b[d][-1][1] for s, b in B.items() if b and d in b}
@@ -69,9 +73,9 @@ def main():
                     idx[s] += 1
             rows = {s: [p, 100 * (p / prev[s][d] - 1), None, None, None] for s, p in px.items() if prev[s].get(d)}
             now = datetime.datetime(y, m, dd, mark // 60, mark % 60, tzinfo=NY)
-            for (n, c), k in zip(variants, res):
+            for (n, c, sh, g), k in zip(variants, res):
                 st = states[k]
-                for key, title, msg, _, _ in theme_moves({"rows": rows}, mem, st, now, dict(THEME_UP, min_n=n, min_chg=c), doc):
+                for key, title, msg, _, _ in theme_moves({"rows": rows}, mem, st, now, dict(THEME_UP, min_n=n, min_chg=c, min_share=sh, groups=g), doc):
                     st["sent"].append(key)
                     names = [x.split(" +")[0] for x in msg.split(" · ") if " +" in x and not x.startswith(("all ", "and ", "first "))]
                     after = [100 * (last[s] / rows[s][0] - 1) for s in names if s in last and s in rows]
@@ -97,9 +101,8 @@ def main():
                               "to_close_avg": round(sum(tc) / len(tc), 2) if tc else None,
                               "to_close_up_share": round(100 * len([x for x in tc if x > 0]) / len(tc)) if tc else None,
                               "days": v["days"]}
-    live = f"{THEME_UP['min_n']} stocks up {THEME_UP['min_chg']:g}%+"
-    out["live_setting"] = live
-    out["alerts"] = {k: res[k]["alerts"] for k in (live, "3 stocks up 5%+")}
+    out["live_setting"] = label(THEME_UP["min_n"], THEME_UP["min_chg"], THEME_UP.get("min_share", 0), THEME_UP.get("groups", True))
+    out["alerts"] = {k: v["alerts"] for k, v in res.items() if "of the theme" in k}
     json.dump(out, open(out_p, "w"), indent=1)
     print(f"theme replay: {len(days) - 1} sessions, {len(syms)} stocks ({len(missing)} without bars); "
           + "; ".join(f"{k}: {v['a_day_avg']} a day" for k, v in out["settings"].items()))
