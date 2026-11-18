@@ -105,6 +105,10 @@
   .tgr-tab.tab-drop-r { box-shadow: inset -3px 0 0 var(--color-fg); }
   .tgr-tab-reset { appearance: none; background: none; border: 0; margin-left: auto; padding: var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); cursor: pointer; }
   .tgr-tab-reset:hover { color: var(--color-fg); }
+  .tgr-seg button.tab-drag { opacity: .45; }
+  .tgr-seg button.tab-drop-l { box-shadow: inset 3px 0 0 var(--color-fg); }
+  .tgr-seg button.tab-drop-r { box-shadow: inset -3px 0 0 var(--color-fg); }
+  .tgr-tab-reset.wl-order-reset { margin-left: 0; padding: var(--cds-pad-xs); }
   .tgr-tab:focus-visible, .tgr-seg button:focus-visible, .tgr-chip:focus-visible, .tgr-th:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
   .tgr-count { font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 var(--cds-pad-sm); color: var(--color-fg); }
   .tgr-page { display: grid; gap: var(--cds-gap-md); }
@@ -1559,6 +1563,39 @@ defCalc('industry_perf', {
       const t = e.target.closest('.tgr-tab'); if (!drag || !t) return;
       e.preventDefault();
       if (t !== drag) nav.insertBefore(drag, right(t, e) ? t.nextSibling : t);
+      clear(); drag = null; save();
+    });
+  })();
+
+  /* the Watchlist list buttons (3-SETUPS ... TREND): drag to move them left or right, as the main tabs (the user, Nov 18
+     2026: "can you make it a way that i can move this tabs left or right"). Kept in this browser; ↺ order puts them back. */
+  (() => {
+    const seg = document.querySelector('.tgr-seg[data-k="wl"]'); if (!seg) return;
+    const KEY = 'radar-wl-order', btns = () => [...seg.querySelectorAll('button')], DEF = btns().map((b) => b.dataset.v);
+    const reset = h('button', 'tgr-tab-reset wl-order-reset', '↺ order'); reset.type = 'button'; reset.title = 'Put the lists back in their first order';
+    seg.after(reset);
+    const isDef = () => btns().map((b) => b.dataset.v).join() === DEF.join();
+    const apply = (o) => { const by = new Map(btns().map((b) => [b.dataset.v, b])); o.concat(DEF).forEach((k) => { const b = by.get(k); if (b) { seg.append(b); by.delete(k); } }); reset.hidden = isDef(); };
+    const save = () => { try { if (isDef()) localStorage.removeItem(KEY); else localStorage.setItem(KEY, JSON.stringify(btns().map((b) => b.dataset.v))); } catch (e) { /* private window */ } reset.hidden = isDef(); };
+    try { const o = JSON.parse(localStorage.getItem(KEY) || 'null'); apply(Array.isArray(o) ? o : DEF); } catch (e) { apply(DEF); }
+    reset.addEventListener('click', () => { apply(DEF); save(); });
+    let drag = null;
+    const clear = () => btns().forEach((x) => x.classList.remove('tab-drag', 'tab-drop-l', 'tab-drop-r'));
+    const right = (b, e) => { const r = b.getBoundingClientRect(); return e.clientX > r.left + r.width / 2; };
+    btns().forEach((b) => {
+      b.draggable = true; if (!b.title) b.title = 'Drag to move this list left or right';
+      b.addEventListener('dragstart', (e) => { drag = b; b.classList.add('tab-drag'); try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', b.dataset.v); } catch (e2) { /* old browser */ } });
+      b.addEventListener('dragend', () => { drag = null; clear(); });
+    });
+    seg.addEventListener('dragover', (e) => {
+      const b = e.target.closest('button'); if (!drag || !b) return;
+      e.preventDefault(); clear(); drag.classList.add('tab-drag');
+      if (b !== drag) b.classList.add(right(b, e) ? 'tab-drop-r' : 'tab-drop-l');
+    });
+    seg.addEventListener('drop', (e) => {
+      const b = e.target.closest('button'); if (!drag || !b) return;
+      e.preventDefault();
+      if (b !== drag) seg.insertBefore(drag, right(b, e) ? b.nextSibling : b);
       clear(); drag = null; save();
     });
   })();
