@@ -9,6 +9,7 @@ microsoft apple and so on".
 Every tradable stock of stocks.json (market cap $700M+, $20M+ a day) is read once: its newest annual report at the SEC
 (10-K, 20-F or 40-F). Every sentence that names a bellwether (NAMES below) is sorted by what it says:
   customer %   the bellwether is named with a share of the stock's revenue or receivables (the 10% customer note)
+  store %      the same through its store, app store or ads (a retailer's sales on Amazon, an app's on Google Play): no link
   stake        the bellwether bought, holds or may buy the stock's shares or warrants
   sells to it  the bellwether is named as a customer
   buys from it the bellwether is named as its supplier
@@ -30,13 +31,14 @@ NAMES = {"NVDA": ["NVIDIA", "Nvidia"], "MSFT": ["Microsoft", "Azure"], "GOOGL": 
          "MU": ["Micron"], "SPCX": ["SpaceX", "Space Exploration Technologies", "Starlink"], "ORCL": ["Oracle"],
          "AMD": ["AMD", "Advanced Micro Devices"], "ASML": ["ASML"], "TSLA": ["Tesla"], "PLTR": ["Palantir"],
          "UNH": ["UnitedHealth", "UnitedHealthcare", "Optum"], "LLY": ["Eli Lilly", "Lilly"], "OPENAI": ["OpenAI"]}
-KINDS = ["customer %", "stake", "sells to it", "buys from it", "agreement", "rival", "platform", "mention"]
+KINDS = ["customer %", "stake", "sells to it", "buys from it", "agreement", "rival", "store %", "platform", "mention"]
 KEEP = KINDS[:6]
 PLATFORM = re.compile(r"app stores?|google play|play store|app store|\bios\b|android|search engines?|social media|advertis|facebook|instagram|whatsapp|"
                       r"youtube|windows|office 365|microsoft 365|\bteams\b|browser|operating systems?|mobile (devices?|platforms?)|marketplaces?|"
                       r"kindle|alexa|prime video|iphone|ipad|smartphones?|"
                       r"(host(ed|ing|s)?|runs?|rel(y|ies|iance)|depend(s|ent|ence)?|operat\w+|deploy\w*|migrat\w+|built)[^.]{0,120}(aws|amazon web services|azure|google cloud|gcp)|"
-                      r"third[- ]party (cloud|data ?cent(er|re)|hosting)|cloud (service|infrastructure|hosting|computing|platform) (providers?|vendors?)|public clouds?", re.I)
+                      r"third[- ]party (cloud|hosting) (service|provider|infrastructure|platform)|our (cloud|hosting) (service )?providers?", re.I)
+STORE = re.compile(r"app stores?|google play|play store|app store|advertis|search engines?|marketplaces?|e-?commerce|retail(er)?s?|wholesale|consumer", re.I)
 LOCK = threading.Lock()
 
 
@@ -44,30 +46,30 @@ def kind_of(s, n, ctx):
     """n = the bellwether's names as one regex group; ctx = the text just before the sentence"""
     low = s.lower()
     if re.search(r"\d{1,2}(\.\d+)?\s?%", s) and re.search(r"revenue|net sales|\bsales\b|receivable", low) \
-            and re.search(r"customer|accounted for|represented|comprised|sales to|distributor|partner", low) and not PLATFORM.search(s):
-        return "customer %"
-    if re.search(n + r"[^.;]{0,90}\b(invested|purchased|acquired|holds?|owns?|agreed to (purchase|invest)|right to (purchase|acquire)|subscribed)\b[^.;]{0,90}"
+            and re.search(r"customer|accounted for|represented|comprised|sales to|distributor|partner", low):
+        return "store %" if STORE.search(s) else "customer %"
+    if re.search(n + r"(?:[^.;]|\.(?=\d)){0,90}\b(invested|purchased|acquired|holds?|owns?|agreed to (purchase|invest)|right to (purchase|acquire)|subscribed)\b(?:[^.;]|\.(?=\d)){0,90}"
                  r"(shares|stock|warrants?|equity|notes|\$)", s) \
-            or re.search(r"(issu(ed|ance)|s(old|ale)|grant(ed)?)[^.;]{0,120}(shares|stock|warrants?)[^.;]{0,80}\bto " + n, s) \
-            or re.search(r"(investment|invested)[^.;]{0,40}\b(by|from) " + n, s) or re.search(n + r"('s)? (Warrants?|Investment|Shares)\b", s) \
-            or re.search(r"(warrants?|right)[^.;]{0,60}(issued|granted)?[^.;]{0,20}\bto " + n + r"[^.;]{0,80}(purchase|acquire)", s):
+            or re.search(r"(issu(ed|ance)|s(old|ale)|grant(ed)?)(?:[^.;]|\.(?=\d)){0,120}(shares|stock|warrants?)(?:[^.;]|\.(?=\d)){0,80}\bto " + n, s) \
+            or re.search(r"(investment|invested)(?:[^.;]|\.(?=\d)){0,40}\b(by|from) " + n, s) or re.search(n + r"('s)? (Warrants?|Investment|Shares)\b", s) \
+            or re.search(r"(warrants?|right)(?:[^.;]|\.(?=\d)){0,60}(issued|granted)?(?:[^.;]|\.(?=\d)){0,20}\bto " + n + r"(?:[^.;]|\.(?=\d)){0,80}(purchase|acquire)", s):
         return "stake"
     if re.search(r"compet", low) or re.search(r"compet", ctx[-350:].lower()):
         return "rival"
     if PLATFORM.search(s):
         return "platform"
-    if re.search(r"(customers?|clients?)[^.]{0,140}(includ\w+|such as|like|:|are|were)[^.]{0,220}" + n, s, re.I) \
-            or re.search(n + r"[^.]{0,90}\b(is|are|was|were|as|remain(s|ed)?)\b[^.]{0,40}(customers?|clients?)", s) \
-            or re.search(r"(sales|sold|shipments?|deliver\w+|revenue)[^.]{0,30}\b(to|from) [^.]{0,40}" + n, s):
+    if re.search(r"(customers?|clients?)(?:[^.]|\.(?=\d)){0,140}(includ\w+|such as|like|:|are|were)(?:[^.]|\.(?=\d)){0,220}" + n, s, re.I) \
+            or re.search(n + r"(?:[^.]|\.(?=\d)){0,90}\b(is|are|was|were|as|remain(s|ed)?)\b(?:[^.]|\.(?=\d)){0,40}(customers?|clients?)", s) \
+            or re.search(r"(sales|sold|shipments?|deliver\w+|revenue)(?:[^.]|\.(?=\d)){0,30}\b(to|from) (?:[^.]|\.(?=\d)){0,40}" + n, s):
         return "sells to it"
-    if re.search(r"(suppliers?|vendors?|foundr(y|ies)|manufacturers?)[^.]{0,140}(includ\w+|such as|like|:|are|is)[^.]{0,220}" + n, s, re.I) \
-            or re.search(n + r"[^.]{0,80}\b(is|are|as)\b[^.]{0,40}(sole|primary|principal|key|major|only|single|significant)[^.]{0,30}(supplier|source|provider|vendor|foundry)", s) \
-            or re.search(r"(purchas\w+|buy|source[ds]?|procure\w*|obtain\w*|licens\w+)[^.]{0,100}\bfrom [^.]{0,40}" + n, s) \
-            or re.search(r"(rel(y|ies|iance)|depend(s|ent|ence)?) (up)?on [^.]{0,80}" + n, s):
+    if re.search(r"(suppliers?|vendors?|foundr(y|ies)|manufacturers?)(?:[^.]|\.(?=\d)){0,140}(includ\w+|such as|like|:|are|is)(?:[^.]|\.(?=\d)){0,220}" + n, s, re.I) \
+            or re.search(n + r"(?:[^.]|\.(?=\d)){0,80}\b(is|are|as)\b(?:[^.]|\.(?=\d)){0,40}(sole|primary|principal|key|major|only|single|significant)(?:[^.]|\.(?=\d)){0,30}(supplier|source|provider|vendor|foundry)", s) \
+            or re.search(r"(purchas\w+|buy|source[ds]?|procure\w*|obtain\w*|licens\w+)(?:[^.]|\.(?=\d)){0,100}\bfrom (?:[^.]|\.(?=\d)){0,40}" + n, s) \
+            or re.search(r"(rel(y|ies|iance)|depend(s|ent|ence)?) (up)?on (?:[^.]|\.(?=\d)){0,80}" + n, s):
         return "buys from it"
-    if re.search(r"(agreements?|contracts?|leases?|partnerships?|collaborations?|memorandum|orders?|arrangements?|alliances?)[^.]{0,90}\b(with|by|from|to) [^.]{0,60}" + n, s, re.I) \
-            or re.search(n + r"[^.]{0,70}(agreement|contract|lease|partnership|collaboration)", s) \
-            or re.search(r"(partner(ed|ing|s)?|collaborat\w+|teamed) with [^.]{0,50}" + n, s, re.I):
+    if re.search(r"(agreements?|contracts?|leases?|partnerships?|collaborations?|memorandum|orders?|arrangements?|alliances?)(?:[^.]|\.(?=\d)){0,90}\b(with|by|from|to) (?:[^.]|\.(?=\d)){0,60}" + n, s, re.I) \
+            or re.search(n + r"(?:[^.]|\.(?=\d)){0,70}(agreement|contract|lease|partnership|collaboration)", s) \
+            or re.search(r"(partner(ed|ing|s)?|collaborat\w+|teamed) with (?:[^.]|\.(?=\d)){0,50}" + n, s, re.I):
         return "agreement"
     return "mention"
 
@@ -168,6 +170,8 @@ def main():
                        "kinds": {k: len(v) for k, v in o["by"].items()}}
                 if best in KEEP:
                     row["by_kind"] = {k: v for k, v in o["by"].items() if k in KEEP}
+                elif st.get("themes") and o["n"] >= 2:
+                    row["seen"] = o["by"][best][0][:300]
                 res[b].append(row)
     with cf.ThreadPoolExecutor(5) as ex:
         list(ex.map(one, trad))
@@ -177,7 +181,7 @@ def main():
         rows.sort(key=lambda r: (KINDS.index(r["kind"]), -(r.get("mentions") or 0)))
         out["bellwethers"][b] = {"count_by_kind": {k: sum(1 for r in rows if r["kind"] == k) for k in KINDS},
                                  "rows": [r for r in rows if r["kind"] in KEEP],
-                                 "other": [[r["sym"], r["kind"], r["mentions"]] for r in rows if r["kind"] not in KEEP and r["mentions"] >= 5][:80]}
+                                 "other": [[r["sym"], r["kind"], r["mentions"], r.get("seen", "")] for r in rows if r["kind"] not in KEEP and (r["mentions"] >= 5 or r.get("seen"))][:160]}
         print(b, out["bellwethers"][b]["count_by_kind"])
     json.dump(out, open(out_p, "w"), separators=(",", ":"))
     print(stats, round(time.time() - t0), "s")

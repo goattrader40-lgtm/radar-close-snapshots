@@ -1331,10 +1331,11 @@ def event_reasons(path, today):
     by_sym, by_theme = {}, {}
     for e in evs:
         if e.get("status") == "out" and e.get("react_day") == today:
+            # a stock tied to two bellwethers that report the same evening (CoreWeave: Microsoft and Meta) gets both reasons
             for k, v in (e.get("alerts") or {}).items():
-                by_sym.setdefault(k, v)
+                by_sym[k] = (by_sym[k] + " | also: " + v[:700]) if k in by_sym else v
             for k, v in (e.get("themes") or {}).items():
-                by_theme.setdefault(k, v)
+                by_theme[k] = (by_theme[k] + " | also: " + v[:700]) if k in by_theme else v
     return by_sym, by_theme
 
 

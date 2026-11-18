@@ -619,6 +619,7 @@
         <h2 id="evl-h">Event</h2>
         <span class="tgr-lbl" id="evl-time">—</span>
       </div>
+      <div class="tgr-copybar" id="evl-pickbar" hidden><b>Reports now</b><span class="tgr-seg" id="evl-pick" aria-label="Which report"></span></div>
       <p class="tgr-note" id="evl-line"></p>
       <details class="tgr-legend tgr-more" data-key="evlinks"><summary>What an event is, and which stocks are linked</summary>
       <p class="tgr-note">An event = a bellwether reports: a company whose results move the stocks tied to it (NVIDIA first). The card is up from the morning of its report to the evening of the session that reacts to it. Only the 1st impact is listed: a <b>direct tie</b> (the bellwether owns a stake in the stock, buys from it, sells to it, or runs a named program with it) or a <b>rival</b>. Every link is written out with its reason; a stock without one is not listed. "What it said" is the bellwether's own sentence from its results filing at the SEC (the press release and the CFO commentary): first a sentence that names the stock, else its sentence on the business the link is about. Nothing is searched or written by Claude. Moves: after hours on the evening, then the pre-market scan, then the live prices. On the reaction session an alert on a listed stock ends with the same reason ("why:"). Price and volume decide; this is the reason next to them.</p>
@@ -2806,11 +2807,16 @@ defCalc('industry_perf', {
      explanation", "im only interested in 1st direct impact ones"): radar/event.py -> events.json. A bellwether of
      radar/bellwethers.json reports: the stocks with a written 1st-impact link to it, each with its tie, the reason and the
      bellwether's own sentence from its SEC results filing. Nothing here changes a grade, a list or a rule. */
+  let EVSEL = null;
   const drawEvLinks = () => {
     const card = $('#evl-card'), today = todayNY();
-    const ev = EVL && Array.isArray(EVL.events) ? EVL.events.find((e) => e.date <= today && today <= e.react_day) : null;
-    card.hidden = !ev;
-    if (!ev) return;
+    /* several bellwethers can report the same evening (Microsoft, Google and Meta usually do): one button each, the first one out shown */
+    const evs = EVL && Array.isArray(EVL.events) ? EVL.events.filter((e) => e.date <= today && today <= e.react_day) : [];
+    card.hidden = !evs.length;
+    if (!evs.length) return;
+    const ev = evs.find((e) => e.id === EVSEL) || evs.find((e) => e.status !== 'due') || evs[0];
+    const pick = $('#evl-pick'); pick.replaceChildren(); $('#evl-pickbar').hidden = evs.length < 2;
+    evs.forEach((e) => { const b = h('button', '', e.sym + (e.status === 'due' ? ' (not out yet)' : '')); b.type = 'button'; b.dataset.id = e.id; b.setAttribute('aria-pressed', String(e.id === ev.id)); pick.append(b); });
     const tiers = EVL.tiers || {}, by = new Map(((BASE && BASE.stocks) || []).map((r) => [r.symbol, r]));
     const pct = (x) => (x > 0 ? '+' : '') + Number(x).toFixed(1) + '%';
     /* the move: the live prices in today's session, else today's pre-market scan, else the build's own quote */
@@ -2856,6 +2862,7 @@ defCalc('industry_perf', {
       tb.append(tr);
     });
   };
+  $('#evl-pick').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { EVSEL = b.dataset.id; draw(); } });
   const drawPmLive = (symMap) => {
     syncPm();
     const table = $('#pml-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
