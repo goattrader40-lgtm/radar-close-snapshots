@@ -19,6 +19,8 @@ price and volume makes me decide, new direct link, fundamental news helps convic
               the same topics and shown as "heard", marked as a headline, not a quote.
   the moves   Yahoo quotes of every linked stock (after hours on the evening, pre-market, live); the page refreshes them
               from its own pre-market / live files.
+  the proof   where the linked company's own annual report names the bellwether (a stake, a share of its revenue, a contract),
+              the map keeps that sentence ("evidence", found by radar/probe_links.py) and the card links to the report
   the reason  for each linked stock one line: the event and its result, the stock's tie, the bellwether's sentence about that
               tie. radar/alerts.py puts it on that stock's alerts during the reaction session ("why:"); the Pre-market
               tab's Event card shows all of it.
@@ -318,8 +320,10 @@ def assemble(B, m, row, S, said, heard, mv, status, named=None, first=("direct",
             tp = v[2] if len(v) > 2 else L["topics"]           # the stock's own topics, else the theme's
             q1 = [dict(x, topic=m["topics"][t]["label"]) for t in tp for x in (said.get(t) or [])[:1]][:1] if len(v) > 2 else qs
             h1 = [dict(x, topic=m["topics"][t]["label"]) for t in tp for x in (heard.get(t) or [])[:1]][:1] if len(v) > 2 else hs
+            e = (m.get("evidence") or {}).get(sym)             # the linked company's own annual report naming the bellwether
             st.append({"sym": sym, "tier": tier, "why": why, "mv": mv.get(sym), "named": (named or {}).get(sym),
-                       "said": q1[:1] if len(v) > 2 else None})
+                       "said": q1[:1] if len(v) > 2 else None,
+                       "ev": {"text": e[0], "url": e[1], "form": e[2], "filed": e[3]} if e else None})
             if sym not in best or TIERS.index(tier) < TIERS.index(best[sym][0]):
                 best[sym] = (tier, why, {"topics": tp}, q1, h1)
         st.sort(key=lambda x: TIERS.index(x["tier"]))

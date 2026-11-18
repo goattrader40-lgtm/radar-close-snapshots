@@ -1,5 +1,5 @@
 {
- "_note": "The bellwether map (the user, Nov 17 2026: 'logic and rationale should be accurate linking ... it has to be very clear'). A bellwether's report moves the stocks tied to it. Every link is written out: the tier and the reason, one stock at a time. A stock of a theme with no entry here has NO link and gets no reason. Tiers: direct = a named deal with the bellwether (it owns a stake, buys from it, sells to it, or a named joint program); step = its product goes into the bellwether's systems or the data centers built around them, without a named deal between the two; rival = sells against it (good news for one can be bad for the other); spend = no tie to the bellwether itself, it moves with the same customers' AI data-center spending. Only the 1st impact is used (the user, Nov 17 2026: 'im only interested in 1st direct impact ones'): the tiers in 'first' (direct ties and rivals); the step / spend entries stay written here but get no card row and no reason. A stock's third entry, when there, is its own list of topics (TSMC: supply; AMD: Data Center revenue). 'names' = how the bellwether's own report would name a linked company: a sentence of the report that names it is the strongest reason of all. radar/event.py reads it; the Pre-market tab's Event card and the alerts' 'why' line show it.",
+ "_note": "The bellwether map (the user, Nov 17 2026: 'logic and rationale should be accurate linking ... it has to be very clear'). A bellwether's report moves the stocks tied to it. Every link is written out: the tier and the reason, one stock at a time. A stock of a theme with no entry here has NO link and gets no reason. Tiers: direct = a named deal with the bellwether (it owns a stake, buys from it, sells to it, or a named joint program); step = its product goes into the bellwether's systems or the data centers built around them, without a named deal between the two; rival = sells against it (good news for one can be bad for the other); spend = no tie to the bellwether itself, it moves with the same customers' AI data-center spending. Only the 1st impact is used (the user, Nov 17 2026: 'im only interested in 1st direct impact ones'): the tiers in 'first' (direct ties and rivals); the step / spend entries stay written here but get no card row and no reason. A stock's third entry, when there, is its own list of topics (TSMC: supply; AMD: Data Center revenue). 'names' = how the bellwether's own report would name a linked company: a sentence of the report that names it is the strongest reason of all. radar/event.py reads it; the Pre-market tab's Event card and the alerts' 'why' line show it. 'evidence' = the linked company's own annual report naming the bellwether (found by radar/probe_links.py, checked by hand): [the sentence, the report's address, the form, its date]; the card links to it. A link without evidence is one the companies do not name in their reports (most suppliers call their big buyers 'Customer A'): it is written only where the deal itself is public, and its reason says so.",
  "tiers": {
   "direct": "Direct tie",
   "step": "One step away",
@@ -203,7 +203,7 @@
       ],
       "IREN": [
        "direct",
-       "IREN buys NVIDIA chips for its AI cloud, including for its $9.7B, 5-year Microsoft contract: it is a customer of NVIDIA."
+       "IREN buys NVIDIA chips for its AI cloud (including for its $9.7B Microsoft contract), and NVIDIA has a right to buy up to 30 million IREN shares at $70 over five years."
       ],
       "APLD": [
        "step",
@@ -889,7 +889,63 @@
    "lead": [
     "datacenter",
     "outlook"
-   ]
+   ],
+   "evidence": {
+    "CRWV": [
+     "In January 2026, NVIDIA Corporation invested $ 2 billion in the Company's Class A common stock at a purchase price of $ 87.20 per share.",
+     "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+     "10-K",
+     "2026-03-02"
+    ],
+    "NBIS": [
+     "We currently rely on Nvidia for the GPU chips we use and on a limited number of other suppliers for other key components in our infrastructure",
+     "https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm",
+     "20-F",
+     "2026-04-30"
+    ],
+    "IREN": [
+     "Separately, we have granted NVIDIA Corporation a right to purchase up to 30 million Ordinary shares at a price of $70.00 per share over a five-year term, subject to certain conditions including regulatory approvals",
+     "https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630.htm",
+     "10-K",
+     "2026-08-27"
+    ],
+    "COHR": [
+     "The increase was primarily due to the $2 billion in proceeds from the issuance of Common Stock to NVIDIA, net of fees, partially offset by higher payments, net of borrowings, on existing debt obligations.",
+     "https://www.sec.gov/Archives/edgar/data/820318/000082031826000020/iivi-20260630.htm",
+     "10-K",
+     "2026-08-14"
+    ],
+    "LITE": [
+     "On March 2, 2026, we completed the issuance and sale of approximately 2.9 million shares of our Series A Convertible Preferred Stock, par value $ 0.001 per share (the “Preferred Stock”) to NVIDIA Corporation (“NVIDIA”), in a private placement pursuant to a Securities Purchase Agreement",
+     "https://www.sec.gov/Archives/edgar/data/1633978/000162828026057358/lite-20260627.htm",
+     "10-K",
+     "2026-08-17"
+    ],
+    "FN": [
+     "[table] … Significant customers Total revenues, by percentage, from individual customers representing 10% or more of total revenues in the respective periods were as follows:  Years Ended June 26, 2026 June 27, 2025 June 28, 2024 Cisco Systems, Inc. 19.9 % 18.2 % 13.4 % | NVIDIA Corporation 16.3 % 27.6 % 35.1 %",
+     "https://www.sec.gov/Archives/edgar/data/1408710/000140871026000028/fn-20260626.htm",
+     "10-K",
+     "2026-08-18"
+    ],
+    "INTC": [
+     "▪ on September 15, 2025, we entered into an agreement with NVIDIA to issue and sell to NVIDIA 215 million shares of our common stock at $23.28 per share for an aggregate cash purchase price of $5.0 billion",
+     "https://www.sec.gov/Archives/edgar/data/50863/000005086326000011/intc-20251227.htm",
+     "10-K",
+     "2026-01-23"
+    ],
+    "NOK": [
+     "2 071 million, proceeds from issuance of shares to NVIDIA of EUR 859 million and net cash inflow",
+     "https://www.sec.gov/Archives/edgar/data/924613/000162828026015034/nok-20251231.htm",
+     "20-F",
+     "2026-03-05"
+    ],
+    "VRT": [
+     "Our partnership with NVIDIA supports the development of advanced power and thermal infrastructure aligned with next-generation AI and high-performance computing architectures, while our collaboration with Oklo reflects exploration of alternative energy solutions that could support future data center power requirements",
+     "https://www.sec.gov/Archives/edgar/data/1674101/000167410126000008/vrt-20251231.htm",
+     "10-K",
+     "2026-02-13"
+    ]
+   }
   },
   "MSFT": {
    "name": "Microsoft",
@@ -916,6 +972,8 @@
     "capex": {
      "label": "capital spending and capacity",
      "find": [
+      "(expect|anticipate)[^.]{0,60}capital expenditures",
+      "capital expenditures[^.]{0,90}(in the range of|approximately|to be)",
       "capital expenditures",
       "additions to property and equipment",
       "finance leases",
@@ -936,8 +994,7 @@
       "contracted"
      ],
      "also": [
-      "backlog",
-      "openai"
+      "backlog"
      ]
     },
     "ai": {
@@ -946,7 +1003,7 @@
       "ai business",
       "ai (demand|capacity|infrastructure|revenue|platform)",
       "copilot",
-      "openai",
+      "azure ai",
       "foundry"
      ],
      "also": [
@@ -954,8 +1011,120 @@
      ]
     }
    },
-   "names": {},
-   "links": []
+   "names": {
+    "NVDA": "NVIDIA",
+    "CRWV": "CoreWeave",
+    "NBIS": "Nebius",
+    "IREN": "IREN",
+    "ANET": "Arista"
+   },
+   "links": [
+    {
+     "theme": "Neoclouds & AI Hosting",
+     "topics": [
+      "capex",
+      "cloud",
+      "commit"
+     ],
+     "why": "When Azure runs short of its own data centers, Microsoft rents capacity from the AI clouds. Azure growth and Microsoft's order book say how much it needs; its spending says how long it keeps renting.",
+     "stocks": {
+      "CRWV": [
+       "direct",
+       "Microsoft is CoreWeave's largest customer: about 67% of CoreWeave's 2025 revenue."
+      ],
+      "IREN": [
+       "direct",
+       "IREN has a five-year contract with Microsoft (Nov 2025, about $9.7B) for AI computing at its Horizon data centers."
+      ],
+      "NBIS": [
+       "direct",
+       "Nebius has a multi-year contract to supply Microsoft with AI computing capacity (signed 2025)."
+      ]
+     }
+    },
+    {
+     "theme": "Optics & CPO",
+     "topics": [
+      "capex",
+      "cloud"
+     ],
+     "why": "The optical links inside Azure's data centers.",
+     "stocks": {
+      "AAOI": [
+       "direct",
+       "Microsoft is Applied Opto's key data-center customer: 28.8% of its 2025 revenue (43.7% in 2024)."
+      ]
+     }
+    },
+    {
+     "theme": "AI Networking",
+     "topics": [
+      "capex",
+      "cloud"
+     ],
+     "why": "The switches that connect Azure's data centers.",
+     "stocks": {
+      "ANET": [
+       "direct",
+       "Microsoft has been Arista's largest customer for years (about 20% of its revenue in 2024): Arista's switches connect Azure's data centers. Not named in its annual report."
+      ]
+     }
+    },
+    {
+     "theme": "AI Chips & CPUs",
+     "topics": [
+      "capex",
+      "ai",
+      "cloud"
+     ],
+     "why": "The chips Azure's AI capacity runs on.",
+     "stocks": {
+      "NVDA": [
+       "direct",
+       "Microsoft is one of NVIDIA's largest customers: most of Azure's AI capacity is NVIDIA chips. Not named in its annual report."
+      ]
+     }
+    },
+    {
+     "theme": "Power Generation (AI Power)",
+     "topics": [
+      "capex"
+     ],
+     "why": "Long fixed power contracts: Microsoft's report changes the story for more such deals, not these contracts.",
+     "stocks": {
+      "CEG": [
+       "step",
+       "Constellation sells Microsoft the power of the restarted Three Mile Island unit under a 20-year contract (Sept 2024)."
+      ]
+     }
+    }
+   ],
+   "evidence": {
+    "CRWV": [
+     "We recognized an aggregate of approximately 67% of our revenue from our top customer, Microsoft, for the year ended December 31, 2025",
+     "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+     "10-K",
+     "2026-03-02"
+    ],
+    "IREN": [
+     "For example, we announced a five-year agreement with Microsoft in November 2025, which includes GPU acquisitions and the development of the “Horizon 1,” “Horizon 2,” “Horizon 3” and “Horizon 4” data center facilities representing approximately $9.7 billion of total contract value",
+     "https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630.htm",
+     "10-K",
+     "2026-08-27"
+    ],
+    "NBIS": [
+     "We also compete with general purpose cloud computing providers including Amazon (AWS), Google (Google Cloud Platform), Microsoft (Azure), and Oracle",
+     "https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm",
+     "20-F",
+     "2026-04-30"
+    ],
+    "AAOI": [
+     "In 2025 , our key customer in the internet data center market was Microsoft . In 2025, 2024 and 2023 , Microsoft accounted for 28.8%, 43.7% and 46.6% of our revenue, respectively, and in 2024, Oracle accounted for 12.4% of our revenue.",
+     "https://www.sec.gov/Archives/edgar/data/1158114/000143774926005875/aaoi20251231_10k.htm",
+     "10-K",
+     "2026-02-26"
+    ]
+   }
   },
   "GOOGL": {
    "name": "Alphabet (Google)",
@@ -969,6 +1138,8 @@
     "capex": {
      "label": "capital spending",
      "find": [
+      "(expect|anticipate)[^.]{0,60}capital expenditures",
+      "capital expenditures[^.]{0,90}(in the range of|approximately|to be)",
       "capital expenditures",
       "capex",
       "technical infrastructure",
@@ -1007,15 +1178,99 @@
      ]
     }
    },
-   "names": {},
-   "links": []
+   "names": {
+    "NVDA": "NVIDIA",
+    "AVGO": "Broadcom"
+   },
+   "links": [
+    {
+     "theme": "AI Chips & CPUs",
+     "topics": [
+      "capex",
+      "ai",
+      "cloud"
+     ],
+     "why": "Google runs mostly on its own AI chips (TPUs), built with Broadcom, and buys NVIDIA's for its cloud customers.",
+     "stocks": {
+      "AVGO": [
+       "direct",
+       "Broadcom designs and supplies Google's own AI chips (TPUs): Google's spending is Broadcom's largest AI order. Not named in its annual report."
+      ],
+      "NVDA": [
+       "direct",
+       "Google is one of NVIDIA's largest customers for its cloud, and its rival with its own TPU chips: more Google spending helps NVIDIA, more of it on TPUs does not. Not named in its annual report."
+      ]
+     }
+    },
+    {
+     "theme": "Neoclouds & AI Hosting",
+     "topics": [
+      "capex",
+      "cloud"
+     ],
+     "why": "Google does not rent from these companies itself: it stands behind Fluidstack, the tenant that fills their data centers, by guaranteeing its lease payments, and took warrants for their shares in return.",
+     "stocks": {
+      "WULF": [
+       "direct",
+       "Google guarantees Fluidstack's lease payments at TeraWulf's data centers and holds warrants for TeraWulf shares."
+      ],
+      "CIFR": [
+       "direct",
+       "Google guarantees Fluidstack's lease at Cipher's Barber Lake site and received warrants for Cipher shares (Sept 2025)."
+      ],
+      "HUT": [
+       "direct",
+       "At Hut 8's River Bend campus Fluidstack is the tenant and Google is to guarantee the 15-year lease."
+      ]
+     }
+    },
+    {
+     "theme": "AI Servers & ODMs",
+     "topics": [
+      "capex",
+      "cloud"
+     ],
+     "why": "The servers and switches in Google's data centers.",
+     "stocks": {
+      "CLS": [
+       "direct",
+       "Google is named among Celestica's customers: Celestica builds servers and switches for Google's data centers."
+      ]
+     }
+    }
+   ],
+   "evidence": {
+    "WULF": [
+     "Lease obligations are supported by investment-grade credit enhancement provided by Google, materially strengthening the credit profile of the contracted revenues and facilitating third-party debt financing.",
+     "https://www.sec.gov/Archives/edgar/data/1083301/000108330126000031/wulf-20251231.htm",
+     "10-K",
+     "2026-02-27"
+    ],
+    "CIFR": [
+     "On September 24, 2025, as consideration for Google agreeing to backstop certain obligations of Fluidstack in connection with the Barber Lake Facility lease, the Company entered into a warrant agreement with Google (the “Google Warrant Agreement”)",
+     "https://www.sec.gov/Archives/edgar/data/1819989/000181998926000009/cifr-20251231.htm",
+     "10-K",
+     "2026-02-24"
+    ],
+    "HUT": [
+     "We are advancing scaled AI infrastructure development at our River Bend campus in Louisiana, where Fluidstack is expected to serve as tenant and Google is expected to provide a financial backstop that covers the lease payments and related pass-through obligations for the 15-year base lease term",
+     "https://www.sec.gov/Archives/edgar/data/1964789/000110465926019392/hut-20251231x10k.htm",
+     "10-K",
+     "2026-02-25"
+    ],
+    "CLS": [
+     "Our CCS segment customers include Amazon Fulfillment Services, Inc., Meta Platforms, Inc., Google Inc., Ciena Corporation, Dell Technologies, Hewlett-Packard Enterprise, and IBM Corporation, Inc",
+     "https://www.sec.gov/Archives/edgar/data/1030894/000103089426000011/cls-20251231.htm",
+     "10-K",
+     "2026-02-27"
+    ]
+   }
   },
   "AMZN": {
    "name": "Amazon",
    "lead": [
     "cloud",
-    "capex",
-    "outlook"
+    "capex"
    ],
    "relevant": "data ?cent(er|re)|capital expenditures|capex|infrastructure|capacity|cloud|\\bAI\\b|chips?|silicon|GPU|TPU|compute|gigawatt|power|servers?|network|backlog|lease",
    "what": "Amazon's AWS is the largest cloud and one of the four companies paying for the AI build-out. AWS growth and backlog, the power and data-center capacity it adds, and its own chips (Trainium, built with Marvell and others) are the order book of its chip, connectivity and data-center suppliers.",
@@ -1035,31 +1290,32 @@
     "capex": {
      "label": "capital spending and capacity",
      "find": [
-      "purchases of property and equipment",
+      "(expect|anticipate)[^.]{0,60}capital expenditures",
+      "capital expenditures[^.]{0,90}(in the range of|approximately|to be)",
+      "cash capital expenditures",
       "capital expenditures",
       "gigawatts?",
       "power capacity",
       "capital investments?"
      ],
      "also": [
+      "purchases of property and equipment",
       "data ?cent(er|re)s?",
       "capacity",
       "infrastructure"
      ]
     },
     "chips": {
-     "label": "its own chips and AI partners",
+     "label": "its own chips",
      "find": [
       "trainium",
-      "custom (ai )?(chips?|silicon)",
+      "custom (ai )?(chips?|silicon|accelerators?)",
       "graviton",
-      "anthropic",
       "project rainier",
       "nvidia"
      ],
      "also": [
-      "bedrock",
-      "\\bai\\b"
+      "bedrock"
      ]
     },
     "outlook": {
@@ -1071,8 +1327,187 @@
      "also": []
     }
    },
-   "names": {},
-   "links": []
+   "names": {
+    "NVDA": "NVIDIA",
+    "MRVL": "Marvell"
+   },
+   "links": [
+    {
+     "theme": "AI Networking",
+     "topics": [
+      "capex",
+      "chips",
+      "cloud"
+     ],
+     "why": "The connectivity chips and cables inside AWS's AI racks. Amazon took warrants in several of its suppliers that vest with its purchases: the more AWS builds, the more it buys from them.",
+     "stocks": {
+      "ALAB": [
+       "direct",
+       "Amazon is an Astera Labs customer and holds a warrant for its shares. The warrant vests as Amazon buys."
+      ],
+      "CRDO": [
+       "direct",
+       "Amazon is a Credo customer and holds a warrant for its shares. The warrant vests as Amazon buys."
+      ],
+      "MRVL": [
+       "direct",
+       "Marvell has a five-year agreement with AWS (Dec 2024) to supply custom AI chips and data-center networking chips. Not named in its annual report."
+      ]
+     }
+    },
+    {
+     "theme": "Optics & CPO",
+     "topics": [
+      "capex",
+      "cloud"
+     ],
+     "why": "The optical links inside AWS's data centers.",
+     "stocks": {
+      "FN": [
+       "direct",
+       "Amazon was 10.5% of Fabrinet's revenue in its last fiscal year, its first year over 10%."
+      ],
+      "AAOI": [
+       "direct",
+       "Amazon is an Applied Opto customer and holds a warrant for its shares. The warrant vests as Amazon buys."
+      ]
+     }
+    },
+    {
+     "theme": "AI Servers & ODMs",
+     "topics": [
+      "capex",
+      "cloud"
+     ],
+     "why": "The companies that build AWS's racks and power gear.",
+     "stocks": {
+      "JBL": [
+       "direct",
+       "Amazon holds a warrant for Jabil shares (Dec 2024): Jabil builds hardware for AWS data centers. The warrant vests as Amazon buys."
+      ],
+      "FLEX": [
+       "direct",
+       "Amazon holds a warrant for Flex shares (Aug 2025): Flex builds hardware for AWS data centers. The warrant vests as Amazon buys."
+      ]
+     }
+    },
+    {
+     "theme": "Analog & Auto Semis",
+     "topics": [
+      "capex",
+      "chips"
+     ],
+     "why": "Chips AWS buys for its data centers.",
+     "stocks": {
+      "STM": [
+       "direct",
+       "AWS holds warrants for up to 24.8 million STMicro shares (Feb 2026) that vest as AWS buys ST's chips."
+      ]
+     }
+    },
+    {
+     "theme": "Neoclouds & AI Hosting",
+     "topics": [
+      "capex",
+      "cloud"
+     ],
+     "why": "Data-center capacity AWS leases instead of building.",
+     "stocks": {
+      "CIFR": [
+       "direct",
+       "Cipher leases data-center capacity to AWS under a long lease (15 years)."
+      ]
+     }
+    },
+    {
+     "theme": "AI Chips & CPUs",
+     "topics": [
+      "chips",
+      "capex",
+      "cloud"
+     ],
+     "why": "AWS buys NVIDIA's chips and builds its own (Trainium).",
+     "stocks": {
+      "NVDA": [
+       "direct",
+       "Amazon is one of NVIDIA's largest customers, and its rival with its own Trainium chips: more AWS spending helps NVIDIA, more of it on Trainium does not. Not named in its annual report."
+      ]
+     }
+    },
+    {
+     "theme": "Power Generation (AI Power)",
+     "topics": [
+      "capex"
+     ],
+     "why": "Long fixed power contracts: Amazon's report changes the story for more such deals, not these contracts.",
+     "stocks": {
+      "TLN": [
+       "step",
+       "Talen sells power to AWS's data centers under a long fixed-price contract (expanded June 2025)."
+      ],
+      "VST": [
+       "step",
+       "Vistra has a 20-year contract to sell AWS 1,200 MW from its Comanche Peak nuclear plant (Sept 2025)."
+      ]
+     }
+    }
+   ],
+   "evidence": {
+    "ALAB": [
+     "In October 2022, the Company issued a warrant to Amazon NV Investment Holdings LLC (“Holder”) to purchase an aggregate of up to 1,484,230 shares of Common Stock at an exercise price of $ 20.34 per share (the “Customer Warrant”)",
+     "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000010/alab-20251231.htm",
+     "10-K",
+     "2026-02-20"
+    ],
+    "CRDO": [
+     "During fiscal year 2022, the Company issued a warrant to Amazon.com NV Investment Holdings LLC (Holder) to purchase an aggregate of up to 4.1 million of our ordinary shares at an exercise price of $ 10.74 per share (the Customer Warrant)",
+     "https://www.sec.gov/Archives/edgar/data/1807794/000162828026043303/crdo-20260502.htm",
+     "10-K",
+     "2026-06-15"
+    ],
+    "FN": [
+     "[table] … customers representing 10% or more of total revenues in the respective periods were as follows:  Years Ended June 26, 2026 June 27, 2025 June 28, 2024 Cisco Systems, Inc. 19.9 % 18.2 % 13.4 % NVIDIA Corporation 16.3 % 27.6 % 35.1 % Nokia Corporation 10.7 % * * | Amazon.com, Inc. 10.5 % * *",
+     "https://www.sec.gov/Archives/edgar/data/1408710/000140871026000028/fn-20260626.htm",
+     "10-K",
+     "2026-08-18"
+    ],
+    "AAOI": [
+     "The remaining 6,621,166 Warrant Shares may vest over the next 10 years, dependent on aggregate purchases by or on behalf of Amazon and its affiliates of $ 4 billion of the Company's products over this time period",
+     "https://www.sec.gov/Archives/edgar/data/1158114/000143774926005875/aaoi20251231_10k.htm",
+     "10-K",
+     "2026-02-26"
+    ],
+    "JBL": [
+     "In December 2024, we issued a warrant to Amazon.com NV Investment Holdings LLC to acquire up to 1,158,539 of our ordinary shares as reported in a Current Report on Form 8-K filed on January 3, 2025",
+     "https://www.sec.gov/Archives/edgar/data/898293/000162828026067038/jbl-20260831.htm",
+     "10-K",
+     "2026-10-23"
+    ],
+    "FLEX": [
+     "On August 15, 2025, we issued a warrant (the “Warrant”) to Amazon.com NV Investment Holdings LLC, a wholly-owned subsidiary of Amazon.com, Inc. (“Parent”) to purchase up to an aggregate of 3,859,851 ordinary shares of the Company (“Warrant Shares”) at an exercise price of $51.29 per share",
+     "https://www.sec.gov/Archives/edgar/data/866374/000086637426000012/flex-20260331.htm",
+     "10-K",
+     "2026-05-20"
+    ],
+    "STM": [
+     "On February 6, 2026, ST issued warrants to Amazon Web Services (\"AWS\") for the acquisition of up to 24.8 million ordinary shares of ST. The warrants will vest in tranches over the term of the agreement, with vesting substantially tied to payments for ST products and services purchased by AWS and its affiliates",
+     "https://www.sec.gov/Archives/edgar/data/932787/000093278726000009/stm-20251231.htm",
+     "20-F",
+     "2026-02-26"
+    ],
+    "CIFR": [
+     "In October 2025, through our wholly-owned subsidiary Cipher Black Pearl LLC (“Cipher Black Pearl”), we entered into a 15-year lease agreement with Amazon Web Services, Inc. (“Amazon”) to deliver approximately 300 gross MW of turnkey data center capacity at the site (“Black Pearl” or the “Black Pearl Facility”), with phased delivery expected to commence in 2026.",
+     "https://www.sec.gov/Archives/edgar/data/1819989/000181998926000009/cifr-20251231.htm",
+     "10-K",
+     "2026-02-24"
+    ],
+    "TLN": [
+     "The AWS PPA requires Talen to deliver carbon-free power to AWS over a significant contract term at anticipated premium prices",
+     "https://www.sec.gov/Archives/edgar/data/1622536/000162253626000017/tln-20251231.htm",
+     "10-K",
+     "2026-02-26"
+    ]
+   }
   },
   "META": {
    "name": "Meta",
@@ -1086,6 +1521,8 @@
     "capex": {
      "label": "capital spending",
      "find": [
+      "(expect|anticipate)[^.]{0,60}capital expenditures",
+      "capital expenditures[^.]{0,90}(in the range of|approximately|to be)",
       "capital expenditures",
       "capex"
      ],
@@ -1118,8 +1555,112 @@
      ]
     }
    },
-   "names": {},
-   "links": []
+   "names": {
+    "NVDA": "NVIDIA",
+    "CRWV": "CoreWeave",
+    "NBIS": "Nebius",
+    "AVGO": "Broadcom",
+    "ANET": "Arista"
+   },
+   "links": [
+    {
+     "theme": "Neoclouds & AI Hosting",
+     "topics": [
+      "capex",
+      "ai"
+     ],
+     "why": "Meta rents AI capacity from the AI clouds on top of what it builds itself.",
+     "stocks": {
+      "CRWV": [
+       "direct",
+       "Meta is one of CoreWeave's significant customers, named in CoreWeave's report next to Microsoft (a multi-year capacity contract signed in 2025)."
+      ],
+      "NBIS": [
+       "direct",
+       "Nebius has a multi-year contract to supply Meta with AI computing capacity (signed 2025)."
+      ]
+     }
+    },
+    {
+     "theme": "AI Chips & CPUs",
+     "topics": [
+      "capex",
+      "ai"
+     ],
+     "why": "The chips Meta's AI data centers run on.",
+     "stocks": {
+      "AVGO": [
+       "direct",
+       "Broadcom designs Meta's own AI chips and supplies its networking chips. Not named in its annual report."
+      ],
+      "NVDA": [
+       "direct",
+       "Meta is one of NVIDIA's largest customers; NVIDIA's Nov 17 2026 report names Meta's expanded deployment of its new Rubin systems."
+      ]
+     }
+    },
+    {
+     "theme": "AI Networking",
+     "topics": [
+      "capex",
+      "ai"
+     ],
+     "why": "The switches that connect Meta's data centers.",
+     "stocks": {
+      "ANET": [
+       "direct",
+       "Meta has been Arista's second-largest customer (about 15% of its revenue in 2024). Not named in its annual report."
+      ]
+     }
+    },
+    {
+     "theme": "AI Servers & ODMs",
+     "topics": [
+      "capex",
+      "ai"
+     ],
+     "why": "The servers and switches in Meta's data centers.",
+     "stocks": {
+      "CLS": [
+       "direct",
+       "Meta is named among Celestica's customers: Celestica builds switches and servers for Meta's data centers."
+      ]
+     }
+    },
+    {
+     "theme": "Power Generation (AI Power)",
+     "topics": [
+      "capex"
+     ],
+     "why": "Long fixed power contracts: Meta's report changes the story for more such deals, not these contracts.",
+     "stocks": {
+      "VST": [
+       "step",
+       "Vistra has 20-year contracts to sell Meta 2,609 MW from its nuclear plants (Jan 2026)."
+      ]
+     }
+    }
+   ],
+   "evidence": {
+    "CRWV": [
+     "Other significant customers include Microsoft and Meta",
+     "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+     "10-K",
+     "2026-03-02"
+    ],
+    "NBIS": [
+     "Although we have entered into, and expect to continue to pursue, longer-term customer arrangements such as those we have secured with Meta and Microsoft, including multi-year agreements that may involve significant capital expenditures, technical requirements, service level commitments and capacity reservations, we have limited experience in delivering, implementing and managing such contracts at scale",
+     "https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm",
+     "20-F",
+     "2026-04-30"
+    ],
+    "CLS": [
+     "Our CCS segment customers include Amazon Fulfillment Services, Inc., Meta Platforms, Inc., Google Inc., Ciena Corporation, Dell Technologies, Hewlett-Packard Enterprise, and IBM Corporation, Inc",
+     "https://www.sec.gov/Archives/edgar/data/1030894/000103089426000011/cls-20251231.htm",
+     "10-K",
+     "2026-02-27"
+    ]
+   }
   }
  },
  "first": [
