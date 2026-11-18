@@ -92,7 +92,20 @@ TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "
             "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep", "mbo", "mbo2"}
 
 
+# a trigger back in its box after it stopped holding (the user, Nov 18 2026: "i need sounds for episodic pivots as well for
+# back on.... and pattern breakouts with 1.5 volume"): one BACK ON alert, on the portal only, at most one every 15 minutes
+# a stock; ⚡ power days and EPs always, 🎯 pattern breakouts only with a volume pace of 1.5x+ for the time of day (under
+# it they come back silently, as before). 🚀 launches and ↩️ pullback entries still come back silently
+BACK_EP = ("power", "ep")
+BACK_PATTERN = ("breakout", "confirm", "gapbase", "gob1", "gob5", "basebreak", "pop", "s3")
+BACK_PATTERN_RV = 1.5
+BACK_EVERY = 15
+BACK_RE = re.compile(r"^(" + "|".join(BACK_EP + BACK_PATTERN) + r")back\d{4}$")
+
+
 def is_trigger(key, title=""):
+    if BACK_RE.match(key.split(":", 1)[1] if ":" in key else ""):
+        return True
     if key.startswith(("grp:", "thm:")):                # a group move (2+ stocks of a theme / group alerting today); a theme moving up
         return True
     kind = key.split(":", 1)[1] if ":" in key else ""
@@ -946,12 +959,16 @@ def still_holds(key, title, found_keys, live, doc, memo):
 
 def update_holding(state, found, live, doc, now):
     """each run: today's triggers that still hold (state hold: the keys, at this time), the ones that stopped (lost: when
-    and the price) and the ones holding again after that (back); the portal's boxes show only what holds"""
+    and the price) and the ones holding again after that (back); the portal's boxes show only what holds. Returns the
+    BACK ON alerts [(key, title, msg)] of the ⚡ power days / EPs and, with a volume pace of 1.5x+, the 🎯 pattern breakouts"""
     found_keys, t, memo = {a[0] for a in found}, f"{now:%H:%M}", {}
     lost, back, held, seen = state.setdefault("lost", {}), state.setdefault("back", {}), [], set()
+    last, out = state.setdefault("trig_back", {}), []
+    mins = lambda x: int(x[:2]) * 60 + int(x[3:5])
     for it in state.get("items", []):
         key = it.get("key", "")
-        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "thm:", "summary:")) or key.endswith((":mbo", ":mbo2")):
+        if it.get("kind") != "trigger" or key in seen or key.startswith(("grp:", "thm:", "summary:")) or key.endswith((":mbo", ":mbo2")) \
+                or BACK_RE.match(key.split(":", 1)[-1]):
             continue                                    # (the morning breakouts: morning_holding, on the user's settings)
         seen.add(key)
         q = (live.get("rows") or {}).get(key.split(":")[0])
@@ -961,12 +978,22 @@ def update_holding(state, found, live, doc, now):
             if key in lost:
                 back[key] = {"at": t, "price": px}
                 del lost[key]
+                sym, kind = key.split(":", 1)
+                rv = q[4] if q and len(q) > 4 else None
+                if (kind in BACK_EP or (kind in BACK_PATTERN and rv is not None and rv >= BACK_PATTERN_RV)) \
+                        and (sym not in last or mins(t) - mins(last[sym]) >= BACK_EVERY):
+                    last[sym] = t
+                    what = "POWER DAY" if kind == "power" else "EPISODIC PIVOT" if kind == "ep" else "PATTERN BREAKOUT"
+                    out.append((f"{sym}:{kind}back{now:%H%M}", f"{sym} {what} BACK ON" + (f" {q[1]:+.1f}%" if q[1] is not None else ""),
+                                (f"{kind_words(key, it.get('title', ''))}: " if kind in BACK_PATTERN else "") + f"meets its rules again (first alert {it.get('time', '')})"
+                                + f" · ${q[0]:.2f}" + (f" · {q[1]:+.1f}%" if q[1] is not None else "") + (f" · vol {rv:.1f}x for the time of day" if rv is not None else ""), it.get("tv") or sym))
         elif key not in lost:
             lost[key] = {"at": t, "price": px}
     # and every trigger its rules find right now, sent or not: a power day / EP that stops holding steps down to a launch
     # when the stock still meets a launch's rules (EPAM Nov 5: volume pace 3.6x at the close, under 4x; still an A launch)
     now_ = sorted({a[0] for a in found if is_trigger(a[0], a[1]) and not a[0].startswith(("grp:", "thm:", "summary:"))})
     state["hold"] = {"at": t, "keys": held, "now": now_}
+    return out
 
 
 # ───────── morning breakouts (the user, Nov 9 2026) ─────────
@@ -1767,7 +1794,12 @@ def main():
     # which of today's triggers still hold (from 9:35, when find() runs): the portal moves the others out of their box
     if not early:
         try:
-            update_holding(state, found, live, doc, now)
+            for key, title, msg, tvs in update_holding(state, found, live, doc, now):     # back in its box: the portal only
+                state.setdefault("items", []).append({"key": key, "time": f"{now:%H:%M}", "title": title, "msg": msg, "tv": tvs,
+                                                      "kind": "trigger", "groups": _GROUPS.get(key.split(":")[0], [])})
+                state.setdefault("log", []).append(f"{now:%H:%M} {title}: {msg}")
+                state["sent"] = sorted(set(state["sent"]) | {key})
+                print(f"{now:%H:%M} {title}: {msg}")
         except Exception as e:                      # never at the cost of the alerts
             print(f"holding not updated: {e!r}", file=sys.stderr)
     json.dump(state, open(state_p, "w"), indent=1)
