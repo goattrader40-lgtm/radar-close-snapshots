@@ -131,6 +131,7 @@ def kind_words(key, title=""):
     return KIND_WORDS.get(kind, kind)
 
 
+GROUP_MIN_ADR = 4.0           # a stock counts for a group move with an ADR of 4%+ (the user, Nov 18 2026: "lets do b with 4 adr")
 GROUP_FROM = "09:40"          # the GROUP MOVE alert is sent from this time (the user, Nov 18 2026: "we are only changing alert time")
 
 
@@ -139,13 +140,15 @@ def group_moves(doc, state, alerts_now, now):
     industry group alerting the same day is a group move. Returns {group: [(sym, words, time), ...]} for the groups with
     2+ stocks, from today's alerts so far plus this run's; the loose "· other" industries don't count. Every alert of the
     day counts, the 9:35 ones too; only the GROUP MOVE alert itself waits until 9:40 (GROUP_FROM, in main; the user, Nov 18
-    2026: "if something happened between 930-940 it has to show")"""
+    2026: "if something happened between 930-940 it has to show"). Only stocks with an ADR of 4%+ count (GROUP_MIN_ADR)"""
     loose = {r["group"] for r in (doc.get("group_rank") or {}).get("rows", []) if r.get("loose")}
     seen = {}
     past = [(it["key"], it.get("title"), it.get("time")) for it in state.get("items", [])
             if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith(":mbo")]
     for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now]:
         sym = key.split(":")[0]
+        if (_ADR.get(sym) or 0) < GROUP_MIN_ADR:          # MD 3.73%, WAT 3.42%, BSY 3.20% on Nov 18 2026: not counted
+            continue
         for g in _GROUPS.get(sym, []):
             if g in loose or "· other" in g:
                 continue
@@ -875,6 +878,7 @@ def chart_low_today(sym):
 MIN_OVER_LOW52 = 30          # % over the 52-week low every alert needs (scanner/settings.json standard)
 _LOW52 = None
 _SMA200 = {}
+_ADR = {}                    # symbol -> its 20-day ADR % (stocks.json adr_20)
 _GROUPS = {}                 # symbol -> its themes and its tight industry group (stocks.json themes " | ", group)
 
 
@@ -897,6 +901,7 @@ def low52_of(launch_p):
                     st = json.load(open(p))
                     _LOW52 = {s["symbol"]: s.get("low_52w") for s in st}
                     _SMA200.update({s["symbol"]: s.get("sma200") for s in st})
+                    _ADR.update({s["symbol"]: s.get("adr_20") for s in st})
                     _GROUPS.update({s["symbol"]: [t for t in str(s.get("themes") or "").split(" | ") if t]
                                     + ([s["group"]] if s.get("group") else []) for s in st})
                     break

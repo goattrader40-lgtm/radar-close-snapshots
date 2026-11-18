@@ -4206,9 +4206,10 @@ defCalc('industry_perf', {
          industry group alerting today; each alert of such a stock names the others (the job sends the GROUP MOVE alert) */
       const looseG = new Set(((ldocA && ldocA.group_rank && ldocA.group_rank.rows) || []).filter((r) => r.loose).map((r) => r.group));
       const grpOf = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, String(x.themes || '').split(' | ').filter(Boolean).concat(x.group ? [x.group] : []).filter((g) => !looseG.has(g) && !/· other/.test(g))]));
+      const adrOfG = new Map((BASE ? BASE.stocks : []).map((x) => [x.symbol, x.adr_20]));
       const gm = loadDay('gm', '{}');
       const hm = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' });
-      const addGm = (key, title, t) => { const sym = symOf(key); (grpOf.get(sym) || []).forEach((g) => { gm[g] = gm[g] || []; if (!gm[g].some((x) => x[0] === sym)) gm[g].push([sym, kindWords(key, title), t]); }); };
+      const addGm = (key, title, t) => { const sym = symOf(key); if (!(num(adrOfG.get(sym)) >= 4)) return;   /* only ADR 4%+ stocks count for a group move (the user, Nov 18 2026; radar/alerts.py GROUP_MIN_ADR) */ (grpOf.get(sym) || []).forEach((g) => { gm[g] = gm[g] || []; if (!gm[g].some((x) => x[0] === sym)) gm[g].push([sym, kindWords(key, title), t]); }); };
       ((SRV && SRV.date === todayNY() && SRV.items) || []).forEach((it) => { if (!/^(summary|grp|thm):/.test(it.key) && !/:mbo(back\d*)?$/.test(it.key)) addGm(it.key, it.title, it.time); });   /* the morning breakouts aren't group moves */
       /* a theme and a group with the same stocks alerting are one move: the better-ranked one names it */
       const pctG = new Map(((ldocA && ldocA.group_rank && ldocA.group_rank.rows) || []).map((r) => [r.group, r.pct || 0]));
