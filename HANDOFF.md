@@ -96,6 +96,19 @@ alone.
   desktop / phone with that record (the split boxes, each box edited and reset alone, every voice line, 5 tabs, 0 page
   errors), again after the merge with main. Rules workbook: 3 new rows, 3 changed. No `--regress`, no Launches rebuild
   (launch.py untouched), no 2-year check (alerts and settings).
+- **LIVE (the user's "go live", Wed Nov 18 2026 ~5:20 PM ET, commit 8ba96bf): the two morning boxes run from their own From
+  time, 9:31 at the earliest** (the user: "if i choose 932 or 933 meaning 3 orh breakout it should sound around 934 or 935...
+  its every 1min"). Found: main() held the morning breakouts to 9:35 with every other alert (`not early`), though the Nov 17
+  change let the box take a 9:31 / 9:32 start: a 1- or 2-minute range never fired before 9:35. radar/alerts.py: that gate is
+  off for the morning boxes only (the 1-minute check runs them from 9:31); and a stock that fires gets its levels kept at once
+  (check_morning: before, one that fired in the range's first minute had none, so it could not leave / re-enter its box).
+  Tested (stand-in levels): 📊 at 3min / From 9:33 fires at 9:33, 📈 at 9:35 / 5min at 9:35, both at 9:35 = nothing before
+  9:35, out at 9:36 and back at 9:52. Told the user the Rel vol is rough before 9:35. Rules workbook: the 📈 row.
+  **Not seen on live prices: check Thu Nov 19** (the user's From times decide; both boxes are saved / default at 9:35 now).
+- **Asked, not built (explain first)**: the EARLY gap heads-up (9:31-9:34) also for the Watchlist names (1-EP/GAP, TREND, Start
+  days, 3-SETUPS). It reads launch.json `watch` (849 liquid stocks: $10+, $20M+ and 700K+ a day, ADR 3.5%+; EP and power day
+  alerts read the same list, not literally the whole market); 36 of the 49 1-EP/GAP names and 39 of 94 3-SETUPS names are not
+  on it: why not is to check first.
 - **Answered, no change**: the Gainers tab already has the theme buttons ("Group moves today", above the theme table; the user:
   "if thats the way i dont need it"); the gainers table updates every minute for stocks up 2%+ (9:31-11:00 since the other
   session's Nov 18 change, was 10:30), every 5 minutes for the rest.
