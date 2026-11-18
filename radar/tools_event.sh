@@ -12,8 +12,8 @@ case "$CMD" in
     rd stocks.json
     python3 radar/event.py replay radar/bellwethers.json /tmp/rd/stocks.json /tmp/events_replay.json ${CMD#eventreplay }
     python3 radar/publish.py "event replay" /tmp/events_replay.json;;
-  links\ *)         # a probe: a bellwether's direct links from the SEC annual reports ("links NVDA GOOGL SPCX") -> radar-data probe_links.json
+  links|links\ *)    # the link finder: every tradable stock's annual report read for the bellwethers' names ("links" or "links 30" minutes) -> radar-data probe_links.json
     rd stocks.json
-    python3 radar/probe_links.py /tmp/rd/stocks.json /tmp/probe_links.json ${CMD#links }
+    A=${CMD#links}; python3 radar/probe_links.py /tmp/rd/stocks.json /tmp/probe_links.json ${A# }
     python3 radar/publish.py "links probe" /tmp/probe_links.json;;
 esac

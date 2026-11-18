@@ -1,149 +1,186 @@
 #!/usr/bin/env python3
-"""A probe (test only, nothing live reads it): can the direct links of a bellwether be built by code, from SEC filings?
+"""The link finder (a test tool, nothing live reads it): a bellwether's direct links, from the companies' own annual reports.
 
-  python3 radar/probe_links.py <stocks.json> <out probe_links.json> SYM [SYM ...]
+  python3 radar/probe_links.py <stocks.json> <out probe_links.json> [minutes]
 
-The user, Nov 17 2026: "big bellwethers maps, for their suppliers and connectivity vendors ... kind of algorithmic ...
-direct connection automatically built ... 1st direct impact and 2nd impact, im only interested in 1st direct impact".
-For each bellwether: 1. the SEC's full-text search for its name in the annual reports (10-K / 20-F) of the last 15 months;
-2. of the filers, the tradable stocks of stocks.json (market cap $700M+, $20M+ a day), the largest first; 3. each one's
-report is read and every sentence that names the bellwether is sorted by what it says: customer with a % of revenue, the
-bellwether owns a stake, supplier, customer, agreement, rival, a platform it merely uses (Google Play, Google Cloud as a
-tool ...: no link), or a plain mention. A stock is a 1st-impact link when its own report states one of the first five.
-The file keeps the sentences, so every link can be checked against the company's own words.
+The user, Nov 17-18 2026: "big bellwethers maps, for their suppliers and connectivity vendors ... kind of algorithmic ...
+direct connection automatically built ... im only interested in 1st direct impact ones"; "you can increase that meta
+microsoft apple and so on".
+Every tradable stock of stocks.json (market cap $700M+, $20M+ a day) is read once: its newest annual report at the SEC
+(10-K, 20-F or 40-F). Every sentence that names a bellwether (NAMES below) is sorted by what it says:
+  customer %   the bellwether is named with a share of the stock's revenue or receivables (the 10% customer note)
+  stake        the bellwether bought, holds or may buy the stock's shares or warrants
+  sells to it  the bellwether is named as a customer
+  buys from it the bellwether is named as its supplier
+  agreement    a named agreement, contract, lease or partnership with it
+  rival        named as a competitor
+  platform     a tool everyone uses (app stores, ads, cloud hosting, Windows ...): no link
+  mention      anything else: no link
+The file keeps the sentences, so each proposed link can be checked against the company's own words. It proposes; the map
+(radar/bellwethers.json) is written from it by review: the finder's label alone is not the link.
+(The first version, Nov 17, used the SEC's full-text search and missed MU, DELL, TSM, ALAB, MRVL for NVIDIA.)
 """
-import concurrent.futures as cf, datetime, json, os, re, sys, time, urllib.parse
+import concurrent.futures as cf, datetime, json, os, re, sys, threading, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import earnings as E  # noqa: E402
 import event as V     # noqa: E402
 
-NAMES = {"NVDA": ["NVIDIA"], "GOOGL": ["Google", "Alphabet"], "SPCX": ["SpaceX", "Space Exploration Technologies", "Starlink"],
-         "MSFT": ["Microsoft"], "AMZN": ["Amazon", "AWS"], "META": ["Meta Platforms", "Meta"], "AAPL": ["Apple"], "TSLA": ["Tesla"],
-         "AVGO": ["Broadcom"], "TSM": ["TSMC", "Taiwan Semiconductor"], "ORCL": ["Oracle"], "MU": ["Micron"], "AMD": ["AMD", "Advanced Micro Devices"]}
-MAX_DOCS = 320
-PLATFORM = re.compile(r"google (play|ads?|analytics|search|maps|workspace|chrome|pay)|app stores?|android|chrome|search engines?|"
-                      r"apple app store|play store|windows|office 365|microsoft (office|teams|azure active)|social media", re.I)
-KINDS = ["customer %", "stake", "supplier", "customer", "agreement", "rival", "platform", "mention"]
-FIRST = {"customer %", "stake", "supplier", "customer", "agreement"}
+NAMES = {"NVDA": ["NVIDIA", "Nvidia"], "MSFT": ["Microsoft", "Azure"], "GOOGL": ["Google", "Alphabet"], "AMZN": ["Amazon", "AWS"],
+         "META": ["Meta Platforms", "Meta"], "AAPL": ["Apple"], "AVGO": ["Broadcom"], "TSM": ["TSMC", "Taiwan Semiconductor"],
+         "MU": ["Micron"], "SPCX": ["SpaceX", "Space Exploration Technologies", "Starlink"], "ORCL": ["Oracle"],
+         "AMD": ["AMD", "Advanced Micro Devices"], "ASML": ["ASML"], "TSLA": ["Tesla"], "PLTR": ["Palantir"],
+         "UNH": ["UnitedHealth", "UnitedHealthcare", "Optum"], "LLY": ["Eli Lilly", "Lilly"], "OPENAI": ["OpenAI"]}
+KINDS = ["customer %", "stake", "sells to it", "buys from it", "agreement", "rival", "platform", "mention"]
+KEEP = KINDS[:6]
+PLATFORM = re.compile(r"app stores?|google play|play store|app store|\bios\b|android|search engines?|social media|advertis|facebook|instagram|whatsapp|"
+                      r"youtube|windows|office 365|microsoft 365|\bteams\b|browser|operating systems?|mobile (devices?|platforms?)|marketplaces?|"
+                      r"kindle|alexa|prime video|iphone|ipad|smartphones?|"
+                      r"(host(ed|ing|s)?|runs?|rel(y|ies|iance)|depend(s|ent|ence)?|operat\w+|deploy\w*|migrat\w+|built)[^.]{0,120}(aws|amazon web services|azure|google cloud|gcp)|"
+                      r"third[- ]party (cloud|data ?cent(er|re)|hosting)|cloud (service|infrastructure|hosting|computing|platform) (providers?|vendors?)|public clouds?", re.I)
+LOCK = threading.Lock()
 
 
-def fts(name, d0, d1, errors):
-    """{cik: [(file_date, form, adsh, file name)]} of the annual reports that contain the name"""
-    out, frm, total = {}, 0, None
-    while frm < 6000:
-        q = urllib.parse.urlencode({"q": f'"{name}"', "forms": "10-K,20-F", "dateRange": "custom", "startdt": d0, "enddt": d1, "from": frm})
-        try:
-            j = json.loads(E.retry(lambda: E.http("https://efts.sec.gov/LATEST/search-index?" + q, E.SEC_UA)))
-        except Exception as e:
-            errors.append(f"search {name} from {frm}: {e!r}"[:200])
-            break
-        hits = (j.get("hits") or {}).get("hits") or []
-        total = ((j.get("hits") or {}).get("total") or {}).get("value")
-        for h in hits:
-            s = h.get("_source") or {}
-            fn = str(h.get("_id") or "").split(":")[-1]
-            form = s.get("form") or s.get("file_type") or ""
-            for c in s.get("ciks") or []:
-                out.setdefault(int(c), []).append((s.get("file_date") or "", form, s.get("adsh") or "", fn))
-        if len(hits) < 100:
-            break
-        frm += 100
-        time.sleep(0.15)
-    return out, total
-
-
-def kind_of(s, pat):
+def kind_of(s, n, ctx):
+    """n = the bellwether's names as one regex group; ctx = the text just before the sentence"""
     low = s.lower()
-    money = re.search(r"\d{1,2}(\.\d+)?\s?%", s) and re.search(r"revenue|net sales|sales|receivable", low)
-    if money and re.search(r"customer|accounted for|represented|comprised|sales to", low):
+    if re.search(r"\d{1,2}(\.\d+)?\s?%", s) and re.search(r"revenue|net sales|\bsales\b|receivable", low) \
+            and re.search(r"customer|accounted for|represented|comprised|sales to|distributor|partner", low) and not PLATFORM.search(s):
         return "customer %"
-    if re.search(r"\b(invest(ed|ment|or)|stake|warrants?|beneficial(ly)? own|shares? (of|issued|sold|held)|equity (interest|investment)|purchased? .{0,40}(shares|stock))", low) \
-            and re.search(pat.pattern + r".{0,160}(invest|purchas|acquir|own|hold|stake|shares|warrant)|(invest\w*|shares|stake|warrants?) .{0,80}(by|from|to|with|of) .{0,30}" + pat.pattern, s, re.I):
+    if re.search(n + r"[^.;]{0,90}\b(invested|purchased|acquired|holds?|owns?|agreed to (purchase|invest)|right to (purchase|acquire)|subscribed)\b[^.;]{0,90}"
+                 r"(shares|stock|warrants?|equity|notes|\$)", s) \
+            or re.search(r"(issu(ed|ance)|s(old|ale)|grant(ed)?)[^.;]{0,120}(shares|stock|warrants?)[^.;]{0,80}\bto " + n, s) \
+            or re.search(r"(investment|invested)[^.;]{0,40}\b(by|from) " + n, s) or re.search(n + r"('s)? (Warrants?|Investment|Shares)\b", s) \
+            or re.search(r"(warrants?|right)[^.;]{0,60}(issued|granted)?[^.;]{0,20}\bto " + n + r"[^.;]{0,80}(purchase|acquire)", s):
         return "stake"
+    if re.search(r"compet", low) or re.search(r"compet", ctx[-350:].lower()):
+        return "rival"
     if PLATFORM.search(s):
         return "platform"
-    if re.search(r"supplier|supplied by|purchases? from|we (purchase|buy|source|procure)|rel(y|ies|iance) on|depend(s|ent|ence)? (up)?on|sole[- ]source|"
-                 r"single[- ]source|manufactured by|foundr(y|ies)|supply agreement", low):
-        return "supplier"
-    if re.search(r"customers?|sales to|sold to|purchases? by|end[- ]users?|design wins?|hyperscal", low):
-        return "customer"
-    if re.search(r"agreement|partnership|partner(ed|s)? with|collaborat|contract|lease|joint|alliance|memorandum", low):
+    if re.search(r"(customers?|clients?)[^.]{0,140}(includ\w+|such as|like|:|are|were)[^.]{0,220}" + n, s, re.I) \
+            or re.search(n + r"[^.]{0,90}\b(is|are|was|were|as|remain(s|ed)?)\b[^.]{0,40}(customers?|clients?)", s) \
+            or re.search(r"(sales|sold|shipments?|deliver\w+|revenue)[^.]{0,30}\b(to|from) [^.]{0,40}" + n, s):
+        return "sells to it"
+    if re.search(r"(suppliers?|vendors?|foundr(y|ies)|manufacturers?)[^.]{0,140}(includ\w+|such as|like|:|are|is)[^.]{0,220}" + n, s, re.I) \
+            or re.search(n + r"[^.]{0,80}\b(is|are|as)\b[^.]{0,40}(sole|primary|principal|key|major|only|single|significant)[^.]{0,30}(supplier|source|provider|vendor|foundry)", s) \
+            or re.search(r"(purchas\w+|buy|source[ds]?|procure\w*|obtain\w*|licens\w+)[^.]{0,100}\bfrom [^.]{0,40}" + n, s) \
+            or re.search(r"(rel(y|ies|iance)|depend(s|ent|ence)?) (up)?on [^.]{0,80}" + n, s):
+        return "buys from it"
+    if re.search(r"(agreements?|contracts?|leases?|partnerships?|collaborations?|memorandum|orders?|arrangements?|alliances?)[^.]{0,90}\b(with|by|from|to) [^.]{0,60}" + n, s, re.I) \
+            or re.search(n + r"[^.]{0,70}(agreement|contract|lease|partnership|collaboration)", s) \
+            or re.search(r"(partner(ed|ing|s)?|collaborat\w+|teamed) with [^.]{0,50}" + n, s, re.I):
         return "agreement"
-    if re.search(r"compet", low):
-        return "rival"
     return "mention"
 
 
-def read_one(cik, hits, pats):
-    """the newest annual report of the filer: its sentences that name the bellwether, sorted by kind"""
-    d, form, adsh, fn = sorted(hits, reverse=True)[0]
-    url = f"https://www.sec.gov/Archives/edgar/data/{cik}/{adsh.replace('-', '')}/{fn}"
-    raw = E.retry(lambda: E.http(url, E.SEC_UA, 60)).decode("utf-8", "replace")
-    txt = V.clean(raw)
-    found = {}
-    n = 0
+def annual(sec_cik):
+    """(filed, form, url) of the filer's newest annual report"""
+    sub = json.loads(E.retry(lambda: E.http(f"https://data.sec.gov/submissions/CIK{sec_cik:010d}.json", E.SEC_UA, 40)))
+    f = sub["filings"]["recent"]
+    for i, form in enumerate(f["form"]):
+        if form in ("10-K", "20-F", "40-F") and f["primaryDocument"][i]:
+            return f["filingDate"][i], form, f"https://www.sec.gov/Archives/edgar/data/{sec_cik}/{f['accessionNumber'][i].replace('-', '')}/{f['primaryDocument'][i]}"
+    return None
+
+
+def read(sym, cik, pats, own):
+    """{bellwether: {kind: [sentences]}} and the mention counts, from the stock's annual report"""
+    a = annual(cik)
+    if not a:
+        return None
+    filed, form, url = a
+    txt = V.clean(E.retry(lambda: E.http(url, E.SEC_UA, 120)).decode("utf-8", "replace"))
+    out = {}
+    hot = {b: p for b, (p, n) in pats.items() if b != own and p.search(txt)}
+    if not hot:
+        return {"filed": filed, "form": form, "url": url, "chars": len(txt), "links": {}}
+    ctx = ""
     for part in re.split(r"\s*¶\s*", txt):
-        if not any(p.search(part) for p in pats):
-            continue
-        for s in re.split(r"(?<=[a-z0-9%\)”\"])[.!?]\s+(?=[A-Z“\"$])", part):
-            p = next((p for p in pats if p.search(s)), None)
-            if not p or not (40 <= len(s) <= 700):
-                continue
-            n += 1
-            k = kind_of(s, p)
-            found.setdefault(k, [])
-            if len(found[k]) < 3:
-                found[k].append(V.short(s.strip(), 420))
-    return {"filed": d, "form": form, "url": url, "mentions": n, "by_kind": found}
+        hit = [b for b, p in hot.items() if p.search(part)]
+        if hit:
+            # a table row: the name with a share next to it, under a note about customers (the 10% customer table)
+            if len(part) <= 170 and re.search(r"\d{1,2}(\.\d+)?\s?%", part) and re.search(r"customer|accounts? receivable|net sales|revenue", ctx[-900:], re.I) \
+                    and re.search(r"10\s?%|ten percent|concentration|significant customers?|major customers?|accounted for", ctx[-900:], re.I):
+                for b in hit:
+                    o = out.setdefault(b, {"n": 0, "by": {}})
+                    o["n"] += 1
+                    o["by"].setdefault("customer %", [])
+                    if len(o["by"]["customer %"]) < 3:
+                        o["by"]["customer %"].append(V.short("[table] … " + ctx[-260:].strip() + " | " + part.strip(), 520))
+            else:
+                for s in re.split(r"(?<=[a-z0-9%\)”\"])[.!?]\s+(?=[A-Z“\"$•])", part):
+                    if not (40 <= len(s) <= 900):
+                        continue
+                    for b in hit:
+                        if not hot[b].search(s):
+                            continue
+                        k = kind_of(s, pats[b][1], ctx)
+                        o = out.setdefault(b, {"n": 0, "by": {}})
+                        o["n"] += 1
+                        o["by"].setdefault(k, [])
+                        if len(o["by"][k]) < 3:
+                            o["by"][k].append(V.short(s.strip(), 420))
+        ctx = (ctx + " " + part)[-1200:]
+    return {"filed": filed, "form": form, "url": url, "chars": len(txt), "links": out}
 
 
 def main():
-    stocks_p, out_p, syms = sys.argv[1], sys.argv[2], [s.upper() for s in sys.argv[3:]]
+    stocks_p, out_p = sys.argv[1], sys.argv[2]
+    minutes = float(sys.argv[3]) if len(sys.argv) > 3 else 42
     S = json.load(open(stocks_p))
-    trad = {s["symbol"]: s for s in S if (s.get("mcap_b") or 0) >= 0.7 and (s.get("dvol_20_m") or 0) >= 20}
+    trad = sorted((s for s in S if (s.get("mcap_b") or 0) >= 0.7 and (s.get("dvol_20_m") or 0) >= 20), key=lambda s: -(s.get("mcap_b") or 0))
     sec = E.SEC()
-    by_cik = {}
-    for t, c in sec.cik.items():
-        t2 = t.replace("-", "/")
-        if t in trad or t2 in trad:
-            by_cik.setdefault(c, t if t in trad else t2)
-    now = datetime.datetime.now(E.NY).date()
-    d0, d1 = (now - datetime.timedelta(days=460)).isoformat(), now.isoformat()
-    res = {"built_at": datetime.datetime.now(E.NY).isoformat(timespec="seconds"), "window": [d0, d1], "tradable": len(trad), "bellwethers": {}}
-    for B in syms:
-        errors, t0 = [], time.time()
-        names = NAMES.get(B) or [str((next((s for s in S if s["symbol"] == B), {}) or {}).get("name") or B).split()[0]]
-        pats = [re.compile(r"\b" + re.escape(nm) + r"\b") for nm in names]
-        hits, totals = {}, {}
-        for nm in names:
-            h, tot = fts(nm, d0, d1, errors)
-            totals[nm] = tot
-            for c, v in h.items():
-                hits.setdefault(c, []).extend(v)
-        own = sec.cik.get(B)
-        cand = sorted(((by_cik[c], c) for c in hits if c in by_cik and c != own), key=lambda x: -(trad[x[0]].get("mcap_b") or 0))
-        rows = []
+    cik_of = lambda t: sec.cik.get(t) or sec.cik.get(t.replace("/", "-")) or sec.cik.get(t.replace("/", "."))
+    pats = {}
+    for b, names in NAMES.items():
+        g = "(?:" + "|".join(re.escape(x) for x in names) + ")"
+        pats[b] = (re.compile(r"(?<![A-Za-z])" + g + r"(?![A-Za-z])"), r"(?<![A-Za-z])" + g + r"(?![A-Za-z])")
+    t0, res, errors, stats = time.time(), {b: [] for b in NAMES}, [], {"read": 0, "no_cik": 0, "no_report": 0, "errors": 0, "skipped_time": 0}
 
-        def one(x):
-            sym, c = x
-            time.sleep(0.12)
-            try:
-                r = read_one(c, hits[c], pats)
-            except Exception as e:
-                return {"sym": sym, "error": repr(e)[:120]}
-            best = next((k for k in KINDS if r["by_kind"].get(k)), None)
-            st = trad[sym]
-            return dict(r, sym=sym, name=st.get("name"), mcap_b=st.get("mcap_b"), themes=st.get("themes") or "", kind=best, first=best in FIRST)
-        with cf.ThreadPoolExecutor(4) as ex:
-            rows = list(ex.map(one, cand[:MAX_DOCS]))
-        ok = [r for r in rows if not r.get("error") and r.get("kind")]
-        ok.sort(key=lambda r: (KINDS.index(r["kind"]), -(r.get("mentions") or 0)))
-        res["bellwethers"][B] = {"names": names, "search_hits": totals, "filers": len(hits), "tradable_filers": len(cand), "read": len(rows),
-                                 "read_errors": sum(1 for r in rows if r.get("error")), "seconds": round(time.time() - t0),
-                                 "count_by_kind": {k: sum(1 for r in ok if r["kind"] == k) for k in KINDS},
-                                 "rows": ok, "errors": errors[:10] + [f"{r['sym']}: {r['error']}" for r in rows if r.get("error")][:10]}
-        print(B, names, "| search hits", totals, "| tradable filers", len(cand), "| read", len(rows), "|", res["bellwethers"][B]["count_by_kind"], "| errors", len(errors))
-    json.dump(res, open(out_p, "w"), separators=(",", ":"))
+    def one(st):
+        sym = st["symbol"]
+        if time.time() - t0 > minutes * 60:
+            with LOCK:
+                stats["skipped_time"] += 1
+            return
+        c = cik_of(sym)
+        if not c:
+            with LOCK:
+                stats["no_cik"] += 1
+            return
+        time.sleep(0.25)
+        try:
+            r = read(sym, c, pats, sym if sym in NAMES else {"GOOG": "GOOGL"}.get(sym))
+        except Exception as e:
+            with LOCK:
+                stats["errors"] += 1
+                if len(errors) < 25:
+                    errors.append(f"{sym}: {e!r}"[:140])
+            return
+        with LOCK:
+            if not r:
+                stats["no_report"] += 1
+                return
+            stats["read"] += 1
+            for b, o in r["links"].items():
+                best = next((k for k in KINDS if o["by"].get(k)), None)
+                row = {"sym": sym, "name": st.get("name"), "mcap_b": st.get("mcap_b"), "themes": st.get("themes") or "", "adr": st.get("adr_20"),
+                       "filed": r["filed"], "form": r["form"], "url": r["url"], "mentions": o["n"], "kind": best,
+                       "kinds": {k: len(v) for k, v in o["by"].items()}}
+                if best in KEEP:
+                    row["by_kind"] = {k: v for k, v in o["by"].items() if k in KEEP}
+                res[b].append(row)
+    with cf.ThreadPoolExecutor(5) as ex:
+        list(ex.map(one, trad))
+    out = {"built_at": datetime.datetime.now(E.NY).isoformat(timespec="seconds"), "tradable": len(trad), "stats": stats, "seconds": round(time.time() - t0),
+           "errors": errors, "names": NAMES, "bellwethers": {}}
+    for b, rows in res.items():
+        rows.sort(key=lambda r: (KINDS.index(r["kind"]), -(r.get("mentions") or 0)))
+        out["bellwethers"][b] = {"count_by_kind": {k: sum(1 for r in rows if r["kind"] == k) for k in KINDS},
+                                 "rows": [r for r in rows if r["kind"] in KEEP],
+                                 "other": [[r["sym"], r["kind"], r["mentions"]] for r in rows if r["kind"] not in KEEP and r["mentions"] >= 5][:80]}
+        print(b, out["bellwethers"][b]["count_by_kind"])
+    json.dump(out, open(out_p, "w"), separators=(",", ":"))
+    print(stats, round(time.time() - t0), "s")
 
 
 if __name__ == "__main__":
