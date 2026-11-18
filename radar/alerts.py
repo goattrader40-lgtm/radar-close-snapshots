@@ -218,15 +218,17 @@ def theme_moves(live, members, state, now, R=None, doc=None):
     # no stock the theme's alert doesn't have): no second alert
     seen = [frozenset(s for s in syms if rows.get(s) and rows[s][1] is not None and rows[s][1] >= R["min_chg"])
             for (_, name), syms in members.items() if f"thm:{name}" in sent]
+    upset = lambda syms: frozenset(s for s in syms if rows.get(s) and rows[s][1] is not None and rows[s][1] >= R["min_chg"])
+    seen2 = [upset(syms) for (_, name), syms in members.items() if f"thm:{name}:more" in sent]      # the second alerts, the same way
     out = []
     for kind, name, key, syms, up, more in cand:
         ss = frozenset(s for _, s in up)
         if not more:
             memo[name] = {"n": len(up), "at": f"{now:%H:%M}"}
-            if any(ss <= x for x in seen):
-                state.setdefault("sent", []).append(key)    # the same move under its other name
-                continue
-        seen.append(ss)
+        if any(ss <= x for x in (seen2 if more else seen)):
+            state.setdefault("sent", []).append(key)        # the same move under its other name
+            continue
+        (seen2 if more else seen).append(ss)
         every = [rows[s][1] for s in syms if rows.get(s) and rows[s][1] is not None]
         r = rank.get(name)
         tier = "" if not r else (" (" + ("★ Top " if r.get("tier") == "Top" else "Strong " if r.get("tier") == "Strong" else "") + f"#{r['rank']}/{r['of']})")
