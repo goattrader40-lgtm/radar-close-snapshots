@@ -131,22 +131,20 @@ def kind_words(key, title=""):
     return KIND_WORDS.get(kind, kind)
 
 
-GROUP_FROM = "09:40"          # group moves count the alerts from this time (the user, Nov 18 2026: "group move do at 940")
+GROUP_FROM = "09:40"          # the GROUP MOVE alert is sent from this time (the user, Nov 18 2026: "we are only changing alert time")
 
 
 def group_moves(doc, state, alerts_now, now):
     """the user (Nov 3 2026, RPD and QLYS both in Cybersecurity at 3:46 PM): 2+ stocks of the same theme or tight
     industry group alerting the same day is a group move. Returns {group: [(sym, words, time), ...]} for the groups with
-    2+ stocks, from today's alerts so far plus this run's; the loose "· other" industries don't count. Only the alerts from
-    9:40 count (GROUP_FROM; the user, Nov 18 2026: "group move do at 940"): the 9:35 batch of pullback heads-ups spent the day's one alert of 6
-    groups that morning (Cybersecurity at 9:35 on NTSK, SAIL, RPD in their retest zones, 30 minutes before its real move).
-    The stocks' own alerts are not changed"""
+    2+ stocks, from today's alerts so far plus this run's; the loose "· other" industries don't count. Every alert of the
+    day counts, the 9:35 ones too; only the GROUP MOVE alert itself waits until 9:40 (GROUP_FROM, in main; the user, Nov 18
+    2026: "if something happened between 930-940 it has to show")"""
     loose = {r["group"] for r in (doc.get("group_rank") or {}).get("rows", []) if r.get("loose")}
     seen = {}
     past = [(it["key"], it.get("title"), it.get("time")) for it in state.get("items", [])
-            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith(":mbo")
-            and it.get("time", "99:99") >= GROUP_FROM]
-    for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now if f"{now:%H:%M}" >= GROUP_FROM]:
+            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith(":mbo")]
+    for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now]:
         sym = key.split(":")[0]
         for g in _GROUPS.get(sym, []):
             if g in loose or "· other" in g:
@@ -1670,7 +1668,7 @@ def main():
         out_ = tagged
         for g, lst in gm.items():
             gk = f"grp:{g}"
-            if gk in state["sent"]:
+            if gk in state["sent"] or f"{now:%H:%M}" < GROUP_FROM:      # sent from 9:40: a group made at 9:35 alerts at 9:40
                 continue
             out_.append(((gk, f"GROUP MOVE: {group_label(doc, g)}: " + ", ".join(x[0] for x in lst),
                           " · ".join(f"{x[0]} {x[1]} {x[2]}" for x in lst) + f" · {len(lst)} stocks of {g} alerting today",
