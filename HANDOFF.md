@@ -49,6 +49,19 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of a chat session outside the Radar sessions (Thu Nov 19 2026 ~11:25-11:45 AM ET; session_01PkbDanQBJvqxfoMDBsGdZG)
+
+- **LIVE (the user's "go live", Thu Nov 19 2026 11:41 AM ET, merge 9c9f6f9 of test/backon-quiet): a morning breakout BACK ON
+  after its box's End time is silent**, 📈 and 📊. The user: "back on alert runs every 15min correct, i dont want to hear any
+  sound (meaning just silent) after cut off time"; the End was 10:15 (saved 10:18 that day) and NTAP, CLS, TWST, GNRC, NTRA
+  (📊), TDC, AMPL (📈) rang BACK ON 11:21-11:31. docs/index.html only: quietBack(key) (keys SYM:mbobackHHMM / SYM:mbo2backHHMM,
+  the key's time later than the box's saved End; 📊 with nothing saved = 📈's) -> notify: no sound, no voice, no sticky pop-up,
+  no flashing title; the line stays in the log and the stock goes back in its box. The job (alerts.py morning_holding) is
+  unchanged: it still writes the back-on alerts all day. Inside the window BACK ON rings as before; the other boxes ring all
+  day. Checked on that day's alerts.json: 67 back-on alerts, 31 after 10:15 silent, 36 inside the window with sound; 10:15
+  rings, 10:16 is silent. **Not seen in a browser**: the first BACK ON after the go-live is the check (the user refreshes the page).
+  Open: alerts/morning2.json is still not saved (📊 follows 📈's window and filters; 135 alerts in 📊 by 11:25 that day).
+
 ## Status of the session "Radar: gap news and NVDA ecosystem links (Nov 17)" (Tue Nov 17 2026 ~5:10 PM ET - Wed Nov 18 ~11:30 PM ET; session_01PkbDanF5dAAQH9AZXNPE3K; in progress)
 
 - **LIVE (the user's "Ok. sounds good" to my "go live now, with the Event card only", Wed Nov 18 2026 ~11:22 PM ET, merge f462127;
