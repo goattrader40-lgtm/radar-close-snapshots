@@ -49,6 +49,67 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: gap news and NVDA ecosystem links (Nov 17)" (Tue Nov 17 2026 ~5:10 PM ET - Wed Nov 18 ~11:30 PM ET; session_01PkbDanF5dAAQH9AZXNPE3K; in progress)
+
+- **LIVE (the user's "Ok. sounds good" to my "go live now, with the Event card only", Wed Nov 18 2026 ~11:22 PM ET, merge f462127;
+  branch claude/eloquent-babbage-xub6om): the Event card on the Pre-market tab. The "why" on the alerts is BUILT and SWITCHED
+  OFF** (radar/bellwethers.json `alert_reasons` false: alerts.py and day.py do nothing with it; the user agreed to switch it on
+  after ~3 sessions of the card reading right: ask before touching it).
+  The user (NVDA's report, Nov 17): "it has major implications for all companies depend on nvda ... our code should be able
+  connect dots"; "logic and rationale should be accurate linking"; "reason of alert has to be clear explanation ... price and
+  volume makes me decide, new direct link, fundamental news helps conviction"; then "when direct link thats top top, then themes
+  same line of business ... most rational direct link then derivatives"; "i gave examples" (not a list: the rules are general).
+  1. **An event = a bellwether reports** (radar/event.py, run by the Earnings job after earnings.py -> radar-data events.json;
+     by code, no Claude). 150 bellwethers: the written maps in radar/bellwethers.json (NVDA, MSFT, GOOGL, AMZN, META) and, by rule,
+     the two largest liquid stocks of each of the 73 named themes whatever their ADR (the user: "agree"). One the Earnings tab
+     doesn't carry (MSFT / GOOGL under 3% ADR, WMT) gets its own row (the day from Yahoo, estimates saved before the report, the
+     release read with the tab's reader). The card is up from the morning of the report to 8 PM ET of the reaction session;
+     several at once: a button each.
+  2. **Level 1, on top: direct ties and rivals**, each stock written out with its reason. A 📄 opens the linked company's own
+     annual report where it names the bellwether (CRWV: "approximately 67% of our revenue from our top customer, Microsoft";
+     warrants issued to Amazon by ALAB, CRDO, AAOI, JBL, FLEX, STM). 9 links have no such proof (ANET, AVGO, NVDA, MRVL under the
+     cloud giants: the suppliers write "Customer A"): written from public deals, the reason says "Not named in its annual
+     report" (the user kept them, and the rivals).
+  3. **Level 2, the same theme** (the user: "add full build"): "same business" = the other tradable stocks of the bellwether's
+     own theme (up to 12), with its sentence on their niche when the report has one WITH A FIGURE (niches written for
+     Cybersecurity only); "its theme is in the report" = the 6 largest stocks of another theme when the report has a sentence
+     with that theme's words (radar/theme_words.json, 70 themes) and a figure. No direct tie is claimed; the reason says demand
+     for the whole group or business taken from it, and the card shows each peer "moving with / against" the bellwether (the
+     user: "direction for peers: agree 100%"). Suppliers of suppliers (the map's step / spend entries) stay off.
+  4. **What it said** = the bellwether's own sentence from its SEC results filing (every exhibit: NVDA's press release and CFO
+     commentary), first one that names the stock. **The line on top**: the Earnings tab's reading, speeding up or slowing (this
+     quarter's growth vs the quarter before's and vs what next quarter's guide implies; the user: "acceleration could be this
+     quarter and their guidance is a sign"; a guide read 12%+ off the street is left out), the bellwether's own lead number
+     (NVDA Data Center, AMZN / META the capital-spending guide), "Growing fastest".
+  Tested: two live test builds (NVDA Nov 17: revenue $115.8B vs $108.7B, +103% y/y, the quarter before +106%, guide $130.0B
+  +4.1%; 37 direct + 19 same-theme stocks. PANW Nov 18: $3.44B +39%, NGS ARR +66% to $9.73B, PANW +9.1% after hours, all 12
+  peers up); replays of past reports (radar-tools `eventreplay SYM prev|DATE ...` -> events_replay.json): NVDA Aug 26, META
+  Oct 21, MSFT / GOOGL Oct 28, AMZN Oct 29 (all 28 linked stocks closed lower the next session), CRWD Aug 26 (+20.5%, all 12
+  peers up), PANW Sep 1 (-9.3%, 11 of 12 down), MU Sep 30, RKLB Nov 9; the merged page on desktop / phone, every tab, with and
+  without an events file, 0 page errors; the alerts get nothing while the switch is off. After the push earnings.yml run by
+  hand (11:24 PM ET): events.json with PANW (out, 12 peers), `alert_reasons` false, 0 errors; earnings.json 130 rows, 0 errors.
+  Rules workbook: 4 rows (event links, level 2, the link finder, the alert reason as switched off). No `--regress` (launch.py
+  untouched), no Launches rebuild, no 2-year check (no pattern, buy point or scan rule).
+- **First checks Thu Nov 19**: the card at the open for PANW's reaction session (moves from the pre-market scan, then live);
+  WMT, BABA, PDD before the open (own rows: the first live run of that path with a real report; tested only on NVDA, where
+  the EPS did not come through), GAP / ROST / KEYS after the close; the Earnings job still on time with the extra step.
+- **The link finder** (radar/probe_links.py, radar-tools `links` -> radar-data probe_links.json, ~10 minutes, nothing live
+  reads it): the newest annual report of 2,010 tradable stocks searched for 18 bellwether names, each sentence sorted (a share
+  of revenue, a stake / warrant, sells to it, buys from it, agreement, rival, a tool it uses, mention). It proposes; I read
+  every sentence before a link went into the map. It added NVIDIA's right to buy 30 million IREN shares.
+- **Known weak spots (told the user)**: the earnings call is not read (not at the SEC; the news feed had 1 headline after NVDA's
+  report), so MSFT's and GOOGL's spending guide and PANW's per-niche numbers are missing; the theme word list is mine and has
+  run on eight real reports (fixed so far: "cryptography" matched Crypto; PANW's "About" paragraph and dateline were quoted:
+  a theme / niche quote now needs a figure); some quotes are thin (NVDA's one optics sentence is about a Cisco module); the
+  Earnings tab's guidance reader misread TGT Nov 18 (a guide -15% vs the street: its own bug, not fixed here).
+- **Open, the user to decide**: switching the alert reason on (after ~3 sessions); written maps for AVGO, TSM, MU, SPCX
+  (MU and SPCX are covered by the theme rule); niches for other themes; unscheduled news events (a rocket launch, a
+  contract): not built, "later". The power contracts (CEG, TLN, VST under the cloud giants) are written and off.
+- **Not taken (the other session's build)**: claude/funny-wright-b2z88z (the reason on morning breakout / GROUP MOVE alerts from
+  Yahoo / Alpaca headlines, the user had not approved it): its own Nov 16 replay left 11 of 14 alerts without a reason and
+  the Medicaid headline came 3.5 hours late. Told the user; this session's event links are the answer for scheduled reports.
+- Test files on radar-data: events_test.json, events_replay.json, probe_links.json (the portal reads none).
+
 ## Status of the session "Radar: move Watchlist tabs left/right (Nov 18)" (Wed Nov 18 2026 ~12:20 PM ET - Thu Nov 19; session_01PkbDaiB9dTkk1MWcV4oJQi; in progress)
 
 - **LIVE (the user's "go live", Thu Nov 19 2026, branch test/wltabmove, merge 05be6b5): the Watchlist list buttons (3-SETUPS,
