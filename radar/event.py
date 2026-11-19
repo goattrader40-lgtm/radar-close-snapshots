@@ -645,7 +645,7 @@ def build(bw, earn, S, prev, now, force=(), themes=None, W=None):
                        "moves": mv, "moves_at": now.isoformat(timespec="minutes"),
                        "links": links, "alerts": alerts, "themes": themes_})
     return {"built_at": now.isoformat(timespec="seconds"), "tiers": dict(bw.get("tiers") or {}, **TIER_LABELS), "events": events, "own_rows": own,
-            "bellwethers": len(BW), "errors": errors[:20]}
+            "bellwethers": len(BW), "alert_reasons": bool(bw.get("alert_reasons")), "errors": errors[:20]}
 
 
 # ───────── a past report read again (the test of the reader and of the links) ─────────

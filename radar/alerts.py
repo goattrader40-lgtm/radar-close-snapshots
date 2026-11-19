@@ -1324,7 +1324,10 @@ def check_morning(cands, state, M, live, S, E, now, sent):
 def event_reasons(path, today):
     """({sym: reason}, {theme: reason}) of the bellwether events whose reaction session is today (radar-data events.json)"""
     try:
-        evs = json.load(open(path)).get("events") or []
+        doc_ = json.load(open(path))
+        if not doc_.get("alert_reasons"):          # the switch (radar/bellwethers.json "alert_reasons"): off = the Event card only
+            return {}, {}
+        evs = doc_.get("events") or []
     except Exception as e:
         print(f"no events file: {e}", file=sys.stderr)
         return {}, {}

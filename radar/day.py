@@ -226,6 +226,11 @@ def morning_args():
 
 def events_args():
     """the bellwether events (radar/event.py -> radar-data events.json) for the alerts' "why" line, as alerts.py arguments"""
+    try:                                       # the switch: off = the Event card only, the alerts are left exactly as they are
+        if not json.load(open(os.path.join(HERE, "bellwethers.json"))).get("alert_reasons"):
+            return []
+    except Exception:
+        return []
     p = os.path.join(OUT, "events_now.json")
     if not (os.path.exists(p) and time.time() - os.path.getmtime(p) < 600):     # re-read every 10 minutes
         txt = data_file("events.json")
