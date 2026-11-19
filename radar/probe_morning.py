@@ -57,7 +57,7 @@ def main():
         if "=" in x and not x.startswith("--"):
             k, v = x.split("=", 1)
             if k in M:
-                M[k] = (int(float(v)) if int(float(v)) in (1, 2) else 5) if k == "orh_min" else (v == "1") if isinstance(MORNING_DEF.get(k), bool) else (None if v == "off" else v if k in ("start", "end") else float(v))
+                M[k] = (int(float(v)) if int(float(v)) in (1, 2, 3) else 5) if k == "orh_min" else (v == "1") if isinstance(MORNING_DEF.get(k), bool) else (None if v == "off" else v if k in ("start", "end") else float(v))
     day = datetime.date.fromisoformat(opt["--day"]) if "--day" in opt else datetime.datetime.now(NY).date()
     SL = json.load(open(stocks_p))
     S = {s["symbol"]: s for s in SL}

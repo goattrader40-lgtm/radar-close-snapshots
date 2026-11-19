@@ -9,9 +9,10 @@ high ...) as + Filter choices on the Gainers & losers tab, "so I can track the l
 Yesterday's high is in stocks.json (high_1d) and the 21-day closing high too (close_high_21); the opening range needs
 today's chart, so this reads Yahoo's 1-minute chart (the 1- and 2-minute highs) and, as before, its 5-minute chart (the
 5-minute range) for every stock up min_chg% or more (2 by default) in the live prices
-and keeps levels.json {date, saved_at, rows: {sym: [high 5-min, low 5-min, high 1-min, high 2-min]}, part: {sym: minutes
+and keeps levels.json {date, saved_at, rows: {sym: [high 5-min, low 5-min, high 1-min, high 2-min, high 3-min]}, part: {sym: minutes
 read so far}} on radar-data, next to live.json (the 5-minute pair first, as before; a range not finished yet is null).
-The 1-minute high (the 9:30 bar) is read from 9:31, the 2-minute one (9:30-9:32) from 9:32, the 5-minute one (9:30-9:35)
+The 1-minute high (the 9:30 bar) is read from 9:31, the 2-minute one (9:30-9:32) from 9:32, the 3-minute one (9:30-9:33)
+from 9:33 (the user, Nov 18 2026), the 5-minute one (9:30-9:35)
 from 9:36: a stock first read before 9:36 is read again when its next range is finished (9:32, 9:36), then never again
 that day. Run by radar/day.py after each 5-minute live update and each minute's movers read, from 9:31. A stock not in it
 (not up 2%+ yet) has no value: the + Filter leaves it out while that filter is set.
@@ -22,16 +23,16 @@ NY = zoneinfo.ZoneInfo("America/New_York")
 MAX_NEW = 1200            # new stocks a run (a market-wide gap day: the biggest movers first, the rest at the next update)
 
 
-RANGES = (1, 2, 5)          # the opening ranges kept, in minutes
+RANGES = (1, 2, 3, 5)       # the opening ranges kept, in minutes (3: the user, Nov 18 2026)
 
 
 def ranges_of(bars, done):
-    """[high 5, low 5, high 1, high 2] from today's 1-minute bars [(minutes after 9:30, high, low)]; a range longer than
+    """[high 5, low 5, high 1, high 2, high 3] from today's 1-minute bars [(minutes after 9:30, high, low)]; a range longer than
     `done` (the minutes finished so far) or without a bar is None"""
     def rng(n):
         x = [b for b in bars if b[0] < n] if done >= n else []
         return (round(max(b[1] for b in x), 4), round(min(b[2] for b in x), 4)) if x else (None, None)
-    return [*rng(5), rng(1)[0], rng(2)[0]]
+    return [*rng(5), rng(1)[0], rng(2)[0], rng(3)[0]]
 
 
 def chart(sym, interval, today):
@@ -69,7 +70,8 @@ def opening_range(sym, today, done=5):
 
 
 def due(part, done):
-    """a stock read when `part` minutes were finished is read again once its next range is (1 -> 2 at 9:32, 2-4 -> 5 at 9:36)"""
+    """a stock read when `part` minutes were finished is read again once its next range is (1 -> 2 at 9:32, 2 -> 3 at 9:33,
+    3-4 -> 5 at 9:36)"""
     return part < max([n for n in RANGES if n <= done], default=0)
 
 

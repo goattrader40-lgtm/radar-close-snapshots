@@ -16,7 +16,7 @@ import datetime, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sipcal  # noqa: E402
 from live import NY, Yahoo, fill_opens, rvol_at, yahoo_sym  # noqa: E402
-from alerts import load_morning, in_morning, morning_static  # noqa: E402
+from alerts import load_morning, load_morning2, in_morning, morning_static  # noqa: E402
 
 
 def main():
@@ -33,8 +33,11 @@ def main():
     avg20 = {r["symbol"]: r.get("avg_vol_20") for r in SL}
     if "--morning" in sys.argv:                         # the morning breakout window: every stock that can pass the settings
         M = load_morning(sys.argv[sys.argv.index("--morning") + 1])
-        if in_morning(M, now) or in_morning(M, now + datetime.timedelta(minutes=1)):
-            syms = sorted(set(syms) | {r["symbol"] for r in SL if morning_static(r, M, slack=0.3)})
+        # + the second box (the stocks not in trend; its own settings, or the first box's with the trend boxes off)
+        M2 = load_morning2(sys.argv[sys.argv.index("--morning2") + 1] if "--morning2" in sys.argv else None, M)
+        for M_ in (M, M2):
+            if in_morning(M_, now) or in_morning(M_, now + datetime.timedelta(minutes=1)):
+                syms = sorted(set(syms) | {r["symbol"] for r in SL if morning_static(r, M_, slack=0.3)})
     off = sipcal.saved(cal_p, now.date())
     ymap = {yahoo_sym(s): s for s in syms}
     y = Yahoo()
