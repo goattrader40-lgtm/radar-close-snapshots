@@ -4313,11 +4313,20 @@ defCalc('industry_perf', {
   };
   document.addEventListener('visibilitychange', () => { if (!document.hidden && flashT) { clearInterval(flashT); flashT = null; flashSyms = []; document.title = pageTitle(); } });
   const showLog = () => { window.focus(); showTab('alerts'); };
+  /* a morning breakout BACK ON after its box's End time is silent (the user, Nov 19 2026: "i dont want to hear any sound
+     (just silent) after cut off time"; NTAP, CLS, TWST, GNRC, NTRA back on 11:21-11:31 with the End at 10:15): the line is
+     in the log and the stock goes back in its box, with no sound, no voice, no sticky pop-up, no flashing title. The End =
+     the box's saved one (📊 with nothing saved: 📈's, as the job); the time = the alert's own (the key's HHMM, ET) */
+  const quietBack = (key) => {
+    const m = /:(mbo2?)back(\d\d)(\d\d)$/.exec(String(key || ''));
+    if (!m) return false;
+    try { const e = withI(MBI[m[1] === 'mbo' ? 0 : 1], mboSaved).end; return tOk(e) && m[2] + ':' + m[3] > e; } catch (x) { return false; }
+  };
   const notify = (title, body, tvs, key, speak) => {
-    const trig = isTrigger(key, title), sum = String(key).startsWith('summary:');
+    const quiet = quietBack(key), trig = isTrigger(key, title) && !quiet, sum = String(key).startsWith('summary:');
     try {
       /* a trigger stays on the screen until you close it; a heads-up fades as before */
-      const n = new Notification(trig ? '🔔 ' + title : title, { body, tag: key, requireInteraction: trig });
+      const n = new Notification(trig ? '🔔 ' + title : title, { body, tag: key, requireInteraction: trig, silent: quiet });
       n.onclick = () => { if (/^PM:pm/.test(String(key))) { window.focus(); showTab('premarket'); } else if (sum || !tvs) showLog(); else openTV(tv(tvs)); n.close(); };
     } catch (e) { /* blocked */ }
     if (trig) {
