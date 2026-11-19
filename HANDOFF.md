@@ -49,6 +49,18 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: move Watchlist tabs left/right (Nov 18)" (Wed Nov 18 2026 ~12:20 PM ET - Thu Nov 19; session_01PkbDaiB9dTkk1MWcV4oJQi; in progress)
+
+- **LIVE (the user's "go live", Thu Nov 19 2026, branch test/wltabmove, merge 05be6b5): the Watchlist list buttons (3-SETUPS,
+  2-POOL, 1-UPDAY, 1-EP/GAP, START DAYS, TREND) drag left / right exactly like the main tabs** (the user: "can you make it a way
+  that i can move this tabs left or right", "do exactly how other tabs i move"; the main tabs have had it since Nov 6). The
+  user was annoyed I made it sound complicated: it is a copy of the main-tab feature, say so plainly. docs/index.html: an
+  IIFE after the main-tab one, localStorage `radar-wl-order` (per browser), a "↺ order" button next to the row when moved;
+  clicking a button still opens its list, the page still opens on 3-SETUPS. Tested in a browser: drag START DAYS to the front,
+  click it (44 rows), reload keeps it, ↺ order resets, main tabs untouched, 0 page errors. Page layout only: no rules workbook
+  row (the main-tab drag has none either), no `--regress`, no Launches rebuild, no 2-year check.
+- **Test only**: nothing.
+
 ## Status of the session "Radar: theme chips on Today's gainers (Nov 18)" (Wed Nov 18 2026, from ~10:55 AM ET; session_01PkbDak4wNj9qyumu6CQx8R; in progress)
 
 - **LIVE (the user's "ok go do what you gotta check adn go live", Wed Nov 18 2026 after the evening scan, commit c92c51e, branch
