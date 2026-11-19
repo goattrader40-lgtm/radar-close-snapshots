@@ -6,7 +6,7 @@
  "min_rv": 1,
  "over_pdh": true,
  "over_orh": true,
- "orh_min": 5,
+ "orh_min": 3,
  "price": 5,
  "mcap_b": 0.7,
  "avgvol_k": 700,
@@ -19,6 +19,6 @@
  "e21_e50": true,
  "e50_s200": false,
  "x": [],
- "saved_at": "2026-11-18T09:24:17",
+ "saved_at": "2026-11-19T09:38:48",
  "by": "portal"
 }
