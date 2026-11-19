@@ -31,7 +31,7 @@ import earnings as E  # noqa: E402
 import theme_event as TE  # noqa: E402
 
 NY = E.NY
-GV = 3                       # the reader's version: a change re-reads the filing
+GV = 4                       # the reader's version: a change re-reads the filing
 TIERS = ["direct", "rival", "peer", "theme", "step", "spend"]
 TIER_WORDS = {"direct": "direct tie", "rival": "rival", "peer": "same business", "theme": "its theme is in the report",
               "step": "one step away", "spend": "same spending, no tie"}
@@ -43,7 +43,9 @@ GROW = re.compile(r"(?:\bup|grew|growth of|growing|increased|increase of|rose|ju
                   r"|(\d{1,3}(?:\.\d+)?)\s?%\s+(?:year[- ]over[- ]year|from a year ago|y/y|growth|increase)", re.I)
 BOILER = re.compile(r"forward-looking|risks and uncertainties|non-gaap (financial )?measures?|conference call|webcast|safe harbor|"
                     r"trademarks?|copyright|reconciliation|investor relations|for (more|further) information|press releases?|"
-                    r"undue reliance|no obligation to update|form 10-[kq]|\bsec\b filings", re.I)
+                    r"undue reliance|no obligation to update|form 10-[kq]|\bsec\b filings|"
+                    r"\bwe (consider|define|believe that (these|this))\b|is defined as|useful information to (management|investors)|"
+                    r"announced today (its )?financial results", re.I)
 CUT = re.compile(r"CONDENSED CONSOLIDATED|About NVIDIA|Certain statements in this|Non-GAAP Measures|Safe Harbor", re.I)
 CHANGE = re.compile(r"\b(record|grew|growth|up \d|down \d|increase[ds]?|decrease[ds]?|declined?|driven by|ramp|doubl|tripl|"
                     r"expect(s|ed)?|strong|surpass|exceed|accelerat|sold out|constrain|commitments (increased|were|of)|arriving|in (full )?production|"
@@ -156,7 +158,7 @@ def said_for(docs, topics, min_score=None):
             hits = [w for p, w in pats if p.search(s)]
             if sum(hits) < MIN_SCORE:
                 continue
-            if sum(hits) + (2 if re.search(r"\$\s?\d|\d\s?%|\d (billion|million)", s) else 0) < min_score:
+            if sum(hits) + (2 if re.search(r"\$\s?\d|\d\s?%|\d (billion|million)", s) else 0) < max(min_score, spec.get("min") or 0):
                 continue
             sc = sum(hits) + (2 if re.search(r"\$\s?\d|\d\s?%|\d (billion|million)", s) else 0) \
                 + (1 if CHANGE.search(s) else 0) + (0.5 if kind == "CFO commentary" else 0) - (2 if len(s) > 320 else 0) - (2 if s[0] in "“\"" else 0) - k / 2000      # the plain statement before the quoted remark
@@ -318,9 +320,9 @@ def all_bellwethers(bw, S, themes, W):
         topics = {k: dict(v) for k, v in (W.get("generic") or {}).items()}
         for T in Ts:
             if (W.get("themes") or {}).get(T):
-                topics["theme:" + T] = {"label": T, "find": W["themes"][T], "also": []}
+                topics["theme:" + T] = {"label": T, "find": W["themes"][T], "also": [], "min": X_MIN}
             for n, spec in ((W.get("niches") or {}).get(T) or {}).items():
-                topics[f"niche:{T}:{n}"] = {"label": n, "find": spec["find"], "also": []}
+                topics[f"niche:{T}:{n}"] = {"label": n, "find": spec["find"], "also": [], "min": X_MIN}
         rank = ["largest", "second-largest"]
         what = " ".join(f"{nm} is the {rank[min(members(S, T, True).index(sym), 1)]} stock of your {T} theme." for T in Ts) + \
             " Its report is the first reading of that business for the whole group: no map is written for it, the links are its theme."
