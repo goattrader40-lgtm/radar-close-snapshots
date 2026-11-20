@@ -22,7 +22,7 @@ def alp(sym, tf, days):
 res = {"saved_at": datetime.datetime.now(NY).isoformat(timespec="seconds")}
 for s in sys.argv[2:]:
     try:
-        res[s] = {"daily": alp(s, "1Day", 120), "m15": [b for b in alp(s, "15Min", 45) if "09:30" <= b[0][11:] < "16:00"]}
+        res[s] = {"daily": alp(s, "1Day", 700), "m15": [b for b in alp(s, "15Min", 45) if "09:30" <= b[0][11:] < "16:00"]}
     except Exception:
         res[s] = {"error": traceback.format_exc()[-600:]}
 json.dump(res, open(sys.argv[1], "w"), separators=(",", ":"))
