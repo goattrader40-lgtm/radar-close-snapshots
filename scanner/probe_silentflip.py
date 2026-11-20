@@ -144,6 +144,91 @@ def run(data, P):
     return out
 
 
+def run_user(data, P, target="range_far", sides=(-1,), back=20, near=0.10):
+    """The user's read (Nov 19 2026): candle 1 closes green ABOVE yesterday's high and its high runs into an earlier
+    15-minute swing high above yesterday's high (within `near` of the ATR, the last `back` sessions) without closing
+    through it; the silent candle closes red under that resistance; short the break of its low. The long is the mirror.
+    target: "range_near" = yesterday's high (low for longs), "range_far" = yesterday's low (high for longs)."""
+    out = []
+    for t, days in data.items():
+        ds = sorted(d for d, b in days.items() if len(b) >= 60)
+        if len(ds) < 80:
+            continue
+        D = np.array([[days[d][0][1], max(x[2] for x in days[d]), min(x[3] for x in days[d]), days[d][-1][4]] for d in ds])
+        piv = []                                    # per day: the 15-minute swing highs and lows (3 candles each side)
+        ser = []
+        for di, d in enumerate(ds):
+            b = days[d]
+            for s in range(570, 960, 15):
+                g = [x for x in b if s <= x[0] < s + 15]
+                if g:
+                    ser.append((di, max(x[2] for x in g), min(x[3] for x in g)))
+        ph = [[] for _ in ds]; pl = [[] for _ in ds]
+        for j in range(3, len(ser) - 3):
+            w = ser[j - 3:j + 4]
+            if ser[j][1] == max(x[1] for x in w):
+                ph[ser[j][0]].append(ser[j][1])
+            if ser[j][2] == min(x[2] for x in w):
+                pl[ser[j][0]].append(ser[j][2])
+        for i in range(70, len(ds)):
+            day, b = ds[i], days[ds[i]]
+            h = D[:i]
+            atr = np.maximum(h[-14:, 1] - h[-14:, 2], np.abs(h[-14:, 1] - h[-15:-1, 3])).mean()
+            RH, RL = h[-1, 1], h[-1, 2]
+
+            def c15(s):
+                g = [x for x in b if s <= x[0] < s + 15]
+                return (g[0][1], max(x[2] for x in g), min(x[3] for x in g), g[-1][4]) if len(g) >= 2 else None
+            c1, c2 = c15(570), c15(585)
+            if not c1 or not c2:
+                continue
+            o1, h1, l1, cl1 = c1; o2, h2, l2, cl2 = c2
+            rng = h1 - l1
+            if rng < P["strong_atr"] * atr or abs(cl1 - o1) < P["body"] * rng:
+                continue
+            cand = None
+            if -1 in sides and cl1 > o1 and cl1 > RH and cl2 < o2:
+                lv = [x for k in range(i - back, i) for x in ph[k] if x > RH and abs(h1 - x) <= near * atr and cl1 < x]
+                if lv:
+                    L = min(lv, key=lambda x: abs(h1 - x))
+                    if cl2 < L and h2 <= max(h1, L) + near * atr:
+                        cand = (-1, L, RH if target == "range_near" else RL, l2, max(h1, h2) + P["buf"] * atr)
+            if 1 in sides and cl1 < o1 and cl1 < RL and cl2 > o2:
+                lv = [x for k in range(i - back, i) for x in pl[k] if x < RL and abs(l1 - x) <= near * atr and cl1 > x]
+                if lv:
+                    L = min(lv, key=lambda x: abs(l1 - x))
+                    if cl2 > L and l2 >= min(l1, L) - near * atr:
+                        cand = (1, L, RL if target == "range_near" else RH, h2, min(l1, l2) - P["buf"] * atr)
+            if not cand:
+                continue
+            side, L, T, trig, stop = cand
+            if (trig - stop) * side <= 0 or (T - trig) * side < P["minR"] * (trig - stop) * side:
+                continue
+            f = [x for x in b if x[0] >= 600]; e = None
+            for n, x in enumerate(f):
+                if x[0] >= 615:
+                    break
+                if (side == 1 and x[2] >= trig) or (side == -1 and x[3] <= trig):
+                    e = n; ep = max(trig, x[1]) if side == 1 else min(trig, x[1]); break
+            if e is None:
+                continue
+            risk = (ep - stop) * side
+            if risk <= 0:
+                continue
+            ex = None
+            for n, x in enumerate(f[e:]):
+                if (side == 1 and x[3] <= stop) or (side == -1 and x[2] >= stop):
+                    ex = stop if n == 0 else (min(stop, x[1]) if side == 1 else max(stop, x[1])); why = "stop"; break
+                if (side == 1 and x[2] >= T) or (side == -1 and x[3] <= T):
+                    ex = T; why = "target"; break
+            if ex is None:
+                ex = f[-1][4]; why = "close"
+            out.append(dict(t=t, day=day, side=side, lvl="15m_res" if side == -1 else "15m_sup", L=round(float(L), 2),
+                            ep=round(float(ep), 2), stop=round(float(stop), 2), T=round(float(T), 2), ex=round(float(ex), 2),
+                            why=why, risk=float(risk), pnl=float((ex - ep) * side), adr=round(float(atr / ep * 100), 2)))
+    return out
+
+
 def stats(tr, cost="heavy"):
     bp, c = COSTS[cost]
     if not tr:
@@ -189,7 +274,7 @@ def main():
         start = (now - datetime.timedelta(days=740)).strftime("%Y-%m-%dT%H:%M:%SZ")
         end = (now - datetime.timedelta(minutes=20)).strftime("%Y-%m-%dT%H:%M:%SZ")
         data, errors = {}, []
-        with cf.ThreadPoolExecutor(6) as pool:
+        with cf.ThreadPoolExecutor(4) as pool:
             futs = {pool.submit(fetch, s, start, end, hdr): s for s in syms}
             for fu in cf.as_completed(futs):
                 try:
@@ -206,6 +291,15 @@ def main():
         res["stronger_candle_0.3atr"] = report(run(data, dict(BASE, strong_atr=0.30)))
         res["target_2R_or_more"] = report(run(data, dict(BASE, minR=2.0)))
         res["loose_first_test"] = report(run(data, dict(BASE, starts=(570, 585, 600), c1close=0.25)))
+        fmt = lambda tr: [[x["t"], x["day"], x["side"], x["lvl"], x["L"], x["ep"], x["stop"], x["T"], x["ex"], x["why"],
+                           round(x["pnl"] / x["risk"], 2), x["adr"]] for x in tr]
+        u_far = run_user(data, BASE, "range_far")
+        res["user_short_target_yesterday_low"] = report(u_far)
+        res["user_short_target_yesterday_high"] = report(run_user(data, BASE, "range_near"))
+        res["user_short_any_candle_size"] = report(run_user(data, dict(BASE, strong_atr=0.0, body=0.0), "range_far"))
+        res["user_short_looser_touch_0.25atr"] = report(run_user(data, BASE, "range_far", near=0.25))
+        res["user_long_mirror_target_yesterday_high"] = report(run_user(data, BASE, "range_far", sides=(1,)))
+        res["user_trades"] = fmt(u_far)
         res["trades"] = [[x["t"], x["day"], x["side"], x["lvl"], x["L"], x["ep"], x["stop"], x["T"], x["ex"], x["why"],
                           round(x["pnl"] / x["risk"], 2), x["adr"]] for x in strict]
         res["trade_fields"] = ["ticker", "day", "side", "level", "level_price", "entry", "stop", "target", "exit", "why", "gross_R", "adr"]
