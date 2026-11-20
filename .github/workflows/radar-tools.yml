@@ -125,6 +125,10 @@ jobs:
             python3 scanner/probe_levels.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/probe_levels.json
             python3 radar/publish.py "levels test" /tmp/probe_levels.json
           fi
+          if [ "${CMD%% *}" = "sflevels" ]; then   # bars to read the Silent Flip lines by hand (a test only) -> radar-data probe_sflevels.json
+            python3 scanner/probe_sflevels.py /tmp/probe_sflevels.json ${CMD#sflevels } || true
+            python3 radar/publish.py "silent flip levels" /tmp/probe_sflevels.json
+          fi
           if [ "${{ inputs.cmd }}" = "silentflip" ]; then
             # a 2-year test of the Silent Flip setup on Alpaca 5-minute bars (a test only) -> radar-data probe_silentflip.json
             pip install --quiet numpy
