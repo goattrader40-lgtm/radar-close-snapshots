@@ -2509,6 +2509,24 @@ def picks_of(path):
         return {}
 
 
+def newest_start(a, i):
+    """the bar of the stock's NEWEST start day if it still holds at bar i (the Start days list's rule: start_listed), else
+    None; an older start day does not come back when a newer one fails (the user, Nov 16 2026)"""
+    lo = max(a.start, i - L["start_list_days"]) if L["start_list_days"] else a.start
+    k = next((m for m in range(i, lo, -1) if a.start_day(m)), None)
+    if k is None or a.st.dates[k] < L["start_from"] or not (k == i or start_listed(a, k, i)):
+        return None
+    return k
+
+
+def removed_starts_of(path):
+    """{symbol: the start day} you removed from START DAYS with its x (setups/picks.json "removed_starts")"""
+    try:
+        return {s.upper(): p["date"] for s, p in (json.load(open(path)).get("removed_starts") or {}).items() if (p or {}).get("date")}
+    except Exception:
+        return {}
+
+
 def removed_setups_of(path):
     """{symbol: the feeder-list day it came on} you removed from 3-SETUPS with ✕ (setups/picks.json "removed_setups")"""
     try:
@@ -2610,10 +2628,10 @@ S3_LIVE = ("adr_pct", "buy_point", "buy_point_top_date", "day_open", "price", "e
            "gap_base_level", "gap_base_pattern", "gap_base_ok", "off_high_pct")
 
 
-def setups3(A, today, wl, prev=(), removed=None):
-    """3-SETUPS (your design, Nov 1 2026): every stock on 1-EP/GAP, 1-UPDAY and 2-POOL read by the Launches engine, like a
-    pick from the day it came on its list (the gap or up day; the day it entered 2-POOL), with its buy points and
-    triggers. Sections:
+def setups3(A, today, wl, prev=(), removed=None, removed_starts=None):
+    """3-SETUPS (your design, Nov 1 2026): every stock on 1-EP/GAP, 1-UPDAY, 2-POOL and START DAYS (Nov 21 2026) read by the
+    Launches engine, like a pick from the day it came on its list (the gap or up day; the day it entered 2-POOL; the start
+    day), with its buy points and triggers. Sections:
       Triggered today  a base breakout, bull flag / pennant breakout, breakout undercut & reclaim, pop, 21 EMA retest or undercut & reclaim, retest held or push today
       Ready            a trigger within 0.7 ADR over the close, in a base of 5+ days or tight 2+ days under it: tomorrow's buys
       Setting up       a flag forming (its line more than 0.7 ADR away), a pullback set up for the 21 EMA, or a pullback
@@ -2625,6 +2643,22 @@ def setups3(A, today, wl, prev=(), removed=None):
     for name in S3_FEEDERS:
         for r in wl.get("lists", {}).get(name, []):
             seen.setdefault(r["symbol"], (name, r))
+    # START DAYS feeds 3-SETUPS too (the user, Nov 21 2026: "ok feed it to setups!!!", "if useful then it needs feed
+    # something too"; "1-3 do it"): a stock whose newest start day still holds (the Start days list's own rule) is read
+    # from its start day, like a feeder name from the day it came on its list; a stock already on 1-EP/GAP, 1-UPDAY or
+    # 2-POOL keeps that list's day. The 3-SETUPS rules are the same for it: ADR 4%+ and a close over the 200 SMA to come
+    # on (Claude's suggestion (a), taken with the user's "do it": a start under the 200 SMA comes on once it closes over
+    # it). Your x on START DAYS (that start day) keeps it off here too
+    for sym, a in A.items():
+        if sym in seen:
+            continue
+        i = len(a.st.dates) - 1
+        if a.st.dates[i] != today:
+            continue
+        k = newest_start(a, i)
+        if k is None or (removed_starts or {}).get(sym) == a.st.dates[k]:
+            continue
+        seen[sym] = ("START DAYS", dict(symbol=sym, tv=run.tv_symbol(sym, a.st.exchange), added=a.st.dates[k]))
     for sym, (src, w) in seen.items():
         a = A.get(sym)
         added = w.get("added") or w.get("section")
@@ -3197,9 +3231,8 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         # only the NEWEST start day of the stock counts: when it fails the stock is off the table, an older start day does not
         # come back (the user, Nov 16 2026: "if newer start day fails it should get off the list (bcs its below start and
         # below 21 ema!!!")
-        lo = max(a.start, i - L["start_list_days"]) if L["start_list_days"] else a.start
-        k = next((m for m in range(i, lo, -1) if a.start_day(m)), None)
-        if k is None or st.dates[k] < L["start_from"] or not (k == i or start_listed(a, k, i)):
+        k = newest_start(a, i)
+        if k is None:
             continue
         gs_, gn_ = best_group(s, T, groups, GS)
         d = dict(symbol=s, tv=run.tv_symbol(s, st.exchange), sessions=i - k, price=fnum(st.c[i]), since_pct=fnum(100 * (st.c[i] / st.c[k] - 1), 1),
@@ -3347,7 +3380,7 @@ def main():
             prev = {r["symbol"] for r in json.load(open(a.out)).get("setups3", [])}
         except Exception:
             prev = set()
-        rows = setups3(A, cal[-1], wl, prev, removed_setups_of(a.picks) if a.picks else {})
+        rows = setups3(A, cal[-1], wl, prev, removed_setups_of(a.picks) if a.picks else {}, removed_starts_of(a.picks) if a.picks else {})
         write_watchlist(rows, a.watchlist, wl)
         s3 = [dict(symbol=r["symbol"], tv=r.get("tv"), section=r["section"], setup=r["setup"], buy_point=r["buy_point"],
                    away_adr=r["away_adr"], adr_pct=r["adr_pct"], why=r["why"], source=r.get("source"), added=r.get("added"), live=r.get("live")) for r in rows]
