@@ -328,10 +328,22 @@ title. What came after:
   Tested (stand-in levels): 📊 at 3min / From 9:33 fires at 9:33, 📈 at 9:35 / 5min at 9:35, both at 9:35 = nothing before
   9:35, out at 9:36 and back at 9:52. Told the user the Rel vol is rough before 9:35. Rules workbook: the 📈 row.
   **Not seen on live prices: check Thu Nov 19** (the user's From times decide; both boxes are saved / default at 9:35 now).
-- **Asked, not built (explain first)**: the EARLY gap heads-up (9:31-9:34) also for the Watchlist names (1-EP/GAP, TREND, Start
-  days, 3-SETUPS). It reads launch.json `watch` (849 liquid stocks: $10+, $20M+ and 700K+ a day, ADR 3.5%+; EP and power day
-  alerts read the same list, not literally the whole market); 36 of the 49 1-EP/GAP names and 39 of 94 3-SETUPS names are not
-  on it: why not is to check first.
+- **LIVE (the user's "go live", Sat Nov 21 2026, after a merge with main): the EARLY gap heads-up (9:31-9:34) also for the
+  followed names** (the user, Nov 18: "gap heads up can you include my wl (ep + trend + start + setups) too"; "i accept your
+  proposal... we are just adding correct?"). The regular one (find_early) reads launch.json `watch` (liquid stocks: $10+,
+  $20M+ and 700K+ a day, ADR 3.5%+; EP and power day alerts read the same list), which drops a stock launched in the last 20
+  sessions: 34 of 49 1-EP/GAP names, 38 of 94 3-SETUPS names, 13 of 44 Start days on Nov 18, all on Launches. radar/alerts.py
+  find_early_lists / list_names: a name on Launches (with the 50 EMA undercut tab and the laggards), 3-SETUPS, Start days or
+  a Watchlist list (setups/latest.json: 1-EP/GAP, 1-UPDAY, 2-POOL, the TREND names' sources) that is not on `watch`, gapping
+  up 5%+ (EARLY_LIST_GAP) and over its open: one quiet heads-up, key SYM:early, "AZTA EARLY: gapping +5.5% (on Launches,
+  3-SETUPS, 1-EP/GAP)", with its buy point cleared or not; none when the stock gets another alert in the same check (a gap
+  out of base). day.py lists_args passes --lists (setups/latest.json, read once a job) to fast.py (which now also reads the
+  Start days, every 3-SETUPS name and the lists' names each minute) and to the 1-minute alerts run. The 5% and the quiet
+  heads-up were my defaults: the user did not answer those two. Merge: day.py conflicted with the other session's
+  events_args (both kept: `*lists_args(), *events_args()`). Tested (stand-in 9:32 run): AZTA, ANET, HAWK, PRKS, SLS fire; ENR
+  (under its open), CDW (3% gap) don't; TMDX gets its gap out of base instead; no repeat the next minute; the Nov 18 tests
+  again on the merged code; the page on 5 tabs, 0 errors. Rules workbook: one row. **Not seen on live prices: check Mon Nov
+  23 at 9:31-9:34** (alerts.json `:early` keys with "gapping" in the title; the minute read's time with the extra names).
 - **Answered, no change**: the Gainers tab already has the theme buttons ("Group moves today", above the theme table; the user:
   "if thats the way i dont need it"); the gainers table updates every minute for stocks up 2%+ (9:31-11:00 since the other
   session's Nov 18 change, was 10:30), every 5 minutes for the rest.
