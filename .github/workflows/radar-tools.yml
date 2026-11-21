@@ -152,6 +152,9 @@ jobs:
             python3 -c "import json; d=json.load(open('/tmp/pout/stocks.json')); b=json.load(open('/tmp/pout/build.json')); b=b[0] if isinstance(b,list) else b; json.dump({'asof': b.get('asof'), 'rows': {r['symbol']: [r.get('trend'), r.get('trend_days'), r.get('tr')] for r in d if r.get('trend') is not None}}, open('/tmp/trend.json','w'), separators=(',',':'))"
             python3 radar/publish.py "trend $(TZ=America/New_York date '+%F %H:%M')" /tmp/trend.json
           fi
+          if [ "${{ inputs.cmd }}" = "dipbars" ]; then   # the DIP list's study: daily bars from Nov 2023 for the liquid stocks -> radar-data dip_bars.json.gz (the portal doesn't read it)
+            python3 scanner/probe_dipbars.py /tmp/dip_bars.json.gz && ls -la /tmp/dip_bars.json.gz && python3 radar/publish.py "dip study bars" /tmp/dip_bars.json.gz
+          fi
           if [ "${{ inputs.cmd }}" = "pipedry" ]; then
             # the nightly build on this branch, NOT published as stocks.json: radar-data stocks_dry.json (the Trend check)
             python3 -I radar/pipeline.py /tmp/pwork /tmp/pout "$GITHUB_REPOSITORY" | tail -5
