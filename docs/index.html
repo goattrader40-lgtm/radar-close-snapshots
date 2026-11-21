@@ -878,7 +878,7 @@
             <th class="c2"><button class="tgr-th" data-sort="pattern">Pattern</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
-            <th><button class="tgr-th" data-sort="res_away" title="Resistance: the highs overhead it still has to clear after the buy point: the 3-, 6-, 9-month and 52-week highs, nearest first, with how far each is from the price">Resistance</button></th>
+            <th><button class="tgr-th" data-sort="res_away" title="Resistance: what it still has to clear overhead after the buy point, nearest first, each as a range. Highs: the 1-, 3-, 6-, 9-month and 52-week high, from the period's highest close to its highest high (1M/3M = the same level for both). Broken support: an old floor that held 3+ tests and then broke down hard; it is resistance until a close back over its top. % = how far the bottom of the range is over the price">Resistance</button></th>
             <th class="num"><button class="tgr-th" data-sort="price">Price</button></th>
             <th class="num"><button class="tgr-th" data-sort="chg_1d">Chg</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="rel_vol">Rel vol</button></th>
@@ -1050,7 +1050,7 @@
             <th class="c2"><button class="tgr-th" data-sort="pattern" title="What the buy point is: the base top, the pattern's pivot, a flag line, the pop out of a consolidation">Trigger</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
-            <th><button class="tgr-th" data-sort="res_away" title="Resistance: the highs overhead it still has to clear after the buy point: the 3-, 6-, 9-month and 52-week highs, nearest first, with how far each is from the price">Resistance</button></th>
+            <th><button class="tgr-th" data-sort="res_away" title="Resistance: what it still has to clear overhead after the buy point, nearest first, each as a range. Highs: the 1-, 3-, 6-, 9-month and 52-week high, from the period's highest close to its highest high (1M/3M = the same level for both). Broken support: an old floor that held 3+ tests and then broke down hard; it is resistance until a close back over its top. % = how far the bottom of the range is over the price">Resistance</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="blen" title="The current base: sessions since its top was set (day 1 = the high, like Base day). Hover a cell: how long nothing traded above that level (ACN Nov 3 2026: 9 sessions since its Oct 22 top 259.39; nothing above 259.39 since Feb 2)">Base length</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_pct">Depth</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_adr" title="The base's depth in the stock's own ADRs: each ticker has its own character">Depth in ADRs</button></th>
@@ -3717,14 +3717,26 @@ defCalc('industry_perf', {
       r.delayed_from ? 'Delayed' : null, r.follows ? 'Follower' : null].filter(Boolean);
     return t.length ? t : ['Launch'];
   };
-  /* resistance (your rule, Nov 2 2026): the overhead 3/6/9-month and 52-week highs, nearest first, from the price now */
-  const resAway = (r, px) => { const l = (r.resistance || [])[0]; return l && px ? r2((l[1] / px - 1) * 100) : null; };
+  /* resistance (your rule, Nov 2 2026), nearest first, from the price now. Each level is a range (the user, Nov 21 2026: "do as
+     range for all", "yes add 1month", "if 1month and 3month same then it has to show 1month/3month"): [label, top, bottom, ...].
+     Highs: the 1-, 3-, 6-, 9-month and 52-week high, from the period's highest close to its highest high; periods with the same
+     range share one line ("1M/3M"). Broken support ("bs"; VERX Nov 2025 - Feb 2026: "every day was trying to break that
+     support, finally that day broke down really bad ... next big resistance"): [bs, zone top, zone bottom, held from, held to,
+     breakdown day, tests]. A level saved before Nov 21 2026 is [label, level]: it shows as one price, as before */
+  const resLo = (x) => num(x[2]) ?? num(x[1]);
+  const resLab = (x) => (x[0] === 'bs' ? 'Broken support' : String(x[0]).toUpperCase());
+  const resRng = (x) => { const lo = resLo(x), hi = num(x[1]); return hi / lo - 1 < 0.005 ? fPrice(hi) : fPrice(lo) + '–' + g2.format(hi); };
+  const resPct = (x, px) => (!px ? '' : px >= resLo(x) ? ' in it' : ' ' + p1((resLo(x) / px - 1) * 100, true));
+  const resOver = (r, px) => (r.resistance || []).filter((x) => !px || x[1] > px);
+  const resAway = (r, px) => { const l = resOver(r, px)[0]; return l && px ? Math.max(0, r2((resLo(l) / px - 1) * 100)) : null; };
   const resCell = (r, px) => {
-    const td = h('td', 'nw'), lv = (r.resistance || []).filter((x) => !px || x[1] > px);
+    const td = h('td', 'nw'), lv = resOver(r, px);
     if (!lv.length) { td.textContent = r.resistance ? 'None: at highs' : '—'; if (r.resistance) td.className = 'nw tgr-up'; return td; }
-    const show = lv.length > 1 ? [lv[0], lv[lv.length - 1]] : lv;
-    show.forEach((x) => td.append(h('div', '', String(x[0]).toUpperCase() + ' ' + fPrice(x[1]) + (px ? ' ' + p1((x[1] / px - 1) * 100, true) : ''))));
-    td.title = 'Overhead highs to clear (3M = 3-month high, 52W = 52-week high; % = how far over the price): ' + lv.map((x) => x[0] + ' ' + fPrice(x[1])).join(', ');
+    /* the nearest level, the nearest broken support (wherever it sits) and the farthest; the rest in the tooltip */
+    const bs = lv.find((x) => x[0] === 'bs'), show = lv.filter((x, i) => i === 0 || i === lv.length - 1 || x === bs);
+    show.forEach((x) => td.append(h('div', '', resLab(x) + ' ' + resRng(x) + resPct(x, px))));
+    td.title = 'Overhead levels to clear, nearest first, each a range (highs: the period\'s highest close to its highest high; 1M = 1-month, 52W = 52-week, 1M/3M = the same level; % = the bottom of the range over the price): '
+      + lv.map((x) => resLab(x) + ' ' + resRng(x) + (x[0] === 'bs' && x[5] ? ' (the floor of ' + x[3] + ' to ' + x[4] + ', tested ' + x[6] + ' times, broke down ' + x[5] + ')' : '')).join('; ');
     return td;
   };
   /* Launches: Base length (the current base; the level's reach in the tooltip), Off 52W high (now), Correction (now) */
@@ -5508,6 +5520,14 @@ defCalc('industry_perf', {
     if (w && w.row) { let o = entTxt(w.row.entries); if ((w.row.ema_triggers_tomorrow || []).length) o = (o ? o + ', ' : '') + 'armed: ' + w.row.ema_triggers_tomorrow.join(' + ') + ' pullback'; return o; }
     return r && num(r.coil) !== null ? 'coil ' + r.coil : '';
   };
+  /* the overhead levels of a stock, for the Resistance column you can add on any table (the user, Nov 21 2026: "if i add that
+     column there it would be visible there correct?"): its Launches / Launch laggards row, its 50 EMA undercut row, its Start
+     days row, the launch watch list (launch.json watch_resistance: the Launching today table), else its Watchlist row */
+  const LSK = (s) => by('ls', LDOC(), (d) => new Map((d.start_days || []).map((r) => [r.symbol, r]))).get(s) || null;
+  const RESK = (s) => {
+    const d = LDOC(), w = WK(s);
+    return (LK(s) || {}).resistance || (LUK(s) || {}).resistance || (LSK(s) || {}).resistance || ((d && d.watch_resistance) || {})[s] || (w && w.row ? w.row.resistance : null) || null;
+  };
   const COILK = (s) => {
     const r = LK(s) || LUK(s);
     if (r && num(r.coil) !== null) return { buy: num(r.coil), stop: num(r.coil_stop) };
@@ -5556,6 +5576,7 @@ defCalc('industry_perf', {
     ['chg_3m', '3M', 'Price', 'Change over 3 months', ['chg_3m', 'perf_3m_pct'], (s) => cPct((SK(s) || {}).chg_3m, true)],
     ['gap', 'Gap', 'Price', 'Today\'s open vs yesterday\'s close (from the live quotes)', ['gap', 'gap_pct'], (s) => cPct((SK(s) || {}).gap_pct, true)],
     ['off52h', 'Off 52W high', 'Price', 'How far under its 52-week high now', ['off_high', 'off_52w_high_pct'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.high_52w) : null; return cNum(v, p1(v, true), tone(v), r && r.high_52w ? '52-week high ' + fPrice(r.high_52w) : ''); }],
+    ['res', 'Resistance', 'Price', 'What it still has to clear overhead, nearest first, each as a range: the 1-, 3-, 6-, 9-month and 52-week high (highest close to highest high) and broken support (an old floor that held 3+ tests, then broke down hard). For the stocks on Launches, Launch laggards, the 50 EMA undercut tab, Start days, the launch watch list and the Watchlist', ['res_away'], (s) => { const lv = RESK(s); if (!lv) return cTxt(null); const r = { resistance: lv }, px = pxOf(s); return cNode(resAway(r, px), resCell(r, px)); }],
     ['over52l', 'Over 52W low', 'Price', 'How far over its 52-week low now', ['over_low52', 'below_low52'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.low_52w) : null; return cNum(v, p1(v, true), '', r && r.low_52w ? '52-week low ' + fPrice(r.low_52w) : ''); }],
     /* the morning breakout alert's levels as + Filter choices on every tab (the user, Nov 9 2026: "some criteria I asked for
        aren't available here, I want them here: above ORH, above PDH"; "I go to filters, I find them, I choose them"):
