@@ -353,10 +353,9 @@ Its first part (Nov 12-13: the coil on Launches, the full + Filter list, the MBG
   22)**, while Launches tests the highest 20-day ADR of the last 63 sessions (4.54%: L adr_look, the user's Nov 12 rule "amd
   never was 3.4% adr stock"), so SPOT launched Oct 22 and never came on the EP list. To propose: the same ADR test on the
   Watchlist lists (scanner/screens.py standard); measure what it adds first.
-  **Not resolved**: the user then asked "why spot on ep/gap lsit then". In the files SPOT is on NO Watchlist list (setups/latest.json
-  of the Nov 20 scan, the TradingView export, scanner/state.json; the history has it on 1-UPDAY Nov 4-5 only); it is on the
-  alert's watch list and off Launches since Nov 19 (end of cycle). Either they meant "why is it NOT on the list" (the ADR
-  answer above) or they see it somewhere I can't: ask for a screenshot of where SPOT shows before anything else.
+  **Resolved (the user: "spotty is not on my ep lsit")**: they meant why SPOT is NOT on the EP list; I misread it as "why is it
+  on" and wrote a wrong first line into the prompt I gave them (corrected). The issue to fix is the ADR test above: the user
+  wants SPOT-type EPs on 1-EP/GAP.
 - **Decided with the user this session (no build needed)**: the Watchlist feeds stay as they are ("we are only interested in
   fast movers thats why setup feeds from updays and fast movers 1 month 3 month and 6 months": NO whole-market trend list, NO
   feed change); nothing is dropped (1-UPDAY, 2-POOL stay); the 2-POOL momentum numbers are NOT changed (25% / 50% / 100% was
