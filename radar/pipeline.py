@@ -437,8 +437,10 @@ try:
     # (smaller regional banks, finance software in Enterprise SaaS, ...): they pass the business-line test for that
     # theme and still need every other test of an automatic add, the liquidity floors included ("as long as they meet
     # liquidity requirement")
+    # (a name the user approved by hand for this theme, "adds", passes too: without it VNOM, UPWK, FA, AOS, SWK fell
+    # into an automatic group before their hand-add was read)
     def line_ok(x, th):
-        return line_of(x) in core_lines[th] or th in KEEP.get(x, ())
+        return line_of(x) in core_lines[th] or th in KEEP.get(x, ()) or x in THEME_ADDS.get(th, "").split()
     def joins(x, th, sc):
         if not (sc >= COH_FLOOR and sector(x) in {sector(y) for y in groups[th]} and line_ok(x, th)): return False
         return not (cat_of.get(th) == "AI & Semis" and semi_f is not None and beyond_fit(x, th) < SEMI_FLOOR)
