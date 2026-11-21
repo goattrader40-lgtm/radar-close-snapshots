@@ -253,6 +253,75 @@ def theme_breakouts(state, new, members, live, now, doc=None):
     return out
 
 
+# the context of a group / theme move (the user, Nov 20 2026: IT services up 2-5% together the morning after Globant's
+# report, the AI chip themes down 2-5%; "we were supposed to have reason for that today we didnt get it"). Two facts the
+# job can state by code, worded as context, never as the cause: a stock of that group that reported with today as its
+# reaction session and gapped MOVE_GAP%+ ("also reported"), and the themes whose tight members move OTHER_WAY%+ the other
+# way on average right now (a rotation). The bellwether "why" (radar/event.py) is separate and has its own switch
+MOVE_GAP = 5.0                # a reporter's gap at the open, either way, that is named
+OTHER_WAY = 2.0               # a theme's average move the other way that is named
+OTHER_OWN = 1.0               # the moving group's own average move before the other side is looked at
+OTHER_MAX = 3
+
+
+def gap_of(q):
+    """the gap at the open % from a live row [price, chg, volume, time, rel vol, open, ...], or None"""
+    try:
+        prev = q[0] / (1 + q[1] / 100)
+        return 100 * (q[5] / prev - 1) if q[5] and prev else None
+    except Exception:
+        return None
+
+
+def move_context(name, syms, live, E, tmem, today, up_only=False):
+    """the words added to a GROUP MOVE / THEME MOVING UP alert of `name` (its alerting stocks `syms`), or ''; up_only (a
+    THEME MOVING UP alert): the other side only when the theme itself is up on average"""
+    rows = (live or {}).get("rows") or {}
+    out = []
+    rep = []
+    for sym, r in sorted((E or {}).items()):
+        if r.get("react_day") != today or name not in _GROUPS.get(sym, []):
+            continue
+        q = rows.get(sym)
+        g = gap_of(q) if q else None
+        if g is None or abs(g) < MOVE_GAP:
+            continue
+        why = ", ".join(x for x in str(r.get("why") or "").split(", ") if "after hours" not in x and "pre-market" not in x)
+        rep.append(f"{sym} ({r.get('read') or 'no reading'}" + (f": {why}" if why else "") + f"; gap {g:+.1f}%, now {q[1]:+.1f}%)")
+    if rep:
+        out.append("also reported: " + "; ".join(rep[:3]) + " (context, not by itself the cause)")
+    avg = {}
+    for (kind, nm), mem in (tmem or {}).items():
+        v = [rows[x][1] for x in mem if rows.get(x) and rows[x][1] is not None]
+        if len(v) >= 3:
+            avg[(kind, nm)] = sum(v) / len(v)
+    own = avg.get(("theme", name), avg.get(("group", name)))
+    if own is None:
+        v = [rows[x][1] for x in syms if rows.get(x) and rows[x][1] is not None]
+        own = sum(v) / len(v) if v else None
+    if own is not None and abs(own) >= OTHER_OWN and (own > 0 or not up_only):
+        opp = sorted(((a, nm) for (kind, nm), a in avg.items() if kind == "theme" and nm != name and a * own < 0 and abs(a) >= OTHER_WAY),
+                     key=lambda x: -abs(x[0]))[:OTHER_MAX]
+        if opp:
+            out.append(f"{name} {own:+.1f}% on average; moving the other way: " + ", ".join(f"{nm} {a:+.1f}%" for a, nm in opp))
+    return "".join(" · " + x for x in out)
+
+
+def move_context_data(launch_p, S_all, E_all):
+    """(earnings rows by stock, {(kind, name): tight members}) for move_context, read here when the morning boxes did not"""
+    d_ = os.path.dirname(os.path.abspath(launch_p))
+    if not S_all:
+        for n in ("base_stocks.json", "stocks.json"):
+            if os.path.exists(os.path.join(d_, n)):
+                S_all = {x["symbol"]: x for x in json.load(open(os.path.join(d_, n)))}
+                break
+    if not E_all and "--earnings" in sys.argv:
+        E_all = {r["sym"]: r for r in json.load(open(sys.argv[sys.argv.index("--earnings") + 1])).get("rows", []) if r.get("reported")}
+    tp_ = next((os.path.join(d_, n) for n in ("base_themes.json", "themes.json") if os.path.exists(os.path.join(d_, n))), None)
+    th_ = json.load(open(tp_)) if tp_ else []
+    return E_all, theme_members(th_.get("themes", []) if isinstance(th_, dict) else th_, list(S_all.values()), THEME_FIT)
+
+
 def confluence_level(r, price, low):
     """the breakout level under a 21 EMA retest: the price over it and today's low within 1 ADR over it (or under it)"""
     lv = r.get("retest_level") or r.get("last_breakout_top")
@@ -1802,7 +1871,16 @@ def main():
     # reacts to a bellwether's report, an alert on a stock with a 1st-impact link to it (radar/bellwethers.json) ends with the
     # event, the stock's tie and the bellwether's own sentence about it; a GROUP MOVE of a linked theme with the theme's
     ev_sym, ev_theme = event_reasons(sys.argv[sys.argv.index("--events") + 1], today) if "--events" in sys.argv else ({}, {})
+    mctx_ = None
     for (key, title, msg, prio, tvs), is_grouped in out_:
+        if key.startswith(("grp:", "thm:")):               # the move's context: who reported, what moves the other way
+            try:
+                if mctx_ is None:
+                    mctx_ = move_context_data(launch_p, S_all, E_all)
+                syms_ = [x.strip() for x in title.rsplit(": ", 1)[-1].split(",")]
+                msg += move_context(key[4:], syms_, live, mctx_[0], mctx_[1], today, key.startswith("thm:"))
+            except Exception as e:                          # never at the cost of the alert itself
+                print(f"move context: {e!r}", file=sys.stderr)
         why_ = ev_theme.get(key[4:]) if key.startswith("grp:") else ev_sym.get(key.split(":")[0])
         if why_ and not key.startswith("summary:"):
             msg += " · why: " + why_

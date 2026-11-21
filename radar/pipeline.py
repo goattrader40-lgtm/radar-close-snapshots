@@ -55,7 +55,8 @@ T = [
  ("AI Infrastructure", "Nuclear & Uranium", "NLR URA URNM", "CCJ OKLO SMR LEU NNE UEC UUUU NXE DNN XE"),
  ("AI Infrastructure", "Neoclouds & AI Hosting", "NCLD WGMI", "CRWV NBIS IREN CIFR WULF APLD GLXY HUT BTDR CORZ KEEL CLSK RIOT MARA"),
  ("Software", "Enterprise SaaS", "IGV", "CRM NOW ADBE INTU WDAY ADSK TEAM HUBS SAP DOCU ASAN FRSH PEGA BOX GWRE RNG BSY"),
- ("Software", "IT Services & Consulting", "IGV", "IT CTSH EPAM GLOB EXLS DXC INFY G ACN"),
+ # Nov 20, 2026 (your OK): IT (Gartner: research subscriptions, not IT services) out of the core
+ ("Software", "IT Services & Consulting", "IGV", "CTSH EPAM GLOB EXLS DXC INFY G ACN"),
  ("Software", "Payroll & HR Software", "IGV", "ADP PAYX PAYC PCTY"),
  ("Software", "AI Software & Data", "AIQ IGV", "PLTR SNOW DDOG MDB ESTC AI PATH GTLB NOW PD NTNX DT"),
  ("Software", "Cybersecurity", "CIBR HACK BUG", "CRWD PANW FTNT ZS NET OKTA S RBRK TENB QLYS SAIL NTSK RPD"),
@@ -327,7 +328,8 @@ for s, r in latest.items():
 # ---------------- 4. co-movement: auto-added members + auto groups (recomputed weekly) ----------------
 # Same test used to approve the core baskets: daily % moves with the whole market's move removed (beta-adjusted),
 # outliers clipped, over the 120 sessions ending at the most recent Friday. A stock joins when it tracks a group
-# at >= 0.6, that group is its best fit, it shares a sector with the group, and it passes the liquidity floors.
+# at >= 0.6, that group is its best fit, it shares a sector with the group and the business line of one of its core
+# stocks (Nov 20, 2026), and it passes the liquidity floors.
 COH_WINDOW, COH_FLOOR = 120, 0.6
 AUTO_ANCHORS = [   # names for the groups the test finds; a group takes the first label with 2+ of these tickers
     ("Refiners", "VLO MPC PSX PBF DINO"), ("Pipelines & Midstream", "KMI WMB OKE ENB EPD TRP ET MPLX"),
@@ -410,10 +412,27 @@ try:
         m = [y for y in groups[th] if y != x]
         return corr(beyond(Z[:, col[x]]), beyond(Z[:, [col[y] for y in m]].mean(1)))
     SEMI_FLOOR = 0.15
+    def base_group(x):
+        if x in IG_HAND: return IG_HAND[x]
+        ind = (PROF.get(x) or {}).get("industry") or (fd.get(x) or {}).get("industry") or latest[x].get("industry") or "Other"
+        if ind in ("Banks - Regional", "Banks - Diversified"):
+            return "Banks: US Regional" if (num(latest[x]["marketCap"]) or 0) >= IG["regional_mid_b"] * 1e9 else "Banks: US Community"
+        if ind == "Biotechnology": return "Biotech: Other"
+        if ind.startswith("Software"): return "Software: Other"
+        return ind
+    # the business line of an auto-added name (the user, Nov 20 2026: "they cant be in same theme ... maybe they are in
+    # different line of business and this pile up not accurate"; BR, TYL, DOX in IT Services; PG, PEP in Retail): moving
+    # with a theme and sharing its sector is not enough, it must also be in the business-line group (base_group: the
+    # industry groups' own lines) of one of the theme's core stocks. One that is not stays in its own industry group.
+    # The names the user approved by hand (theme_adds.json, below) are not held to it
+    def line_of(x):
+        try: return base_group(x)
+        except Exception: return None
+    core_lines = {th: {line_of(y) for y in core[th]} - {None} for th in groups}
     for x in liquid:
         if x in incore: continue
         th, sc = best_fit(x)
-        if sc >= COH_FLOOR and sector(x) in {sector(y) for y in groups[th]}:
+        if sc >= COH_FLOOR and sector(x) in {sector(y) for y in groups[th]} and line_of(x) in core_lines[th]:
             if cat_of.get(th) == "AI & Semis" and semi_f is not None and beyond_fit(x, th) < SEMI_FLOOR:
                 continue
             ext.setdefault(th, []).append((round(sc, 2), x))
@@ -468,14 +487,6 @@ try:
     # industry groups: every stock its business-line group, then each group pruned like the auto groups (the weakest
     # out until everyone tracks the rest at COH_FLOOR+, 3 stocks at least); the 2-year test (probe_rolling.py, pruned
     # month by month): Top / Strong launches ran 20%+ 36% vs 32% with the broad industries
-    def base_group(x):
-        if x in IG_HAND: return IG_HAND[x]
-        ind = (PROF.get(x) or {}).get("industry") or (fd.get(x) or {}).get("industry") or latest[x].get("industry") or "Other"
-        if ind in ("Banks - Regional", "Banks - Diversified"):
-            return "Banks: US Regional" if (num(latest[x]["marketCap"]) or 0) >= IG["regional_mid_b"] * 1e9 else "Banks: US Community"
-        if ind == "Biotechnology": return "Biotech: Other"
-        if ind.startswith("Software"): return "Software: Other"
-        return ind
     bg = defaultdict(list)
     for x in univ:
         g_ = base_group(x)
