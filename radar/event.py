@@ -302,16 +302,21 @@ def members(S, T, any_adr=False):
 
 
 def all_bellwethers(bw, S, themes, W):
-    """the written maps plus, for every named theme, its two largest tradable stocks (the user: 'agree'): their report is the
+    """the written maps plus, for every named theme, its two largest tradable core stocks (the user: 'agree'): their report is the
     theme's first reading. Each gets 'home' (its themes); one without a written map reads the generic topics, its theme's
     words and its theme's niches"""
     B = {k: dict(v) for k, v in bw["bellwethers"].items()}
-    home = {}
+    home, home_rank = {}, {}
     for t in themes or []:
         if t.get("category") == "Auto groups":
             continue
-        for sym in members(S, t["theme"], True)[:2]:
+        # the theme's own (core) stocks only (the user, Nov 20 2026: Keysight, auto-added to Semi Test & Packaging for moving
+        # with it, was read as that theme's first reading; it is electronic test and measurement). A themes file without
+        # the core list (an old one) keeps every member
+        core_ = set(str(t.get("members") or "").split())
+        for sym in [x for x in members(S, t["theme"], True) if not core_ or x in core_][:2]:
             home.setdefault(sym, []).append(t["theme"])
+            home_rank[(sym, t["theme"])] = len([1 for k_ in home_rank if k_[1] == t["theme"]])
     for sym, Ts in home.items():
         if sym in B:
             B[sym]["home"] = Ts
@@ -324,7 +329,7 @@ def all_bellwethers(bw, S, themes, W):
             for n, spec in ((W.get("niches") or {}).get(T) or {}).items():
                 topics[f"niche:{T}:{n}"] = {"label": n, "find": spec["find"], "also": [], "min": X_MIN}
         rank = ["largest", "second-largest"]
-        what = " ".join(f"{nm} is the {rank[min(members(S, T, True).index(sym), 1)]} stock of your {T} theme." for T in Ts) + \
+        what = " ".join(f"{nm} is the {rank[min(home_rank.get((sym, T), 0), 1)]} stock of your {T} theme." for T in Ts) + \
             " Its report is the first reading of that business for the whole group: no map is written for it, the links are its theme."
         B[sym] = {"name": nm, "auto": True, "home": Ts, "what": what, "topics": topics, "lead": ["recurring", "revenue", "outlook"],
                   "names": {}, "links": []}
