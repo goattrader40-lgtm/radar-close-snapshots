@@ -49,6 +49,76 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: MBGL / AVEX miss (Nov 12)", continued (Sun Nov 15 - Sat Nov 21 2026; session_01PkbDaiSjzGPJPtohD3UF2C; in progress)
+
+Its first part (Nov 12-13: the coil on Launches, the full + Filter list, the MBGL / AVEX findings) is in the archive under the same
+title. What came after:
+
+- **LIVE (the user's "go live", Sat Nov 21 2026 ~11:30 AM ET, branch test/resrange, merge d89b0d0; Launches rebuilt 11:32 AM,
+  4fcdacb): the Resistance column as ranges, the 1-month high, joined labels, broken support, and Resistance as a column to add.**
+  The user (VERX): "look at last feb 3rd and nov 10th 25 all the way to that, every day was trying to break that support, finally
+  that day broke down really bad ... that day is considered next big resistance for the ticker, that's why nov 5th it stalled at
+  that number"; "the way i see it 18.50-18.90 range was the support"; "do as range for all"; "yes add 1month"; "if 1month and
+  3month same then it has to show 1month/3month".
+  1. **Every level is a range** (scanner/launch.py resistance(): [label, top, bottom, ...], lowest first): the 1-, 3-, 6-, 9-month
+     and 52-week high (21 / 63 / 126 / 189 / 252 sessions) from the span's highest CLOSE (bottom) to its highest HIGH (top); a
+     level counts when its top is 0.5%+ over the close and the buy point (so the 1-month high does not repeat a base-top buy
+     point). Spans with the same range (both ends within 0.5%) share one entry, the labels joined ("1m/3m", "6m/9m/52w").
+  2. **Broken support** (broken_support(), settings BS): the breakdown day closes under the lowest close of the 40 sessions before
+     it, down 1.5+ ADRs on 1.5x+ volume; the range before it = back while the closes stay within 4 ADRs of each other, 20+
+     sessions; the zone = that range's lowest close to half an ADR over it; 3+ separate tests (a low in the zone or within a
+     quarter ADR over it, tests 4+ sessions apart); gone once a close is back over the zone's top; wicks under the floor that
+     closed back do not move it. Entry ["bs", top, bottom, range from, range to, breakdown day, tests]. **VERX**: closes
+     18.55-20.71 from Nov 3 2025 to Feb 2 2026, 5 tests; Feb 3 2026 -15.1% (4.2 ADRs) on 3.7x; zone 18.55-18.88; the highs of
+     Nov 5 2026 (18.53) and Nov 16 2026 (18.57) turned back at its bottom; its buy point 18.57 sits inside the zone. An older
+     VERX zone 23.87-24.24 (floor Aug 8 - Oct 28 2025, broke Oct 29 2025). **The thicknesses (half an ADR, 4 ADRs, a quarter ADR)
+     are Claude's, fitted on VERX alone.**
+  3. **The page** (docs/index.html resCell / resAway / resLo ...): "1M/3M $36.84-38.07 +1.6%", "Broken support $18.55-18.88
+     +7.7%"; one price when the two ends are within 0.5%; the % is to the BOTTOM of the range (was to the highest high), "in it"
+     when the price is inside; the cell shows the nearest level, the nearest broken support and the farthest high, the tooltip
+     all of them (with the floor's dates, tests and breakdown day). A level saved before this ([label, level]) shows as one
+     price, as before. **Resistance in Columns: + add** (catalog `res`, RESK: the Launches / laggards row, the 50 EMA undercut
+     row, the Start days row (start_days rows now carry `resistance`), launch.json `watch_resistance` for the 888 launch-watch
+     stocks, else the Watchlist row).
+  Tested: `--regress` "every agreed example reads the same"; radar-tools `setupsdry` on the branch (Nov 20 close): the same 134
+  launches, 12 in the 50 EMA undercut tab, 27 start days, no launch date / grade / buy point / status / read changed; broken
+  support overhead on 11 of 134 Launches rows (TTD 16.79-17.20, HGV 48.31-49.14, POOL 252.28-255.77, EPAM 200.00-203.54, PRKS
+  48.60-49.43, CHKP 214.03-216.49, INTA 52.76-53.47, PRMB 30.79-31.20, CRI 50.40-51.27, UPBD 28.44-28.81, VERX), 14 of 182
+  Watchlist stocks, 97 of the 888 watch stocks; the page with the dry files and with the old files (0 page errors; the column
+  added on the 50 EMA undercut and Start days tables). After the go live: the rebuilt launch.json identical to the evening's but
+  for the levels; VERX on Launches reads "Broken support $18.55-18.88 +7.7% | 52W $20.62-20.82 +19.7%". Rules workbook: the
+  Resistance row rewritten and a broken-support row. A display only: no launch rule, buy point or alert reads the levels.
+  **First checks**: (1) the Watchlist rows still carry the old single prices (latest.json is written by the evening scan only):
+  after the Mon Nov 23 scan, setups/latest.json `resistance` entries have 3+ elements and VERX reads the zone there too (the
+  evening scan was NOT re-run by hand: it may resend the phone's Ready list); (2) Launching today with the added Resistance
+  column (empty on a weekend, not tested); (3) the user was asked to check 2-3 of the 10 other zones on their charts.
+- **The start day's move (Nov 15, built here)**: "up 1 ADR+, or up 4%+ that is also 0.8 ADR+" (ZETA Nov 9 2026: +4.5% on 2.2x with a
+  5.39% ADR, missed 1 ADR; TTEK Oct 15 2026 +3.5% with a 2.8% ADR kept: the user's "start is 15th october"), branch
+  test/start4pct 3b9d5b4. **It went live on Nov 16 through the session "Start days stay on until they fail + 0.8 ADR start (BILL,
+  Nov 16)"** (see there). On Nov 21 this session twice told the user it was still waiting for a go live: wrong, corrected the
+  same day. test/start4pct and test/resrange can be deleted.
+- **Answered, no change** (Nov 13 - 21): FLY Nov 6 2026 was on 1-EP/GAP and 2-POOL, not on Launch laggards (closed 20.76 under its
+  1-month high 20.96 by the wicks, its AST SpaceMobile news never graded: the 8:45 list had dropped it) and came on Launches as
+  a first day when the chart reading went live Nov 12; the first-day rule is under the 200 SMA only (the user's WRBY Nov 5 read;
+  2 years: 127 under it 32% ran 20%+ / 38% failed, 73 over it 29% / 51%); the Watchlist's "Added: all" header is a day picker,
+  not a sort; "vs 200 SMA >= 0" = over the 200 SMA; VERX's highs on Nov 5 2026 (1- to 9-month 18.53 / close 17.59; 10-month
+  20.40; 52-week 20.86).
+- **Open, each needs the user's go**:
+  - **The 15% / 3x exception** (the user, Nov 13: "if stock up 15%, volume over 300% it should automatically qualify for launch or
+    launch laggard depending of its 200 sma position ... and it should trigger that time ... and regarding news its big gap, do
+    that as well as a rule"; then interrupted by the first-day question). Explained, not built; unanswered: keep the liquidity
+    minimums (suggested yes), how big a "big gap" is (suggested 10%), and the 2-year check (a new rule: asked, with the reason).
+    FLY Nov 6 passes it; FLY Nov 9 (2.6x) and MBGL Nov 12 (2.0x) do not.
+  - First days over the 200 SMA too (the user asked "it could be above 200 sma as well?"; the numbers above; no decision).
+  - A click on "Added" sorting the Watchlist by date (offered Nov 13, no answer).
+  - Broken support: the buy-point tag "inside broken support: clear over $18.88" (offered, no answer); highs and floors older
+    than 52 weeks / 2 years (offered, no answer); "None: at highs" also shows when nothing sits over the buy point (THC, W in
+    the 50 EMA undercut tab, Nov 20: seen, not changed).
+  - Still open from the first part (archive): the coil alert to look at later, the pre-market blind spot 9:10-9:30, young
+    listings (52-week low / 200 SMA), the code grader's "no daily bars" bug.
+- Data: radar-tools `long` re-run on Nov 21 with the 135 symbols another session had fetched that morning plus the examples and
+  VERX (long_bars.json: 153 symbols).
+
 ## Status of a chat session outside the Radar sessions (Fri Nov 20 2026 ~10:40 AM - 9:20 PM ET; session_01PkbDanJN5CDcjcEmx8eMXh)
 
 - **LIVE (the user's "go ahead ok others as well, as long as they meet liquidity requirement", Fri Nov 20 2026 ~9:10 PM ET, merge of
