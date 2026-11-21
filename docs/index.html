@@ -3732,8 +3732,11 @@ defCalc('industry_perf', {
   const resCell = (r, px) => {
     const td = h('td', 'nw'), lv = resOver(r, px);
     if (!lv.length) { td.textContent = r.resistance ? 'None: at highs' : '—'; if (r.resistance) td.className = 'nw tgr-up'; return td; }
-    /* the nearest level, the nearest broken support (wherever it sits) and the farthest; the rest in the tooltip */
-    const bs = lv.find((x) => x[0] === 'bs'), show = lv.filter((x, i) => i === 0 || i === lv.length - 1 || x === bs);
+    /* the nearest level, the nearest broken support (wherever it sits) and the farthest high (the 52-week high as a rule: VERX
+       Nov 20 2026 reads Broken support 18.55-18.88, 52W 20.62-20.82; its older zone 23.87-24.24 is in the tooltip); the rest in
+       the tooltip */
+    const bs = lv.find((x) => x[0] === 'bs'), hs = lv.filter((x) => x[0] !== 'bs'), far = hs[hs.length - 1];
+    const show = lv.filter((x, i) => i === 0 || x === bs || x === far);
     show.forEach((x) => td.append(h('div', '', resLab(x) + ' ' + resRng(x) + resPct(x, px))));
     td.title = 'Overhead levels to clear, nearest first, each a range (highs: the period\'s highest close to its highest high; 1M = 1-month, 52W = 52-week, 1M/3M = the same level; % = the bottom of the range over the price): '
       + lv.map((x) => resLab(x) + ' ' + resRng(x) + (x[0] === 'bs' && x[5] ? ' (the floor of ' + x[3] + ' to ' + x[4] + ', tested ' + x[6] + ' times, broke down ' + x[5] + ')' : '')).join('; ');
