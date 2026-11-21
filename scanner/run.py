@@ -173,9 +173,9 @@ def step(state, d, stocks, cfg, cal, log):
                 remove(name, sym, f"closed below the pre-gap close {e['pre_close']} (the gap is given back)")
             elif ((name == "1-EP/GAP" and L["delete_below_gap_low"]) or (name == "1-UPDAY" and L["delete_below_upday_low"])) and st.c[i] < e["low"]:
                 remove(name, sym, "closed below the " + ("gap" if name == "1-EP/GAP" else "up-day") + f" low {e['low']}")
-            # the 15 days without a setup: 1-UPDAY only (the user, Nov 14 2026, on 1-EP/GAP: "lets take that 15 day clock,
-            # we dont need it there": an EP gap stays until it closes 2 days under the 50 EMA)
-            elif name == "1-UPDAY" and not e.get("promoted") and tdays_between(cal, e["added"], d) >= L["new_mover_days_without_setup"]:
+            # the 15 days without a setup: OFF (0) since Nov 21 2026 (the user: "take 15 day rule of for upday as well"; off
+            # 1-EP/GAP since Nov 14: "lets take that 15 day clock, we dont need it there"); the setting is kept, 0 = off
+            elif name == "1-UPDAY" and L["new_mover_days_without_setup"] and not e.get("promoted") and tdays_between(cal, e["added"], d) >= L["new_mover_days_without_setup"]:
                 remove(name, sym, f"{L['new_mover_days_without_setup']} trading days with no setup")
             elif name == "3-SETUPS" and L["setups_need_above_sma200"] and not st.c[i] > st.sma200[i]:
                 remove(name, sym, "closed below the 200 SMA")
@@ -363,7 +363,12 @@ def write_outputs(state, stocks, cfg, P, log, d):
     cal = state["_cal"]
     full = {}
     for name in LISTS:
-        rows = [details(s, today[s], d, e, P, name) for s, e in lists[name].items() if s in today]
+        # a stock on 1-EP/GAP is not shown on 1-UPDAY (the user, Nov 21 2026: "i thought anything in ep/gap isnt shown in
+        # upday - i agree with that recommendation"): it stays in state.json's 1-UPDAY with its own line (the first day's
+        # low), so it shows on 1-UPDAY again if it leaves 1-EP/GAP and still holds that line; 3-SETUPS already reads it
+        # from 1-EP/GAP first
+        hide = set(lists["1-EP/GAP"]) if name == "1-UPDAY" else set()
+        rows = [details(s, today[s], d, e, P, name) for s, e in lists[name].items() if s in today and s not in hide]
         if name == "3-SETUPS":
             rows.sort(key=lambda r: rank_key(r["symbol"], lists[name][r["symbol"]], today, d, cal))
         else:
