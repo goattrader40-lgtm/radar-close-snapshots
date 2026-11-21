@@ -25,6 +25,15 @@ def main():
     doc = json.load(open(launch_p))
     syms = sorted(set(doc.get("watch", {})) | set(doc.get("ep_watch") or {}) | {r["symbol"] for r in doc.get("launches", []) + doc.get("ema50_undercut", []) + doc.get("laggards", [])})   # + the 50 EMA undercut tab: its reclaim within a minute
     syms = sorted(set(syms) | {r["symbol"] for r in doc.get("setups3") or [] if r.get("buy_point") or r.get("live")})   # + 3-SETUPS: every entry (Nov 3 2026)
+    # + the names the user follows, for the 9:31-9:34 gap heads-up (alerts.py find_early_lists): Start days, every 3-SETUPS
+    # name and the Watchlist's lists (setups/latest.json, --lists)
+    syms = sorted(set(syms) | {r["symbol"] for r in (doc.get("start_days") or []) + (doc.get("setups3") or []) if r.get("symbol")})
+    if "--lists" in sys.argv:
+        try:
+            for rows_ in (json.load(open(sys.argv[sys.argv.index("--lists") + 1])).get("lists") or {}).values():
+                syms = sorted(set(syms) | {r["symbol"] for r in rows_ or [] if isinstance(r, dict) and r.get("symbol")})
+        except Exception as e:
+            print(f"fast: the Watchlist's lists not read: {e!r}", file=sys.stderr)
     try:
         prof = json.load(open(prof_p))["rows"]
     except Exception:

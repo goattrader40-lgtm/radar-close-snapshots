@@ -458,6 +458,51 @@ def find_early(live, doc, now=None):
     return out
 
 
+EARLY_LIST_GAP = 5.0          # the gap a followed name needs for its early heads-up
+
+
+def list_names(doc, lists_doc=None):
+    """{symbol: [the lists it is on]}: Launches (with the 50 EMA undercut tab and the laggards), 3-SETUPS, Start days
+    (launch.json) and the Watchlist's lists (setups/latest.json: 1-EP/GAP, 1-UPDAY, 2-POOL, the TREND names' sources)"""
+    out = {}
+    for name, rows in (("Launches", (doc.get("launches") or []) + (doc.get("ema50_undercut") or []) + (doc.get("laggards") or [])),
+                       ("3-SETUPS", doc.get("setups3") or []), ("Start days", doc.get("start_days") or [])):
+        for r in rows:
+            if r.get("symbol") and name not in out.setdefault(r["symbol"], []):
+                out[r["symbol"]].append(name)
+    for name, rows in ((lists_doc or {}).get("lists") or {}).items():
+        if name == "3-SETUPS":
+            continue
+        for r in rows or []:
+            if isinstance(r, dict) and r.get("symbol") and name not in out.setdefault(r["symbol"], []):
+                out[r["symbol"]].append(name)
+    return out
+
+
+def find_early_lists(live, doc, lists_doc, skip=()):
+    """the early heads-up, 9:31-9:34, for the names the user follows that find_early leaves out (the user, Nov 18 2026: "gap
+    heads up can you include my wl (ep + trend + start + setups) too"). find_early reads launch.json watch, which drops a
+    stock that launched in the last 20 sessions: 34 of the 49 1-EP/GAP names, 38 of the 94 3-SETUPS names and 13 of the 44
+    Start days that day, all on Launches. For them: gapping up 5%+ and still over the open; no shape, no volume. One
+    heads-up a stock (the same key as find_early's)"""
+    rows, out = live.get("rows") or {}, []
+    for sym, names in sorted(list_names(doc, lists_doc).items()):
+        q = rows.get(sym)
+        if sym in skip or sym in (doc.get("watch") or {}) or not q or len(q) < 6 or not q[5] or not q[0] or q[1] is None:
+            continue
+        price, chg, rv, op = q[0], q[1], q[4], q[5]
+        gap = (op / (price / (1 + chg / 100)) - 1) * 100
+        if gap < EARLY_LIST_GAP or price <= op:
+            continue
+        r = row_of(doc, sym) or {}
+        out.append((f"{sym}:early", f"{sym} EARLY: gapping {gap:+.1f}% (on {', '.join(names)})",
+                    f"gap {gap:+.1f}% · ${price:.2f} ({chg:+.1f}%), over its open ${op:.2f}"
+                    + (f" · buy point ${r['buy_point']:.2f} " + ("cleared" if price > r["buy_point"] else "not cleared") if r.get("buy_point") else "")
+                    + (f" · vol {rv:.1f}x so far (rough: the opening auction)" if rv else "")
+                    + " · its own alerts follow from 9:35", "default", r.get("tv") or r.get("tv_symbol") or sym))
+    return out
+
+
 def gtext(w):
     """the group line in a launch alert: the group rank and RS (watch fields 15-16, Nov 3 2026), else the old status"""
     if len(w) > 16 and (w[15] or w[16] is not None):
@@ -1686,6 +1731,12 @@ def main():
         mb2_cands = [s_ for s_ in (find_morning(live, S_all, M2, now) if M2.get("on") else [])
                      if f"{s_}:mbo" not in sent and not morning_trend_ok(S_all[s_], live["rows"][s_][0], M)]
     found = (find_early(live, doc, now) if early else find(live, doc, now)) + find_gob(live, doc, now)
+    if early:                                           # + the followed names the watch list leaves out (Launches, the Watchlist's lists)
+        try:
+            lists_doc = json.load(open(sys.argv[sys.argv.index("--lists") + 1])) if "--lists" in sys.argv else None
+            found += find_early_lists(live, doc, lists_doc, {a[0].split(":")[0] for a in found})
+        except Exception as e:
+            print(f"early heads-ups of the lists: {e!r}", file=sys.stderr)
     if not early:
         try:
             found += find_start(live, doc, now, sent)
