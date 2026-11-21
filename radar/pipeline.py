@@ -359,7 +359,11 @@ try:
 except Exception:
     PROF = {}
 IG_HAND = {x: g for g, m in IG["hand"].items() for x in m.split()}
-THEME_ADDS = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "theme_adds.json")))["adds"]
+_TA = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "theme_adds.json")))
+THEME_ADDS = _TA["adds"]
+KEEP = defaultdict(set)                        # sym -> the themes the user kept it in (theme_adds.json "keep")
+for _th, _m in (_TA.get("keep") or {}).items():
+    for _x in _m.split(): KEEP[_x].add(_th)
 igroups, grp_of = {}, {}                       # tight group -> [(score, sym)]; sym -> (group, score)
 coh_anchor = None
 try:
@@ -429,12 +433,25 @@ try:
         try: return base_group(x)
         except Exception: return None
     core_lines = {th: {line_of(y) for y in core[th]} - {None} for th in groups}
+    # "keep" (theme_adds.json, the user Nov 20 2026): names the user kept in a theme though their line's label differs
+    # (smaller regional banks, finance software in Enterprise SaaS, ...): they pass the business-line test for that
+    # theme and still need every other test of an automatic add, the liquidity floors included ("as long as they meet
+    # liquidity requirement")
+    def line_ok(x, th):
+        return line_of(x) in core_lines[th] or th in KEEP.get(x, ())
+    def joins(x, th, sc):
+        if not (sc >= COH_FLOOR and sector(x) in {sector(y) for y in groups[th]} and line_ok(x, th)): return False
+        return not (cat_of.get(th) == "AI & Semis" and semi_f is not None and beyond_fit(x, th) < SEMI_FLOOR)
     for x in liquid:
         if x in incore: continue
         th, sc = best_fit(x)
-        if sc >= COH_FLOOR and sector(x) in {sector(y) for y in groups[th]} and line_of(x) in core_lines[th]:
-            if cat_of.get(th) == "AI & Semis" and semi_f is not None and beyond_fit(x, th) < SEMI_FLOOR:
-                continue
+        if not joins(x, th, sc):
+            # not its best fit's business: the theme of its own business line it tracks best, by the same tests (the
+            # user, Nov 20 2026: "you would move them to correct themes right?"; CHKP from Enterprise SaaS to
+            # Cybersecurity). No theme of its line, or under 0.6 with it: it stays in its industry group
+            alt = sorted(((gcorr(x, t2), t2) for t2 in groups if t2 != th and line_ok(x, t2)), reverse=True)
+            th, sc = next(((t2, s2) for s2, t2 in alt if joins(x, t2, s2)), (None, None))
+        if th:
             ext.setdefault(th, []).append((round(sc, 2), x))
     taken = incore | {x for v in ext.values() for _, x in v}
     def prune(names, min_n=5):

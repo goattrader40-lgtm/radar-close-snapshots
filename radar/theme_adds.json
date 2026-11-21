@@ -36,5 +36,15 @@
   "Net Lease & Diversified REITs": "DEA",
   "LatAm Fintech & Banks": "PICS",
   "Hotels": "HGV"
+ },
+ "_keep": "Names the user kept in a theme on Nov 20 2026 when automatic adds began to need the business line of a core stock: the same business under another label. They pass that one test for that theme only; every other test of an automatic add still applies (0.6+ with the theme, the sector, the liquidity floors: the user, 'as long as they meet liquidity requirement').",
+ "keep": {
+  "Regional Banks": "PFS NWBI FCF TRMK WAFD BUSE FHB HOPE OCFC CFFN BANC BBT BKU",
+  "Enterprise SaaS": "WK VERX BL NCNO BILL OTEX",
+  "Silver Miners": "VZLA SSMR",
+  "Building Products": "MBC ALLE",
+  "Retail": "KR",
+  "Homebuilders & Housing": "POOL SITE",
+  "Medtech": "SNN"
  }
 }
