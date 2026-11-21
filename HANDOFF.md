@@ -97,6 +97,40 @@ alone.
 - Data: long_bars.json on radar-data had only SPOT / SPY (another session's fetch); re-run `long` with the 24 example stocks +
   VERX (30 symbols now: the 153 of the morning are gone; re-fetch others when needed).
 
+## Status of the session "Radar: 1-UPDAY / 1-EP/GAP / START DAYS -> 3-SETUPS (Nov 21)" (Sat Nov 21 2026; session_01PkbDaj2rqMQ1qnsD48H7ev; in progress)
+
+- **LIVE (the user's "tasks 1-3 go live", Sat Nov 21 2026, merge ee34096 on top of the other session's be57c80; Launches rebuilt
+  by picks.yml): the three Watchlist changes agreed in the session "watchlist restructuring (Nov 21)". They show from the Mon
+  Nov 23 evening scan (run.py and launch.py --watchlist run only then).**
+  1. **1-UPDAY: no 15-day rule** (settings.json lists.new_mover_days_without_setup 0 = off; run.py skips the check when 0). Off
+     only on 2 closes under the 50 EMA, a close under the FIRST day's low, or the user's x.
+  2. **A stock on 1-EP/GAP is not shown on 1-UPDAY** (run.py write_outputs: hidden in latest.json / the TradingView file /
+     history, kept in state.json with its own line, so it shows on 1-UPDAY again if it leaves 1-EP/GAP and still holds its
+     first-day low). Nov 20: 18 names hidden, 94 -> 76. 3-SETUPS already read those names from 1-EP/GAP (no change there).
+  3. **START DAYS feeds 3-SETUPS** (launch.py setups3 + newest_start(), the same rule as the Start days list; removed_starts_of
+     reads the user's x on a start day). Read from the start day; a stock already on 1-EP/GAP, 1-UPDAY or 2-POOL keeps that
+     list's day; the 3-SETUPS rules unchanged: ADR 4%+ and a close over the 200 SMA to come on (my suggestion (a), taken with
+     the user's "1-3 do it": a start under the 200 SMA joins once it closes over it). Nov 20 dry run (radar-tools setupsdry on
+     the branch): the same 66 names (the only new candidate, CXW, had no setup); Start days 27 and Launches 134 identical. On
+     the Oct 23 bars with start_from opened to June: 12 of 100 holding start names came on (RHI, ARXS, RBRK triggered; ZYME,
+     CAI, FROG Ready; SHOP, NRIX, SYRE, ASST, BHVN, MRNA setting up); the x keeps one off.
+  Tested: backfill Sep-Oct 2026 main vs branch (no 15-day removals, EP names only on 1-EP/GAP), `--regress` "every agreed
+  example reads the same" (before and after the merge), the page 0 errors with the new rule text. Rules workbook: the 1-UPDAY,
+  1-EP/GAP, START DAYS and 3-SETUPS rows. No 2-year check (list rules). **Check Mon Nov 23 evening**: setups/latest.json counts
+  (1-UPDAY without the EP names, no "15 trading days" in changes_today), 3-SETUPS rows with source "START DAYS".
+- **SPOT / the EP list ADR test (answered, no change; the user: "so you advise no change on it??", answered yes)**: SPOT Oct 22
+  2026 (gap +6.8%, +11.1%, 3.2x) missed 1-EP/GAP only on the ADR that day, 3.35% < 3.5% (3-month high 4.54%). Jan 2 2025 - Oct
+  23 2026: the list 1,278 EP days, 25% ran 20%+ (close), 36% broke the EP low in 5 days; the Launches-style 3-month ADR would add
+  194 days (3.5%) / 119 (4%), 5% ran 20%+. The list for the user's chart check: tools/ep_spot_check.xlsx (first sheet = the 119).
+  Offered if they find tradable ones: let them in only when also on Launches.
+- **The EP trade study (answers only, nothing built)**: today's 1-EP/GAP rules, 1,251 EP days Jan 2025 - Oct 23 2026, bought at the
+  EP day's CLOSE (no minute bars for the 5-minute ORH entry), stop the EP day's low (median risk 6.4% = 1.1 ADR): up 20%+ at a
+  high within 20 sessions 30%, failed (a close under the pre-EP close within 20) 35%. Exits: half at 2 ADR, a quarter at +20%,
+  the rest a close under the 21 EMA: +236R (+0.19R a trade, 35% winners, 64% full stops; last 12 months -46R, Jan-Oct 2025
+  +282R). The user's plan (1/3 at 2-3 ADR or 10-20% within 5 days, the rest breakeven, trail): the 21 EMA trail +256R to
+  +317R, "the higher of the 10 / 21 EMA" +105R to +158R; best +20% / 3 ADR with the 21 EMA (+317R / +311R, +0.25R); +15% with
+  the 21 EMA the only one positive in the last 12 months (+4R). Scripts were in the session's scratchpad (not kept).
+
 ## Status at the end of the session "Radar: theme chips on Today's gainers (Nov 18)" (Wed Nov 18 ~10:55 AM ET - Sat Nov 21 2026 ~12:40 PM ET; session_01PkbDak4wNj9qyumu6CQx8R)
 
 **In one line: seven alert changes, all live on main, nothing left on a test branch (claude/compassionate-volta-5ichnh = main): the
