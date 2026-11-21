@@ -60,8 +60,9 @@ SESSION (stand-in levels only; the Thu Nov 19 and Fri Nov 20 opens ran the first
 first `grp:` at 9:40 or later, levels.json rows with 5 values from 9:33; and ask the user how the 📊 box and the 🔥 alerts
 behaved on Nov 19-20 (too many? the 📊 settings saved in alerts/morning2.json?).**
 
-- (The MBGL / AVEX session's wrap-up, a minute before this one, moved this section's earlier copy to HANDOFF_ARCHIVE.md with ten
-  others; this is the completed one. The other sessions changed things on top of this work since Nov 18: a morning BACK ON
+- (The MBGL / AVEX session's wrap-up, a minute before this one, moved this section to HANDOFF_ARCHIVE.md with ten others while
+  it was still open; this wrap-up brought it back here, completed, and took that earlier copy out of the archive: one copy
+  only. The other sessions changed things on top of this work since Nov 18: a morning BACK ON
   after the box's End time is silent (Nov 19), a context line on GROUP MOVE / THEME MOVING UP alerts (Nov 20), themes by
   business line (Nov 20): their sections are in the archive.)
 - **How it went with the user (for the next session)**: two of my mistakes cost them time. (1) "move the GROUP MOVE time to
@@ -617,8 +618,8 @@ Nov 11 and Nov 18 code-grade check-ins read HANDOFF.md); after that, /wrapup mov
     links (Nov 17)"].
   - Themes moving DOWN in their own box; BACK ON alerts on the phone ("later"); a cap or market filter if 🔥 fires too often;
     the Nov 19 first checks of its five alert changes not confirmed ["Radar: theme chips on Today's gainers (Nov 18)"].
-  - (Added at that session's own wrap-up, Nov 21) its completed section is back in this file, above; the archive's copy is its
-    earlier state (before the EARLY gap heads-up for the followed names went live). The BACK ON alert for ⚡ and, at 1.5x
+  - (Added at that session's own wrap-up, Nov 21) its completed section is back in this file, above (not in the archive any
+    more). The BACK ON alert for ⚡ and, at 1.5x
     volume, 🎯 was built there (the "offered, no answer" two lines below is done for those two boxes).
   - Offered, no answer: Rel vol 0.7x, an 11:00 end, no 10 > 21, a group-move alert for the morning box; the user's neoclouds
     screenshot (4%+ not seen in our data) ["Radar: Cybertruck morning breakout alerts (Nov 18)"].
