@@ -49,6 +49,229 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: watchlist restructuring (Nov 21)" (Sat Nov 21 2026; session_01PkbDajfJpUeWXECPJeGVh4; in progress)
+
+- **LIVE (the user's "1# go live", Sat Nov 21 2026, branch ccr-ab7f572a-fksxkd merged with main, 726c01d): two tags next to the
+  ticker on every Watchlist list** (3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP, START DAYS, TREND). The user: "trend shows state of the
+  stock ...but i mainly try grab something from setup or ep gap or start... it has to be actionable thing", "i liked your trend tag
+  thing", "so tag for trend tag and tag for momentum!!!".
+  1. **Trend tag** (docs/index.html trendTag; live in the session like the Trend column; every stock gets exactly one, first match):
+     FULL TREND = 10 EMA > 21 EMA > 50 EMA > 200 SMA, the 50 EMA higher than the day before ("50 ema has to be rising in full
+     trend (meaning bigger than yesterday)"), price over the 21 EMA; NEW TREND = price over the 21 and 50 EMA, not all of that
+     yet; CAUTION = 10 > 21 > 50 in order, price under the 21 EMA ("not a pullback: to be cautious, if it reclaims good sign,
+     if not it has to prove itself"); NO TREND = the rest. The Trend column (Up / Resting / Reclaim / Turn up / Negative) is
+     unchanged. Nov 20 close: 3-SETUPS 66 = 37 / 9 / 18 / 2, 1-EP/GAP 20 / 6 / 14 / 0, START DAYS 4 / 6 / 6 / 11.
+  2. **Momentum tag** (momTag): a stock on 2-POOL's Momentum section shows MOM 3M (its Why has 3M) or else MOM 1M, "only one of
+     them"; 6M is added only when it is up 100%+ in 6 months ("for 6month show if its over 100%": perf_6m_pct, a new field on
+     the scan's rows, scanner/run.py details: **the 6M part shows from the Mon Nov 23 evening scan**); the 1-week test and a
+     6-month gain under 100% show nothing. The pool's numbers are unchanged. Nov 20: of 134 Momentum names 43 show 1M, 11 3M,
+     19 are up 100%+ in 6 months, 68 show no tag.
+  Both are in + Filter and Columns ("Trend tag", "Momentum tag") and in a folded box "The tags next to a ticker". Tested in a
+  browser on desktop / phone (every list, every tab, 0 page errors; + Filter FULL TREND on 3-SETUPS = 37 rows), again after the
+  merge with main (the Resistance-ranges session had gone live). Rules workbook: 2 rows (T1 Trend column). No `--regress`, no
+  Launches rebuild (launch.py untouched), no 2-year check (tags). **Not seen on the live page / live prices: check Mon Nov 23.**
+- **Decided with the user this session (no build needed)**: the Watchlist feeds stay as they are ("we are only interested in
+  fast movers thats why setup feeds from updays and fast movers 1 month 3 month and 6 months": NO whole-market trend list, NO
+  feed change); nothing is dropped (1-UPDAY, 2-POOL stay); the 2-POOL momentum numbers are NOT changed (25% / 50% / 100% was
+  asked, then left: "without checking anything, the way they are now"); **the 1-EP/GAP list rules stay as they are** ("i agree
+  with your recommendation regarding ep list.. we keep it as is"): on 629 list EP days of 2026 no gap / volume number raised
+  the 31% that ran 20%+, a 2.2x volume rule lost 12 winners (AEHR Mar 31 +176%) and a 21-day-closing-high rule 31.
+
+## Status of the session "Radar: MBGL / AVEX miss (Nov 12)", continued (Sun Nov 15 - Sat Nov 21 2026; session_01PkbDaiSjzGPJPtohD3UF2C; in progress)
+
+Its first part (Nov 12-13: the coil on Launches, the full + Filter list, the MBGL / AVEX findings) is in the archive under the same
+title. What came after:
+
+- **LIVE (the user's "go live", Sat Nov 21 2026 ~11:30 AM ET, branch test/resrange, merge d89b0d0; Launches rebuilt 11:32 AM,
+  4fcdacb): the Resistance column as ranges, the 1-month high, joined labels, broken support, and Resistance as a column to add.**
+  The user (VERX): "look at last feb 3rd and nov 10th 25 all the way to that, every day was trying to break that support, finally
+  that day broke down really bad ... that day is considered next big resistance for the ticker, that's why nov 5th it stalled at
+  that number"; "the way i see it 18.50-18.90 range was the support"; "do as range for all"; "yes add 1month"; "if 1month and
+  3month same then it has to show 1month/3month".
+  1. **Every level is a range** (scanner/launch.py resistance(): [label, top, bottom, ...], lowest first): the 1-, 3-, 6-, 9-month
+     and 52-week high (21 / 63 / 126 / 189 / 252 sessions) from the span's highest CLOSE (bottom) to its highest HIGH (top); a
+     level counts when its top is 0.5%+ over the close and the buy point (so the 1-month high does not repeat a base-top buy
+     point). Spans with the same range (both ends within 0.5%) share one entry, the labels joined ("1m/3m", "6m/9m/52w").
+  2. **Broken support** (broken_support(), settings BS): the breakdown day closes under the lowest close of the 40 sessions before
+     it, down 1.5+ ADRs on 1.5x+ volume; the range before it = back while the closes stay within 4 ADRs of each other, 20+
+     sessions; the zone = that range's lowest close to half an ADR over it; 3+ separate tests (a low in the zone or within a
+     quarter ADR over it, tests 4+ sessions apart); gone once a close is back over the zone's top; wicks under the floor that
+     closed back do not move it. Entry ["bs", top, bottom, range from, range to, breakdown day, tests]. **VERX**: closes
+     18.55-20.71 from Nov 3 2025 to Feb 2 2026, 5 tests; Feb 3 2026 -15.1% (4.2 ADRs) on 3.7x; zone 18.55-18.88; the highs of
+     Nov 5 2026 (18.53) and Nov 16 2026 (18.57) turned back at its bottom; its buy point 18.57 sits inside the zone. An older
+     VERX zone 23.87-24.24 (floor Aug 8 - Oct 28 2025, broke Oct 29 2025). **The thicknesses (half an ADR, 4 ADRs, a quarter ADR)
+     are Claude's, fitted on VERX alone.**
+  3. **The page** (docs/index.html resCell / resAway / resLo ...): "1M/3M $36.84-38.07 +1.6%", "Broken support $18.55-18.88
+     +7.7%"; one price when the two ends are within 0.5%; the % is to the BOTTOM of the range (was to the highest high), "in it"
+     when the price is inside; the cell shows the nearest level, the nearest broken support and the farthest high, the tooltip
+     all of them (with the floor's dates, tests and breakdown day). A level saved before this ([label, level]) shows as one
+     price, as before. **Resistance in Columns: + add** (catalog `res`, RESK: the Launches / laggards row, the 50 EMA undercut
+     row, the Start days row (start_days rows now carry `resistance`), launch.json `watch_resistance` for the 888 launch-watch
+     stocks, else the Watchlist row).
+  Tested: `--regress` "every agreed example reads the same"; radar-tools `setupsdry` on the branch (Nov 20 close): the same 134
+  launches, 12 in the 50 EMA undercut tab, 27 start days, no launch date / grade / buy point / status / read changed; broken
+  support overhead on 11 of 134 Launches rows (TTD 16.79-17.20, HGV 48.31-49.14, POOL 252.28-255.77, EPAM 200.00-203.54, PRKS
+  48.60-49.43, CHKP 214.03-216.49, INTA 52.76-53.47, PRMB 30.79-31.20, CRI 50.40-51.27, UPBD 28.44-28.81, VERX), 14 of 182
+  Watchlist stocks, 97 of the 888 watch stocks; the page with the dry files and with the old files (0 page errors; the column
+  added on the 50 EMA undercut and Start days tables). After the go live: the rebuilt launch.json identical to the evening's but
+  for the levels; VERX on Launches reads "Broken support $18.55-18.88 +7.7% | 52W $20.62-20.82 +19.7%". Rules workbook: the
+  Resistance row rewritten and a broken-support row. A display only: no launch rule, buy point or alert reads the levels.
+  **First checks**: (1) the Watchlist rows still carry the old single prices (latest.json is written by the evening scan only):
+  after the Mon Nov 23 scan, setups/latest.json `resistance` entries have 3+ elements and VERX reads the zone there too (the
+  evening scan was NOT re-run by hand: it may resend the phone's Ready list); (2) Launching today with the added Resistance
+  column (empty on a weekend, not tested); (3) the user was asked to check 2-3 of the 10 other zones on their charts.
+- **The start day's move (Nov 15, built here)**: "up 1 ADR+, or up 4%+ that is also 0.8 ADR+" (ZETA Nov 9 2026: +4.5% on 2.2x with a
+  5.39% ADR, missed 1 ADR; TTEK Oct 15 2026 +3.5% with a 2.8% ADR kept: the user's "start is 15th october"), branch
+  test/start4pct 3b9d5b4. **It went live on Nov 16 through the session "Start days stay on until they fail + 0.8 ADR start (BILL,
+  Nov 16)"** (see there). On Nov 21 this session twice told the user it was still waiting for a go live: wrong, corrected the
+  same day. test/start4pct and test/resrange can be deleted.
+- **Answered, no change** (Nov 13 - 21): FLY Nov 6 2026 was on 1-EP/GAP and 2-POOL, not on Launch laggards (closed 20.76 under its
+  1-month high 20.96 by the wicks, its AST SpaceMobile news never graded: the 8:45 list had dropped it) and came on Launches as
+  a first day when the chart reading went live Nov 12; the first-day rule is under the 200 SMA only (the user's WRBY Nov 5 read;
+  2 years: 127 under it 32% ran 20%+ / 38% failed, 73 over it 29% / 51%); the Watchlist's "Added: all" header is a day picker,
+  not a sort; "vs 200 SMA >= 0" = over the 200 SMA; VERX's highs on Nov 5 2026 (1- to 9-month 18.53 / close 17.59; 10-month
+  20.40; 52-week 20.86).
+- **Open, each needs the user's go**:
+  - **The 15% / 3x exception** (the user, Nov 13: "if stock up 15%, volume over 300% it should automatically qualify for launch or
+    launch laggard depending of its 200 sma position ... and it should trigger that time ... and regarding news its big gap, do
+    that as well as a rule"; then interrupted by the first-day question). Explained, not built; unanswered: keep the liquidity
+    minimums (suggested yes), how big a "big gap" is (suggested 10%), and the 2-year check (a new rule: asked, with the reason).
+    FLY Nov 6 passes it; FLY Nov 9 (2.6x) and MBGL Nov 12 (2.0x) do not.
+  - First days over the 200 SMA too (the user asked "it could be above 200 sma as well?"; the numbers above; no decision).
+  - A click on "Added" sorting the Watchlist by date (offered Nov 13, no answer).
+  - Broken support: the buy-point tag "inside broken support: clear over $18.88" (offered, no answer); highs and floors older
+    than 52 weeks / 2 years (offered, no answer); "None: at highs" also shows when nothing sits over the buy point (THC, W in
+    the 50 EMA undercut tab, Nov 20: seen, not changed).
+  - Still open from the first part (archive): the coil alert to look at later, the pre-market blind spot 9:10-9:30, young
+    listings (52-week low / 200 SMA), the code grader's "no daily bars" bug.
+- Data: radar-tools `long` re-run on Nov 21 with the 135 symbols another session had fetched that morning plus the examples and
+  VERX (long_bars.json: 153 symbols).
+
+## Status of a chat session outside the Radar sessions (Fri Nov 20 2026 ~10:40 AM - 9:20 PM ET; session_01PkbDanJN5CDcjcEmx8eMXh)
+
+- **LIVE (the user's "go ahead ok others as well, as long as they meet liquidity requirement", Fri Nov 20 2026 ~9:10 PM ET, merge of
+  test/theme-business): themes by business line.** The user (the IT Services & Consulting table, ACN INFY CTSH BR TYL IT EPAM
+  G EXLS DOX KD DXC): "they cant be in same theme ... maybe they are in different line of business and this pile up not
+  accurate"; "its not only about that one, other themes might have issues"; "you would move them to correct themes right?".
+  1. radar/pipeline.py: an automatic add now also needs the business line (base_group: the industry groups' lines) of one of
+     the theme's core stocks. One that fails for its best-fitting theme joins the theme of its own line it tracks best, by
+     the same tests; with none it stays in its industry group / an automatic group. Hand-approved names (theme_adds.json
+     "adds") pass for their theme. New theme_adds.json "keep": 27 names the user kept under another label (13 smaller regional
+     banks; WK VERX BL NCNO BILL OTEX in Enterprise SaaS; VZLA SSMR; MBC ALLE; KR; POOL SITE; SNN): they pass the line test
+     for that theme only and still need 0.6+, the sector and the liquidity floors.
+  2. Gartner (IT) out of the IT Services & Consulting core (research subscriptions).
+  3. Dry run (radar-tools `groupsdry` on the branch, Nov 20 close): 251 automatic adds -> 198. Moved 11: BR, JKHY -> Fintech &
+     Payments; TYL, ROP, AMPL -> Enterprise SaaS; ECG, LGN -> Data Center Builders & REITs; PTEN -> Offshore Drillers; CVE ->
+     Oil Majors; KOS -> Shale & Permian E&P; SBSW -> Silver Miners. Out of their theme 57 (19 in an automatic group: Pipelines &
+     Midstream, Beverages, Household Products, Info Services & Staffing ...; 15 in a tight industry group; 23 in neither: LPL SNX
+     DOCN GTX BWXT CTRI MWH GDDY TRMB DOCS CHKP DOX IBM ZM SEIC WAB CLMT ZTS ABSI RXRX WY LKQ TNL). ASX has no theme now (out
+     of AI Chips & CPUs; under 0.6 / the semi floor with Semi Test & Packaging, where the user approved it): told the user.
+     IT Services & Consulting: CTSH EPAM GLOB EXLS DXC INFY G ACN + KD CNXC GDYN.
+- **LIVE, same merge: a theme's bellwethers are its two largest CORE stocks** (radar/event.py all_bellwethers; Keysight, an
+  automatic add, had been read as Semi Test & Packaging's first reading on Nov 20). On the Nov 20 files: CNQ EC IBM PH Q ROP
+  SWK UL out; AME ENTG EOG INFY MO OC PAYX YPF in (150 still).
+- **LIVE, same merge: the context on GROUP MOVE / THEME MOVING UP alerts** (radar/alerts.py move_context; the user, Nov 20:
+  IT services up 2-5% the morning after GLOB's report, "we were supposed to have reason for that today we didnt get it").
+  Two facts, worded as context, never the cause: "also reported" (a stock of the group with today as its reaction session
+  that gapped 5%+; its Earnings-tab reading, the gap, where it is now) and "moving the other way" (up to 3 themes whose
+  tight members are 2%+ the other way on average, when the group is 1%+ either way; a THEME MOVING UP alert only when the
+  theme is up). Replayed on Nov 20's 33 group / theme alerts with the 10:35 prices: 26 got a line; IT Consulting &
+  Outsourcing read "also reported: GLOB (Somewhat bearish ...; gap +8.7%, now +2.8%) ... +3.9% on average; moving the
+  other way: Neoclouds & AI Hosting -10.7%, Memory & Storage -10.1%, Optics & CPO -9.7%". **Not seen live yet: the first
+  GROUP MOVE on Mon Nov 23 is the check.** The bellwether "why" (alert_reasons) is still OFF: the user's call.
+- Rules workbook: 3 rows (automatic theme members, the bellwether rule, the move context). No `--regress` (launch.py
+  untouched; the bars need a job on main), no 2-year check (no pattern, buy point or scan rule).
+- **Explained, no change (Nov 20)**: ACN had no morning breakout alert because its 20-day ADR (3.84%) is under the boxes'
+  ADR 4%+; DXC and IT fired in 📊 at 9:35; GDYN, KD, DOX under Rel vol 0.8x; CNXC under $30M a day; GLOB never back over its
+  opening range high. **Open: EPAM passed every filter at 10:35 and did not alert** (the box was on ORH-3min from 9:29 and
+  saved ORH-5min at 10:14): replay it (radar-tools `morning`).
+
+## Status of a chat session outside the Radar sessions (Thu Nov 19 2026 ~11:25-11:45 AM ET; session_01PkbDanQBJvqxfoMDBsGdZG)
+
+- **LIVE (the user's "go live", Thu Nov 19 2026 11:41 AM ET, merge 9c9f6f9 of test/backon-quiet): a morning breakout BACK ON
+  after its box's End time is silent**, 📈 and 📊. The user: "back on alert runs every 15min correct, i dont want to hear any
+  sound (meaning just silent) after cut off time"; the End was 10:15 (saved 10:18 that day) and NTAP, CLS, TWST, GNRC, NTRA
+  (📊), TDC, AMPL (📈) rang BACK ON 11:21-11:31. docs/index.html only: quietBack(key) (keys SYM:mbobackHHMM / SYM:mbo2backHHMM,
+  the key's time later than the box's saved End; 📊 with nothing saved = 📈's) -> notify: no sound, no voice, no sticky pop-up,
+  no flashing title; the line stays in the log and the stock goes back in its box. The job (alerts.py morning_holding) is
+  unchanged: it still writes the back-on alerts all day. Inside the window BACK ON rings as before; the other boxes ring all
+  day. Checked on that day's alerts.json: 67 back-on alerts, 31 after 10:15 silent, 36 inside the window with sound; 10:15
+  rings, 10:16 is silent. **Not seen in a browser**: the first BACK ON after the go-live is the check (the user refreshes the page).
+  Open: alerts/morning2.json is still not saved (📊 follows 📈's window and filters; 135 alerts in 📊 by 11:25 that day).
+
+## Status of the session "Radar: gap news and NVDA ecosystem links (Nov 17)" (Tue Nov 17 2026 ~5:10 PM ET - Wed Nov 18 ~11:30 PM ET; session_01PkbDanF5dAAQH9AZXNPE3K; in progress)
+
+- **LIVE (the user's "Ok. sounds good" to my "go live now, with the Event card only", Wed Nov 18 2026 ~11:22 PM ET, merge f462127;
+  branch claude/eloquent-babbage-xub6om): the Event card on the Pre-market tab. The "why" on the alerts is BUILT and SWITCHED
+  OFF** (radar/bellwethers.json `alert_reasons` false: alerts.py and day.py do nothing with it; the user agreed to switch it on
+  after ~3 sessions of the card reading right: ask before touching it).
+  The user (NVDA's report, Nov 17): "it has major implications for all companies depend on nvda ... our code should be able
+  connect dots"; "logic and rationale should be accurate linking"; "reason of alert has to be clear explanation ... price and
+  volume makes me decide, new direct link, fundamental news helps conviction"; then "when direct link thats top top, then themes
+  same line of business ... most rational direct link then derivatives"; "i gave examples" (not a list: the rules are general).
+  1. **An event = a bellwether reports** (radar/event.py, run by the Earnings job after earnings.py -> radar-data events.json;
+     by code, no Claude). 150 bellwethers: the written maps in radar/bellwethers.json (NVDA, MSFT, GOOGL, AMZN, META) and, by rule,
+     the two largest liquid stocks of each of the 73 named themes whatever their ADR (the user: "agree"). One the Earnings tab
+     doesn't carry (MSFT / GOOGL under 3% ADR, WMT) gets its own row (the day from Yahoo, estimates saved before the report, the
+     release read with the tab's reader). The card is up from the morning of the report to 8 PM ET of the reaction session;
+     several at once: a button each.
+  2. **Level 1, on top: direct ties and rivals**, each stock written out with its reason. A 📄 opens the linked company's own
+     annual report where it names the bellwether (CRWV: "approximately 67% of our revenue from our top customer, Microsoft";
+     warrants issued to Amazon by ALAB, CRDO, AAOI, JBL, FLEX, STM). 9 links have no such proof (ANET, AVGO, NVDA, MRVL under the
+     cloud giants: the suppliers write "Customer A"): written from public deals, the reason says "Not named in its annual
+     report" (the user kept them, and the rivals).
+  3. **Level 2, the same theme** (the user: "add full build"): "same business" = the other tradable stocks of the bellwether's
+     own theme (up to 12), with its sentence on their niche when the report has one WITH A FIGURE (niches written for
+     Cybersecurity only); "its theme is in the report" = the 6 largest stocks of another theme when the report has a sentence
+     with that theme's words (radar/theme_words.json, 70 themes) and a figure. No direct tie is claimed; the reason says demand
+     for the whole group or business taken from it, and the card shows each peer "moving with / against" the bellwether (the
+     user: "direction for peers: agree 100%"). Suppliers of suppliers (the map's step / spend entries) stay off.
+  4. **What it said** = the bellwether's own sentence from its SEC results filing (every exhibit: NVDA's press release and CFO
+     commentary), first one that names the stock. **The line on top**: the Earnings tab's reading, speeding up or slowing (this
+     quarter's growth vs the quarter before's and vs what next quarter's guide implies; the user: "acceleration could be this
+     quarter and their guidance is a sign"; a guide read 12%+ off the street is left out), the bellwether's own lead number
+     (NVDA Data Center, AMZN / META the capital-spending guide), "Growing fastest".
+  Tested: two live test builds (NVDA Nov 17: revenue $115.8B vs $108.7B, +103% y/y, the quarter before +106%, guide $130.0B
+  +4.1%; 37 direct + 19 same-theme stocks. PANW Nov 18: $3.44B +39%, NGS ARR +66% to $9.73B, PANW +9.1% after hours, all 12
+  peers up); replays of past reports (radar-tools `eventreplay SYM prev|DATE ...` -> events_replay.json): NVDA Aug 26, META
+  Oct 21, MSFT / GOOGL Oct 28, AMZN Oct 29 (all 28 linked stocks closed lower the next session), CRWD Aug 26 (+20.5%, all 12
+  peers up), PANW Sep 1 (-9.3%, 11 of 12 down), MU Sep 30, RKLB Nov 9; the merged page on desktop / phone, every tab, with and
+  without an events file, 0 page errors; the alerts get nothing while the switch is off. After the push earnings.yml run by
+  hand (11:24 PM ET): events.json with PANW (out, 12 peers), `alert_reasons` false, 0 errors; earnings.json 130 rows, 0 errors.
+  Rules workbook: 4 rows (event links, level 2, the link finder, the alert reason as switched off). No `--regress` (launch.py
+  untouched), no Launches rebuild, no 2-year check (no pattern, buy point or scan rule).
+- **First checks Thu Nov 19**: the card at the open for PANW's reaction session (moves from the pre-market scan, then live);
+  WMT, BABA, PDD before the open (own rows: the first live run of that path with a real report; tested only on NVDA, where
+  the EPS did not come through), GAP / ROST / KEYS after the close; the Earnings job still on time with the extra step.
+- **The link finder** (radar/probe_links.py, radar-tools `links` -> radar-data probe_links.json, ~10 minutes, nothing live
+  reads it): the newest annual report of 2,010 tradable stocks searched for 18 bellwether names, each sentence sorted (a share
+  of revenue, a stake / warrant, sells to it, buys from it, agreement, rival, a tool it uses, mention). It proposes; I read
+  every sentence before a link went into the map. It added NVIDIA's right to buy 30 million IREN shares.
+- **Known weak spots (told the user)**: the earnings call is not read (not at the SEC; the news feed had 1 headline after NVDA's
+  report), so MSFT's and GOOGL's spending guide and PANW's per-niche numbers are missing; the theme word list is mine and has
+  run on eight real reports (fixed so far: "cryptography" matched Crypto; PANW's "About" paragraph and dateline were quoted:
+  a theme / niche quote now needs a figure); some quotes are thin (NVDA's one optics sentence is about a Cisco module); the
+  Earnings tab's guidance reader misread TGT Nov 18 (a guide -15% vs the street: its own bug, not fixed here).
+- **Open, the user to decide**: switching the alert reason on (after ~3 sessions); written maps for AVGO, TSM, MU, SPCX
+  (MU and SPCX are covered by the theme rule); niches for other themes; unscheduled news events (a rocket launch, a
+  contract): not built, "later". The power contracts (CEG, TLN, VST under the cloud giants) are written and off.
+- **Not taken (the other session's build)**: claude/funny-wright-b2z88z (the reason on morning breakout / GROUP MOVE alerts from
+  Yahoo / Alpaca headlines, the user had not approved it): its own Nov 16 replay left 11 of 14 alerts without a reason and
+  the Medicaid headline came 3.5 hours late. Told the user; this session's event links are the answer for scheduled reports.
+- Test files on radar-data: events_test.json, events_replay.json, probe_links.json (the portal reads none).
+
+## Status of the session "Radar: move Watchlist tabs left/right (Nov 18)" (Wed Nov 18 2026 ~12:20 PM ET - Thu Nov 19; session_01PkbDaiB9dTkk1MWcV4oJQi; in progress)
+
+- **LIVE (the user's "go live", Thu Nov 19 2026, branch test/wltabmove, merge 05be6b5): the Watchlist list buttons (3-SETUPS,
+  2-POOL, 1-UPDAY, 1-EP/GAP, START DAYS, TREND) drag left / right exactly like the main tabs** (the user: "can you make it a way
+  that i can move this tabs left or right", "do exactly how other tabs i move"; the main tabs have had it since Nov 6). The
+  user was annoyed I made it sound complicated: it is a copy of the main-tab feature, say so plainly. docs/index.html: an
+  IIFE after the main-tab one, localStorage `radar-wl-order` (per browser), a "↺ order" button next to the row when moved;
+  clicking a button still opens its list, the page still opens on 3-SETUPS. Tested in a browser: drag START DAYS to the front,
+  click it (44 rows), reload keeps it, ↺ order resets, main tabs untouched, 0 page errors. Page layout only: no rules workbook
+  row (the main-tab drag has none either), no `--regress`, no Launches rebuild, no 2-year check.
+- **Test only**: nothing.
+
 ## Status of the session "Radar: theme chips on Today's gainers (Nov 18)" (Wed Nov 18 2026, from ~10:55 AM ET; session_01PkbDak4wNj9qyumu6CQx8R; in progress)
 
 - **LIVE (the user's "ok go do what you gotta check adn go live", Wed Nov 18 2026 after the evening scan, commit c92c51e, branch

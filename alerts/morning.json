@@ -1,10 +1,10 @@
 {
  "on": true,
  "start": "09:35",
- "end": "10:30",
- "min_chg": 2,
- "min_rv": 1,
- "over_pdh": true,
+ "end": "10:15",
+ "min_chg": null,
+ "min_rv": 0.8,
+ "over_pdh": false,
  "over_orh": true,
  "orh_min": 5,
  "price": 5,
@@ -19,6 +19,6 @@
  "e21_e50": true,
  "e50_s200": false,
  "x": [],
- "saved_at": "2026-11-18T09:24:17",
+ "saved_at": "2026-11-20T10:14:21",
  "by": "portal"
 }

@@ -2661,20 +2661,88 @@ def setups3(A, today, wl, prev=(), removed=None):
     return rows
 
 
-RES_SPANS = ((63, "3m"), (126, "6m"), (189, "9m"), (252, "52w"))
+RES_SPANS = ((21, "1m"), (63, "3m"), (126, "6m"), (189, "9m"), (252, "52w"))
+# broken support (the user, Nov 21 2026, VERX: "every day was trying to break that support, finally that day broke down
+# really bad ... that's considered next big resistance for the ticker, that's why nov 5th it stalled at that number";
+# "the way i see it 18.50-18.90 range was the support"). VERX: closes 18.55-20.71 from Nov 3 2025 to Feb 2 2026, the lows
+# came down to the floor 5 separate times; Feb 3 2026 closed 15.87, -15.1% (4.2 ADRs) on 3.7x; the zone 18.55-18.89; the
+# highs of Nov 5 2026 (18.53) and Nov 16 2026 (18.57) turned back at its bottom.
+#   low_look   the breakdown day closes under the lowest close of this many sessions before it
+#   drop_adr   and is down this many ADRs (the 20-day ADR of the day before) on rv x its 20-day average volume
+#   range_adr  the range before it: back from the breakdown while the closes stay within this many ADRs of each other
+#   min_len    and that range is at least this many sessions long
+#   zone_adr   the zone: from the range's lowest close to this many ADRs over it
+#   touch_adr  a test: a low inside the zone or within this many ADRs over it; tests are separate when gap+ sessions
+#   tests      without one lie between them; the floor held this many separate tests
+# Thicknesses fitted on VERX only (Claude's choice, to check on more of the user's charts)
+BS = dict(low_look=40, drop_adr=1.5, rv=1.5, range_adr=4, min_len=20, zone_adr=0.5, touch_adr=0.25, gap=3, tests=3)
+
+
+def broken_support(a, i):
+    """the broken-support zones still overhead at bar i: [(zone low, zone high, range from, range to, breakdown day,
+    tests)], lowest first. A zone is gone once a close is back over its top. A wick under the floor that closed back
+    over it does not move the zone (VERX Jan 29 2026: low 18.13, close 18.70)"""
+    st = a.st
+    c, lo_, adr = st.c, st.l, st.adr
+    n = BS["low_look"]
+    out = []
+    for k in range(n + 1, i + 1):
+        ad = adr[k - 1]
+        if not (ad > 0 and a.chg[k] <= -BS["drop_adr"] * ad and a.rv[k] >= BS["rv"] and c[k] < c[k - n:k].min()):
+            continue
+        i0, lc, hc = k - 1, c[k - 1], c[k - 1]
+        while i0 > 0:                                        # the range before the breakdown
+            nl, nh = min(lc, c[i0 - 1]), max(hc, c[i0 - 1])
+            if nh > nl * (1 + BS["range_adr"] * ad / 100):
+                break
+            i0, lc, hc = i0 - 1, nl, nh
+        if k - i0 < BS["min_len"]:
+            continue
+        zlo, zhi = float(lc), float(lc * (1 + BS["zone_adr"] * ad / 100))
+        touch = lc * (1 + (BS["zone_adr"] + BS["touch_adr"]) * ad / 100)
+        tests, last = 0, -99
+        for j in range(i0, k):
+            if lo_[j] <= touch:
+                tests += j - last > BS["gap"]
+                last = j
+        if tests < BS["tests"] or (c[k + 1:i + 1] > zhi).any():
+            continue                                         # not tested enough, or a close back over it since
+        out.append((zlo, zhi, st.dates[i0], st.dates[k - 1], st.dates[k], int(tests)))
+    out.sort()
+    keep = []
+    for z in out:                                            # two zones on the same floor: the later breakdown's
+        if keep and z[0] <= keep[-1][1]:
+            keep[-1] = max(keep[-1], z, key=lambda x: x[4])
+        else:
+            keep.append(z)
+    return keep
 
 
 def resistance(a, i, floor=None):
-    """the highs overhead the stock still has to clear (your rule, Nov 2 2026): the 3-, 6-, 9-month and 52-week highs
-    over the close and over the buy point (shown on its own), lowest first, [[label, level]]; a high that is the top of
-    several spans takes the shortest one's label"""
+    """what the stock still has to clear overhead (your rule, Nov 2 2026; ranges, the 1-month high and broken support: the
+    user, Nov 21 2026: "do as range for all", "yes add 1month", "if 1month and 3month same then it has to show
+    1month/3month"). Each level is a RANGE: [label, top, bottom, ...], lowest first.
+    Highs: the 1-, 3-, 6-, 9-month and 52-week highs, from the span's highest close (bottom) to its highest high (top),
+    when the top is over the close and over the buy point (shown on its own); spans with the same range share one entry,
+    their labels joined ("1m/3m").
+    Broken support: ["bs", zone top, zone bottom, range from, range to, breakdown day, tests] (broken_support)"""
     st = a.st
     lo = max(float(st.c[i]), float(floor or 0)) * 1.005
-    out = []
+    out, raw = [], []
     for n, lab in RES_SPANS:
-        hi = float(st.h[max(0, i - n + 1):i + 1].max())
-        if hi > lo and not any(abs(hi / x[1] - 1) < 0.005 for x in out):
-            out.append([lab, round(hi, 2)])
+        s = max(0, i - n + 1)
+        hi, hc = float(st.h[s:i + 1].max()), float(st.c[s:i + 1].max())
+        if hi <= lo:
+            continue
+        if raw and abs(hi / raw[-1][0] - 1) < 0.005 and abs(hc / raw[-1][1] - 1) < 0.005:
+            out[-1][0] += "/" + lab
+        else:
+            raw.append((hi, hc))
+            out.append([lab, round(hi, 2), round(hc, 2)])
+    for zlo, zhi, d0, d1, dk, tests in broken_support(a, i):
+        if zhi > lo:
+            out.append(["bs", round(zhi, 2), round(zlo, 2), d0, d1, dk, tests])
+    out.sort(key=lambda x: (x[2], x[1]))
     return out
 
 
@@ -3005,6 +3073,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         d.update(start_fields(a, k, "date"))
         cf = next((m for m in range(k, i + 1) if st.c[m] > a.e50[m]), None)      # the confirmation: the first close over the 50 EMA
         d.update(confirmed=st.dates[cf] if cf is not None else None, over_50ema=bool(st.c[k] > a.e50[k]))
+        d["resistance"] = resistance(a, i)             # for the Resistance column you can add on this table
         starts.append(d)
     starts.sort(key=lambda r: (r["date"], r["date_rel_vol"]), reverse=True)
     # tomorrow's possible start days, for the phone alert (the user, Nov 13 2026: "do alerts go live")
@@ -3030,6 +3099,9 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                              "correction_pct", "group", "group_status", "tv", "faded_gap [date, base high before it]", "leaders launched in its themes (10 sessions)",
                              "sma50", "low_52w", "group rank now (★ Top / Strong, place in it)", "RS now"],
                launches=rows, ema50_undercut=under50, laggards=lag,
+               # the overhead levels of the launch watch list's stocks (the Launching today table has no row of its own
+               # to carry them): the Resistance column you can add there (the user, Nov 21 2026)
+               watch_resistance={s_: resistance(A[s_], len(A[s_].st.dates) - 1) for s_ in watch if s_ in A},
                # off the list by the 50 EMA / rising-EMA rule, still inside 62 sessions of their high: back on at a breakout
                off_watch=sorted({x[0]: x for x in sorted(off_watch, key=lambda x: x[1])}.values()), watch=watch, watch_close_high_21d=watch_hc21, groups=[g for g in G if g["status"] != "Not trending"],
                catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()),

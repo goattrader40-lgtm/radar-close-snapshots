@@ -140,7 +140,7 @@ def live_once():
             files.append(hp)
         load_alert_state()
         r = sh(sys.executable, os.path.join(HERE, "alerts.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "launch.json"),
-               os.path.join(OUT, "alerts.json"), *premarket_args(), *morning_args(), check=False)
+               os.path.join(OUT, "alerts.json"), *premarket_args(), *morning_args(), *events_args(), check=False)
         log((r.stdout or r.stderr).strip()[-600:])
         if r.returncode == 0 and os.path.exists(os.path.join(OUT, "alerts.json")):
             files.append(os.path.join(OUT, "alerts.json"))
@@ -239,6 +239,21 @@ def lists_args():
     return ["--lists", p] if os.path.exists(p) else []
 
 
+def events_args():
+    """the bellwether events (radar/event.py -> radar-data events.json) for the alerts' "why" line, as alerts.py arguments"""
+    try:                                       # the switch: off = the Event card only, the alerts are left exactly as they are
+        if not json.load(open(os.path.join(HERE, "bellwethers.json"))).get("alert_reasons"):
+            return []
+    except Exception:
+        return []
+    p = os.path.join(OUT, "events_now.json")
+    if not (os.path.exists(p) and time.time() - os.path.getmtime(p) < 600):     # re-read every 10 minutes
+        txt = data_file("events.json")
+        if txt:
+            open(p, "w").write(txt)
+    return ["--events", p] if os.path.exists(p) else []
+
+
 def premarket_args():
     """this morning's pre-market grades for the laggard launch alerts (news days), as alerts.py arguments"""
     p = os.path.join(OUT, "premarket_grades.json")
@@ -268,7 +283,7 @@ def fast_once():
         return
     sh(sys.executable, os.path.join(HERE, "livelog.py"), out, need[0], load_history(), os.path.join(OUT, "sipcal.json"), check=False)   # the morning record
     load_alert_state()
-    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", *premarket_args(), *mo, *lists_args(), check=False)
+    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", *premarket_args(), *mo, *lists_args(), *events_args(), check=False)
     txt = (r.stdout or r.stderr).strip()
     if r.returncode == 0 and " 0 new," not in txt:
         log("fast:", txt[-600:])

@@ -291,7 +291,9 @@ def details(sym, st, d, entry, P):
         pattern=msf.NAMES[code] if code else "", buy_point=fnum(r.pivot) if code else None,
         to_buy_point_pct=fnum(r.dist, 1) if code else None, base_bars=fnum(r.cN, 0), base_depth_pct=fnum(r.cDep, 1),
         msf_score=int(r.score), adr_pct=fnum(r.adr, 1), rel_vol=fnum(st.relvol[i], 1), dollar_vol_30d_m=fnum(st.dv30[i], 0),
-        perf_1m_pct=fnum(st.perf(i, 21), 0), perf_3m_pct=fnum(st.perf(i, 63), 0), off_52w_high_pct=fnum(100 * (1 - st.c[i] / st.high52[i]), 1),
+        perf_1m_pct=fnum(st.perf(i, 21), 0), perf_3m_pct=fnum(st.perf(i, 63), 0),
+        perf_6m_pct=fnum(st.perf(i, 126), 0),     # for the Momentum tag's 6M (shown at 100%+; the user, Nov 21 2026)
+        off_52w_high_pct=fnum(100 * (1 - st.c[i] / st.high52[i]), 1),
         ema21=fnum(st.ema21[i]), ema50=fnum(st.ema50[i]), sma200=fnum(st.sma200[i]),
         entries={k: v for k, v in dict(
             breakout=fnum(r.pivot) if msf.is_pat(code) else None,

@@ -1,0 +1,682 @@
+{
+ "_note": "Which theme a report sentence is about (the user, Nov 18 2026: 'investment or capital exp increase or focus in optics automatically links to main players in that theme, it doesnt have to mention direct link ... when direct link thats top top, then themes same line of business'; 'i gave examples', not a list). 'themes': for each of your named themes, the words that mark a sentence as being about that business (regular expressions, any letter case; an empty list = the theme is never picked up from another company's report). 'niches': the lines of business inside a theme, each with its words and its stocks (Cybersecurity first). 'generic': what is read in the report of a theme's own bellwether (its two largest stocks) when no map is written for it. radar/event.py reads it.",
+ "themes": {
+  "AI Chips & CPUs": [
+   "ai (chips?|accelerators?|processors?)",
+   "\\bgpus?\\b",
+   "custom (ai )?(silicon|asics?|accelerators?)",
+   "\\bxpus?\\b"
+  ],
+  "Memory & Storage": [
+   "\\bhbm",
+   "high-bandwidth memory",
+   "\\bdram\\b",
+   "\\bnand\\b",
+   "memory (prices|pricing|supply|chips?|shortage|costs?)",
+   "procurement of memory",
+   "hard (disk )?drives?"
+  ],
+  "Wafer Fab Equipment": [
+   "wafer fab(rication)? equipment",
+   "\\bwfe\\b",
+   "lithography",
+   "\\beuv\\b",
+   "deposition",
+   "etch(ing)? (tools?|systems?|equipment)"
+  ],
+  "Semi Subsystems": [],
+  "Semi Test & Packaging": [
+   "advanced packaging",
+   "cowos",
+   "chip (testing|packaging)",
+   "burn-in",
+   "probe cards?",
+   "semiconductor test"
+  ],
+  "GaN & SiC Power": [
+   "gallium nitride",
+   "\\bgan\\b",
+   "silicon carbide",
+   "\\bsic\\b"
+  ],
+  "Analog & Auto Semis": [
+   "analog (chips?|semiconductors?)",
+   "power management (ics?|chips?)",
+   "microcontrollers?"
+  ],
+  "AI Servers & ODMs": [
+   "ai servers?",
+   "rack-scale",
+   "server (racks?|shipments?|builders?|makers?)",
+   "\\bodms?\\b"
+  ],
+  "AI Networking": [
+   "spectrum-x",
+   "infiniband",
+   "ethernet (switch\\w*|networking)",
+   "ai networking",
+   "nvlink",
+   "active electrical cables?",
+   "\\baecs?\\b",
+   "retimers?",
+   "scale-(up|out) network\\w*"
+  ],
+  "Optics & CPO": [
+   "co-packaged optic\\w*",
+   "silicon photonic\\w*",
+   "photonic\\w*",
+   "optical (modules?|transceivers?|interconnects?|networking|components?)",
+   "transceivers?",
+   "pluggable optics",
+   "\\blasers?\\b"
+  ],
+  "Data Center Power & Cooling": [
+   "liquid[- ]cool\\w*",
+   "thermal management",
+   "power distribution",
+   "800 ?v(dc|olt)?",
+   "switchgear",
+   "cooling (systems?|infrastructure|capacity)",
+   "gas turbines?",
+   "backup generators?"
+  ],
+  "Data Center Builders & REITs": [
+   "data cent(er|re) (construction|leases?|leasing|developers?|campus\\w*|shells?)",
+   "colocation",
+   "powered shells?"
+  ],
+  "Power Generation (AI Power)": [
+   "power purchase agreements?",
+   "\\bppas?\\b",
+   "electricity (supply|demand|prices?)",
+   "power (plants?|generation)",
+   "megawatts? of (power|capacity)"
+  ],
+  "Fuel Cells & On-site Power": [
+   "fuel cells?",
+   "on-?site power",
+   "behind-the-meter",
+   "off-grid",
+   "solid oxide",
+   "hydrogen"
+  ],
+  "Nuclear & Uranium": [
+   "nuclear",
+   "uranium",
+   "small modular reactors?",
+   "\\bsmrs?\\b",
+   "enrichment"
+  ],
+  "Neoclouds & AI Hosting": [
+   "neoclouds?",
+   "ai clouds?",
+   "gpu clouds?",
+   "coreweave",
+   "nebius",
+   "ai (hosting|colocation)",
+   "high[- ]performance computing hosting"
+  ],
+  "Enterprise SaaS": [
+   "software[- ]as[- ]a[- ]service",
+   "\\bsaas\\b",
+   "seat-based",
+   "enterprise software"
+  ],
+  "IT Services & Consulting": [
+   "it services",
+   "consulting (services|revenue|demand)",
+   "systems integrators?",
+   "outsourcing"
+  ],
+  "Payroll & HR Software": [
+   "payroll",
+   "human capital management",
+   "\\bhcm\\b"
+  ],
+  "AI Software & Data": [
+   "data (platform|cloud|warehouse|lakehouse)",
+   "observability",
+   "ai agents?",
+   "agentic",
+   "vector (database|search)",
+   "consumption (revenue|growth)"
+  ],
+  "Cybersecurity": [
+   "cyber ?security",
+   "cyber ?attacks?",
+   "security platform",
+   "zero trust",
+   "threat (detection|intelligence|actors?)",
+   "ransomware"
+  ],
+  "Internet Platforms": [
+   "gross bookings",
+   "ride-?hailing",
+   "online travel",
+   "food delivery"
+  ],
+  "China Internet": [],
+  "Telecom": [
+   "postpaid",
+   "wireless (subscribers?|service revenue)",
+   "spectrum (licenses?|auction)",
+   "broadband (subscribers?|net adds)"
+  ],
+  "Crypto & Digital Assets": [
+   "bitcoin",
+   "\\bcrypto\\b",
+   "cryptocurrenc\\w+",
+   "stablecoins?",
+   "digital assets?",
+   "ethereum",
+   "\\bbtc\\b"
+  ],
+  "Fintech & Payments": [
+   "payment volume",
+   "payments? processing",
+   "cross-border volume",
+   "buy now,? pay later",
+   "\\bbnpl\\b"
+  ],
+  "Brokers & Exchanges": [
+   "trading volumes?",
+   "average daily volume",
+   "net new assets",
+   "clearing"
+  ],
+  "Alt Asset Managers": [
+   "fee-related earnings",
+   "fundrais\\w+",
+   "assets under management",
+   "private (equity|credit|markets)"
+  ],
+  "BDCs & Private Credit": [
+   "private credit",
+   "direct lending",
+   "non-accruals?",
+   "net investment income"
+  ],
+  "Big Banks": [
+   "net interest income",
+   "investment banking (fees|revenue)",
+   "credit card (losses|charge-offs)",
+   "loan loss"
+  ],
+  "LatAm Fintech & Banks": [],
+  "Regional Banks": [
+   "net interest margin",
+   "deposit (costs|betas?|growth)",
+   "commercial real estate loans?",
+   "\\bcre\\b"
+  ],
+  "Aerospace & Defense": [
+   "defense (budget|spending|contracts?|department)",
+   "department of (defense|war)",
+   "missiles?",
+   "munitions",
+   "fighter jets?",
+   "\\bf-35\\b"
+  ],
+  "Defense Tech & Drones": [
+   "drones?",
+   "unmanned (aerial|aircraft|systems?)",
+   "\\buas\\b",
+   "counter-drone",
+   "loitering"
+  ],
+  "Space": [
+   "rocket\\w*",
+   "satellites?",
+   "launch (services?|vehicles?|cadence|manifest)",
+   "low[- ]earth orbit",
+   "\\bleo\\b",
+   "starlink",
+   "direct-to-(cell|device)",
+   "spacecraft",
+   "orbital"
+  ],
+  "Industrial Automation": [
+   "factory automation",
+   "industrial automation",
+   "robot\\w*",
+   "process automation"
+  ],
+  "Quantum Computing": [
+   "quantum (comput\\w+|processors?|systems?|advantage)",
+   "qubits?"
+  ],
+  "Solar & Clean Energy": [
+   "solar (modules?|panels?|installations?|demand)",
+   "photovoltaic",
+   "residential solar",
+   "utility-scale solar",
+   "energy storage",
+   "inverters?",
+   "trackers?"
+  ],
+  "Shale & Permian E&P": [
+   "permian",
+   "shale",
+   "rig count",
+   "drilling (activity|program)",
+   "\\bwti\\b"
+  ],
+  "Oil Majors": [
+   "upstream production",
+   "\\bbrent\\b",
+   "crude (oil )?prices?",
+   "lng (projects?|exports?|cargoes)"
+  ],
+  "Offshore Drillers": [
+   "offshore (drilling|rigs?)",
+   "drillships?",
+   "jack-?ups?",
+   "dayrates?"
+  ],
+  "LatAm Energy": [
+   "vaca muerta"
+  ],
+  "Crude & Product Tankers": [
+   "tanker (rates|market)",
+   "\\bvlccs?\\b",
+   "spot (tanker )?rates",
+   "time charter equivalent",
+   "\\btce\\b"
+  ],
+  "Refiners": [
+   "crack spreads?",
+   "refining (margins?|throughput|capacity)",
+   "refiner(y|ies)",
+   "renewable diesel"
+  ],
+  "Natural Gas Producers": [
+   "natural gas (prices?|production|demand)",
+   "henry hub",
+   "gas-fired"
+  ],
+  "Oil Services": [
+   "oilfield services?",
+   "completions? activity",
+   "frac (fleets?|crews?)",
+   "well (construction|intervention)",
+   "subsea"
+  ],
+  "Gold Miners": [
+   "gold (price|production|sales|ounces)",
+   "all-in sustaining costs?",
+   "\\baisc\\b"
+  ],
+  "Silver Miners": [
+   "silver (price|production|ounces)"
+  ],
+  "Copper & Base Metals": [
+   "copper (price|production|demand|cathode)",
+   "alumin(i)?um (price|production)",
+   "iron ore",
+   "zinc"
+  ],
+  "Steel": [
+   "steel (prices?|shipments?|mills?|demand|imports?)",
+   "hot-rolled",
+   "scrap (prices?|costs?)"
+  ],
+  "Rare Earths": [
+   "rare earths?",
+   "ndpr",
+   "magnets?",
+   "critical minerals?"
+  ],
+  "Agribusiness & Fertilizer": [
+   "fertili[sz]ers?",
+   "potash",
+   "nitrogen",
+   "crop (prices?|protection)",
+   "soybean (crush|oil)",
+   "grain"
+  ],
+  "Biotech": [
+   "phase [123]\\b",
+   "clinical trials?",
+   "\\bfda\\b (approval|accept\\w+|review)",
+   "pipeline (assets?|programs?)"
+  ],
+  "Pharma & GLP-1": [
+   "glp-1",
+   "obesity",
+   "tirzepatide",
+   "semaglutide",
+   "zepbound",
+   "mounjaro",
+   "wegovy",
+   "ozempic",
+   "drug pricing",
+   "most favored nation"
+  ],
+  "Medtech": [
+   "procedure volumes?",
+   "surgical (robots?|procedures?)",
+   "medical devices?",
+   "implants?",
+   "da vinci"
+  ],
+  "Gene Editing": [
+   "gene editing",
+   "crispr",
+   "base editing"
+  ],
+  "Genomics & Diagnostics": [
+   "sequenc\\w+",
+   "genomic\\w*",
+   "liquid biopsy",
+   "molecular diagnostics?",
+   "test volumes?"
+  ],
+  "Life Science Tools & CROs": [
+   "bioprocess\\w*",
+   "life science tools",
+   "biopharma (demand|customers?|spending)",
+   "contract research",
+   "\\bcros?\\b",
+   "lab(oratory)? (instruments?|equipment)"
+  ],
+  "Drug Distributors": [
+   "drug distribut\\w+",
+   "specialty (drugs?|pharmaceuticals?) distribution",
+   "generics? (pricing|deflation)"
+  ],
+  "Managed Care": [
+   "medical (loss|care|benefit) ratio",
+   "\\bmlr\\b",
+   "medicare advantage",
+   "medicaid",
+   "utilization (trends?|rates?)",
+   "medical cost trend",
+   "star ratings?"
+  ],
+  "Homebuilders & Housing": [
+   "new home (orders|sales)",
+   "housing (starts|market|demand)",
+   "mortgage rates?",
+   "homebuy\\w+",
+   "cancellation rate"
+  ],
+  "Building Products": [
+   "repair and remodel",
+   "roofing",
+   "insulation",
+   "decking",
+   "building products"
+  ],
+  "Off-price Retail": [
+   "off-price",
+   "closeouts?"
+  ],
+  "Hotels": [
+   "revpar",
+   "occupancy",
+   "room (rates|nights)",
+   "hotel (demand|pipeline)"
+  ],
+  "Cruise Lines": [
+   "cruise\\w*",
+   "net yields?",
+   "onboard (spending|revenue)",
+   "booked position"
+  ],
+  "Apparel & Mall Retail": [
+   "apparel",
+   "comparable (store )?sales",
+   "denim"
+  ],
+  "Casual Dining": [
+   "casual dining",
+   "same-restaurant sales",
+   "guest (traffic|counts?)"
+  ],
+  "Retail": [
+   "comparable sales",
+   "same-store sales",
+   "grocery",
+   "e-?commerce sales",
+   "general merchandise",
+   "consumer (spending|demand)"
+  ],
+  "Restaurants": [
+   "same-store sales",
+   "restaurant (traffic|margins?)",
+   "quick[- ]service",
+   "franchise\\w*"
+  ],
+  "Tobacco": [
+   "cigarettes?",
+   "nicotine (pouches?|products?)",
+   "smoke-free",
+   "heated tobacco",
+   "\\bzyn\\b"
+  ],
+  "China EV": [
+   "electric vehicles?",
+   "\\bevs?\\b (deliveries|sales|demand)",
+   "vehicle deliveries",
+   "new energy vehicles?"
+  ],
+  "Airlines": [
+   "available seat miles",
+   "\\b(p|t|c)?rasm\\b",
+   "\\bcasm\\b",
+   "premium cabin",
+   "jet fuel",
+   "load factor",
+   "airfares?"
+  ],
+  "Transports & Freight": [
+   "freight (rates|demand|volumes?|market)",
+   "truckload",
+   "less-than-truckload",
+   "\\bltl\\b",
+   "intermodal",
+   "carloads?",
+   "tonnage",
+   "shipping volumes?"
+  ]
+ },
+ "niches": {
+  "Cybersecurity": {
+   "network security": {
+    "find": [
+     "firewalls?",
+     "\\bsase\\b",
+     "secure access service edge",
+     "network security",
+     "zero trust network",
+     "prisma access",
+     "secure (web )?gateway"
+    ],
+    "stocks": [
+     "PANW",
+     "FTNT",
+     "ZS",
+     "NET",
+     "NTSK"
+    ]
+   },
+   "cloud security": {
+    "find": [
+     "cloud security",
+     "prisma cloud",
+     "cortex cloud",
+     "\\bcnapp\\b",
+     "cloud workloads?"
+    ],
+    "stocks": [
+     "PANW",
+     "CRWD",
+     "ZS",
+     "TENB",
+     "QLYS"
+    ]
+   },
+   "security operations": {
+    "find": [
+     "security operations",
+     "\\bsiem\\b",
+     "xsiam",
+     "\\bsoc\\b",
+     "next-gen(eration)? siem",
+     "logscale",
+     "\\bxdr\\b"
+    ],
+    "stocks": [
+     "CRWD",
+     "PANW",
+     "S",
+     "RPD"
+    ]
+   },
+   "identity security": {
+    "find": [
+     "identity (security|protection|threat|governance|management)",
+     "privileged access",
+     "cyberark",
+     "identity"
+    ],
+    "stocks": [
+     "OKTA",
+     "SAIL",
+     "CRWD",
+     "PANW"
+    ]
+   },
+   "endpoint security": {
+    "find": [
+     "endpoint (security|protection)",
+     "endpoints?",
+     "\\bedr\\b",
+     "falcon"
+    ],
+    "stocks": [
+     "CRWD",
+     "S",
+     "PANW"
+    ]
+   },
+   "exposure management": {
+    "find": [
+     "exposure management",
+     "vulnerability management",
+     "attack surface"
+    ],
+    "stocks": [
+     "TENB",
+     "QLYS",
+     "RPD"
+    ]
+   },
+   "data security": {
+    "find": [
+     "data security",
+     "cyber resilience",
+     "backup and recovery",
+     "data protection"
+    ],
+    "stocks": [
+     "RBRK",
+     "ZS",
+     "PANW"
+    ]
+   },
+   "AI security": {
+    "find": [
+     "ai security",
+     "secur(e|ing) ai",
+     "ai agents?",
+     "agentic"
+    ],
+    "stocks": [
+     "PANW",
+     "CRWD",
+     "ZS",
+     "NET",
+     "OKTA",
+     "S",
+     "SAIL"
+    ]
+   }
+  }
+ },
+ "generic": {
+  "revenue": {
+   "label": "revenue",
+   "find": [
+    "total revenues?",
+    "revenues? (grew|increased|was|were|of|rose|decreased|declined)",
+    "net sales (grew|increased|were|of|rose|decreased|declined)"
+   ],
+   "also": [
+    "revenue",
+    "net sales"
+   ]
+  },
+  "recurring": {
+   "label": "its order book",
+   "find": [
+    "annual(ized)? recurring revenue",
+    "\\barr\\b",
+    "remaining performance obligations?",
+    "\\brpo\\b",
+    "backlog",
+    "bookings",
+    "billings",
+    "subscription revenue",
+    "net new"
+   ],
+   "also": [
+    "contracted",
+    "orders"
+   ]
+  },
+  "outlook": {
+   "label": "the outlook",
+   "find": [
+    "(expects?|expected|anticipates?|guidance|outlook)[^.]{0,80}(revenues?|net sales|arr|billings)",
+    "(revenues?|net sales)[^.]{0,60}(expected to be|in the range of|between \\$)",
+    "rais(es|ed|ing) (its |our )?(full[- ]year |fiscal )?(guidance|outlook)",
+    "lower(s|ed|ing) (its |our )?(full[- ]year |fiscal )?(guidance|outlook)"
+   ],
+   "also": [
+    "guidance",
+    "outlook"
+   ]
+  },
+  "margin": {
+   "label": "margins and cash",
+   "find": [
+    "operating margin",
+    "gross margin",
+    "free cash flow",
+    "adjusted ebitda"
+   ],
+   "also": []
+  },
+  "capex": {
+   "label": "capital spending",
+   "find": [
+    "capital expenditures",
+    "(expect|anticipate)[^.]{0,60}capital expenditures",
+    "capital investments?"
+   ],
+   "also": []
+  },
+  "demand": {
+   "label": "demand",
+   "find": [
+    "demand (for|remains|was|is|continued|accelerat\\w+|strengthen\\w+|soften\\w+|weak\\w*)",
+    "accelerat\\w+",
+    "record (quarter|revenue|orders|bookings)"
+   ],
+   "also": [
+    "customers"
+   ]
+  }
+ }
+}

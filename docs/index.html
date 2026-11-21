@@ -105,6 +105,10 @@
   .tgr-tab.tab-drop-r { box-shadow: inset -3px 0 0 var(--color-fg); }
   .tgr-tab-reset { appearance: none; background: none; border: 0; margin-left: auto; padding: var(--cds-pad-sm); font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); cursor: pointer; }
   .tgr-tab-reset:hover { color: var(--color-fg); }
+  .tgr-seg button.tab-drag { opacity: .45; }
+  .tgr-seg button.tab-drop-l { box-shadow: inset 3px 0 0 var(--color-fg); }
+  .tgr-seg button.tab-drop-r { box-shadow: inset -3px 0 0 var(--color-fg); }
+  .tgr-tab-reset.wl-order-reset { margin-left: 0; padding: var(--cds-pad-xs); }
   .tgr-tab:focus-visible, .tgr-seg button:focus-visible, .tgr-chip:focus-visible, .tgr-th:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
   .tgr-count { font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 var(--cds-pad-sm); color: var(--color-fg); }
   .tgr-page { display: grid; gap: var(--cds-gap-md); }
@@ -275,6 +279,16 @@
   .tr-pill.t-reclaim { border: 1px dashed var(--color-ok); color: var(--color-ok); }
   .tr-pill.t-rest { color: var(--color-fg-muted); }
   .tr-pill.t-neg { border-color: var(--color-bad); color: var(--color-bad); }
+  /* the tags next to a Watchlist ticker (the user, Nov 21 2026): the Trend tag and the Momentum tag; square corners, so
+     they don't read as the round Trend pills or "in Launches" */
+  .wl-tag { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 3px; font-size: .66rem; font-weight: var(--cds-font-weight-medium); line-height: 1.55; vertical-align: middle; white-space: nowrap; border: 1px solid var(--color-border-line); cursor: help; letter-spacing: .02em; }
+  .wl-tag.tt-full { background: var(--color-ok); border-color: var(--color-ok); color: var(--color-bg); }
+  .wl-tag.tt-new { border-color: var(--color-ok); color: var(--color-ok); }
+  .wl-tag.tt-caution { border-color: var(--color-warn); color: var(--color-warn); }
+  .wl-tag.tt-none { color: var(--color-fg-muted); }
+  .wl-tag.tt-mom { border-style: dashed; border-color: var(--color-fg-muted); color: var(--color-fg); }
+  .wl-tkline { white-space: nowrap; }
+  td.key > .wl-tag.tt-mom { display: block; width: max-content; margin: 2px 0 1px 0; }
   /* conviction stars (Nov 4 2026, the combination test) */
   .tgr-star { display: inline-block; padding: 0 7px; border-radius: 999px; font-size: .75rem; font-weight: var(--cds-font-weight-medium); line-height: 1.6; white-space: nowrap; cursor: help; border: 1px solid var(--color-warn); }
   .tgr-star.s3 { background: var(--color-ok); border-color: var(--color-ok); color: var(--color-bg); }
@@ -618,6 +632,23 @@
 
   <!-- ───────── Tab 3: pre-market gappers ───────── -->
   <section class="tgr-page" id="premarket" role="tabpanel" aria-labelledby="tab-premarket" hidden>
+    <div class="tgr-card tgr-hc" id="evl-card" hidden>
+      <div class="tgr-cardhead">
+        <h2 id="evl-h">Event</h2>
+        <span class="tgr-lbl" id="evl-time">—</span>
+      </div>
+      <div class="tgr-copybar" id="evl-pickbar" hidden><b>Reports now</b><span class="tgr-seg" id="evl-pick" aria-label="Which report"></span></div>
+      <p class="tgr-note" id="evl-line"></p>
+      <details class="tgr-legend tgr-more" data-key="evlinks"><summary>What an event is, and which stocks are linked</summary>
+      <p class="tgr-note">An event = a bellwether reports: a company whose results move the stocks tied to it. When several report the same evening, a button for each. The card is up from the morning of its report to the evening of the session that reacts to it. Two levels, the direct links on top. <b>Level 1</b>: a <b>direct tie</b> (the bellwether owns a stake in the stock, buys from it, sells to it, or runs a named program with it) or a <b>rival</b>, each written out with its reason. <b>Level 2, the same theme</b>: <b>same business</b> = the other stocks of the bellwether's own theme, with its sentence on their niche when it has one; <b>its theme is in the report</b> = the main stocks of another of your themes when the report has a sentence about that business with a figure in it. No direct tie is claimed at level 2: for a peer the report means either demand for the whole group or business taken from it, and "moving with / against" under the link says which way its price reads it. Suppliers of suppliers are not listed. The bellwethers: the written maps (NVIDIA, Microsoft, Google, Amazon, Meta) and the two largest stocks of each of your themes. The line on top adds whether its revenue growth is speeding up or slowing (against the quarter before, and against what its guide implies) and where the report grows fastest. A 📄 after the reason opens the linked company's own annual report where it names the bellwether (hover for the sentence); a link without it is one the two companies do not name in their reports, written only where the deal is public. "What it said" is the bellwether's own sentence from its results filing at the SEC (the press release and the CFO commentary): first a sentence that names the stock, else its sentence on the business the link is about. Nothing is searched or written by Claude. Moves: after hours on the evening, then the pre-market scan, then the live prices. The alerts are not changed: the same reason on an alert ("why:") is built and switched off until you say so. Price and volume decide; this is the reason next to them.</p>
+      </details>
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="evl-table">
+          <thead><tr><th>Ticker</th><th class="num">Move</th><th>Link</th><th>Why it is linked</th><th>What it said</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
     <div class="tgr-card tgr-hc" id="pme-card" hidden>
       <div class="tgr-cardhead">
         <h2 id="pme-h">Theme event</h2>
@@ -840,6 +871,18 @@
         </ul>
         <p>So a stock can be A+ here and B on the Launches tab: that one grades the launch day itself (MIR on Oct 29, 2026: A+ here for its trend and 10.7% pullback, B there for a +11.5% day and a base breakout but only a 1% gap on 1.9× volume).</p>
       </details>
+      <details class="tgr-legend" id="wl-tags-box">
+        <summary>The tags next to a ticker</summary>
+        <p><b>Trend tag</b>: the state of the stock, with the 200-day SMA in it; live in the session. Every stock gets one.</p>
+        <ul>
+          <li><span class="wl-tag tt-full" style="margin-left:0">FULL TREND</span> 10 EMA above the 21 EMA above the 50 EMA above the 200-day SMA, the 50 EMA higher than the day before, and the price above the 21 EMA.</li>
+          <li><span class="wl-tag tt-new" style="margin-left:0">NEW TREND</span> the price is above the 21 and the 50 EMA, but the averages are not all lined up yet (a stock that just popped over both).</li>
+          <li><span class="wl-tag tt-caution" style="margin-left:0">CAUTION</span> 10 EMA above the 21 above the 50 still in order, but the price is under the 21 EMA: it has to prove itself (a close back over the 21 EMA is the good sign: the Trend column then reads Reclaim).</li>
+          <li><span class="wl-tag tt-none" style="margin-left:0">NO TREND</span> the rest.</li>
+        </ul>
+        <p><b>Momentum tag</b> <span class="wl-tag tt-mom" style="margin-left:0">MOM 1M</span>: the stock is on 2-POOL's Momentum section. 3M = it passed +50% in 3 months at the pool's weekly test, else 1M = +25% in 1 month (only one of the two shows); 6M shows only when it is up 100% or more in 6 months. The 1-week test and a 6-month gain under 100% show no tag.</p>
+        <p>The Trend column (Up, Resting, Reclaim, Turn up, Negative) is the day-to-day reading of the 10, 21 and 50 EMA and is unchanged. + Filter has both tags (Trend tag, Momentum tag).</p>
+      </details>
       <details class="tgr-legend" id="wl-about-box" open>
         <summary>About these lists</summary>
         <p class="tgr-note">Your setup scanner's lists, rebuilt after each close (about 4:25-4:35 PM ET). 1-EP/GAP = gap over 5% on 2× relative volume, closing up 5% or more; 1-UPDAY = up 4% or more with relative volume 1 or more; 2-POOL = a first close back above the 50 EMA, plus the weekly momentum leaders; 3-SETUPS = the names from those three lists that the Launches engine reads as a setup (an ADR of 4%+ to come in, 3.2% to stay): Triggered today (a base breakout, bull flag or bull pennant break, breakout undercut &amp; reclaim, pop, 21 EMA retest or undercut &amp; reclaim, retest held, push), Ready (its trigger within 0.7 ADR over the close) and Setting up (a bull flag or pennant forming, a 21 EMA pullback set up, near a retest). Names leave 3-SETUPS after 2 closes in a row under the 50 EMA, 62 sessions without a new high, an ADR under 3.2% or your ✕; 1-UPDAY also after 15 trading days without reaching 3-SETUPS (1-EP/GAP has no time limit). Price, Chg and Rel vol are live during market hours (otherwise the latest close), and Away = how far the buy point is above that price. "armed" (in Why) = a 21 / 50 EMA pullback trigger's daily rules pass and the price is within 1 ADR over that EMA. Download for TradingView saves the list you're looking at as a file for TradingView's Watchlist menu → Import list.</p>
@@ -857,7 +900,7 @@
             <th class="c2"><button class="tgr-th" data-sort="pattern">Pattern</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
-            <th><button class="tgr-th" data-sort="res_away" title="Resistance: the highs overhead it still has to clear after the buy point: the 3-, 6-, 9-month and 52-week highs, nearest first, with how far each is from the price">Resistance</button></th>
+            <th><button class="tgr-th" data-sort="res_away" title="Resistance: what it still has to clear overhead after the buy point, nearest first, each as a range. Highs: the 1-, 3-, 6-, 9-month and 52-week high, from the period's highest close to its highest high (1M/3M = the same level for both). Broken support: an old floor that held 3+ tests and then broke down hard; it is resistance until a close back over its top. % = how far the bottom of the range is over the price">Resistance</button></th>
             <th class="num"><button class="tgr-th" data-sort="price">Price</button></th>
             <th class="num"><button class="tgr-th" data-sort="chg_1d">Chg</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="rel_vol">Rel vol</button></th>
@@ -1029,7 +1072,7 @@
             <th class="c2"><button class="tgr-th" data-sort="pattern" title="What the buy point is: the base top, the pattern's pivot, a flag line, the pop out of a consolidation">Trigger</button></th>
             <th class="num"><button class="tgr-th" data-sort="buy_point">Buy point</button></th>
             <th class="num"><button class="tgr-th" data-sort="away">Away</button></th>
-            <th><button class="tgr-th" data-sort="res_away" title="Resistance: the highs overhead it still has to clear after the buy point: the 3-, 6-, 9-month and 52-week highs, nearest first, with how far each is from the price">Resistance</button></th>
+            <th><button class="tgr-th" data-sort="res_away" title="Resistance: what it still has to clear overhead after the buy point, nearest first, each as a range. Highs: the 1-, 3-, 6-, 9-month and 52-week high, from the period's highest close to its highest high (1M/3M = the same level for both). Broken support: an old floor that held 3+ tests and then broke down hard; it is resistance until a close back over its top. % = how far the bottom of the range is over the price">Resistance</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="blen" title="The current base: sessions since its top was set (day 1 = the high, like Base day). Hover a cell: how long nothing traded above that level (ACN Nov 3 2026: 9 sessions since its Oct 22 top 259.39; nothing above 259.39 since Feb 2)">Base length</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_pct">Depth</button></th>
             <th class="num c2"><button class="tgr-th" data-sort="base_depth_adr" title="The base's depth in the stock's own ADRs: each ticker has its own character">Depth in ADRs</button></th>
@@ -1591,6 +1634,39 @@ defCalc('industry_perf', {
       const t = e.target.closest('.tgr-tab'); if (!drag || !t) return;
       e.preventDefault();
       if (t !== drag) nav.insertBefore(drag, right(t, e) ? t.nextSibling : t);
+      clear(); drag = null; save();
+    });
+  })();
+
+  /* the Watchlist list buttons (3-SETUPS ... TREND): drag to move them left or right, as the main tabs (the user, Nov 18
+     2026: "can you make it a way that i can move this tabs left or right"). Kept in this browser; ↺ order puts them back. */
+  (() => {
+    const seg = document.querySelector('.tgr-seg[data-k="wl"]'); if (!seg) return;
+    const KEY = 'radar-wl-order', btns = () => [...seg.querySelectorAll('button')], DEF = btns().map((b) => b.dataset.v);
+    const reset = h('button', 'tgr-tab-reset wl-order-reset', '↺ order'); reset.type = 'button'; reset.title = 'Put the lists back in their first order';
+    seg.after(reset);
+    const isDef = () => btns().map((b) => b.dataset.v).join() === DEF.join();
+    const apply = (o) => { const by = new Map(btns().map((b) => [b.dataset.v, b])); o.concat(DEF).forEach((k) => { const b = by.get(k); if (b) { seg.append(b); by.delete(k); } }); reset.hidden = isDef(); };
+    const save = () => { try { if (isDef()) localStorage.removeItem(KEY); else localStorage.setItem(KEY, JSON.stringify(btns().map((b) => b.dataset.v))); } catch (e) { /* private window */ } reset.hidden = isDef(); };
+    try { const o = JSON.parse(localStorage.getItem(KEY) || 'null'); apply(Array.isArray(o) ? o : DEF); } catch (e) { apply(DEF); }
+    reset.addEventListener('click', () => { apply(DEF); save(); });
+    let drag = null;
+    const clear = () => btns().forEach((x) => x.classList.remove('tab-drag', 'tab-drop-l', 'tab-drop-r'));
+    const right = (b, e) => { const r = b.getBoundingClientRect(); return e.clientX > r.left + r.width / 2; };
+    btns().forEach((b) => {
+      b.draggable = true; if (!b.title) b.title = 'Drag to move this list left or right';
+      b.addEventListener('dragstart', (e) => { drag = b; b.classList.add('tab-drag'); try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', b.dataset.v); } catch (e2) { /* old browser */ } });
+      b.addEventListener('dragend', () => { drag = null; clear(); });
+    });
+    seg.addEventListener('dragover', (e) => {
+      const b = e.target.closest('button'); if (!drag || !b) return;
+      e.preventDefault(); clear(); drag.classList.add('tab-drag');
+      if (b !== drag) b.classList.add(right(b, e) ? 'tab-drop-r' : 'tab-drop-l');
+    });
+    seg.addEventListener('drop', (e) => {
+      const b = e.target.closest('button'); if (!drag || !b) return;
+      e.preventDefault();
+      if (b !== drag) seg.insertBefore(drag, right(b, e) ? b.nextSibling : b);
       clear(); drag = null; save();
     });
   })();
@@ -2838,6 +2914,77 @@ defCalc('industry_perf', {
   };
   $('#pme-show').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { PMESHOW = b.dataset.v; draw(); } });
   $('#pme-copy').addEventListener('click', () => { const t = ($('#pme-card').dataset.syms || '').split(',').filter(Boolean); if (t.length && navigator.clipboard) navigator.clipboard.writeText(t.join(',')).then(() => { $('#pme-count').textContent = t.length + ' tickers copied'; }).catch(() => {}); });
+  /* Event links (the user, Nov 17 2026, NVDA's report: "our code should be able connect dots", "reason ... has to be clear
+     explanation", "im only interested in 1st direct impact ones"): radar/event.py -> events.json. A bellwether of
+     radar/bellwethers.json reports: the stocks with a written 1st-impact link to it, each with its tie, the reason and the
+     bellwether's own sentence from its SEC results filing. Nothing here changes a grade, a list or a rule. */
+  let EVSEL = null;
+  const drawEvLinks = () => {
+    const card = $('#evl-card'), today = todayNY();
+    /* several bellwethers can report the same evening (Microsoft, Google and Meta usually do): one button each, the first one out shown */
+    const evs = EVL && Array.isArray(EVL.events) ? EVL.events.filter((e) => e.date <= today && today <= e.react_day) : [];
+    card.hidden = !evs.length;
+    if (!evs.length) return;
+    const ev = evs.find((e) => e.id === EVSEL) || evs.find((e) => e.status !== 'due') || evs[0];
+    const pick = $('#evl-pick'); pick.replaceChildren(); $('#evl-pickbar').hidden = evs.length < 2;
+    evs.forEach((e) => { const b = h('button', '', e.sym + (e.status === 'due' ? ' (not out yet)' : '')); b.type = 'button'; b.dataset.id = e.id; b.setAttribute('aria-pressed', String(e.id === ev.id)); pick.append(b); });
+    const tiers = EVL.tiers || {}, by = new Map(((BASE && BASE.stocks) || []).map((r) => [r.symbol, r]));
+    const pct = (x) => (x > 0 ? '+' : '') + Number(x).toFixed(1) + '%';
+    /* the move: the live prices in today's session, else today's pre-market scan, else the build's own quote */
+    const react = today === ev.react_day && ev.status !== 'due';   /* the evening of an after-close report: the build's after-hours quote, not the day's session */
+    const mvOf = (sym) => {
+      if (react && LIVE && LIVE.session === today && LIVE.rows && LIVE.rows[sym]) return [LIVE.rows[sym][1], 'live'];
+      if (react && PML && PML.date === today && PML.rows && PML.rows[sym]) return [PML.rows[sym][1], 'pre-market'];
+      return (ev.moves || {})[sym] || null;
+    };
+    $('#evl-h').textContent = 'Event: ' + ev.name + ' earnings';
+    $('#evl-time').textContent = ev.when_words + (ev.status === 'due' ? ' · not out yet' : '') + ' · reaction session ' + fDate(ev.react_day);
+    const ln = $('#evl-line'); ln.replaceChildren();
+    const bm = mvOf(ev.sym);
+    if (ev.status === 'due') ln.append(h('b', '', ev.sym + ' reports ' + ev.when_words + '. '));
+    else {
+      ln.append(h('b', '', ev.sym + ': '), ev.result || 'the report is out, not read yet');
+      if (bm) ln.append('; ', h('b', tone(bm[0]), ev.sym + ' ' + pct(bm[0])), ' ' + bm[1]);
+      ln.append('. ');
+      (ev.docs || []).forEach((d) => { if (!/^https:\/\//.test(d.url)) return; const l = h('a', '', '📰 ' + d.kind); l.href = d.url; l.target = '_blank'; l.rel = 'noopener'; ln.append(l, ' '); });
+    }
+    const rows = [], seen = new Set();
+    (ev.links || []).forEach((L) => (L.stocks || []).forEach((x) => { if (seen.has(x.sym)) return; seen.add(x.sym); rows.push(Object.assign({ theme: L.theme, tsaid: (L.said || [])[0] }, x, { mv: mvOf(x.sym) })); }));
+    const up = rows.filter((r) => r.mv && r.mv[0] >= 2).length, dn = rows.filter((r) => r.mv && r.mv[0] <= -2).length;
+    const n1 = rows.filter((r) => r.level !== 2).length;
+    /* where it is growing fastest (the report's own growth figures, topic by topic) */
+    if (ev.status !== 'due' && (ev.fastest || []).length) { ln.append(h('b', '', 'Growing fastest: '), ev.fastest.map((f) => f.label + ' +' + Math.round(f.pct) + '%' + (f.accel ? ' (accelerating)' : '')).join(', ') + '. '); }
+    ln.append(h('span', 'tgr-lbl', n1 + ' with a direct tie or a rival · ' + (rows.length - n1) + ' of the same theme · ' + up + ' up 2%+ · ' + dn + ' down 2%+' + (ev.what ? ' · ' + ev.what : '')));
+    /* your order (Nov 18 2026): the direct links on top, then the same theme; inside each, the biggest move first */
+    rows.sort((a, b) => ((a.level === 2) - (b.level === 2)) || ((b.mv ? b.mv[0] : -99) - (a.mv ? a.mv[0] : -99)));
+    const tb = $('#evl-table tbody'); tb.replaceChildren();
+    rows.forEach((r) => {
+      const tr = h('tr'), key = h('td', 'key'), st = by.get(r.sym);
+      const a = h('a', 'tgr-tk', r.sym); a.href = tv((st && st.tv_symbol) || r.sym); a.target = TVTAB; key.append(a);
+      const mv = h('td', 'num ' + (r.mv ? tone(r.mv[0]) : ''), r.mv ? pct(r.mv[0]) : '—');
+      if (r.mv) mv.title = r.mv[1];
+      const tie = h('td'); tie.append(h('b', '', tiers[r.tier] || r.tier), h('br'), h('span', 'tgr-lbl', r.theme));
+      /* a peer: with the bellwether or against it (the group's demand, or business taken from it: its own price tells) */
+      if (r.level === 2 && bm && r.mv && ev.status !== 'due' && Math.abs(bm[0]) >= 1 && Math.abs(r.mv[0]) >= 1) {
+        const same = (bm[0] > 0) === (r.mv[0] > 0);
+        tie.append(h('br'), h('span', same ? 'tgr-lbl' : 'tgr-dn', same ? 'moving with ' + ev.sym : 'moving against ' + ev.sym));
+      }
+      const why = h('td', '', r.why); why.style.whiteSpace = 'normal'; why.style.minWidth = '260px';
+      /* the proof: the stock's own annual report naming the bellwether (hover for its sentence, click for the report) */
+      if (r.ev && /^https:\/\//.test(r.ev.url || '')) { const l = h('a', '', ' 📄 its ' + (r.ev.form || 'report')); l.href = r.ev.url; l.target = '_blank'; l.rel = 'noopener'; l.title = 'Its own ' + (r.ev.form || 'annual report') + ' (' + fDate(r.ev.filed) + '): “' + r.ev.text + '”'; why.append(l); }
+      const sd = h('td'); sd.style.whiteSpace = 'normal'; sd.style.minWidth = '300px';
+      const q = r.named || (r.said && r.said[0]) || r.tsaid;
+      if (ev.status === 'due') sd.append(h('span', 'tgr-lbl', 'after the report'));
+      else if (!q) sd.append(h('span', 'tgr-lbl', 'Nothing in its release on this.'));
+      else {
+        sd.append(h('b', '', r.named ? 'Named: ' : 'On ' + q.topic + ': '), '“' + q.text + '”');
+        if (/^https:\/\//.test(q.url || '')) { const l = h('a', '', ' 📰'); l.href = q.url; l.target = '_blank'; l.rel = 'noopener'; l.title = q.src; sd.append(l); }
+      }
+      tr.append(key, mv, tie, why, sd);
+      tb.append(tr);
+    });
+  };
+  $('#evl-pick').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { EVSEL = b.dataset.id; draw(); } });
   const drawPmLive = (symMap) => {
     syncPm();
     const table = $('#pml-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
@@ -2852,6 +2999,7 @@ defCalc('industry_perf', {
     const xk = PMF.dir === 'down' ? 'pmd' : 'pmu';
     const allPm = pmRows();
     drawPmEvent(allPm);
+    drawEvLinks();
     /* Scan: the whole market or one of your lists (the event card above keeps the whole market) */
     const ss = scanSet(SCAN.pm);
     drawScanSeg('pml-scan', SCAN.pm);
@@ -3247,6 +3395,7 @@ defCalc('industry_perf', {
     ss.forEach((r) => {
       const tr = h('tr');
       const keyS = tkCell(r.symbol, r.tv);
+      wlTags(keyS, r.symbol);
       const rmS = h('button', 'tgr-lite tgr-follow', '✕'); rmS.type = 'button'; rmS.title = 'Remove ' + r.symbol + ' from Start days (a new start day of it on a later day shows again)';
       rmS.setAttribute('aria-label', rmS.title);
       rmS.addEventListener('click', () => { if (confirm('Remove ' + r.symbol + ' from Start days?')) removeStart(r, rmS); });
@@ -3333,6 +3482,7 @@ defCalc('industry_perf', {
       const tr = h('tr'); tr.dataset.key = r.symbol;
       const key = h('td', 'key');
       const a = h('a', 'tgr-tk', r.symbol); a.href = tv(r.tv_symbol); a.target = TVTAB; key.append(a);
+      wlTags(key, r.symbol);     /* the Trend tag and the Momentum tag (the user, Nov 21 2026) */
       /* Follow: onto the Launches tab, followed like a launch (buy points, breakouts, alerts) */
       const fol = picked.has(r.symbol);
       if (launchedSet.has(r.symbol) && !fol) { const t = h('span', 'tgr-gm', 'in Launches'); t.title = 'Already followed on the Launches tab as a launch'; key.append(t); }
@@ -3591,14 +3741,29 @@ defCalc('industry_perf', {
       r.delayed_from ? 'Delayed' : null, r.follows ? 'Follower' : null].filter(Boolean);
     return t.length ? t : ['Launch'];
   };
-  /* resistance (your rule, Nov 2 2026): the overhead 3/6/9-month and 52-week highs, nearest first, from the price now */
-  const resAway = (r, px) => { const l = (r.resistance || [])[0]; return l && px ? r2((l[1] / px - 1) * 100) : null; };
+  /* resistance (your rule, Nov 2 2026), nearest first, from the price now. Each level is a range (the user, Nov 21 2026: "do as
+     range for all", "yes add 1month", "if 1month and 3month same then it has to show 1month/3month"): [label, top, bottom, ...].
+     Highs: the 1-, 3-, 6-, 9-month and 52-week high, from the period's highest close to its highest high; periods with the same
+     range share one line ("1M/3M"). Broken support ("bs"; VERX Nov 2025 - Feb 2026: "every day was trying to break that
+     support, finally that day broke down really bad ... next big resistance"): [bs, zone top, zone bottom, held from, held to,
+     breakdown day, tests]. A level saved before Nov 21 2026 is [label, level]: it shows as one price, as before */
+  const resLo = (x) => num(x[2]) ?? num(x[1]);
+  const resLab = (x) => (x[0] === 'bs' ? 'Broken support' : String(x[0]).toUpperCase());
+  const resRng = (x) => { const lo = resLo(x), hi = num(x[1]); return hi / lo - 1 < 0.005 ? fPrice(hi) : fPrice(lo) + '–' + g2.format(hi); };
+  const resPct = (x, px) => (!px ? '' : px >= resLo(x) ? ' in it' : ' ' + p1((resLo(x) / px - 1) * 100, true));
+  const resOver = (r, px) => (r.resistance || []).filter((x) => !px || x[1] > px);
+  const resAway = (r, px) => { const l = resOver(r, px)[0]; return l && px ? Math.max(0, r2((resLo(l) / px - 1) * 100)) : null; };
   const resCell = (r, px) => {
-    const td = h('td', 'nw'), lv = (r.resistance || []).filter((x) => !px || x[1] > px);
+    const td = h('td', 'nw'), lv = resOver(r, px);
     if (!lv.length) { td.textContent = r.resistance ? 'None: at highs' : '—'; if (r.resistance) td.className = 'nw tgr-up'; return td; }
-    const show = lv.length > 1 ? [lv[0], lv[lv.length - 1]] : lv;
-    show.forEach((x) => td.append(h('div', '', String(x[0]).toUpperCase() + ' ' + fPrice(x[1]) + (px ? ' ' + p1((x[1] / px - 1) * 100, true) : ''))));
-    td.title = 'Overhead highs to clear (3M = 3-month high, 52W = 52-week high; % = how far over the price): ' + lv.map((x) => x[0] + ' ' + fPrice(x[1])).join(', ');
+    /* the nearest level, the nearest broken support (wherever it sits) and the farthest high (the 52-week high as a rule: VERX
+       Nov 20 2026 reads Broken support 18.55-18.88, 52W 20.62-20.82; its older zone 23.87-24.24 is in the tooltip); the rest in
+       the tooltip */
+    const bs = lv.find((x) => x[0] === 'bs'), hs = lv.filter((x) => x[0] !== 'bs'), far = hs[hs.length - 1];
+    const show = lv.filter((x, i) => i === 0 || x === bs || x === far);
+    show.forEach((x) => td.append(h('div', '', resLab(x) + ' ' + resRng(x) + resPct(x, px))));
+    td.title = 'Overhead levels to clear, nearest first, each a range (highs: the period\'s highest close to its highest high; 1M = 1-month, 52W = 52-week, 1M/3M = the same level; % = the bottom of the range over the price): '
+      + lv.map((x) => resLab(x) + ' ' + resRng(x) + (x[0] === 'bs' && x[5] ? ' (the floor of ' + x[3] + ' to ' + x[4] + ', tested ' + x[6] + ' times, broke down ' + x[5] + ')' : '')).join('; ');
     return td;
   };
   /* Launches: Base length (the current base; the level's reach in the tooltip), Off 52W high (now), Correction (now) */
@@ -4187,11 +4352,20 @@ defCalc('industry_perf', {
   };
   document.addEventListener('visibilitychange', () => { if (!document.hidden && flashT) { clearInterval(flashT); flashT = null; flashSyms = []; document.title = pageTitle(); } });
   const showLog = () => { window.focus(); showTab('alerts'); };
+  /* a morning breakout BACK ON after its box's End time is silent (the user, Nov 19 2026: "i dont want to hear any sound
+     (just silent) after cut off time"; NTAP, CLS, TWST, GNRC, NTRA back on 11:21-11:31 with the End at 10:15): the line is
+     in the log and the stock goes back in its box, with no sound, no voice, no sticky pop-up, no flashing title. The End =
+     the box's saved one (📊 with nothing saved: 📈's, as the job); the time = the alert's own (the key's HHMM, ET) */
+  const quietBack = (key) => {
+    const m = /:(mbo2?)back(\d\d)(\d\d)$/.exec(String(key || ''));
+    if (!m) return false;
+    try { const e = withI(MBI[m[1] === 'mbo' ? 0 : 1], mboSaved).end; return tOk(e) && m[2] + ':' + m[3] > e; } catch (x) { return false; }
+  };
   const notify = (title, body, tvs, key, speak) => {
-    const trig = isTrigger(key, title), sum = String(key).startsWith('summary:');
+    const quiet = quietBack(key), trig = isTrigger(key, title) && !quiet, sum = String(key).startsWith('summary:');
     try {
       /* a trigger stays on the screen until you close it; a heads-up fades as before */
-      const n = new Notification(trig ? '🔔 ' + title : title, { body, tag: key, requireInteraction: trig });
+      const n = new Notification(trig ? '🔔 ' + title : title, { body, tag: key, requireInteraction: trig, silent: quiet });
       n.onclick = () => { if (/^PM:pm/.test(String(key))) { window.focus(); showTab('premarket'); } else if (sum || !tvs) showLog(); else openTV(tv(tvs)); n.close(); };
     } catch (e) { /* blocked */ }
     if (trig) {
@@ -5373,6 +5547,14 @@ defCalc('industry_perf', {
     if (w && w.row) { let o = entTxt(w.row.entries); if ((w.row.ema_triggers_tomorrow || []).length) o = (o ? o + ', ' : '') + 'armed: ' + w.row.ema_triggers_tomorrow.join(' + ') + ' pullback'; return o; }
     return r && num(r.coil) !== null ? 'coil ' + r.coil : '';
   };
+  /* the overhead levels of a stock, for the Resistance column you can add on any table (the user, Nov 21 2026: "if i add that
+     column there it would be visible there correct?"): its Launches / Launch laggards row, its 50 EMA undercut row, its Start
+     days row, the launch watch list (launch.json watch_resistance: the Launching today table), else its Watchlist row */
+  const LSK = (s) => by('ls', LDOC(), (d) => new Map((d.start_days || []).map((r) => [r.symbol, r]))).get(s) || null;
+  const RESK = (s) => {
+    const d = LDOC(), w = WK(s);
+    return (LK(s) || {}).resistance || (LUK(s) || {}).resistance || (LSK(s) || {}).resistance || ((d && d.watch_resistance) || {})[s] || (w && w.row ? w.row.resistance : null) || null;
+  };
   const COILK = (s) => {
     const r = LK(s) || LUK(s);
     if (r && num(r.coil) !== null) return { buy: num(r.coil), stop: num(r.coil_stop) };
@@ -5405,6 +5587,54 @@ defCalc('industry_perf', {
     const a = e10 > e21, b = e21 > e50, c = sma ? e50 > sma : null;
     return { a, b, c, txt: '10 ' + (a ? '>' : '<') + ' 21 ' + (b ? '>' : '<') + ' 50' + (c === null ? '' : ' ' + (c ? '>' : '<') + ' 200') };
   };
+  /* The Trend tag next to a Watchlist ticker (the user, Nov 21 2026: "trend shows state of the stock", "i want you add
+     trend tag on ticker in wls", "50 ema has to be rising in full trend (meaning bigger than yesterday)", under the 21 EMA
+     "not a pullback: to be cautious"). The big picture with the 200 SMA in it; every stock gets exactly one, first match:
+       FULL TREND  10 EMA > 21 EMA > 50 EMA > 200 SMA, the 50 EMA higher than the day before, the price over the 21 EMA
+       NEW TREND   the price over the 21 and the 50 EMA, but not all of that yet (a stock that just popped over both)
+       CAUTION     10 > 21 > 50 still in order, the price under the 21 EMA: it has to prove itself
+       NO TREND    the rest
+     Live in the session like the Trend column (the EMAs and the 200 SMA move on with the price). The Trend column (Up,
+     Resting, Reclaim, Turn up, Negative: day to day, no 200 SMA) is unchanged and still shows the reclaim day. */
+  const TT_CLS = { 'FULL TREND': 'tt-full', 'NEW TREND': 'tt-new', CAUTION: 'tt-caution', 'NO TREND': 'tt-none' };
+  const TT_N = { 'FULL TREND': 4, 'NEW TREND': 3, CAUTION: 2, 'NO TREND': 1 };
+  const TT_TIP = {
+    'FULL TREND': 'Full trend: 10 EMA > 21 EMA > 50 EMA > 200 SMA, the 50 EMA higher than the day before, and the price over the 21 EMA',
+    'NEW TREND': 'New trend: the price is over the 21 and the 50 EMA, but the averages are not all lined up yet (10 > 21 > 50 > 200 SMA with the 50 rising)',
+    CAUTION: 'Caution: 10 EMA > 21 EMA > 50 EMA still in order, but the price is under the 21 EMA. It has to prove itself: a close back over the 21 EMA is the good sign',
+    'NO TREND': 'No trend: the price is under the 21 or the 50 EMA and the averages are not in order',
+  };
+  const trendTag = (s) => {
+    const x = trendOf(s); if (!x || !x.t || x.t.slice(0, 5).some((v) => v === null || v === undefined)) return null;
+    const [, e10, e21, e50, e50p] = x.t, p = num(x.p), m = maOf(s), s200 = m ? num(m.s200) : null;
+    if (p === null) return null;
+    const stack = e10 > e21 && e21 > e50, all = stack && s200 !== null && e50 > s200 && e50 > e50p;
+    return all && p > e21 ? 'FULL TREND' : p > e21 && p > e50 ? 'NEW TREND' : stack ? 'CAUTION' : 'NO TREND';
+  };
+  /* The Momentum tag (the user, Nov 21 2026: "tag next to ticker just shows 1m or 3m, whichever it apply but only one of
+     them... for 6month show if its over 100%"): a stock on 2-POOL's Momentum section shows the test that put it there at
+     the weekly refresh (its Why): 3M (+50% in 3 months) when it passed that one, else 1M (+25% in 1 month); 6M only when
+     it is up 100%+ in 6 months at the last close (perf_6m_pct, in the scan's rows from Nov 2026); the 1-week test and a
+     6-month gain under 100% show nothing. The pool's own numbers are unchanged. */
+  const MOMK = (s) => by('mom', st('setups').status === 'ok' ? st('setups').data : null, (d) => new Map((((d.lists || {})['2-POOL']) || []).filter((r) => r.section === 'Momentum').map((r) => [r.symbol, r]))).get(s) || null;
+  const momTag = (s) => {
+    const r = MOMK(s); if (!r) return null;
+    const w = String(r.why || '').replace(/^momentum\s*/, '').split('/'), a = w.includes('3M') ? '3M' : w.includes('1M') ? '1M' : null;
+    const p6 = num(r.perf_6m_pct), six = p6 !== null && p6 >= 100;
+    if (!a && !six) return null;
+    return { a, six, txt: 'MOM ' + [a, six ? '6M' : null].filter(Boolean).join(' · '),
+      tip: 'Momentum (2-POOL): ' + [a === '3M' ? 'up 50%+ in 3 months' : a === '1M' ? 'up 25%+ in 1 month' : null, six ? 'up ' + Math.round(p6) + '% in 6 months (shown at 100%+)' : null].filter(Boolean).join(', ') + (a ? ' when it passed the pool\'s weekly test' : '') + (r.why ? ' · on the pool for: ' + r.why : '') };
+  };
+  /* the ticker and its Trend tag stay on one line; the Momentum tag sits on its own line under them (the row is no taller
+     than its Why cell) */
+  const wlTags = (td, s) => {
+    const t = trendTag(s), m = momTag(s), a = td.querySelector('.tgr-tk');
+    if (t) {
+      const e = h('span', 'wl-tag ' + TT_CLS[t], t); e.title = TT_TIP[t];
+      if (a) { const line = h('span', 'wl-tkline'); a.replaceWith(line); line.append(a, e); } else td.append(e);
+    }
+    if (m) { const e = h('span', 'wl-tag tt-mom', m.txt); e.title = m.tip; td.append(e); }
+  };
   const cell = (v, txt, cls, title) => { const td = h('td', cls || '', txt); if (title) td.title = title; return [v, td]; };
   const cNum = (v, txt, cls, title) => cell(v, txt, 'num' + (cls ? ' ' + cls : ''), title);
   const cPct = (v, sign) => { const x = num(v); return cNum(x, p1(x, sign), sign ? tone(x) : ''); };
@@ -5421,6 +5651,7 @@ defCalc('industry_perf', {
     ['chg_3m', '3M', 'Price', 'Change over 3 months', ['chg_3m', 'perf_3m_pct'], (s) => cPct((SK(s) || {}).chg_3m, true)],
     ['gap', 'Gap', 'Price', 'Today\'s open vs yesterday\'s close (from the live quotes)', ['gap', 'gap_pct'], (s) => cPct((SK(s) || {}).gap_pct, true)],
     ['off52h', 'Off 52W high', 'Price', 'How far under its 52-week high now', ['off_high', 'off_52w_high_pct'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.high_52w) : null; return cNum(v, p1(v, true), tone(v), r && r.high_52w ? '52-week high ' + fPrice(r.high_52w) : ''); }],
+    ['res', 'Resistance', 'Price', 'What it still has to clear overhead, nearest first, each as a range: the 1-, 3-, 6-, 9-month and 52-week high (highest close to highest high) and broken support (an old floor that held 3+ tests, then broke down hard). For the stocks on Launches, Launch laggards, the 50 EMA undercut tab, Start days, the launch watch list and the Watchlist', ['res_away'], (s) => { const lv = RESK(s); if (!lv) return cTxt(null); const r = { resistance: lv }, px = pxOf(s); return cNode(resAway(r, px), resCell(r, px)); }],
     ['over52l', 'Over 52W low', 'Price', 'How far over its 52-week low now', ['over_low52', 'below_low52'], (s) => { const r = SK(s), v = r ? vsPct(pxOf(s), r.low_52w) : null; return cNum(v, p1(v, true), '', r && r.low_52w ? '52-week low ' + fPrice(r.low_52w) : ''); }],
     /* the morning breakout alert's levels as + Filter choices on every tab (the user, Nov 9 2026: "some criteria I asked for
        aren't available here, I want them here: above ORH, above PDH"; "I go to filters, I find them, I choose them"):
@@ -5452,6 +5683,8 @@ defCalc('industry_perf', {
     ['rev_growth', 'Rev growth YoY', 'Company', 'Revenue growth vs a year ago', ['rev_growth'], (s) => cPct((REVOF(s) || {}).growth, true)],
     ['next_q', 'Next Q est. growth', 'Company', 'Next quarter estimated revenue growth', ['next_q_growth'], (s) => cPct((REVOF(s) || {}).next_q_growth, true)],
     ['trend', 'Trend (live)', 'Rank & trend', 'Up / Turn up / Reclaim / Resting / Negative, live with today\'s price', ['trend', 'trend_n'], (s) => cNode(trendN(s), trendCell(s))],
+    ['ttag', 'Trend tag', 'Rank & trend', 'The tag next to a Watchlist ticker, live: FULL TREND (10 > 21 > 50 EMA > 200 SMA, the 50 EMA higher than the day before, price over the 21 EMA) / NEW TREND (price over the 21 and 50 EMA, not all lined up yet) / CAUTION (10 > 21 > 50, price under the 21 EMA) / NO TREND', ['ttag'], (s) => { const t = trendTag(s), td = h('td', 'nw', t ? '' : '—'); if (t) { const e = h('span', 'wl-tag ' + TT_CLS[t], t); e.style.marginLeft = '0'; e.title = TT_TIP[t]; td.append(e); } return cNode(t ? TT_N[t] : null, td); }],
+    ['momtag', 'Momentum tag', 'Rank & trend', 'The tag next to a Watchlist ticker for a stock on 2-POOL Momentum: 3M (+50% in 3 months) or else 1M (+25% in 1 month), the test that put it on the pool; 6M only when it is up 100%+ in 6 months', ['momtag'], (s) => { const m = momTag(s), td = h('td', 'nw', m ? '' : '—'); if (m) { const e = h('span', 'wl-tag tt-mom', m.txt); e.style.marginLeft = '0'; e.title = m.tip; td.append(e); } return cNode(m ? (m.a === '3M' ? 2 : m.a === '1M' ? 1 : 0) + (m.six ? 4 : 0) + 1 : null, td); }],
     ['trend_y', 'Trend (last close)', 'Rank & trend', 'The Trend at the last close (what the stars read)', ['trend_y'], (s) => { const x = trendLast(s); return cNode(x ? TR_N[x.st] * 1000 + Math.min(x.d || 0, 999) : null, trendLastCell(s)); }],
     ['grank', 'Group rank', 'Rank & trend', 'Its best group\'s rank (★ Top = top 3%, Strong = 3-10%) and its place in the group', ['grank'], (s) => { const g = grBest(s); return cNode(g ? g.pct : null, grStockCell(g, s, false)); }],
     ['rs', 'RS', 'Rank & trend', 'Market rank 1-99 after the last close', ['rs', 'rs_now'], (s) => { const v = num(ldocRS()[s]); return cNum(v, v === null ? '—' : String(v)); }],
@@ -5735,6 +5968,8 @@ defCalc('industry_perf', {
     name: { k: 'text' }, sector: { k: 'text' }, industry: { k: 'text' }, themes: { k: 'text' }, index: { k: 'text' },
     other: { k: 'text' }, l_status: { k: 'text' }, l_trigger: { k: 'text' }, l_date: { k: 'text' }, w_section: { k: 'text' }, w_why: { k: 'text' },
     trend: { k: 'cat', opts: XF_TR.map((o) => [o, (s) => trLabel(s) === o]) },
+    ttag: { k: 'cat', opts: ['FULL TREND', 'NEW TREND', 'CAUTION', 'NO TREND', 'FULL TREND or NEW TREND'].map((o) => [o, (s) => o.split(' or ').includes(trendTag(s))]) },
+    momtag: { k: 'cat', opts: [['1M', (s) => (momTag(s) || {}).a === '1M'], ['3M', (s) => (momTag(s) || {}).a === '3M'], ['6M (up 100%+)', (s) => !!(momTag(s) || {}).six], ['Any momentum tag', (s) => !!momTag(s)], ['No momentum tag', (s) => !momTag(s)]] },
     trend_y: { k: 'cat', opts: XF_TR.map((o) => [o, (s) => { const x = trendLast(s); return (x ? x.st || '—' : '—') === o; }]) },
     grank: { k: 'cat', opts: [['★ Top', (s) => XF_TIER(s) === 'Top'], ['Strong', (s) => XF_TIER(s) === 'Strong'], ['★ Top or Strong', (s) => ['Top', 'Strong'].includes(XF_TIER(s))], ['Not in the top 10%', (s) => !['Top', 'Strong'].includes(XF_TIER(s))]] },
     stars: { k: 'cat', opts: [['★★', (s) => (launchStars(s) || {}).n === 2], ['★', (s) => (launchStars(s) || {}).n === 1], ['★★ or ★', (s) => ((launchStars(s) || {}).n || 0) >= 1], ['⚠ skip', (s) => (launchStars(s) || {}).n === -1]] },
@@ -5943,6 +6178,7 @@ defCalc('industry_perf', {
   const GH = { owner: 'goattrader40-lgtm', repo: 'radar-close-snapshots', branch: 'radar-data' };
   let CGR = null;     /* the code grades (radar/codegrade.py, test next to Claude's) */
   let PMEV = null;    /* the news behind today's theme event (the 8:45 grading -> pm_event.json) */
+  let EVL = null;     /* the event links (radar/event.py -> events.json): a bellwether's report and the stocks tied to it */
   let PMN = null;     /* the 8:05 / 8:35 news runs (radar/codegrade.py news -> pmnews.json): the News column before 8:45 */
   let CGL = null;     /* the code grader's daily log: its W (laggard watch) names for the W-crossed-the-200 alerts */
   let LEV = null;     /* today's 1- / 2- / 5-minute opening ranges of the movers (radar/levels.py): the + Filter "Above ORH" */
@@ -6063,6 +6299,7 @@ defCalc('industry_perf', {
       CGL = await getJson(sha, 'codegrade_log.json').catch(() => CGL);
       PMN = await getJson(sha, 'pmnews.json').catch(() => PMN);
       PMEV = await getJson(sha, 'pm_event.json').catch(() => PMEV);
+      EVL = await getJson(sha, 'events.json').catch(() => EVL);
       CGR = await getJson(sha, 'codegrade.json').catch(() => CGR);     /* the code grades, next to Claude's (test) */     /* the Earnings tab (radar/earnings.py) */     /* the job's alerts, incl. its 1-minute gap-up checks */
       PML = pml; ETF = etfs; REV = rev;
       if (!BASE || build[0].built_at !== lastBuilt) {
