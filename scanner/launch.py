@@ -90,7 +90,7 @@ import run  # noqa: E402
 from screens import roll_mean  # noqa: E402
 
 L = dict(off_200=2, bo_adr=0, bo_rv=1, leg_adr=1.25, flag_adr_min=1.25, flag_adr_max=4, min_sessions=60, rest_days=40, power_rv=3, power_gap=8, power_chg=10, power_ext200=10 ** 6, aplus_gap=6, leg_pause=5, late_leg=4, min_chg=5, min_clpos=0.5, min_rv=1.5, max_ext200=10 ** 6, min_above_low52=30, rv_big=3, gap_big=3, chg_big=10, base_days=20,
-         near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, watch_under200=25,
+         near_high=70, neglect_days=40, neglect_depth=25, follow_days=120, dedupe_days=20, ep_gap=5, ep_watch_min_price=7, watch_under200=25,
          near_gap=2, near_rv=1.2, flag_run_adr=4, flag_max_days=22, flag_relax_rv=1.3, flag_relax_drop=0.5, flag_vol_avg=1.1, try_adr=0.2, max_run_pct=0, pennant_low=0.0, flag_legs=1, flag_surf=3, flag_down_days=3, flag_days=4, caution_pct=0.5, tight_near=0.85, inner_span=20, inner_big=20, base_spans=(63, 21), retest_days=20, retest_first=1, retest_need_ema=0, bo_decisive=0, catalyst_launch=1, cat_rv=2, reversal_launch=1, rev_rv=2, rev_chg=8, off_days=62, off_adr=3.2, s3_ready_adr=0.7, s3_min_adr=4, gob_min_adr=4, gob_min_shares=600000, gob_min_dv=30, gob_min_mcap=700, gob_rv=1, gob_rv20=2, leg_decisive=0.5, dry_max=0.85, pop_tight=0.8, tight_body=0.5, rest_body=0.5,
          lag_rv=2, lag_under200=60,
          # max_ext200 / power_ext200 = no limit (the user, Nov 10 2026: "it can be a launch.. I don't have any rule like that",
@@ -267,6 +267,10 @@ class Arr:
         self.liquid20 = self.liq_noadr & (st.adr >= LQ["min_adr"])          # on today's 20-day ADR (the group ranking keeps this one)
         adr_hi = np.array([np.nanmax(st.adr[max(0, i - L["adr_look"] + 1):i + 1]) if not np.isnan(st.adr[max(0, i - L["adr_look"] + 1):i + 1]).all() else np.nan for i in range(n)])
         self.liquid = self.liq_noadr & (adr_hi >= LQ["min_adr"])            # adr_look: the highest ADR of the last 63 sessions
+        # liquid but for its price: the EP / power-day alert also watches a stock just under the price minimum, its $10 is
+        # checked on the live price (the user, Nov 21 2026: POET closed 8.59 on Apr 20 2026, 10.25 on its EP day)
+        self.liq_nopx = np.array([avgv20[i] >= LQ["min_avg_vol_20d"] and dv20[i] >= LQ["min_dollar_vol_20d_millions"] for i in range(n)]) & (adr_hi >= LQ["min_adr"])
+        self.min_price = LQ["min_price"]
         self.ret21 = np.full(n, np.nan)
         self.ret21[21:] = 100 * (c[21:] / c[:-21] - 1)
         self.ret5 = np.full(n, np.nan)
@@ -2982,15 +2986,25 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
         if r["grade"] in ("A+", "A", "B") and not r.get("follows") and r["sessions"] < 10:
             for g in groups.get(r["symbol"], ([], []))[0]:
                 leaders[g].add(r["symbol"])
-    watch, watch_hc21 = {}, {}
+    # ep_watch (the user, Nov 21 2026): the names only the EPISODIC PIVOT / POWER DAY alert reads on top of the watch list:
+    # a stock that launched in the last 20 sessions (CGON launched Nov 6 2026, gapped +23.7% on 8.2x on Nov 16 and could
+    # not alert) and a stock that is liquid but for its price, from L["ep_watch_min_price"] up (its $10 is checked on the
+    # live price). The same row as a watch row; no 200 SMA range (the EP alert has no 200 SMA rule). No other alert, list
+    # or table reads it.
+    watch, watch_hc21, ep_watch = {}, {}, {}
     for s, a in A.items():
         st = a.st
         i = len(st.dates) - 1
-        if st.dates[i] != today or s in launched or not a.liquid[i] or i < a.start:
+        if st.dates[i] != today or i < a.start:
             continue
+        only_ep = False
+        if s in launched or not a.liquid[i]:
+            only_ep = bool((s in launched and a.liquid[i]) or (s not in launched and a.liq_nopx[i] and L["ep_watch_min_price"] <= st.c[i] < a.min_price))
+            if not only_ep:
+                continue
         ext = 100 * (st.c[i] / a.s200[i] - 1)
         # 28-50% over: power days only (the trigger checks); down to 60% under for a laggard launch on a catalyst
-        if ext > L["power_ext200"] or ext < -max(L["watch_under200"], L["lag_under200"]):
+        if not only_ep and (ext > L["power_ext200"] or ext < -max(L["watch_under200"], L["lag_under200"])):
             continue
         hi20 = st.h[i - L["base_days"] + 1:i + 1].max()          # tomorrow's "previous 20 days' high"
         # tomorrow's power day / episodic pivot has to open over it (the user, Nov 5 2026: "the whole point is to gap up above
@@ -3007,7 +3021,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                       and a.ext200_prev[k] <= L["max_ext200"] and (a.clpos[k] < L["min_clpos"] or a.chg[k] < L["min_chg"])
                       and all(st.c[j] >= min(a.hi20[k], a.s200[k]) * 0.97 for j in range(k, i + 1))), default=-1)
             g = g2
-        watch[s] = [fnum(st.c[i]), fnum(hi20), fnum(a.s200[i]), fnum(a.e21[i]), fnum(a.e50[i]), fnum(st.high52[i]),
+        (ep_watch if only_ep else watch)[s] = [fnum(st.c[i]), fnum(hi20), fnum(a.s200[i]), fnum(a.e21[i]), fnum(a.e50[i]), fnum(st.high52[i]),
                     int(days), fnum(depth, 0), gn, gs, run.tv_symbol(s, st.exchange),
                     [st.dates[g], fnum(a.hi20[g])] if g >= 0 else None,
                     " ".join(sorted({x for t in groups.get(s, ([], []))[0] for x in leaders.get(t, ()) if x != s})) or None,
@@ -3016,7 +3030,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
     # (turning up)" from the old status): [15] "★ Top <group> #r/N · #p of n in it", [16] RS
     if gbest:
         order = {(g_["kind"], g_["group"]): (g_.get("order") or "").split() for g_ in (grank or {}).get("rows", [])}
-        for s_, w_ in watch.items():
+        for s_, w_ in list(watch.items()) + list(ep_watch.items()):
             b = gbest.get(s_) or {}
             txt = None
             if b.get("group"):
@@ -3103,7 +3117,7 @@ def daily(A, groups, GS, cal, S, out_path, news=None, earnings=None, picks=None,
                # to carry them): the Resistance column you can add there (the user, Nov 21 2026)
                watch_resistance={s_: resistance(A[s_], len(A[s_].st.dates) - 1) for s_ in watch if s_ in A},
                # off the list by the 50 EMA / rising-EMA rule, still inside 62 sessions of their high: back on at a breakout
-               off_watch=sorted({x[0]: x for x in sorted(off_watch, key=lambda x: x[1])}.values()), watch=watch, watch_close_high_21d=watch_hc21, groups=[g for g in G if g["status"] != "Not trending"],
+               off_watch=sorted({x[0]: x for x in sorted(off_watch, key=lambda x: x[1])}.values()), watch=watch, ep_watch=ep_watch, watch_close_high_21d=watch_hc21, groups=[g for g in G if g["status"] != "Not trending"],
                catalyst_days=sorted([s, d, w] for (s, d), w in CATALYST_DAYS.items()),
                news_days=sorted([s, d, w] for (s, d), w in NEWS_DAYS.items()),
                # 3-SETUPS for the live alerts (desktop: every trigger; phone: Ready only); kept from the evening scan when

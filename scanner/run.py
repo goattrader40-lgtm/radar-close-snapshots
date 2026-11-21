@@ -277,7 +277,17 @@ def our_flag(st, i):
     return float(f[3]), float(st.h[f[0]]), f[4] if len(f) > 4 else "bull flag"     # the line tomorrow, the top, the shape
 
 
-def details(sym, st, d, entry, P):
+def ep_day(o, h, l, c, k0):
+    """how a gap day (bar k0) ended, for the 1-EP/GAP tags: FADED = closed below its open or in the bottom half of its
+    day's range; UNDER 21D HIGH = closed at or under the highest close of the 21 sessions before it"""
+    o0, h0, l0, c0 = float(o[k0]), float(h[k0]), float(l[k0]), float(c[k0])
+    pos0 = (c0 - l0) / (h0 - l0) if h0 > l0 else 1.0
+    hc0 = float(max(c[max(0, k0 - 21):k0]))
+    return dict(open=fnum(o0), close=fnum(c0), high=fnum(h0), low=fnum(l0), range_pos=fnum(pos0), close_high_21=fnum(hc0),
+                faded=bool(c0 < o0 or pos0 < 0.5), under_21d=bool(c0 <= hc0))
+
+
+def details(sym, st, d, entry, P, name=None):
     i = st.pos[d]
     r = st.df.iloc[i]
     code = int(r.code)
@@ -324,6 +334,15 @@ def details(sym, st, d, entry, P):
                        flag_top=fnum(fl[1]))
             out["entries"]["flag_line"] = fnum(fl[0])
     out.update({k: v for k, v in entry.items() if k not in ("low",)})
+    # the EP day's two tags on 1-EP/GAP (the user, Nov 21 2026: "we add your faded tag next to ticker", "agree with
+    # everything you recommended"): how the gap day itself ended, a fact of that day that does not change afterwards.
+    #   FADED = it closed below its open, or in the bottom half of its day's range (629 list EP days of 2026: closed under
+    #   the EP day's low within 5 sessions 50% of the time, 30% for the rest; 30% / 31% ran 20%+ either way)
+    #   UNDER 21D HIGH = it closed at or under the highest close of the 21 sessions before it (48% vs 35%; 35% / 30% ran)
+    # A tag only: the list's rules are unchanged.
+    k0 = st.pos.get(entry.get("added")) if name == "1-EP/GAP" else None
+    if k0 is not None and k0 >= 1:
+        out.update(ep_day=ep_day(st.o, st.h, st.l, st.c, k0))
     if "low" in entry:
         out["support_low"] = entry["low"]
     if entry.get("pre_close"):
@@ -344,7 +363,7 @@ def write_outputs(state, stocks, cfg, P, log, d):
     cal = state["_cal"]
     full = {}
     for name in LISTS:
-        rows = [details(s, today[s], d, e, P) for s, e in lists[name].items() if s in today]
+        rows = [details(s, today[s], d, e, P, name) for s, e in lists[name].items() if s in today]
         if name == "3-SETUPS":
             rows.sort(key=lambda r: rank_key(r["symbol"], lists[name][r["symbol"]], today, d, cal))
         else:

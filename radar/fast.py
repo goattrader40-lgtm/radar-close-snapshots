@@ -4,7 +4,7 @@
   python3 radar/fast.py <launch.json> <stocks.json> <volprofile.json> <sipcal.json> <out.json> [--morning <settings.json>]
 
 The launch watch list (setups/launch.json, a few hundred stocks), so a big gap-up on volume (a catalyst gap, a power
-day, an A+/A launch) alerts within a minute instead of up to five (HRI crossed its 200 SMA between the 9:35 and the
+day, an A+/A launch) alerts within a minute (and the names only the EP / power day alert reads: launch.json ep_watch) instead of up to five (HRI crossed its 200 SMA between the 9:35 and the
 9:40 update on Oct 27, 2026), plus the launches being followed, for their breakouts (LION crossed its buy point at
 3:08 PM on Oct 29, 2026 and the 5-minute update saw it at 3:11). Writes live.json-shaped rows for those stocks only, Rel vol as radar/live.py works it out,
 with the volume correction the last live update measured (radar/sipcal.py). radar/alerts.py reads it like live.json.
@@ -23,7 +23,7 @@ def main():
     launch_p, stocks_p, prof_p, cal_p, out_p = sys.argv[1:6]
     now = datetime.datetime.now(NY)
     doc = json.load(open(launch_p))
-    syms = sorted(set(doc.get("watch", {})) | {r["symbol"] for r in doc.get("launches", []) + doc.get("ema50_undercut", []) + doc.get("laggards", [])})   # + the 50 EMA undercut tab: its reclaim within a minute
+    syms = sorted(set(doc.get("watch", {})) | set(doc.get("ep_watch") or {}) | {r["symbol"] for r in doc.get("launches", []) + doc.get("ema50_undercut", []) + doc.get("laggards", [])})   # + the 50 EMA undercut tab: its reclaim within a minute
     syms = sorted(set(syms) | {r["symbol"] for r in doc.get("setups3") or [] if r.get("buy_point") or r.get("live")})   # + 3-SETUPS: every entry (Nov 3 2026)
     try:
         prof = json.load(open(prof_p))["rows"]

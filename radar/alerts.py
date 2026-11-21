@@ -364,6 +364,49 @@ def grade_breakout(r):
     return g, ", ".join(why)
 
 
+# ───────── the episodic pivot / power day alert (the user, Nov 21 2026) ─────────
+# "fix to ep alert so we dont miss it": of the 40 names on 1-EP/GAP on Nov 20 2026 only 28 met the alert's rules at the
+# close of their gap day (APP, WING, TMDX under the 200 SMA; HAWK, LFTO without one; KD opened 14.91 under its 21-day
+# closing high 15.20; AZTA, UPBD, PCOR, KVYO, CHYM under 3x; CGON already on Launches). Now, on the live price:
+#   a 5%+ gap (was 6%), a volume pace of 2.2x+ (was 3x), over the 50 EMA (new), $10+ now (was last night's close),
+#   30%+ over the 52-week low (main() checks it for every alert), NO 200 SMA rule, NO 1-month-high rule ("its same thing"
+#   as the 21-day level), and over the highest close of the last 21 sessions:
+#     - it opened over that level: it rings as before (and holds while the price is over the level);
+#     - it opened under it ("its for laggards starts"): it rings when the price is over the 3-minute opening range high
+#       AND over that level ("alert would just ring and sound when it passes 2 true states: above orh, plus above the
+#       level"); KD Nov 4 2026.
+# A power day keeps its own bar (gap 8%+, up 10%+, a volume pace of 3x+) on the same rules. Read for the watch list AND
+# launch.json ep_watch (a stock launched in the last 20 sessions, a liquid stock closing $7-10). A stock under its 200 SMA
+# rings as an EP when it meets them; the laggard-launch alert stays for the ones that don't.
+EP_GAP, EP_RV, EP_MIN_PRICE, EP_ORH_MIN = 5.0, 2.2, 10.0, 3
+_EP_NEED_ORH = {}        # symbol -> its 21-day closing high, for an EP / power day found this run that opened under it
+_EP_ORH = {}             # symbol -> today's 3-minute opening range high (kept in the state file: read once a stock a day)
+
+
+def ep_orh(sym):
+    """today's 3-minute opening range high (9:30-9:33) of a stock that opened under its 21-day closing high, or None"""
+    if not _EP_ORH.get(sym):
+        lv = morning_levels(sym, n=EP_ORH_MIN)
+        if lv and lv.get("orh"):
+            _EP_ORH[sym] = lv["orh"]
+    return _EP_ORH.get(sym)
+
+
+def ep_orh_ok(sym, price):
+    """(True / False, the 3-minute high): an EP / power day that opened under its 21-day closing high also needs the price
+    over its 3-minute opening range high; one that opened over the level needs nothing more (True, None)"""
+    if sym not in _EP_NEED_ORH:
+        return True, None
+    orh = ep_orh(sym)
+    return bool(orh and price and price > orh), orh
+
+
+def ep_names(doc):
+    """[(symbol, watch row, only_ep)]: the watch list, then the names only the EP / power day alert reads (ep_watch)"""
+    w = doc.get("watch", {})
+    return [(s_, r_, False) for s_, r_ in w.items()] + [(s_, r_, True) for s_, r_ in (doc.get("ep_watch") or {}).items() if s_ not in w]
+
+
 def find_early(live, doc, now=None):
     """the early heads-up, 9:31-9:34 (every minute): the shape of a big gap-up from the first minutes' prices, before
     the volume pace means anything (the opening auction is most of the first minutes' volume). The full alert follows
@@ -375,7 +418,8 @@ def find_early(live, doc, now=None):
     now = now or datetime.datetime.now(NY)
     d0 = datetime.date.fromisoformat(doc["date"])
     after_close = datetime.datetime(d0.year, d0.month, d0.day, 15, 30, tzinfo=NY).timestamp()
-    for sym, w in doc.get("watch", {}).items():
+    hc = doc.get("watch_close_high_21d") or {}
+    for sym, w, only_ep in ep_names(doc):
         q = rows.get(sym)
         if not q or len(q) < 6 or not q[5]:
             continue                                                # not open yet (NYSE often takes a minute or more)
@@ -383,25 +427,31 @@ def find_early(live, doc, now=None):
         prev = price / (1 + chg / 100)
         gap = (op / prev - 1) * 100
         close0, pivot, s200, s50 = w[0], w[1], w[2], w[4]
-        if not s200 or price <= s200 or gap < R.get("ep_gap", 5):
+        if gap < R.get("ep_gap", 5):
             continue
-        ext = (close0 / s200 - 1) * 100
-        power = gap >= R.get("power_gap", 8)
-        if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not power):
-            continue
+        # the EP / power-day gap follows the EP alert's rules (the user, Nov 21 2026): over the 50 EMA, $10+ now, no 200 SMA rule
+        hc21 = hc.get(sym)
+        epgap = (not s50 or price > s50) and price >= EP_MIN_PRICE
+        over200 = bool(s200 and price > s200)
+        power = epgap and gap >= R.get("power_gap", 8)
         under = [n for n, m in (("50 EMA", s50), ("200 SMA", s200)) if m and close0 < m]
-        catalyst = bool(under) and bool(s50) and price > s50
-        launch = price > pivot and chg >= R["min_chg"]
-        if not (power or catalyst or launch):
+        catalyst = not only_ep and over200 and bool(under) and bool(s50) and price > s50
+        launch = not only_ep and over200 and price > pivot and chg >= R["min_chg"]
+        if not (epgap or catalyst or launch):
             continue
         ern = q[6] if len(q) > 6 else None
         earn = bool(ern and after_close <= ern <= now.timestamp() + 3600)
         group, gstat = w[8], w[9]
         theme = gtext(w)
-        what, need = ("power-day gap", "4x+ and up 15%+") if power else ("catalyst gap", "3x+") if catalyst else ("launch gap", "3x+")
+        what, need = (("power-day gap", f"{R.get('power_rv', 3):g}x+ and up {R.get('power_chg', 10):g}%+") if power else ("catalyst gap", "3x+") if catalyst
+                      else ("launch gap", "3x+") if launch else ("EP gap", f"{EP_RV:g}x+"))
+        lvl = "" if not hc21 or not (power or not (catalyst or launch)) else (
+            f" · opened over its 21-day closing high ${hc21:.2f}" if op > hc21
+            else f" · opened {100 * (1 - op / hc21):.1f}% under its 21-day closing high ${hc21:.2f}: the alert needs the {EP_ORH_MIN}-minute opening range high and that level")
         out.append((f"{sym}:early", f"{sym} EARLY: {what} " + ("on earnings" if earn else "(news? no earnings)"),
                     f"gap {gap:+.1f}% · ${price:.2f} ({chg:+.1f}%)"
-                    + (f" · was under its {' & '.join(under)}, now above the 50 EMA & 200 SMA" if under and price > s50 else "")
+                    + (f" · was under its {' & '.join(under)}, now above the 50 EMA & 200 SMA" if under and price > s50 and over200 else "")
+                    + (f" · under its 200 SMA ${s200:.2f}" if s200 and not over200 else "") + lvl
                     + f" · base high ${pivot:.2f} " + ("cleared" if price > pivot else "not cleared")
                     + (f" · vol {rv:.1f}x so far (rough: the opening auction)" if rv else "")
                     + f" · the full alert from 9:35 if the volume confirms ({need}) · theme {theme}", "default", w[10]))
@@ -422,7 +472,8 @@ def find(live, doc, now=None):
     now = now or datetime.datetime.now(NY)
     d0 = datetime.date.fromisoformat(doc["date"])                 # the last close the watch list was built from
     after_close = datetime.datetime(d0.year, d0.month, d0.day, 15, 30, tzinfo=NY).timestamp()
-    for sym, w in doc.get("watch", {}).items():
+    _EP_NEED_ORH.clear()
+    for sym, w, only_ep in ep_names(doc):
         q = rows.get(sym)
         if not q or len(q) < 5 or q[4] is None:
             continue
@@ -436,7 +487,18 @@ def find(live, doc, now=None):
         s50 = w[4]                                                 # the 50 EMA
         ern = q[6] if len(q) > 6 else None
         earn = bool(ern and after_close <= ern <= now.timestamp() + 3600)  # reported after the last close (or this morning)
-        if s200 and price <= s200:
+        # the episodic pivot and the power day (the rules above find_early; the user, Nov 21 2026): over the 50 EMA, $10+
+        # now, over the highest close of the last 21 sessions (no number = not checked), no 200 SMA and no 1-month-high rule
+        hc21 = (doc.get("watch_close_high_21d") or {}).get(sym)
+        ep_base = (gap is not None and (not s50 or price > s50) and price >= EP_MIN_PRICE and (not hc21 or price > hc21))
+        power = ep_base and rv >= R.get("power_rv", 4) and gap >= R.get("power_gap", 8) and chg >= R.get("power_chg", 10)
+        ep = ep_base and rv >= EP_RV and gap >= EP_GAP
+        opened_under = bool(hc21 and op and op <= hc21)
+        if (power or ep) and opened_under:
+            _EP_NEED_ORH[sym] = hc21                               # main(): only over its 3-minute opening range high too
+        if only_ep and not (power or ep):
+            continue
+        if s200 and price <= s200 and not (power or ep):
             # a laggard launch (the Launch Laggards tab): under the 200 SMA, on earnings or this morning's A/B-graded news,
             # up 5%+ from an up open on 2x+ volume
             news, lo52 = doc.get("_news_today", {}).get(sym), (w[14] if len(w) > 14 else None)
@@ -449,29 +511,24 @@ def find(live, doc, now=None):
                             f"{100 * (price / s200 - 1):+.1f}% vs the 200 SMA ${s200:.2f} · base high ${pivot:.2f} "
                             + ("cleared" if price > pivot else "not cleared") + " · moves to Launches after 5 closes over the 200 SMA",
                             "default", tvs))
-        if not s200 or price <= s200:
+        if (not s200 or price <= s200) and not (power or ep):
             continue
-        ext = (close0 / s200 - 1) * 100
-        power = (rv >= R.get("power_rv", 4) and gap is not None and gap >= R.get("power_gap", 8) and chg >= R.get("power_chg", 10)
-                 and price > pivot)                                # over its 1-month high (your rule, Nov 2 2026)
+        ext = (close0 / s200 - 1) * 100 if s200 else 0.0
         # an episodic pivot (the user, Nov 4 2026; in this job Nov 5, so every device has it): a volume pace of 3x+ (was 4x), a 6%+
         # gap, over the 1-month high and the 200 SMA; a power day (8%+ gap, +10%) is one and alerts as the power day
         # (CHYM Nov 5: gap +6.4%, up 4.7%, 5x: an EP, not a power day)
         # a volume pace of 3x+ (the user, Nov 5 2026 evening: "change the rule for the episodic pivot: 3 rvol at least,
         # everything else stays the same"; was 4x, the power day's)
-        ep = rv >= 3 and gap is not None and gap >= 6 and price > pivot
-        # both have to gap over the highest close of the last 21 sessions (the user, Nov 5 2026: "the whole point is to gap up
-        # above it"; WRBY Nov 5 opened 25.93 under its 26.52 and fired a power day at 12:35 on a 1-cent pass of its 27.00
-        # high, then closed 26.10); no number (a watch list built before Nov 6) = not checked
-        hc21 = (doc.get("watch_close_high_21d") or {}).get(sym)
-        if hc21 and not (op and op > hc21):
-            power = ep = False
+        # (until Nov 21 2026: 3x, a 6%+ gap, over the 1-month high and the 200 SMA, and it had to OPEN over the highest close of
+        # the last 21 sessions: the user, Nov 5 2026, "the whole point is to gap up above it"; WRBY Nov 5 opened 25.93 under
+        # its 26.52 and fired a power day at 12:35 on a 1-cent pass of its 27.00 high, then closed 26.10. Now a stock that
+        # opened under that level needs the price over it AND over its 3-minute opening range high: main() checks it)
         if ext > R.get("power_ext200", 50) or (ext > R["max_ext200"] and not (power or ep)):
             continue
         theme = gtext(w)
         facts = f"{chg:+.1f}% · gap {gap:+.1f}% · vol {rv:.1f}x for the time of day" if gap is not None else f"{chg:+.1f}% · vol {rv:.1f}x"
         under = [n for n, m in (("50 EMA", s50), ("200 SMA", s200)) if m and close0 < m]
-        over = bool(s50) and price > s50 and price > s200
+        over = bool(s50) and price > s50 and bool(s200) and price > s200
         crossed = f" · was under its {' & '.join(under)}, now above the 50 EMA & 200 SMA" if under and over else ""
         # how far under its 52-week high it trades now, and the correction it is coming out of (AXGN Oct 28 2026: 14% under
         # its 52-week high at $45.48, after a 36% correction; not "36% off its high", which was yesterday's depth)
@@ -479,20 +536,25 @@ def find(live, doc, now=None):
             + (f", after a {w[7]:.0f}% correction" if w[7] and w[7] >= 15 else "")
         cat = " · EARNINGS" if earn else ""
         bo = price > pivot or bool(mem and price > mem[1])
-        g = grade(max(rv, R["rv_big"]), bo, max(gap or 0, R["gap_big"]), chg, R, False) if mem else grade(rv, bo, gap, chg, R, close0 < s200)
+        g = grade(max(rv, R["rv_big"]), bo, max(gap or 0, R["gap_big"]), chg, R, False) if mem else grade(rv, bo, gap, chg, R, bool(s200) and close0 < s200)
+        # what the EP / power-day alert says about its levels: the 21-day closing high it is over (and how it opened), the
+        # 200 SMA when it is under it or has none yet
+        lv21 = ("" if not hc21 else f" over its 21-day closing high ${hc21:.2f}"
+                + (f" (opened {100 * (1 - op / hc21):.1f}% under it)" if opened_under else ""))
+        s2txt = (" · no 200 SMA yet" if not s200 else f" · under its 200 SMA ${s200:.2f}" if price <= s200 else "")
         shape = bool(under) and over and gap is not None and gap >= R.get("ep_gap", 5)    # a catalyst gap, whatever the volume
-        if shape and price > pivot and rv >= 1:
+        if shape and price > pivot and rv >= 1 and not only_ep:      # (an ep_watch name gets the EP / power day alert only)
             # the 2nd trigger: sent only after a catalyst alert that hadn't cleared the base yet (see main)
             out.append((f"{sym}:basebreak", f"{sym} 2nd trigger: base high ${pivot:.2f} cleared",
                         f"${price:.2f} · {chg:+.1f}% · vol {rv:.1f}x for the time of day · grade so far {g}{cat}"
                         f" · after its catalyst gap over the 50 EMA & 200 SMA · theme {theme}", "high", tvs))
         if power:
             out.append((f"{sym}:power", f"{sym} POWER DAY" + (" on earnings" if earn else ""),
-                        f"{facts} · ${price:.2f}{crossed}{neglect} · theme {theme}", "high", tvs))
+                        f"{facts} · ${price:.2f}{lv21}{s2txt}{crossed}{neglect} · theme {theme}", "high", tvs))
             continue
-        if ep:                                                     # stands for this stock's catalyst gap and A launch
+        if ep:                                                     # stands for this stock's catalyst gap, A launch and laggard launch
             out.append((f"{sym}:ep", f"{sym} EPISODIC PIVOT" + (" on earnings" if earn else ""),
-                        f"{facts} · ${price:.2f} over its 1-month high ${pivot:.2f}{crossed}{neglect} · grade so far {g} · theme {theme}",
+                        f"{facts} · ${price:.2f}{lv21}{s2txt}{crossed}{neglect} · grade so far {g} · theme {theme}",
                         "high", tvs))
             continue
         if shape and rv >= R["rv_big"]:
@@ -1024,6 +1086,8 @@ def still_holds(key, title, found_keys, live, doc, memo):
     if kind in ("gob1", "gob5"):             # the opening range's high broken, the price over its low (the stop)
         rg = gob_range(got("bars", gob_bars), 1 if kind == "gob1" else 5)
         return bool(rg and rg[2] and price > rg[1])
+    if kind in ("ep", "power"):              # it opened under its 21-day closing high: over the 3-minute range too
+        return ep_orh_ok(sym, price)[0]
     return True
 
 
@@ -1592,6 +1656,8 @@ def main():
         print("alerts: not in today's session yet")
         return
     sent = set(state["sent"])
+    _EP_ORH.clear()
+    _EP_ORH.update(state.get("ep_orh") or {})      # today's 3-minute opening range highs read so far (EP / power day)
     low52_of(launch_p)                  # the stocks file: 52-week lows, 200 SMAs and each stock's groups (3-SETUPS tiers)
     # the morning breakouts (any stock; the user's settings, alerts/morning.json): the stocks whose live quote passes now
     M = load_morning(sys.argv[sys.argv.index("--morning") + 1]) if "--morning" in sys.argv else None
@@ -1641,7 +1707,8 @@ def main():
         if key in sent or (key.endswith(":launch") and sym + ":power" in sent):
             continue
         # one alert per move: an EP covers the stock's later catalyst gap / A launch; a power day covers its EP
-        if ((key.endswith(":launch") or key.endswith(":catalyst")) and sym + ":ep" in sent) or (key.endswith(":ep") and sym + ":power" in sent):
+        if ((key.endswith(":launch") or key.endswith(":catalyst") or key.endswith(":laggard")) and (sym + ":ep" in sent or sym + ":power" in sent)) \
+                or (key.endswith(":ep") and sym + ":power" in sent):
             continue
         # a catalyst stock gets two triggers: the catalyst gap, then (if its base wasn't cleared yet) the base breakout;
         # its launch alert would only repeat them
@@ -1763,6 +1830,16 @@ def main():
             if not (ch and r_.get("buy_point") and ch > r_["buy_point"]):
                 print(f"{key}: not confirmed by today's chart (high {ch}), not sent")
                 continue
+        if title is not None and key.endswith((":ep", ":power")) and key.split(":")[0] in _EP_NEED_ORH:
+            # it opened under its 21-day closing high (the user, Nov 21 2026, KD Nov 4 2026: opened 14.91 under 15.20): the
+            # alert goes out when the price is over the 3-minute opening range high as well as over that level
+            sym_ = key.split(":")[0]
+            q_ = live["rows"].get(sym_)
+            ok_, orh_ = ep_orh_ok(sym_, q_[0] if q_ else None)
+            if not ok_:
+                print(f"{key}: opened under its 21-day closing high {_EP_NEED_ORH[sym_]}, the {EP_ORH_MIN}-minute opening range high {orh_} not broken yet, not sent")
+                continue
+            msg += f" · and over its {EP_ORH_MIN}-minute opening range high ${orh_:.2f}"
         if title is not None and key.endswith((":catalyst", ":basebreak", ":pop", ":push")):
             # your entry: over the first 5 minutes' high, or a retest of it
             orh, q = opening_range_high(key.split(":")[0]), live["rows"].get(key.split(":")[0])
@@ -1915,6 +1992,7 @@ def main():
                 print(f"{now:%H:%M} {title}: {msg}")
         except Exception as e:                      # never at the cost of the alerts
             print(f"holding not updated: {e!r}", file=sys.stderr)
+    state["ep_orh"] = dict(_EP_ORH)
     json.dump(state, open(state_p, "w"), indent=1)
     print(f"alerts: {len(out_)} new, {len(state['sent'])} today" + ("" if topic else " (no NTFY_TOPIC: logged, not sent)"))
 
