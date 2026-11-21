@@ -4,6 +4,10 @@ their risk is low of day that time"). A test tool only: nothing live reads it.
 
   python3 radar/probe_orh.py history/orh_request.json /tmp/probe_orh.json
 
+Keys "3" / "5" = the first break of the range high; "3a" / "5a" = the first cross of it from below at 10:00 or later
+(a stock that broke earlier, pulled back under it and broke again counts with its new break). The request also holds the
+day after each EP day (the user, Nov 21 2026: "next day after ep day (all eps), orh breakout risking low of day").
+
 The request is {date: [symbols]} (the 5%+ gap-up days of the EP study). For each stock-day it reads the day's 1-minute SIP
 bars from Alpaca (regular hours) and, for a 3- and a 5-minute opening range:
   entry   the first 1-minute bar after the range whose high goes over the range high: bought at the range high (at the
@@ -58,7 +62,9 @@ def bars(date, syms):
             return out
 
 
-def orh_trade(bs, n):
+def orh_trade(bs, n, rebreak_from=None):
+    """rebreak_from (minutes after 9:30): only a break from that time on, crossing the range high from below (the bar
+    before closed at or under it): the user's "broke, pulled back and broke again" after 10:00 (and a first break then)"""
     bs = sorted(bs)
     rng = [b for b in bs if b[0] < n]
     after = [b for b in bs if b[0] >= n]
@@ -67,7 +73,8 @@ def orh_trade(bs, n):
     orh = max(b[2] for b in rng)
     low = min(b[3] for b in rng)
     for j, b in enumerate(after):
-        if b[2] > orh:
+        prev_close = after[j - 1][4] if j else rng[-1][4]
+        if b[2] > orh and (rebreak_from is None or (b[0] >= rebreak_from and prev_close <= orh)):
             entry = max(b[1], orh)
             stop = low
             if entry <= stop:
@@ -100,7 +107,8 @@ def main():
                 continue
             for s in syms[k:k + 50]:
                 if s in B:
-                    res[f"{date} {s}"] = {str(r): orh_trade(B[s], r) for r in RANGES}
+                    res[f"{date} {s}"] = {**{str(r): orh_trade(B[s], r) for r in RANGES},
+                                           **{f"{r}a": orh_trade(B[s], r, 30) for r in RANGES}}   # from 10:00
                     n += 1
         print(date, n, flush=True)
     json.dump({"made_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "requested": sum(len(v) for v in req.values()),
