@@ -197,6 +197,7 @@ jobs:
           case "$CMD" in morning*)   # the morning breakout alert replayed on today's 1-minute charts ("morning FLY VSAT ...") -> probe_morning.json; before 4:06 PM
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd && for f in stocks earnings volprofile; do git show origin/radar-data:$f.json > /tmp/rd/$f.json; done
+            [ -f tools/tmp/base_1119.json ] && cp tools/tmp/base_1119.json /tmp/rd/stocks.json   # TEST ONLY: Thursday Nov 19 close, rebuilt
             git show origin/main:alerts/morning.json > /tmp/rd/morning.json 2>/dev/null || git show HEAD:alerts/morning.json > /tmp/rd/morning.json 2>/dev/null || echo '{}' > /tmp/rd/morning.json
             A=${CMD#morning}; A=${A# }
             python3 radar/probe_morning.py /tmp/rd/stocks.json /tmp/rd/volprofile.json /tmp/rd/earnings.json /tmp/probe_morning.json --settings=/tmp/rd/morning.json $A
