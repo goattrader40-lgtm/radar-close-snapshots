@@ -49,6 +49,54 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: Resistance alerts box (Nov 21)" (Sat Nov 21 2026 ~1:15 PM ET -; session_01PkbDakoHKZ2tgMSvkWcZxx; in progress)
+
+- **LIVE (the user's "Go live, and i want this to be ready for monday morning", Sat Nov 21 2026; branch claude/friendly-carson-ia63f6
+  merged with main): the resistance levels as a FILTER of the two morning boxes (no new box), the all-time high, and a silent
+  end-of-day report. NONE OF IT HAS RUN ON LIVE PRICES: FIRST CHECK Mon Nov 23 from 9:35 AM ET.** The user first asked for a third
+  box (NEAR / INSIDE / BREAKOUT, its own sound), then: "maybe we dont need add another box ... you add those options here";
+  "you are just adding new filter above 1m high/3month/6/9/52w/ath, and i choose which one, when other filters aligns with it it
+  fires"; "stock can open up above 1month high, it would have to wait to breakout of orh to trigger ... at orh both states has to
+  be true above the level and orh"; "i dont need inside alerts ... silent and end of day report"; "im only interested in breakout
+  level"; "here im only requesting we work on alerts" (the Resistance column is NOT changed).
+  1. **📈 and 📊 settings**: tick boxes "Above: 1M / 3M / 6M / 9M / 52W / ATH / Broken support" and "Only my lists" (alerts/
+     morning.json / morning2.json keys res_1m ... res_bs, lists_only; all off by default = the boxes exactly as before: 1,200
+     random cases identical to the old code). A ticked level: the price over the TOP of that range (its highest high), the range
+     overhead at the last close, at the same moment as every other setting incl. the ORH (radar/alerts.py RES_KEYS,
+     ticked_levels, morning_alert; morning_static leaves out stocks with no ticked level in reach, so fast.py reads fewer).
+     A joined range ("1m/3m") counts when any label is ticked. Only my lists = Launches (+ 50 EMA undercut, laggards),
+     3-SETUPS, Start days, the Watchlist's lists (list_names).
+  2. **The alert**: title "ARM MORNING BREAKOUT +4.1% · ABOVE 1M"; the text adds "above its 1M $a-b", "also cleared ...", "next:
+     3M $a-b, +x%", the trend tag at the live price (FULL / NEW TREND / CAUTION / NO TREND, the Watchlist tag's rule); the
+     voice "Morning breakout, V E R X, above 1 month 3 month, volume 1.8 times" (docs/index.html sayOf; an example in the sound
+     test). Same sound, one alert a stock a day (the user: "one alert.. the way its now"); it holds in its box only while over
+     the level; BACK ON as before.
+  3. **The levels**: setups/resistance.json, written by the evening scan (scanner/launch.py write_resistance, only with
+     --watchlist) for every stock it loads (2,879 on Nov 20; the $2T+ stocks are not in the scan: NVDA, AAPL ... have no
+     levels, so a ticked box never fires on them: told the user): the Resistance column's ranges without its buy-point floor,
+     plus the ATH. radar/day.py resistance_args reads it once a job and passes --resistance to fast.py and alerts.py.
+  4. **The all-time high**: radar/ath.py (Yahoo monthly range=max, then the daily bars of the top months: highest close to
+     highest high; a reference close so the scan rescales after a split) -> radar-data ath.json; .github/workflows/ath.yml every
+     Saturday 13:17 UTC and radar-tools `ath` (`ath SYM ...` -> ath_test.json). First full run Nov 21: 3,208 stocks, 0 missing
+     (AZTA 124.15-124.79 Nov 2021, VERX 58.95-60.71 Feb 2025, ARM's = its 52W: "6m/9m/52w/ath"). Without a row: a stock listed
+     inside the 2 years gets its bars' high, any other none.
+  5. **🧱 Resistance at the close** (Alerts tab, folded, silent): broke out / inside / rejected at the close vs the levels
+     overhead the day before, the 📈 box's price / liquidity / ADR / 52W low / only-my-lists settings, no trend boxes, no ORH.
+     Nov 20: 0 broke out, 1 inside (ENR), 17 rejected (KVYO, XERS, VIA, TDC, VCEL ...).
+  **For Monday (the user's ask)**: the evening scan doesn't run on weekends, so setups/resistance.json on main is the branch's
+  dry-run file (radar-tools `setupsdry`, the Nov 20 close, with ath.json): exactly what the scan writes. From Mon Nov 23 evening
+  the scan writes it itself. **Nothing is ticked yet: the user ticks levels in the boxes and Saves.**
+  Tested: stand-in minute runs (ARM's levels, 1M ticked: 9:36 $327 over the 1M top 325.48 under the ORH 330 nothing; 9:38 $331
+  fires; 9:45 $324 out of the box; 10:05 back on; 3M ticked: $331 nothing, $337.50 fires); the page on desktop / phone, 0 page
+  errors, the voice captured; `setupsdry` on the branch: launches 134, setups3 66, start_days 27, ema50_undercut 12, watch and
+  ep_watch identical to main's; `--regress` "every agreed example reads the same". Rules workbook: 2 rows. No 2-year check
+  (an alert filter), no Launches rebuild (no launch rule changed).
+  **Check Mon Nov 23**: the boxes' level ticks once saved (alerts/morning.json res_*), a "· ABOVE" alert and its voice, the job
+  log (alerts.json) without "no resistance levels"; Mon evening: setups/resistance.json date 2026-11-23 and its report on the
+  Alerts tab; Sat Nov 28: ath.yml ran.
+- Data: long_bars.json on radar-data had only SPOT / SPY (another session's fetch); re-run `long` with the 24 example stocks +
+  VERX (30 symbols now: the 153 of the morning are gone; re-fetch others when needed).
+
 ## Status at the end of the session "Radar: theme chips on Today's gainers (Nov 18)" (Wed Nov 18 ~10:55 AM ET - Sat Nov 21 2026 ~12:40 PM ET; session_01PkbDak4wNj9qyumu6CQx8R)
 
 **In one line: seven alert changes, all live on main, nothing left on a test branch (claude/compassionate-volta-5ichnh = main): the
@@ -252,6 +300,7 @@ Its first part (Nov 12-13: the coil on Launches, the full + Filter list, the MBG
     third box like 📈 / 📊: tick boxes per level incl. ATH and broken support, NEAR % / INSIDE / BREAKOUT, an ORH combination,
     its own sound and the volume in the voice; to explain first: where it feeds from, levels for every stock it watches, the
     ATH needing more than 2 years of bars, how often it checks).
+    **Done and live Nov 21 in the session "Radar: Resistance alerts box (Nov 21)"**: as tick boxes in the two existing boxes.
   - Still open from the first part (archive): the coil alert to look at later, the pre-market blind spot 9:10-9:30, young
     listings (52-week low / 200 SMA), the code grader's "no daily bars" bug.
 - Data: radar-tools `long` re-run on Nov 21 with the 135 symbols another session had fetched that morning plus the examples and
@@ -437,7 +486,7 @@ Its first part (Nov 12-13: the coil on Launches, the full + Filter list, the MBG
 | Launches (nightly + picks) | scanner/launch.py → setups/launch.json; the user's picks: setups/picks.json |
 | Live alerts (phone, ntfy) | radar/alerts.py (every 5 min, 1 min at the open/close via radar/fast.py), radar/eod_alerts.py (after the close; also the 3-SETUPS Ready list as one text file) |
 | Desktop alerts | the portal (docs/index.html) while it is open: launches, breakouts, and every 3-SETUPS trigger |
-| 📈 Morning breakouts (portal only) | radar/alerts.py check_morning (any stock, 9:35-10:30 by default); the user's settings and + Filters: alerts/morning.json on main (Alerts tab, Save); replay: radar-tools `morning` |
+| 📈 Morning breakouts (portal only) | radar/alerts.py check_morning (any stock, 9:35-10:30 by default); the user's settings and + Filters: alerts/morning.json on main (Alerts tab, Save); the level ticks read setups/resistance.json (evening scan) and radar-data ath.json (ath.yml, Saturdays); replay: radar-tools `morning` |
 | Opening ranges (+ Filter "Above ORH" 1min / 2min / 5min) | radar/levels.py from day.py's live updates and minute reads, 9:31 on -> radar-data levels.json (stocks up 2%+) |
 | Data branch | `radar-data`: stocks.json, long_bars.json, probe_catalyst.json, alerts.json, gradelog.json |
 
