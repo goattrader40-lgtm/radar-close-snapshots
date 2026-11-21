@@ -60,6 +60,10 @@ SESSION (stand-in levels only; the Thu Nov 19 and Fri Nov 20 opens ran the first
 first `grp:` at 9:40 or later, levels.json rows with 5 values from 9:33; and ask the user how the 📊 box and the 🔥 alerts
 behaved on Nov 19-20 (too many? the 📊 settings saved in alerts/morning2.json?).**
 
+- (The MBGL / AVEX session's wrap-up, a minute before this one, moved this section's earlier copy to HANDOFF_ARCHIVE.md with ten
+  others; this is the completed one. The other sessions changed things on top of this work since Nov 18: a morning BACK ON
+  after the box's End time is silent (Nov 19), a context line on GROUP MOVE / THEME MOVING UP alerts (Nov 20), themes by
+  business line (Nov 20): their sections are in the archive.)
 - **How it went with the user (for the next session)**: two of my mistakes cost them time. (1) "move the GROUP MOVE time to
   9:40" was built as "alerts before 9:40 don't count" and reported as "3 alerts instead of 8" before showing what was behind
   the numbers (the user: "you cant do stuff without my confirmation... all i asked you change time", "you really messed me up
@@ -599,41 +603,38 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 **Keep in this file until the Nov 18 check-in has run**: the section "Code grade next to Claude's (LIVE Nov 4)" (the
 Nov 11 and Nov 18 code-grade check-ins read HANDOFF.md); after that, /wrapup moves it to the archive.
 
-- Moved to the archive on Nov 21: still open there: the first GROUP MOVE on Mon Nov 23 is the check of the alerts' context line
-  (move_context); the bellwether "why" (alert_reasons) is still OFF, the user's call; EPAM passed every filter at 10:35 on Nov
-  20 and did not alert (to replay with radar-tools `morning`); ASX has no theme now ["a chat session outside the Radar
-  sessions (Fri Nov 20 2026"].
-- Moved to the archive on Nov 21: still open there: a morning BACK ON after the box's End time is silent: not seen in a
-  browser; alerts/morning2.json was not saved on Nov 19 (135 alerts in 📊 by 11:25 that day) ["a chat session outside the
-  Radar sessions (Thu Nov 19 2026"].
-- Moved to the archive on Nov 21: still open there: switching the alert reason on after ~3 sessions of the Event card reading
-  right (ask first); the Nov 19 first checks of the card (PANW's reaction session, WMT / BABA / PDD own rows); written maps
-  for AVGO, TSM; niches for other themes; unscheduled news events ("later"); the earnings call is not read; the Earnings
-  tab's guidance reader misread TGT Nov 18 ["Radar: gap news and NVDA ecosystem links (Nov 17)"].
-- Moved to the archive on Nov 21: still open there: live.json fast_at every minute 10:30-11:00 (never checked); the user's
-  neoclouds screenshot (more were 4%+ than our data showed); offered, no answer: Rel vol 0.7x, an 11:00 end, no 10 > 21 for
-  the morning box ["Radar: Cybertruck morning breakout alerts (Nov 18)"].
-- Moved to the archive on Nov 21: still open there: the Nov 17 evening scan's 20-day Rel vol on the Watchlist rows and a real
-  START DAY alert with its sound / phone priority (never checked); offered, not taken up: no 50 EMA test for 1-EP/GAP /
-  1-UPDAY ["Radar: why AVEX isn't on the EP watchlist (Nov 17)"].
-- Moved to the archive on Nov 21: still open there: the 9:31-9:36 opening-range reads (levels.json) never checked on a live
-  open; offered, not built: one more read of all the ranges around 9:45 (a high read in the first minutes can be 0.1-1%
-  low); the 15 minutes between two BACK ON alerts (the user's "at most once" read as 15 minutes) ["Radar: opening range
-  1/2/5-min choice (Nov 17)"].
-- Moved to the archive on Nov 21: still open there: the first run of the Start days 1 ADR lines (who left, who stayed) never
-  checked; offered, no answer: "back on <date>" under a launch date on the Launches row, a tighter reset (BILL's 3 lower
-  highs) ["Radar: Start days stay on until they fail + 0.8 ADR start (BILL, Nov 16)"].
-- Moved to the archive on Nov 21: still open there: the gap-out-of-base 1x / 2x volume alerts never seen live; a followed
-  stock's plain breakout alert fired on a gap-out-of-base day (KVYO Nov 16; the legend says it stays quiet); the 1-minute
-  checks stop 12:00-3:00; offered, not built: movers at 1% in the first hour ["Radar: missing earnings on the list (Nov 16)"].
-- Moved to the archive on Nov 21: still open there: how many retest / reclaim alerts a day now that every touch counts (never
-  checked); AZTA Nov 16 read "retest held" though the user called it "just confirmation" (no answer); the 2-3 month history
-  check of groups moving together under 5% at the open (asked, not done); a GAP retest rule (AEHR Feb 12-17 2026: "leave
-  that alone"); the alert text "nothing traded above it for N sessions" is false for a top poked in the last 3 sessions
-  ["Radar: AZTA breakout alert (Nov 16)"].
 - In the status section "Radar: MBGL / AVEX miss (Nov 12)" above: the coil alert to look at later (the user's
   request), the pre-market blind spot 9:10-9:30, young listings (52-week low / 200 SMA), the code grader's
   "no daily bars" bug.
+- Moved to the archive on Nov 21 (from the sessions below; check there before raising one):
+  - EPAM passed every morning-breakout filter at 10:35 on Nov 20 and did not alert (the box went ORH-3min -> ORH-5min at 10:14):
+    replay it with radar-tools `morning` ["a chat session outside the Radar sessions (Fri Nov 20 2026 ...)"].
+  - The first BACK ON alert after its go live not yet seen in a browser ["a chat session outside the Radar sessions (Thu Nov 19
+    2026 ...)"].
+  - The user to decide: the alert reason switched on (after ~3 sessions), written maps for AVGO / TSM / MU / SPCX, niches for
+    other themes, unscheduled news events ("later"); the Earnings guidance reader misread TGT Nov 18 (not fixed); the Nov 19
+    first checks (PANW card, WMT / BABA / PDD rows, GAP / ROST / KEYS) not confirmed ["Radar: gap news and NVDA ecosystem
+    links (Nov 17)"].
+  - Themes moving DOWN in their own box; BACK ON alerts on the phone ("later"); a cap or market filter if 🔥 fires too often;
+    the Nov 19 first checks of its five alert changes not confirmed ["Radar: theme chips on Today's gainers (Nov 18)"].
+  - (Added at that session's own wrap-up, Nov 21) its completed section is back in this file, above; the archive's copy is its
+    earlier state (before the EARLY gap heads-up for the followed names went live). The BACK ON alert for ⚡ and, at 1.5x
+    volume, 🎯 was built there (the "offered, no answer" two lines below is done for those two boxes).
+  - Offered, no answer: Rel vol 0.7x, an 11:00 end, no 10 > 21, a group-move alert for the morning box; the user's neoclouds
+    screenshot (4%+ not seen in our data) ["Radar: Cybertruck morning breakout alerts (Nov 18)"].
+  - Offered, not taken up: dropping the 50 EMA test for 1-EP/GAP / 1-UPDAY; not seen: a real START DAY alert on live prices
+    ["Radar: why AVEX isn't on the EP watchlist (Nov 17)"].
+  - Offered, no answer: the BACK ON alert for the other boxes; one more read of all the opening ranges ~9:45 ["Radar: opening
+    range 1/2/5-min choice (Nov 17)"].
+  - Offered, no answer: "back on <date>" under a launch date on the Launches row (BILL); a tighter reset (BILL's 3 lower highs)
+    ["Radar: Start days stay on until they fail + 0.8 ADR start (BILL, Nov 16)"].
+  - Offered, not built: a 1% movers threshold inside the 5-minute gap; seen, not changed: a followed stock's plain breakout
+    alert on a gap-out-of-base day (KVYO 9:35), the 1-minute checks stopping 12:00-3:00 ["Radar: missing earnings on the list
+    (Nov 16)"].
+  - To build in a new session (agreed in principle): the news reason on after-the-open alerts (Yahoo as a second source, its
+    times captured first); asked, not done: a 2-3 month history check of group moves under 5% at the open; for another
+    session: a GAP retest rule (AEHR Feb 12-17 2026); not done: the "nothing traded above it for N sessions" text (WRBY Nov
+    11); told, no answer: AZTA Nov 16 reads "retest held" (the user: "just confirmation") ["Radar: AZTA breakout alert (Nov 16)"].
 - Moved to the archive on Nov 17: still open there: **the first checks of the Mon Nov 16 evening scan were NOT done** (the
   1-list changes: `first_day` and the first-day lows on 1-UPDAY, `pre_close` on 1-EP/GAP with VIR / NXT leaving, what joined
   1-EP/GAP at 2x volume, a first real x, "inside day" on the Watchlist rows, Days 21H / 62H in the session); the 15 trading

@@ -10,6 +10,7 @@ and when something was decided. /wrapup adds newer sections at the top, under th
 - Nov 21 2026 · Status of a chat session outside the Radar sessions (Thu Nov 19 2026 ~11:25-11:45 AM ET; session_01PkbDanQBJvqxfoMDBsGdZG)
 - Nov 21 2026 · Status of the session "Radar: gap news and NVDA ecosystem links (Nov 17)" (Tue Nov 17 2026 ~5:10 PM ET - Wed Nov 18 ~11:30 PM ET; session_01PkbDanF5dAAQH9AZXNPE3K; in progress)
 - Nov 21 2026 · Status of the session "Radar: move Watchlist tabs left/right (Nov 18)" (Wed Nov 18 2026 ~12:20 PM ET - Thu Nov 19; session_01PkbDaiB9dTkk1MWcV4oJQi; in progress)
+- Nov 21 2026 · Status of the session "Radar: theme chips on Today's gainers (Nov 18)" (Wed Nov 18 2026, from ~10:55 AM ET; session_01PkbDak4wNj9qyumu6CQx8R; in progress)
 - Nov 21 2026 · Status of the session "Radar: Cybertruck morning breakout alerts (Nov 18)" (Wed Nov 18 2026, from ~2:50 PM ET; session_01PkbDaivTc9D2kGvMMYMMLt; in progress)
 - Nov 21 2026 · Status of the session "Radar: why AVEX isn't on the EP watchlist (Nov 17)" (Tue Nov 17 2026, from ~1:25 PM ET; session_01PkbDameNZtixLSWb6F7Thg; in progress)
 - Nov 21 2026 · Status of the session "Radar: opening range 1/2/5-min choice (Nov 17)" (Tue Nov 17 2026, from ~10:10 AM ET; session_01PkbDajetWCG8Sskm5kAjad; in progress)
@@ -200,6 +201,89 @@ and when something was decided. /wrapup adds newer sections at the top, under th
   clicking a button still opens its list, the page still opens on 3-SETUPS. Tested in a browser: drag START DAYS to the front,
   click it (44 rows), reload keeps it, ↺ order resets, main tabs untouched, 0 page errors. Page layout only: no rules workbook
   row (the main-tab drag has none either), no `--regress`, no Launches rebuild, no 2-year check.
+- **Test only**: nothing.
+
+## Status of the session "Radar: theme chips on Today's gainers (Nov 18)" (Wed Nov 18 2026, from ~10:55 AM ET; session_01PkbDak4wNj9qyumu6CQx8R; in progress)
+
+- **LIVE (the user's "ok go do what you gotta check adn go live", Wed Nov 18 2026 after the evening scan, commit c92c51e, branch
+  claude/compassionate-volta-5ichnh merged with main): five alert changes. NONE HAS RUN ON LIVE PRICES: FIRST CHECK Thu Nov 19
+  from 9:33 AM ET** (tested with stand-in levels: cloud sessions can't read Yahoo).
+  Started from: all 12 Cybersecurity stocks up 5-13% on Nov 18 (TENB first at 9:53, PANW 10:00, QLYS 10:03, ...) with no
+  important alert ("howcome we didnt get any important priority alert that all cybersecurity stocks moving up as a group").
+  Found: the GROUP MOVE alert counts stocks that ALERTED (2+), once a day per group; Cybersecurity's was spent at 9:35 on three
+  pullback heads-ups (NTSK, SAIL, RPD); PANW, CRWD, QLYS, TENB, S were under their 50 EMA, on no list, and could not alert.
+  1. **📊 Breakouts, not in trend: a second morning box** (the user: "another tab alerts for stocks not in trend, basically not
+     eligible for setups i have in morning breakout alerts"; "separate filters i can adjust"). radar/alerts.py: kind `mbo2`
+     (keys SYM:mbo2, SYM:mbo2backHHMM, mbatch2HHMM:mbo2), its own settings alerts/morning2.json (load_morning2: none saved = the
+     📈 settings with the five trend boxes off; NOT SAVED YET: the user will tighten it), its own levels (state mbo2_lv). A stock
+     that passes the trend boxes ticked in the 📈 settings at the live price is left out (morning_trend_ok: "good logic like
+     it"); one that fired in 📈 does not fire here. Same true state and BACK ON alert as 📈, portal only. day.py morning_args
+     passes --morning2; fast.py reads its candidates each minute too. docs/index.html: the two settings boxes side by side
+     (.mbo-split; MBI / MBC / withI: one code for both), the 📊 box (code n), its sound and voice ("Breakout, not in trend, P A
+     N W, volume 1.3 times"). Replay of Nov 18 with the copied settings (radar-tools `morning above200=0 above50=0 e10_e21=0
+     e21_e50=0`): 62 fire, 20 of them in 📈, so about 42 in 📊: **it rings a lot until the user tightens it (told them: before
+     9:25 the first morning)**.
+  2. **🔥 Theme moving up: 3+ morning breakouts of one theme** (from 📈 or 📊; tight members, fit 0.7+; themes and tight
+     industry groups, one alert for the same stocks, the theme names it): THEME MOVING UP, key thm:<theme>, once a day per
+     theme, a trigger, phone too, its own box (code t; the user: "just keep it with its own box, if i dont like then we can
+     move back to morning breakouts"), sound and voice ("Theme moving up, Cybersecurity, 3 breakouts"). alerts.py
+     theme_members / theme_breakouts. Nov 18 replay: PANW 9:53, CRWD 10:07, S 10:10 -> the alert at 10:10, the only theme
+     that day. **Dropped after measuring**: a first version, 3 tight members up 3%+ (the user's first pick): 34 alerts a day on
+     22 sessions (Oct 20 - Nov 18; 87 on Nov 9), 3 up 4%+ 23 a day, 5%+ with half the theme and themes only 3 a typical day
+     but 29 on Nov 9 (the user: "i m looking for real alerts"; they then proposed the morning-breakout route). The replay tool
+     (radar/probe_themeup.py, radar-tools `themeup`) was removed with it; the numbers are in the rules row.
+  3. **GROUP MOVE: the alert is sent from 9:40, and only ADR 4%+ stocks count** (GROUP_FROM, GROUP_MIN_ADR; the page's own
+     group tags use the ADR rule too). **My mistake, corrected with the user**: I first built "alerts before 9:40 don't count"
+     (5 of the day's 8 group alerts vanished); the user: "we are only changing alert time, still if something happened
+     between 930-940 it has to show". Now every alert of the day counts and a group made at 9:35 alerts at 9:40. Nov 18
+     replay: 8 group alerts -> 5 (MD 3.73%, WAT 3.42%, BSY 3.20% ADR not counted). The single-stock alerts are unchanged.
+  4. **3-minute opening range** (the user: "2min/3min/5min", keep 1min): ORH_START 3 = 9:33, morning_levels n=3; levels.py
+     keeps a 5th value (rows [high 5, low 5, high 1, high 2, high 3], read from 9:33); the picker in both settings boxes and
+     the + Filter "Above ORH" chip read 1min / 2min / 3min / 5min; probe_morning orh_min=3.
+  5. **BACK ON alert for ⚡ and 🎯** (the user: "i need sounds for episodic pivots as well for back on.... and pattern
+     breakouts with 1.5 volume"; "for now portal only"): a power day / EP that stopped holding and holds again gets one BACK
+     ON alert; a pattern breakout (breakout, confirm, gapbase, gob1, gob5, basebreak, pop, s3) only with a volume pace of
+     1.5x+; at most one every 15 minutes a stock; portal only (keys SYM:<kind>backHHMM, BACK_RE; update_holding returns
+     them). 🚀 and ↩️ still come back silently; 📈 / 📊 keep their own.
+  Tested: the alert job on the Nov 18 11:05 prices with stand-in levels (20 in 📈, 29 in 📊, none in both, one theme alert, no
+  repeat on a second run, lost / back and the 15-minute limit, 5 of 19 returning breakouts at 1.5x+ alerted); the page on
+  desktop / phone with that record (the split boxes, each box edited and reset alone, every voice line, 5 tabs, 0 page
+  errors), again after the merge with main. Rules workbook: 3 new rows, 3 changed. No `--regress`, no Launches rebuild
+  (launch.py untouched), no 2-year check (alerts and settings).
+- **LIVE (the user's "go live", Wed Nov 18 2026 ~4:55 PM ET, commit 8ba96bf): the two morning boxes run from their own From
+  time, 9:31 at the earliest** (the user: "if i choose 932 or 933 meaning 3 orh breakout it should sound around 934 or 935...
+  its every 1min"). Found: main() held the morning breakouts to 9:35 with every other alert (`not early`), though the Nov 17
+  change let the box take a 9:31 / 9:32 start: a 1- or 2-minute range never fired before 9:35. radar/alerts.py: that gate is
+  off for the morning boxes only (the 1-minute check runs them from 9:31); and a stock that fires gets its levels kept at once
+  (check_morning: before, one that fired in the range's first minute had none, so it could not leave / re-enter its box).
+  Tested (stand-in levels): 📊 at 3min / From 9:33 fires at 9:33, 📈 at 9:35 / 5min at 9:35, both at 9:35 = nothing before
+  9:35, out at 9:36 and back at 9:52. Told the user the Rel vol is rough before 9:35. Rules workbook: the 📈 row.
+  **Not seen on live prices: check Thu Nov 19** (the user's From times decide; both boxes are saved / default at 9:35 now).
+- **LIVE (the user's "go live", Sat Nov 21 2026, after a merge with main): the EARLY gap heads-up (9:31-9:34) also for the
+  followed names** (the user, Nov 18: "gap heads up can you include my wl (ep + trend + start + setups) too"; "i accept your
+  proposal... we are just adding correct?"). The regular one (find_early) reads launch.json `watch` (liquid stocks: $10+,
+  $20M+ and 700K+ a day, ADR 3.5%+; EP and power day alerts read the same list), which drops a stock launched in the last 20
+  sessions: 34 of 49 1-EP/GAP names, 38 of 94 3-SETUPS names, 13 of 44 Start days on Nov 18, all on Launches. radar/alerts.py
+  find_early_lists / list_names: a name on Launches (with the 50 EMA undercut tab and the laggards), 3-SETUPS, Start days or
+  a Watchlist list (setups/latest.json: 1-EP/GAP, 1-UPDAY, 2-POOL, the TREND names' sources) that is not on `watch`, gapping
+  up 5%+ (EARLY_LIST_GAP) and over its open: one quiet heads-up, key SYM:early, "AZTA EARLY: gapping +5.5% (on Launches,
+  3-SETUPS, 1-EP/GAP)", with its buy point cleared or not; none when the stock gets another alert in the same check (a gap
+  out of base). day.py lists_args passes --lists (setups/latest.json, read once a job) to fast.py (which now also reads the
+  Start days, every 3-SETUPS name and the lists' names each minute) and to the 1-minute alerts run. The 5% and the quiet
+  heads-up were my defaults: the user did not answer those two. Merge: day.py conflicted with the other session's
+  events_args (both kept: `*lists_args(), *events_args()`). Tested (stand-in 9:32 run): AZTA, ANET, HAWK, PRKS, SLS fire; ENR
+  (under its open), CDW (3% gap) don't; TMDX gets its gap out of base instead; no repeat the next minute; the Nov 18 tests
+  again on the merged code; the page on 5 tabs, 0 errors. Rules workbook: one row. **Not seen on live prices: check Mon Nov
+  23 at 9:31-9:34** (alerts.json `:early` keys with "gapping" in the title; the minute read's time with the extra names).
+- **Answered, no change**: the Gainers tab already has the theme buttons ("Group moves today", above the theme table; the user:
+  "if thats the way i dont need it"); the gainers table updates every minute for stocks up 2%+ (9:31-11:00 since the other
+  session's Nov 18 change, was 10:30), every 5 minutes for the rest.
+- **Check Thu Nov 19**: alerts.json keys :mbo2, mbatch2, thm:, <kind>backHHMM and their box / sound on the page; the first
+  GROUP MOVE at 9:40 or later; levels.json rows with 5 values from 9:33; the minute read's time with the 📊 candidates added
+  (687 stocks in the replay); alerts/morning2.json on main once the user saves.
+- **Open**: themes moving DOWN in their own box (the user: "lets do ups and see how it reacts, then we can do down ones"); the
+  BACK ON alerts on the phone ("you can add phone as well": later); a cap or a market filter if 🔥 fires too often on rally
+  days (not measured for the breakout version: only Nov 18 could be replayed).
 - **Test only**: nothing.
 
 ## Status of the session "Radar: Cybertruck morning breakout alerts (Nov 18)" (Wed Nov 18 2026, from ~2:50 PM ET; session_01PkbDaivTc9D2kGvMMYMMLt; in progress)
