@@ -339,11 +339,12 @@ Its first part (Nov 12-13: the coil on Launches, the full + Filter list, the MBG
      "1# agreed" without choosing: ask once more before building.
   3. **A stock on 1-EP/GAP is not shown on 1-UPDAY** ("i thought anything in ep/gap isnt shown in upday - i agree with that
      recommendation"); 18 names are on both now (from different days; the same day already goes to 1-EP/GAP only).
-- **Asked, to answer next session (the user's 5#)**: "i want to see the ones could be actionable next day ... not only retest i
-  meant bull flag other setups": which 3-SETUPS section to check for tomorrow's entries. What I had said: a retest that held
-  today = Triggered today "Retest held" (XNCR, PAR, HLF Nov 20), pulling back toward the level = Setting up "Near the retest
-  zone", Ready = a breakout-type trigger (base top, flag / pennant line) within 0.7 ADR over the close. They want ONE place for
-  everything actionable tomorrow: explain first (Ready + today's triggers still holding?), no build agreed.
+- **Answered (the user's 5#, Nov 21): which 3-SETUPS status is actionable.** They meant "where i have to check in setups whats
+  status is actionable? ready or triggered", not a new list (I first read it as a request for one place: wrong). The answer
+  given: **Ready** = tomorrow's breakout candidates (base top, bull flag / pennant line within 0.7 ADR over the close);
+  **Triggered today** = a buy point fired today, and the ONLY place a pullback entry shows (retest held, 21 EMA retest /
+  undercut & reclaim, push: their trigger is the close back over the level, so they never show as Ready); **Setting up** =
+  forming, watch only. Daily: Ready first, then Triggered today. No build asked.
 - **SPOT, my mistake and a find (explain first, no change agreed)**: the user asked whether the 1-EP/GAP "gap given back" rule
   fails SPOT. I first answered on the wrong gap (Oct 30 2026, +3.2%): the user, "your spot gap was wrong". The EP gap is **Oct 22
   2026**: close 525.34 the day before, open 561.29 (+6.8%), close 583.66 (+11.1%), 3.2x. The gap-given-back rule would NOT
