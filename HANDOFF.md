@@ -70,6 +70,56 @@ alone.
   browser on desktop / phone (every list, every tab, 0 page errors; + Filter FULL TREND on 3-SETUPS = 37 rows), again after the
   merge with main (the Resistance-ranges session had gone live). Rules workbook: 2 rows (T1 Trend column). No `--regress`, no
   Launches rebuild (launch.py untouched), no 2-year check (tags). **Not seen on the live page / live prices: check Mon Nov 23.**
+- **LIVE (the user's "go live", Sat Nov 21 2026 ~12:30 PM ET, merge f4210a6; Launches rebuilt 12:29 PM, d5d2201): the EPISODIC
+  PIVOT / POWER DAY alert on new rules, and two tags on 1-EP/GAP. NONE OF IT HAS RUN ON LIVE PRICES: FIRST CHECK Mon Nov 23 from
+  9:31 AM ET** (tested with each example day's daily bar as the live price; the 3-minute opening range with a stand-in).
+  The user: "fix to ep alert so we dont miss it". Found: of the 40 names on 1-EP/GAP on Nov 20 only 28 met the alert's rules at
+  the close of their gap day (APP Nov 5, WING Oct 28, TMDX Nov 6 under the 200 SMA; HAWK, LFTO Nov 13 without one; KD Nov 4
+  opened 14.91 under its 21-day closing high 15.20; AZTA, UPBD, PCOR, KVYO, CHYM under 3x), and CGON (launched Nov 6, +23.7% gap
+  on 8.2x Nov 16) could not ring: launch.json watch drops a stock launched in the last 20 sessions.
+  1. **The EP alert** (radar/alerts.py find, EP_GAP / EP_RV / EP_MIN_PRICE / EP_ORH_MIN), on the LIVE price: a 5%+ gap (was 6%), a
+     volume pace of 2.2x+ (was 3x), over the 50 EMA (new), $10+ now (was last night's close: POET closed 8.59 the day before its
+     Apr 21 2026 EP day), 30%+ over the 52-week low (main() already checked it for every alert: I first told the user it was
+     new), over the highest close of the last 21 sessions; **NO 200 SMA rule, NO 1-month-high rule** ("1month i agree its same
+     thing"). The 21-day level: a stock that OPENED over it rings as before and holds while the price is over it (CHYM Nov 5
+     rings at the open, out when back under 30.46); one that opened under it ("its for laggards starts ... alert would just ring
+     and sound when it passes 2 true states: above orh, plus above the level") rings when the price is over its **3-minute
+     opening range high** AND over the level (main(): ep_orh_ok, the high read once a stock and kept in the state file
+     `ep_orh`; the alert says "opened X% under it"). The user's first idea, an open within 1% under the level, was dropped
+     for this ("we dont need 1% rule then").
+  2. **Power day**: keeps gap 8%+, up 10%+, 3x+, on the same rules (no 200 SMA, no 1-month high). **The Launches table's own
+     power day (the evening scan) is unchanged**: a live POWER DAY under the 200 SMA is not a launch that evening, and the
+     "Launching today" table on the Launches tab still tags by the old rules (told the user; offered to align, no answer).
+  3. **The 9:31-9:34 early heads-up** follows: every 5%+ gap over the 50 EMA, $10+ ("EP gap", 8%+ "power-day gap"), over or
+     under the 200 SMA, with how it opened vs its 21-day closing high; the catalyst / launch shapes as before (more early
+     heads-ups on earnings mornings: told the user). The other session's find_early_lists (the followed names) runs after it.
+  4. **launch.json `ep_watch`** (scanner/launch.py, L ep_watch_min_price 7): the names ONLY this alert reads on top of `watch`:
+     a liquid stock launched in the last 20 sessions, and a stock liquid but for its price closing $7-10. 111 names on the
+     Nov 20 close (62 launched, 49 at $7-10). `watch` is unchanged (888, identical); fast.py reads their prices each minute.
+     A stock under its 200 SMA rings as an EP when it meets the rules; the laggard-launch alert stays for the ones that don't;
+     the EP stands for the stock's catalyst gap, A launch and laggard launch.
+  5. **1-EP/GAP list: no rule change, two tags next to the ticker** (the user: "i agree with your recommendation regarding ep
+     list.. we keep it as is, and we add your faded tag next to ticker", "agree with everything you recommended"): FADED = the
+     EP day closed below its open or in the bottom half of its day's range; UNDER 21D HIGH = it closed at or under the highest
+     close of the 21 sessions before (scanner/run.py ep_day -> the row's `ep_day`; a fact of that day, fixed). **They show
+     from the Mon Nov 23 evening scan** (so does the Momentum tag's 6M). On 629 list EP days of Jan 1 - Sep 25 2026: a close
+     under the EP day's low within 5 sessions FADED 50% vs 30%, UNDER 21D HIGH 48% vs 35%; after 20 sessions it evens out
+     (higher than the EP day's close 47% / 47% and 43% / 48%; ran 20%+ 30% / 31% and 35% / 30%): a warning for the first days.
+  Numbers the user saw (2026, daily bars; the alert rows are estimates, no minute history): the list rule 629 EP days, 55% ran
+  10%+, 31% ran 20%+ (195), 44 ran 50%+, 37% failed (a close under the EP day's low within 5 sessions); the old alert 187 days
+  / 49% / 27% (51) / 33%; the new alert 463 / 57% / 32% (147) / 40%; by market: Jan-Feb 28% ran 20%+, Mar-May 40-43%, Jun-Sep
+  19-22%. A gap in ADRs was tested and not taken (87% of list EPs gapped 1 ADR+ anyway; the ones under 1 ADR, the fastest
+  stocks, ran 20%+ 40% vs 30%); gap 5-5.5% ran 20%+ 38%. Expect about 2-3 EP alerts a day, 10+ on a heavy earnings day.
+  Tested: 32 cases old rules vs new (every example above; each rule alone; 30 rounds of random prices on the real watch list:
+  4,187 other alerts identical, 0 different); main() three runs on stand-in files (sent, KD out of the box under its 3-minute
+  high, BACK ON); the scan on the branch vs the same scan on main's code (radar-tools `setupsdry` on both: launches, setups3,
+  start_days, watch identical); `--regress` "every agreed example reads the same"; scanner/run.py end to end on a copy with
+  history/bars_2y.json.gz; the page on desktop / phone, 0 page errors; again after the merge with main (the other session's
+  early heads-up for the followed names had gone live in alerts.py / fast.py / day.py). Rules workbook: 5 rows. No 2-year
+  check (alert settings and tags). After the push picks.yml by hand: launch.json has ep_watch 111, launches 134 the same.
+  **Check Mon Nov 23**: alerts.json `:ep` / `:power` keys (how many; any under the 200 SMA; one with "opened X% under" and
+  "3-minute opening range high"), `:early` count 9:31-9:34, the state's `ep_orh`, the minute tick's time with 111 more
+  quotes; Monday evening: `ep_day` on the 1-EP/GAP rows and `perf_6m_pct` in setups/latest.json.
 - **Decided with the user this session (no build needed)**: the Watchlist feeds stay as they are ("we are only interested in
   fast movers thats why setup feeds from updays and fast movers 1 month 3 month and 6 months": NO whole-market trend list, NO
   feed change); nothing is dropped (1-UPDAY, 2-POOL stay); the 2-POOL momentum numbers are NOT changed (25% / 50% / 100% was
