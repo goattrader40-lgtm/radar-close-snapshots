@@ -79,9 +79,11 @@ jobs:
             python3 scanner/fetch.py /tmp/bars.json.gz
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
             mkdir -p /tmp/rd /tmp/wl/history && git show origin/radar-data:stocks.json > /tmp/rd/stocks.json && git show origin/radar-data:themes.json > /tmp/rd/themes.json
+            git show origin/radar-data:ath.json > /tmp/rd/ath.json || true
             cp setups/latest.json /tmp/wl/latest.json && cp setups/launch.json /tmp/launch_dry.json
             python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out /tmp/launch_dry.json --picks setups/picks.json --watchlist /tmp/wl/latest.json
-            cp /tmp/wl/latest.json /tmp/setups_dry.json && python3 radar/publish.py "setups dry run" /tmp/setups_dry.json /tmp/launch_dry.json
+            cp /tmp/resistance.json /tmp/resistance_dry.json || true
+            cp /tmp/wl/latest.json /tmp/setups_dry.json && python3 radar/publish.py "setups dry run" /tmp/setups_dry.json /tmp/launch_dry.json /tmp/resistance_dry.json
           fi
           case "$CMD" in launchdry\ *)
             # the launch build with test picks (not saved to main): python3 -c writes them added at this time yesterday
@@ -210,6 +212,14 @@ jobs:
           case "$CMD" in news\ *) python3 radar/probe_news.py /tmp/probe_news.json ${CMD#news } && python3 radar/publish.py "news probe" /tmp/probe_news.json;; esac   # "news FROM TO SYM ..." (Alpaca / Yahoo headlines)
           case "$CMD" in reltext*) git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && git show origin/radar-data:earnings.json > /tmp/earn_now.json && python3 radar/probe_reltext.py /tmp/earn_now.json /tmp/probe_reltext.json ${CMD#reltext} && python3 radar/publish.py "earnings release texts" /tmp/probe_reltext.json;; esac
           case "$CMD" in earnprobe\ *) python3 radar/probe_earnings.py /tmp/probe_earnings.json ${CMD#earnprobe } && python3 radar/publish.py "earnings source check" /tmp/probe_earnings.json;; esac
+          if [ "${{ inputs.cmd }}" = "ath" ]; then   # every stock's all-time high (radar/ath.py) -> radar-data ath.json (the Saturday job's run, by hand)
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && git show origin/radar-data:stocks.json > /tmp/stocks.json
+            python3 radar/ath.py /tmp/stocks.json /tmp/ath.json && python3 radar/publish.py "all-time highs" /tmp/ath.json
+          fi
+          case "$CMD" in ath\ *)   # a few stocks only ("ath VERX NVDA ...") -> radar-data ath_test.json (nothing reads it)
+            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && git show origin/radar-data:stocks.json > /tmp/stocks.json
+            python3 radar/ath.py /tmp/stocks.json /tmp/ath_test.json ${CMD#ath } && python3 radar/publish.py "all-time highs test" /tmp/ath_test.json;;
+          esac
           case "$CMD" in long\ *) python3 radar/probe_long.py /tmp/long_bars.json ${CMD#long } && python3 radar/publish.py "long history" /tmp/long_bars.json;; esac
           case "$CMD" in replay\ *) python3 radar/probe_replay.py /tmp/probe_replay.json ${CMD#replay } && python3 radar/publish.py "alert replay" /tmp/probe_replay.json;; esac
           bash radar/tools_event.sh   # the event links

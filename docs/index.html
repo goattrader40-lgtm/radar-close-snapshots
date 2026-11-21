@@ -306,6 +306,9 @@
   .tgr-legend li { margin: 3px 0; }
   .tgr-legend h3 { font-size: 1em; margin: 10px 0 2px; }
   .tgr-more { margin: 8px 0 10px; }
+  .mbo-res { white-space: normal; display: inline-flex; flex-wrap: wrap; gap: 2px 10px; align-items: center; max-width: 100%; }   /* the level tick boxes (Nov 21 2026) */
+  .mbo-res label { white-space: nowrap; }
+  #resrep-body { width: 0; min-width: 100%; overflow-x: auto; }   /* (its tables never widen the card on a phone) */
   .mbo-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; align-items: start; }   /* the two morning boxes side by side (the user, Nov 18 2026) */
   @media (max-width: 900px) { .mbo-split { grid-template-columns: minmax(0, 1fr); } }
   .tgr-more > summary { color: var(--color-fg-muted); }
@@ -1159,7 +1162,7 @@
       <div class="mbo-split">
       <details class="tgr-legend tgr-more" id="mbo-wrap" data-key="mbo" open><summary>📈 Morning breakouts: your settings</summary>
       <div class="tgr-filters" id="mbo-box" role="group" aria-label="Morning breakout alert settings">
-        <span class="tgr-lbl" style="flex-basis:100%">Any stock trading over yesterday's high and the opening range high you pick (1, 2, 3 or 5 minutes), up on the day on volume, between the times below: GitHub's job checks every minute and the alert shows here (📈 box, sound and pop-up; no phone yet). One alert when one stock fires, one batch alert when several fire in the same minute. Each stock once a day. Saved in your repo: set them before 9:25 ET.</span>
+        <span class="tgr-lbl" style="flex-basis:100%">Any stock trading over yesterday's high and the opening range high you pick (1, 2, 3 or 5 minutes), up on the day on volume, between the times below: GitHub's job checks every minute and the alert shows here (📈 box, sound and pop-up; no phone yet). One alert when one stock fires, one batch alert when several fire in the same minute. Each stock once a day. <b>Above</b> 1M / 3M / 6M / 9M / 52W / ATH / broken support: tick a level and the alert also needs the price over the top of that range (overhead at yesterday's close) at the same moment, and says which one; the alert always names the levels cleared and the next one overhead. Saved in your repo: set them before 9:25 ET.</span>
         <label class="tgr-f"><input type="checkbox" data-mbo="on"> On</label>
         <label class="tgr-f">From <input class="tgr-num mbo-time" type="time" step="60" data-mbo="start" aria-label="Start, ET"> to <input class="tgr-num mbo-time" type="time" step="60" data-mbo="end" aria-label="End, ET"> ET</label>
         <label class="tgr-f">Up ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" max="100" data-mbo="min_chg" aria-label="Minimum % up on the day"> %</label>
@@ -1177,6 +1180,9 @@
         <label class="tgr-f"><input type="checkbox" data-mbo="e10_e21"> 10 EMA over the 21</label>
         <label class="tgr-f"><input type="checkbox" data-mbo="e21_e50"> 21 EMA over the 50</label>
         <label class="tgr-f"><input type="checkbox" data-mbo="e50_s200"> 50 EMA over the 200 SMA</label>
+        <span class="tgr-f mbo-res" title="Ticked: the alert fires only when the price is over the TOP of a ticked range (its highest high) that was overhead at yesterday's close, at the same moment as every other setting (the opening range high too). A stock that opens over the level still waits for the ORH; one under it at the ORH break waits until both are true. Several ticked: any of them. Nothing ticked: the box as before."><b>Above:</b>
+          <label><input type="checkbox" data-mbo="res_1m"> 1M</label> <label><input type="checkbox" data-mbo="res_3m"> 3M</label> <label><input type="checkbox" data-mbo="res_6m"> 6M</label> <label><input type="checkbox" data-mbo="res_9m"> 9M</label> <label><input type="checkbox" data-mbo="res_52w"> 52W</label> <label><input type="checkbox" data-mbo="res_ath"> ATH</label> <label><input type="checkbox" data-mbo="res_bs"> Broken support</label></span>
+        <label class="tgr-f" title="Only the stocks on Launches (with the 50 EMA undercut tab and the laggards), 3-SETUPS, Start days and the Watchlist's lists"><input type="checkbox" data-mbo="lists_only"> Only my lists</label>
         <span class="xf-box" id="mbo-xf" style="flex-basis:100%"></span>
         <button class="tgr-lite" id="mbo-save" type="button" disabled>Save</button>
         <button class="tgr-lite" id="mbo-def" type="button">Back to the defaults</button>
@@ -1203,6 +1209,9 @@
         <label class="tgr-f"><input type="checkbox" data-mbo="e10_e21"> 10 EMA over the 21</label>
         <label class="tgr-f"><input type="checkbox" data-mbo="e21_e50"> 21 EMA over the 50</label>
         <label class="tgr-f"><input type="checkbox" data-mbo="e50_s200"> 50 EMA over the 200 SMA</label>
+        <span class="tgr-f mbo-res" title="Ticked: the alert fires only when the price is over the TOP of a ticked range (its highest high) that was overhead at yesterday's close, at the same moment as every other setting (the opening range high too). A stock that opens over the level still waits for the ORH; one under it at the ORH break waits until both are true. Several ticked: any of them. Nothing ticked: the box as before."><b>Above:</b>
+          <label><input type="checkbox" data-mbo="res_1m"> 1M</label> <label><input type="checkbox" data-mbo="res_3m"> 3M</label> <label><input type="checkbox" data-mbo="res_6m"> 6M</label> <label><input type="checkbox" data-mbo="res_9m"> 9M</label> <label><input type="checkbox" data-mbo="res_52w"> 52W</label> <label><input type="checkbox" data-mbo="res_ath"> ATH</label> <label><input type="checkbox" data-mbo="res_bs"> Broken support</label></span>
+        <label class="tgr-f" title="Only the stocks on Launches (with the 50 EMA undercut tab and the laggards), 3-SETUPS, Start days and the Watchlist's lists"><input type="checkbox" data-mbo="lists_only"> Only my lists</label>
         <span class="xf-box" id="mbo2-xf" style="flex-basis:100%"></span>
         <button class="tgr-lite" id="mbo2-save" type="button" disabled>Save</button>
         <button class="tgr-lite" id="mbo2-def" type="button">Back to the defaults</button>
@@ -1210,6 +1219,10 @@
       </div>
       </details>
       </div>
+      <details class="tgr-legend tgr-more" id="resrep-wrap" data-key="resrep"><summary>🧱 Resistance at the close: broke out, inside, rejected</summary>
+      <p class="tgr-note">After the close (the 4:40 PM scan), silent, for your review: the stocks that <b>broke out</b> (closed over the top of a 1M / 3M / 6M / 9M / 52W / all-time high range or a broken support that was overhead the day before), closed <b>inside</b> one, or were <b>rejected</b> (the day's high reached the range, the close back under it). The 📈 box's price, market cap, volume, $ volume, ADR, 52-week low and "only my lists" settings; no trend boxes, no opening range. The tag: the trend at the close.</p>
+      <div id="resrep-body" class="tgr-note">Open to load.</div>
+      </details>
       <div class="al-filter"><span class="tgr-seg" id="al-filter" role="group" aria-label="Which tab's alerts"><button data-v="All" aria-pressed="true">All</button><button data-v="Launches" aria-pressed="false">Launches</button><button data-v="Watchlist" aria-pressed="false">Watchlist</button><button data-v="Launch laggards" aria-pressed="false">Laggards</button><button data-v="Pre-market" aria-pressed="false">Pre-market</button><button data-v="Morning" aria-pressed="false">Morning</button></span></div>
       <div class="al-boxes" id="ln-alert-boxes"></div>
       <ul class="tgr-alog" id="ln-alert-log"></ul>
@@ -2479,10 +2492,14 @@ defCalc('industry_perf', {
      5, the user, Nov 17 2026; the job starts no earlier than 9:31 / 9:32 / 9:35, when that range is complete), your Gainers
      tab's liquidity with ADR 4%+, 30% over the 52-week low, over the 200 SMA and the 50 EMA, 10 EMA over the 21, 21 over the 50 */
   const MBO_DEF = { on: true, start: '09:35', end: '10:30', min_chg: 5, min_rv: 1, over_pdh: true, over_orh: true, orh_min: 5, price: 5, mcap_b: 0.7, avgvol_k: 700,
-    dvol_m: 30, adr: 4, low52: 30, above200: true, above50: true, e10_e21: true, e21_e50: true, e50_s200: false, x: [] };
+    dvol_m: 30, adr: 4, low52: 30, above200: true, above50: true, e10_e21: true, e21_e50: true, e50_s200: false,
+    res_1m: false, res_3m: false, res_6m: false, res_9m: false, res_52w: false, res_ath: false, res_bs: false, lists_only: false, x: [] };
   const MBO_NUM = { min_chg: [0, 100, 'Up', '', '%'], min_rv: [0, 50, 'Rel vol', '', '×'], price: [0, 10000, 'Price', '$', ''], mcap_b: [0, 5000, 'Mkt cap', '$', 'B'],
     avgvol_k: [0, 100000, 'Avg vol 20D', '', 'K'], dvol_m: [0, 100000, '$ vol 20D', '$', 'M'], adr: [0, 50, 'ADR', '', '%'], low52: [0, 1000, '52W low', '', '%'] };
-  const MBO_BOOL = ['on', 'over_pdh', 'over_orh', 'above200', 'above50', 'e10_e21', 'e21_e50', 'e50_s200'];
+  const MBO_BOOL = ['on', 'over_pdh', 'over_orh', 'above200', 'above50', 'e10_e21', 'e21_e50', 'e50_s200', 'res_1m', 'res_3m', 'res_6m', 'res_9m', 'res_52w', 'res_ath', 'res_bs', 'lists_only'];
+  /* the resistance levels as one more filter (the user, Nov 21 2026: "you are just adding new filter above 1m high / 3month /
+     6 / 9 / 52w / ath, and i choose which one, when other filters aligns with it it fires"): radar/alerts.py RES_KEYS */
+  const MBO_RES = [['res_1m', '1M'], ['res_3m', '3M'], ['res_6m', '6M'], ['res_9m', '9M'], ['res_52w', '52W'], ['res_ath', 'ATH'], ['res_bs', 'broken support']];
   /* two boxes (the user, Nov 18 2026): 📈 the trend stocks (alerts/morning.json) and 📊 the stocks not in trend
      (alerts/morning2.json; none saved = the first box's settings with the trend boxes off, as radar/alerts.py
      load_morning2). Each has S the saved file, E the boxes, dirty = boxes changed and not saved; MBC = the one in use */
@@ -2549,6 +2566,9 @@ defCalc('industry_perf', {
     if (R.above50) x.push('over the 50 EMA');
     const stk = [R.e10_e21 ? '10 > 21' : '', R.e21_e50 ? '21 > 50' : '', R.e50_s200 ? '50 EMA > 200 SMA' : ''].filter(Boolean);
     if (stk.length) x.push(stk.join(', '));
+    const rs = MBO_RES.filter(([k]) => R[k]).map(([, n]) => n);
+    if (rs.length) x.push('Above ' + rs.join(' or '));
+    if (R.lists_only) x.push('only my lists');
     (R.x || []).filter(mxOn).forEach((f) => x.push(mxDesc(f)));
     return t12(st) + '-' + t12(R.end) + ' ET: ' + x.join(', ') + '.';
   };
@@ -2627,6 +2647,36 @@ defCalc('industry_perf', {
     setTimeout(() => inp.focus(), 0);
   };
   const drawMorning = () => MBI.forEach((I) => withI(I, drawMorning1));
+  /* 🧱 the end-of-day resistance report (the user, Nov 21 2026: "i dont need inside alerts for morning breakouts, it could be
+     silent and end of day report so i review it"; "so end of day your report have broke out ones, inside day, and rejected
+     ones"): setups/resistance.json "report", written by the evening scan (scanner/launch.py write_resistance) */
+  let RESREP = null;
+  const resName = (l) => (l === 'bs' ? 'Broken support' : String(l).toUpperCase());
+  const resSpan = (x) => (Math.abs(x[1] / x[2] - 1) < 0.005 ? fPrice(x[1]) : fPrice(x[2]) + '-' + fPrice(x[1]).replace('$', ''));
+  const drawResRep = async () => {
+    const body = $('#resrep-body'); if (!body) return;
+    if (!RESREP) { body.textContent = 'Loading…'; try { RESREP = await getMain('setups/resistance.json'); } catch (e) { body.textContent = 'No report yet (the evening scan writes it after the close).'; return; } }
+    const R = RESREP.report || {}; body.replaceChildren();
+    body.append(h('div', 'tgr-lbl', 'The close of ' + fDate(RESREP.date) + (RESREP.ath_saved_at ? '' : ' · all-time highs: only for stocks listed in the last 2 years until the Saturday job has run')));
+    [['broke', 'Broke out'], ['inside', 'Inside'], ['rejected', 'Rejected']].forEach(([k, name]) => {
+      const rows = R[k] || [];
+      { const d = h('div'); d.append(h('b', '', name + ' (' + rows.length + ')')); body.append(d); }
+      if (!rows.length) { body.append(h('div', 'tgr-lbl', 'none')); return; }
+      const tb = h('table', 'tgr-table'), hd = h('tr');
+      ['Ticker', 'Level', 'Close', 'High', 'Day', 'Rel vol', 'Trend'].forEach((t) => hd.append(h('th', '', t)));
+      const th = h('thead'); th.append(hd); tb.append(th); const bd = h('tbody'); tb.append(bd);
+      rows.forEach((r) => {
+        const tr = h('tr'), a = h('a', '', r.symbol); a.href = tv(r.tv || r.symbol); a.target = '_blank'; a.rel = 'noopener';
+        const t1 = h('td'); t1.append(a); tr.append(t1);
+        tr.append(h('td', '', (r.levels || []).map((x) => resName(x[0]) + ' ' + resSpan(x)).join(' · ')));
+        tr.append(h('td', 'num', fPrice(r.close)), h('td', 'num', fPrice(r.high)), h('td', 'num', fPct(r.chg_pct)), h('td', 'num', num(r.rel_vol) === null ? '—' : num(r.rel_vol).toFixed(1) + '×'));
+        const tt = h('td', 'nw'); if (r.trend && TT_CLS[r.trend]) { const e = h('span', 'wl-tag ' + TT_CLS[r.trend], r.trend); e.style.marginLeft = '0'; e.title = TT_TIP[r.trend] || ''; tt.append(e); } else tt.textContent = r.trend || '—';
+        tr.append(tt); bd.append(tr);
+      });
+      const wrap = h('div', 'tgr-scroll'); wrap.append(tb); body.append(wrap);
+    });
+  };
+  { const w = $('#resrep-wrap'); if (w) { w.addEventListener('toggle', () => { if (w.open) drawResRep(); }); if (w.open) setTimeout(drawResRep, 0); } }
   const drawMorning1 = () => {
     if (!$('#' + MBC.id + '-box')) return;
     if (!MBC.E || !MBC.dirty) MBC.E = mboSaved();
@@ -4330,6 +4380,11 @@ defCalc('industry_perf', {
     const n = (/^★+/.exec(b.title) || [''])[0].length;
     const head = BOX_SAY[b.box] + (n ? ', ' + STARS_SAY[Math.min(n, 3)] : '') + (b.sym ? ', ' + b.sym.split('').join(' ') : '');
     if (b.box === 'p') return head + patternSay(b);
+    if (b.box === 'o' || b.box === 'n') {      /* the level it broke (the user, Nov 21 2026): "Morning breakout, A R M, above 1 month, volume 1.8 times" */
+      const m = / · ABOVE (.+)$/.exec(String(b.title || ''));
+      const lv = m ? ', above ' + m[1].split(' + ').map((x) => x.split('/').map((y) => ({ '1M': '1 month', '3M': '3 month', '6M': '6 month', '9M': '9 month', '52W': '52 week', ATH: 'all time high', 'BROKEN SUPPORT': 'broken support' })[y] || y).join(' ')).join(' and ') : '';
+      return head + lv + volSay(full);
+    }
     return head + ('leon'.includes(b.box) ? volSay(full) : '');
   };
   /* the triggers of one check go together: each kind's sound once (EP first, then launching now, pattern, pullback, group;
@@ -5031,6 +5086,7 @@ defCalc('industry_perf', {
       ['p', 'MHK B breakout: Base top', '$153.79 over the base top $151.25 · vol 4.1x for the time of day · base 5 days', 'MHK:breakout'],
       ['p', 'WING B breakout: Base top', '$173.21 over the base top $170.37 · vol 0.8x for the time of day (light) · base 5 days', 'WING:breakout'],
       ['o', 'CDNA MORNING BREAKOUT +6.4%', '$83.57 · +6.4% · vol 2.0x for the time of day', 'CDNA:mbo'],
+      ['o', 'VERX MORNING BREAKOUT +4.2% · ABOVE 1M/3M', '$38.40 · +4.2% · vol 1.8x for the time of day · above its 1M/3M $36.84-38.07 · next: 52W $45.20, +17.7% · FULL TREND', 'VERX:mbo'],
       ['b', 'SPOT RETEST HOLDING into the close', 'vol 0.9x', 'SPOT:retest'],
       ['h', 'RKLB START DAY: over its 21 EMA after a downtrend', '+7.6% (1.2 ADR) · vol 1.8x for the time of day', 'RKLB:start'],
       ['e', 'CDW EPISODIC PIVOT BACK ON +9.1%', 'meets its rules again (first alert 09:36) · $182.40 · +9.1% · vol 3.2x for the time of day', 'CDW:epback1012'],

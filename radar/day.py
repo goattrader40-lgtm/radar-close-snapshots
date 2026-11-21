@@ -140,7 +140,7 @@ def live_once():
             files.append(hp)
         load_alert_state()
         r = sh(sys.executable, os.path.join(HERE, "alerts.py"), os.path.join(OUT, "live.json"), os.path.join(OUT, "launch.json"),
-               os.path.join(OUT, "alerts.json"), *premarket_args(), *morning_args(), *events_args(), check=False)
+               os.path.join(OUT, "alerts.json"), *premarket_args(), *morning_args(), *lists_args(), *resistance_args(), *events_args(), check=False)
         log((r.stdout or r.stderr).strip()[-600:])
         if r.returncode == 0 and os.path.exists(os.path.join(OUT, "alerts.json")):
             files.append(os.path.join(OUT, "alerts.json"))
@@ -228,6 +228,17 @@ def morning_args():
     return ["--morning", p, "--morning2", p2] + (["--earnings", pe] if os.path.exists(pe) else [])
 
 
+def resistance_args():
+    """the levels overhead at the last close (setups/resistance.json on main, the evening scan) for the morning boxes' level
+    tick boxes, as fast.py / alerts.py arguments; read once a job"""
+    p = os.path.join(OUT, "resistance.json")
+    if not os.path.exists(p):
+        txt = main_file("setups/resistance.json")
+        if txt:
+            open(p, "w").write(txt)
+    return ["--resistance", p] if os.path.exists(p) else []
+
+
 def lists_args():
     """the Watchlist's lists (setups/latest.json on main) for the 9:31-9:34 gap heads-up of the followed names, as fast.py /
     alerts.py arguments; read once a job (the evening scan writes it after the close)"""
@@ -277,13 +288,13 @@ def fast_once():
     out = os.path.join(OUT, "live_fast.json")
     load_opens()
     mo = morning_args()
-    r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, *mo[:4], *lists_args(), check=False)
+    r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, *mo[:4], *lists_args(), *resistance_args(), check=False)
     if r.returncode:
         log("fast:", (r.stderr or r.stdout).strip()[-300:])
         return
     sh(sys.executable, os.path.join(HERE, "livelog.py"), out, need[0], load_history(), os.path.join(OUT, "sipcal.json"), check=False)   # the morning record
     load_alert_state()
-    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", *premarket_args(), *mo, *lists_args(), *events_args(), check=False)
+    r = sh(sys.executable, os.path.join(HERE, "alerts.py"), out, need[0], os.path.join(OUT, "alerts.json"), "--fast", *premarket_args(), *mo, *lists_args(), *resistance_args(), *events_args(), check=False)
     txt = (r.stdout or r.stderr).strip()
     if r.returncode == 0 and " 0 new," not in txt:
         log("fast:", txt[-600:])

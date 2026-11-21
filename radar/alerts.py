@@ -1185,10 +1185,23 @@ def update_holding(state, found, live, doc, now):
 # Save button (like the Graded gappers rules); none saved = these defaults. Each stock once a day.
 MORNING_DEF = {"on": True, "start": "09:35", "end": "10:30", "min_chg": 5.0, "min_rv": 1.0, "over_pdh": True, "over_orh": True,
                "orh_min": 5, "price": 5.0, "mcap_b": 0.7, "avgvol_k": 700.0, "dvol_m": 30.0, "adr": 4.0, "low52": 30.0,
-               "above200": True, "above50": True, "e10_e21": True, "e21_e50": True, "e50_s200": False}
+               "above200": True, "above50": True, "e10_e21": True, "e21_e50": True, "e50_s200": False,
+               "res_1m": False, "res_3m": False, "res_6m": False, "res_9m": False, "res_52w": False, "res_ath": False, "res_bs": False,
+               "lists_only": False}
 MORNING_NUM = {"min_chg": (0, 100), "min_rv": (0, 50), "price": (0, 10000), "mcap_b": (0, 5000), "avgvol_k": (0, 100000),
                "dvol_m": (0, 100000), "adr": (0, 50), "low52": (0, 1000)}     # an empty box (null) = that filter off
-MORNING_BOOL = ("on", "over_pdh", "over_orh", "above200", "above50", "e10_e21", "e21_e50", "e50_s200")
+MORNING_BOOL = ("on", "over_pdh", "over_orh", "above200", "above50", "e10_e21", "e21_e50", "e50_s200",
+                "res_1m", "res_3m", "res_6m", "res_9m", "res_52w", "res_ath", "res_bs", "lists_only")
+# The resistance levels as one more filter of the two morning boxes (the user, Nov 21 2026: "you are just adding new filter
+# above 1m high / 3month / 6 / 9 / 52w / ath, and i choose which one, when other filters aligns with it it fires"; "stock can
+# open up above 1month high, it would have to wait to breakout of orh to trigger.. at orh both states has to be true above
+# the level and orh"). Ticked: the price must be over the TOP of a ticked range (its highest high) that was overhead at the
+# last close (setups/resistance.json, the evening scan: scanner/launch.py alert_levels), at the same moment as every other
+# setting; a joined range ("1m/3m") counts when any of its labels is ticked. Nothing ticked = the box as before. The alert
+# names the ticked level(s) it is over ("ABOVE 3M"), the other levels it cleared and the next one overhead, and the trend tag.
+# "Only my lists": Launches (with the 50 EMA undercut tab and the laggards), 3-SETUPS, Start days, the Watchlist's lists
+RES_KEYS = {"res_1m": "1m", "res_3m": "3m", "res_6m": "6m", "res_9m": "9m", "res_52w": "52w", "res_ath": "ath", "res_bs": "bs"}
+_RES = {"lv": None, "lists": None}       # main() / fast.py fill them: {sym: levels} (None = not read), {sym: [lists]}
 # the opening range the alert tests (the user, Nov 17 2026: "when i put it does 1min, if i put 2min it does 2 mins, if i put
 # 5min it does 5min"; alerts/morning.json "orh_min", 5 when not saved) and the first minute it is complete
 ORH_START = {1: (9, 31), 2: (9, 32), 3: (9, 33), 5: (9, 35)}     # 3: the user, Nov 18 2026
@@ -1404,9 +1417,15 @@ def morning_static(st, M, slack=None):
         return False
     if M.get("adr") is not None and n("adr_20") is not None and n("adr_20") < M["adr"]:
         return False
+    if M.get("lists_only") and _RES["lists"] is not None and st.get("symbol") not in _RES["lists"]:
+        return False
+    if res_ticked(M) and _RES["lv"] is not None and not ticked_levels(st.get("symbol"), M):
+        return False                                        # no ticked level overhead at the last close: can't fire today
     if slack is None:
         return True
     px = n("price")                                         # the last close, with some room for today's move
+    if px and res_ticked(M) and _RES["lv"] is not None and not any(x[1] <= px * (1 + slack) for x in ticked_levels(st.get("symbol"), M)):
+        return False
     if px and M.get("price") is not None and px * (1 + slack) < M["price"]:
         return False
     if px and M.get("above200") and n("sma200") and px * (1 + slack) < n("sma200"):
@@ -1414,6 +1433,60 @@ def morning_static(st, M, slack=None):
     if px and M.get("low52") is not None and n("low_52w") and px * (1 + slack) < n("low_52w") * (1 + M["low52"] / 100):
         return False
     return True
+
+
+def res_ticked(M):
+    """the level labels ticked in a box"""
+    return {v for k, v in RES_KEYS.items() if M and M.get(k)}
+
+
+def ticked_levels(sym, M):
+    """the stock's levels overhead at the last close that the box has ticked"""
+    t = res_ticked(M)
+    return [x for x in (_RES["lv"] or {}).get(sym) or [] if t & set(x[0].split("/"))]
+
+
+def res_name(lab):
+    """a level's name: "1m/3m" -> "1M/3M", "bs" -> "broken support"""
+    return "broken support" if lab == "bs" else lab.upper()
+
+
+def res_span(x):
+    """a range's prices: one price when both ends are within 0.5%"""
+    return f"${x[1]:.2f}" if abs(x[1] / x[2] - 1) < 0.005 else f"${x[2]:.2f}-{x[1]:.2f}"
+
+
+def res_setup(doc):
+    """_RES from the command line: --resistance <setups/resistance.json> (the levels) and the followed names (launch.json and
+    --lists <setups/latest.json>) for "Only my lists"; read once a run"""
+    if "--resistance" in sys.argv:
+        load_res(sys.argv[sys.argv.index("--resistance") + 1])
+    try:
+        lists_doc = json.load(open(sys.argv[sys.argv.index("--lists") + 1])) if "--lists" in sys.argv else None
+    except Exception:
+        lists_doc = None
+    _RES["lists"] = list_names(doc, lists_doc) if (doc.get("launches") or lists_doc) else None
+
+
+def load_res(path):
+    """setups/resistance.json's levels into _RES (None when it can't be read: then a ticked level can't fire)"""
+    try:
+        _RES["lv"] = json.load(open(path)).get("levels") or {}
+    except Exception as e:
+        _RES["lv"] = None
+        print(f"no resistance levels: {e!r}", file=sys.stderr)
+
+
+def live_trend_tag(st, price):
+    """the Watchlist's trend tag at the live price (docs/index.html trendTag): FULL TREND / NEW TREND / CAUTION / NO TREND"""
+    t, e = st.get("tr"), live_emas(st, price)
+    if not e or not t or len(t) < 4 or t[3] is None:
+        return ""
+    E10, E21, E50 = e
+    s200 = st.get("sma200")
+    stack = E10 > E21 > E50
+    full = stack and s200 and E50 > s200 and E50 > t[3]
+    return "FULL TREND" if full and price > E21 else "NEW TREND" if price > E21 and price > E50 else "CAUTION" if stack else "NO TREND"
 
 
 def morning_why_not(st, q, M):
@@ -1524,6 +1597,10 @@ def morning_alert(sym, st, q, lv, M, kind="mbo"):
         return None
     if any(f["id"] == "hc21" and x_fails(f, st, q, lv) for f in M.get("x") or []):
         return None
+    all_lv = (_RES["lv"] or {}).get(sym) or []
+    hits = [x for x in ticked_levels(sym, M) if price > x[1]]
+    if res_ticked(M) and not hits:                      # a level ticked: over the top of one of them, now, or no alert
+        return None
     adr = st.get("adr_20") or 0
     over = [f"yesterday's high ${lv['pdh']:.2f}"] if M.get("over_pdh") and lv else []
     over += [f"the {M.get('orh_min') or 5}-min opening range high ${lv['orh']:.2f}"] if M.get("over_orh") and lv else []
@@ -1540,7 +1617,21 @@ def morning_alert(sym, st, q, lv, M, kind="mbo"):
     th = [t for t in str(st.get("themes") or "").split(" | ") if t]
     if th or st.get("group"):
         msg += " · theme " + (th[0] if th else st.get("group"))
-    return f"{sym} {MORNING_NAME[kind]} {chg:+.1f}%", msg
+    tag = live_trend_tag(st, price)
+    lv_msg = ""
+    if hits:
+        lv_msg += " · above its " + " and ".join(f"{res_name(x[0])} {res_span(x)}" for x in hits)
+    other = [x for x in all_lv if price > x[1] and x not in hits]
+    if other:
+        lv_msg += " · also cleared " + ", ".join(f"{res_name(x[0])} {res_span(x)}" for x in other)
+    nxt = [x for x in all_lv if price <= x[1]]
+    if nxt:
+        x = min(nxt, key=lambda y: y[2])
+        lv_msg += f" · next: {res_name(x[0])} {res_span(x)}, " + (f"+{100 * (x[2] / price - 1):.1f}%" if price < x[2] else "in it now")
+    parts = msg.split(" · ")                            # the price, the % and the volume first, then the levels and the tag
+    msg = " · ".join(parts[:3]) + lv_msg + (f" · {tag}" if tag else "") + "".join(" · " + p_ for p_ in parts[3:])
+    above = " · ABOVE " + " + ".join(res_name(x[0]).upper() for x in hits) if hits else ""
+    return f"{sym} {MORNING_NAME[kind]} {chg:+.1f}%{above}", msg
 
 
 def morning_holding(state, M, live, S, now, kind="mbo"):
@@ -1621,7 +1712,8 @@ def check_morning(cands, state, M, live, S, E, now, sent, kind="mbo"):
         if a:
             (recheck if sym in before else fired).append((sym, a, lv))
         elif lv:
-            print(f"{sym}:{kind}: ${q[0]:.2f} not over yesterday's high {lv.get('pdh')} / the opening range high {lv.get('orh')} yet")
+            print(f"{sym}:{kind}: ${q[0]:.2f} not over yesterday's high {lv.get('pdh')} / the opening range high {lv.get('orh')}"
+                  + (f" / a ticked level {[x[1] for x in ticked_levels(sym, M)]}" if res_ticked(M) else "") + " yet")
     if recheck:                                         # levels from an earlier check: the day's low now
         with concurrent.futures.ThreadPoolExecutor(8) as ex:
             fresh = dict(zip([r[0] for r in recheck], ex.map(lambda s_: morning_levels(s_, now.date(), n), [r[0] for r in recheck])))
@@ -1707,6 +1799,7 @@ def main():
     # the morning breakouts (any stock; the user's settings, alerts/morning.json): the stocks whose live quote passes now
     M = load_morning(sys.argv[sys.argv.index("--morning") + 1]) if "--morning" in sys.argv else None
     M2 = load_morning2(sys.argv[sys.argv.index("--morning2") + 1] if "--morning2" in sys.argv else None, M) if M else None
+    res_setup(doc)                                       # the levels (setups/resistance.json) and the followed names, for the boxes
     mb_cands, mb2_cands, S_all, E_all = [], [], {}, {}
     # (from each box's own From time, 9:31 at the earliest, in the 1-minute check: the 9:35 rule below is for the other alerts.
     # The user, Nov 18 2026: "if i choose 932 or 933 meaning 3 orh breakout it should sound around 934 or 935... its every

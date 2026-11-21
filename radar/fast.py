@@ -16,7 +16,7 @@ import datetime, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sipcal  # noqa: E402
 from live import NY, Yahoo, fill_opens, rvol_at, yahoo_sym  # noqa: E402
-from alerts import load_morning, load_morning2, in_morning, morning_static  # noqa: E402
+from alerts import load_morning, load_morning2, in_morning, morning_static, res_setup  # noqa: E402
 
 
 def main():
@@ -41,6 +41,7 @@ def main():
     SL = json.load(open(stocks_p))
     avg20 = {r["symbol"]: r.get("avg_vol_20") for r in SL}
     if "--morning" in sys.argv:                         # the morning breakout window: every stock that can pass the settings
+        res_setup(doc)                                  # (the resistance levels a ticked box needs, the followed names)
         M = load_morning(sys.argv[sys.argv.index("--morning") + 1])
         # + the second box (the stocks not in trend; its own settings, or the first box's with the trend boxes off)
         M2 = load_morning2(sys.argv[sys.argv.index("--morning2") + 1] if "--morning2" in sys.argv else None, M)

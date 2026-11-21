@@ -2750,6 +2750,127 @@ def resistance(a, i, floor=None):
     return out
 
 
+# The resistance levels for the morning breakout boxes (the user, Nov 21 2026: "you are just adding new filter above 1m high /
+# 3month / 6 / 9 / 52w / ath, and i choose which one, when other filters aligns with it it fires"; "it has to be true for
+# couple situation.. stock can open up above 1month high, it would have to wait to breakout of orh to trigger.. at orh both
+# states has to be true above the level and orh"). Every stock the scan loads, the levels overhead at this close (the same
+# ranges as the Resistance column, without its buy-point floor), plus the ALL-TIME HIGH: the highest close to the highest high
+# of the stock's whole history. The 2-year bars only reach 2 years back: older history comes from radar-data ath.json (radar/
+# ath.py, read from Yahoo's full history every Saturday); a stock listed inside the 2 years has its whole history in the bars;
+# any other stock without an ath.json row gets no ATH (never a 2-year high called the all-time high). The Resistance column
+# itself is unchanged (the user: "here im only requesting we work on alerts").
+# Each entry [label, top, bottom] ("1m/3m", "52w/ath", "ath"), a broken support ["bs", top, bottom, breakdown day].
+RES_SPLIT = 0.02         # ath.json's reference close vs the bars' close that day: further off = a split since (rescale)
+
+
+def ath_range(a, i, rec, young):
+    """(top, bottom) of the all-time range at bar i, or None when the history older than the bars isn't known"""
+    st = a.st
+    top, bot = float(st.h[:i + 1].max()), float(st.c[:i + 1].max())
+    if rec:
+        hi, cl, ref_d, ref_c = rec.get("high"), rec.get("close"), rec.get("ref_date"), rec.get("ref_close")
+        r = 1.0
+        if ref_d and ref_c:
+            k = int(np.searchsorted(st.dates, ref_d))
+            if k < len(st.dates) and st.dates[k] == ref_d and st.c[k] > 0 and abs(st.c[k] / ref_c - 1) > RES_SPLIT:
+                r = float(st.c[k]) / ref_c               # a split (or Yahoo re-based the history) since ath.json was read
+        if hi and cl:
+            return max(top, hi * r), max(bot, cl * r)
+    return (top, bot) if young else None
+
+
+def alert_levels(a, i, rec=None, young=False):
+    """the levels overhead at bar i for the morning breakout alerts: [[label, top, bottom(, breakdown day)]], lowest first"""
+    out = [x[:3] if x[0] != "bs" else ["bs", x[1], x[2], x[5]] for x in resistance(a, i)]
+    at = ath_range(a, i, rec, young)
+    if at:
+        top, bot = at
+        hs = [x for x in out if x[0] != "bs"]
+        last = max(hs, key=lambda x: x[1]) if hs else None
+        if last and abs(top / last[1] - 1) < 0.005 and abs(bot / last[2] - 1) < 0.005:
+            last[0] += "/ath"
+        elif top > float(a.st.c[i]) * 1.005:
+            out.append(["ath", round(top, 2), round(bot, 2)])
+    out.sort(key=lambda x: (x[2], x[1]))
+    return out
+
+
+def morning_filters(path):
+    """the 📈 box's saved liquidity / price filters (alerts/morning.json; none = the defaults) for the evening report"""
+    M = dict(price=5.0, mcap_b=0.7, avgvol_k=700.0, dvol_m=30.0, adr=4.0, low52=30.0, lists_only=False)
+    try:
+        d = json.load(open(path))
+        for k in ("price", "mcap_b", "avgvol_k", "dvol_m", "adr", "low52"):
+            if k in d and (d[k] is None or isinstance(d[k], (int, float))):
+                M[k] = d[k]
+        M["lists_only"] = d.get("lists_only") is True
+    except Exception:
+        pass
+    return M
+
+
+def trend_tag_close(a, i):
+    """the Watchlist's trend tag at the close (docs/index.html trendTag): FULL TREND / NEW TREND / CAUTION / NO TREND"""
+    st = a.st
+    p, e10, e21, e50, s200 = float(st.c[i]), float(a.e10[i]), float(a.e21[i]), float(a.e50[i]), float(st.sma200[i])
+    stack = e10 > e21 > e50
+    full = stack and s200 == s200 and s200 > 0 and e50 > s200 and i > 0 and e50 > float(a.e50[i - 1])
+    return "FULL TREND" if full and p > e21 else "NEW TREND" if p > e21 and p > e50 else "CAUTION" if stack else "NO TREND"
+
+
+def write_resistance(path, A, cal, stocks_path, list_syms, morning_path):
+    """setups/resistance.json: every current stock's levels for tomorrow's alerts, and tonight's report of the levels the
+    day broke, closed inside, or tested and closed back under (the user, Nov 21 2026: "i dont need inside alerts for morning
+    breakouts, it could be silent and end of day report so i review it"; "so end of day your report have broke out ones,
+    inside day, and rejected ones"). The report: today's bar against the levels overhead at yesterday's close; the 📈 box's
+    liquidity and price filters (price, market cap, average volume, $ volume, ADR, 52-week low, only my lists), no trend
+    boxes, no opening range"""
+    today = cal[-1]
+    try:
+        ath = json.load(open(os.path.join(os.path.dirname(stocks_path or ""), "ath.json")))
+    except Exception:
+        ath = {}
+    AR = ath.get("rows") or {}
+    M = morning_filters(morning_path)
+    levels, rep = {}, {"broke": [], "inside": [], "rejected": []}
+    for s, a in A.items():
+        st = a.st
+        i = len(st.dates) - 1
+        if st.dates[i] != today or i < 21:
+            continue
+        young = st.dates[0] > cal[5]
+        lv = alert_levels(a, i, AR.get(s), young)
+        if lv:
+            levels[s] = lv
+        c, v = st.c, st.v
+        av, dv = float(v[i - 20:i].mean()), float(np.dot(c[i - 20:i], v[i - 20:i])) / 20 / 1e6
+        lo52 = float(st.l[max(0, i - 251):i + 1].min())
+        mc = (getattr(st, "mcap", None) or 0) / 1e9
+        if ((M["price"] is not None and c[i] < M["price"]) or (M["mcap_b"] is not None and mc < M["mcap_b"])
+                or (M["avgvol_k"] is not None and av < M["avgvol_k"] * 1000) or (M["dvol_m"] is not None and dv < M["dvol_m"])
+                or (M["adr"] is not None and st.adr[i - 1] < M["adr"]) or (M["low52"] is not None and c[i] < lo52 * (1 + M["low52"] / 100))
+                or (M["lists_only"] and s not in list_syms)):
+            continue
+        prev = alert_levels(a, i - 1, AR.get(s), young)
+        if not prev:
+            continue
+        row = lambda ls: dict(symbol=s, tv=run.tv_symbol(s, st.exchange), close=fnum(c[i]), high=fnum(st.h[i]),
+                              chg_pct=fnum(a.chg[i], 1), rel_vol=fnum(a.rv[i], 2), trend=trend_tag_close(a, i), levels=ls)
+        g = {"broke": [x for x in prev if c[i] > x[1]], "inside": [x for x in prev if x[2] <= c[i] <= x[1]],
+             "rejected": [x for x in prev if st.h[i] >= x[2] and c[i] < x[2]]}
+        for k, ls in g.items():
+            if ls:
+                rep[k].append(row(ls))
+    for k in rep:
+        rep[k].sort(key=lambda r: -(r["chg_pct"] or 0))
+    doc = dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+               ath_saved_at=ath.get("saved_at"), filters=M, levels=levels, report=rep)
+    with open(path, "w") as f:
+        json.dump(doc, f, separators=(",", ":"))
+    print(f"resistance: levels for {len(levels)} stocks ({sum(1 for v in levels.values() for x in v if 'ath' in x[0])} with an ATH overhead, "
+          f"ath.json {'rows ' + str(len(AR)) if AR else 'missing'}); report {', '.join(f'{k} {len(v)}' for k, v in rep.items())}")
+
+
 def write_watchlist(rows, wl_path, wl):
     """the new 3-SETUPS into the Watchlist's files: latest.json, the day's history file, the TradingView import file and
     the README (run.py builds the other three lists before this)"""
@@ -3248,6 +3369,16 @@ def main():
         print("group rank failed:", e)
     daily(A, groups, GS, cal, S, a.out, news_of(a.gradelog) if a.gradelog else {}, earnings_of(a.live, cal) if a.live else {},
           picks_of(a.picks) if a.picks else {}, removed_of(a.picks) if a.picks else {}, s3, grank, gbest, ghist)
+    if a.watchlist:                              # the evening scan: the levels for tomorrow's morning breakout alerts, and the report
+        try:
+            d_ = json.load(open(a.out))
+            ls_ = {r["symbol"] for k in ("launches", "ema50_undercut", "laggards", "start_days", "setups3") for r in d_.get(k) or []}
+            for rows_ in (json.load(open(a.watchlist)).get("lists") or {}).values():
+                ls_ |= {r["symbol"] for r in rows_ or [] if isinstance(r, dict) and r.get("symbol")}
+            write_resistance(os.path.join(os.path.dirname(os.path.abspath(a.out)), "resistance.json"), A, cal, a.stocks, ls_,
+                             os.path.join(os.path.dirname(HERE), "alerts", "morning.json"))
+        except Exception as e:                   # never at the cost of the launch list
+            print("resistance levels failed:", repr(e))
     if a.backtest:
         try:
             srows = json.load(open(a.stocks)) if a.stocks else None

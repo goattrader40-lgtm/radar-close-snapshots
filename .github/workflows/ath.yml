@@ -1,0 +1,28 @@
+# Each stock's all-time high range from Yahoo's full history (radar/ath.py) -> radar-data ath.json, for the morning breakout
+# boxes' "Above: ATH" level (scanner/launch.py reads it in the evening scan). Every Saturday morning, and by hand.
+name: All-time highs
+on:
+  schedule:
+    - cron: "17 13 * * 6"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: ath
+  cancel-in-progress: false
+jobs:
+  ath:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Read the all-time highs and save them
+        run: |
+          git config user.name "radar-bot"; git config user.email "radar-bot@users.noreply.github.com"
+          git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data
+          git show origin/radar-data:stocks.json > /tmp/stocks.json
+          python3 radar/ath.py /tmp/stocks.json /tmp/ath.json
+          python3 radar/publish.py "all-time highs" /tmp/ath.json
