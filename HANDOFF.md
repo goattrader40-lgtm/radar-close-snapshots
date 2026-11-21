@@ -49,6 +49,37 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: 7-day-low pullback column question (Nov 21)" (Sat Nov 21 2026 ~4:25 PM ET -; session_01PkbDahohHKiAyA9NYCdZQ7; in progress)
+
+- **LIVE (the user's "go live", Sat Nov 21 2026 evening; branch claude/nice-maxwell-10pa6l merged with main): the DIP list on the
+  Watchlist tab ("Dip to the 7-day low"), a screen of its own. NOT SEEN ON LIVE PRICES: FIRST CHECK Mon Nov 23 in the session
+  (the list near the close), and Mon evening that the scan rewrote setups/dip.json (date 2026-11-23).**
+  The user: "10 EMA above 21 above 50, and a new 20-day high in the last 10 days; wait 5-9 trading days after that high for a
+  dip; buy at the close on the day the close is the lowest of 7 days but still above the 21 EMA"; "from highest, meaning wick"
+  (for counting the days in this screen only: **the Days 21H column stays on closes**); "instead of these columns shouldnt we
+  just build this filter and scan/screen like that"; "whole market plus switch"; "i want numbers from my morning box"; "i dont
+  want it to be deeper than 25%".
+  1. **The list** (docs/index.html: the DIP button next to TREND, #dip-card, dipSet / dipRows / drawDip): always 10 > 21 > 50 EMA
+     and the price over the 21 EMA (trendOf, live in the session); the high = the highest HIGH of the last 21 sessions, its day a
+     new 20-day high (over the highs of the 20 sessions before it), no higher high since; the user's numbers (localStorage
+     `radar-dip`, an empty box = off, Reset): the high within 10 sessions, 5 to 9 sessions of dip, the close (live price) the
+     lowest close of 7 sessions today included, depth at most 25%; liquidity = the 📈 box's saved numbers until changed here
+     (Nov 21: $5+, $0.7B+, 700K+, $30M+, ADR 4%+, 20%+ over the 52-week low); "Only my lists" (Launches + 50 EMA undercut,
+     laggards, the Watchlist lists, Start days); its own table (On = the stock's lists), Download for TradingView. No alerts;
+     no other list, Launches rule or column changed.
+  2. **The data**: setups/dip.json, the evening scan (scanner/launch.py write_dip, only with --watchlist, after
+     write_resistance): {date, rows: {SYM: [sessions since the high, the high, its date, 1 = a new 20-day high on its day, the
+     last 15 closes]}} for every stock the scan loads (2,883 on Nov 20; not the $2T+ stocks: told the user). A session newer
+     than the file (live, or a newer stocks.json) = one more day at the live price; a price over the high = out. The file on
+     main now is the branch's dry run (radar-tools `setupsdry` also publishes radar-data dip_dry.json), the Nov 20 close.
+  Nov 20 close: 9 of 407 liquid stocks pass: PPLI (high 44.37 Nov 12, 6 days, -6.4%), FLYW, SHAK (on no list), SARO, FBIN, PRKS,
+  REZI, XNCR, REPL (-19.0%); 7 of 9 within 0.6% over the 21 EMA; 2 biotech (XNCR, REPL).
+  Tested in a browser with the dry file (desktop / phone, each number changed / emptied, Only my lists 140 searched, sort,
+  Reset, the other lists and 5 tabs, 0 page errors), again after the merge with main (the 1-UPDAY / START DAYS session had gone
+  live). Rules workbook: 1 row. No 2-year check (a screen). The Columns "+ add" button attached itself to the table: not tested.
+- **Offered, no answer**: a "Leave out biotech" tick box (the user: "i dont want to see bunch of biotech stocks"); a study of
+  which depth worked best over 2 years for this setup (the user asked "10-15 is sweet spot? what you recommend": not measured).
+
 ## Status of the session "Radar: Resistance alerts box (Nov 21)" (Sat Nov 21 2026 ~1:15 PM ET -; session_01PkbDakoHKZ2tgMSvkWcZxx; in progress)
 
 - **LIVE (the user's "Go live, and i want this to be ready for monday morning", Sat Nov 21 2026; branch claude/friendly-carson-ia63f6
@@ -96,6 +127,40 @@ alone.
   Alerts tab; Sat Nov 28: ath.yml ran.
 - Data: long_bars.json on radar-data had only SPOT / SPY (another session's fetch); re-run `long` with the 24 example stocks +
   VERX (30 symbols now: the 153 of the morning are gone; re-fetch others when needed).
+
+## Status of the session "Radar: 1-UPDAY / 1-EP/GAP / START DAYS -> 3-SETUPS (Nov 21)" (Sat Nov 21 2026; session_01PkbDaj2rqMQ1qnsD48H7ev; in progress)
+
+- **LIVE (the user's "tasks 1-3 go live", Sat Nov 21 2026, merge ee34096 on top of the other session's be57c80; Launches rebuilt
+  by picks.yml): the three Watchlist changes agreed in the session "watchlist restructuring (Nov 21)". They show from the Mon
+  Nov 23 evening scan (run.py and launch.py --watchlist run only then).**
+  1. **1-UPDAY: no 15-day rule** (settings.json lists.new_mover_days_without_setup 0 = off; run.py skips the check when 0). Off
+     only on 2 closes under the 50 EMA, a close under the FIRST day's low, or the user's x.
+  2. **A stock on 1-EP/GAP is not shown on 1-UPDAY** (run.py write_outputs: hidden in latest.json / the TradingView file /
+     history, kept in state.json with its own line, so it shows on 1-UPDAY again if it leaves 1-EP/GAP and still holds its
+     first-day low). Nov 20: 18 names hidden, 94 -> 76. 3-SETUPS already read those names from 1-EP/GAP (no change there).
+  3. **START DAYS feeds 3-SETUPS** (launch.py setups3 + newest_start(), the same rule as the Start days list; removed_starts_of
+     reads the user's x on a start day). Read from the start day; a stock already on 1-EP/GAP, 1-UPDAY or 2-POOL keeps that
+     list's day; the 3-SETUPS rules unchanged: ADR 4%+ and a close over the 200 SMA to come on (my suggestion (a), taken with
+     the user's "1-3 do it": a start under the 200 SMA joins once it closes over it). Nov 20 dry run (radar-tools setupsdry on
+     the branch): the same 66 names (the only new candidate, CXW, had no setup); Start days 27 and Launches 134 identical. On
+     the Oct 23 bars with start_from opened to June: 12 of 100 holding start names came on (RHI, ARXS, RBRK triggered; ZYME,
+     CAI, FROG Ready; SHOP, NRIX, SYRE, ASST, BHVN, MRNA setting up); the x keeps one off.
+  Tested: backfill Sep-Oct 2026 main vs branch (no 15-day removals, EP names only on 1-EP/GAP), `--regress` "every agreed
+  example reads the same" (before and after the merge), the page 0 errors with the new rule text. Rules workbook: the 1-UPDAY,
+  1-EP/GAP, START DAYS and 3-SETUPS rows. No 2-year check (list rules). **Check Mon Nov 23 evening**: setups/latest.json counts
+  (1-UPDAY without the EP names, no "15 trading days" in changes_today), 3-SETUPS rows with source "START DAYS".
+- **SPOT / the EP list ADR test (answered, no change; the user: "so you advise no change on it??", answered yes)**: SPOT Oct 22
+  2026 (gap +6.8%, +11.1%, 3.2x) missed 1-EP/GAP only on the ADR that day, 3.35% < 3.5% (3-month high 4.54%). Jan 2 2025 - Oct
+  23 2026: the list 1,278 EP days, 25% ran 20%+ (close), 36% broke the EP low in 5 days; the Launches-style 3-month ADR would add
+  194 days (3.5%) / 119 (4%), 5% ran 20%+. The list for the user's chart check: tools/ep_spot_check.xlsx (first sheet = the 119).
+  Offered if they find tradable ones: let them in only when also on Launches.
+- **The EP trade study (answers only, nothing built)**: today's 1-EP/GAP rules, 1,251 EP days Jan 2025 - Oct 23 2026, bought at the
+  EP day's CLOSE (no minute bars for the 5-minute ORH entry), stop the EP day's low (median risk 6.4% = 1.1 ADR): up 20%+ at a
+  high within 20 sessions 30%, failed (a close under the pre-EP close within 20) 35%. Exits: half at 2 ADR, a quarter at +20%,
+  the rest a close under the 21 EMA: +236R (+0.19R a trade, 35% winners, 64% full stops; last 12 months -46R, Jan-Oct 2025
+  +282R). The user's plan (1/3 at 2-3 ADR or 10-20% within 5 days, the rest breakeven, trail): the 21 EMA trail +256R to
+  +317R, "the higher of the 10 / 21 EMA" +105R to +158R; best +20% / 3 ADR with the 21 EMA (+317R / +311R, +0.25R); +15% with
+  the 21 EMA the only one positive in the last 12 months (+4R). Scripts were in the session's scratchpad (not kept).
 
 ## Status at the end of the session "Radar: theme chips on Today's gainers (Nov 18)" (Wed Nov 18 ~10:55 AM ET - Sat Nov 21 2026 ~12:40 PM ET; session_01PkbDak4wNj9qyumu6CQx8R)
 
