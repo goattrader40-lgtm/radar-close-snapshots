@@ -1,0 +1,1719 @@
+{
+ "day": "2026-11-20",
+ "settings": {
+  "on": true,
+  "start": "09:35",
+  "end": "10:30",
+  "min_chg": null,
+  "min_rv": 0.8,
+  "over_pdh": false,
+  "over_orh": true,
+  "orh_min": 3,
+  "price": 5.0,
+  "mcap_b": 0.7,
+  "avgvol_k": 700.0,
+  "dvol_m": 30.0,
+  "adr": 4.0,
+  "low52": 20.0,
+  "above200": true,
+  "above50": true,
+  "e10_e21": true,
+  "e21_e50": true,
+  "e50_s200": false,
+  "x": [],
+  "saved_at": "2026-11-20T10:14:21"
+ },
+ "read": 495,
+ "fired_n": 95,
+ "fired": [
+  {
+   "symbol": "CWK",
+   "time": "09:35",
+   "price": 13.2,
+   "chg": 2.4,
+   "rv": 4.6,
+   "pdh": 13.17,
+   "orh": 13.19,
+   "low": 12.92,
+   "title": "CWK MORNING BREAKOUT +2.4%",
+   "msg": "$13.20 \u00b7 +2.4% \u00b7 vol 4.6x for the time of day \u00b7 over the 3-min opening range high $13.19 \u00b7 stop under the day's low $12.92: risk 2.2% = 0.5 ADR \u00b7 ADR 4.6% \u00b7 +0% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Real Estate Services",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "BRBR",
+   "time": "09:35",
+   "price": 15.46,
+   "chg": 2.32,
+   "rv": 2.11,
+   "pdh": 15.82,
+   "orh": 15.45,
+   "low": 15.05,
+   "title": "BRBR MORNING BREAKOUT +2.3%",
+   "msg": "$15.46 \u00b7 +2.3% \u00b7 vol 2.1x for the time of day \u00b7 over the 3-min opening range high $15.45 \u00b7 stop under the day's low $15.05: risk 2.7% = 0.4 ADR \u00b7 ADR 6.8% \u00b7 +26% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "Filing, not classified",
+    "reason": "Filed since the close: 8-K 8.01. brbr-20261119 0001772016 false 0001772016 2026-11-19 2026-11-19 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 ____",
+    "url": "https://www.sec.gov/Archives/edgar/data/1772016/000162828026075091/brbr-20261119.htm",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "KVYO",
+   "time": "09:35",
+   "price": 21.76,
+   "chg": 2.18,
+   "rv": 1.06,
+   "pdh": 22.72,
+   "orh": 21.67,
+   "low": 20.78,
+   "title": "KVYO MORNING BREAKOUT +2.2%",
+   "msg": "$21.76 \u00b7 +2.2% \u00b7 vol 1.1x for the time of day \u00b7 over the 3-min opening range high $21.67 \u00b7 stop under the day's low $20.78: risk 4.8% = 0.8 ADR \u00b7 ADR 5.8% \u00b7 +22% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Enterprise SaaS"
+  },
+  {
+   "symbol": "TDC",
+   "time": "09:35",
+   "price": 36.38,
+   "chg": 2.18,
+   "rv": 3.2,
+   "pdh": 37.39,
+   "orh": 36.1,
+   "low": 34.96,
+   "title": "TDC MORNING BREAKOUT +2.2%",
+   "msg": "$36.38 \u00b7 +2.2% \u00b7 vol 3.2x for the time of day \u00b7 over the 3-min opening range high $36.10 \u00b7 stop under the day's low $34.96: risk 4.1% = 0.9 ADR \u00b7 ADR 4.4% \u00b7 +20% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "BAX",
+   "time": "09:35",
+   "price": 25.93,
+   "chg": 2.15,
+   "rv": 1.12,
+   "pdh": 26.16,
+   "orh": 25.77,
+   "low": 24.85,
+   "title": "BAX MORNING BREAKOUT +2.1%",
+   "msg": "$25.93 \u00b7 +2.1% \u00b7 vol 1.1x for the time of day \u00b7 over the 3-min opening range high $25.77 \u00b7 stop under the day's low $24.85: risk 4.4% = 1.0 ADR \u00b7 ADR 4.3% \u00b7 +19% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "Earlier news (Tue Nov 17): Deal / contract",
+    "reason": "Baxter Healthcare and Direct Relief Discuss Humanitarian Partnership Strategy (Fiscal.ai Nov 17 6:01 PM ET); today: No company news: No SEC filing or company release since the last close",
+    "url": "https://www.devex.com/news/special-edition-humanitarian-lessons-for-today-s-private-sector-partnerships-113859/amp",
+    "earlier": {
+     "label": "Tue Nov 17",
+     "date": "2026-11-17",
+     "kind": "Deal / contract",
+     "text": "Baxter Healthcare and Direct Relief Discuss Humanitarian Partnership Strategy",
+     "source": "Fiscal.ai",
+     "url": "https://www.devex.com/news/special-edition-humanitarian-lessons-for-today-s-private-sector-partnerships-113859/amp",
+     "at": "Nov 17 6:01 PM ET"
+    },
+    "weak": false
+   }
+  },
+  {
+   "symbol": "SONO",
+   "time": "09:35",
+   "price": 17.4,
+   "chg": 2.0,
+   "rv": 1.69,
+   "pdh": 17.76,
+   "orh": 17.07,
+   "low": 17.06,
+   "title": "SONO MORNING BREAKOUT +2.0%",
+   "msg": "$17.40 \u00b7 +2.0% \u00b7 vol 1.7x for the time of day \u00b7 over the 3-min opening range high $17.07 \u00b7 stop under the day's low $17.06: risk 2.0% = 0.4 ADR \u00b7 ADR 5.4% \u00b7 +13% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "TENB",
+   "time": "09:35",
+   "price": 44.97,
+   "chg": 2.0,
+   "rv": 1.36,
+   "pdh": 47.67,
+   "orh": 44.0,
+   "low": 42.87,
+   "title": "TENB MORNING BREAKOUT +2.0%",
+   "msg": "$44.97 \u00b7 +2.0% \u00b7 vol 1.4x for the time of day \u00b7 over the 3-min opening range high $44.00 \u00b7 stop under the day's low $42.87: risk 4.9% = 0.7 ADR \u00b7 ADR 7.5% \u00b7 +48% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Cybersecurity"
+  },
+  {
+   "symbol": "TREX",
+   "time": "09:35",
+   "price": 51.58,
+   "chg": 1.96,
+   "rv": 0.87,
+   "pdh": 52.27,
+   "orh": 51.29,
+   "low": 50.37,
+   "title": "TREX MORNING BREAKOUT +2.0%",
+   "msg": "$51.58 \u00b7 +2.0% \u00b7 vol 0.9x for the time of day \u00b7 over the 3-min opening range high $51.29 \u00b7 stop under the day's low $50.37: risk 2.4% = 0.5 ADR \u00b7 ADR 4.4% \u00b7 +18% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Building Products"
+  },
+  {
+   "symbol": "ENR",
+   "time": "09:35",
+   "price": 28.75,
+   "chg": 1.7,
+   "rv": 2.92,
+   "pdh": 28.7,
+   "orh": 28.51,
+   "low": 28.15,
+   "title": "ENR MORNING BREAKOUT +1.7%",
+   "msg": "$28.75 \u00b7 +1.7% \u00b7 vol 2.9x for the time of day \u00b7 over the 3-min opening range high $28.51 \u00b7 stop under the day's low $28.15: risk 2.1% = 0.5 ADR \u00b7 ADR 4.3% \u00b7 +39% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "After earnings (Nov 17)",
+    "reason": "Reported Tue Nov 17 before the open: EPS beat +5.7%, revenue -5% y/y; no new filing since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "APPN",
+   "time": "09:35",
+   "price": 51.83,
+   "chg": 1.69,
+   "rv": 1.59,
+   "pdh": 56.71,
+   "orh": 51.66,
+   "low": 50.0,
+   "title": "APPN MORNING BREAKOUT +1.7%",
+   "msg": "$51.83 \u00b7 +1.7% \u00b7 vol 1.6x for the time of day \u00b7 over the 3-min opening range high $51.66 \u00b7 stop under the day's low $50.00: risk 3.7% = 0.6 ADR \u00b7 ADR 6.4% \u00b7 +69% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Enterprise SaaS",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "KTB",
+   "time": "09:35",
+   "price": 80.78,
+   "chg": 1.67,
+   "rv": 2.28,
+   "pdh": 83.23,
+   "orh": 80.23,
+   "low": 78.73,
+   "title": "KTB MORNING BREAKOUT +1.7%",
+   "msg": "$80.78 \u00b7 +1.7% \u00b7 vol 2.3x for the time of day \u00b7 over the 3-min opening range high $80.23 \u00b7 stop under the day's low $78.73: risk 2.6% = 0.5 ADR \u00b7 ADR 4.9% \u00b7 +9% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Apparel & Luxury Goods"
+  },
+  {
+   "symbol": "PRGO",
+   "time": "09:35",
+   "price": 16.3,
+   "chg": 1.62,
+   "rv": 2.33,
+   "pdh": 16.82,
+   "orh": 16.22,
+   "low": 15.87,
+   "title": "PRGO MORNING BREAKOUT +1.6%",
+   "msg": "$16.30 \u00b7 +1.6% \u00b7 vol 2.3x for the time of day \u00b7 over the 3-min opening range high $16.22 \u00b7 stop under the day's low $15.87: risk 2.7% = 0.6 ADR \u00b7 ADR 4.6% \u00b7 +30% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "SHAK",
+   "time": "09:35",
+   "price": 74.08,
+   "chg": 1.57,
+   "rv": 1.36,
+   "pdh": 74.52,
+   "orh": 73.95,
+   "low": 72.45,
+   "title": "SHAK MORNING BREAKOUT +1.6%",
+   "msg": "$74.08 \u00b7 +1.6% \u00b7 vol 1.4x for the time of day \u00b7 over the 3-min opening range high $73.95 \u00b7 stop under the day's low $72.45: risk 2.3% = 0.5 ADR \u00b7 ADR 5.0% \u00b7 +1% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "ACHC",
+   "time": "09:35",
+   "price": 35.0,
+   "chg": 1.54,
+   "rv": 2.08,
+   "pdh": 38.0,
+   "orh": 34.75,
+   "low": 33.8,
+   "title": "ACHC MORNING BREAKOUT +1.5%",
+   "msg": "$35.00 \u00b7 +1.5% \u00b7 vol 2.1x for the time of day \u00b7 over the 3-min opening range high $34.75 \u00b7 stop under the day's low $33.80: risk 3.6% = 0.6 ADR \u00b7 ADR 5.7% \u00b7 +27% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "ASO",
+   "time": "09:35",
+   "price": 71.5,
+   "chg": 1.45,
+   "rv": 2.14,
+   "pdh": 72.66,
+   "orh": 71.0,
+   "low": 69.84,
+   "title": "ASO MORNING BREAKOUT +1.4%",
+   "msg": "$71.50 \u00b7 +1.4% \u00b7 vol 2.1x for the time of day \u00b7 over the 3-min opening range high $71.00 \u00b7 stop under the day's low $69.84: risk 2.4% = 0.6 ADR \u00b7 ADR 4.0% \u00b7 +33% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "Earlier news (Wed Nov 18): Earnings",
+    "reason": "Academy Sports + Outdoors Opens Three New Stores in Q4 (Fiscal.ai Nov 18 2:02 PM ET); today: No company news: No SEC filing or company release since the last close",
+    "url": "https://www.prnewswire.com/news-releases/academy-sports--outdoors-opens-three-stores-in-q4-taking-new-store-total-to-23-in-fiscal-2026-302943044.html",
+    "earlier": {
+     "label": "Wed Nov 18",
+     "date": "2026-11-18",
+     "kind": "Earnings",
+     "text": "Academy Sports + Outdoors Opens Three New Stores in Q4",
+     "source": "Fiscal.ai",
+     "url": "https://www.prnewswire.com/news-releases/academy-sports--outdoors-opens-three-stores-in-q4-taking-new-store-total-to-23-in-fiscal-2026-302943044.html",
+     "at": "Nov 18 2:02 PM ET"
+    },
+    "weak": false
+   }
+  },
+  {
+   "symbol": "CVNA",
+   "time": "09:35",
+   "price": 68.94,
+   "chg": 1.39,
+   "rv": 1.75,
+   "pdh": 72.95,
+   "orh": 68.29,
+   "low": 67.39,
+   "title": "CVNA MORNING BREAKOUT +1.4%",
+   "msg": "$68.94 \u00b7 +1.4% \u00b7 vol 1.8x for the time of day \u00b7 over the 3-min opening range high $68.29 \u00b7 stop under the day's low $67.39: risk 2.3% = 0.4 ADR \u00b7 ADR 5.7% \u00b7 +1% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "AMPL",
+   "time": "09:35",
+   "price": 16.76,
+   "chg": 1.33,
+   "rv": 1.86,
+   "pdh": 17.58,
+   "orh": 16.61,
+   "low": 16.19,
+   "title": "AMPL MORNING BREAKOUT +1.3%",
+   "msg": "$16.76 \u00b7 +1.3% \u00b7 vol 1.9x for the time of day \u00b7 over the 3-min opening range high $16.61 \u00b7 stop under the day's low $16.19: risk 3.5% = 0.6 ADR \u00b7 ADR 5.4% \u00b7 +65% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Enterprise SaaS",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "DLTR",
+   "time": "09:35",
+   "price": 142.04,
+   "chg": 1.28,
+   "rv": 1.39,
+   "pdh": 141.74,
+   "orh": 141.79,
+   "low": 140.91,
+   "title": "DLTR MORNING BREAKOUT +1.3%",
+   "msg": "$142.04 \u00b7 +1.3% \u00b7 vol 1.4x for the time of day \u00b7 over the 3-min opening range high $141.79 \u00b7 stop under the day's low $140.91: risk 0.8% = 0.2 ADR \u00b7 ADR 4.0% \u00b7 +21% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Retail",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "VCEL",
+   "time": "09:35",
+   "price": 58.97,
+   "chg": 1.22,
+   "rv": 1.75,
+   "pdh": 59.66,
+   "orh": 58.9,
+   "low": 58.11,
+   "title": "VCEL MORNING BREAKOUT +1.2%",
+   "msg": "$58.97 \u00b7 +1.2% \u00b7 vol 1.8x for the time of day \u00b7 over the 3-min opening range high $58.90 \u00b7 stop under the day's low $58.11: risk 1.5% = 0.3 ADR \u00b7 ADR 4.9% \u00b7 +48% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "FBIN",
+   "time": "09:35",
+   "price": 47.85,
+   "chg": 1.19,
+   "rv": 1.36,
+   "pdh": 47.44,
+   "orh": 47.78,
+   "low": 47.02,
+   "title": "FBIN MORNING BREAKOUT +1.2%",
+   "msg": "$47.85 \u00b7 +1.2% \u00b7 vol 1.4x for the time of day \u00b7 over the 3-min opening range high $47.78 \u00b7 stop under the day's low $47.02: risk 1.8% = 0.4 ADR \u00b7 ADR 4.4% \u00b7 +8% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Building Products",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "WWW",
+   "time": "09:35",
+   "price": 25.28,
+   "chg": 1.16,
+   "rv": 1.91,
+   "pdh": 25.92,
+   "orh": 25.23,
+   "low": 24.77,
+   "title": "WWW MORNING BREAKOUT +1.2%",
+   "msg": "$25.28 \u00b7 +1.2% \u00b7 vol 1.9x for the time of day \u00b7 over the 3-min opening range high $25.23 \u00b7 stop under the day's low $24.77: risk 2.1% = 0.4 ADR \u00b7 ADR 5.2% \u00b7 +37% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Apparel & Luxury Goods"
+  },
+  {
+   "symbol": "HGV",
+   "time": "09:35",
+   "price": 45.15,
+   "chg": 1.12,
+   "rv": 2.08,
+   "pdh": 46.47,
+   "orh": 45.01,
+   "low": 44.52,
+   "title": "HGV MORNING BREAKOUT +1.1%",
+   "msg": "$45.15 \u00b7 +1.1% \u00b7 vol 2.1x for the time of day \u00b7 over the 3-min opening range high $45.01 \u00b7 stop under the day's low $44.52: risk 1.4% = 0.3 ADR \u00b7 ADR 4.2% \u00b7 +2% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "PRCT",
+   "time": "09:35",
+   "price": 26.03,
+   "chg": 1.09,
+   "rv": 2.5,
+   "pdh": 26.39,
+   "orh": 25.86,
+   "low": 25.1,
+   "title": "PRCT MORNING BREAKOUT +1.1%",
+   "msg": "$26.03 \u00b7 +1.1% \u00b7 vol 2.5x for the time of day \u00b7 over the 3-min opening range high $25.86 \u00b7 stop under the day's low $25.10: risk 3.7% = 0.6 ADR \u00b7 ADR 6.7% \u00b7 +14% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "CDW",
+   "time": "09:35",
+   "price": 169.43,
+   "chg": 1.08,
+   "rv": 3.11,
+   "pdh": 170.85,
+   "orh": 169.08,
+   "low": 167.09,
+   "title": "CDW MORNING BREAKOUT +1.1%",
+   "msg": "$169.43 \u00b7 +1.1% \u00b7 vol 3.1x for the time of day \u00b7 over the 3-min opening range high $169.08 \u00b7 stop under the day's low $167.09: risk 1.4% = 0.3 ADR \u00b7 ADR 4.8% \u00b7 +25% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "VIA",
+   "time": "09:35",
+   "price": 46.2,
+   "chg": 1.04,
+   "rv": 1.26,
+   "pdh": 48.25,
+   "orh": 45.62,
+   "low": 44.99,
+   "title": "VIA MORNING BREAKOUT +1.0%",
+   "msg": "$46.20 \u00b7 +1.0% \u00b7 vol 1.3x for the time of day \u00b7 over the 3-min opening range high $45.62 \u00b7 stop under the day's low $44.99: risk 2.7% = 0.4 ADR \u00b7 ADR 6.3% \u00b7 +106% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "CERT",
+   "time": "09:35",
+   "price": 10.77,
+   "chg": 0.84,
+   "rv": 2.13,
+   "pdh": 11.51,
+   "orh": 10.68,
+   "low": 10.42,
+   "title": "CERT MORNING BREAKOUT +0.8%",
+   "msg": "$10.77 \u00b7 +0.8% \u00b7 vol 2.1x for the time of day \u00b7 over the 3-min opening range high $10.68 \u00b7 stop under the day's low $10.42: risk 3.4% = 0.6 ADR \u00b7 ADR 5.6% \u00b7 +45% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No news since the last close, only routine filings (4)",
+    "url": "https://www.sec.gov/Archives/edgar/data/1827090/000214391526000006/",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "GME",
+   "time": "09:35",
+   "price": 27.15,
+   "chg": 0.82,
+   "rv": 3.15,
+   "pdh": 27.5,
+   "orh": 27.0,
+   "low": 26.74,
+   "title": "GME MORNING BREAKOUT +0.8%",
+   "msg": "$27.15 \u00b7 +0.8% \u00b7 vol 3.1x for the time of day \u00b7 over the 3-min opening range high $27.00 \u00b7 stop under the day's low $26.74: risk 1.5% = 0.4 ADR \u00b7 ADR 4.0% \u00b7 +19% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "YOU",
+   "time": "09:35",
+   "price": 55.37,
+   "chg": 0.78,
+   "rv": 2.74,
+   "pdh": 55.97,
+   "orh": 55.3,
+   "low": 53.77,
+   "title": "YOU MORNING BREAKOUT +0.8%",
+   "msg": "$55.37 \u00b7 +0.8% \u00b7 vol 2.7x for the time of day \u00b7 over the 3-min opening range high $55.30 \u00b7 stop under the day's low $53.77: risk 3.0% = 0.5 ADR \u00b7 ADR 5.7% \u00b7 +12% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "INSM",
+   "time": "09:35",
+   "price": 145.54,
+   "chg": 0.74,
+   "rv": 1.46,
+   "pdh": 148.94,
+   "orh": 144.18,
+   "low": 142.42,
+   "title": "INSM MORNING BREAKOUT +0.7%",
+   "msg": "$145.54 \u00b7 +0.7% \u00b7 vol 1.5x for the time of day \u00b7 over the 3-min opening range high $144.18 \u00b7 stop under the day's low $142.42: risk 2.2% = 0.4 ADR \u00b7 ADR 5.7% \u00b7 +19% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "XERS",
+   "time": "09:35",
+   "price": 16.74,
+   "chg": 0.73,
+   "rv": 1.12,
+   "pdh": 17.04,
+   "orh": 16.68,
+   "low": 16.53,
+   "title": "XERS MORNING BREAKOUT +0.7%",
+   "msg": "$16.74 \u00b7 +0.7% \u00b7 vol 1.1x for the time of day \u00b7 over the 3-min opening range high $16.68 \u00b7 stop under the day's low $16.53: risk 1.3% = 0.3 ADR \u00b7 ADR 4.7% \u00b7 +107% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "FTDR",
+   "time": "09:35",
+   "price": 90.81,
+   "chg": 0.72,
+   "rv": 3.68,
+   "pdh": 94.25,
+   "orh": 90.23,
+   "low": 89.4,
+   "title": "FTDR MORNING BREAKOUT +0.7%",
+   "msg": "$90.81 \u00b7 +0.7% \u00b7 vol 3.7x for the time of day \u00b7 over the 3-min opening range high $90.23 \u00b7 stop under the day's low $89.40: risk 1.6% = 0.4 ADR \u00b7 ADR 4.1% \u00b7 +26% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "LTH",
+   "time": "09:35",
+   "price": 46.87,
+   "chg": 0.71,
+   "rv": 3.07,
+   "pdh": 48.12,
+   "orh": 46.63,
+   "low": 45.59,
+   "title": "LTH MORNING BREAKOUT +0.7%",
+   "msg": "$46.87 \u00b7 +0.7% \u00b7 vol 3.1x for the time of day \u00b7 over the 3-min opening range high $46.63 \u00b7 stop under the day's low $45.59: risk 2.8% = 0.7 ADR \u00b7 ADR 4.3% \u00b7 +28% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "SN",
+   "time": "09:35",
+   "price": 218.31,
+   "chg": 0.7,
+   "rv": 1.54,
+   "pdh": 230.25,
+   "orh": 218.08,
+   "low": 214.05,
+   "title": "SN MORNING BREAKOUT +0.7%",
+   "msg": "$218.31 \u00b7 +0.7% \u00b7 vol 1.5x for the time of day \u00b7 over the 3-min opening range high $218.08 \u00b7 stop under the day's low $214.05: risk 2.0% = 0.5 ADR \u00b7 ADR 4.0% \u00b7 +45% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "ARHS",
+   "time": "09:35",
+   "price": 13.01,
+   "chg": 0.62,
+   "rv": 1.5,
+   "pdh": 13.8,
+   "orh": 12.9,
+   "low": 12.68,
+   "title": "ARHS MORNING BREAKOUT +0.6%",
+   "msg": "$13.01 \u00b7 +0.6% \u00b7 vol 1.5x for the time of day \u00b7 over the 3-min opening range high $12.90 \u00b7 stop under the day's low $12.68: risk 2.6% = 0.4 ADR \u00b7 ADR 5.9% \u00b7 +52% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "CAKE",
+   "time": "09:35",
+   "price": 112.88,
+   "chg": 0.56,
+   "rv": 1.52,
+   "pdh": 119.48,
+   "orh": 112.28,
+   "low": 110.45,
+   "title": "CAKE MORNING BREAKOUT +0.6%",
+   "msg": "$112.88 \u00b7 +0.6% \u00b7 vol 1.5x for the time of day \u00b7 over the 3-min opening range high $112.28 \u00b7 stop under the day's low $110.45: risk 2.2% = 0.4 ADR \u00b7 ADR 5.1% \u00b7 +35% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Casual Dining",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "CALY",
+   "time": "09:35",
+   "price": 16.53,
+   "chg": 0.55,
+   "rv": 3.66,
+   "pdh": 17.25,
+   "orh": 16.47,
+   "low": 16.23,
+   "title": "CALY MORNING BREAKOUT +0.6%",
+   "msg": "$16.53 \u00b7 +0.6% \u00b7 vol 3.7x for the time of day \u00b7 over the 3-min opening range high $16.47 \u00b7 stop under the day's low $16.23: risk 1.8% = 0.5 ADR \u00b7 ADR 4.0% \u00b7 +6% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "IRON",
+   "time": "09:35",
+   "price": 76.5,
+   "chg": 0.52,
+   "rv": 2.26,
+   "pdh": 78.9,
+   "orh": 76.08,
+   "low": 75.2,
+   "title": "IRON MORNING BREAKOUT +0.5%",
+   "msg": "$76.50 \u00b7 +0.5% \u00b7 vol 2.3x for the time of day \u00b7 over the 3-min opening range high $76.08 \u00b7 stop under the day's low $75.20: risk 1.7% = 0.4 ADR \u00b7 ADR 4.8% \u00b7 +8% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "TGTX",
+   "time": "09:35",
+   "price": 65.2,
+   "chg": 0.5,
+   "rv": 2.18,
+   "pdh": 67.19,
+   "orh": 65.14,
+   "low": 64.22,
+   "title": "TGTX MORNING BREAKOUT +0.5%",
+   "msg": "$65.20 \u00b7 +0.5% \u00b7 vol 2.2x for the time of day \u00b7 over the 3-min opening range high $65.14 \u00b7 stop under the day's low $64.22: risk 1.5% = 0.3 ADR \u00b7 ADR 5.5% \u00b7 +41% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "ENOV",
+   "time": "09:35",
+   "price": 26.33,
+   "chg": 0.4,
+   "rv": 2.11,
+   "pdh": 27.53,
+   "orh": 26.19,
+   "low": 25.64,
+   "title": "ENOV MORNING BREAKOUT +0.4%",
+   "msg": "$26.33 \u00b7 +0.4% \u00b7 vol 2.1x for the time of day \u00b7 over the 3-min opening range high $26.19 \u00b7 stop under the day's low $25.64: risk 2.7% = 0.5 ADR \u00b7 ADR 5.9% \u00b7 +13% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "RPD",
+   "time": "09:35",
+   "price": 15.39,
+   "chg": 0.39,
+   "rv": 2.61,
+   "pdh": 16.5,
+   "orh": 15.33,
+   "low": 14.6,
+   "title": "RPD MORNING BREAKOUT +0.4%",
+   "msg": "$15.39 \u00b7 +0.4% \u00b7 vol 2.6x for the time of day \u00b7 over the 3-min opening range high $15.33 \u00b7 stop under the day's low $14.60: risk 5.4% = 0.6 ADR \u00b7 ADR 9.5% \u00b7 +59% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Cybersecurity"
+  },
+  {
+   "symbol": "FLYW",
+   "time": "09:35",
+   "price": 21.46,
+   "chg": 0.28,
+   "rv": 2.47,
+   "pdh": 21.93,
+   "orh": 21.35,
+   "low": 20.72,
+   "title": "FLYW MORNING BREAKOUT +0.3%",
+   "msg": "$21.46 \u00b7 +0.3% \u00b7 vol 2.5x for the time of day \u00b7 over the 3-min opening range high $21.35 \u00b7 stop under the day's low $20.72: risk 3.6% = 0.8 ADR \u00b7 ADR 4.3% \u00b7 +33% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "VSXY",
+   "time": "09:35",
+   "price": 96.7,
+   "chg": 0.24,
+   "rv": 2.18,
+   "pdh": 102.2,
+   "orh": 96.47,
+   "low": 94.37,
+   "title": "VSXY MORNING BREAKOUT +0.2%",
+   "msg": "$96.70 \u00b7 +0.2% \u00b7 vol 2.2x for the time of day \u00b7 over the 3-min opening range high $96.47 \u00b7 stop under the day's low $94.37: risk 2.5% = 0.5 ADR \u00b7 ADR 5.4% \u00b7 +32% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "LION",
+   "time": "09:35",
+   "price": 13.5,
+   "chg": 0.22,
+   "rv": 2.46,
+   "pdh": 13.99,
+   "orh": 13.49,
+   "low": 13.26,
+   "title": "LION MORNING BREAKOUT +0.2%",
+   "msg": "$13.50 \u00b7 +0.2% \u00b7 vol 2.5x for the time of day \u00b7 over the 3-min opening range high $13.49 \u00b7 stop under the day's low $13.26: risk 1.8% = 0.4 ADR \u00b7 ADR 4.2% \u00b7 +13% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "HNGE",
+   "time": "09:35",
+   "price": 108.19,
+   "chg": 0.08,
+   "rv": 2.28,
+   "pdh": 117.35,
+   "orh": 107.06,
+   "low": 106.0,
+   "title": "HNGE MORNING BREAKOUT +0.1%",
+   "msg": "$108.19 \u00b7 +0.1% \u00b7 vol 2.3x for the time of day \u00b7 over the 3-min opening range high $107.06 \u00b7 stop under the day's low $106.00: risk 2.1% = 0.4 ADR \u00b7 ADR 5.2% \u00b7 +48% vs the 200 SMA \u00b7 10 > 21 > 50 EMA",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "VVV",
+   "time": "09:35",
+   "price": 36.87,
+   "chg": 0.08,
+   "rv": 2.66,
+   "pdh": 38.0,
+   "orh": 36.8,
+   "low": 35.98,
+   "title": "VVV MORNING BREAKOUT +0.1%",
+   "msg": "$36.87 \u00b7 +0.1% \u00b7 vol 2.7x for the time of day \u00b7 over the 3-min opening range high $36.80 \u00b7 stop under the day's low $35.98: risk 2.5% = 0.6 ADR \u00b7 ADR 4.0% \u00b7 +7% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "PRKS",
+   "time": "09:35",
+   "price": 39.1,
+   "chg": -0.33,
+   "rv": 1.24,
+   "pdh": 40.77,
+   "orh": 38.88,
+   "low": 37.94,
+   "title": "PRKS MORNING BREAKOUT -0.3%",
+   "msg": "$39.10 \u00b7 -0.3% \u00b7 vol 1.2x for the time of day \u00b7 over the 3-min opening range high $38.88 \u00b7 stop under the day's low $37.94: risk 3.0% = 0.5 ADR \u00b7 ADR 5.8% \u00b7 +2% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "NTSK",
+   "time": "09:35",
+   "price": 24.71,
+   "chg": -0.36,
+   "rv": 1.1,
+   "pdh": 26.45,
+   "orh": 24.67,
+   "low": 24.0,
+   "title": "NTSK MORNING BREAKOUT -0.4%",
+   "msg": "$24.71 \u00b7 -0.4% \u00b7 vol 1.1x for the time of day \u00b7 over the 3-min opening range high $24.67 \u00b7 stop under the day's low $24.00: risk 3.0% = 0.4 ADR \u00b7 ADR 8.2% \u00b7 +80% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Cybersecurity"
+  },
+  {
+   "symbol": "VRDN",
+   "time": "09:35",
+   "price": 31.28,
+   "chg": -0.51,
+   "rv": 1.08,
+   "pdh": 31.51,
+   "orh": 31.22,
+   "low": 31.04,
+   "title": "VRDN MORNING BREAKOUT -0.5%",
+   "msg": "$31.28 \u00b7 -0.5% \u00b7 vol 1.1x for the time of day \u00b7 over the 3-min opening range high $31.22 \u00b7 stop under the day's low $31.04: risk 0.8% = 0.1 ADR \u00b7 ADR 5.4% \u00b7 +45% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "CRL",
+   "time": "09:35",
+   "price": 326.02,
+   "chg": -0.58,
+   "rv": 1.22,
+   "pdh": 343.57,
+   "orh": 325.63,
+   "low": 323.0,
+   "title": "CRL MORNING BREAKOUT -0.6%",
+   "msg": "$326.02 \u00b7 -0.6% \u00b7 vol 1.2x for the time of day \u00b7 over the 3-min opening range high $325.63 \u00b7 stop under the day's low $323.00: risk 0.9% = 0.2 ADR \u00b7 ADR 4.8% \u00b7 +41% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Life Science Tools & CROs",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "U",
+   "time": "09:35",
+   "price": 46.17,
+   "chg": -1.13,
+   "rv": 1.02,
+   "pdh": 50.2,
+   "orh": 46.05,
+   "low": 45.26,
+   "title": "U MORNING BREAKOUT -1.1%",
+   "msg": "$46.17 \u00b7 -1.1% \u00b7 vol 1.0x for the time of day \u00b7 over the 3-min opening range high $46.05 \u00b7 stop under the day's low $45.26: risk 2.0% = 0.3 ADR \u00b7 ADR 6.0% \u00b7 +42% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "ADPT",
+   "time": "09:35",
+   "price": 27.59,
+   "chg": -1.62,
+   "rv": 1.86,
+   "pdh": 29.8,
+   "orh": 27.5,
+   "low": 27.15,
+   "title": "ADPT MORNING BREAKOUT -1.6%",
+   "msg": "$27.59 \u00b7 -1.6% \u00b7 vol 1.9x for the time of day \u00b7 over the 3-min opening range high $27.50 \u00b7 stop under the day's low $27.15: risk 1.6% = 0.3 ADR \u00b7 ADR 6.3% \u00b7 +36% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Genomics & Diagnostics",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "BILL",
+   "time": "09:35",
+   "price": 61.73,
+   "chg": -3.67,
+   "rv": 60.09,
+   "pdh": 66.58,
+   "orh": 61.68,
+   "low": 61.58,
+   "title": "BILL MORNING BREAKOUT -3.7%",
+   "msg": "$61.73 \u00b7 -3.7% \u00b7 vol 60.1x for the time of day \u00b7 over the 3-min opening range high $61.68 \u00b7 stop under the day's low $61.58: risk 0.2% = 0.1 ADR \u00b7 ADR 4.7% \u00b7 +42% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Enterprise SaaS",
+   "news": {
+    "checked": true,
+    "catalyst": "Signed takeover",
+    "reason": "A signed agreement to be acquired (8-K / release)",
+    "url": "https://www.sec.gov/Archives/edgar/data/1786352/000119312526469396/d176726dex991.htm",
+    "earlier": null,
+    "weak": false
+   }
+  },
+  {
+   "symbol": "TTAN",
+   "time": "09:36",
+   "price": 79.0,
+   "chg": 2.68,
+   "rv": 2.53,
+   "pdh": 84.7,
+   "orh": 78.0,
+   "low": 76.81,
+   "title": "TTAN MORNING BREAKOUT +2.7%",
+   "msg": "$79.00 \u00b7 +2.7% \u00b7 vol 2.5x for the time of day \u00b7 over the 3-min opening range high $78.00 \u00b7 stop under the day's low $76.81: risk 2.9% = 0.6 ADR \u00b7 ADR 5.0% \u00b7 +9% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Enterprise SaaS"
+  },
+  {
+   "symbol": "KMPR",
+   "time": "09:36",
+   "price": 33.08,
+   "chg": 2.67,
+   "rv": 3.8,
+   "pdh": 32.5,
+   "orh": 32.84,
+   "low": 32.29,
+   "title": "KMPR MORNING BREAKOUT +2.7%",
+   "msg": "$33.08 \u00b7 +2.7% \u00b7 vol 3.8x for the time of day \u00b7 over the 3-min opening range high $32.84 \u00b7 stop under the day's low $32.29: risk 2.4% = 0.6 ADR \u00b7 ADR 4.3% \u00b7 +13% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme P&C Insurance & Brokers"
+  },
+  {
+   "symbol": "LFST",
+   "time": "09:36",
+   "price": 13.6,
+   "chg": 1.97,
+   "rv": 1.36,
+   "pdh": 14.12,
+   "orh": 13.53,
+   "low": 13.21,
+   "title": "LFST MORNING BREAKOUT +2.0%",
+   "msg": "$13.60 \u00b7 +2.0% \u00b7 vol 1.4x for the time of day \u00b7 over the 3-min opening range high $13.53 \u00b7 stop under the day's low $13.21: risk 3.0% = 0.6 ADR \u00b7 ADR 5.3% \u00b7 +38% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "TDOC",
+   "time": "09:36",
+   "price": 7.86,
+   "chg": 0.9,
+   "rv": 1.06,
+   "pdh": 8.14,
+   "orh": 7.83,
+   "low": 7.67,
+   "title": "TDOC MORNING BREAKOUT +0.9%",
+   "msg": "$7.86 \u00b7 +0.9% \u00b7 vol 1.1x for the time of day \u00b7 over the 3-min opening range high $7.83 \u00b7 stop under the day's low $7.67: risk 2.5% = 0.4 ADR \u00b7 ADR 6.5% \u00b7 +17% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "KNSA",
+   "time": "09:36",
+   "price": 94.24,
+   "chg": 0.75,
+   "rv": 1.01,
+   "pdh": 96.18,
+   "orh": 93.48,
+   "low": 92.68,
+   "title": "KNSA MORNING BREAKOUT +0.8%",
+   "msg": "$94.24 \u00b7 +0.8% \u00b7 vol 1.0x for the time of day \u00b7 over the 3-min opening range high $93.48 \u00b7 stop under the day's low $92.68: risk 1.7% = 0.3 ADR \u00b7 ADR 5.2% \u00b7 +47% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "ADMA",
+   "time": "09:36",
+   "price": 13.42,
+   "chg": 0.6,
+   "rv": 1.42,
+   "pdh": 13.59,
+   "orh": 13.4,
+   "low": 13.15,
+   "title": "ADMA MORNING BREAKOUT +0.6%",
+   "msg": "$13.42 \u00b7 +0.6% \u00b7 vol 1.4x for the time of day \u00b7 over the 3-min opening range high $13.40 \u00b7 stop under the day's low $13.15: risk 2.1% = 0.4 ADR \u00b7 ADR 5.3% \u00b7 +26% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "CDNA",
+   "time": "09:36",
+   "price": 72.25,
+   "chg": 0.47,
+   "rv": 0.84,
+   "pdh": 76.9,
+   "orh": 71.1,
+   "low": 70.0,
+   "title": "CDNA MORNING BREAKOUT +0.5%",
+   "msg": "$72.25 \u00b7 +0.5% \u00b7 vol 0.8x for the time of day \u00b7 over the 3-min opening range high $71.10 \u00b7 stop under the day's low $70.00: risk 3.2% = 0.5 ADR \u00b7 ADR 6.3% \u00b7 +90% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "ATEN",
+   "time": "09:36",
+   "price": 32.57,
+   "chg": 0.08,
+   "rv": 2.33,
+   "pdh": 33.97,
+   "orh": 32.37,
+   "low": 31.75,
+   "title": "ATEN MORNING BREAKOUT +0.1%",
+   "msg": "$32.57 \u00b7 +0.1% \u00b7 vol 2.3x for the time of day \u00b7 over the 3-min opening range high $32.37 \u00b7 stop under the day's low $31.75: risk 2.6% = 0.4 ADR \u00b7 ADR 5.9% \u00b7 +19% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Network & App Delivery"
+  },
+  {
+   "symbol": "CGON",
+   "time": "09:36",
+   "price": 81.68,
+   "chg": -0.27,
+   "rv": 1.3,
+   "pdh": 84.22,
+   "orh": 81.32,
+   "low": 80.31,
+   "title": "CGON MORNING BREAKOUT -0.3%",
+   "msg": "$81.68 \u00b7 -0.3% \u00b7 vol 1.3x for the time of day \u00b7 over the 3-min opening range high $81.32 \u00b7 stop under the day's low $80.31: risk 1.7% = 0.2 ADR \u00b7 ADR 7.9% \u00b7 +21% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "PRCH",
+   "time": "09:36",
+   "price": 19.88,
+   "chg": -0.4,
+   "rv": 1.53,
+   "pdh": 21.07,
+   "orh": 19.83,
+   "low": 19.26,
+   "title": "PRCH MORNING BREAKOUT -0.4%",
+   "msg": "$19.88 \u00b7 -0.4% \u00b7 vol 1.5x for the time of day \u00b7 over the 3-min opening range high $19.83 \u00b7 stop under the day's low $19.26: risk 3.2% = 0.5 ADR \u00b7 ADR 6.0% \u00b7 +53% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "ORKA",
+   "time": "09:36",
+   "price": 96.46,
+   "chg": -1.13,
+   "rv": 1.83,
+   "pdh": 101.93,
+   "orh": 96.32,
+   "low": 95.0,
+   "title": "ORKA MORNING BREAKOUT -1.1%",
+   "msg": "$96.46 \u00b7 -1.1% \u00b7 vol 1.8x for the time of day \u00b7 over the 3-min opening range high $96.32 \u00b7 stop under the day's low $95.00: risk 1.5% = 0.2 ADR \u00b7 ADR 6.4% \u00b7 +30% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "XMTR",
+   "time": "09:36",
+   "price": 109.61,
+   "chg": -1.6,
+   "rv": 2.62,
+   "pdh": 125.34,
+   "orh": 108.0,
+   "low": 106.49,
+   "title": "XMTR MORNING BREAKOUT -1.6%",
+   "msg": "$109.61 \u00b7 -1.6% \u00b7 vol 2.6x for the time of day \u00b7 over the 3-min opening range high $108.00 \u00b7 stop under the day's low $106.49: risk 2.9% = 0.3 ADR \u00b7 ADR 8.8% \u00b7 +37% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "BRKR",
+   "time": "09:36",
+   "price": 61.1,
+   "chg": -1.61,
+   "rv": 1.03,
+   "pdh": 65.82,
+   "orh": 60.65,
+   "low": 59.39,
+   "title": "BRKR MORNING BREAKOUT -1.6%",
+   "msg": "$61.10 \u00b7 -1.6% \u00b7 vol 1.0x for the time of day \u00b7 over the 3-min opening range high $60.65 \u00b7 stop under the day's low $59.39: risk 2.9% = 0.5 ADR \u00b7 ADR 6.0% \u00b7 +19% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "UPBD",
+   "time": "09:37",
+   "price": 25.49,
+   "chg": 2.49,
+   "rv": 1.24,
+   "pdh": 26.13,
+   "orh": 25.38,
+   "low": 25.01,
+   "title": "UPBD MORNING BREAKOUT +2.5%",
+   "msg": "$25.49 \u00b7 +2.5% \u00b7 vol 1.2x for the time of day \u00b7 over the 3-min opening range high $25.38 \u00b7 stop under the day's low $25.01: risk 1.9% = 0.4 ADR \u00b7 ADR 5.5% \u00b7 +32% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "CRI",
+   "time": "09:37",
+   "price": 36.11,
+   "chg": 2.04,
+   "rv": 1.37,
+   "pdh": 36.6,
+   "orh": 35.98,
+   "low": 35.35,
+   "title": "CRI MORNING BREAKOUT +2.0%",
+   "msg": "$36.11 \u00b7 +2.0% \u00b7 vol 1.4x for the time of day \u00b7 over the 3-min opening range high $35.98 \u00b7 stop under the day's low $35.35: risk 2.1% = 0.5 ADR \u00b7 ADR 4.5% \u00b7 +0% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "LYFT",
+   "time": "09:37",
+   "price": 17.25,
+   "chg": 2.04,
+   "rv": 1.41,
+   "pdh": 17.74,
+   "orh": 17.23,
+   "low": 16.71,
+   "title": "LYFT MORNING BREAKOUT +2.0%",
+   "msg": "$17.25 \u00b7 +2.0% \u00b7 vol 1.4x for the time of day \u00b7 over the 3-min opening range high $17.23 \u00b7 stop under the day's low $16.71: risk 3.3% = 0.7 ADR \u00b7 ADR 4.9% \u00b7 +14% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Internet Platforms"
+  },
+  {
+   "symbol": "INTA",
+   "time": "09:37",
+   "price": 43.22,
+   "chg": 1.86,
+   "rv": 1.5,
+   "pdh": 45.16,
+   "orh": 43.0,
+   "low": 40.56,
+   "title": "INTA MORNING BREAKOUT +1.9%",
+   "msg": "$43.22 \u00b7 +1.9% \u00b7 vol 1.5x for the time of day \u00b7 over the 3-min opening range high $43.00 \u00b7 stop under the day's low $40.56: risk 6.6% = 1.1 ADR \u00b7 ADR 5.8% \u00b7 +40% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Enterprise SaaS"
+  },
+  {
+   "symbol": "PCOR",
+   "time": "09:37",
+   "price": 74.29,
+   "chg": 1.35,
+   "rv": 1.36,
+   "pdh": 77.37,
+   "orh": 73.47,
+   "low": 71.57,
+   "title": "PCOR MORNING BREAKOUT +1.4%",
+   "msg": "$74.29 \u00b7 +1.4% \u00b7 vol 1.4x for the time of day \u00b7 over the 3-min opening range high $73.47 \u00b7 stop under the day's low $71.57: risk 3.8% = 0.9 ADR \u00b7 ADR 4.1% \u00b7 +37% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Enterprise SaaS"
+  },
+  {
+   "symbol": "PENN",
+   "time": "09:37",
+   "price": 18.59,
+   "chg": 1.03,
+   "rv": 1.76,
+   "pdh": 18.75,
+   "orh": 18.48,
+   "low": 18.23,
+   "title": "PENN MORNING BREAKOUT +1.0%",
+   "msg": "$18.59 \u00b7 +1.0% \u00b7 vol 1.8x for the time of day \u00b7 over the 3-min opening range high $18.48 \u00b7 stop under the day's low $18.23: risk 2.0% = 0.5 ADR \u00b7 ADR 4.3% \u00b7 +9% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "SAIL",
+   "time": "09:37",
+   "price": 22.25,
+   "chg": 0.95,
+   "rv": 2.01,
+   "pdh": 23.52,
+   "orh": 22.07,
+   "low": 21.43,
+   "title": "SAIL MORNING BREAKOUT +0.9%",
+   "msg": "$22.25 \u00b7 +0.9% \u00b7 vol 2.0x for the time of day \u00b7 over the 3-min opening range high $22.07 \u00b7 stop under the day's low $21.43: risk 3.8% = 0.6 ADR \u00b7 ADR 6.2% \u00b7 +36% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Cybersecurity"
+  },
+  {
+   "symbol": "REAL",
+   "time": "09:37",
+   "price": 11.89,
+   "chg": 0.5,
+   "rv": 1.34,
+   "pdh": 12.84,
+   "orh": 11.88,
+   "low": 11.55,
+   "title": "REAL MORNING BREAKOUT +0.5%",
+   "msg": "$11.89 \u00b7 +0.5% \u00b7 vol 1.3x for the time of day \u00b7 over the 3-min opening range high $11.88 \u00b7 stop under the day's low $11.55: risk 2.9% = 0.4 ADR \u00b7 ADR 7.4% \u00b7 +10% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "ZETA",
+   "time": "09:37",
+   "price": 32.35,
+   "chg": 0.4,
+   "rv": 2.79,
+   "pdh": 36.85,
+   "orh": 32.08,
+   "low": 31.52,
+   "title": "ZETA MORNING BREAKOUT +0.4%",
+   "msg": "$32.35 \u00b7 +0.4% \u00b7 vol 2.8x for the time of day \u00b7 over the 3-min opening range high $32.08 \u00b7 stop under the day's low $31.52: risk 2.6% = 0.4 ADR \u00b7 ADR 6.4% \u00b7 +38% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme AI Software & Data"
+  },
+  {
+   "symbol": "NXPI",
+   "time": "09:37",
+   "price": 251.99,
+   "chg": 0.09,
+   "rv": 5.71,
+   "pdh": 261.82,
+   "orh": 251.41,
+   "low": 248.76,
+   "title": "NXPI MORNING BREAKOUT +0.1%",
+   "msg": "$251.99 \u00b7 +0.1% \u00b7 vol 5.7x for the time of day \u00b7 over the 3-min opening range high $251.41 \u00b7 stop under the day's low $248.76: risk 1.3% = 0.2 ADR \u00b7 ADR 5.4% \u00b7 +1% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Analog & Auto Semis"
+  },
+  {
+   "symbol": "MGNI",
+   "time": "09:37",
+   "price": 26.62,
+   "chg": 0.03,
+   "rv": 1.67,
+   "pdh": 28.37,
+   "orh": 26.49,
+   "low": 26.12,
+   "title": "MGNI MORNING BREAKOUT +0.0%",
+   "msg": "$26.62 \u00b7 +0.0% \u00b7 vol 1.7x for the time of day \u00b7 over the 3-min opening range high $26.49 \u00b7 stop under the day's low $26.12: risk 1.9% = 0.4 ADR \u00b7 ADR 5.0% \u00b7 +43% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "RYTM",
+   "time": "09:37",
+   "price": 115.96,
+   "chg": -0.72,
+   "rv": 0.88,
+   "pdh": 119.26,
+   "orh": 115.75,
+   "low": 114.44,
+   "title": "RYTM MORNING BREAKOUT -0.7%",
+   "msg": "$115.96 \u00b7 -0.7% \u00b7 vol 0.9x for the time of day \u00b7 over the 3-min opening range high $115.75 \u00b7 stop under the day's low $114.44: risk 1.3% = 0.2 ADR \u00b7 ADR 6.4% \u00b7 +19% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "DUOL",
+   "time": "09:37",
+   "price": 148.23,
+   "chg": -0.77,
+   "rv": 1.31,
+   "pdh": 162.81,
+   "orh": 147.16,
+   "low": 143.41,
+   "title": "DUOL MORNING BREAKOUT -0.8%",
+   "msg": "$148.23 \u00b7 -0.8% \u00b7 vol 1.3x for the time of day \u00b7 over the 3-min opening range high $147.16 \u00b7 stop under the day's low $143.41: risk 3.4% = 0.5 ADR \u00b7 ADR 6.4% \u00b7 +19% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "CARG",
+   "time": "09:38",
+   "price": 33.31,
+   "chg": 2.53,
+   "rv": 2.58,
+   "pdh": 34.91,
+   "orh": 32.95,
+   "low": 32.45,
+   "title": "CARG MORNING BREAKOUT +2.5%",
+   "msg": "$33.31 \u00b7 +2.5% \u00b7 vol 2.6x for the time of day \u00b7 over the 3-min opening range high $32.95 \u00b7 stop under the day's low $32.45: risk 2.7% = 0.5 ADR \u00b7 ADR 5.0% \u00b7 +1% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Online Marketplaces & Listings"
+  },
+  {
+   "symbol": "REPL",
+   "time": "09:38",
+   "price": 19.14,
+   "chg": -0.47,
+   "rv": 1.61,
+   "pdh": 20.48,
+   "orh": 18.96,
+   "low": 18.7,
+   "title": "REPL MORNING BREAKOUT -0.5%",
+   "msg": "$19.14 \u00b7 -0.5% \u00b7 vol 1.6x for the time of day \u00b7 over the 3-min opening range high $18.96 \u00b7 stop under the day's low $18.70: risk 2.4% = 0.3 ADR \u00b7 ADR 8.8% \u00b7 +86% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "SYRE",
+   "time": "09:38",
+   "price": 96.54,
+   "chg": -1.12,
+   "rv": 3.06,
+   "pdh": 103.5,
+   "orh": 96.36,
+   "low": 95.19,
+   "title": "SYRE MORNING BREAKOUT -1.1%",
+   "msg": "$96.54 \u00b7 -1.1% \u00b7 vol 3.1x for the time of day \u00b7 over the 3-min opening range high $96.36 \u00b7 stop under the day's low $95.19: risk 1.4% = 0.3 ADR \u00b7 ADR 5.6% \u00b7 +23% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "SKY",
+   "time": "09:39",
+   "price": 93.31,
+   "chg": 2.07,
+   "rv": 4.57,
+   "pdh": 93.69,
+   "orh": 92.99,
+   "low": 91.79,
+   "title": "SKY MORNING BREAKOUT +2.1%",
+   "msg": "$93.31 \u00b7 +2.1% \u00b7 vol 4.6x for the time of day \u00b7 over the 3-min opening range high $92.99 \u00b7 stop under the day's low $91.79: risk 1.7% = 0.4 ADR \u00b7 ADR 4.0% \u00b7 +13% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Residential Construction"
+  },
+  {
+   "symbol": "ELAN",
+   "time": "09:39",
+   "price": 26.76,
+   "chg": 1.79,
+   "rv": 1.21,
+   "pdh": 27.49,
+   "orh": 26.22,
+   "low": 26.11,
+   "title": "ELAN MORNING BREAKOUT +1.8%",
+   "msg": "$26.76 \u00b7 +1.8% \u00b7 vol 1.2x for the time of day \u00b7 over the 3-min opening range high $26.22 \u00b7 stop under the day's low $26.11: risk 2.5% = 0.6 ADR \u00b7 ADR 4.0% \u00b7 +12% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "PRG",
+   "time": "09:40",
+   "price": 39.56,
+   "chg": 1.06,
+   "rv": 1.7,
+   "pdh": 40.78,
+   "orh": 39.34,
+   "low": 38.55,
+   "title": "PRG MORNING BREAKOUT +1.1%",
+   "msg": "$39.56 \u00b7 +1.1% \u00b7 vol 1.7x for the time of day \u00b7 over the 3-min opening range high $39.34 \u00b7 stop under the day's low $38.55: risk 2.6% = 0.4 ADR \u00b7 ADR 6.0% \u00b7 +10% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "AEO",
+   "time": "09:42",
+   "price": 21.5,
+   "chg": 2.38,
+   "rv": 1.94,
+   "pdh": 22.12,
+   "orh": 21.42,
+   "low": 20.94,
+   "title": "AEO MORNING BREAKOUT +2.4%",
+   "msg": "$21.50 \u00b7 +2.4% \u00b7 vol 1.9x for the time of day \u00b7 over the 3-min opening range high $21.42 \u00b7 stop under the day's low $20.94: risk 2.6% = 0.6 ADR \u00b7 ADR 4.5% \u00b7 +19% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Apparel & Mall Retail"
+  },
+  {
+   "symbol": "M",
+   "time": "09:43",
+   "price": 24.16,
+   "chg": 1.73,
+   "rv": 0.97,
+   "pdh": 24.69,
+   "orh": 24.14,
+   "low": 23.62,
+   "title": "M MORNING BREAKOUT +1.7%",
+   "msg": "$24.16 \u00b7 +1.7% \u00b7 vol 1.0x for the time of day \u00b7 over the 3-min opening range high $24.14 \u00b7 stop under the day's low $23.62: risk 2.3% = 0.5 ADR \u00b7 ADR 4.5% \u00b7 +10% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "PPLI",
+   "time": "09:47",
+   "price": 42.92,
+   "chg": 2.66,
+   "rv": 1.6,
+   "pdh": 42.77,
+   "orh": 41.83,
+   "low": 41.39,
+   "title": "PPLI MORNING BREAKOUT +2.7%",
+   "msg": "$42.92 \u00b7 +2.7% \u00b7 vol 1.6x for the time of day \u00b7 over the 3-min opening range high $41.83 \u00b7 stop under the day's low $41.39: risk 3.7% = 0.9 ADR \u00b7 ADR 4.2% \u00b7 +5% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "GKOS",
+   "time": "09:48",
+   "price": 239.62,
+   "chg": 0.64,
+   "rv": 0.82,
+   "pdh": 239.34,
+   "orh": 238.87,
+   "low": 233.4,
+   "title": "GKOS MORNING BREAKOUT +0.6%",
+   "msg": "$239.62 \u00b7 +0.6% \u00b7 vol 0.8x for the time of day \u00b7 over the 3-min opening range high $238.87 \u00b7 stop under the day's low $233.40: risk 2.7% = 0.5 ADR \u00b7 ADR 5.8% \u00b7 +59% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "MWH",
+   "time": "09:50",
+   "price": 26.8,
+   "chg": -1.42,
+   "rv": 1.26,
+   "pdh": 28.07,
+   "orh": 26.72,
+   "low": 26.0,
+   "title": "MWH MORNING BREAKOUT -1.4%",
+   "msg": "$26.80 \u00b7 -1.4% \u00b7 vol 1.3x for the time of day \u00b7 over the 3-min opening range high $26.72 \u00b7 stop under the day's low $26.00: risk 3.1% = 0.4 ADR \u00b7 ADR 7.4% \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "KOD",
+   "time": "09:58",
+   "price": 99.1,
+   "chg": 1.22,
+   "rv": 0.8,
+   "pdh": 101.23,
+   "orh": 98.84,
+   "low": 96.99,
+   "title": "KOD MORNING BREAKOUT +1.2%",
+   "msg": "$99.10 \u00b7 +1.2% \u00b7 vol 0.8x for the time of day \u00b7 over the 3-min opening range high $98.84 \u00b7 stop under the day's low $96.99: risk 2.2% = 0.3 ADR \u00b7 ADR 6.7% \u00b7 +107% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "FROG",
+   "time": "10:05",
+   "price": 107.6,
+   "chg": -1.54,
+   "rv": 1.64,
+   "pdh": 121.85,
+   "orh": 107.31,
+   "low": 100.13,
+   "title": "FROG MORNING BREAKOUT -1.5%",
+   "msg": "$107.60 \u00b7 -1.5% \u00b7 vol 1.6x for the time of day \u00b7 over the 3-min opening range high $107.31 \u00b7 stop under the day's low $100.13: risk 7.5% = 0.9 ADR \u00b7 ADR 8.2% \u00b7 +43% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Cybersecurity"
+  },
+  {
+   "symbol": "TOST",
+   "time": "10:09",
+   "price": 32.54,
+   "chg": 2.17,
+   "rv": 1.09,
+   "pdh": 34.34,
+   "orh": 31.91,
+   "low": 31.63,
+   "title": "TOST MORNING BREAKOUT +2.2%",
+   "msg": "$32.54 \u00b7 +2.2% \u00b7 vol 1.1x for the time of day \u00b7 over the 3-min opening range high $31.91 \u00b7 stop under the day's low $31.63: risk 2.9% = 0.7 ADR \u00b7 ADR 4.4% \u00b7 +10% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Fintech & Payments"
+  },
+  {
+   "symbol": "GPK",
+   "time": "10:12",
+   "price": 10.57,
+   "chg": 2.62,
+   "rv": 0.84,
+   "pdh": 10.45,
+   "orh": 10.52,
+   "low": 10.37,
+   "title": "GPK MORNING BREAKOUT +2.6%",
+   "msg": "$10.57 \u00b7 +2.6% \u00b7 vol 0.8x for the time of day \u00b7 over the 3-min opening range high $10.52 \u00b7 stop under the day's low $10.37: risk 1.9% = 0.5 ADR \u00b7 ADR 4.3% \u00b7 +2% vs the 200 SMA \u00b7 10 > 21 > 50 EMA"
+  },
+  {
+   "symbol": "EPAM",
+   "time": "10:24",
+   "price": 157.07,
+   "chg": 4.41,
+   "rv": 0.88,
+   "pdh": 154.19,
+   "orh": 153.45,
+   "low": 151.55,
+   "title": "EPAM MORNING BREAKOUT +4.4%",
+   "msg": "$157.07 \u00b7 +4.4% \u00b7 vol 0.9x for the time of day \u00b7 over the 3-min opening range high $153.45 \u00b7 stop under the day's low $151.55: risk 3.6% = 0.9 ADR \u00b7 ADR 4.2% \u00b7 +33% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme IT Services & Consulting",
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  {
+   "symbol": "LPX",
+   "time": "10:25",
+   "price": 75.05,
+   "chg": 2.25,
+   "rv": 0.91,
+   "pdh": 75.04,
+   "orh": 72.8,
+   "low": 72.61,
+   "title": "LPX MORNING BREAKOUT +2.2%",
+   "msg": "$75.05 \u00b7 +2.2% \u00b7 vol 0.9x for the time of day \u00b7 over the 3-min opening range high $72.80 \u00b7 stop under the day's low $72.61: risk 3.4% = 0.8 ADR \u00b7 ADR 4.0% \u00b7 +1% vs the 200 SMA \u00b7 10 > 21 > 50 EMA \u00b7 theme Building Products & Equipment"
+  }
+ ],
+ "per_minute": {
+  "09:35": [
+   "ACHC",
+   "ADPT",
+   "AMPL",
+   "APPN",
+   "ARHS",
+   "ASO",
+   "BAX",
+   "BILL",
+   "BRBR",
+   "CAKE",
+   "CALY",
+   "CDW",
+   "CERT",
+   "CRL",
+   "CVNA",
+   "CWK",
+   "DLTR",
+   "ENOV",
+   "ENR",
+   "FBIN",
+   "FLYW",
+   "FTDR",
+   "GME",
+   "HGV",
+   "HNGE",
+   "INSM",
+   "IRON",
+   "KTB",
+   "KVYO",
+   "LION",
+   "LTH",
+   "NTSK",
+   "PRCT",
+   "PRGO",
+   "PRKS",
+   "RPD",
+   "SHAK",
+   "SN",
+   "SONO",
+   "TDC",
+   "TENB",
+   "TGTX",
+   "TREX",
+   "U",
+   "VCEL",
+   "VIA",
+   "VRDN",
+   "VSXY",
+   "VVV",
+   "WWW",
+   "XERS",
+   "YOU"
+  ],
+  "09:36": [
+   "ADMA",
+   "ATEN",
+   "BRKR",
+   "CDNA",
+   "CGON",
+   "KMPR",
+   "KNSA",
+   "LFST",
+   "ORKA",
+   "PRCH",
+   "TDOC",
+   "TTAN",
+   "XMTR"
+  ],
+  "09:37": [
+   "CRI",
+   "DUOL",
+   "INTA",
+   "LYFT",
+   "MGNI",
+   "NXPI",
+   "PCOR",
+   "PENN",
+   "REAL",
+   "RYTM",
+   "SAIL",
+   "UPBD",
+   "ZETA"
+  ],
+  "09:38": [
+   "CARG",
+   "REPL",
+   "SYRE"
+  ],
+  "09:39": [
+   "ELAN",
+   "SKY"
+  ],
+  "09:40": [
+   "PRG"
+  ],
+  "09:42": [
+   "AEO"
+  ],
+  "09:43": [
+   "M"
+  ],
+  "09:47": [
+   "PPLI"
+  ],
+  "09:48": [
+   "GKOS"
+  ],
+  "09:50": [
+   "MWH"
+  ],
+  "09:58": [
+   "KOD"
+  ],
+  "10:05": [
+   "FROG"
+  ],
+  "10:09": [
+   "TOST"
+  ],
+  "10:12": [
+   "GPK"
+  ],
+  "10:24": [
+   "EPAM"
+  ],
+  "10:25": [
+   "LPX"
+  ]
+ },
+ "watch": {
+  "EPAM": {
+   "steps": [
+    [
+     "09:35",
+     "$154.17 (+2.5%, vol 0.77x): Rel vol 0.77x, under 0.8x"
+    ],
+    [
+     "09:36",
+     "$154.01 (+2.4%, vol 0.79x): Rel vol 0.79x, under 0.8x"
+    ],
+    [
+     "09:37",
+     "$154.01 (+2.4%, vol 0.71x): Rel vol 0.71x, under 0.8x"
+    ],
+    [
+     "09:38",
+     "$154.12 (+2.4%, vol 0.66x): Rel vol 0.66x, under 0.8x"
+    ],
+    [
+     "09:39",
+     "$153.34 (+1.9%, vol 0.61x): Rel vol 0.61x, under 0.8x"
+    ],
+    [
+     "09:40",
+     "$155.00 (+3.0%, vol 0.67x): Rel vol 0.67x, under 0.8x"
+    ],
+    [
+     "09:41",
+     "$155.00 (+3.0%, vol 0.63x): Rel vol 0.63x, under 0.8x"
+    ],
+    [
+     "09:42",
+     "$155.53 (+3.4%, vol 0.69x): Rel vol 0.69x, under 0.8x"
+    ],
+    [
+     "09:43",
+     "$155.53 (+3.4%, vol 0.66x): Rel vol 0.66x, under 0.8x"
+    ],
+    [
+     "09:44",
+     "$155.54 (+3.4%, vol 0.64x): Rel vol 0.64x, under 0.8x"
+    ],
+    [
+     "09:45",
+     "$155.48 (+3.4%, vol 0.61x): Rel vol 0.61x, under 0.8x"
+    ],
+    [
+     "09:46",
+     "$155.51 (+3.4%, vol 0.59x): Rel vol 0.59x, under 0.8x"
+    ],
+    [
+     "09:47",
+     "$156.04 (+3.7%, vol 0.58x): Rel vol 0.58x, under 0.8x"
+    ],
+    [
+     "09:48",
+     "$156.01 (+3.7%, vol 0.56x): Rel vol 0.56x, under 0.8x"
+    ],
+    [
+     "09:49",
+     "$156.90 (+4.3%, vol 0.57x): Rel vol 0.57x, under 0.8x"
+    ],
+    [
+     "09:50",
+     "$156.42 (+4.0%, vol 0.58x): Rel vol 0.58x, under 0.8x"
+    ],
+    [
+     "09:51",
+     "$156.78 (+4.2%, vol 0.57x): Rel vol 0.57x, under 0.8x"
+    ],
+    [
+     "09:52",
+     "$156.18 (+3.8%, vol 0.59x): Rel vol 0.59x, under 0.8x"
+    ],
+    [
+     "09:53",
+     "$155.41 (+3.3%, vol 0.58x): Rel vol 0.58x, under 0.8x"
+    ],
+    [
+     "09:55",
+     "$155.75 (+3.5%, vol 0.56x): Rel vol 0.56x, under 0.8x"
+    ],
+    [
+     "09:58",
+     "$156.25 (+3.9%, vol 0.58x): Rel vol 0.58x, under 0.8x"
+    ],
+    [
+     "09:59",
+     "$156.25 (+3.9%, vol 0.56x): Rel vol 0.56x, under 0.8x"
+    ],
+    [
+     "10:00",
+     "$156.25 (+3.9%, vol 0.55x): Rel vol 0.55x, under 0.8x"
+    ],
+    [
+     "10:01",
+     "$156.74 (+4.2%, vol 0.54x): Rel vol 0.54x, under 0.8x"
+    ],
+    [
+     "10:02",
+     "$157.24 (+4.5%, vol 0.55x): Rel vol 0.55x, under 0.8x"
+    ],
+    [
+     "10:03",
+     "$157.23 (+4.5%, vol 0.54x): Rel vol 0.54x, under 0.8x"
+    ],
+    [
+     "10:05",
+     "$157.10 (+4.4%, vol 0.52x): Rel vol 0.52x, under 0.8x"
+    ],
+    [
+     "10:06",
+     "$156.96 (+4.3%, vol 0.51x): Rel vol 0.51x, under 0.8x"
+    ],
+    [
+     "10:07",
+     "$156.56 (+4.1%, vol 0.5x): Rel vol 0.5x, under 0.8x"
+    ],
+    [
+     "10:08",
+     "$157.45 (+4.7%, vol 0.52x): Rel vol 0.52x, under 0.8x"
+    ],
+    [
+     "10:10",
+     "$157.69 (+4.8%, vol 0.51x): Rel vol 0.51x, under 0.8x"
+    ],
+    [
+     "10:15",
+     "$158.15 (+5.1%, vol 0.5x): Rel vol 0.5x, under 0.8x"
+    ],
+    [
+     "10:17",
+     "$158.10 (+5.1%, vol 0.51x): Rel vol 0.51x, under 0.8x"
+    ],
+    [
+     "10:18",
+     "$157.60 (+4.8%, vol 0.5x): Rel vol 0.5x, under 0.8x"
+    ],
+    [
+     "10:19",
+     "$157.67 (+4.8%, vol 0.49x): Rel vol 0.49x, under 0.8x"
+    ],
+    [
+     "10:20",
+     "$157.60 (+4.8%, vol 0.48x): Rel vol 0.48x, under 0.8x"
+    ],
+    [
+     "10:22",
+     "$157.56 (+4.7%, vol 0.5x): Rel vol 0.5x, under 0.8x"
+    ],
+    [
+     "10:23",
+     "$156.93 (+4.3%, vol 0.66x): Rel vol 0.66x, under 0.8x"
+    ],
+    [
+     "10:24",
+     "ALERT"
+    ]
+   ],
+   "news": {
+    "checked": true,
+    "catalyst": "No company news",
+    "reason": "No SEC filing or company release since the last close",
+    "url": "",
+    "earlier": null,
+    "weak": true
+   }
+  },
+  "ACN": {
+   "steps": [
+    [
+     "09:35",
+     "$222.08 (+1.6%, vol 1.45x): liquidity / ADR"
+    ]
+   ],
+   "news": {
+    "checked": true,
+    "catalyst": "Earlier news (Thu Nov 19): Deal / contract",
+    "reason": "Accenture and Coupa Announce Strategic Partnership for Spend Management (Fiscal.ai Nov 19 9:01 AM ET); today: No company news: No SEC filing or company release since the last close",
+    "url": "https://procurementmag.com/news/coupa-data-quality-is-holding-back-ai-agents-in-procurement",
+    "earlier": {
+     "label": "Thu Nov 19",
+     "date": "2026-11-19",
+     "kind": "Deal / contract",
+     "text": "Accenture and Coupa Announce Strategic Partnership for Spend Management",
+     "source": "Fiscal.ai",
+     "url": "https://procurementmag.com/news/coupa-data-quality-is-holding-back-ai-agents-in-procurement",
+     "at": "Nov 19 9:01 AM ET"
+    },
+    "weak": false
+   }
+  }
+ }
+}

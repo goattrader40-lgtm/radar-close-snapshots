@@ -1,0 +1,275 @@
+{
+ "gaps_total": 3720,
+ "note": "gap-ups 5%+, liquid stocks, 2 years; group at the close before the gap",
+ "gaps": {
+  "gap size 10%+ \u00b7 Leading": {
+   "n": 239,
+   "faded_pct": 45.2,
+   "held_pct": 54.8,
+   "avg_day_from_open": 1.29,
+   "avg_5d_from_open": -0.48,
+   "avg_20d_from_open": 0.86,
+   "ran20_pct": 38.9
+  },
+  "gap size 10%+ \u00b7 No group": {
+   "n": 1,
+   "faded_pct": 100.0,
+   "held_pct": 0.0,
+   "avg_day_from_open": -2.59,
+   "avg_5d_from_open": -2.02,
+   "avg_20d_from_open": null,
+   "ran20_pct": 0.0
+  },
+  "gap size 10%+ \u00b7 Not trending": {
+   "n": 295,
+   "faded_pct": 56.6,
+   "held_pct": 43.1,
+   "avg_day_from_open": -0.65,
+   "avg_5d_from_open": 0.4,
+   "avg_20d_from_open": -0.43,
+   "ran20_pct": 32.5
+  },
+  "gap size 10%+ \u00b7 Turning up": {
+   "n": 210,
+   "faded_pct": 57.6,
+   "held_pct": 42.4,
+   "avg_day_from_open": -0.85,
+   "avg_5d_from_open": -1.11,
+   "avg_20d_from_open": -1.99,
+   "ran20_pct": 25.2
+  },
+  "gap size 5-10% \u00b7 Leading": {
+   "n": 966,
+   "faded_pct": 49.9,
+   "held_pct": 49.9,
+   "avg_day_from_open": 0.09,
+   "avg_5d_from_open": -0.2,
+   "avg_20d_from_open": -0.1,
+   "ran20_pct": 40.2
+  },
+  "gap size 5-10% \u00b7 No group": {
+   "n": 1,
+   "faded_pct": 0.0,
+   "held_pct": 100.0,
+   "avg_day_from_open": 2.88,
+   "avg_5d_from_open": 6.43,
+   "avg_20d_from_open": 8.47,
+   "ran20_pct": 0.0
+  },
+  "gap size 5-10% \u00b7 Not trending": {
+   "n": 1348,
+   "faded_pct": 55.5,
+   "held_pct": 44.1,
+   "avg_day_from_open": -0.34,
+   "avg_5d_from_open": -1.18,
+   "avg_20d_from_open": -1.57,
+   "ran20_pct": 30.0
+  },
+  "gap size 5-10% \u00b7 Turning up": {
+   "n": 660,
+   "faded_pct": 56.5,
+   "held_pct": 43.0,
+   "avg_day_from_open": -0.3,
+   "avg_5d_from_open": 0.65,
+   "avg_20d_from_open": -0.05,
+   "ran20_pct": 28.8
+  },
+  "group 1-month: 0 to +8%": {
+   "n": 844,
+   "faded_pct": 53.1,
+   "held_pct": 46.6,
+   "avg_day_from_open": -0.02,
+   "avg_5d_from_open": -0.17,
+   "avg_20d_from_open": 0.16,
+   "ran20_pct": 29.4
+  },
+  "group 1-month: down": {
+   "n": 1632,
+   "faded_pct": 57.4,
+   "held_pct": 42.3,
+   "avg_day_from_open": -0.58,
+   "avg_5d_from_open": -0.55,
+   "avg_20d_from_open": -1.8,
+   "ran20_pct": 29.8
+  },
+  "group 1-month: up 8%+": {
+   "n": 1242,
+   "faded_pct": 49.5,
+   "held_pct": 50.3,
+   "avg_day_from_open": 0.27,
+   "avg_5d_from_open": -0.42,
+   "avg_20d_from_open": 0.17,
+   "ran20_pct": 39.4
+  },
+  "group 1-week & 1-month: both down": {
+   "n": 1085,
+   "faded_pct": 55.5,
+   "held_pct": 44.1,
+   "avg_day_from_open": -0.39,
+   "avg_5d_from_open": -0.54,
+   "avg_20d_from_open": -1.87,
+   "ran20_pct": 32.4
+  },
+  "group 1-week & 1-month: both up": {
+   "n": 1503,
+   "faded_pct": 50.8,
+   "held_pct": 48.9,
+   "avg_day_from_open": 0.1,
+   "avg_5d_from_open": -0.06,
+   "avg_20d_from_open": 0.38,
+   "ran20_pct": 36.7
+  },
+  "group 1-week & 1-month: mixed": {
+   "n": 1130,
+   "faded_pct": 56.1,
+   "held_pct": 43.7,
+   "avg_day_from_open": -0.33,
+   "avg_5d_from_open": -0.8,
+   "avg_20d_from_open": -0.98,
+   "ran20_pct": 28.5
+  },
+  "group 1-week: 0 to +2%": {
+   "n": 584,
+   "faded_pct": 52.1,
+   "held_pct": 47.4,
+   "avg_day_from_open": 0.05,
+   "avg_5d_from_open": -1.68,
+   "avg_20d_from_open": -2.73,
+   "ran20_pct": 24.7
+  },
+  "group 1-week: down": {
+   "n": 1657,
+   "faded_pct": 54.1,
+   "held_pct": 45.7,
+   "avg_day_from_open": -0.15,
+   "avg_5d_from_open": -0.7,
+   "avg_20d_from_open": -1.3,
+   "ran20_pct": 32.2
+  },
+  "group 1-week: up 2%+": {
+   "n": 1477,
+   "faded_pct": 54.1,
+   "held_pct": 45.6,
+   "avg_day_from_open": -0.28,
+   "avg_5d_from_open": 0.38,
+   "avg_20d_from_open": 0.8,
+   "ran20_pct": 37.0
+  },
+  "status: Leading": {
+   "n": 1205,
+   "faded_pct": 49.0,
+   "held_pct": 50.9,
+   "avg_day_from_open": 0.33,
+   "avg_5d_from_open": -0.25,
+   "avg_20d_from_open": 0.09,
+   "ran20_pct": 39.9
+  },
+  "status: No group": {
+   "n": 2,
+   "faded_pct": 50.0,
+   "held_pct": 50.0,
+   "avg_day_from_open": 0.15,
+   "avg_5d_from_open": 2.2,
+   "avg_20d_from_open": 8.47,
+   "ran20_pct": 0.0
+  },
+  "status: Not trending": {
+   "n": 1643,
+   "faded_pct": 55.7,
+   "held_pct": 43.9,
+   "avg_day_from_open": -0.4,
+   "avg_5d_from_open": -0.89,
+   "avg_20d_from_open": -1.36,
+   "ran20_pct": 30.4
+  },
+  "status: Turning up": {
+   "n": 870,
+   "faded_pct": 56.8,
+   "held_pct": 42.9,
+   "avg_day_from_open": -0.44,
+   "avg_5d_from_open": 0.24,
+   "avg_20d_from_open": -0.51,
+   "ran20_pct": 27.9
+  }
+ },
+ "launches": {
+  "confirmed within 10 sessions: no": {
+   "n": 68,
+   "avg_5d_from_open": -4.02,
+   "avg_20d_from_open": -7.72,
+   "ran20_pct": 5.9
+  },
+  "confirmed within 10 sessions: yes": {
+   "n": 1302,
+   "avg_5d_from_open": 0.07,
+   "avg_20d_from_open": 1.03,
+   "ran20_pct": 25.5
+  },
+  "grade A \u00b7 confirmed no": {
+   "n": 15,
+   "avg_5d_from_open": -2.3,
+   "avg_20d_from_open": -7.43,
+   "ran20_pct": 0.0
+  },
+  "grade A \u00b7 confirmed yes": {
+   "n": 282,
+   "avg_5d_from_open": -0.69,
+   "avg_20d_from_open": 0.01,
+   "ran20_pct": 23.4
+  },
+  "grade A+ \u00b7 confirmed no": {
+   "n": 7,
+   "avg_5d_from_open": -1.78,
+   "avg_20d_from_open": -4.65,
+   "ran20_pct": 14.3
+  },
+  "grade A+ \u00b7 confirmed yes": {
+   "n": 82,
+   "avg_5d_from_open": 1.86,
+   "avg_20d_from_open": 2.11,
+   "ran20_pct": 26.8
+  },
+  "grade B \u00b7 confirmed no": {
+   "n": 13,
+   "avg_5d_from_open": -6.05,
+   "avg_20d_from_open": -9.84,
+   "ran20_pct": 15.4
+  },
+  "grade B \u00b7 confirmed yes": {
+   "n": 407,
+   "avg_5d_from_open": 0.46,
+   "avg_20d_from_open": 1.42,
+   "ran20_pct": 28.3
+  },
+  "grade C \u00b7 confirmed no": {
+   "n": 33,
+   "avg_5d_from_open": -4.47,
+   "avg_20d_from_open": -7.68,
+   "ran20_pct": 3.0
+  },
+  "grade C \u00b7 confirmed yes": {
+   "n": 531,
+   "avg_5d_from_open": -0.11,
+   "avg_20d_from_open": 1.1,
+   "ran20_pct": 24.3
+  },
+  "launch day status: Leading": {
+   "n": 512,
+   "avg_5d_from_open": -0.22,
+   "avg_20d_from_open": 1.81,
+   "ran20_pct": 29.9
+  },
+  "launch day status: Not trending": {
+   "n": 347,
+   "avg_5d_from_open": 0.88,
+   "avg_20d_from_open": 2.19,
+   "ran20_pct": 27.4
+  },
+  "launch day status: Turning up": {
+   "n": 511,
+   "avg_5d_from_open": -0.74,
+   "avg_20d_from_open": -1.71,
+   "ran20_pct": 17.2
+  }
+ }
+}

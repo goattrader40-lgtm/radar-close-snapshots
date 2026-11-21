@@ -1,0 +1,771 @@
+{
+ "made_at": "2026-11-01T04:46:58+00:00",
+ "first": "2025-08-21",
+ "last": "2026-10-01",
+ "triggered": {
+  "all": {
+   "n": 6713,
+   "ran10": 55,
+   "ran20": 28,
+   "fail5": 42,
+   "med20": 0.5
+  },
+  "by_setup": {
+   "21 EMA retest": {
+    "n": 976,
+    "ran10": 56,
+    "ran20": 28,
+    "fail5": 43,
+    "med20": 0.1
+   },
+   "21 EMA undercut & reclaim": {
+    "n": 254,
+    "ran10": 54,
+    "ran20": 28,
+    "fail5": 43,
+    "med20": -0.1
+   },
+   "Base breakout": {
+    "n": 2404,
+    "ran10": 54,
+    "ran20": 28,
+    "fail5": 35,
+    "med20": -0.2
+   },
+   "Breakout": {
+    "n": 746,
+    "ran10": 52,
+    "ran20": 24,
+    "fail5": 51,
+    "med20": 1.4
+   },
+   "Flag breakout": {
+    "n": 825,
+    "ran10": 59,
+    "ran20": 28,
+    "fail5": 41,
+    "med20": 1.8
+   },
+   "Pop out of the consolidation": {
+    "n": 217,
+    "ran10": 58,
+    "ran20": 29,
+    "fail5": 52,
+    "med20": -0.4
+   },
+   "Push out of the 21 EMA": {
+    "n": 298,
+    "ran10": 57,
+    "ran20": 30,
+    "fail5": 51,
+    "med20": 0.2
+   },
+   "Retest held": {
+    "n": 993,
+    "ran10": 57,
+    "ran20": 29,
+    "fail5": 49,
+    "med20": 0.4
+   }
+  },
+  "by_list": {
+   "1-EP/GAP": {
+    "n": 419,
+    "ran10": 53,
+    "ran20": 31,
+    "fail5": 45,
+    "med20": 1.5
+   },
+   "1-UPDAY": {
+    "n": 3102,
+    "ran10": 55,
+    "ran20": 28,
+    "fail5": 42,
+    "med20": -0.2
+   },
+   "2-POOL": {
+    "n": 3192,
+    "ran10": 56,
+    "ran20": 27,
+    "fail5": 42,
+    "med20": 1.0
+   }
+  }
+ },
+ "ready": {
+  "days": 10466,
+  "hit_next_day_pct": 53,
+  "all": {
+   "n": 5591,
+   "ran10": 55,
+   "ran20": 27,
+   "fail5": 51,
+   "med20": 0.4
+  },
+  "by_setup": {
+   "Ascending triangle": {
+    "n": 76,
+    "ran10": 42,
+    "ran20": 20,
+    "fail5": 53,
+    "med20": -2.1
+   },
+   "Base breakout": {
+    "n": 51,
+    "ran10": 59,
+    "ran20": 25,
+    "fail5": 55,
+    "med20": 0.7
+   },
+   "Base top": {
+    "n": 3257,
+    "ran10": 55,
+    "ran20": 27,
+    "fail5": 50,
+    "med20": 0.1
+   },
+   "Cup": {
+    "n": 2,
+    "ran10": 50,
+    "ran20": 50,
+    "fail5": 50,
+    "med20": 7.6
+   },
+   "Cup with handle": {
+    "n": 1,
+    "ran10": 0,
+    "ran20": 0,
+    "fail5": 0,
+    "med20": -14.1
+   },
+   "Flag": {
+    "n": 1373,
+    "ran10": 58,
+    "ran20": 28,
+    "fail5": 51,
+    "med20": 2.3
+   },
+   "High tight flag": {
+    "n": 19,
+    "ran10": 37,
+    "ran20": 0,
+    "fail5": 58,
+    "med20": -9.6
+   },
+   "Inner base": {
+    "n": 292,
+    "ran10": 53,
+    "ran20": 24,
+    "fail5": 50,
+    "med20": -1.2
+   },
+   "Pop out of the consolidation": {
+    "n": 367,
+    "ran10": 54,
+    "ran20": 28,
+    "fail5": 57,
+    "med20": 0.1
+   },
+   "Qullamaggie breakout": {
+    "n": 28,
+    "ran10": 43,
+    "ran20": 14,
+    "fail5": 50,
+    "med20": -2.4
+   },
+   "Tight flag": {
+    "n": 125,
+    "ran10": 46,
+    "ran20": 17,
+    "fail5": 51,
+    "med20": 0.7
+   }
+  },
+  "by_list": {
+   "1-EP/GAP": {
+    "n": 373,
+    "ran10": 51,
+    "ran20": 29,
+    "fail5": 52,
+    "med20": 0.9
+   },
+   "1-UPDAY": {
+    "n": 2605,
+    "ran10": 56,
+    "ran20": 28,
+    "fail5": 52,
+    "med20": 0.3
+   },
+   "2-POOL": {
+    "n": 2613,
+    "ran10": 55,
+    "ran20": 25,
+    "fail5": 50,
+    "med20": 0.4
+   }
+  },
+  "tight": {
+   "n": 299,
+   "ran10": 44,
+   "ran20": 18,
+   "fail5": 54,
+   "med20": 0.2
+  },
+  "not_tight": {
+   "n": 5292,
+   "ran10": 56,
+   "ran20": 27,
+   "fail5": 51,
+   "med20": 0.5
+  }
+ },
+ "setting_up": {
+  "days": 13271,
+  "became_ready_or_triggered_10d_pct": 70,
+  "by_setup": {
+   "21 EMA retest setup": {
+    "days": 6999,
+    "became_pct": 76
+   },
+   "21 EMA undercut & reclaim setup": {
+    "days": 901,
+    "became_pct": 61
+   },
+   "Flag forming": {
+    "days": 3046,
+    "became_pct": 71
+   },
+   "Near the retest zone": {
+    "days": 2325,
+    "became_pct": 51
+   }
+  }
+ },
+ "ready_orh": {
+  "all": {
+   "n": 10462,
+   "broke_orh_pct": 73,
+   "trades": 7658,
+   "stopped_same_day_pct": 50,
+   "win": 10,
+   "avg": -0.1,
+   "med": -1.6,
+   "ran20": 8,
+   "ran50": 2,
+   "risk_med_pct": 1.7,
+   "avg_R": -0.03,
+   "med_R": -1.0,
+   "reached_2R": 37,
+   "reached_5R": 17
+  },
+  "B_day_low_stop": {
+   "n": 10462,
+   "broke_orh_pct": 73,
+   "trades": 7658,
+   "stopped_same_day_pct": 0,
+   "win": 16,
+   "avg": -0.2,
+   "med": -2.3,
+   "ran20": 12,
+   "ran50": 3,
+   "risk_med_pct": 2.6,
+   "avg_R": 0.32,
+   "med_R": -1.0,
+   "reached_2R": 42,
+   "reached_5R": 21
+  },
+  "C_half_at_2R": {
+   "n": 10462,
+   "broke_orh_pct": 73,
+   "trades": 7658,
+   "stopped_same_day_pct": 48,
+   "win": 30,
+   "avg": -0.1,
+   "med": -1.2,
+   "ran20": 6,
+   "ran50": 2,
+   "risk_med_pct": 1.7,
+   "avg_R": -0.07,
+   "med_R": -1.0,
+   "reached_2R": 37,
+   "reached_5R": 14,
+   "took_half_at_2R_pct": 31
+  },
+  "by_setup": {
+   "Ascending triangle": {
+    "n": 156,
+    "broke_orh_pct": 74,
+    "trades": 116,
+    "stopped_same_day_pct": 47,
+    "win": 7,
+    "avg": -0.5,
+    "med": -1.6,
+    "ran20": 4,
+    "ran50": 2,
+    "risk_med_pct": 1.6,
+    "avg_R": -0.37,
+    "med_R": -1.0,
+    "reached_2R": 37,
+    "reached_5R": 16
+   },
+   "Base breakout": {
+    "n": 120,
+    "broke_orh_pct": 72,
+    "trades": 87,
+    "stopped_same_day_pct": 44,
+    "win": 7,
+    "avg": -1.9,
+    "med": -1.6,
+    "ran20": 6,
+    "ran50": 0,
+    "risk_med_pct": 1.6,
+    "avg_R": -0.69,
+    "med_R": -1.0,
+    "reached_2R": 40,
+    "reached_5R": 22
+   },
+   "Base top": {
+    "n": 6087,
+    "broke_orh_pct": 73,
+    "trades": 4469,
+    "stopped_same_day_pct": 48,
+    "win": 11,
+    "avg": -0.0,
+    "med": -1.6,
+    "ran20": 9,
+    "ran50": 2,
+    "risk_med_pct": 1.8,
+    "avg_R": 0.03,
+    "med_R": -1.0,
+    "reached_2R": 38,
+    "reached_5R": 17
+   },
+   "Bull flag": {
+    "n": 1,
+    "broke_orh_pct": 0
+   },
+   "Cup": {
+    "n": 5,
+    "broke_orh_pct": 100,
+    "trades": 5,
+    "stopped_same_day_pct": 60,
+    "win": 20,
+    "avg": 2.8,
+    "med": -1.7,
+    "ran20": 20,
+    "ran50": 0,
+    "risk_med_pct": 1.7,
+    "avg_R": 3.27,
+    "med_R": -1.0,
+    "reached_2R": 40,
+    "reached_5R": 20
+   },
+   "Cup with handle": {
+    "n": 4,
+    "broke_orh_pct": 50,
+    "trades": 2,
+    "stopped_same_day_pct": 50,
+    "win": 0,
+    "avg": -2.1,
+    "med": -2.1,
+    "ran20": 0,
+    "ran50": 0,
+    "risk_med_pct": 2.1,
+    "avg_R": -1.0,
+    "med_R": -1.0,
+    "reached_2R": 0,
+    "reached_5R": 0
+   },
+   "Flag": {
+    "n": 2614,
+    "broke_orh_pct": 73,
+    "trades": 1915,
+    "stopped_same_day_pct": 53,
+    "win": 10,
+    "avg": -0.0,
+    "med": -1.5,
+    "ran20": 7,
+    "ran50": 2,
+    "risk_med_pct": 1.6,
+    "avg_R": -0.05,
+    "med_R": -1.0,
+    "reached_2R": 37,
+    "reached_5R": 16
+   },
+   "High tight flag": {
+    "n": 33,
+    "broke_orh_pct": 85,
+    "trades": 28,
+    "stopped_same_day_pct": 54,
+    "win": 0,
+    "avg": -2.4,
+    "med": -1.7,
+    "ran20": 4,
+    "ran50": 0,
+    "risk_med_pct": 1.7,
+    "avg_R": -1.28,
+    "med_R": -1.0,
+    "reached_2R": 32,
+    "reached_5R": 14
+   },
+   "Inner base": {
+    "n": 635,
+    "broke_orh_pct": 73,
+    "trades": 463,
+    "stopped_same_day_pct": 48,
+    "win": 9,
+    "avg": -0.5,
+    "med": -1.6,
+    "ran20": 8,
+    "ran50": 2,
+    "risk_med_pct": 1.7,
+    "avg_R": -0.12,
+    "med_R": -1.0,
+    "reached_2R": 39,
+    "reached_5R": 18
+   },
+   "Pop out of the consolidation": {
+    "n": 467,
+    "broke_orh_pct": 71,
+    "trades": 331,
+    "stopped_same_day_pct": 56,
+    "win": 10,
+    "avg": 0.5,
+    "med": -1.4,
+    "ran20": 6,
+    "ran50": 2,
+    "risk_med_pct": 1.5,
+    "avg_R": 0.18,
+    "med_R": -1.0,
+    "reached_2R": 33,
+    "reached_5R": 15
+   },
+   "Qullamaggie breakout": {
+    "n": 54,
+    "broke_orh_pct": 81,
+    "trades": 44,
+    "stopped_same_day_pct": 50,
+    "win": 9,
+    "avg": -1.0,
+    "med": -1.5,
+    "ran20": 7,
+    "ran50": 0,
+    "risk_med_pct": 1.5,
+    "avg_R": -0.45,
+    "med_R": -1.0,
+    "reached_2R": 32,
+    "reached_5R": 16
+   },
+   "Tight flag": {
+    "n": 286,
+    "broke_orh_pct": 69,
+    "trades": 198,
+    "stopped_same_day_pct": 50,
+    "win": 7,
+    "avg": -1.1,
+    "med": -1.3,
+    "ran20": 2,
+    "ran50": 1,
+    "risk_med_pct": 1.4,
+    "avg_R": -0.63,
+    "med_R": -1.0,
+    "reached_2R": 37,
+    "reached_5R": 15
+   }
+  },
+  "by_list": {
+   "1-EP/GAP": {
+    "n": 715,
+    "broke_orh_pct": 73,
+    "trades": 523,
+    "stopped_same_day_pct": 49,
+    "win": 11,
+    "avg": -0.2,
+    "med": -1.6,
+    "ran20": 9,
+    "ran50": 3,
+    "risk_med_pct": 1.7,
+    "avg_R": -0.03,
+    "med_R": -1.0,
+    "reached_2R": 41,
+    "reached_5R": 17
+   },
+   "1-UPDAY": {
+    "n": 4867,
+    "broke_orh_pct": 74,
+    "trades": 3581,
+    "stopped_same_day_pct": 51,
+    "win": 10,
+    "avg": 0.1,
+    "med": -1.6,
+    "ran20": 8,
+    "ran50": 2,
+    "risk_med_pct": 1.7,
+    "avg_R": 0.13,
+    "med_R": -1.0,
+    "reached_2R": 37,
+    "reached_5R": 17
+   },
+   "2-POOL": {
+    "n": 4880,
+    "broke_orh_pct": 73,
+    "trades": 3554,
+    "stopped_same_day_pct": 48,
+    "win": 10,
+    "avg": -0.3,
+    "med": -1.5,
+    "ran20": 7,
+    "ran50": 2,
+    "risk_med_pct": 1.7,
+    "avg_R": -0.19,
+    "med_R": -1.0,
+    "reached_2R": 37,
+    "reached_5R": 17
+   }
+  },
+  "splits": {
+   "theme leading": {
+    "trades": 3326,
+    "win": 10,
+    "avg": 0.0,
+    "med": -1.7,
+    "ran20": 9,
+    "ran50": 2,
+    "C_win": 30,
+    "C_avg": -0.1
+   },
+   "theme turning up": {
+    "trades": 2650,
+    "win": 10,
+    "avg": -0.2,
+    "med": -1.5,
+    "ran20": 7,
+    "ran50": 2,
+    "C_win": 31,
+    "C_avg": -0.2
+   },
+   "theme not trending": {
+    "trades": 1682,
+    "win": 10,
+    "avg": -0.2,
+    "med": -1.5,
+    "ran20": 7,
+    "ran50": 2,
+    "C_win": 29,
+    "C_avg": -0.2
+   },
+   "no theme": {
+    "trades": null,
+    "win": null,
+    "avg": null,
+    "med": null,
+    "ran20": null,
+    "ran50": null,
+    "C_win": null,
+    "C_avg": null
+   },
+   "volume building 1.1x+": {
+    "trades": 2171,
+    "win": 11,
+    "avg": -0.6,
+    "med": -1.7,
+    "ran20": 9,
+    "ran50": 2,
+    "C_win": 31,
+    "C_avg": -0.4
+   },
+   "volume not building": {
+    "trades": 5487,
+    "win": 10,
+    "avg": 0.1,
+    "med": -1.5,
+    "ran20": 7,
+    "ran50": 2,
+    "C_win": 30,
+    "C_avg": -0.1
+   },
+   "on its list 10 days or less": {
+    "trades": 2893,
+    "win": 11,
+    "avg": 0.1,
+    "med": -1.5,
+    "ran20": 9,
+    "ran50": 2,
+    "C_win": 31,
+    "C_avg": 0.0
+   },
+   "on its list 11-30 days": {
+    "trades": 2731,
+    "win": 10,
+    "avg": 0.2,
+    "med": -1.5,
+    "ran20": 8,
+    "ran50": 2,
+    "C_win": 31,
+    "C_avg": 0.1
+   },
+   "on its list 31+ days": {
+    "trades": 2034,
+    "win": 9,
+    "avg": -0.9,
+    "med": -1.7,
+    "ran20": 7,
+    "ran50": 1,
+    "C_win": 29,
+    "C_avg": -0.6
+   },
+   "within 10% of the 52-week high": {
+    "trades": 3966,
+    "win": 10,
+    "avg": -0.1,
+    "med": -1.5,
+    "ran20": 7,
+    "ran50": 2,
+    "C_win": 29,
+    "C_avg": -0.2
+   },
+   "10%+ under the 52-week high": {
+    "trades": 3692,
+    "win": 10,
+    "avg": -0.1,
+    "med": -1.6,
+    "ran20": 8,
+    "ran50": 2,
+    "C_win": 31,
+    "C_avg": -0.1
+   },
+   "base under 2 ADRs deep": {
+    "trades": 2208,
+    "win": 9,
+    "avg": -0.7,
+    "med": -1.6,
+    "ran20": 7,
+    "ran50": 1,
+    "C_win": 31,
+    "C_avg": -0.3
+   },
+   "base 2-4 ADRs deep": {
+    "trades": 4516,
+    "win": 11,
+    "avg": 0.2,
+    "med": -1.6,
+    "ran20": 8,
+    "ran50": 2,
+    "C_win": 30,
+    "C_avg": -0.1
+   },
+   "base over 4 ADRs deep": {
+    "trades": 934,
+    "win": 8,
+    "avg": -0.1,
+    "med": -1.6,
+    "ran20": 7,
+    "ran50": 2,
+    "C_win": 29,
+    "C_avg": -0.1
+   },
+   "trigger within 0.3 ADR": {
+    "trades": 3036,
+    "win": 10,
+    "avg": -0.2,
+    "med": -1.6,
+    "ran20": 8,
+    "ran50": 2,
+    "C_win": 29,
+    "C_avg": -0.3
+   },
+   "trigger 0.3-0.7 ADR away": {
+    "trades": 4622,
+    "win": 10,
+    "avg": -0.0,
+    "med": -1.5,
+    "ran20": 8,
+    "ran50": 2,
+    "C_win": 31,
+    "C_avg": -0.1
+   },
+   "ADR 4-6%": {
+    "trades": 5044,
+    "win": 10,
+    "avg": 0.1,
+    "med": -1.4,
+    "ran20": 6,
+    "ran50": 2,
+    "C_win": 29,
+    "C_avg": -0.1
+   },
+   "ADR 6%+": {
+    "trades": 2614,
+    "win": 11,
+    "avg": -0.4,
+    "med": -2.2,
+    "ran20": 11,
+    "ran50": 3,
+    "C_win": 32,
+    "C_avg": -0.3
+   },
+   "leading theme + volume building": {
+    "trades": 994,
+    "win": 10,
+    "avg": -0.5,
+    "med": -1.9,
+    "ran20": 10,
+    "ran50": 2,
+    "C_win": 32,
+    "C_avg": -0.4
+   },
+   "leading theme + within 10% of the 52-week high": {
+    "trades": 1845,
+    "win": 10,
+    "avg": 0.3,
+    "med": -1.7,
+    "ran20": 9,
+    "ran50": 3,
+    "C_win": 30,
+    "C_avg": -0.1
+   },
+   "leading theme + volume building + within 10% of the high": {
+    "trades": 589,
+    "win": 11,
+    "avg": -0.3,
+    "med": -1.8,
+    "ran20": 11,
+    "ran50": 3,
+    "C_win": 31,
+    "C_avg": -0.4
+   }
+  },
+  "opening_range_over_trigger": {
+   "n": 3115,
+   "broke_orh_pct": 72,
+   "trades": 2233,
+   "stopped_same_day_pct": 45,
+   "win": 11,
+   "avg": -0.0,
+   "med": -1.9,
+   "ran20": 10,
+   "ran50": 3,
+   "risk_med_pct": 2.0,
+   "avg_R": -0.04,
+   "med_R": -1.0,
+   "reached_2R": 35,
+   "reached_5R": 17
+  },
+  "opening_range_under_trigger": {
+   "n": 7347,
+   "broke_orh_pct": 74,
+   "trades": 5425,
+   "stopped_same_day_pct": 52,
+   "win": 10,
+   "avg": -0.1,
+   "med": -1.5,
+   "ran20": 7,
+   "ran50": 2,
+   "risk_med_pct": 1.6,
+   "avg_R": -0.03,
+   "med_R": -1.0,
+   "reached_2R": 38,
+   "reached_5R": 17
+  }
+ }
+}

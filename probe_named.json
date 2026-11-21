@@ -1,0 +1,5225 @@
+{
+ "stocks": 2714,
+ "versions": {
+  "current": {
+   "groups_3plus": 73,
+   "avg_fit": 0.235,
+   "median_fit": 0.205,
+   "bands": {
+    "gaps": {
+     "1 Top 3%": {
+      "n": 720,
+      "faded_pct": 52.2,
+      "held_pct": 47.6,
+      "avg_day_from_open": -0.04,
+      "avg_5d_from_open": 0.03,
+      "avg_20d_from_open": 1.1,
+      "ran20_pct": 43.9
+     },
+     "2 Strong 3-10%": {
+      "n": 445,
+      "faded_pct": 53.9,
+      "held_pct": 45.8,
+      "avg_day_from_open": -0.41,
+      "avg_5d_from_open": -0.67,
+      "avg_20d_from_open": -0.79,
+      "ran20_pct": 39.3
+     },
+     "3 10-50%": {
+      "n": 1187,
+      "faded_pct": 55.6,
+      "held_pct": 44.0,
+      "avg_day_from_open": -0.33,
+      "avg_5d_from_open": -1.34,
+      "avg_20d_from_open": -1.16,
+      "ran20_pct": 29.1
+     },
+     "4 bottom half": {
+      "n": 1115,
+      "faded_pct": 52.7,
+      "held_pct": 46.9,
+      "avg_day_from_open": -0.0,
+      "avg_5d_from_open": 0.55,
+      "avg_20d_from_open": -0.99,
+      "ran20_pct": 30.0
+     }
+    },
+    "gaps 10%+": {
+     "1 Top 3%": {
+      "n": 140,
+      "faded_pct": 50.0,
+      "held_pct": 50.0,
+      "avg_day_from_open": 1.17,
+      "avg_5d_from_open": 0.0,
+      "avg_20d_from_open": 1.08,
+      "ran20_pct": 42.1
+     },
+     "2 Strong 3-10%": {
+      "n": 77,
+      "faded_pct": 54.5,
+      "held_pct": 45.5,
+      "avg_day_from_open": -0.68,
+      "avg_5d_from_open": -0.7,
+      "avg_20d_from_open": 1.35,
+      "ran20_pct": 45.5
+     },
+     "3 10-50%": {
+      "n": 223,
+      "faded_pct": 58.3,
+      "held_pct": 41.7,
+      "avg_day_from_open": -0.91,
+      "avg_5d_from_open": -1.15,
+      "avg_20d_from_open": -0.05,
+      "ran20_pct": 28.7
+     },
+     "4 bottom half": {
+      "n": 239,
+      "faded_pct": 50.2,
+      "held_pct": 49.4,
+      "avg_day_from_open": 0.12,
+      "avg_5d_from_open": 0.63,
+      "avg_20d_from_open": -1.59,
+      "ran20_pct": 29.7
+     }
+    },
+    "launches": {
+     "1 Top 3%": {
+      "n": 196,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 0.64,
+      "avg_20d_from_open": 4.86,
+      "ran20_pct": 35.2
+     },
+     "2 Strong 3-10%": {
+      "n": 182,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -1.4,
+      "avg_20d_from_open": -0.05,
+      "ran20_pct": 28.0
+     },
+     "3 10-50%": {
+      "n": 580,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 0.1,
+      "avg_20d_from_open": 0.35,
+      "ran20_pct": 22.8
+     },
+     "4 bottom half": {
+      "n": 357,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.46,
+      "avg_20d_from_open": -1.06,
+      "ran20_pct": 21.0
+     }
+    },
+    "gaps \u00b7 2nd year": {
+     "1 Top 3%": {
+      "n": 604,
+      "faded_pct": 50.7,
+      "held_pct": 49.2,
+      "avg_day_from_open": -0.01,
+      "avg_5d_from_open": 0.28,
+      "avg_20d_from_open": 3.41,
+      "ran20_pct": 44.5
+     },
+     "2 Strong 3-10%": {
+      "n": 326,
+      "faded_pct": 56.7,
+      "held_pct": 42.9,
+      "avg_day_from_open": -0.67,
+      "avg_5d_from_open": -0.96,
+      "avg_20d_from_open": -1.04,
+      "ran20_pct": 37.1
+     },
+     "3 10-50%": {
+      "n": 1069,
+      "faded_pct": 55.8,
+      "held_pct": 43.8,
+      "avg_day_from_open": -0.42,
+      "avg_5d_from_open": -1.65,
+      "avg_20d_from_open": -1.76,
+      "ran20_pct": 28.4
+     },
+     "4 bottom half": {
+      "n": 1010,
+      "faded_pct": 51.9,
+      "held_pct": 47.8,
+      "avg_day_from_open": 0.09,
+      "avg_5d_from_open": 0.92,
+      "avg_20d_from_open": -0.35,
+      "ran20_pct": 31.9
+     }
+    },
+    "launches \u00b7 2nd year": {
+     "1 Top 3%": {
+      "n": 171,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.41,
+      "avg_20d_from_open": 2.1,
+      "ran20_pct": 29.8
+     },
+     "2 Strong 3-10%": {
+      "n": 144,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.87,
+      "avg_20d_from_open": 0.92,
+      "ran20_pct": 31.2
+     },
+     "3 10-50%": {
+      "n": 514,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 0.02,
+      "avg_20d_from_open": -0.45,
+      "ran20_pct": 22.0
+     },
+     "4 bottom half": {
+      "n": 304,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.59,
+      "avg_20d_from_open": -1.33,
+      "ran20_pct": 21.1
+     }
+    }
+   },
+   "top_groups_today": [
+    [
+     "Health Care Technology",
+     100.0
+    ],
+    [
+     "Hotel REITs",
+     98.6
+    ],
+    [
+     "IT Services",
+     97.2
+    ],
+    [
+     "Professional Services",
+     95.8
+    ],
+    [
+     "Pharmaceuticals",
+     94.4
+    ],
+    [
+     "Insurance",
+     93.1
+    ],
+    [
+     "Personal Care",
+     91.7
+    ],
+    [
+     "Household Products",
+     90.3
+    ],
+    [
+     "Grocery & Drug Retail",
+     88.9
+    ],
+    [
+     "Health Care Providers",
+     87.5
+    ],
+    [
+     "Beverages",
+     86.1
+    ],
+    [
+     "Life Science Tools",
+     84.7
+    ],
+    [
+     "Medical Devices & Supplies",
+     83.3
+    ],
+    [
+     "Software",
+     81.9
+    ],
+    [
+     "Industrial Distribution & Rental",
+     80.6
+    ]
+   ]
+  },
+  "yahoo": {
+   "groups_3plus": 137,
+   "avg_fit": 0.277,
+   "median_fit": 0.242,
+   "bands": {
+    "gaps": {
+     "1 Top 3%": {
+      "n": 562,
+      "faded_pct": 50.4,
+      "held_pct": 49.6,
+      "avg_day_from_open": 0.22,
+      "avg_5d_from_open": -1.57,
+      "avg_20d_from_open": -0.39,
+      "ran20_pct": 41.5
+     },
+     "2 Strong 3-10%": {
+      "n": 485,
+      "faded_pct": 52.8,
+      "held_pct": 46.6,
+      "avg_day_from_open": -0.0,
+      "avg_5d_from_open": 0.75,
+      "avg_20d_from_open": -0.02,
+      "ran20_pct": 41.0
+     },
+     "3 10-50%": {
+      "n": 1187,
+      "faded_pct": 54.8,
+      "held_pct": 45.0,
+      "avg_day_from_open": -0.32,
+      "avg_5d_from_open": -1.09,
+      "avg_20d_from_open": -0.66,
+      "ran20_pct": 31.5
+     },
+     "4 bottom half": {
+      "n": 1230,
+      "faded_pct": 54.7,
+      "held_pct": 44.9,
+      "avg_day_from_open": -0.28,
+      "avg_5d_from_open": 0.45,
+      "avg_20d_from_open": -0.83,
+      "ran20_pct": 29.7
+     }
+    },
+    "gaps 10%+": {
+     "1 Top 3%": {
+      "n": 115,
+      "faded_pct": 51.3,
+      "held_pct": 48.7,
+      "avg_day_from_open": 1.05,
+      "avg_5d_from_open": -1.01,
+      "avg_20d_from_open": 0.74,
+      "ran20_pct": 43.5
+     },
+     "2 Strong 3-10%": {
+      "n": 84,
+      "faded_pct": 44.0,
+      "held_pct": 56.0,
+      "avg_day_from_open": 1.83,
+      "avg_5d_from_open": 2.61,
+      "avg_20d_from_open": 4.68,
+      "ran20_pct": 47.6
+     },
+     "3 10-50%": {
+      "n": 234,
+      "faded_pct": 57.3,
+      "held_pct": 42.7,
+      "avg_day_from_open": -1.09,
+      "avg_5d_from_open": -0.94,
+      "avg_20d_from_open": -0.41,
+      "ran20_pct": 31.6
+     },
+     "4 bottom half": {
+      "n": 246,
+      "faded_pct": 53.7,
+      "held_pct": 45.9,
+      "avg_day_from_open": -0.34,
+      "avg_5d_from_open": -0.17,
+      "avg_20d_from_open": -2.11,
+      "ran20_pct": 26.4
+     }
+    },
+    "launches": {
+     "1 Top 3%": {
+      "n": 122,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.1,
+      "avg_20d_from_open": 4.39,
+      "ran20_pct": 35.2
+     },
+     "2 Strong 3-10%": {
+      "n": 224,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.29,
+      "avg_20d_from_open": 1.19,
+      "ran20_pct": 27.2
+     },
+     "3 10-50%": {
+      "n": 598,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.27,
+      "avg_20d_from_open": 0.24,
+      "ran20_pct": 23.7
+     },
+     "4 bottom half": {
+      "n": 369,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 0.02,
+      "avg_20d_from_open": -0.46,
+      "ran20_pct": 22.0
+     }
+    },
+    "gaps \u00b7 2nd year": {
+     "1 Top 3%": {
+      "n": 463,
+      "faded_pct": 47.9,
+      "held_pct": 52.1,
+      "avg_day_from_open": 0.27,
+      "avg_5d_from_open": -1.38,
+      "avg_20d_from_open": 3.09,
+      "ran20_pct": 42.1
+     },
+     "2 Strong 3-10%": {
+      "n": 385,
+      "faded_pct": 54.0,
+      "held_pct": 45.5,
+      "avg_day_from_open": 0.03,
+      "avg_5d_from_open": 0.73,
+      "avg_20d_from_open": 0.08,
+      "ran20_pct": 40.3
+     },
+     "3 10-50%": {
+      "n": 1028,
+      "faded_pct": 55.1,
+      "held_pct": 44.6,
+      "avg_day_from_open": -0.43,
+      "avg_5d_from_open": -1.45,
+      "avg_20d_from_open": -1.61,
+      "ran20_pct": 30.4
+     },
+     "4 bottom half": {
+      "n": 1130,
+      "faded_pct": 54.3,
+      "held_pct": 45.3,
+      "avg_day_from_open": -0.24,
+      "avg_5d_from_open": 0.79,
+      "avg_20d_from_open": -0.27,
+      "ran20_pct": 31.3
+     }
+    },
+    "launches \u00b7 2nd year": {
+     "1 Top 3%": {
+      "n": 105,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -1.04,
+      "avg_20d_from_open": 1.89,
+      "ran20_pct": 30.5
+     },
+     "2 Strong 3-10%": {
+      "n": 194,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 0.21,
+      "avg_20d_from_open": 1.02,
+      "ran20_pct": 27.8
+     },
+     "3 10-50%": {
+      "n": 512,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.66,
+      "avg_20d_from_open": -0.63,
+      "ran20_pct": 22.3
+     },
+     "4 bottom half": {
+      "n": 320,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 0.12,
+      "avg_20d_from_open": -0.66,
+      "ran20_pct": 22.8
+     }
+    }
+   },
+   "top_groups_today": [
+    [
+     "Health Information Services",
+     100.0
+    ],
+    [
+     "Consulting Services",
+     99.3
+    ],
+    [
+     "Insurance Brokers",
+     98.5
+    ],
+    [
+     "REIT - Hotel & Motel",
+     97.8
+    ],
+    [
+     "Financial Data & Stock Exchanges",
+     97.1
+    ],
+    [
+     "Lodging",
+     96.3
+    ],
+    [
+     "Waste Management",
+     95.6
+    ],
+    [
+     "Discount Stores",
+     94.9
+    ],
+    [
+     "Personal Services",
+     94.1
+    ],
+    [
+     "Household & Personal Products",
+     93.4
+    ],
+    [
+     "Insurance - Property & Casualty",
+     92.6
+    ],
+    [
+     "Drug Manufacturers - General",
+     91.9
+    ],
+    [
+     "Medical Distribution",
+     91.2
+    ],
+    [
+     "Specialty Retail",
+     90.4
+    ],
+    [
+     "Diagnostics & Research",
+     89.7
+    ]
+   ]
+  },
+  "named": {
+   "groups_3plus": 211,
+   "avg_fit": 0.327,
+   "median_fit": 0.296,
+   "bands": {
+    "gaps": {
+     "1 Top 3%": {
+      "n": 486,
+      "faded_pct": 54.1,
+      "held_pct": 45.7,
+      "avg_day_from_open": -0.28,
+      "avg_5d_from_open": -1.11,
+      "avg_20d_from_open": -0.43,
+      "ran20_pct": 42.0
+     },
+     "2 Strong 3-10%": {
+      "n": 528,
+      "faded_pct": 49.2,
+      "held_pct": 50.8,
+      "avg_day_from_open": 0.36,
+      "avg_5d_from_open": 0.13,
+      "avg_20d_from_open": -0.2,
+      "ran20_pct": 40.5
+     },
+     "3 10-50%": {
+      "n": 1199,
+      "faded_pct": 53.6,
+      "held_pct": 46.0,
+      "avg_day_from_open": -0.18,
+      "avg_5d_from_open": -0.62,
+      "avg_20d_from_open": 0.13,
+      "ran20_pct": 33.1
+     },
+     "4 bottom half": {
+      "n": 1230,
+      "faded_pct": 55.3,
+      "held_pct": 44.3,
+      "avg_day_from_open": -0.31,
+      "avg_5d_from_open": 0.08,
+      "avg_20d_from_open": -1.42,
+      "ran20_pct": 28.6
+     }
+    },
+    "gaps 10%+": {
+     "1 Top 3%": {
+      "n": 94,
+      "faded_pct": 53.2,
+      "held_pct": 46.8,
+      "avg_day_from_open": 0.25,
+      "avg_5d_from_open": -2.8,
+      "avg_20d_from_open": -0.46,
+      "ran20_pct": 38.3
+     },
+     "2 Strong 3-10%": {
+      "n": 102,
+      "faded_pct": 48.0,
+      "held_pct": 52.0,
+      "avg_day_from_open": 1.21,
+      "avg_5d_from_open": 2.68,
+      "avg_20d_from_open": 4.13,
+      "ran20_pct": 50.0
+     },
+     "3 10-50%": {
+      "n": 234,
+      "faded_pct": 56.0,
+      "held_pct": 44.0,
+      "avg_day_from_open": -0.65,
+      "avg_5d_from_open": -0.37,
+      "avg_20d_from_open": 0.49,
+      "ran20_pct": 33.3
+     },
+     "4 bottom half": {
+      "n": 248,
+      "faded_pct": 52.8,
+      "held_pct": 46.8,
+      "avg_day_from_open": -0.23,
+      "avg_5d_from_open": -0.34,
+      "avg_20d_from_open": -2.52,
+      "ran20_pct": 25.8
+     }
+    },
+    "launches": {
+     "1 Top 3%": {
+      "n": 83,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -1.21,
+      "avg_20d_from_open": 4.28,
+      "ran20_pct": 37.3
+     },
+     "2 Strong 3-10%": {
+      "n": 228,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 0.93,
+      "avg_20d_from_open": 3.85,
+      "ran20_pct": 30.7
+     },
+     "3 10-50%": {
+      "n": 614,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.24,
+      "avg_20d_from_open": -0.1,
+      "ran20_pct": 23.8
+     },
+     "4 bottom half": {
+      "n": 371,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.31,
+      "avg_20d_from_open": -0.71,
+      "ran20_pct": 21.0
+     }
+    },
+    "gaps \u00b7 2nd year": {
+     "1 Top 3%": {
+      "n": 375,
+      "faded_pct": 53.9,
+      "held_pct": 45.9,
+      "avg_day_from_open": -0.43,
+      "avg_5d_from_open": -1.11,
+      "avg_20d_from_open": 2.79,
+      "ran20_pct": 40.3
+     },
+     "2 Strong 3-10%": {
+      "n": 435,
+      "faded_pct": 48.5,
+      "held_pct": 51.5,
+      "avg_day_from_open": 0.44,
+      "avg_5d_from_open": 0.16,
+      "avg_20d_from_open": 0.67,
+      "ran20_pct": 42.3
+     },
+     "3 10-50%": {
+      "n": 1041,
+      "faded_pct": 53.9,
+      "held_pct": 45.8,
+      "avg_day_from_open": -0.25,
+      "avg_5d_from_open": -0.91,
+      "avg_20d_from_open": -0.6,
+      "ran20_pct": 32.2
+     },
+     "4 bottom half": {
+      "n": 1140,
+      "faded_pct": 54.6,
+      "held_pct": 44.9,
+      "avg_day_from_open": -0.25,
+      "avg_5d_from_open": 0.37,
+      "avg_20d_from_open": -1.02,
+      "ran20_pct": 30.0
+     }
+    },
+    "launches \u00b7 2nd year": {
+     "1 Top 3%": {
+      "n": 59,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -2.65,
+      "avg_20d_from_open": 0.85,
+      "ran20_pct": 30.5
+     },
+     "2 Strong 3-10%": {
+      "n": 197,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 0.97,
+      "avg_20d_from_open": 3.17,
+      "ran20_pct": 30.5
+     },
+     "3 10-50%": {
+      "n": 537,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.42,
+      "avg_20d_from_open": -0.69,
+      "ran20_pct": 22.3
+     },
+     "4 bottom half": {
+      "n": 324,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.34,
+      "avg_20d_from_open": -1.06,
+      "ran20_pct": 22.5
+     }
+    }
+   },
+   "top_groups_today": [
+    [
+     "Software: HR & Payroll",
+     100.0
+    ],
+    [
+     "IT Consulting & Outsourcing",
+     99.5
+    ],
+    [
+     "Software: Marketing & Ad Tech",
+     99.0
+    ],
+    [
+     "Software: Vertical & Industry",
+     98.6
+    ],
+    [
+     "Health Information Services",
+     98.1
+    ],
+    [
+     "Government IT & Defense Services",
+     97.6
+    ],
+    [
+     "Financial Data & Stock Exchanges",
+     97.1
+    ],
+    [
+     "Consulting Services",
+     96.7
+    ],
+    [
+     "Insurance Brokers",
+     96.2
+    ],
+    [
+     "Insurance: Florida Homeowners",
+     95.7
+    ],
+    [
+     "Software: Collaboration & Communications",
+     95.2
+    ],
+    [
+     "REIT - Hotel & Motel",
+     94.8
+    ],
+    [
+     "Software: Finance & Banking",
+     94.3
+    ],
+    [
+     "Lodging",
+     93.8
+    ],
+    [
+     "Biotech: Protein Degraders",
+     93.3
+    ]
+   ]
+  },
+  "named + tight only": {
+   "groups_3plus": 211,
+   "avg_fit": 0.327,
+   "median_fit": 0.296,
+   "bands": {
+    "gaps": {
+     "1 Top 3%": {
+      "n": 476,
+      "faded_pct": 54.0,
+      "held_pct": 45.8,
+      "avg_day_from_open": -0.28,
+      "avg_5d_from_open": -1.14,
+      "avg_20d_from_open": -0.51,
+      "ran20_pct": 41.8
+     },
+     "2 Strong 3-10%": {
+      "n": 440,
+      "faded_pct": 49.5,
+      "held_pct": 50.5,
+      "avg_day_from_open": 0.11,
+      "avg_5d_from_open": 0.28,
+      "avg_20d_from_open": -0.16,
+      "ran20_pct": 40.5
+     },
+     "3 10-50%": {
+      "n": 1297,
+      "faded_pct": 53.3,
+      "held_pct": 46.3,
+      "avg_day_from_open": -0.06,
+      "avg_5d_from_open": -0.62,
+      "avg_20d_from_open": 0.13,
+      "ran20_pct": 33.8
+     },
+     "4 bottom half": {
+      "n": 1230,
+      "faded_pct": 55.3,
+      "held_pct": 44.3,
+      "avg_day_from_open": -0.31,
+      "avg_5d_from_open": 0.08,
+      "avg_20d_from_open": -1.42,
+      "ran20_pct": 28.6
+     }
+    },
+    "gaps 10%+": {
+     "1 Top 3%": {
+      "n": 92,
+      "faded_pct": 54.3,
+      "held_pct": 45.7,
+      "avg_day_from_open": 0.07,
+      "avg_5d_from_open": -2.88,
+      "avg_20d_from_open": -0.26,
+      "ran20_pct": 39.1
+     },
+     "2 Strong 3-10%": {
+      "n": 69,
+      "faded_pct": 46.4,
+      "held_pct": 53.6,
+      "avg_day_from_open": 1.17,
+      "avg_5d_from_open": 3.01,
+      "avg_20d_from_open": 4.08,
+      "ran20_pct": 49.3
+     },
+     "3 10-50%": {
+      "n": 269,
+      "faded_pct": 55.0,
+      "held_pct": 45.0,
+      "avg_day_from_open": -0.34,
+      "avg_5d_from_open": -0.07,
+      "avg_20d_from_open": 0.87,
+      "ran20_pct": 35.3
+     },
+     "4 bottom half": {
+      "n": 248,
+      "faded_pct": 52.8,
+      "held_pct": 46.8,
+      "avg_day_from_open": -0.23,
+      "avg_5d_from_open": -0.34,
+      "avg_20d_from_open": -2.52,
+      "ran20_pct": 25.8
+     }
+    },
+    "launches": {
+     "1 Top 3%": {
+      "n": 69,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.33,
+      "avg_20d_from_open": 5.84,
+      "ran20_pct": 40.6
+     },
+     "2 Strong 3-10%": {
+      "n": 154,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 1.52,
+      "avg_20d_from_open": 4.75,
+      "ran20_pct": 35.1
+     },
+     "3 10-50%": {
+      "n": 702,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.35,
+      "avg_20d_from_open": 0.05,
+      "ran20_pct": 23.5
+     },
+     "4 bottom half": {
+      "n": 371,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.31,
+      "avg_20d_from_open": -0.71,
+      "ran20_pct": 21.0
+     }
+    },
+    "gaps \u00b7 2nd year": {
+     "1 Top 3%": {
+      "n": 365,
+      "faded_pct": 53.7,
+      "held_pct": 46.0,
+      "avg_day_from_open": -0.43,
+      "avg_5d_from_open": -1.15,
+      "avg_20d_from_open": 2.76,
+      "ran20_pct": 40.0
+     },
+     "2 Strong 3-10%": {
+      "n": 364,
+      "faded_pct": 48.9,
+      "held_pct": 51.1,
+      "avg_day_from_open": 0.16,
+      "avg_5d_from_open": 0.56,
+      "avg_20d_from_open": 1.42,
+      "ran20_pct": 43.1
+     },
+     "3 10-50%": {
+      "n": 1122,
+      "faded_pct": 53.5,
+      "held_pct": 46.3,
+      "avg_day_from_open": -0.11,
+      "avg_5d_from_open": -0.97,
+      "avg_20d_from_open": -0.73,
+      "ran20_pct": 32.7
+     },
+     "4 bottom half": {
+      "n": 1140,
+      "faded_pct": 54.6,
+      "held_pct": 44.9,
+      "avg_day_from_open": -0.25,
+      "avg_5d_from_open": 0.37,
+      "avg_20d_from_open": -1.02,
+      "ran20_pct": 30.0
+     }
+    },
+    "launches \u00b7 2nd year": {
+     "1 Top 3%": {
+      "n": 47,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -1.79,
+      "avg_20d_from_open": 1.69,
+      "ran20_pct": 31.9
+     },
+     "2 Strong 3-10%": {
+      "n": 138,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": 1.62,
+      "avg_20d_from_open": 4.67,
+      "ran20_pct": 34.1
+     },
+     "3 10-50%": {
+      "n": 608,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.54,
+      "avg_20d_from_open": -0.69,
+      "ran20_pct": 22.4
+     },
+     "4 bottom half": {
+      "n": 324,
+      "faded_pct": 0.0,
+      "held_pct": 0.0,
+      "avg_day_from_open": 0.0,
+      "avg_5d_from_open": -0.34,
+      "avg_20d_from_open": -1.06,
+      "ran20_pct": 22.5
+     }
+    }
+   },
+   "top_groups_today": [
+    [
+     "Software: HR & Payroll",
+     100.0
+    ],
+    [
+     "IT Consulting & Outsourcing",
+     99.5
+    ],
+    [
+     "Software: Marketing & Ad Tech",
+     99.0
+    ],
+    [
+     "Software: Vertical & Industry",
+     98.6
+    ],
+    [
+     "Health Information Services",
+     98.1
+    ],
+    [
+     "Government IT & Defense Services",
+     97.6
+    ],
+    [
+     "Financial Data & Stock Exchanges",
+     97.1
+    ],
+    [
+     "Consulting Services",
+     96.7
+    ],
+    [
+     "Insurance Brokers",
+     96.2
+    ],
+    [
+     "Insurance: Florida Homeowners",
+     95.7
+    ],
+    [
+     "Software: Collaboration & Communications",
+     95.2
+    ],
+    [
+     "REIT - Hotel & Motel",
+     94.8
+    ],
+    [
+     "Software: Finance & Banking",
+     94.3
+    ],
+    [
+     "Lodging",
+     93.8
+    ],
+    [
+     "Biotech: Protein Degraders",
+     93.3
+    ]
+   ]
+  }
+ },
+ "named_groups": {
+  "Silver": {
+   "n": 5,
+   "fit": 0.792,
+   "weakest": [
+    [
+     "NEWP",
+     0.744
+    ],
+    [
+     "AYA",
+     0.779
+    ],
+    [
+     "EXK",
+     0.817
+    ]
+   ]
+  },
+  "Utilities - Regulated Water": {
+   "n": 6,
+   "fit": 0.777,
+   "weakest": [
+    [
+     "HTO",
+     0.713
+    ],
+    [
+     "MSEX",
+     0.771
+    ],
+    [
+     "AWK",
+     0.771
+    ]
+   ]
+  },
+  "Copper": {
+   "n": 7,
+   "fit": 0.747,
+   "weakest": [
+    [
+     "IE",
+     0.681
+    ],
+    [
+     "TECK",
+     0.709
+    ],
+    [
+     "ERO",
+     0.747
+    ]
+   ]
+  },
+  "Uranium": {
+   "n": 7,
+   "fit": 0.74,
+   "weakest": [
+    [
+     "LEU",
+     0.657
+    ],
+    [
+     "UROY",
+     0.669
+    ],
+    [
+     "UUUU",
+     0.759
+    ]
+   ]
+  },
+  "Software: HR & Payroll": {
+   "n": 4,
+   "fit": 0.739,
+   "weakest": [
+    [
+     "PAYC",
+     0.681
+    ],
+    [
+     "PCTY",
+     0.75
+    ],
+    [
+     "PAYX",
+     0.756
+    ]
+   ]
+  },
+  "Bitcoin Miners": {
+   "n": 5,
+   "fit": 0.737,
+   "weakest": [
+    [
+     "BTDR",
+     0.662
+    ],
+    [
+     "MARA",
+     0.748
+    ],
+    [
+     "RIOT",
+     0.755
+    ]
+   ]
+  },
+  "Other Precious Metals & Mining": {
+   "n": 10,
+   "fit": 0.721,
+   "weakest": [
+    [
+     "SLSR",
+     0.648
+    ],
+    [
+     "BVN",
+     0.691
+    ],
+    [
+     "PPTA",
+     0.724
+    ]
+   ]
+  },
+  "Gold": {
+   "n": 34,
+   "fit": 0.718,
+   "weakest": [
+    [
+     "AAUC",
+     0.432
+    ],
+    [
+     "ELE",
+     0.579
+    ],
+    [
+     "HYMC",
+     0.59
+    ]
+   ]
+  },
+  "Banks: Canada": {
+   "n": 5,
+   "fit": 0.714,
+   "weakest": [
+    [
+     "BMO",
+     0.692
+    ],
+    [
+     "CM",
+     0.705
+    ],
+    [
+     "BNS",
+     0.713
+    ]
+   ]
+  },
+  "Semi Equipment: Front-End": {
+   "n": 10,
+   "fit": 0.705,
+   "weakest": [
+    [
+     "ACMR",
+     0.603
+    ],
+    [
+     "VECO",
+     0.631
+    ],
+    [
+     "ACLS",
+     0.675
+    ]
+   ]
+  },
+  "Banks: Custody & Trust": {
+   "n": 3,
+   "fit": 0.693,
+   "weakest": [
+    [
+     "NTRS",
+     0.675
+    ],
+    [
+     "BNY",
+     0.696
+    ],
+    [
+     "STT",
+     0.707
+    ]
+   ]
+  },
+  "Memory & Storage Chips": {
+   "n": 6,
+   "fit": 0.657,
+   "weakest": [
+    [
+     "SIMO",
+     0.524
+    ],
+    [
+     "MU",
+     0.669
+    ],
+    [
+     "SNDK",
+     0.676
+    ]
+   ]
+  },
+  "Banks: US Super-Regional": {
+   "n": 12,
+   "fit": 0.642,
+   "weakest": [
+    [
+     "FCNCA",
+     0.432
+    ],
+    [
+     "PNFP",
+     0.551
+    ],
+    [
+     "EWBC",
+     0.577
+    ]
+   ]
+  },
+  "Utilities - Regulated Electric": {
+   "n": 33,
+   "fit": 0.639,
+   "weakest": [
+    [
+     "HE",
+     0.271
+    ],
+    [
+     "EIX",
+     0.402
+    ],
+    [
+     "PCG",
+     0.403
+    ]
+   ]
+  },
+  "AI Cloud & Data-Center Hosting": {
+   "n": 11,
+   "fit": 0.638,
+   "weakest": [
+    [
+     "ORCL",
+     0.426
+    ],
+    [
+     "GLXY",
+     0.587
+    ],
+    [
+     "NBIS",
+     0.632
+    ]
+   ]
+  },
+  "Oil & Gas E&P": {
+   "n": 37,
+   "fit": 0.631,
+   "weakest": [
+    [
+     "TBN",
+     0.429
+    ],
+    [
+     "KOS",
+     0.499
+    ],
+    [
+     "BKV",
+     0.516
+    ]
+   ]
+  },
+  "Oil & Gas Drilling": {
+   "n": 9,
+   "fit": 0.63,
+   "weakest": [
+    [
+     "BORR",
+     0.513
+    ],
+    [
+     "VAL",
+     0.605
+    ],
+    [
+     "PDS",
+     0.628
+    ]
+   ]
+  },
+  "Home Improvement Retail": {
+   "n": 3,
+   "fit": 0.62,
+   "weakest": [
+    [
+     "FND",
+     0.51
+    ],
+    [
+     "LOW",
+     0.671
+    ],
+    [
+     "HD",
+     0.679
+    ]
+   ]
+  },
+  "Banks: Europe": {
+   "n": 9,
+   "fit": 0.62,
+   "weakest": [
+    [
+     "UBS",
+     0.477
+    ],
+    [
+     "HSBC",
+     0.596
+    ],
+    [
+     "SAN",
+     0.604
+    ]
+   ]
+  },
+  "Software: Majors": {
+   "n": 9,
+   "fit": 0.619,
+   "weakest": [
+    [
+     "ROP",
+     0.494
+    ],
+    [
+     "TEAM",
+     0.585
+    ],
+    [
+     "SAP",
+     0.606
+    ]
+   ]
+  },
+  "REIT - Hotel & Motel": {
+   "n": 10,
+   "fit": 0.615,
+   "weakest": [
+    [
+     "INN",
+     0.547
+    ],
+    [
+     "RHP",
+     0.556
+    ],
+    [
+     "HST",
+     0.599
+    ]
+   ]
+  },
+  "Oil & Gas Integrated": {
+   "n": 15,
+   "fit": 0.615,
+   "weakest": [
+    [
+     "TGS",
+     0.403
+    ],
+    [
+     "NFG",
+     0.466
+    ],
+    [
+     "DEC",
+     0.507
+    ]
+   ]
+  },
+  "Contract Electronics Manufacturing": {
+   "n": 7,
+   "fit": 0.612,
+   "weakest": [
+    [
+     "CLS",
+     0.534
+    ],
+    [
+     "SANM",
+     0.575
+    ],
+    [
+     "FLEX",
+     0.598
+    ]
+   ]
+  },
+  "Financial Data & Stock Exchanges": {
+   "n": 6,
+   "fit": 0.607,
+   "weakest": [
+    [
+     "TRU",
+     0.488
+    ],
+    [
+     "MSCI",
+     0.601
+    ],
+    [
+     "FDS",
+     0.609
+    ]
+   ]
+  },
+  "Semi Equipment: Test & Packaging": {
+   "n": 8,
+   "fit": 0.603,
+   "weakest": [
+    [
+     "IMOS",
+     0.354
+    ],
+    [
+     "AEHR",
+     0.587
+    ],
+    [
+     "KLIC",
+     0.607
+    ]
+   ]
+  },
+  "Crypto Treasuries": {
+   "n": 6,
+   "fit": 0.596,
+   "weakest": [
+    [
+     "PURR",
+     0.406
+    ],
+    [
+     "XXI",
+     0.531
+    ],
+    [
+     "ASST",
+     0.597
+    ]
+   ]
+  },
+  "eVTOL & Air Mobility": {
+   "n": 3,
+   "fit": 0.593,
+   "weakest": [
+    [
+     "BETA",
+     0.523
+    ],
+    [
+     "JOBY",
+     0.606
+    ],
+    [
+     "ACHR",
+     0.651
+    ]
+   ]
+  },
+  "Banks: US Money-Center": {
+   "n": 4,
+   "fit": 0.591,
+   "weakest": [
+    [
+     "C",
+     0.54
+    ],
+    [
+     "JPM",
+     0.586
+    ],
+    [
+     "WFC",
+     0.608
+    ]
+   ]
+  },
+  "Residential Construction": {
+   "n": 15,
+   "fit": 0.588,
+   "weakest": [
+    [
+     "LEGH",
+     0.384
+    ],
+    [
+     "IBP",
+     0.483
+    ],
+    [
+     "CVCO",
+     0.485
+    ]
+   ]
+  },
+  "Optical Networking & Photonics": {
+   "n": 8,
+   "fit": 0.566,
+   "weakest": [
+    [
+     "POET",
+     0.377
+    ],
+    [
+     "LASR",
+     0.479
+    ],
+    [
+     "AAOI",
+     0.548
+    ]
+   ]
+  },
+  "Quantum Computing": {
+   "n": 10,
+   "fit": 0.565,
+   "weakest": [
+    [
+     "IQMX",
+     0.124
+    ],
+    [
+     "IONQ",
+     0.654
+    ],
+    [
+     "QUBT",
+     0.666
+    ]
+   ]
+  },
+  "Semis: Analog, Auto & Power": {
+   "n": 12,
+   "fit": 0.564,
+   "weakest": [
+    [
+     "WOLF",
+     0.456
+    ],
+    [
+     "NVTS",
+     0.465
+    ],
+    [
+     "VICR",
+     0.489
+    ]
+   ]
+  },
+  "Banks: US Regional": {
+   "n": 51,
+   "fit": 0.56,
+   "weakest": [
+    [
+     "CBC",
+     0.259
+    ],
+    [
+     "CLBK",
+     0.333
+    ],
+    [
+     "FLG",
+     0.38
+    ]
+   ]
+  },
+  "Semis: AI Connectivity & Interconnect": {
+   "n": 8,
+   "fit": 0.554,
+   "weakest": [
+    [
+     "MXL",
+     0.494
+    ],
+    [
+     "CRDO",
+     0.522
+    ],
+    [
+     "MRVL",
+     0.543
+    ]
+   ]
+  },
+  "Semi Materials & Subsystems": {
+   "n": 7,
+   "fit": 0.551,
+   "weakest": [
+    [
+     "AXTI",
+     0.417
+    ],
+    [
+     "PLAB",
+     0.444
+    ],
+    [
+     "Q",
+     0.542
+    ]
+   ]
+  },
+  "Airports & Air Services": {
+   "n": 4,
+   "fit": 0.549,
+   "weakest": [
+    [
+     "CAAP",
+     0.382
+    ],
+    [
+     "PAC",
+     0.591
+    ],
+    [
+     "OMAB",
+     0.605
+    ]
+   ]
+  },
+  "Banks: Japan & Korea": {
+   "n": 6,
+   "fit": 0.544,
+   "weakest": [
+    [
+     "WF",
+     0.507
+    ],
+    [
+     "MUFG",
+     0.537
+    ],
+    [
+     "MFG",
+     0.546
+    ]
+   ]
+  },
+  "REIT - Retail": {
+   "n": 23,
+   "fit": 0.539,
+   "weakest": [
+    [
+     "ALX",
+     0.25
+    ],
+    [
+     "CBL",
+     0.276
+    ],
+    [
+     "MAC",
+     0.301
+    ]
+   ]
+  },
+  "Lumber & Wood Production": {
+   "n": 4,
+   "fit": 0.537,
+   "weakest": [
+    [
+     "WFG",
+     0.435
+    ],
+    [
+     "SSD",
+     0.519
+    ],
+    [
+     "BCC",
+     0.592
+    ]
+   ]
+  },
+  "Trucking": {
+   "n": 13,
+   "fit": 0.537,
+   "weakest": [
+    [
+     "ULH",
+     0.33
+    ],
+    [
+     "RXO",
+     0.367
+    ],
+    [
+     "TFII",
+     0.473
+    ]
+   ]
+  },
+  "Aluminum": {
+   "n": 4,
+   "fit": 0.533,
+   "weakest": [
+    [
+     "KALU",
+     0.518
+    ],
+    [
+     "CSTM",
+     0.527
+    ],
+    [
+     "CENX",
+     0.531
+    ]
+   ]
+  },
+  "Software: Collaboration & Communications": {
+   "n": 12,
+   "fit": 0.532,
+   "weakest": [
+    [
+     "ZM",
+     0.439
+    ],
+    [
+     "NICE",
+     0.468
+    ],
+    [
+     "DBX",
+     0.47
+    ]
+   ]
+  },
+  "Semis: AI Accelerators & CPUs": {
+   "n": 5,
+   "fit": 0.53,
+   "weakest": [
+    [
+     "AVGO",
+     0.456
+    ],
+    [
+     "INTC",
+     0.531
+    ],
+    [
+     "ARM",
+     0.535
+    ]
+   ]
+  },
+  "Coking Coal": {
+   "n": 3,
+   "fit": 0.524,
+   "weakest": [
+    [
+     "SXC",
+     0.435
+    ],
+    [
+     "HCC",
+     0.546
+    ],
+    [
+     "AMR",
+     0.591
+    ]
+   ]
+  },
+  "Alternative Asset Managers": {
+   "n": 12,
+   "fit": 0.524,
+   "weakest": [
+    [
+     "PAX",
+     0.247
+    ],
+    [
+     "GCMG",
+     0.356
+    ],
+    [
+     "HLNE",
+     0.51
+    ]
+   ]
+  },
+  "AI Servers": {
+   "n": 4,
+   "fit": 0.524,
+   "weakest": [
+    [
+     "SMCI",
+     0.478
+    ],
+    [
+     "PENG",
+     0.498
+    ],
+    [
+     "DELL",
+     0.542
+    ]
+   ]
+  },
+  "Banks: US Community": {
+   "n": 92,
+   "fit": 0.523,
+   "weakest": [
+    [
+     "HAPN",
+     0.019
+    ],
+    [
+     "RCBC",
+     0.047
+    ],
+    [
+     "VBNK",
+     0.107
+    ]
+   ]
+  },
+  "Insurance - Reinsurance": {
+   "n": 5,
+   "fit": 0.522,
+   "weakest": [
+    [
+     "RGA",
+     0.426
+    ],
+    [
+     "SPNT",
+     0.488
+    ],
+    [
+     "HG",
+     0.506
+    ]
+   ]
+  },
+  "Confectioners": {
+   "n": 3,
+   "fit": 0.521,
+   "weakest": [
+    [
+     "TR",
+     0.48
+    ],
+    [
+     "HSY",
+     0.54
+    ],
+    [
+     "MDLZ",
+     0.542
+    ]
+   ]
+  },
+  "Crypto Platforms": {
+   "n": 5,
+   "fit": 0.519,
+   "weakest": [
+    [
+     "FIGR",
+     0.37
+    ],
+    [
+     "BLSH",
+     0.542
+    ],
+    [
+     "CRCL",
+     0.565
+    ]
+   ]
+  },
+  "Satellite Communications": {
+   "n": 4,
+   "fit": 0.518,
+   "weakest": [
+    [
+     "IRDM",
+     0.482
+    ],
+    [
+     "TSAT",
+     0.508
+    ],
+    [
+     "ASTS",
+     0.518
+    ]
+   ]
+  },
+  "Oil & Gas Refining & Marketing": {
+   "n": 11,
+   "fit": 0.516,
+   "weakest": [
+    [
+     "UGP",
+     0.132
+    ],
+    [
+     "WKC",
+     0.276
+    ],
+    [
+     "IEP",
+     0.288
+    ]
+   ]
+  },
+  "REIT - Healthcare Facilities": {
+   "n": 13,
+   "fit": 0.515,
+   "weakest": [
+    [
+     "MPT",
+     0.196
+    ],
+    [
+     "DHC",
+     0.311
+    ],
+    [
+     "DOC",
+     0.336
+    ]
+   ]
+  },
+  "Thermal Coal": {
+   "n": 3,
+   "fit": 0.509,
+   "weakest": [
+    [
+     "NRP",
+     0.364
+    ],
+    [
+     "BTU",
+     0.577
+    ],
+    [
+     "CNR",
+     0.587
+    ]
+   ]
+  },
+  "REIT - Residential": {
+   "n": 13,
+   "fit": 0.504,
+   "weakest": [
+    [
+     "MRP",
+     0.032
+    ],
+    [
+     "CSR",
+     0.335
+    ],
+    [
+     "UMH",
+     0.411
+    ]
+   ]
+  },
+  "Connectors & Passive Components": {
+   "n": 11,
+   "fit": 0.503,
+   "weakest": [
+    [
+     "TEL",
+     0.367
+    ],
+    [
+     "ALNT",
+     0.449
+    ],
+    [
+     "APH",
+     0.45
+    ]
+   ]
+  },
+  "Government IT & Defense Services": {
+   "n": 5,
+   "fit": 0.503,
+   "weakest": [
+    [
+     "PSN",
+     0.377
+    ],
+    [
+     "CACI",
+     0.511
+    ],
+    [
+     "SAIC",
+     0.537
+    ]
+   ]
+  },
+  "Wall Street Banks": {
+   "n": 3,
+   "fit": 0.502,
+   "weakest": [
+    [
+     "NMR",
+     0.351
+    ],
+    [
+     "GS",
+     0.573
+    ],
+    [
+     "MS",
+     0.582
+    ]
+   ]
+  },
+  "Financial Tech Processors": {
+   "n": 5,
+   "fit": 0.499,
+   "weakest": [
+    [
+     "GPN",
+     0.422
+    ],
+    [
+     "JKHY",
+     0.494
+    ],
+    [
+     "FISV",
+     0.497
+    ]
+   ]
+  },
+  "Waste Management": {
+   "n": 6,
+   "fit": 0.495,
+   "weakest": [
+    [
+     "CLH",
+     0.307
+    ],
+    [
+     "GFL",
+     0.421
+    ],
+    [
+     "CWST",
+     0.449
+    ]
+   ]
+  },
+  "Semis: Foundry": {
+   "n": 3,
+   "fit": 0.492,
+   "weakest": [
+    [
+     "TSEM",
+     0.46
+    ],
+    [
+     "UMC",
+     0.463
+    ],
+    [
+     "GFS",
+     0.552
+    ]
+   ]
+  },
+  "REIT - Office": {
+   "n": 11,
+   "fit": 0.473,
+   "weakest": [
+    [
+     "CDP",
+     0.292
+    ],
+    [
+     "DEA",
+     0.324
+    ],
+    [
+     "ARE",
+     0.329
+    ]
+   ]
+  },
+  "Insurance: Florida Homeowners": {
+   "n": 4,
+   "fit": 0.473,
+   "weakest": [
+    [
+     "HRTG",
+     0.437
+    ],
+    [
+     "HCI",
+     0.449
+    ],
+    [
+     "SLDE",
+     0.451
+    ]
+   ]
+  },
+  "BDC Lenders": {
+   "n": 19,
+   "fit": 0.471,
+   "weakest": [
+    [
+     "PSEC",
+     0.298
+    ],
+    [
+     "MFIC",
+     0.397
+    ],
+    [
+     "FDUS",
+     0.402
+    ]
+   ]
+  },
+  "Insurance - Specialty": {
+   "n": 10,
+   "fit": 0.464,
+   "weakest": [
+    [
+     "AGO",
+     0.332
+    ],
+    [
+     "EIG",
+     0.354
+    ],
+    [
+     "AXS",
+     0.361
+    ]
+   ]
+  },
+  "Airlines": {
+   "n": 16,
+   "fit": 0.455,
+   "weakest": [
+    [
+     "RJET",
+     0.26
+    ],
+    [
+     "AERO",
+     0.305
+    ],
+    [
+     "RYAAY",
+     0.388
+    ]
+   ]
+  },
+  "Wealth & Retirement": {
+   "n": 8,
+   "fit": 0.448,
+   "weakest": [
+    [
+     "PFG",
+     0.357
+    ],
+    [
+     "CRBG",
+     0.382
+    ],
+    [
+     "EQH",
+     0.402
+    ]
+   ]
+  },
+  "Advisory & Mid-Market Banks": {
+   "n": 10,
+   "fit": 0.443,
+   "weakest": [
+    [
+     "OPY",
+     0.273
+    ],
+    [
+     "PWP",
+     0.346
+    ],
+    [
+     "HLI",
+     0.412
+    ]
+   ]
+  },
+  "Insurance - Property & Casualty": {
+   "n": 28,
+   "fit": 0.442,
+   "weakest": [
+    [
+     "DGICB",
+     0.053
+    ],
+    [
+     "KMPR",
+     0.268
+    ],
+    [
+     "SAFT",
+     0.268
+    ]
+   ]
+  },
+  "Software: Finance & Banking": {
+   "n": 11,
+   "fit": 0.436,
+   "weakest": [
+    [
+     "DFIN",
+     0.269
+    ],
+    [
+     "FICO",
+     0.305
+    ],
+    [
+     "ALKT",
+     0.381
+    ]
+   ]
+  },
+  "Utilities - Regulated Gas": {
+   "n": 14,
+   "fit": 0.436,
+   "weakest": [
+    [
+     "CTRI",
+     -0.081
+    ],
+    [
+     "BIPC",
+     0.152
+    ],
+    [
+     "UGI",
+     0.347
+    ]
+   ]
+  },
+  "Software: Vertical & Industry": {
+   "n": 21,
+   "fit": 0.433,
+   "weakest": [
+    [
+     "KARO",
+     0.251
+    ],
+    [
+     "EVCM",
+     0.268
+    ],
+    [
+     "PAR",
+     0.325
+    ]
+   ]
+  },
+  "Chemicals": {
+   "n": 8,
+   "fit": 0.431,
+   "weakest": [
+    [
+     "REX",
+     0.334
+    ],
+    [
+     "GPRE",
+     0.343
+    ],
+    [
+     "HUN",
+     0.378
+    ]
+   ]
+  },
+  "Consulting Services": {
+   "n": 6,
+   "fit": 0.42,
+   "weakest": [
+    [
+     "EFX",
+     0.388
+    ],
+    [
+     "ICFI",
+     0.412
+    ],
+    [
+     "VRSK",
+     0.416
+    ]
+   ]
+  },
+  "Insurance Brokers": {
+   "n": 14,
+   "fit": 0.419,
+   "weakest": [
+    [
+     "NP",
+     0.204
+    ],
+    [
+     "ARX",
+     0.218
+    ],
+    [
+     "CRVL",
+     0.247
+    ]
+   ]
+  },
+  "REIT - Mortgage": {
+   "n": 11,
+   "fit": 0.419,
+   "weakest": [
+    [
+     "BXMT",
+     0.308
+    ],
+    [
+     "LADR",
+     0.311
+    ],
+    [
+     "PMT",
+     0.327
+    ]
+   ]
+  },
+  "Biotech: Protein Degraders": {
+   "n": 3,
+   "fit": 0.415,
+   "weakest": [
+    [
+     "GLUE",
+     0.328
+    ],
+    [
+     "KYMR",
+     0.443
+    ],
+    [
+     "NRIX",
+     0.473
+    ]
+   ]
+  },
+  "Utilities - Independent Power Producers": {
+   "n": 7,
+   "fit": 0.413,
+   "weakest": [
+    [
+     "KEN",
+     0.158
+    ],
+    [
+     "OKLO",
+     0.306
+    ],
+    [
+     "TAC",
+     0.338
+    ]
+   ]
+  },
+  "Online Brokers": {
+   "n": 5,
+   "fit": 0.412,
+   "weakest": [
+    [
+     "FUTU",
+     0.297
+    ],
+    [
+     "ETOR",
+     0.327
+    ],
+    [
+     "IBKR",
+     0.465
+    ]
+   ]
+  },
+  "IT Consulting & Outsourcing": {
+   "n": 15,
+   "fit": 0.408,
+   "weakest": [
+    [
+     "FORTY",
+     0.069
+    ],
+    [
+     "TASK",
+     0.228
+    ],
+    [
+     "WIT",
+     0.244
+    ]
+   ]
+  },
+  "Oil & Gas Midstream": {
+   "n": 34,
+   "fit": 0.403,
+   "weakest": [
+    [
+     "PBT",
+     0.3
+    ],
+    [
+     "EE",
+     0.33
+    ],
+    [
+     "LPG",
+     0.341
+    ]
+   ]
+  },
+  "Online Marketplaces & Listings": {
+   "n": 8,
+   "fit": 0.391,
+   "weakest": [
+    [
+     "EVER",
+     0.286
+    ],
+    [
+     "UPWK",
+     0.305
+    ],
+    [
+     "NRDS",
+     0.389
+    ]
+   ]
+  },
+  "Recreational Vehicles": {
+   "n": 8,
+   "fit": 0.391,
+   "weakest": [
+    [
+     "HOG",
+     0.231
+    ],
+    [
+     "DOO",
+     0.321
+    ],
+    [
+     "PII",
+     0.406
+    ]
+   ]
+  },
+  "Solar": {
+   "n": 7,
+   "fit": 0.387,
+   "weakest": [
+    [
+     "DQ",
+     0.205
+    ],
+    [
+     "RUN",
+     0.387
+    ],
+    [
+     "FSLR",
+     0.406
+    ]
+   ]
+  },
+  "Oil & Gas Equipment & Services": {
+   "n": 32,
+   "fit": 0.386,
+   "weakest": [
+    [
+     "FTK",
+     0.228
+    ],
+    [
+     "NEXT",
+     0.281
+    ],
+    [
+     "SEI",
+     0.299
+    ]
+   ]
+  },
+  "Railroads": {
+   "n": 8,
+   "fit": 0.386,
+   "weakest": [
+    [
+     "WAB",
+     0.226
+    ],
+    [
+     "TRN",
+     0.236
+    ],
+    [
+     "GBX",
+     0.288
+    ]
+   ]
+  },
+  "Utilities - Diversified": {
+   "n": 5,
+   "fit": 0.385,
+   "weakest": [
+    [
+     "AES",
+     0.203
+    ],
+    [
+     "AQN",
+     0.327
+    ],
+    [
+     "UTL",
+     0.437
+    ]
+   ]
+  },
+  "Semis: Mobile & RF": {
+   "n": 6,
+   "fit": 0.381,
+   "weakest": [
+    [
+     "PI",
+     0.259
+    ],
+    [
+     "CRUS",
+     0.361
+    ],
+    [
+     "CEVA",
+     0.394
+    ]
+   ]
+  },
+  "Banks: Latin America": {
+   "n": 15,
+   "fit": 0.379,
+   "weakest": [
+    [
+     "BLX",
+     0.114
+    ],
+    [
+     "AVAL",
+     0.313
+    ],
+    [
+     "BAP",
+     0.321
+    ]
+   ]
+  },
+  "Grocery Stores": {
+   "n": 7,
+   "fit": 0.374,
+   "weakest": [
+    [
+     "GO",
+     0.222
+    ],
+    [
+     "SFM",
+     0.297
+    ],
+    [
+     "KR",
+     0.424
+    ]
+   ]
+  },
+  "Other Industrial Metals & Mining": {
+   "n": 19,
+   "fit": 0.37,
+   "weakest": [
+    [
+     "EMAT",
+     0.134
+    ],
+    [
+     "GSM",
+     0.25
+    ],
+    [
+     "MTRN",
+     0.258
+    ]
+   ]
+  },
+  "Software: Cybersecurity": {
+   "n": 25,
+   "fit": 0.367,
+   "weakest": [
+    [
+     "YOU",
+     0.142
+    ],
+    [
+     "RSKD",
+     0.215
+    ],
+    [
+     "BB",
+     0.243
+    ]
+   ]
+  },
+  "Software: Web Presence & Domains": {
+   "n": 3,
+   "fit": 0.367,
+   "weakest": [
+    [
+     "VRSN",
+     0.3
+    ],
+    [
+     "WIX",
+     0.353
+    ],
+    [
+     "GDDY",
+     0.447
+    ]
+   ]
+  },
+  "Biotech: AI & Platform Drug Discovery": {
+   "n": 6,
+   "fit": 0.367,
+   "weakest": [
+    [
+     "OABI",
+     0.217
+    ],
+    [
+     "RXRX",
+     0.411
+    ],
+    [
+     "ABSI",
+     0.411
+    ]
+   ]
+  },
+  "Utilities - Latin America & Asia": {
+   "n": 6,
+   "fit": 0.364,
+   "weakest": [
+    [
+     "KEP",
+     0.177
+    ],
+    [
+     "CEPU",
+     0.262
+    ],
+    [
+     "ENIC",
+     0.339
+    ]
+   ]
+  },
+  "Staffing & Employment Services": {
+   "n": 8,
+   "fit": 0.364,
+   "weakest": [
+    [
+     "KELYB",
+     0.021
+    ],
+    [
+     "BBSI",
+     0.335
+    ],
+    [
+     "KFRC",
+     0.356
+    ]
+   ]
+  },
+  "Software: AI Applications": {
+   "n": 6,
+   "fit": 0.363,
+   "weakest": [
+    [
+     "INOD",
+     0.231
+    ],
+    [
+     "PATH",
+     0.351
+    ],
+    [
+     "PLTR",
+     0.39
+    ]
+   ]
+  },
+  "Banks: Digital & Specialty": {
+   "n": 6,
+   "fit": 0.357,
+   "weakest": [
+    [
+     "CASH",
+     0.26
+    ],
+    [
+     "TBBK",
+     0.327
+    ],
+    [
+     "ESQ",
+     0.351
+    ]
+   ]
+  },
+  "Marine Shipping": {
+   "n": 16,
+   "fit": 0.356,
+   "weakest": [
+    [
+     "CCEC",
+     0.074
+    ],
+    [
+     "ZIM",
+     0.176
+    ],
+    [
+     "MATX",
+     0.19
+    ]
+   ]
+  },
+  "REIT - Diversified": {
+   "n": 9,
+   "fit": 0.348,
+   "weakest": [
+    [
+     "ESRT",
+     0.258
+    ],
+    [
+     "JBGS",
+     0.283
+    ],
+    [
+     "SAFE",
+     0.298
+    ]
+   ]
+  },
+  "Lodging": {
+   "n": 8,
+   "fit": 0.341,
+   "weakest": [
+    [
+     "HTHT",
+     0.176
+    ],
+    [
+     "ATAT",
+     0.187
+    ],
+    [
+     "CHH",
+     0.319
+    ]
+   ]
+  },
+  "Test, Measurement & Sensors": {
+   "n": 6,
+   "fit": 0.337,
+   "weakest": [
+    [
+     "CGNX",
+     0.294
+    ],
+    [
+     "NOVT",
+     0.296
+    ],
+    [
+     "ESE",
+     0.328
+    ]
+   ]
+  },
+  "Healthcare Plans": {
+   "n": 11,
+   "fit": 0.335,
+   "weakest": [
+    [
+     "PGNY",
+     0.153
+    ],
+    [
+     "ALHC",
+     0.226
+    ],
+    [
+     "CLOV",
+     0.236
+    ]
+   ]
+  },
+  "Software: Cloud, Data & Observability": {
+   "n": 18,
+   "fit": 0.334,
+   "weakest": [
+    [
+     "TDC",
+     0.211
+    ],
+    [
+     "FSLY",
+     0.219
+    ],
+    [
+     "BAND",
+     0.22
+    ]
+   ]
+  },
+  "China Internet": {
+   "n": 7,
+   "fit": 0.328,
+   "weakest": [
+    [
+     "JOYY",
+     0.245
+    ],
+    [
+     "BZ",
+     0.295
+    ],
+    [
+     "TME",
+     0.296
+    ]
+   ]
+  },
+  "Mortgage Finance": {
+   "n": 4,
+   "fit": 0.325,
+   "weakest": [
+    [
+     "WD",
+     0.233
+    ],
+    [
+     "PFSI",
+     0.337
+    ],
+    [
+     "UWMC",
+     0.348
+    ]
+   ]
+  },
+  "REIT - Industrial": {
+   "n": 13,
+   "fit": 0.322,
+   "weakest": [
+    [
+     "IIPR",
+     0.055
+    ],
+    [
+     "LINE",
+     0.194
+    ],
+    [
+     "COLD",
+     0.211
+    ]
+   ]
+  },
+  "Software: Marketing & Ad Tech": {
+   "n": 15,
+   "fit": 0.322,
+   "weakest": [
+    [
+     "APPS",
+     0.175
+    ],
+    [
+     "IBTA",
+     0.179
+    ],
+    [
+     "SMWB",
+     0.23
+    ]
+   ]
+  },
+  "Drug Manufacturers - General": {
+   "n": 16,
+   "fit": 0.314,
+   "weakest": [
+    [
+     "OGN",
+     -0.003
+    ],
+    [
+     "NVO",
+     0.106
+    ],
+    [
+     "GRFS",
+     0.126
+    ]
+   ]
+  },
+  "Semis: IoT, Edge & FPGA": {
+   "n": 5,
+   "fit": 0.314,
+   "weakest": [
+    [
+     "SLAB",
+     0.065
+    ],
+    [
+     "AMBQ",
+     0.324
+    ],
+    [
+     "SITM",
+     0.357
+    ]
+   ]
+  },
+  "Biotech: Gene Editing & Gene Therapy": {
+   "n": 10,
+   "fit": 0.309,
+   "weakest": [
+    [
+     "QURE",
+     0.174
+    ],
+    [
+     "PGEN",
+     0.201
+    ],
+    [
+     "KRYS",
+     0.223
+    ]
+   ]
+  },
+  "Medical Distribution": {
+   "n": 5,
+   "fit": 0.304,
+   "weakest": [
+    [
+     "AHG",
+     0.013
+    ],
+    [
+     "HSIC",
+     0.207
+    ],
+    [
+     "CAH",
+     0.419
+    ]
+   ]
+  },
+  "Farm & Heavy Construction Machinery": {
+   "n": 14,
+   "fit": 0.293,
+   "weakest": [
+    [
+     "BLBD",
+     0.168
+    ],
+    [
+     "AEBI",
+     0.17
+    ],
+    [
+     "FSS",
+     0.23
+    ]
+   ]
+  },
+  "Tools & Accessories": {
+   "n": 8,
+   "fit": 0.286,
+   "weakest": [
+    [
+     "TTC",
+     0.195
+    ],
+    [
+     "HLMN",
+     0.231
+    ],
+    [
+     "SNA",
+     0.263
+    ]
+   ]
+  },
+  "Exchanges & Trading": {
+   "n": 10,
+   "fit": 0.284,
+   "weakest": [
+    [
+     "SNEX",
+     0.17
+    ],
+    [
+     "MKTX",
+     0.215
+    ],
+    [
+     "MRX",
+     0.247
+    ]
+   ]
+  },
+  "Tobacco": {
+   "n": 6,
+   "fit": 0.283,
+   "weakest": [
+    [
+     "AIIR",
+     -0.023
+    ],
+    [
+     "TPB",
+     0.179
+    ],
+    [
+     "UVV",
+     0.311
+    ]
+   ]
+  },
+  "Electrical Equipment & Parts": {
+   "n": 17,
+   "fit": 0.28,
+   "weakest": [
+    [
+     "ENR",
+     -0.049
+    ],
+    [
+     "HAYW",
+     0.031
+    ],
+    [
+     "AYI",
+     0.19
+    ]
+   ]
+  },
+  "Beverages - Non-Alcoholic": {
+   "n": 10,
+   "fit": 0.277,
+   "weakest": [
+    [
+     "COCO",
+     0.124
+    ],
+    [
+     "PRMB",
+     0.145
+    ],
+    [
+     "CELH",
+     0.179
+    ]
+   ]
+  },
+  "Networking Equipment": {
+   "n": 9,
+   "fit": 0.277,
+   "weakest": [
+    [
+     "CALX",
+     0.182
+    ],
+    [
+     "UI",
+     0.195
+    ],
+    [
+     "ERIC",
+     0.218
+    ]
+   ]
+  },
+  "Furnishings, Fixtures & Appliances": {
+   "n": 10,
+   "fit": 0.276,
+   "weakest": [
+    [
+     "ALH",
+     0.146
+    ],
+    [
+     "LZB",
+     0.161
+    ],
+    [
+     "SN",
+     0.206
+    ]
+   ]
+  },
+  "Farm Products": {
+   "n": 7,
+   "fit": 0.273,
+   "weakest": [
+    [
+     "CALM",
+     0.194
+    ],
+    [
+     "AGRO",
+     0.23
+    ],
+    [
+     "TSN",
+     0.253
+    ]
+   ]
+  },
+  "Utilities - Renewable": {
+   "n": 7,
+   "fit": 0.271,
+   "weakest": [
+    [
+     "RNW",
+     0.133
+    ],
+    [
+     "ENLT",
+     0.232
+    ],
+    [
+     "BEPC",
+     0.301
+    ]
+   ]
+  },
+  "Broadcasting": {
+   "n": 4,
+   "fit": 0.27,
+   "weakest": [
+    [
+     "FUBO",
+     0.215
+    ],
+    [
+     "NMAX",
+     0.277
+    ],
+    [
+     "SBGI",
+     0.286
+    ]
+   ]
+  },
+  "Steel": {
+   "n": 12,
+   "fit": 0.27,
+   "weakest": [
+    [
+     "SIM",
+     0.04
+    ],
+    [
+     "NWPX",
+     0.127
+    ],
+    [
+     "PKX",
+     0.211
+    ]
+   ]
+  },
+  "Biotech: Vaccines & Infectious Disease": {
+   "n": 6,
+   "fit": 0.267,
+   "weakest": [
+    [
+     "ADMA",
+     0.124
+    ],
+    [
+     "VIR",
+     0.262
+    ],
+    [
+     "MRNA",
+     0.287
+    ]
+   ]
+  },
+  "Traditional Asset Managers": {
+   "n": 14,
+   "fit": 0.262,
+   "weakest": [
+    [
+     "SII",
+     0.056
+    ],
+    [
+     "SEIC",
+     0.202
+    ],
+    [
+     "CNS",
+     0.211
+    ]
+   ]
+  },
+  "Apparel Manufacturing": {
+   "n": 13,
+   "fit": 0.261,
+   "weakest": [
+    [
+     "FIGS",
+     0.064
+    ],
+    [
+     "GIL",
+     0.176
+    ],
+    [
+     "GIII",
+     0.253
+    ]
+   ]
+  },
+  "Packaging & Containers": {
+   "n": 16,
+   "fit": 0.26,
+   "weakest": [
+    [
+     "TRS",
+     0.087
+    ],
+    [
+     "KRT",
+     0.097
+    ],
+    [
+     "MYE",
+     0.104
+    ]
+   ]
+  },
+  "Digital Ads & Social Media": {
+   "n": 5,
+   "fit": 0.26,
+   "weakest": [
+    [
+     "TBLA",
+     0.179
+    ],
+    [
+     "META",
+     0.203
+    ],
+    [
+     "PINS",
+     0.26
+    ]
+   ]
+  },
+  "Electronics & Computer Distribution": {
+   "n": 7,
+   "fit": 0.259,
+   "weakest": [
+    [
+     "CLMB",
+     0.101
+    ],
+    [
+     "SCSC",
+     0.212
+    ],
+    [
+     "CNXN",
+     0.261
+    ]
+   ]
+  },
+  "Gambling": {
+   "n": 7,
+   "fit": 0.257,
+   "weakest": [
+    [
+     "CHDN",
+     0.2
+    ],
+    [
+     "ACEL",
+     0.207
+    ],
+    [
+     "BRSL",
+     0.244
+    ]
+   ]
+  },
+  "Travel Services": {
+   "n": 13,
+   "fit": 0.257,
+   "weakest": [
+    [
+     "TCOM",
+     0.09
+    ],
+    [
+     "PRSU",
+     0.129
+    ],
+    [
+     "ABNB",
+     0.22
+    ]
+   ]
+  },
+  "Beverages - Brewers": {
+   "n": 6,
+   "fit": 0.257,
+   "weakest": [
+    [
+     "FMX",
+     0.183
+    ],
+    [
+     "CCU",
+     0.191
+    ],
+    [
+     "SAM",
+     0.21
+    ]
+   ]
+  },
+  "Building Products & Equipment": {
+   "n": 24,
+   "fit": 0.255,
+   "weakest": [
+    [
+     "ARLO",
+     0.013
+    ],
+    [
+     "NPKI",
+     0.099
+    ],
+    [
+     "JCI",
+     0.156
+    ]
+   ]
+  },
+  "Building Materials": {
+   "n": 14,
+   "fit": 0.253,
+   "weakest": [
+    [
+     "CPAC",
+     -0.027
+    ],
+    [
+     "LOMA",
+     0.117
+    ],
+    [
+     "USLM",
+     0.126
+    ]
+   ]
+  },
+  "Insurance - Life": {
+   "n": 15,
+   "fit": 0.249,
+   "weakest": [
+    [
+     "PUK",
+     0.072
+    ],
+    [
+     "ABX",
+     0.087
+    ],
+    [
+     "BHF",
+     0.107
+    ]
+   ]
+  },
+  "Footwear & Accessories": {
+   "n": 7,
+   "fit": 0.246,
+   "weakest": [
+    [
+     "SHOO",
+     0.168
+    ],
+    [
+     "NKE",
+     0.2
+    ],
+    [
+     "WWW",
+     0.225
+    ]
+   ]
+  },
+  "Insurtech": {
+   "n": 5,
+   "fit": 0.241,
+   "weakest": [
+    [
+     "TRUP",
+     0.176
+    ],
+    [
+     "PRCH",
+     0.202
+    ],
+    [
+     "ROOT",
+     0.244
+    ]
+   ]
+  },
+  "Biotech: Large-Cap Commercial": {
+   "n": 11,
+   "fit": 0.237,
+   "weakest": [
+    [
+     "INSM",
+     0.16
+    ],
+    [
+     "ASND",
+     0.192
+    ],
+    [
+     "GMAB",
+     0.2
+    ]
+   ]
+  },
+  "Agricultural Inputs": {
+   "n": 7,
+   "fit": 0.236,
+   "weakest": [
+    [
+     "SMG",
+     -0.049
+    ],
+    [
+     "ICL",
+     0.193
+    ],
+    [
+     "FMC",
+     0.213
+    ]
+   ]
+  },
+  "Metal Fabrication": {
+   "n": 9,
+   "fit": 0.235,
+   "weakest": [
+    [
+     "GPGI",
+     0.156
+    ],
+    [
+     "MLI",
+     0.199
+    ],
+    [
+     "ESAB",
+     0.212
+    ]
+   ]
+  },
+  "Auto & Truck Dealerships": {
+   "n": 14,
+   "fit": 0.235,
+   "weakest": [
+    [
+     "BGSI",
+     0.095
+    ],
+    [
+     "OPLN",
+     0.127
+    ],
+    [
+     "CVNA",
+     0.139
+    ]
+   ]
+  },
+  "Bio Tools & Services": {
+   "n": 5,
+   "fit": 0.232,
+   "weakest": [
+    [
+     "TECH",
+     0.179
+    ],
+    [
+     "FTRE",
+     0.217
+    ],
+    [
+     "MRVI",
+     0.231
+    ]
+   ]
+  },
+  "Consumer Fintech": {
+   "n": 8,
+   "fit": 0.231,
+   "weakest": [
+    [
+     "KPLT",
+     0.054
+    ],
+    [
+     "WLTH",
+     0.108
+    ],
+    [
+     "UPBD",
+     0.115
+    ]
+   ]
+  },
+  "Software: Design & Engineering": {
+   "n": 7,
+   "fit": 0.23,
+   "weakest": [
+    [
+     "PDFS",
+     0.049
+    ],
+    [
+     "U",
+     0.198
+    ],
+    [
+     "FIG",
+     0.208
+    ]
+   ]
+  },
+  "Household & Personal Products": {
+   "n": 15,
+   "fit": 0.225,
+   "weakest": [
+    [
+     "ODD",
+     0.052
+    ],
+    [
+     "NWL",
+     0.116
+    ],
+    [
+     "ELF",
+     0.121
+    ]
+   ]
+  },
+  "Discount Stores": {
+   "n": 9,
+   "fit": 0.224,
+   "weakest": [
+    [
+     "TBBB",
+     0.049
+    ],
+    [
+     "PSMT",
+     0.131
+    ],
+    [
+     "OLLI",
+     0.176
+    ]
+   ]
+  },
+  "Apparel Retail": {
+   "n": 13,
+   "fit": 0.224,
+   "weakest": [
+    [
+     "LULU",
+     0.143
+    ],
+    [
+     "BURL",
+     0.165
+    ],
+    [
+     "VSXY",
+     0.186
+    ]
+   ]
+  },
+  "Biotech: Immunology & Inflammation": {
+   "n": 23,
+   "fit": 0.221,
+   "weakest": [
+    [
+     "ALMS",
+     0.11
+    ],
+    [
+     "OMER",
+     0.118
+    ],
+    [
+     "NKTR",
+     0.137
+    ]
+   ]
+  },
+  "Diagnostics & Research": {
+   "n": 30,
+   "fit": 0.22,
+   "weakest": [
+    [
+     "FRNM",
+     0.021
+    ],
+    [
+     "IDXX",
+     0.063
+    ],
+    [
+     "OPK",
+     0.101
+    ]
+   ]
+  },
+  "Food Distribution": {
+   "n": 7,
+   "fit": 0.22,
+   "weakest": [
+    [
+     "ANDE",
+     0.091
+    ],
+    [
+     "AVO",
+     0.122
+    ],
+    [
+     "UNFI",
+     0.229
+    ]
+   ]
+  },
+  "Resorts & Casinos": {
+   "n": 12,
+   "fit": 0.22,
+   "weakest": [
+    [
+     "MCRI",
+     0.116
+    ],
+    [
+     "MTN",
+     0.161
+    ],
+    [
+     "MLCO",
+     0.175
+    ]
+   ]
+  },
+  "Aerospace & Defense": {
+   "n": 52,
+   "fit": 0.22,
+   "weakest": [
+    [
+     "SWBI",
+     0.002
+    ],
+    [
+     "RGR",
+     0.042
+    ],
+    [
+     "AXON",
+     0.087
+    ]
+   ]
+  },
+  "Insurance - Diversified": {
+   "n": 11,
+   "fit": 0.216,
+   "weakest": [
+    [
+     "BNT",
+     -0.095
+    ],
+    [
+     "XZO",
+     0.038
+    ],
+    [
+     "AEG",
+     0.086
+    ]
+   ]
+  },
+  "Education & Training Services": {
+   "n": 14,
+   "fit": 0.216,
+   "weakest": [
+    [
+     "DAO",
+     0.014
+    ],
+    [
+     "TAL",
+     0.091
+    ],
+    [
+     "AFYA",
+     0.145
+    ]
+   ]
+  },
+  "Advertising Agencies": {
+   "n": 10,
+   "fit": 0.214,
+   "weakest": [
+    [
+     "APP",
+     0.127
+    ],
+    [
+     "ZD",
+     0.139
+    ],
+    [
+     "TTD",
+     0.197
+    ]
+   ]
+  },
+  "Specialty Industrial Machinery": {
+   "n": 50,
+   "fit": 0.213,
+   "weakest": [
+    [
+     "NWCL",
+     -0.049
+    ],
+    [
+     "OTIS",
+     0.003
+    ],
+    [
+     "SMR",
+     0.085
+    ]
+   ]
+  },
+  "Biotech: RNA Medicines": {
+   "n": 5,
+   "fit": 0.208,
+   "weakest": [
+    [
+     "ALNY",
+     0.151
+    ],
+    [
+     "SLN",
+     0.161
+    ],
+    [
+     "DYN",
+     0.218
+    ]
+   ]
+  },
+  "Restaurants": {
+   "n": 25,
+   "fit": 0.206,
+   "weakest": [
+    [
+     "ARCO",
+     0.016
+    ],
+    [
+     "CHA",
+     0.089
+    ],
+    [
+     "BH",
+     0.124
+    ]
+   ]
+  },
+  "Engineering & Construction": {
+   "n": 29,
+   "fit": 0.201,
+   "weakest": [
+    [
+     "EXPO",
+     -0.073
+    ],
+    [
+     "TTEK",
+     -0.038
+    ],
+    [
+     "KBR",
+     -0.014
+    ]
+   ]
+  },
+  "Department Stores": {
+   "n": 3,
+   "fit": 0.195,
+   "weakest": [
+    [
+     "PLBL",
+     0.01
+    ],
+    [
+     "M",
+     0.279
+    ],
+    [
+     "KSS",
+     0.294
+    ]
+   ]
+  },
+  "Real Estate - Development": {
+   "n": 4,
+   "fit": 0.191,
+   "weakest": [
+    [
+     "SKYH",
+     0.034
+    ],
+    [
+     "HHH",
+     0.135
+    ],
+    [
+     "CCS",
+     0.295
+    ]
+   ]
+  },
+  "Biotech: Neuro & Psychiatry": {
+   "n": 16,
+   "fit": 0.19,
+   "weakest": [
+    [
+     "KRSA",
+     0.028
+    ],
+    [
+     "HRMY",
+     0.151
+    ],
+    [
+     "XENE",
+     0.154
+    ]
+   ]
+  },
+  "Biotech: Royalties": {
+   "n": 5,
+   "fit": 0.189,
+   "weakest": [
+    [
+     "ANAB",
+     0.131
+    ],
+    [
+     "HALO",
+     0.167
+    ],
+    [
+     "LGND",
+     0.205
+    ]
+   ]
+  },
+  "Packaged Foods": {
+   "n": 30,
+   "fit": 0.188,
+   "weakest": [
+    [
+     "DAR",
+     0.009
+    ],
+    [
+     "HLF",
+     0.038
+    ],
+    [
+     "SENEB",
+     0.041
+    ]
+   ]
+  },
+  "Publishing": {
+   "n": 6,
+   "fit": 0.185,
+   "weakest": [
+    [
+     "SCHL",
+     0.12
+    ],
+    [
+     "WLYB",
+     0.135
+    ],
+    [
+     "NYT",
+     0.172
+    ]
+   ]
+  },
+  "Biotech: Oncology": {
+   "n": 31,
+   "fit": 0.185,
+   "weakest": [
+    [
+     "AAPG",
+     0.042
+    ],
+    [
+     "REPL",
+     0.061
+    ],
+    [
+     "COGT",
+     0.111
+    ]
+   ]
+  },
+  "Integrated Freight & Logistics": {
+   "n": 12,
+   "fit": 0.184,
+   "weakest": [
+    [
+     "ZTO",
+     0.012
+    ],
+    [
+     "PBI",
+     0.028
+    ],
+    [
+     "CYRX",
+     0.035
+    ]
+   ]
+  },
+  "Payments": {
+   "n": 21,
+   "fit": 0.184,
+   "weakest": [
+    [
+     "NYAX",
+     0.012
+    ],
+    [
+     "KSPI",
+     0.115
+    ],
+    [
+     "PAYS",
+     0.119
+    ]
+   ]
+  },
+  "Biotech: Rare Disease & Hematology": {
+   "n": 19,
+   "fit": 0.181,
+   "weakest": [
+    [
+     "DMRA",
+     0.073
+    ],
+    [
+     "PHAR",
+     0.122
+    ],
+    [
+     "INBX",
+     0.135
+    ]
+   ]
+  },
+  "Biotech: Obesity & Cardiometabolic": {
+   "n": 15,
+   "fit": 0.176,
+   "weakest": [
+    [
+     "CORT",
+     0.072
+    ],
+    [
+     "GPCR",
+     0.098
+    ],
+    [
+     "MNKD",
+     0.134
+    ]
+   ]
+  },
+  "Consumer Apps & Ride-Hailing": {
+   "n": 12,
+   "fit": 0.173,
+   "weakest": [
+    [
+     "NAVN",
+     0.113
+    ],
+    [
+     "YMM",
+     0.114
+    ],
+    [
+     "SRAD",
+     0.121
+    ]
+   ]
+  },
+  "Real Estate Services": {
+   "n": 14,
+   "fit": 0.169,
+   "weakest": [
+    [
+     "IRS",
+     -0.078
+    ],
+    [
+     "IHS",
+     -0.064
+    ],
+    [
+     "BEKE",
+     0.003
+    ]
+   ]
+  },
+  "Health Information Services": {
+   "n": 16,
+   "fit": 0.168,
+   "weakest": [
+    [
+     "BTSG",
+     0.004
+    ],
+    [
+     "HTFL",
+     0.094
+    ],
+    [
+     "GDRX",
+     0.113
+    ]
+   ]
+  },
+  "Closed-End & CLO Funds": {
+   "n": 11,
+   "fit": 0.168,
+   "weakest": [
+    [
+     "ASA",
+     0.087
+    ],
+    [
+     "GAB",
+     0.12
+    ],
+    [
+     "OXLC",
+     0.121
+    ]
+   ]
+  },
+  "Electronic Gaming & Multimedia": {
+   "n": 4,
+   "fit": 0.166,
+   "weakest": [
+    [
+     "NTES",
+     0.133
+    ],
+    [
+     "PLTK",
+     0.133
+    ],
+    [
+     "RBLX",
+     0.182
+    ]
+   ]
+  },
+  "Credit Services": {
+   "n": 26,
+   "fit": 0.145,
+   "weakest": [
+    [
+     "LU",
+     -0.006
+    ],
+    [
+     "WU",
+     0.045
+    ],
+    [
+     "FCFS",
+     0.075
+    ]
+   ]
+  },
+  "REIT - Specialty": {
+   "n": 15,
+   "fit": 0.144,
+   "weakest": [
+    [
+     "FRMI",
+     -0.033
+    ],
+    [
+     "UNIT",
+     0.011
+    ],
+    [
+     "OUT",
+     0.075
+    ]
+   ]
+  },
+  "Luxury Goods": {
+   "n": 6,
+   "fit": 0.144,
+   "weakest": [
+    [
+     "REAL",
+     0.098
+    ],
+    [
+     "LUXE",
+     0.101
+    ],
+    [
+     "SIG",
+     0.145
+    ]
+   ]
+  },
+  "Auto Manufacturers": {
+   "n": 14,
+   "fit": 0.141,
+   "weakest": [
+    [
+     "VFS",
+     0.052
+    ],
+    [
+     "PSNY",
+     0.076
+    ],
+    [
+     "CYD",
+     0.109
+    ]
+   ]
+  },
+  "Auto Parts": {
+   "n": 30,
+   "fit": 0.141,
+   "weakest": [
+    [
+     "ORLY",
+     -0.021
+    ],
+    [
+     "AZO",
+     -0.013
+    ],
+    [
+     "HSAI",
+     0.052
+    ]
+   ]
+  },
+  "Entertainment": {
+   "n": 30,
+   "fit": 0.138,
+   "weakest": [
+    [
+     "IQ",
+     0.014
+    ],
+    [
+     "SPHR",
+     0.051
+    ],
+    [
+     "CCZ",
+     0.06
+    ]
+   ]
+  },
+  "Internet Content & Information": {
+   "n": 9,
+   "fit": 0.135,
+   "weakest": [
+    [
+     "SPOT",
+     0.07
+    ],
+    [
+     "BMBL",
+     0.114
+    ],
+    [
+     "RUM",
+     0.119
+    ]
+   ]
+  },
+  "Industrial Distribution": {
+   "n": 17,
+   "fit": 0.134,
+   "weakest": [
+    [
+     "XMTR",
+     0.002
+    ],
+    [
+     "DSGR",
+     0.03
+    ],
+    [
+     "POOL",
+     0.044
+    ]
+   ]
+  },
+  "Personal Services": {
+   "n": 6,
+   "fit": 0.132,
+   "weakest": [
+    [
+     "ANDG",
+     0.078
+    ],
+    [
+     "FTDR",
+     0.079
+    ],
+    [
+     "ROL",
+     0.136
+    ]
+   ]
+  },
+  "Biotech: Other": {
+   "n": 6,
+   "fit": 0.131,
+   "weakest": [
+    [
+     "SLBT",
+     -0.015
+    ],
+    [
+     "ZLAB",
+     0.081
+    ],
+    [
+     "ARDX",
+     0.099
+    ]
+   ]
+  },
+  "Medical Instruments & Supplies": {
+   "n": 27,
+   "fit": 0.13,
+   "weakest": [
+    [
+     "STAA",
+     0.018
+    ],
+    [
+     "WRBY",
+     0.027
+    ],
+    [
+     "ATR",
+     0.065
+    ]
+   ]
+  },
+  "Biotech: Eye Disease": {
+   "n": 6,
+   "fit": 0.129,
+   "weakest": [
+    [
+     "KOD",
+     0.027
+    ],
+    [
+     "OCUL",
+     0.09
+    ],
+    [
+     "VRDN",
+     0.154
+    ]
+   ]
+  },
+  "Medical Care Facilities": {
+   "n": 31,
+   "fit": 0.128,
+   "weakest": [
+    [
+     "CMPS",
+     -0.048
+    ],
+    [
+     "AGL",
+     0.05
+    ],
+    [
+     "INNV",
+     0.055
+    ]
+   ]
+  },
+  "Rental & Leasing Services": {
+   "n": 15,
+   "fit": 0.125,
+   "weakest": [
+    [
+     "CAR",
+     -0.018
+    ],
+    [
+     "VSTS",
+     0.004
+    ],
+    [
+     "PRG",
+     0.068
+    ]
+   ]
+  },
+  "Medical Devices": {
+   "n": 50,
+   "fit": 0.124,
+   "weakest": [
+    [
+     "AHCO",
+     0.053
+    ],
+    [
+     "INMD",
+     0.056
+    ],
+    [
+     "PEN",
+     0.063
+    ]
+   ]
+  },
+  "Electronic Components": {
+   "n": 5,
+   "fit": 0.123,
+   "weakest": [
+    [
+     "OSIS",
+     0.065
+    ],
+    [
+     "DAKT",
+     0.104
+    ],
+    [
+     "RAL",
+     0.128
+    ]
+   ]
+  },
+  "Specialty Chemicals": {
+   "n": 39,
+   "fit": 0.12,
+   "weakest": [
+    [
+     "CLMT",
+     -0.037
+    ],
+    [
+     "SSL",
+     0.023
+    ],
+    [
+     "LWLG",
+     0.029
+    ]
+   ]
+  },
+  "PCs, Devices & Peripherals": {
+   "n": 7,
+   "fit": 0.117,
+   "weakest": [
+    [
+     "LPL",
+     0.026
+    ],
+    [
+     "CRCT",
+     0.034
+    ],
+    [
+     "SONY",
+     0.076
+    ]
+   ]
+  },
+  "Biotech: Cell Therapy": {
+   "n": 6,
+   "fit": 0.115,
+   "weakest": [
+    [
+     "VCEL",
+     0.066
+    ],
+    [
+     "MESO",
+     0.108
+    ],
+    [
+     "LEGN",
+     0.13
+    ]
+   ]
+  },
+  "Internet Retail": {
+   "n": 20,
+   "fit": 0.111,
+   "weakest": [
+    [
+     "LQDT",
+     0.008
+    ],
+    [
+     "HEPS",
+     0.04
+    ],
+    [
+     "CART",
+     0.076
+    ]
+   ]
+  },
+  "Specialty Retail": {
+   "n": 20,
+   "fit": 0.097,
+   "weakest": [
+    [
+     "MUSA",
+     0.007
+    ],
+    [
+     "CASY",
+     0.025
+    ],
+    [
+     "MNSO",
+     0.032
+    ]
+   ]
+  },
+  "Telecom Services": {
+   "n": 38,
+   "fit": 0.093,
+   "weakest": [
+    [
+     "ATEX",
+     -0.021
+    ],
+    [
+     "ECHO",
+     -0.009
+    ],
+    [
+     "KYIV",
+     -0.0
+    ]
+   ]
+  },
+  "Software: Other": {
+   "n": 14,
+   "fit": 0.089,
+   "weakest": [
+    [
+     "KC",
+     0.007
+    ],
+    [
+     "DBD",
+     0.011
+    ],
+    [
+     "NATL",
+     0.032
+    ]
+   ]
+  },
+  "Biotech: Radiopharma": {
+   "n": 3,
+   "fit": 0.088,
+   "weakest": [
+    [
+     "TLX",
+     0.058
+    ],
+    [
+     "AKTS",
+     0.07
+    ],
+    [
+     "DRTS",
+     0.134
+    ]
+   ]
+  },
+  "Leisure": {
+   "n": 12,
+   "fit": 0.085,
+   "weakest": [
+    [
+     "HAS",
+     0.014
+    ],
+    [
+     "PLNT",
+     0.028
+    ],
+    [
+     "OSW",
+     0.051
+    ]
+   ]
+  },
+  "Scientific & Technical Instruments": {
+   "n": 7,
+   "fit": 0.078,
+   "weakest": [
+    [
+     "ITRN",
+     -0.051
+    ],
+    [
+     "GRMN",
+     0.043
+    ],
+    [
+     "FTV",
+     0.062
+    ]
+   ]
+  },
+  "Information Technology Services": {
+   "n": 15,
+   "fit": 0.078,
+   "weakest": [
+    [
+     "MGRT",
+     -0.03
+    ],
+    [
+     "KEEL",
+     -0.017
+    ],
+    [
+     "CHRN",
+     -0.0
+    ]
+   ]
+  },
+  "Communication Equipment": {
+   "n": 6,
+   "fit": 0.072,
+   "weakest": [
+    [
+     "MSI",
+     -0.086
+    ],
+    [
+     "VISN",
+     0.074
+    ],
+    [
+     "ONDS",
+     0.098
+    ]
+   ]
+  },
+  "Drug Manufacturers - Specialty & Generic": {
+   "n": 33,
+   "fit": 0.065,
+   "weakest": [
+    [
+     "HCM",
+     0.004
+    ],
+    [
+     "HIMS",
+     0.01
+    ],
+    [
+     "RGC",
+     0.015
+    ]
+   ]
+  },
+  "Asset Management": {
+   "n": 3,
+   "fit": 0.057,
+   "weakest": [
+    [
+     "HASI",
+     -0.008
+    ],
+    [
+     "BUR",
+     0.083
+    ],
+    [
+     "RPC",
+     0.095
+    ]
+   ]
+  },
+  "Specialty Business Services": {
+   "n": 23,
+   "fit": 0.05,
+   "weakest": [
+    [
+     "AZZ",
+     -0.064
+    ],
+    [
+     "KODK",
+     -0.045
+    ],
+    [
+     "RHLD",
+     -0.044
+    ]
+   ]
+  },
+  "Security & Protection Services": {
+   "n": 9,
+   "fit": 0.044,
+   "weakest": [
+    [
+     "EVLV",
+     0.006
+    ],
+    [
+     "BCO",
+     0.018
+    ],
+    [
+     "ADT",
+     0.024
+    ]
+   ]
+  },
+  "Conglomerates": {
+   "n": 12,
+   "fit": 0.021,
+   "weakest": [
+    [
+     "CODI",
+     -0.021
+    ],
+    [
+     "VMI",
+     -0.007
+    ],
+    [
+     "GHC",
+     -0.005
+    ]
+   ]
+  },
+  "Capital Markets": {
+   "n": 4,
+   "fit": 0.015,
+   "weakest": [
+    [
+     "TOP",
+     -0.009
+    ],
+    [
+     "GOLD",
+     -0.001
+    ],
+    [
+     "XP",
+     0.023
+    ]
+   ]
+  },
+  "Financial Conglomerates": {
+   "n": 4,
+   "fit": -0.006,
+   "weakest": [
+    [
+     "HTH",
+     -0.045
+    ],
+    [
+     "FRHC",
+     -0.017
+    ],
+    [
+     "IX",
+     -0.005
+    ]
+   ]
+  }
+ },
+ "current_groups": {
+  "Hotel REITs": {
+   "n": 10,
+   "fit": 0.615
+  },
+  "Residential REITs": {
+   "n": 11,
+   "fit": 0.585
+  },
+  "Health Care REITs": {
+   "n": 13,
+   "fit": 0.556
+  },
+  "Retail REITs": {
+   "n": 21,
+   "fit": 0.541
+  },
+  "Gas Utilities": {
+   "n": 11,
+   "fit": 0.541
+  },
+  "Office REITs": {
+   "n": 7,
+   "fit": 0.489
+  },
+  "Water Utilities": {
+   "n": 8,
+   "fit": 0.459
+  },
+  "Airlines": {
+   "n": 16,
+   "fit": 0.455
+  },
+  "Semiconductors & Chip Equipment": {
+   "n": 75,
+   "fit": 0.441
+  },
+  "Mortgage REITs": {
+   "n": 11,
+   "fit": 0.426
+  },
+  "Shipping": {
+   "n": 21,
+   "fit": 0.398
+  },
+  "Mining & Metals": {
+   "n": 98,
+   "fit": 0.395
+  },
+  "Electric Utilities": {
+   "n": 39,
+   "fit": 0.391
+  },
+  "Oil, Gas & Fuels": {
+   "n": 109,
+   "fit": 0.385
+  },
+  "Oilfield Services & Equipment": {
+   "n": 43,
+   "fit": 0.379
+  },
+  "Industrial REITs": {
+   "n": 8,
+   "fit": 0.372
+  },
+  "Paper & Wood Products": {
+   "n": 6,
+   "fit": 0.365
+  },
+  "Multi-Utilities": {
+   "n": 14,
+   "fit": 0.362
+  },
+  "Life Science Tools": {
+   "n": 18,
+   "fit": 0.357
+  },
+  "Power Producers & Renewables": {
+   "n": 9,
+   "fit": 0.346
+  },
+  "Electrical Equipment": {
+   "n": 33,
+   "fit": 0.326
+  },
+  "Construction & Engineering": {
+   "n": 26,
+   "fit": 0.325
+  },
+  "Household Durables": {
+   "n": 25,
+   "fit": 0.321
+  },
+  "Banks": {
+   "n": 204,
+   "fit": 0.317
+  },
+  "Transport Infrastructure": {
+   "n": 6,
+   "fit": 0.304
+  },
+  "Household Products": {
+   "n": 14,
+   "fit": 0.301
+  },
+  "Tobacco": {
+   "n": 6,
+   "fit": 0.283
+  },
+  "Building Products": {
+   "n": 26,
+   "fit": 0.275
+  },
+  "Insurance": {
+   "n": 91,
+   "fit": 0.27
+  },
+  "Building Materials": {
+   "n": 13,
+   "fit": 0.263
+  },
+  "Packaging": {
+   "n": 17,
+   "fit": 0.25
+  },
+  "Electronic Components & Instruments": {
+   "n": 49,
+   "fit": 0.243
+  },
+  "Diversified REITs": {
+   "n": 19,
+   "fit": 0.236
+  },
+  "Rail & Road Transport": {
+   "n": 23,
+   "fit": 0.235
+  },
+  "Apparel & Luxury Goods": {
+   "n": 27,
+   "fit": 0.231
+  },
+  "Networking & Communications Equipment": {
+   "n": 23,
+   "fit": 0.222
+  },
+  "Aerospace & Defense": {
+   "n": 52,
+   "fit": 0.217
+  },
+  "Grocery & Drug Retail": {
+   "n": 19,
+   "fit": 0.215
+  },
+  "Machinery": {
+   "n": 70,
+   "fit": 0.214
+  },
+  "Beverages": {
+   "n": 19,
+   "fit": 0.212
+  },
+  "Software": {
+   "n": 200,
+   "fit": 0.209
+  },
+  "Auto Parts": {
+   "n": 23,
+   "fit": 0.202
+  },
+  "Freight & Logistics": {
+   "n": 10,
+   "fit": 0.2
+  },
+  "Consumer Services": {
+   "n": 21,
+   "fit": 0.199
+  },
+  "Professional Services": {
+   "n": 41,
+   "fit": 0.197
+  },
+  "Food Products": {
+   "n": 39,
+   "fit": 0.194
+  },
+  "Computers & Hardware": {
+   "n": 17,
+   "fit": 0.179
+  },
+  "Personal Care": {
+   "n": 8,
+   "fit": 0.177
+  },
+  "Specialty REITs": {
+   "n": 17,
+   "fit": 0.169
+  },
+  "Health Care Technology": {
+   "n": 13,
+   "fit": 0.166
+  },
+  "IT Services": {
+   "n": 34,
+   "fit": 0.161
+  },
+  "Internet Media & Services": {
+   "n": 27,
+   "fit": 0.159
+  },
+  "Industrial Distribution & Rental": {
+   "n": 23,
+   "fit": 0.154
+  },
+  "Consumer Lending": {
+   "n": 36,
+   "fit": 0.144
+  },
+  "Biotechnology": {
+   "n": 204,
+   "fit": 0.143
+  },
+  "Mortgage Finance": {
+   "n": 7,
+   "fit": 0.141
+  },
+  "Chemicals": {
+   "n": 49,
+   "fit": 0.141
+  },
+  "Media": {
+   "n": 25,
+   "fit": 0.134
+  },
+  "Pharmaceuticals": {
+   "n": 37,
+   "fit": 0.131
+  },
+  "Payments & Specialty Finance": {
+   "n": 19,
+   "fit": 0.129
+  },
+  "Medical Devices & Supplies": {
+   "n": 68,
+   "fit": 0.127
+  },
+  "Real Estate Development & Services": {
+   "n": 19,
+   "fit": 0.121
+  },
+  "Specialty Retail": {
+   "n": 53,
+   "fit": 0.113
+  },
+  "Capital Markets": {
+   "n": 121,
+   "fit": 0.112
+  },
+  "Entertainment": {
+   "n": 27,
+   "fit": 0.109
+  },
+  "Automobiles": {
+   "n": 23,
+   "fit": 0.099
+  },
+  "Health Care Providers": {
+   "n": 53,
+   "fit": 0.097
+  },
+  "Hospitality & Leisure": {
+   "n": 81,
+   "fit": 0.096
+  },
+  "General & Online Retail": {
+   "n": 24,
+   "fit": 0.083
+  },
+  "Fixed & Integrated Telecom": {
+   "n": 37,
+   "fit": 0.079
+  },
+  "Leisure Products": {
+   "n": 8,
+   "fit": 0.054
+  },
+  "Commercial Services": {
+   "n": 31,
+   "fit": 0.051
+  },
+  "Conglomerates": {
+   "n": 7,
+   "fit": 0.026
+  }
+ },
+ "loose_groups_first_year": [
+  "Advertising Agencies",
+  "Aerospace & Defense",
+  "Asset Management",
+  "Auto Manufacturers",
+  "Auto Parts",
+  "Biotech: Cell Therapy",
+  "Biotech: Eye Disease",
+  "Biotech: Immunology & Inflammation",
+  "Biotech: Large-Cap Commercial",
+  "Biotech: Neuro & Psychiatry",
+  "Biotech: Obesity & Cardiometabolic",
+  "Biotech: Oncology",
+  "Biotech: Other",
+  "Biotech: Radiopharma",
+  "Biotech: Rare Disease & Hematology",
+  "Biotech: Royalties",
+  "Broadcasting",
+  "Building Materials",
+  "Building Products & Equipment",
+  "Capital Markets",
+  "Communication Equipment",
+  "Conglomerates",
+  "Consulting Services",
+  "Consumer Apps & Ride-Hailing",
+  "Consumer Fintech",
+  "Credit Services",
+  "Crypto Platforms",
+  "Crypto Treasuries",
+  "Department Stores",
+  "Diagnostics & Research",
+  "Drug Manufacturers - Specialty & Generic",
+  "Education & Training Services",
+  "Electrical Equipment & Parts",
+  "Electronic Components",
+  "Electronic Gaming & Multimedia",
+  "Engineering & Construction",
+  "Entertainment",
+  "Financial Conglomerates",
+  "Food Distribution",
+  "Gambling",
+  "Health Information Services",
+  "Household & Personal Products",
+  "IT Consulting & Outsourcing",
+  "Industrial Distribution",
+  "Information Technology Services",
+  "Integrated Freight & Logistics",
+  "Internet Content & Information",
+  "Internet Retail",
+  "Leisure",
+  "Luxury Goods",
+  "Medical Care Facilities",
+  "Medical Devices",
+  "Medical Instruments & Supplies",
+  "Metal Fabrication",
+  "Networking Equipment",
+  "Online Brokers",
+  "Online Marketplaces & Listings",
+  "Other Industrial Metals & Mining",
+  "PCs, Devices & Peripherals",
+  "Packaging & Containers",
+  "Payments",
+  "Publishing",
+  "Railroads",
+  "Real Estate - Development",
+  "Real Estate Services",
+  "Rental & Leasing Services",
+  "Restaurants",
+  "Scientific & Technical Instruments",
+  "Security & Protection Services",
+  "Semis: Foundry",
+  "Software: Cybersecurity",
+  "Software: Design & Engineering",
+  "Software: Finance & Banking",
+  "Software: Marketing & Ad Tech",
+  "Software: Other",
+  "Software: Vertical & Industry",
+  "Software: Web Presence & Domains",
+  "Specialty Business Services",
+  "Specialty Chemicals",
+  "Specialty Industrial Machinery",
+  "Specialty Retail",
+  "Staffing & Employment Services",
+  "Steel",
+  "Telecom Services",
+  "Test, Measurement & Sensors",
+  "Tools & Accessories",
+  "Traditional Asset Managers",
+  "eVTOL & Air Mobility"
+ ]
+}
