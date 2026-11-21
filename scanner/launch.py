@@ -2818,6 +2818,32 @@ def trend_tag_close(a, i):
     return "FULL TREND" if full and p > e21 else "NEW TREND" if p > e21 and p > e50 else "CAUTION" if stack else "NO TREND"
 
 
+def write_dip(path, A, cal):
+    """setups/dip.json: what the Watchlist's DIP list needs for every stock of the scan (the user, Nov 21 2026: "10 EMA above
+    21 above 50, and a new 20-day high in the last 10 days; wait 5-9 trading days after that high for a dip; the close is the
+    lowest of 7 days but still above the 21 EMA"; "from highest, meaning wick"; "whole market plus switch", "numbers from my
+    morning box"). A row: [sessions since the highest HIGH of the last 21 sessions (0 = today, the newest on a tie), that high,
+    its date, 1 when that day was a new 20-day high (over the highs of the 20 sessions before it), the last 15 closes].
+    The page (docs/index.html dipRows) does the rest with the live price: the days of dip, the lowest close of N, the 21 EMA,
+    the depth and the liquidity numbers. Nothing else reads this file"""
+    today, rows = cal[-1], {}
+    for s, a in A.items():
+        st = a.st
+        i = len(st.dates) - 1
+        if st.dates[i] != today or i < 21:
+            continue
+        w = st.h[i - 20:i + 1]
+        ago = int(np.argmax(w[::-1]))                    # the newest day on a tie
+        m = i - ago
+        hi = float(st.h[m])
+        strict = int(m >= 20 and hi > float(st.h[m - 20:m].max()))
+        rows[s] = [ago, fnum(hi, 4), st.dates[m], strict, [fnum(float(x), 4) for x in st.c[max(0, i - 14):i + 1]]]
+    with open(path, "w") as f:
+        json.dump(dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rows=rows),
+                  f, separators=(",", ":"))
+    print(f"dip: {len(rows)} stocks, {sum(1 for r in rows.values() if r[3] and 5 <= r[0] <= 9)} with a 20-day high 5-9 sessions ago")
+
+
 def write_resistance(path, A, cal, stocks_path, list_syms, morning_path):
     """setups/resistance.json: every current stock's levels for tomorrow's alerts, and tonight's report of the levels the
     day broke, closed inside, or tested and closed back under (the user, Nov 21 2026: "i dont need inside alerts for morning
@@ -3379,6 +3405,10 @@ def main():
                              os.path.join(os.path.dirname(HERE), "alerts", "morning.json"))
         except Exception as e:                   # never at the cost of the launch list
             print("resistance levels failed:", repr(e))
+        try:                                     # the DIP list's data (the Watchlist tab): its own file, read by the page only
+            write_dip(os.path.join(os.path.dirname(os.path.abspath(a.out)), "dip.json"), A, cal)
+        except Exception as e:
+            print("dip data failed:", repr(e))
     if a.backtest:
         try:
             srows = json.load(open(a.stocks)) if a.stocks else None

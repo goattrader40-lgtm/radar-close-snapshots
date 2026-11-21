@@ -854,7 +854,7 @@
         <span class="tgr-lbl" id="wl-time">—</span>
       </div>
       <div class="tgr-bar">
-        <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button><button data-v="START DAYS" aria-pressed="false" title="The day a stock turns up out of a downtrend (its own rules; it may still be under the 50 EMA). Moved here from the Launches tab on Nov 17 2026">START DAYS</button><button data-v="TREND" aria-pressed="false" title="Every name on the four lists and on Launches in a trend now: Up, Turn up, Reclaim or Resting (live in the session)">TREND</button></span>
+        <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button><button data-v="START DAYS" aria-pressed="false" title="The day a stock turns up out of a downtrend (its own rules; it may still be under the 50 EMA). Moved here from the Launches tab on Nov 17 2026">START DAYS</button><button data-v="TREND" aria-pressed="false" title="Every name on the four lists and on Launches in a trend now: Up, Turn up, Reclaim or Resting (live in the session)">TREND</button><button data-v="DIP" aria-pressed="false" title="Dip to the 7-day low: 10 EMA over the 21 over the 50, a new 20-day high a few days ago, and now a close that is the lowest of the last 7 days but still above the 21 EMA. The whole market or only your lists; your own numbers">DIP</button></span>
         <label class="tgr-f"><span class="tgr-lbl" id="wl-sec-lbl">Section</span> <select class="tgr-search" id="wl-sec" aria-label="Section"></select></label>
         <input class="tgr-search" id="wl-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
         <span class="tgr-flt" data-f="wl"></span>
@@ -949,6 +949,53 @@
             <th class="num"><button class="tgr-th" data-sort="adr_pct">ADR</button></th>
             <th><button class="tgr-th" data-sort="on" title="Whether the stock is on Launches already">On</button></th>
             <th><button class="tgr-th" data-sort="group">Theme</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tgr-card" id="dip-card" hidden>
+      <div class="tgr-cardhead">
+        <h2>Dip to the 7-day low</h2>
+        <span class="tgr-lbl" id="dip-time">—</span>
+        <button class="tgr-lite" id="dip-dl" type="button" title="Saves the rows on screen as a file for TradingView: Watchlist menu → Import list">Download for TradingView</button>
+      </div>
+      <div class="tgr-bar" id="dip-set">
+        <label class="tgr-f" title="Always on: the 10 EMA over the 21 EMA over the 50 EMA, and the price over the 21 EMA (live in the session)"><input type="checkbox" checked disabled> 10 &gt; 21 &gt; 50 EMA, price over the 21 EMA</label>
+        <label class="tgr-f" title="The high = the highest high (the wick) of the last 21 sessions, and that day had to be a new 20-day high: over the highs of the 20 sessions before it. Empty = any day of the last 21 sessions">New 20-day high within the last <input class="tgr-num" type="number" inputmode="numeric" step="1" min="0" max="21" data-dip="hi_days" aria-label="The 20-day high was made within this many sessions"> days</label>
+        <label class="tgr-f" title="Sessions since that high (the high day = 0). Empty = no limit on that side">Days of dip from <input class="tgr-num" type="number" inputmode="numeric" step="1" min="0" max="21" data-dip="dip_from" aria-label="Days of dip, at least"> to <input class="tgr-num" type="number" inputmode="numeric" step="1" min="0" max="21" data-dip="dip_to" aria-label="Days of dip, at most"></label>
+        <label class="tgr-f" title="The close (the live price during the session) is the lowest close of this many sessions, today included. Empty = off">Lowest close of <input class="tgr-num" type="number" inputmode="numeric" step="1" min="2" max="15" data-dip="low_n" aria-label="The close is the lowest of this many sessions"> days</label>
+        <label class="tgr-f" title="How far the price is under that high, at most. Empty = no limit">Depth ≤ <input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" max="100" data-dip="depth" aria-label="Maximum depth under the high, %"> %</label>
+      </div>
+      <div class="tgr-bar" id="dip-liq">
+        <label class="tgr-f">Price ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="1" min="0" data-dip="price" aria-label="Minimum price, dollars"></label>
+        <label class="tgr-f">Mkt cap ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="0.1" min="0" data-dip="mcap_b" aria-label="Minimum market cap, $ billions"> B</label>
+        <label class="tgr-f">Avg vol 20D ≥ <input class="tgr-num" type="number" inputmode="decimal" step="50" min="0" data-dip="avgvol_k" aria-label="Minimum 20-day average volume, thousands of shares"> K</label>
+        <label class="tgr-f">$ vol 20D ≥ $<input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-dip="dvol_m" aria-label="Minimum 20-day average $ volume, millions"> M</label>
+        <label class="tgr-f">ADR ≥ <input class="tgr-num" type="number" inputmode="decimal" step="0.5" min="0" max="50" data-dip="adr" aria-label="Minimum ADR, %"> %</label>
+        <label class="tgr-f">52W low ≥ <input class="tgr-num" type="number" inputmode="decimal" step="5" min="0" data-dip="low52" aria-label="Price at least this % over the 52-week low"> % below price</label>
+        <label class="tgr-f" title="Only the names on Launches (with its 50 EMA undercut tab), Launch laggards, 3-SETUPS, 2-POOL, 1-UPDAY, 1-EP/GAP and Start days"><input type="checkbox" data-dip="lists_only"> Only my lists</label>
+        <button class="tgr-lite" id="dip-reset" type="button" title="Back to your rule (10 / 5 to 9 / 7 / 25%) and to the 📈 Morning breakouts box's price, market cap, volume, ADR and 52-week-low numbers">Reset</button>
+      </div>
+      <p class="tgr-note" id="dip-note"></p>
+      <details class="tgr-legend tgr-more" data-key="dip"><summary>What this list is</summary><p class="tgr-note">Your pullback rule (Nov 21 2026): a stock in trend (10 EMA above the 21 above the 50) that made a new 20-day high a few days ago, has dipped for 5 to 9 sessions, and now closes at the lowest close of the last 7 days while still above the 21 EMA. The high is the highest high (the wick) of the last 21 sessions, and its day must have been a real new 20-day high (over the highs of the 20 sessions before it), with no higher high since. Days of dip = sessions since that high. Depth = how far the price is under that high. During the session everything reads the live price (the EMAs move with it), so near the close the list shows the stocks about to close at their 7-day low; after the evening scan (about 4:30 PM ET) it is the final list of that close. The search covers every stock the evening scan reads (the whole market but the $2T+ stocks), or only your lists. The price, market cap, volume, ADR and 52-week-low numbers start as the ones of your 📈 Morning breakouts box; change any number here (kept in this browser), an empty box turns that test off, Reset puts them back. No alerts, no effect on Launches or the other lists.</p></details>
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="dip-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th class="num"><button class="tgr-th" data-sort="px" title="Live during market hours, else the last close">Price</button></th>
+            <th class="num"><button class="tgr-th" data-sort="chg" title="Today's change (live in the session)">Day</button></th>
+            <th class="num"><button class="tgr-th" data-sort="hi" title="The highest high (wick) of the last 21 sessions, a new 20-day high on its day">20-day high</button></th>
+            <th><button class="tgr-th" data-sort="hi_date">High day</button></th>
+            <th class="num"><button class="tgr-th" data-sort="ago" title="Sessions since that high">Days of dip</button></th>
+            <th class="num"><button class="tgr-th" data-sort="depth" title="The price vs that high">Depth</button></th>
+            <th class="num"><button class="tgr-th" data-sort="low_n" title="The close (live price) is the lowest close of this many sessions, today included">Lowest close of</button></th>
+            <th class="num"><button class="tgr-th" data-sort="vs21" title="The price vs the 21-day EMA (live in the session)">vs 21 EMA</button></th>
+            <th class="num"><button class="tgr-th" data-sort="adr">ADR</button></th>
+            <th class="num"><button class="tgr-th" data-sort="mcap" title="Market cap, $ billions">Mkt cap $B</button></th>
+            <th class="num c2"><button class="tgr-th" data-sort="dvol" title="20-day average $ volume, millions">$ vol $M</button></th>
+            <th><button class="tgr-th" data-sort="on" title="Which of your lists it is on">On</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="group">Theme / industry</button></th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -3463,22 +3510,137 @@ defCalc('industry_perf', {
       stb.append(tr);
     });
   };
+  /* DIP: the user's pullback screen as a list of its own on the Watchlist tab (Nov 21 2026: "10 EMA above 21 above 50, and
+     a new 20-day high in the last 10 days; wait 5-9 trading days after that high for a dip; the close is the lowest of 7
+     days but still above the 21 EMA"; "from highest, meaning wick"; "whole market plus switch"; "i want numbers from my
+     morning box"; "i dont want it to be deeper than 25%"). setups/dip.json (the evening scan, scanner/launch.py write_dip)
+     gives each stock [sessions since the highest high of the last 21 sessions, the high, its date, 1 = a new 20-day high
+     on its day, the last 15 closes]; the rest is read here with the live price. A session newer than the file (the live
+     session, or a newer close in stocks.json) counts as one more day: the price is that day's close so far.
+     Settings: the rule's numbers and the liquidity numbers, kept in this browser; the liquidity ones start as the 📈
+     Morning breakouts box's saved numbers. An empty box = that test off. Its own table: no alerts, no other list reads it */
+  const DIPK = 'radar-dip', DIP_RULE = { hi_days: 10, dip_from: 5, dip_to: 9, low_n: 7, depth: 25, lists_only: false }, DIP_LIQ = ['price', 'mcap_b', 'avgvol_k', 'dvol_m', 'adr', 'low52'];
+  let DIP = null, DIPat = 0, DIPbusy = false, DIPerr = false;
+  const dipMine = () => { try { const o = JSON.parse(localStorage.getItem(DIPK) || '{}'); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; } catch (e) { return {}; } };
+  const dipSet = () => {
+    const m = withI(MBI[0], mboSaved), o = Object.assign({}, DIP_RULE); DIP_LIQ.forEach((k) => { o[k] = m[k] === undefined ? null : m[k]; });
+    const mine = dipMine();
+    Object.keys(o).forEach((k) => { if (!(k in mine)) return; const v = mine[k]; if (k === 'lists_only') { if (typeof v === 'boolean') o[k] = v; } else if (v === null || (Number.isFinite(Number(v)) && Number(v) >= 0)) o[k] = v === null ? null : Number(v); });
+    return o;
+  };
+  const dipLoad = () => {       /* the file, read again at most every 5 minutes while the list is open (the evening scan rewrites it) */
+    if (DIPbusy || Date.now() - DIPat < 5 * 60 * 1000) return;
+    DIPbusy = true; DIPat = Date.now();
+    getMain('setups/dip.json').then((d) => { const was = DIP; DIP = d && d.rows ? d : DIP; DIPerr = !(d && d.rows); DIPbusy = false; if (S.wl === 'DIP' && (DIP !== was || DIPerr)) draw(); })
+      .catch(() => { DIPbusy = false; DIPerr = true; if (S.wl === 'DIP') draw(); });
+  };
+  /* the names on your lists: Launches (with the 50 EMA undercut tab), Launch laggards, the Watchlist's lists, Start days */
+  const dipLists = () => {
+    const m = new Map(), add = (s, n) => { const a = m.get(s) || []; if (!a.includes(n)) a.push(n); m.set(s, a); };
+    const ld = LDOC();
+    if (ld) { (ld.launches || []).concat(ld.ema50_undercut || []).forEach((r) => add(r.symbol, 'Launches')); (ld.laggards || []).forEach((r) => add(r.symbol, 'Laggards')); (ld.start_days || []).forEach((r) => add(r.symbol, 'Start days')); }
+    const doc = st('setups').status === 'ok' ? st('setups').data : null;
+    Object.entries((doc && doc.lists) || {}).forEach(([ln, rows]) => (rows || []).forEach((r) => { if (r && r.symbol) add(r.symbol, ln); }));
+    return m;
+  };
+  /* every stock of the file that passes the settings now: [rows, how many were searched, live (the price is a newer session's)] */
+  const dipRows = (C) => {
+    if (!DIP || !DIP.rows) return [[], 0, false];
+    const b = rowsOf('build')[0], cur = LIVE_ON && LIVE ? LIVE.session : b ? b.asof : null, live = !!(cur && String(cur) > String(DIP.date));
+    const lists = dipLists(), out = []; let n = 0;
+    const lo = (x) => x === null || x === undefined || x === '';
+    Object.entries(DIP.rows).forEach(([s, d]) => {
+      const r = SK(s); if (!r || r.no_new_price) return;
+      const p = num(r.price); if (!p) return;
+      if (C.lists_only && !lists.has(s)) return;
+      if (!lo(C.price) && p < C.price) return;
+      if (!lo(C.mcap_b) && num(r.mcap_b) !== null && r.mcap_b < C.mcap_b) return;
+      if (!lo(C.avgvol_k) && num(r.avg_vol_20) !== null && r.avg_vol_20 < C.avgvol_k * 1000) return;
+      if (!lo(C.dvol_m) && num(r.dvol_20_m) !== null && r.dvol_20_m < C.dvol_m) return;
+      if (!lo(C.adr) && num(r.adr_20) !== null && r.adr_20 < C.adr) return;
+      if (!lo(C.low52) && num(r.low_52w) && p < r.low_52w * (1 + C.low52 / 100)) return;
+      n++;
+      const x = trendOf(s); if (!x || !x.t || x.t.slice(1, 4).some((v) => v === null || v === undefined)) return;
+      const [, e10, e21, e50] = x.t;
+      if (!(e10 > e21 && e21 > e50 && p > e21)) return;
+      let [ago, hi, hd, strict, cl] = d; cl = (cl || []).filter((v) => v !== null);
+      if (!strict || !hi || !cl.length) return;
+      if (live) { if (p > hi) return; ago += 1; }                      /* over the high today = a new high, no dip */
+      if (ago > 20) return;                                            /* the high is out of the last 21 sessions */
+      if (!lo(C.hi_days) && ago > C.hi_days) return;
+      if (!lo(C.dip_from) && ago < C.dip_from) return;
+      if (!lo(C.dip_to) && ago > C.dip_to) return;
+      const depth = Math.round((p / hi - 1) * 1000) / 10;
+      if (!lo(C.depth) && -depth > C.depth) return;
+      /* the close is the lowest close of how many sessions, today included (15 = 15 or more) */
+      const last = live ? p : cl[cl.length - 1], prev = live ? cl : cl.slice(0, -1);
+      let k = 1; for (let i = prev.length - 1; i >= 0 && last <= prev[i]; i--) k++;
+      if (!lo(C.low_n) && k < C.low_n) return;
+      const on = lists.get(s) || [];
+      out.push({ symbol: s, tv: r.tv_symbol, px: p, chg: num(r.chg_1d), hi, hi_date: hd, ago, depth, low_n: k, vs21: Math.round((p / e21 - 1) * 1000) / 10, adr: num(r.adr_20), mcap: num(r.mcap_b), dvol: num(r.dvol_20_m),
+        on: on.join(', '), group: String(r.themes || '').split(' | ').filter(Boolean)[0] || r.industry_detail || r.industry || '' });
+    });
+    return [out, n, live];
+  };
+  const drawDip = (lq) => {
+    dipLoad();
+    const C = dipSet(), T = $('#dip-table'), tb = T.querySelector('tbody'); tb.replaceChildren();
+    document.querySelectorAll('#dip-card [data-dip]').forEach((el) => { if (el === document.activeElement) return; if (el.type === 'checkbox') el.checked = !!C[el.dataset.dip]; else el.value = C[el.dataset.dip] === null || C[el.dataset.dip] === undefined ? '' : String(C[el.dataset.dip]); });
+    $('#dip-reset').hidden = !Object.keys(dipMine()).length;
+    const [all, n, live] = dipRows(C), rows = all.filter((r) => !lq || r.symbol.includes(lq));
+    const b = rowsOf('build')[0];
+    $('#dip-time').textContent = !DIP ? '—' : live ? (LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : 'The ' + (b ? fDate(b.asof) : 'last') + ' close') + ' · highs and closes to ' + fDate(DIP.date) : 'After the ' + fDate(DIP.date) + ' close';
+    $('#dip-note').textContent = !DIP ? (DIPerr ? 'No data yet: the evening scan writes it after the close (about 4:30 PM ET).' : 'Loading…')
+      : rows.length + ' stock' + (rows.length === 1 ? '' : 's') + ' pass' + (rows.length === 1 ? 'es' : '') + (lq ? ' with "' + lq + '"' : '') + ', of ' + n + ' that meet the price, size and volume numbers' + (C.lists_only ? ' on your lists' : ' in the whole market') + '.' +
+        (live ? ' The price is today\'s: a stock shows while it trades at its lowest close of ' + (C.low_n || '—') + ' days; the close decides.' : '');
+    sortRows(T, rows, { key: 'depth', dir: -1 }, ['symbol', 'hi_date', 'on', 'group'], '');
+    S.dipShown = rows;
+    if (DIP && !rows.length) noRows(tb, 14, lq ? 'No "' + lq + '" in this list.' : 'Nothing passes these numbers now.');
+    rows.forEach((r) => {
+      const tr = h('tr'), key = tkCell(r.symbol, r.tv);
+      wlTags(key, r.symbol);
+      tr.append(key, h('td', 'num', fPrice(r.px)), pctCell(r.chg, 0), h('td', 'num', fPrice(r.hi)), h('td', 'nw', fDate(r.hi_date).replace(/, \d{4}$/, '')),
+        h('td', 'num', r.ago + 'd'), h('td', 'num tgr-dn', p1(r.depth, true)), h('td', 'num', (r.low_n >= 15 ? '15+' : r.low_n) + ' days'), h('td', 'num ' + tone(r.vs21), p1(r.vs21, true)),
+        h('td', 'num', r.adr === null ? '—' : r.adr.toFixed(1) + '%'), h('td', 'num', fCap(r.mcap)), h('td', 'num c2', r.dvol === null ? '—' : fDv(r.dvol)), h('td', 'nw', r.on || '—'), h('td', 'c2', r.group || '—'));
+      tb.append(tr);
+    });
+  };
+  document.querySelectorAll('#dip-card [data-dip]').forEach((el) => el.addEventListener('change', () => {
+    const k = el.dataset.dip, mine = dipMine();
+    if (el.type === 'checkbox') mine[k] = el.checked;
+    else { const v = el.value.trim() === '' ? null : Number(el.value); if (v !== null && (!Number.isFinite(v) || v < 0)) { el.classList.add('bad'); return; } el.classList.remove('bad'); mine[k] = v; }
+    try { localStorage.setItem(DIPK, JSON.stringify(mine)); } catch (e) { /* private window: this visit only */ }
+    draw();
+  }));
+  $('#dip-reset').addEventListener('click', () => { try { localStorage.removeItem(DIPK); } catch (e) { /* ignore */ } document.querySelectorAll('#dip-card .tgr-num.bad').forEach((el) => el.classList.remove('bad')); draw(); });
+  $('#dip-dl').addEventListener('click', () => {
+    const rows = S.dipShown || [];
+    if (!rows.length) { toast('No rows to save.'); return; }
+    const txt = '###Dip to the 7-day low\n' + [...new Set(rows.map((r) => r.tv || r.symbol))].join('\n') + '\n';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
+    a.download = 'Dip ' + todayNY() + '.txt';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
   const drawWatchlist = (symMap) => {
     drawAlog(loadDay('log', '[]'));
     const table = $('#wl-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
     setState('wl-table', ['setups']);
     /* START DAYS: its own table (below) in place of the list's table, rules and filters; the ticker box filters it */
-    const SD = S.wl === 'START DAYS';
-    [$('#wl-note'), $('#wl-rules-box'), $('#wl-legend'), $('#wl-about-box'), table.closest('.tgr-scroll'), $('#wl-sec').closest('label'), document.querySelector('.tgr-flt[data-f="wl"]'), $('#wl-dl')].forEach((el) => { if (el) el.hidden = SD; });
+    const SD = S.wl === 'START DAYS', DP = S.wl === 'DIP';     /* DIP: its own card too (below) */
+    [$('#wl-note'), $('#wl-rules-box'), $('#wl-legend'), $('#wl-about-box'), table.closest('.tgr-scroll'), $('#wl-sec').closest('label'), document.querySelector('.tgr-flt[data-f="wl"]'), $('#wl-dl')].forEach((el) => { if (el) el.hidden = SD || DP; });
     $('#ln-sd-card').hidden = !SD;
     if (SD) drawStartDays(symMap, S.wlq.toUpperCase());
+    $('#dip-card').hidden = !DP;
+    if (DP) drawDip(S.wlq.toUpperCase());
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
     WLD = doc ? doc.date : null;
     const all = wlRows(symMap);
     /* today's triggers on a read from an earlier close: a 3-SETUPS row holding one moves to the triggered part */
     const LT = WLD && WLD < todayNY() ? liveTrigs() : new Map();
     all.forEach((r) => { const ts = LT.get(r.symbol); r.lt = ts || null; if (S.wl === '3-SETUPS' && ts && ts.some((t) => !t.lost)) r.section = 'Triggered today'; });
-    document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = b.dataset.v === 'START DAYS' ? sdCount() : b.dataset.v === 'TREND' ? (doc ? (S.wl === 'TREND' ? all.length : trendSrc(doc).length) : null) : doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
+    document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = b.dataset.v === 'DIP' ? (DIP && S.wl === 'DIP' ? (S.dipShown || []).length : null) : b.dataset.v === 'START DAYS' ? sdCount() : b.dataset.v === 'TREND' ? (doc ? (S.wl === 'TREND' ? all.length : trendSrc(doc).length) : null) : doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
     $('#wl-time').textContent = doc ? 'Scan of the ' + fDate(doc.date) + ' close' : st('setups').status === 'error' ? 'Could not load the lists' : '—';
     const rules = wlRules(S.wl, doc && doc.settings), rbox = $('#wl-rules');
     $('#wl-rules-sum').textContent = 'The rules of ' + S.wl;
