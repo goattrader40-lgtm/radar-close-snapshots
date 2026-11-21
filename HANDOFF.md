@@ -49,6 +49,45 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of a chat session outside the Radar sessions (Fri Nov 20 2026 ~10:40 AM - 9:20 PM ET; session_01PkbDanJN5CDcjcEmx8eMXh)
+
+- **LIVE (the user's "go ahead ok others as well, as long as they meet liquidity requirement", Fri Nov 20 2026 ~9:10 PM ET, merge of
+  test/theme-business): themes by business line.** The user (the IT Services & Consulting table, ACN INFY CTSH BR TYL IT EPAM
+  G EXLS DOX KD DXC): "they cant be in same theme ... maybe they are in different line of business and this pile up not
+  accurate"; "its not only about that one, other themes might have issues"; "you would move them to correct themes right?".
+  1. radar/pipeline.py: an automatic add now also needs the business line (base_group: the industry groups' lines) of one of
+     the theme's core stocks. One that fails for its best-fitting theme joins the theme of its own line it tracks best, by
+     the same tests; with none it stays in its industry group / an automatic group. Hand-approved names (theme_adds.json
+     "adds") pass for their theme. New theme_adds.json "keep": 27 names the user kept under another label (13 smaller regional
+     banks; WK VERX BL NCNO BILL OTEX in Enterprise SaaS; VZLA SSMR; MBC ALLE; KR; POOL SITE; SNN): they pass the line test
+     for that theme only and still need 0.6+, the sector and the liquidity floors.
+  2. Gartner (IT) out of the IT Services & Consulting core (research subscriptions).
+  3. Dry run (radar-tools `groupsdry` on the branch, Nov 20 close): 251 automatic adds -> 198. Moved 11: BR, JKHY -> Fintech &
+     Payments; TYL, ROP, AMPL -> Enterprise SaaS; ECG, LGN -> Data Center Builders & REITs; PTEN -> Offshore Drillers; CVE ->
+     Oil Majors; KOS -> Shale & Permian E&P; SBSW -> Silver Miners. Out of their theme 57 (19 in an automatic group: Pipelines &
+     Midstream, Beverages, Household Products, Info Services & Staffing ...; 15 in a tight industry group; 23 in neither: LPL SNX
+     DOCN GTX BWXT CTRI MWH GDDY TRMB DOCS CHKP DOX IBM ZM SEIC WAB CLMT ZTS ABSI RXRX WY LKQ TNL). ASX has no theme now (out
+     of AI Chips & CPUs; under 0.6 / the semi floor with Semi Test & Packaging, where the user approved it): told the user.
+     IT Services & Consulting: CTSH EPAM GLOB EXLS DXC INFY G ACN + KD CNXC GDYN.
+- **LIVE, same merge: a theme's bellwethers are its two largest CORE stocks** (radar/event.py all_bellwethers; Keysight, an
+  automatic add, had been read as Semi Test & Packaging's first reading on Nov 20). On the Nov 20 files: CNQ EC IBM PH Q ROP
+  SWK UL out; AME ENTG EOG INFY MO OC PAYX YPF in (150 still).
+- **LIVE, same merge: the context on GROUP MOVE / THEME MOVING UP alerts** (radar/alerts.py move_context; the user, Nov 20:
+  IT services up 2-5% the morning after GLOB's report, "we were supposed to have reason for that today we didnt get it").
+  Two facts, worded as context, never the cause: "also reported" (a stock of the group with today as its reaction session
+  that gapped 5%+; its Earnings-tab reading, the gap, where it is now) and "moving the other way" (up to 3 themes whose
+  tight members are 2%+ the other way on average, when the group is 1%+ either way; a THEME MOVING UP alert only when the
+  theme is up). Replayed on Nov 20's 33 group / theme alerts with the 10:35 prices: 26 got a line; IT Consulting &
+  Outsourcing read "also reported: GLOB (Somewhat bearish ...; gap +8.7%, now +2.8%) ... +3.9% on average; moving the
+  other way: Neoclouds & AI Hosting -10.7%, Memory & Storage -10.1%, Optics & CPO -9.7%". **Not seen live yet: the first
+  GROUP MOVE on Mon Nov 23 is the check.** The bellwether "why" (alert_reasons) is still OFF: the user's call.
+- Rules workbook: 3 rows (automatic theme members, the bellwether rule, the move context). No `--regress` (launch.py
+  untouched; the bars need a job on main), no 2-year check (no pattern, buy point or scan rule).
+- **Explained, no change (Nov 20)**: ACN had no morning breakout alert because its 20-day ADR (3.84%) is under the boxes'
+  ADR 4%+; DXC and IT fired in 📊 at 9:35; GDYN, KD, DOX under Rel vol 0.8x; CNXC under $30M a day; GLOB never back over its
+  opening range high. **Open: EPAM passed every filter at 10:35 and did not alert** (the box was on ORH-3min from 9:29 and
+  saved ORH-5min at 10:14): replay it (radar-tools `morning`).
+
 ## Status of a chat session outside the Radar sessions (Thu Nov 19 2026 ~11:25-11:45 AM ET; session_01PkbDanQBJvqxfoMDBsGdZG)
 
 - **LIVE (the user's "go live", Thu Nov 19 2026 11:41 AM ET, merge 9c9f6f9 of test/backon-quiet): a morning breakout BACK ON
