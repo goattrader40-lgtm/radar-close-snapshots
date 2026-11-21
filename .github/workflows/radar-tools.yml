@@ -129,6 +129,11 @@ jobs:
             python3 scanner/probe_sflevels.py /tmp/probe_sflevels.json ${CMD#sflevels } || true
             python3 radar/publish.py "silent flip levels" /tmp/probe_sflevels.json
           fi
+          if [ "${{ inputs.cmd }}" = "sflevelsr" ]; then   # the general level-rejection idea, with / against the trend (a test only) -> radar-data probe_sr.json
+            pip install --quiet numpy
+            python3 scanner/probe_silentflip.py --bars history/bars_2y.json.gz --out /tmp/probe_sr.json --n 100 --mode sr || true
+            python3 radar/publish.py "level rejection test" /tmp/probe_sr.json
+          fi
           if [ "${{ inputs.cmd }}" = "silentflip" ]; then
             # a 2-year test of the Silent Flip setup on Alpaca 5-minute bars (a test only) -> radar-data probe_silentflip.json
             pip install --quiet numpy
