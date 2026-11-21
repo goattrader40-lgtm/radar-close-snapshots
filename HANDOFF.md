@@ -120,6 +120,30 @@ alone.
   **Check Mon Nov 23**: alerts.json `:ep` / `:power` keys (how many; any under the 200 SMA; one with "opened X% under" and
   "3-minute opening range high"), `:early` count 9:31-9:34, the state's `ep_orh`, the minute tick's time with 111 more
   quotes; Monday evening: `ep_day` on the 1-EP/GAP rows and `perf_6m_pct` in setups/latest.json.
+- **AGREED, NOT BUILT (the user's gos, Sat Nov 21 2026 afternoon; the message was interrupted before any build: test branch
+  first, as always). FIRST THING NEXT SESSION:**
+  1. **The 15 trading days off 1-UPDAY too** ("take 15 day rule of for upday as well"; off 1-EP/GAP since Nov 14). scanner/run.py
+     step: the `name == "1-UPDAY" ... new_mover_days_without_setup` line. Since Oct 5 it removed 5 (ADMA, EFOR, FDS, PCOR, SGRY).
+  2. **START DAYS feeds 3-SETUPS** ("ok feed it to setups!!!", "if useful then it needs feed something too"). Today it feeds only
+     the START DAY alert, the "start <date>" under a launch and the reset way back onto Launches; 19 of the 27 start names are not
+     in 3-SETUPS, 5 are on no feeder (AAON, CXW, IMVT, SPHR, ZIM). **Open inside it**: 3-SETUPS needs a close over the 200 SMA
+     and ADR 4%+ to come on, 9 of the 27 are under the 200 SMA: asked twice (let them in, or wait until over), the user said
+     "1# agreed" without choosing: ask once more before building.
+  3. **A stock on 1-EP/GAP is not shown on 1-UPDAY** ("i thought anything in ep/gap isnt shown in upday - i agree with that
+     recommendation"); 18 names are on both now (from different days; the same day already goes to 1-EP/GAP only).
+- **Asked, to answer next session (the user's 5#)**: "i want to see the ones could be actionable next day ... not only retest i
+  meant bull flag other setups": which 3-SETUPS section to check for tomorrow's entries. What I had said: a retest that held
+  today = Triggered today "Retest held" (XNCR, PAR, HLF Nov 20), pulling back toward the level = Setting up "Near the retest
+  zone", Ready = a breakout-type trigger (base top, flag / pennant line) within 0.7 ADR over the close. They want ONE place for
+  everything actionable tomorrow: explain first (Ready + today's triggers still holding?), no build agreed.
+- **SPOT, my mistake and a find (explain first, no change agreed)**: the user asked whether the 1-EP/GAP "gap given back" rule
+  fails SPOT. I first answered on the wrong gap (Oct 30 2026, +3.2%): the user, "your spot gap was wrong". The EP gap is **Oct 22
+  2026**: close 525.34 the day before, open 561.29 (+6.8%), close 583.66 (+11.1%), 3.2x. The gap-given-back rule would NOT
+  have failed it (lowest close since: 538.40 on Oct 28, its agreed retest day, over 525.34; no close under the 50 EMA). What
+  kept SPOT off 1-EP/GAP altogether: **the Watchlist's ADR minimum of 3.5% is tested on that day's 20-day ADR (3.35% on Oct
+  22)**, while Launches tests the highest 20-day ADR of the last 63 sessions (4.54%: L adr_look, the user's Nov 12 rule "amd
+  never was 3.4% adr stock"), so SPOT launched Oct 22 and never came on the EP list. To propose: the same ADR test on the
+  Watchlist lists (scanner/screens.py standard); measure what it adds first.
 - **Decided with the user this session (no build needed)**: the Watchlist feeds stay as they are ("we are only interested in
   fast movers thats why setup feeds from updays and fast movers 1 month 3 month and 6 months": NO whole-market trend list, NO
   feed change); nothing is dropped (1-UPDAY, 2-POOL stay); the 2-POOL momentum numbers are NOT changed (25% / 50% / 100% was
