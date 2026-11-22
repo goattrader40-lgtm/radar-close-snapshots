@@ -100,7 +100,8 @@ def orh_trade(bs, n, rebreak_from=None, level=None):
 def main():
     req = json.load(open(sys.argv[1]))
     levels = json.load(open(sys.argv[3])) if len(sys.argv) > 3 and os.path.exists(sys.argv[3]) else {}   # "date sym": 21-day closing high
-    res, errors, n = {}, [], 0
+    raw_keys = set(json.load(open(sys.argv[4]))) if len(sys.argv) > 4 and os.path.exists(sys.argv[4]) else set()   # "date sym": keep the day's 1-minute bars
+    res, errors, n, raw = {}, [], 0, {}
     for date, syms in sorted(req.items()):
         for k in range(0, len(syms), 50):
             try:
@@ -113,11 +114,19 @@ def main():
                     res[f"{date} {s}"] = {**{str(r): orh_trade(B[s], r) for r in RANGES},
                                            **{f"{r}a": orh_trade(B[s], r, 30) for r in RANGES},   # from 10:00
                                            **({f"{r}l": orh_trade(B[s], r, level=levels[f"{date} {s}"]) for r in RANGES} if f"{date} {s}" in levels else {})}
+                    bs = sorted(B[s])
+                    # for checking the trades against the daily bars: first bar's minute and open, the 3- and 5-minute range
+                    # highs, the session's high, low and last price, the number of 1-minute bars
+                    res[f"{date} {s}"]["i"] = [bs[0][0], bs[0][1], max((b[2] for b in bs if b[0] < 3), default=None),
+                                               max((b[2] for b in bs if b[0] < 5), default=None), max(b[2] for b in bs),
+                                               min(b[3] for b in bs), bs[-1][4], len(bs)]
+                    if f"{date} {s}" in raw_keys:
+                        raw[f"{date} {s}"] = [list(b) for b in bs]
                     n += 1
         print(date, n, flush=True)
     json.dump({"made_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "requested": sum(len(v) for v in req.values()),
                "found": n, "errors": errors[:50], "fields": "entry time, entry, stop, third sold, out, pnl per share, position left, day close",
-               "trades": res}, open(sys.argv[2], "w"), separators=(",", ":"))
+               "trades": res, "raw": raw}, open(sys.argv[2], "w"), separators=(",", ":"))
 
 
 if __name__ == "__main__":
