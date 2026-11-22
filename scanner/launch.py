@@ -887,7 +887,9 @@ def flag_at(a, i):
     if i < 50:
         return None
     t = i - 24 + int(np.argmax(h[i - 24:i + 1]))
-    # 4 to 22 sessions from its top (your count, Nov 1 2026: AEHR's Mar 4 2026 top, the break Apr 2 on the 21st session)
+    # 4 to 22 sessions from its top (your count, Nov 1 2026: AEHR's Mar 4 2026 top, the break Apr 2 on the 21st session).
+    # A flag counts from its top, its highest high (the base's day count from its highest close, Nov 22 2026, is not used
+    # here: from AEHR's Mar 2 close the Apr 2 break would be the 23rd session, past the 22)
     if not L["flag_days"] <= i - t <= L["flag_max_days"] or h[t] < h[max(0, t - 21):t].max():
         return None
     depth = 100 * (1 - l[t + 1:i + 1].min() / h[t])
@@ -1093,6 +1095,27 @@ def base_ok(a, j, span):
     if 100 * (1 - st.c[k + 1:j].min() / top) < L["leg_adr"] * _adr(st, k) and down < 2:
         return None
     return top, k
+
+
+def base_close_day(a, i, top, k):
+    """day 1 of the base under the top (top, k) as of day i: its highest CLOSE (the user, Nov 22 2026: "in the base it has
+    to count from highest close"), the last day up to the top's day k that closed over the highest high before it (from
+    the start of the span that top came from, base_ok's 6- or 2-month look). A wick over it raises the top, not the count;
+    a close between that close and the top is inside the breakout's range, no new start (KVYO 2026: the top 22.20 Nov 5, a
+    wick that closed 20.81; day 1 = the Nov 2 close 21.80 over the 21.17 top before it)"""
+    st = a.st
+    lo = k
+    for sp in L["base_spans"]:
+        b = base_ok(a, i + 1, sp)
+        if b and b[1] == k and abs(b[0] - top) < 1e-9:
+            lo = max(0, i + 1 - sp)
+            break
+    s_, hr = lo, st.h[lo]
+    for m in range(lo + 1, k + 1):
+        if st.c[m] > hr:
+            s_ = m
+        hr = max(hr, st.h[m])
+    return s_
 
 
 def reach(a, j, top):
@@ -1475,6 +1498,15 @@ def follow(a, i0, i, pick=False):
     b0 = base_ok(a, i0, 120)
     leg = 1 if not b0 or c[i0] > b0[0] or a.cleared(i0) >= BASES[-1] else 0    # cleared at least its 1-month base by the bodies: leg 1 (GMAB Aug 7)
     H, last_new, armed, rested, last_leg = st.h[i0], i0, False, None, i0
+    # the base counts from its highest CLOSE (the user, Nov 22 2026, KVYO: "base top has to get highest high, not highest
+    # close ... in the base it has to count from highest close!!! 21 ema entries it has to calculate from highest closing"):
+    # a day that wicks over the highest high but closes under the highest close stays inside the base, it only raises the
+    # base's top (H: a breakout still has to clear it). The highest close to the highest high is the breakout's range ("they
+    # become range for breakout"): a close inside it is no breakout and the count goes on; day 1 moves only with a close over
+    # the highest high so far. KVYO 2026: the close 21.80 Nov 2 over its 21.17 top (high 22.14); Nov 5 wicked to 22.20 and
+    # closed 20.81: Nov 10 is day 7 of the base, not day 4; Nov 13 wicked to 22.36 and closed 22.13, inside 21.80-22.20: day
+    # 10, still Ready for the Nov 16 breakout. bs = day 1 of the base, HC = its close
+    HC, bs = c[i0], i0
     if pick and b0 and b0[0] > H:
         H = b0[0]
     used, bo = set(), None                                  # bo = (day, top, top index) of the last base breakout
@@ -1643,6 +1675,8 @@ def follow(a, i0, i, pick=False):
                 if rs_:
                     reset_day, reset = j, rs_
                 back_day, back_from, off_since, off_why, stall = j, off_since, None, None, None
+        if c[j] > H:                                     # a close over the highest high: a new base starts from it
+            HC, bs = c[j], j
         if st.h[j] > H:
             H, last_new, armed, dry_done = st.h[j], j, True, False
     # the higher level is in play until the pullback's low comes down into the 20-day level's zone (SPOT Oct 28 2026 536.74,
@@ -1693,7 +1727,7 @@ def follow(a, i0, i, pick=False):
     if fl and (fl[0] not in used_flags or (flag_day == i and flag_caution)) and c[i] < fl[3] and (c[i] <= fl[2] or flag_caution):
         cands.append((fl[3], ("Bull pennant" if fl[4] == "pennant" else "Bull flag") + " (trendline)", i - fl[0], fl[1]))
     if not dry_done and dry_armed(a, i, H) and pop_level(a, i):
-        cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - last_new, 100 * (1 - st.l[last_new:i + 1].min() / H)))
+        cands.append((float(pop_level(a, i)), "Pop out of the consolidation (in base)", i - bs, 100 * (1 - st.l[bs:i + 1].min() / H)))
     for top, k in tops:
         cands.append((top, "Base top", below_since(a, i + 1, top, k), 100 * (1 - st.l[k:i + 1].min() / top)))
     ib = inner_base(a, i + 1)
@@ -1779,14 +1813,17 @@ def follow(a, i0, i, pick=False):
         closed 1.3 ADRs under: a breakdown, no)"""
         ak, top = _adr(st, k), st.h[i0:k].max()
         if not (st.l[k] < a.e21[k] and st.l[k] < st.o[k] and c[k] > a.e21[k] and c[k] > a.e50[k] and c[k] < top
-                and c[k] - st.l[k] >= 0.5 * (st.h[k] - st.l[k]) and st.l[last_new:k + 1].min() <= top * (1 - 1.25 * ak / 100)):
+                and c[k] - st.l[k] >= 0.5 * (st.h[k] - st.l[k]) and st.l[bs:k + 1].min() <= top * (1 - 1.25 * ak / 100)):
             return None
         if all(a.e21[m] * (1 - ak / 200) <= c[m] < a.e21[m] for m in range(k - L["undercut21_closes"], k)):
             return "undercut"
-        if (c[last_new:k] >= a.e21[last_new:k] * (1 - ak / 400)).all() and not all(c[m] > c[m - 1] for m in (k - 3, k - 2, k - 1)):
+        if (c[bs:k] >= a.e21[bs:k] * (1 - ak / 400)).all() and not all(c[m] > c[m - 1] for m in (k - 3, k - 2, k - 1)):
             return "retest"
         return None
-    reclaim = ema_back(i) if i - last_new >= 4 and not any(k > last_new for k in rdays) and not any(ema_back(k) for k in range(last_new + 4, i)) else None
+    # day 4+ of the base, day 1 = its highest close (the user, Nov 22 2026: "its important to have that, you can do 4+";
+    # KVYO Nov 10 2026: day 7 from the Nov 2 close 21.80, dipped to 19.00 under the 21 EMA 19.93, closed 20.43 back over it.
+    # Was 5+ days from the highest high: Nov 5's wick made it day 4)
+    reclaim = ema_back(i) if i - bs >= 3 and not any(k > bs for k in rdays) and not any(ema_back(k) for k in range(bs + 3, i)) else None
     # the breakout undercut & reclaim (the user's name; CAI Oct 9 2026): after a breakout, 2+ closes back under its level (the broken base's top,
     # its bodies: Oct 6 closed 27.45 under 28.01), the closes since holding over the 50 EMA (Oct 7-8, tight), then the close
     # back over the level (Oct 9, 29.70): an entry, within 5 sessions of the first close under it, once per breakout. One
@@ -1856,19 +1893,19 @@ def follow(a, i0, i, pick=False):
         return k1
     hl2_k1, hl2_ema = None, "50 EMA"
     for e_, nm_ in ((a.e50, "50 EMA"), (a.e21, "21 EMA")):
-        if hl2_k1 is None and i - last_new >= 8:
-            hl2_k1, hl2_ema = hl2_on(i, last_new, e_), nm_
-            if hl2_k1 is not None and any(hl2_on(x, last_new, e_) is not None for x in range(hl2_k1 + L["hl2_gap"], i)):
+        if hl2_k1 is None and i - bs >= 8:
+            hl2_k1, hl2_ema = hl2_on(i, bs, e_), nm_
+            if hl2_k1 is not None and any(hl2_on(x, bs, e_) is not None for x in range(hl2_k1 + L["hl2_gap"], i)):
                 hl2_k1 = None                                   # once per base: the first day it holds
     # tomorrow's 21 EMA setup (radar/alerts.py: the heads-up when it trades down to the 21 EMA, the alert from 3:45 PM
     # when it holds back over it): "undercut" after 2 closes under it (today and yesterday, within half an ADR), "retest"
     # while the closes held over it after a pullback that was no advance
     ema21_watch = None
-    if i - last_new >= 3 and not any(k > last_new for k in rdays) and not any(ema_back(k) for k in range(last_new + 4, i + 1)) \
+    if i - bs >= 2 and not any(k > bs for k in rdays) and not any(ema_back(k) for k in range(bs + 3, i + 1)) \
             and c[i] < st.h[i0:i + 1].max() and c[i] > a.e50[i]:
         if all(a.e21[m] * (1 - adr / 200) <= c[m] < a.e21[m] for m in range(i - L["undercut21_closes"] + 1, i + 1)):
             ema21_watch = "undercut"
-        elif (c[last_new:i + 1] >= a.e21[last_new:i + 1] * (1 - adr / 400)).all() and not all(c[m] > c[m - 1] for m in (i - 2, i - 1, i)) \
+        elif (c[bs:i + 1] >= a.e21[bs:i + 1] * (1 - adr / 400)).all() and not all(c[m] > c[m - 1] for m in (i - 2, i - 1, i)) \
                 and c[i] <= a.e21[i] * (1 + 1.5 * adr / 100):
             ema21_watch = "retest"
     # tomorrow's zone, for the heads-up during the day (the buy alert itself waits for the close): until a retest held
@@ -1933,7 +1970,7 @@ def follow(a, i0, i, pick=False):
         tight = 0
     # a base has at least 5 bars after its high (the user, Nov 10 2026: AVNT Aug 14 2026, 3 bars after its Aug 11 high 46.64)
     tk = next((k for t_, k in tops if nb is not None and t_ == nb), None)
-    if tight and tk is not None and i - tk < L["tight_base_bars"]:
+    if tight and tk is not None and i - base_close_day(a, i, nb, tk) < L["tight_base_bars"]:
         tight = 0                    # under a high set a few sessions ago there is no base yet (GMAB Sep 21 2026: 1 session)
     msf_pat = msf.NAMES[code] if code and msf.is_pat(code) else None
     # no entry on a close under the 200 SMA (the user, Nov 10 2026: REAL Jul 2 2026 closed 11.58 under its 200 SMA 12.03 and
@@ -2088,13 +2125,16 @@ def follow(a, i0, i, pick=False):
         # a base formed under a new high: it starts the day of that high (ACN: its Oct 22 2026 high 259.39, pulled back),
         # whatever buy point is nearer (ATRC Oct 5 2026: the flag line 58.66 under its Sep 24 top 61.70)
         tb, kt = min(tops)
-        bday = i - kt + 1
-        stage = f"In the base, day {bday}, {100 * (1 - c[i] / tb):.0f}% under the top {tb:.2f} (set {st.dates[kt]})"
+        kc = base_close_day(a, i, tb, kt)            # day 1 = the base's highest close (the user, Nov 22 2026)
+        bday = i - kc + 1
+        stage = (f"In the base, day {bday}, {100 * (1 - c[i] / tb):.0f}% under the top {tb:.2f} (set {st.dates[kt]}"
+                 + (f"; day 1 = the {st.dates[kc]} close {c[kc]:.2f}" if kc != kt else "") + ")")
     elif c[i] > lvl and c[i] >= H * (1 - 1.25 * adr / 100):     # closing above what the leg broke out of (ANF: never over
         stage = f"Running (leg {leg}), {100 * (c[i] / lvl - 1):.0f}% over {lvl:.2f}"   # the Aug 26 high until Oct 19)
     else:
-        bday = i - last_new + 1
-        stage = f"In the base, day {bday}, {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}"   # from the day of that high
+        bday = i - bs + 1                            # from its highest close (the user, Nov 22 2026)
+        stage = (f"In the base, day {bday}, {100 * (1 - c[i] / H):.0f}% under the top {H:.2f}"
+                 + (f" (day 1 = the {st.dates[bs]} close {HC:.2f})" if bs != last_new else ""))
     tries_txt, ntries = None, 0
     if tops and not (bo and bo[0] == i):
         tb, kt = min(tops)
