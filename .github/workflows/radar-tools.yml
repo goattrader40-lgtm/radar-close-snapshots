@@ -36,6 +36,9 @@ jobs:
             python3 radar/publish.py "volume probe" /tmp/probe_vol.json
           fi
           if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi
+          if [ "${{ inputs.cmd }}" = "bars6y" ]; then   # daily bars of the scanner's universe since Dec 2020, for the multi-year EP study (test only) -> the scratch branch radar-study, bars_6y.json.gz
+            python3 radar/probe_bars.py /tmp/bars_6y.json.gz 2020-12-01 && python3 radar/publish.py --branch radar-study "daily bars since Dec 2020 (study)" /tmp/bars_6y.json.gz
+          fi
           case "$CMD" in orh|orh\ *)   # the opening-range / level break study on 1-minute bars (test only) -> radar-data probe_orh.json; "orh NAME" reads history/NAME.json (and NAME_levels.json)
             R="${CMD#orh}"; R="${R# }"; R="${R:-orh_request}"
             python3 radar/probe_orh.py "history/$R.json" /tmp/probe_orh.json "history/${R}_levels.json" history/orh_raw.json && python3 radar/publish.py "orh probe" /tmp/probe_orh.json;;
