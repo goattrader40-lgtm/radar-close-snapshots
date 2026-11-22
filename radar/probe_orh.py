@@ -97,6 +97,34 @@ def orh_trade(bs, n, rebreak_from=None, level=None):
     return None
 
 
+def level_trade(bs, level):
+    """as soon as the price is over a level (the user, Nov 22 2026: "you can do as soon as it is over"): the first 1-minute bar
+    that trades over it on a day that opened at or under it (a day that opens over it has no cross: the opening range buy
+    covers it); filled at the level (at the bar's open if it opens over it); stop = the lowest price of the day before that
+    bar (the bar's own low when it is the day's first bar). The rest of the day as in orh_trade"""
+    bs = sorted(bs)
+    if not bs or bs[0][1] > level:
+        return None
+    low = None
+    for j, b in enumerate(bs):
+        if b[2] > level:
+            entry = max(b[1], level)
+            stop = stop0 = low if low is not None else b[3]
+            if entry <= stop:
+                return None
+            pos, pnl, took, out = 1.0, 0.0, 0, 0
+            for m, o, h, l, c in bs[j + 1:]:
+                if l <= stop:
+                    pnl += pos * (min(o, stop) - entry); pos = 0.0; out = 1
+                    break
+                if not took and h >= entry * (1 + TARGET):
+                    pnl += SELL * (max(o, entry * (1 + TARGET)) - entry); pos -= SELL; took = 1; stop = max(stop, entry)
+            t = 570 + b[0]
+            return [f"{t // 60:02d}:{t % 60:02d}", round(entry, 4), round(stop0, 4), took, out, round(pnl, 4), round(pos, 4), bs[-1][4]]
+        low = b[3] if low is None else min(low, b[3])
+    return None
+
+
 def main():
     req = json.load(open(sys.argv[1]))
     levels = json.load(open(sys.argv[3])) if len(sys.argv) > 3 and os.path.exists(sys.argv[3]) else {}   # "date sym": 21-day closing high
@@ -110,7 +138,12 @@ def main():
                 errors.append(f"{date}: {e}")
                 continue
             for s in syms[k:k + 50]:
-                if s in B:
+                lv = levels.get(f"{date} {s}")
+                if s in B and isinstance(lv, list):        # the 21-day breakout study: [wick high, closing high]; lean output
+                    res[f"{date} {s}"] = {**{str(r): orh_trade(B[s], r) for r in RANGES},
+                                           "xw": level_trade(B[s], lv[0]), "xc": level_trade(B[s], lv[1])}
+                    n += 1
+                elif s in B:
                     res[f"{date} {s}"] = {**{str(r): orh_trade(B[s], r) for r in RANGES},
                                            **{f"{r}a": orh_trade(B[s], r, 30) for r in RANGES},   # from 10:00
                                            **({f"{r}l": orh_trade(B[s], r, level=levels[f"{date} {s}"]) for r in RANGES} if f"{date} {s}" in levels else {})}
