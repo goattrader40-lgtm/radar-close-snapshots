@@ -82,7 +82,12 @@ def main(path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 2:
+    a = sys.argv[1]
+    if a == "dipbars":                       # the tools job's two commands (kept short there: its script is near GitHub's size limit)
+        a = "/tmp/dip_bars.json.gz"
+    elif a == "dipbars22":
+        a, FROM, LIQ_FROM, RANGE = "/tmp/dip_bars22", "2020-12-01", "2021-12-01", "10y"
+    elif len(sys.argv) > 2:
         FROM, LIQ_FROM = sys.argv[2], sys.argv[3]
         RANGE = sys.argv[4] if len(sys.argv) > 4 else "10y"
-    main(sys.argv[1])
+    main(a)
