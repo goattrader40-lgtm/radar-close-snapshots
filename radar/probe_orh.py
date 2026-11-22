@@ -62,7 +62,7 @@ def bars(date, syms):
             return out
 
 
-def orh_trade(bs, n, rebreak_from=None):
+def orh_trade(bs, n, rebreak_from=None, level=None):
     """rebreak_from (minutes after 9:30): only a break from that time on, crossing the range high from below (the bar
     before closed at or under it): the user's "broke, pulled back and broke again" after 10:00 (and a first break then)"""
     bs = sorted(bs)
@@ -71,6 +71,8 @@ def orh_trade(bs, n, rebreak_from=None):
     if not rng or not after:
         return None
     orh = max(b[2] for b in rng)
+    if level:                                # the EP alert's way: over the range high AND over the 21-day closing high
+        orh = max(orh, level)
     low = min(b[3] for b in rng)
     for j, b in enumerate(after):
         prev_close = after[j - 1][4] if j else rng[-1][4]
@@ -97,6 +99,7 @@ def orh_trade(bs, n, rebreak_from=None):
 
 def main():
     req = json.load(open(sys.argv[1]))
+    levels = json.load(open(sys.argv[3])) if len(sys.argv) > 3 and os.path.exists(sys.argv[3]) else {}   # "date sym": 21-day closing high
     res, errors, n = {}, [], 0
     for date, syms in sorted(req.items()):
         for k in range(0, len(syms), 50):
@@ -108,7 +111,8 @@ def main():
             for s in syms[k:k + 50]:
                 if s in B:
                     res[f"{date} {s}"] = {**{str(r): orh_trade(B[s], r) for r in RANGES},
-                                           **{f"{r}a": orh_trade(B[s], r, 30) for r in RANGES}}   # from 10:00
+                                           **{f"{r}a": orh_trade(B[s], r, 30) for r in RANGES},   # from 10:00
+                                           **({f"{r}l": orh_trade(B[s], r, level=levels[f"{date} {s}"]) for r in RANGES} if f"{date} {s}" in levels else {})}
                     n += 1
         print(date, n, flush=True)
     json.dump({"made_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "requested": sum(len(v) for v in req.values()),

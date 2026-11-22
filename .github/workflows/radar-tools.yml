@@ -37,7 +37,7 @@ jobs:
           fi
           if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi
           if [ "${{ inputs.cmd }}" = "orh" ]; then   # the 3- / 5-minute opening-range-high break on gap days (test only) -> radar-data probe_orh.json
-            python3 radar/probe_orh.py history/orh_request.json /tmp/probe_orh.json && python3 radar/publish.py "orh probe" /tmp/probe_orh.json
+            python3 radar/probe_orh.py history/orh_request.json /tmp/probe_orh.json history/orh_levels.json && python3 radar/publish.py "orh probe" /tmp/probe_orh.json
           fi
           if [ "${{ inputs.cmd }}" = "moverstest" ]; then   # the movers' 1-minute read on a copy of the live files (market hours) -> radar-data movers_test.json
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && mkdir -p /tmp/mv
