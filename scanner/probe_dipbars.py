@@ -2,6 +2,9 @@
 Yahoo's 5-year daily bars from 2023-11-01 on, for the stocks that were liquid at some point since Dec 2024 (price $5+,
 20-day average volume 500K+ and $20M+ a day: looser than the 📈 box's numbers, so the study can vary them), plus SPY and
 QQQ. Usage: python scanner/probe_dipbars.py OUT.json.gz   (radar-tools `dipbars` -> radar-data dip_bars.json.gz).
+The longer study (the user, Nov 22 2026: "do you have numbers for 2022 until now?"):
+  python scanner/probe_dipbars.py OUT_PREFIX 2020-12-01 2021-12-01 10y   -> OUT_PREFIX_a.json.gz (tickers A-L) and _b (M-Z),
+two files to stay well under GitHub's file limit (radar-tools `dipbars22` -> radar-data dip_bars22_a / _b.json.gz).
 A study file: the portal does not read it."""
 import concurrent.futures as cf
 import datetime
@@ -13,11 +16,11 @@ import urllib.error
 
 import fetch
 
-FROM, LIQ_FROM = "2023-11-01", "2024-12-01"
+FROM, LIQ_FROM, RANGE = "2023-11-01", "2024-12-01", "5y"
 
 
 def bars(sym):
-    url = "https://query1.finance.yahoo.com/v8/finance/chart/" + sym.replace("/", "-").replace(".", "-") + "?range=5y&interval=1d"
+    url = "https://query1.finance.yahoo.com/v8/finance/chart/" + sym.replace("/", "-").replace(".", "-") + "?range=" + RANGE + "&interval=1d"
     for attempt in range(5):
         try:
             res = fetch.get(url)["chart"]["result"][0]
@@ -69,11 +72,17 @@ def main(path):
     print(f"{len(syms)} symbols, {got} downloaded, {len(data)} kept (liquid since {LIQ_FROM}); last bar {data['SPY'][-1][0]}")
     if "SPY" not in data or got < 0.8 * len(syms):
         sys.exit(f"only {got} of {len(syms)} came back")
-    with gzip.open(path, "wt") as f:
-        json.dump({"saved_at": datetime.datetime.now(fetch.NY).isoformat(timespec="seconds"),
-                   "fields": ["date", "open", "high", "low", "close", "volume"],
-                   "market_cap": {s: caps.get(s) for s in data}, "bars": data}, f, separators=(",", ":"))
+    saved = datetime.datetime.now(fetch.NY).isoformat(timespec="seconds")
+    parts = [(path, data)] if path.endswith(".gz") else [(path + "_a.json.gz", {k: v for k, v in data.items() if k < "M"}),
+                                                          (path + "_b.json.gz", {k: v for k, v in data.items() if k >= "M"})]
+    for p_, d_ in parts:
+        with gzip.open(p_, "wt") as f:
+            json.dump({"saved_at": saved, "fields": ["date", "open", "high", "low", "close", "volume"],
+                       "market_cap": {s: caps.get(s) for s in d_}, "bars": d_}, f, separators=(",", ":"))
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 2:
+        FROM, LIQ_FROM = sys.argv[2], sys.argv[3]
+        RANGE = sys.argv[4] if len(sys.argv) > 4 else "10y"
     main(sys.argv[1])
