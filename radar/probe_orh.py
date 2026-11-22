@@ -78,7 +78,7 @@ def orh_trade(bs, n, rebreak_from=None, level=None):
         prev_close = after[j - 1][4] if j else rng[-1][4]
         if b[2] > orh and (rebreak_from is None or (b[0] >= rebreak_from and prev_close <= orh)):
             entry = max(b[1], orh)
-            stop = low
+            stop = stop0 = low               # stop0: the stop at the entry, reported (the working stop moves to the entry after the 1/3 sale)
             if entry <= stop:
                 return None
             pos, pnl, took, out = 1.0, 0.0, 0, 0
@@ -92,7 +92,7 @@ def orh_trade(bs, n, rebreak_from=None, level=None):
                     pnl += SELL * (px - entry); pos -= SELL; took = 1; stop = max(stop, entry)
             day_close = bs[-1][4]
             t = 570 + b[0]
-            return [f"{t // 60:02d}:{t % 60:02d}", round(entry, 4), round(stop, 4), took, out, round(pnl, 4), round(pos, 4), day_close]
+            return [f"{t // 60:02d}:{t % 60:02d}", round(entry, 4), round(stop0, 4), took, out, round(pnl, 4), round(pos, 4), day_close]
         low = min(low, b[3])
     return None
 
