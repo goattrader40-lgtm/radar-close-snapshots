@@ -3,6 +3,7 @@
 #   bars6y        daily bars of the scanner's universe since Dec 2020 -> the scratch branch radar-study, bars_6y.json.gz
 #   orh [NAME]    the opening-range / level study on 1-minute bars: history/NAME.json (default orh_request) and
 #                 history/NAME_levels.json -> radar-data probe_orh.json
+#   raw NAME      the 1-minute bars of the stock-days in history/NAME.json -> the scratch branch radar-study, raw_NAME.json.gz
 set -e
 CMD="$1"
 case "$CMD" in
@@ -13,4 +14,8 @@ case "$CMD" in
     R="${CMD#orh}"; R="${R# }"; R="${R:-orh_request}"
     python3 radar/probe_orh.py "history/$R.json" /tmp/probe_orh.json "history/${R}_levels.json" history/orh_raw.json
     python3 radar/publish.py "orh probe" /tmp/probe_orh.json;;
+  raw\ *)
+    R="${CMD#raw }"
+    python3 radar/probe_raw.py "history/$R.json" "/tmp/raw_$R.json.gz"
+    python3 radar/publish.py --branch radar-study "1-minute bars: $R (study)" "/tmp/raw_$R.json.gz";;
 esac
