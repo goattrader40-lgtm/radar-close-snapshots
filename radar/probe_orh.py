@@ -55,7 +55,7 @@ def bars(date, syms):
                 t = datetime.datetime.fromisoformat(b["t"].replace("Z", "+00:00")).astimezone(NY)
                 m = (t.hour - 9) * 60 + t.minute - 30
                 if 0 <= m < 390:
-                    out.setdefault(s, []).append((m, b["o"], b["h"], b["l"], b["c"]))
+                    out.setdefault(s, []).append((m, b["o"], b["h"], b["l"], b["c"], b.get("v", 0)))
         token = res.get("next_page_token")
         time.sleep(0.35)                     # the free plan's 200 requests a minute
         if not token:
@@ -82,7 +82,7 @@ def orh_trade(bs, n, rebreak_from=None, level=None):
             if entry <= stop:
                 return None
             pos, pnl, took, out = 1.0, 0.0, 0, 0
-            for m, o, h, l, c in after[j + 1:]:
+            for m, o, h, l, c, *_ in after[j + 1:]:
                 if l <= stop:
                     px = min(o, stop)
                     pnl += pos * (px - entry); pos = 0.0; out = 1
@@ -92,7 +92,9 @@ def orh_trade(bs, n, rebreak_from=None, level=None):
                     pnl += SELL * (px - entry); pos -= SELL; took = 1; stop = max(stop, entry)
             day_close = bs[-1][4]
             t = 570 + b[0]
-            return [f"{t // 60:02d}:{t % 60:02d}", round(entry, 4), round(stop0, 4), took, out, round(pnl, 4), round(pos, 4), day_close]
+            # + the volume traded before the entry minute and the session's volume (for the relative volume at the entry)
+            return [f"{t // 60:02d}:{t % 60:02d}", round(entry, 4), round(stop0, 4), took, out, round(pnl, 4), round(pos, 4), day_close,
+                    int(sum(x[5] for x in rng) + sum(x[5] for x in after[:j])), int(sum(x[5] for x in bs))]
         low = min(low, b[3])
     return None
 
@@ -113,14 +115,15 @@ def level_trade(bs, level):
             if entry <= stop:
                 return None
             pos, pnl, took, out = 1.0, 0.0, 0, 0
-            for m, o, h, l, c in bs[j + 1:]:
+            for m, o, h, l, c, *_ in bs[j + 1:]:
                 if l <= stop:
                     pnl += pos * (min(o, stop) - entry); pos = 0.0; out = 1
                     break
                 if not took and h >= entry * (1 + TARGET):
                     pnl += SELL * (max(o, entry * (1 + TARGET)) - entry); pos -= SELL; took = 1; stop = max(stop, entry)
             t = 570 + b[0]
-            return [f"{t // 60:02d}:{t % 60:02d}", round(entry, 4), round(stop0, 4), took, out, round(pnl, 4), round(pos, 4), bs[-1][4]]
+            return [f"{t // 60:02d}:{t % 60:02d}", round(entry, 4), round(stop0, 4), took, out, round(pnl, 4), round(pos, 4), bs[-1][4],
+                    int(sum(x[5] for x in bs[:j])), int(sum(x[5] for x in bs))]
         low = b[3] if low is None else min(low, b[3])
     return None
 
@@ -130,6 +133,7 @@ def main():
     levels = json.load(open(sys.argv[3])) if len(sys.argv) > 3 and os.path.exists(sys.argv[3]) else {}   # "date sym": 21-day closing high
     raw_keys = set(json.load(open(sys.argv[4]))) if len(sys.argv) > 4 and os.path.exists(sys.argv[4]) else set()   # "date sym": keep the day's 1-minute bars
     res, errors, n, raw = {}, [], 0, {}
+    prof, nprof = [0.0] * 390, 0
     for date, syms in sorted(req.items()):
         for k in range(0, len(syms), 50):
             try:
@@ -138,6 +142,15 @@ def main():
                 errors.append(f"{date}: {e}")
                 continue
             for s in syms[k:k + 50]:
+                if s in B:
+                    bs_ = sorted(B[s]); vt = sum(x[5] for x in bs_)
+                    if vt > 0:
+                        cum, q = 0, 0
+                        for m in range(390):
+                            while q < len(bs_) and bs_[q][0] <= m:
+                                cum += bs_[q][5]; q += 1
+                            prof[m] += cum / vt
+                        nprof += 1
                 lv = levels.get(f"{date} {s}")
                 if s in B and isinstance(lv, list):        # the 21-day breakout study: [wick high, closing high]; lean output
                     res[f"{date} {s}"] = {**{str(r): orh_trade(B[s], r) for r in RANGES},
@@ -158,8 +171,8 @@ def main():
                     n += 1
         print(date, n, flush=True)
     json.dump({"made_at": datetime.datetime.now(NY).isoformat(timespec="seconds"), "requested": sum(len(v) for v in req.values()),
-               "found": n, "errors": errors[:50], "fields": "entry time, entry, stop, third sold, out, pnl per share, position left, day close",
-               "trades": res, "raw": raw}, open(sys.argv[2], "w"), separators=(",", ":"))
+               "found": n, "errors": errors[:50], "fields": "entry time, entry, stop, third sold, out, pnl per share, position left, day close, volume before the entry minute, session volume; profile = the average share of the session's volume done by the end of each minute",
+               "trades": res, "raw": raw, "profile": [round(x / nprof, 5) for x in prof] if nprof else []}, open(sys.argv[2], "w"), separators=(",", ":"))
 
 
 if __name__ == "__main__":
