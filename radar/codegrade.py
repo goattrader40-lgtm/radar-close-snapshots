@@ -239,6 +239,11 @@ def earnings_news(e, direction):
     return gd, cat, "; ".join(bits) or "earnings release (numbers not read)", infl, sc
 
 
+LEADER_IN = (r"\b(?:appoint\w*|reinstat\w*|nam(?:ed|es|ing)|elect(?:s|ed)?|promot\w*|re-?hire[sd]?|return(?:s|ing)?)\b.{0,80}"
+             r"(?:\bchief executive\b|\bCEO\b|(?<!vice )\bpresident\b)|"
+             r"(?:\bchief executive\b|\bCEO\b).{0,40}\b(?:appoint\w*|reinstat\w*|named|elected|returns?|returning)\b")
+
+
 def classify(fs, texts, direction, mcap, e=None):
     """filings in the window + their release texts -> {news, catalyst, reason, flags, sources, inflection, inflection_score}"""
     out = dict(news="C", catalyst="No company news", reason="No SEC filing or company release since the last close",
@@ -301,6 +306,12 @@ def classify(fs, texts, direction, mcap, e=None):
         out.update(news=g if direction == "up" else "C", catalyst="Contract / agreement",
                    reason=f"{lead[:160]} ... (${v / 1e6:,.0f}M = {share * 100:.0f}% of the market cap)",
                    inflection="New business" if g == "A" else "None", inflection_score=7 if g == "A" else 0)
+    elif direction == "up" and (re.search(LEADER_IN, head, re.I) or
+                                any(f["form"] == "8-K" and "5.02" in items(f) and re.search(LEADER_IN, texts.get(f["acc"], ("", ""))[1][:3000], re.I) for f in fs)):
+        # a CEO / president named, reinstated or returning (the user, Nov 23 2026: NVDA +31% pre-market on "NVIDIA Board
+        # Reinstates Jensen Huang as President, CEO and Board Director", 8-K 5.02; it read "Filing, not classified" and then
+        # "Sector move: AI Chips & CPUs", as if NVDA followed TSM). The stock's own news: it beats a sector move; grade C
+        out.update(news="C", catalyst="Leadership change", reason=lead[:200])
     elif re.search(r"(?:chief executive|ceo|chief financial|cfo)\b.{0,80}\b(?:resign|depart|step(?:s|ping)? down|terminat|leave)", head, re.I) or \
             any(f["form"] == "8-K" and "5.02" in items(f) and re.search(r"resign|depart|step(?:s|ping)? down|terminat", texts.get(f["acc"], ("", ""))[1][:3000], re.I) for f in fs):
         imm = re.search(r"effective immediately", alltxt, re.I)

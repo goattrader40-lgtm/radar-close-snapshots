@@ -664,7 +664,7 @@
       <div id="pme-bounce">
         <div class="tgr-copybar"><b>Theme bounce list</b><span class="tgr-seg" id="pme-show" aria-label="Which stocks of the event"><button data-v="turn" aria-pressed="true">Under an EMA at the last close</button><button data-v="all" aria-pressed="false">All of the event</button></span><button class="tgr-lite" id="pme-copy" type="button">Copy tickers shown</button><span class="tgr-lbl" id="pme-count"></span></div>
         <details class="tgr-legend tgr-more" data-key="pmevent"><summary>What the theme event and the bounce list are</summary>
-        <p class="tgr-note">A theme event = many stocks of one area gapping together before the open: 8 or more tradable stocks of an area (market cap $700M+, 700K+ shares and $20M+ a day, ADR 3%+), and at least 30% of that area, up or down 5%+ in the latest pre-market scan (Nov 11, 2026: 93 semis / AI stocks, 63 of the 83 in AI &amp; Semis). An area = a family of themes (AI &amp; Semis, AI Infrastructure, Software, Energy …). The news line is the market or sector news behind the move, searched once by the 8:45 grading; a company's own news stays in the News column below. The graded list is not changed: a stock with no news of its own still reads C there, and gap-ups under the 50 EMA stay off it. <b>The bounce list</b> shows every gapper of the event with its distance to the 21 and the 50 EMA (as of the last close), so the first to get back over both stands out (your go sign: AMD Sep 4-8, 2026, MRVL Mar 6, 2026). <span class="tgr-gm">✔ over both</span> = under its 21 or 50 EMA at the last close and over both at the pre-market price; next come the ones over the 21 EMA and nearest to the 50, then the ones still under both. The sign is only real when the day closes over both; before the open this is a watch list, not a buy list. "All of the event" adds the stocks that were already over both EMAs.</p>
+        <p class="tgr-note">A theme event = many stocks of one area gapping together before the open: 8 or more tradable stocks of an area (market cap $700M+, 700K+ shares and $20M+ a day, ADR 3%+), and at least 30% of that area, up or down 5%+ in the latest pre-market scan (Nov 11, 2026: 93 semis / AI stocks, 63 of the 83 in AI &amp; Semis). An area = a family of themes (AI &amp; Semis, AI Infrastructure, Software, Energy …). The Why line: the 8:45 grading's search when it wrote one; else by code, from the newest news (8:45-9:20, else 8:05 / 8:35): the first leader with news of its own since the last close is named the source (Nov 23, 2026: NVDA, the board reinstated Jensen Huang as CEO), the other leaders "follow" it; no leader with news of its own = a market or sector move. Every company's own news is in the News column below. The graded list is not changed: a stock with no news of its own still reads C there, and gap-ups under the 50 EMA stay off it. <b>The bounce list</b> shows every gapper of the event with its distance to the 21 and the 50 EMA (as of the last close), so the first to get back over both stands out (your go sign: AMD Sep 4-8, 2026, MRVL Mar 6, 2026). <span class="tgr-gm">✔ over both</span> = under its 21 or 50 EMA at the last close and over both at the pre-market price; next come the ones over the 21 EMA and nearest to the 50, then the ones still under both. The sign is only real when the day closes over both; before the open this is a watch list, not a buy list. "All of the event" adds the stocks that were already over both EMAs.</p>
         </details>
         <div class="tgr-scroll tall">
           <table class="tgr-table" id="pme-table">
@@ -3019,17 +3019,46 @@ defCalc('industry_perf', {
     } else {
       /* the reason by code (the user, Nov 12 2026: "i dont want this to be done by claude, it has to be done by code"): the
          own news of the event's leaders from the code news feed (pmnews.json, the 8:05 / 8:35 runs), the first 4 that have any */
-      const N = PMN && PMN.day === today && PMN.news ? PMN.news : {};
-      const got = evs.flatMap((e) => e.leaders || []).filter((x, i, a) => a.indexOf(x) === i).map((x) => [x, N[x]]).filter(([, n]) => n && (n.headline || n.catalyst)).slice(0, 4);
-      why.append(h('b', '', 'Why (the leaders\' own news): '));
-      if (!got.length) why.append(h('span', 'tgr-lbl', 'no company news on its leaders in the news feed yet: a market or sector move. Each stock\'s own news is in the News column below.'));
-      got.forEach(([x, n], i) => {
-        if (i) why.append(' · ');
-        why.append(h('b', '', x + ': '), (n.catalyst || 'In the news') + (n.headline && n.headline.title ? ' — ' + n.headline.title : n.reason ? ' — ' + n.reason : ''));
-        if (n.headline && n.headline.at) why.append(h('span', 'tgr-lbl', ' (' + (n.headline.source || 'news') + ' ' + n.headline.at + ')'));
-        const u = (n.headline && n.headline.url) || (n.sources || [])[0];
+      /* Nov 23 2026 (NVDA +31% on "NVIDIA Board Reinstates Jensen Huang as President, CEO", the user: "theme event today is
+         totally wrong"): 1. the newest news first, the same order as the News column: the code grader's (8:45-9:20,
+         codegrade.json), else the 8:05 / 8:35 news runs (pmnews.json); 2. only a stock's OWN news since the last close counts
+         (not "Sector move", "Earlier news", "After earnings", no news / routine filings, a headline from before today:
+         SNDK's Sat Nov 21 story); 3. the event stock with the most pre-market $ volume that has its own news is named the
+         source, the rest of the leaders "follow" it. */
+      const cgN = CGR && CGR.day === today ? Object.assign({}, CGR.news || {}, CGR.rows || {}) : {};
+      const pmN = PMN && PMN.day === today && PMN.news ? PMN.news : {};
+      const newsOfEv = (x) => cgN[x] || pmN[x] || null;
+      const NOT_OWN = ['No company news', 'Filing, not classified', 'Not at the SEC', 'Executive change'];
+      const ownNews = (n) => {
+        const c = String((n && n.catalyst) || '');
+        if (!c || NOT_OWN.includes(c) || /^(Sector move|Earlier news|After earnings)/.test(c)) return false;
+        if (/\(headline\)$/.test(c)) { const ts = n.headline && n.headline.ts; return !!ts && ts.slice(0, 10) === today; }
+        return true;
+      };
+      const dv = (x) => { const r = by.get(x); return r ? num(r.pm_dvol_m) || 0 : 0; };
+      const evSyms = evs.flatMap((e) => e.symbols || e.leaders || []).filter((x, i, a) => a.indexOf(x) === i).sort((a, b) => dv(b) - dv(a));
+      const leaders = evs.flatMap((e) => e.leaders || []).filter((x, i, a) => a.indexOf(x) === i);
+      const src = leaders.map((x) => [x, newsOfEv(x)]).find(([, n]) => ownNews(n));    /* only a leader can be the source (ZS's report isn't a 260-stock AI move) */
+      const got = (src ? [src] : []).concat(evSyms.filter((x) => !src || x !== src[0]).map((x) => [x, newsOfEv(x)]).filter(([, n]) => ownNews(n)).slice(0, 3));
+      const lead = leaders.filter((x) => !got.some(([g]) => g === x));
+      const newsItem = (x, n) => {
+        const t = n.headline && n.headline.title && /\(headline\)$/.test(n.catalyst) ? n.headline.title : String(n.reason || '').slice(0, 180);
+        why.append(h('b', '', x + ': '), (n.catalyst || 'In the news') + (t ? ' — ' + t : ''));
+        if (n.headline && n.headline.at && /\(headline\)$/.test(n.catalyst)) why.append(h('span', 'tgr-lbl', ' (' + (n.headline.source || 'news') + ' ' + n.headline.at + ')'));
+        const u = (/\(headline\)$/.test(n.catalyst) && n.headline && n.headline.url) || (n.sources || [])[0];
         if (u && /^https:\/\//.test(u)) { const l = h('a', '', ' 📰'); l.href = u; l.target = '_blank'; l.rel = 'noopener'; l.title = 'The source: ' + u; why.append(l); }
-      });
+      };
+      if (!src) {
+        why.append(h('b', '', 'Why: '), h('span', 'tgr-lbl', 'none of the leaders has news of its own since the last close in the news feed: a market or sector move. Each stock\'s own news is in the News column below.'));
+        if (got.length) { why.append(h('br'), h('b', '', 'In the event with news of their own: ')); got.forEach(([x, n], i) => { if (i) why.append(' · '); newsItem(x, n); }); }
+      } else {
+        why.append(h('b', '', 'Why: the source looks like '));
+        newsItem(got[0][0], got[0][1]);
+        if (got.length > 1) { why.append(h('br'), h('b', '', 'Also with news of their own: ')); got.slice(1).forEach(([x, n], i) => { if (i) why.append(' · '); newsItem(x, n); }); }
+        if (lead.length) why.append(h('br'), h('b', '', 'Following ' + got[0][0] + ' (no news of their own): '), lead.join(', '), '.');
+      }
+      const when = CGR && CGR.day === today && CGR.built_at ? 'code news, ' + fTime(CGR.built_at) + ' ET' : PMN && PMN.day === today && PMN.built_at ? 'code news, ' + fTime(PMN.built_at) + ' ET' : '';
+      if (when) why.append(h('span', 'tgr-lbl', ' (' + when + ')'));
     }
     const up = evs.find((e) => e.dir === 'up');
     $('#pme-bounce').hidden = !up;
