@@ -226,6 +226,9 @@ jobs:
           if [ "${{ inputs.cmd }}" = "eppcheck" ]; then   # the EP pullback alerts replayed on today's exact minute bars (a check; after 4:16 PM ET) -> radar-data probe_epp.json
             python3 radar/probe_epp.py setups/ep_pullback.json /tmp/probe_epp.json; python3 radar/publish.py "EP pullback check" /tmp/probe_epp.json
           fi
+          if [ "${{ inputs.cmd }}" = "alertbars" ]; then   # today's 1-minute bars of every alerted stock, to score the alerts after the close (a check) -> radar-data probe_alertbars.json.gz
+            python3 radar/probe_alertbars.py /tmp/probe_alertbars.json.gz; python3 radar/publish.py "alert bars" /tmp/probe_alertbars.json.gz
+          fi
           bash radar/tools_event.sh   # the event links
           if [ "${{ inputs.cmd }}" = "alerttest" ]; then
             if [ -z "$NTFY_TOPIC" ]; then echo "NTFY_TOPIC secret is not set"; exit 1; fi
