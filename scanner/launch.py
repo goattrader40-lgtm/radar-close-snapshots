@@ -79,6 +79,7 @@ import datetime
 import json
 import math
 import os
+import re
 import sys
 
 import numpy as np
@@ -2878,6 +2879,140 @@ def write_dip(path, A, cal):
     print(f"dip: {len(rows)} stocks, {sum(1 for r in rows.values() if r[3] and 5 <= r[0] <= 9)} with a 20-day high 5-9 sessions ago")
 
 
+def write_ep_pullback(path, A, cal, stocks_path, alerts_path=None):
+    """setups/ep_pullback.json: tomorrow's EP pullbacks (the user, Nov 23 2026: "show this live, this 10 EMA and 21 EMA things
+    as they happen"; the full evening list is the plan, the Watchlist's live view the "watch now"). For each stock its newest
+    EP day (the 1-EP/GAP rule: scanner/screens.py EP-GAPUP-BREAKOUT, a gap of at most max_gap_pct, no biotech / pharma) of
+    the last e21_max_sessions sessions, and for each play the level tomorrow's touch is read against (the EMA at tonight's
+    close) and its status:
+      wait    tomorrow can be its first touch: the 10 EMA within e10_max_sessions of the EP day with no close more than
+              e10_floor_pct % under its close; the 21 EMA within e21_max_sessions with no trade under its low; the EMA rising
+      flat    as wait, but the EMA is not rising tonight: a touch tomorrow is no trade (the study's rule)
+      used    the first touch came (touched = its date): one try per EP and EMA
+      out     the guard broke (a close more than 5% under the EP close / a trade under the EP day's low)
+      late    past the sessions limit without a touch
+    Only stocks with a play waiting, or touched today (for tonight's list), are written. radar/epp.py has the intraday rule
+    (READY / BUY), radar/alerts.py find_epp the live alerts, docs/index.html the Watchlist's EP PULLBACKS.
+    bought: today's BUY alerts (alerts_path, radar-data alerts.json) and the earlier ones from the last file, followed to the
+    exit with the daily bars: stopped (a low under the stop; on the buy day a low under the day's low at the buy), 1/3 sold
+    at +first_sale_pct % (from the day after the buy: the daily bar doesn't say whether the buy day's high came after the
+    buy), then the stop at the buy price, the rest out on a close under the 21 EMA (from session 6 without the sale). A closed
+    trade stays 5 sessions"""
+    cfg = json.load(open(os.path.join(HERE, "settings.json")))
+    P = dict(e10_max_sessions=10, e10_floor_pct=5, e21_max_sessions=30, max_gap_pct=20, skip_industries=["Biotechnology", "Pharmaceuticals"],
+             near_pct=3, first_sale_pct=10)
+    P.update({k: v for k, v in (cfg.get("ep_pullback") or {}).items() if not k.startswith("_")})
+    X = cfg["screeners"]["EP-GAPUP-BREAKOUT"]
+    try:
+        S = {r["symbol"]: r for r in json.load(open(stocks_path))} if stocks_path else {}
+    except Exception:
+        S = {}
+    skip = set(P["skip_industries"] or [])
+    n10, n21, fl = int(P["e10_max_sessions"]), int(P["e21_max_sessions"]), float(P["e10_floor_pct"])
+    today, rows = cal[-1], {}
+    for s, a in A.items():
+        st = a.st
+        i = len(st.dates) - 1
+        if st.dates[i] != today or i < 40 or (S.get(s) or {}).get("industry") in skip:
+            continue
+        j, gap = None, None
+        for q in range(i, max(i - n21, 1), -1):          # the newest EP day: tomorrow is 1 to n21 sessions after it
+            g = 100 * (st.o[q] / st.c[q - 1] - 1)
+            if X["gap_pct"] < g <= P["max_gap_pct"] and "EP-GAPUP-BREAKOUT" in st.screens(q, cfg):
+                j, gap = q, g
+                break
+        if j is None:
+            continue
+        C0, L0, days = float(st.c[j]), float(st.l[j]), i + 1 - j
+        floor = C0 * (1 - fl / 100)
+
+        def touch(em):
+            return next((q for q in range(j + 1, i + 1) if st.l[q] <= em[q - 1]), None)
+
+        plays = {}
+        for name, em, lim in (("p10", a.e10, n10), ("p21", a.e21, n21)):
+            p = dict(level=fnum(em[i], 4), up=bool(em[i] > em[i - 1]))
+            t = touch(em)
+            if name == "p10":
+                p["floor"] = fnum(floor, 4)
+            if t is not None:
+                p.update(status="used", touched=st.dates[t])
+            elif days > lim:
+                p["status"] = "late"
+            elif name == "p10" and i > j and float(st.c[j + 1:i + 1].min()) < floor:
+                p["status"] = "out"
+            elif name == "p21" and i > j and float(st.l[j + 1:i + 1].min()) < L0:
+                p["status"] = "out"
+            else:
+                p["status"] = "wait" if p["up"] else "flat"
+            plays[name] = p
+        if not any(p["status"] in ("wait", "flat") or p.get("touched") == today for p in plays.values()):
+            continue
+        r_ = S.get(s) or {}
+        rows[s] = dict(ep=st.dates[j], c0=fnum(C0, 4), l0=fnum(L0, 4), gap=fnum(gap, 1), days=days, close=fnum(float(st.c[i]), 4),
+                       tv=r_.get("tv_symbol"), adr=fnum(r_.get("adr_20"), 1), **plays)
+    bought = ep_bought(path, A, today, alerts_path, float(P["first_sale_pct"]), S)
+    with open(path, "w") as f:
+        json.dump(dict(date=today, made_at=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), rules=P, rows=rows,
+                       bought=bought), f, separators=(",", ":"))
+    print(f"ep pullbacks: {len(bought)} bought followed, {len(rows)} stocks, {sum(1 for r in rows.values() if r['p10']['status'] == 'wait')} waiting for the 10 EMA, "
+          f"{sum(1 for r in rows.values() if r['p21']['status'] == 'wait')} for the 21 EMA")
+
+
+def ep_bought(path, A, today, alerts_path, first_pct, S):
+    """the EP pullback buys followed to their exit (write_ep_pullback): the last file's, plus today's BUY alerts"""
+    try:
+        prev = json.load(open(path)).get("bought") or []
+    except Exception:
+        prev = []
+    new = []
+    try:
+        al = json.load(open(alerts_path)) if alerts_path else {}
+        if al.get("date") == today:
+            for it in al.get("items") or []:
+                m = re.match(r"^(.+):epb(10|21)$", it.get("key", ""))
+                px = re.search(r"\$([\d,.]+)\s*$", it.get("title", ""))
+                sp = re.search(r"stop \$([\d,.]+)", it.get("msg", ""))
+                if m and px and sp:
+                    new.append(dict(symbol=m.group(1), play=m.group(2), date=today, time=it.get("time"),
+                                    entry=float(px.group(1).replace(",", "")), stop0=float(sp.group(1).replace(",", ""))))
+    except Exception as e:
+        print("ep pullback alerts not read:", repr(e))
+    seen = {(b["symbol"], b["play"], b["date"]) for b in prev}
+    out = []
+    for b in prev + [b for b in new if (b["symbol"], b["play"], b["date"]) not in seen]:
+        a = A.get(b["symbol"])
+        if a is None or b["date"] not in a.st.pos or b["entry"] <= b["stop0"]:
+            continue
+        st, k0 = a.st, a.st.pos[b["date"]]
+        i = len(st.dates) - 1
+        E, s0 = b["entry"], b["stop0"]
+        target, stop, took, pnl, p, first, status, exit_d = E * (1 + first_pct / 100), s0, False, 0.0, 1.0, None, "open", None
+        if st.l[k0] < s0:                                # the buy day's low went under the low at the buy: stopped
+            pnl, p, status, exit_d = s0 - E, 0.0, "stopped", b["date"]
+        else:
+            for k in range(k0 + 1, i + 1):
+                o, h, l, c = float(st.o[k]), float(st.h[k]), float(st.l[k]), float(st.c[k])
+                if l <= stop:
+                    pnl, p, status, exit_d = pnl + p * (min(o, stop) - E), 0.0, "breakeven stop" if took else "stopped", st.dates[k]
+                    break
+                if not took and h >= target:
+                    pnl, p, took, stop, first = pnl + (1 / 3) * (max(o, target) - E), p - 1 / 3, True, max(stop, E), st.dates[k]
+                if (took or k - k0 > 5) and c < a.e21[k]:
+                    pnl, p, status, exit_d = pnl + p * (c - E), 0.0, "out on a close under the 21 EMA", st.dates[k]
+                    break
+        if p > 0:
+            status = "open, 1/3 sold" if took else "open"
+            r = (pnl + p * (float(st.c[i]) - E)) / (E - s0)
+        else:
+            r = pnl / (E - s0)
+            if i - st.pos[exit_d] > 5:
+                continue                                 # closed more than 5 sessions ago
+        out.append(dict(symbol=b["symbol"], play=b["play"], date=b["date"], time=b.get("time"), entry=b["entry"], stop0=s0, stop=fnum(stop, 4),
+                        first=first, status=status, exit=exit_d, r=fnum(r, 2), tv=(S.get(b["symbol"]) or {}).get("tv_symbol")))
+    return out
+
+
 def write_resistance(path, A, cal, stocks_path, list_syms, morning_path):
     """setups/resistance.json: every current stock's levels for tomorrow's alerts, and tonight's report of the levels the
     day broke, closed inside, or tested and closed back under (the user, Nov 21 2026: "i dont need inside alerts for morning
@@ -3394,6 +3529,7 @@ def main():
     ap.add_argument("--live", help="the day's last live quotes (radar-data live.json), for earnings tags")
     ap.add_argument("--picks", help="setups/picks.json: the stocks you follow (the portal's Follow button)")
     ap.add_argument("--watchlist", help="setups/latest.json (run.py, just before): 3-SETUPS is built from its other three lists")
+    ap.add_argument("--alerts", help="today's alerts (radar-data alerts.json), for the EP pullback buys setups/ep_pullback.json follows")
     a = ap.parse_args()
     global ENTRY
     ENTRY = a.entry
@@ -3442,6 +3578,10 @@ def main():
             write_dip(os.path.join(os.path.dirname(os.path.abspath(a.out)), "dip.json"), A, cal)
         except Exception as e:
             print("dip data failed:", repr(e))
+        try:                                     # the EP pullbacks (Watchlist tab + the live READY / BUY alerts): its own file
+            write_ep_pullback(os.path.join(os.path.dirname(os.path.abspath(a.out)), "ep_pullback.json"), A, cal, a.stocks, a.alerts)
+        except Exception as e:
+            print("ep pullback data failed:", repr(e))
     if a.backtest:
         try:
             srows = json.load(open(a.stocks)) if a.stocks else None

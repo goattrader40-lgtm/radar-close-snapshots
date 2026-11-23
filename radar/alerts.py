@@ -75,6 +75,13 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
   theme up    THEME MOVING UP / GROUP MOVING UP (the user, Nov 18 2026: Cybersecurity, PANW 9:53, CRWD 10:07, S 10:10, with
               no alert of its own): 3+ tight members (fit 0.7+) of a theme, or of a tight industry group, with a morning
               breakout today, from either morning box (theme_breakouts). Once a day per theme; on the phone too
+  EP pullback the first touch of the rising 10 / 21 EMA after an EP day (setups/ep_pullback.json, the evening scan; the
+              rule in radar/epp.py, the user's Nov 23 2026: "it has to say in alert message ep pullback buy 10 ema"):
+              READY (heads-up) when it touched the EMA (the 10 EMA: and traded under the EP day's close; the 21 EMA:
+              still over the EP day's low), BUY (trigger) when a 15-minute candle closes back over the EMA and VWAP
+              (the 10 EMA: not more than 5% under the EP close), with its stop (today's low) and first sale (+10%).
+              Read from today's 1-minute chart for the names within 5% of their level; a BUY holds in its box while
+              the price stays over its stop. In the portal's ⚡ Episodic pivots box (the user: "same box")
 Triggers (the buys, TRIGGERS) always get their own push, up to MAX_TRIGGERS a run, after today's 1-minute chart checks;
 heads-ups fill the rest of MAX_PER_RUN and the others are grouped into one push naming each. Every alert's full text
 is saved in alerts.json items (kind trigger / heads-up / summary, grouped) for the portal's log.
@@ -83,6 +90,8 @@ before 9:35 ET (the volume pace is rough in the first minutes). ntfy is a free p
 subscribe to the topic in the NTFY_TOPIC secret.
 """
 import datetime, json, os, re, sys, urllib.request, zoneinfo
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import epp  # noqa: E402  (the EP pullback rule, shared with the tests)
 
 NY = zoneinfo.ZoneInfo("America/New_York")
 MAX_PER_RUN = 8               # pushes a run: the triggers first, then heads-ups; the rest grouped into one
@@ -90,7 +99,7 @@ MAX_TRIGGERS = 15             # triggers a run that always get their own push (a
 # the buys (the user, Nov 3 2026: "so it gets my attention"); everything else is a heads-up. The 21 EMA retest alone is a
 # heads-up (the user: "21 ema retest is not a strong sign by itself"); with the breakout level under it (ema21bl) a trigger
 TRIGGERS = {"power", "catalyst", "basebreak", "launch", "reversal", "laggard", "breakout", "retest", "reclaimbo2",
-            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep", "mbo", "mbo2"}
+            "ema50", "push", "pop", "gapbase", "gob1", "gob5", "confirm", "s3", "ema21bl", "ep", "mbo", "mbo2", "epb10", "epb21"}
 
 
 # a trigger back in its box after it stopped holding (the user, Nov 18 2026: "i need sounds for episodic pivots as well for
@@ -127,7 +136,8 @@ def short(a):
 
 
 # a few words for each kind, for the group-move lines (RPD 21 EMA + breakout level 3:46)
-KIND_WORDS = {"retest": "retest holding", "zone": "in the retest zone", "ema21": "21 EMA retest", "ema21bl": "21 EMA + breakout level",
+KIND_WORDS = {"epr10": "EP pullback ready (10 EMA)", "epb10": "EP pullback buy (10 EMA)", "epr21": "EP pullback ready (21 EMA)",
+              "epb21": "EP pullback buy (21 EMA)", "retest": "retest holding", "zone": "in the retest zone", "ema21": "21 EMA retest", "ema21bl": "21 EMA + breakout level",
               "ema21zone": "at the 21 EMA", "breakout": "breakout", "touch": "touched the buy point", "confirm": "breakout confirmed",
               "power": "power day", "catalyst": "catalyst gap", "basebreak": "base high cleared", "launch": "launch",
               "reversal": "reversal launch", "laggard": "laggard launch", "reclaimbo": "back over its breakout level",
@@ -1760,6 +1770,98 @@ def event_reasons(path, today):
     return by_sym, by_theme
 
 
+# ───────── EP pullbacks (the user, Nov 23 2026) ─────────
+EPP = {"rows": {}, "rules": {}}    # setups/ep_pullback.json (the evening scan); main() fills it (--epp)
+EPP_FETCH_PCT = 5.0                # a name's 1-minute chart is read when its price is within this % over its EMA level, or once READY
+EPP_MAX_FETCH = 40                 # charts read a run
+
+
+def chart_bars_today(sym):
+    """today's 1-minute bars from 9:30 on, from Yahoo's chart: [(minute after 9:30, open, high, low, close, volume)], or []"""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.request.quote(sym.replace('/', '-').replace('.', '-'))}?range=1d&interval=1m"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            res = json.load(r)["chart"]["result"][0]
+        q = res["indicators"]["quote"][0]
+        today, out = datetime.datetime.now(NY).date(), []
+        for t, o, h, l, c, v in zip(res.get("timestamp") or [], q.get("open") or [], q.get("high") or [], q.get("low") or [],
+                                    q.get("close") or [], q.get("volume") or []):
+            if None in (o, h, l, c):
+                continue
+            d = datetime.datetime.fromtimestamp(t, NY)
+            m = d.hour * 60 + d.minute - 570
+            if d.date() == today and 0 <= m < 390:
+                out.append((m, o, h, l, c, v or 0))
+        return out
+    except Exception:
+        return []
+
+
+def find_epp(live, now, sent, state, bars_of=None, fast=False):
+    """EP PULLBACK READY / BUY (radar/epp.py has the rule): the names of tonight's setups/ep_pullback.json with a play waiting
+    (status "wait"), read on today's 1-minute chart once the price is within EPP_FETCH_PCT % over the EMA level. A BUY is
+    found again every run while the price holds over its stop, so it stays in its box (update_holding). The 1-minute check
+    (fast) only reads the names already READY: a new READY comes from the 5-minute run"""
+    out, rows = [], EPP.get("rows") or {}
+    bars_of = bars_of or chart_bars_today
+    nowm = now.hour * 60 + now.minute - 570
+    if not rows or nowm < 1:
+        return out
+    first = (EPP.get("rules") or {}).get("first_sale_pct", 10)
+    memo = state.setdefault("epp", {})
+    charts, fetched = {}, 0
+    for sym, r in rows.items():
+        q = live["rows"].get(sym)
+        if not q or not q[0]:
+            continue
+        price, tvs = q[0], r.get("tv") or sym
+        for play in ("10", "21"):
+            p = r.get("p" + play) or {}
+            if p.get("status") != "wait":
+                continue
+            kr, kb = f"{sym}:epr{play}", f"{sym}:epb{play}"
+            if kb in sent:                                  # bought today: in its box while over its stop
+                b = memo.get(kb)
+                if b and price > b["stop"]:
+                    out.append((kb, b["title"], b["msg"], "high", tvs))
+                continue
+            if memo.get(f"{sym}:off{play}") or (kr not in sent and (fast or price > p["level"] * (1 + EPP_FETCH_PCT / 100))):
+                continue
+            if sym not in charts:
+                if fetched >= EPP_MAX_FETCH:
+                    continue
+                charts[sym], fetched = bars_of(sym), fetched + 1
+            if not charts[sym]:
+                continue
+            lv, c0, l0 = p["level"], r["c0"], r["l0"]
+            res = epp.check(charts[sym], play, lv, c0, l0, floor=p.get("floor") if play == "10" else None, now_min=nowm)
+            if res["off"]:
+                memo[f"{sym}:off{play}"] = True
+                print(f"{sym}: EP pullback {play} EMA off (under the EP day's low {l0})")
+                continue
+            if res["buy"]:
+                end, px, stop, vw, start = res["buy"]
+                risk = 100 * (px / stop - 1)
+                adr = _ADR.get(sym) or r.get("adr")
+                title = f"{sym} EP PULLBACK BUY - {play} EMA ${px:.2f}"
+                msg = (f"the {epp.hhmm(start)}-{epp.hhmm(end)} candle closed ${px:.2f} over the {play} EMA ${lv:.2f} and VWAP ${vw:.2f}"
+                       f" · stop ${stop:.2f}, today's low: risk {risk:.1f}%" + (f" = {risk / adr:.1f} ADR" if adr else "")
+                       + f" · first sale ${px * (1 + first / 100):.2f} (+{first:g}%), then breakeven, the rest on a daily close under the 21 EMA"
+                       + f" · EP {r['ep']} (close ${c0:.2f}, low ${l0:.2f}), {r.get('days')} sessions ago · ready at {epp.hhmm(res['ready'][0])}")
+                memo[kb] = {"stop": stop, "entry": px, "title": title, "msg": msg}
+                out.append((kb, title, msg, "high", tvs))
+            elif res["ready"] and kr not in sent:
+                t0, low0 = res["ready"]
+                how = (f"traded under the EP day's close ${c0:.2f}" if play == "10" else f"still over the EP day's low ${l0:.2f}")
+                need = (f"not under ${p['floor']:.2f}" if play == "10" else f"while today's low stays over ${l0:.2f}")
+                out.append((kr, f"{sym} EP PULLBACK READY - {play} EMA",
+                            f"touched the {play} EMA ${lv:.2f} by {epp.hhmm(t0)} and {how} (EP {r['ep']}, {r.get('days')} sessions ago)"
+                            f" · now ${price:.2f}, VWAP ${res['vwap']:.2f} · the buy: a 15-minute candle closing over ${lv:.2f} and VWAP, {need}"
+                            f" · stop: today's low, now ${res['low']:.2f}", "default", tvs))
+    return out
+
+
 def send(topic, title, msg, prio, tvs):
     req = urllib.request.Request(f"https://ntfy.sh/{topic}", data=msg.encode(), method="POST", headers={
         "Title": title.encode("ascii", "replace").decode(), "Priority": prio, "Tags": "chart_with_upwards_trend",
@@ -1793,6 +1895,12 @@ def main():
         print("alerts: not in today's session yet")
         return
     sent = set(state["sent"])
+    if "--epp" in sys.argv:                              # tonight's EP pullbacks (setups/ep_pullback.json)
+        try:
+            d_ = json.load(open(sys.argv[sys.argv.index("--epp") + 1]))
+            EPP.update(rows=d_.get("rows") or {}, rules=d_.get("rules") or {})
+        except Exception as e:
+            print(f"no EP pullbacks: {e!r}", file=sys.stderr)
     _EP_ORH.clear()
     _EP_ORH.update(state.get("ep_orh") or {})      # today's 3-minute opening range highs read so far (EP / power day)
     low52_of(launch_p)                  # the stocks file: 52-week lows, 200 SMAs and each stock's groups (3-SETUPS tiers)
@@ -1836,12 +1944,17 @@ def main():
             found += find_range(live, doc, now, sent)
         except Exception as e:
             print(f"start-day alerts: {e}", file=sys.stderr)
+        try:
+            found += find_epp(live, now, sent, state, fast=fast)
+        except Exception as e:                          # never at the cost of the other alerts
+            print(f"EP pullback alerts: {e!r}", file=sys.stderr)
     # your rule for every alert (Nov 3 2026): the price at least 30% over the 52-week low, checked when it fires
     found = [a for a in found if over_low52(a[0].split(":")[0], live, low52_of(launch_p))]
     # 3-SETUPS triggers only over the 200 SMA (the user, Nov 3 2026: ECHO's base top 100.90 under its 200 SMA 106.63)
     low52_of(launch_p)
     s3syms = {x["symbol"] for x in s3_rows(doc)}
-    found = [a for a in found if not (a[0].endswith(":s3") or a[0].split(":")[0] in s3syms) or over_sma200(a[0].split(":")[0], live)]
+    found = [a for a in found if not (a[0].endswith(":s3") or a[0].split(":")[0] in s3syms) or over_sma200(a[0].split(":")[0], live)
+             or a[0].split(":")[-1][:3] in ("epr", "epb")]     # an EP pullback keeps its own rules (it can be under the 200 SMA)
     gbars = {}
     cat_before = {k.split(":")[0] for k in sent if k.endswith(":catalyst")}
     cat_now = {a[0].split(":")[0] for a in found if a[0].endswith(":catalyst") and a[0] not in sent}

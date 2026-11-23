@@ -67,6 +67,22 @@
     "_no_chase_1y_pct": "off (your choice, Oct 25); a number (e.g. 300) skips stocks up that much in 12 months"
   },
 
+  "ep_pullback": {
+    "_about": "EP pullbacks (the user, Nov 23 2026): the first touch of the rising 10 / 21 EMA after an EP day (the 1-EP/GAP rule), bought on the 15-minute reclaim (radar/epp.py has the rule and the study's numbers). The evening scan writes setups/ep_pullback.json (scanner/launch.py write_ep_pullback), the live job alerts READY and BUY (radar/alerts.py find_epp), the Watchlist tab lists them (EP PULLBACKS). A change here applies from the next evening scan",
+    "e10_max_sessions": 10,
+    "_e10_max_sessions": "the 10 EMA touch has to come within this many sessions after the EP day",
+    "e10_floor_pct": 5,
+    "_e10_floor_pct": "the 10 EMA play: no daily close more than this % under the EP day's close since the EP, and no buy more than this % under it",
+    "e21_max_sessions": 30,
+    "_e21_max_sessions": "the 21 EMA touch has to come within this many sessions after the EP day (and never a trade under the EP day's low before it)",
+    "max_gap_pct": 20,
+    "_max_gap_pct": "EP days with a bigger gap are left out (as in the study)",
+    "skip_industries": ["Biotechnology", "Pharmaceuticals"],
+    "near_pct": 3,
+    "_near_pct": "the Watchlist's EP PULLBACKS 'now' view shows a name as NEAR when its price is within this % over its EMA level",
+    "first_sale_pct": 10
+  },
+
   "msf": {
     "_about": "MSF settings that differ from the Pine script's defaults (v29.4; coil = 3 candles in both)"
   }
