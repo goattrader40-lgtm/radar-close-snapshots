@@ -854,7 +854,7 @@
         <span class="tgr-lbl" id="wl-time">—</span>
       </div>
       <div class="tgr-bar">
-        <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button><button data-v="START DAYS" aria-pressed="false" title="The day a stock turns up out of a downtrend (its own rules; it may still be under the 50 EMA). Moved here from the Launches tab on Nov 17 2026">START DAYS</button><button data-v="TREND" aria-pressed="false" title="Every name on the four lists and on Launches in a trend now: Up, Turn up, Reclaim or Resting (live in the session)">TREND</button><button data-v="DIP" aria-pressed="false" title="Dip to the 7-day low: 10 EMA over the 21 over the 50, a new 20-day high a few days ago, and now a close that is the lowest of the last 7 days but still above the 21 EMA. The whole market or only your lists; your own numbers">DIP</button></span>
+        <span class="tgr-seg" data-k="wl" aria-label="List"><button data-v="3-SETUPS" aria-pressed="true">3-SETUPS</button><button data-v="2-POOL" aria-pressed="false">2-POOL</button><button data-v="1-UPDAY" aria-pressed="false">1-UPDAY</button><button data-v="1-EP/GAP" aria-pressed="false">1-EP/GAP</button><button data-v="START DAYS" aria-pressed="false" title="The day a stock turns up out of a downtrend (its own rules; it may still be under the 50 EMA). Moved here from the Launches tab on Nov 17 2026">START DAYS</button><button data-v="TREND" aria-pressed="false" title="Every name on the four lists and on Launches in a trend now: Up, Turn up, Reclaim or Resting (live in the session)">TREND</button><button data-v="DIP" aria-pressed="false" title="Dip to the 7-day low: 10 EMA over the 21 over the 50, a new 20-day high a few days ago, and now a close that is the lowest of the last 7 days but still above the 21 EMA. The whole market or only your lists; your own numbers">DIP</button><button data-v="EP PULLBACKS" aria-pressed="false" title="EP pullbacks: the first touch of the rising 10 / 21 EMA after an EP day, bought on the 15-minute reclaim. Tonight's plan, and during the day only what matters now: BUY, READY, NEAR (with ⚡ alerts)">EP PULLBACKS</button></span>
         <label class="tgr-f"><span class="tgr-lbl" id="wl-sec-lbl">Section</span> <select class="tgr-search" id="wl-sec" aria-label="Section"></select></label>
         <input class="tgr-search" id="wl-search" type="search" placeholder="Filter by ticker" aria-label="Filter tickers">
         <span class="tgr-flt" data-f="wl"></span>
@@ -996,6 +996,53 @@
             <th class="num c2"><button class="tgr-th" data-sort="dvol" title="20-day average $ volume, millions">$ vol $M</button></th>
             <th><button class="tgr-th" data-sort="on" title="Which of your lists it is on">On</button></th>
             <th class="c2"><button class="tgr-th" data-sort="group">Theme / industry</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tgr-card" id="epp-card" hidden>
+      <div class="tgr-cardhead">
+        <h2>EP pullbacks: 10 / 21 EMA</h2>
+        <span class="tgr-lbl" id="epp-time">—</span>
+        <button class="tgr-lite" id="epp-dl" type="button" title="Saves the rows on screen as a file for TradingView: Watchlist menu → Import list">Download for TradingView</button>
+      </div>
+      <div class="tgr-bar">
+        <label class="tgr-f" title="Only what matters now: BUY (the 15-minute reclaim came), READY (touched and dipped, waiting for the reclaim) and NEAR (within 3% of its EMA level). Off: the whole plan from the last evening scan. On by itself during market hours"><input type="checkbox" id="epp-now"> Watch now only (BUY / READY / NEAR)</label>
+      </div>
+      <p class="tgr-note" id="epp-note"></p>
+      <details class="tgr-legend tgr-more" data-key="epp"><summary>What this list is</summary><p class="tgr-note">Your EP pullback plays (Nov 23 2026), from the EP study (Jan 2023 – Nov 2026 on 1-minute bars, the 2022 bear market left out). The EP day = the 1-EP/GAP rule (5%+ gap, 2×+ volume, closes up 5%+, the main filters), a gap of at most 20%, no biotech or pharma. <b>10 EMA</b> (play 4): within 10 sessions of the EP day, no daily close more than 5% under the EP day's close since; the first day its low reaches the rising 10 EMA (its value at the last close) and it trades under the EP day's close = READY; BUY = the first 15-minute candle after that closing over the 10 EMA and VWAP, not more than 5% under the EP close (268 trades, 29% won, +0.70R a trade, +187R, worst drop 24R). <b>21 EMA</b> (play 3b): within 30 sessions, never a trade under the EP day's low; the first touch of the rising 21 EMA = READY; BUY = the first 15-minute candle closing over the 21 EMA and VWAP while today's low holds over the EP day's low (276 trades, 26% won, +0.62R, +171R, worst drop 34R). Going under the EMA during the day is fine. One try per EP and EMA: a touch with no buy uses it. Stop: today's low at the buy. Exits: 1/3 at +10%, then breakeven, the rest on a daily close under the 21 EMA. NEAR = within 3% over the EMA level (scanner/settings.json ep_pullback). READY and BUY come as ⚡ alerts (phone and this page); a BUY stays in the box while the price holds over its stop. Status: EMA flat = not rising at the last close: a touch tomorrow is no trade. The evening scan writes setups/ep_pullback.json (scanner/launch.py write_ep_pullback); the intraday rule is radar/epp.py.</p></details>
+      <div class="tgr-scroll tall">
+        <table class="tgr-table" id="epp-table">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="nowr" title="BUY (the 15-minute reclaim came: the ⚡ alert's time), READY (touched and dipped, waiting for the reclaim), NEAR (within 3% of its EMA level); after the close: what today's touch did">Now</button></th>
+            <th><button class="tgr-th" data-sort="play">Play</button></th>
+            <th class="num"><button class="tgr-th" data-sort="level" title="The EMA's value at the last close: the touch is read against it">EMA level</button></th>
+            <th class="num"><button class="tgr-th" data-sort="px" title="Live during market hours, else the last close">Price</button></th>
+            <th class="num"><button class="tgr-th" data-sort="vs" title="The price vs the EMA level">vs level</button></th>
+            <th class="num"><button class="tgr-th" data-sort="guard" title="10 EMA: the EP day's close (the touch day has to trade under it; no buy more than 5% under it). 21 EMA: the EP day's low (never a trade under it)">EP close / low</button></th>
+            <th><button class="tgr-th" data-sort="ep">EP day</button></th>
+            <th class="num"><button class="tgr-th" data-sort="days" title="Sessions after the EP day, counting the next session (the 10 EMA: at most 10; the 21 EMA: at most 30)">Day</button></th>
+            <th><button class="tgr-th" data-sort="buy" title="Today's BUY alert: the price and the stop (today's low at the buy)">Buy / stop</button></th>
+            <th class="c2"><button class="tgr-th" data-sort="group">Theme / industry</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <h3 class="tgr-sub" id="epp-bt-h">Bought: followed to the exit</h3>
+      <p class="tgr-note" id="epp-bt-note"></p>
+      <div class="tgr-scroll">
+        <table class="tgr-table" id="epp-bt">
+          <thead><tr>
+            <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
+            <th><button class="tgr-th" data-sort="play">Play</button></th>
+            <th><button class="tgr-th" data-sort="date">Bought</button></th>
+            <th class="num"><button class="tgr-th" data-sort="entry">Buy</button></th>
+            <th class="num"><button class="tgr-th" data-sort="stop" title="The stop now: today's low at the buy, at the buy price once 1/3 is sold">Stop</button></th>
+            <th><button class="tgr-th" data-sort="first" title="The day 1/3 was sold at +10%">1/3 sold</button></th>
+            <th><button class="tgr-th" data-sort="status">Status</button></th>
+            <th class="num"><button class="tgr-th" data-sort="r" title="The result in R (risk = buy minus the first stop), at the last close while open">R</button></th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -3623,24 +3670,126 @@ defCalc('industry_perf', {
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
+  /* EP PULLBACKS (the user, Nov 23 2026: "show this live, this 10 EMA and 21 EMA things as they happen as alert or current
+     status when it true"; "same logic that it shows throughout the day when its ready and buy"): tonight's plan from the
+     evening scan (setups/ep_pullback.json, scanner/launch.py write_ep_pullback), and during the session what matters now:
+     BUY / READY from the live job's ⚡ alerts (radar-data alerts.json, radar/alerts.py find_epp), NEAR from the live price
+     (within the file's near_pct over the EMA level). The buys are followed to their exit by the evening scan (bought) */
+  let EPPD = null, EPPat = 0, EPPbusy = false, EPPerr = false, EPPNOW = null;
+  const eppLoad = () => {
+    if (EPPbusy || Date.now() - EPPat < 5 * 60 * 1000) return;
+    EPPbusy = true; EPPat = Date.now();
+    getMain('setups/ep_pullback.json').then((d) => { const was = EPPD; EPPD = d && d.rows ? d : EPPD; EPPerr = !(d && d.rows); EPPbusy = false; if (S.wl === 'EP PULLBACKS' && (EPPD !== was || EPPerr)) draw(); })
+      .catch(() => { EPPbusy = false; EPPerr = true; if (S.wl === 'EP PULLBACKS') draw(); });
+  };
+  const eppAlerts = () => {      /* today's READY / BUY alerts: {"SYM:10": {ready, buy, px, stop, lost}} */
+    const S0 = SRV && SRV.date === todayNY() ? SRV : null, m = new Map();
+    ((S0 && S0.items) || []).forEach((it) => {
+      const [sym, kind] = String(it.key || '').split(':'), mm = /^ep(r|b)(10|21)$/.exec(kind || '');
+      if (!mm) return;
+      const k = sym + ':' + mm[2], o = m.get(k) || {};
+      if (mm[1] === 'r') o.ready = o.ready || it.time;
+      else if (!o.buy) {
+        const a = /\$([\d,.]+)\s*$/.exec(it.title || ''), b = /stop \$([\d,.]+)/.exec(it.msg || '');
+        o.buy = it.time; o.px = a ? Number(a[1].replace(/,/g, '')) : null; o.stop = b ? Number(b[1].replace(/,/g, '')) : null; o.lost = (S0.lost || {})[it.key] || null;
+      }
+      m.set(k, o);
+    });
+    Object.keys((S0 && S0.epp) || {}).forEach((k) => { const mm = /^(.+):off(10|21)$/.exec(k); if (mm) { const o = m.get(mm[1] + ':' + mm[2]) || {}; o.off = true; m.set(mm[1] + ':' + mm[2], o); } });   /* broke the EP day's low: out */
+    return m;
+  };
+  const eppRows = () => {
+    if (!EPPD || !EPPD.rows) return [[], false];
+    const al = eppAlerts(), near = num((EPPD.rules || {}).near_pct) ?? 3, out = [];
+    const b = rowsOf('build')[0], cur = LIVE_ON && LIVE ? LIVE.session : b ? b.asof : null, newer = !!(cur && String(cur) > String(EPPD.date));
+    Object.entries(EPPD.rows).forEach(([s, d]) => {
+      const r = SK(s), p = r ? num(r.price) : null;
+      [['p10', '10'], ['p21', '21']].forEach(([pk, pl]) => {
+        const q = d[pk]; if (!q) return;
+        const a = al.get(s + ':' + pl) || {}, touchedNow = !newer && q.touched && q.touched === EPPD.date;
+        if (!['wait', 'flat'].includes(q.status) && !touchedNow) return;
+        let now = '—', nowr = 5;
+        if (touchedNow) { now = a.buy ? 'BUY ' + a.buy + (a.lost ? ', stop hit ' + a.lost.at : '') : a.ready ? 'READY ' + a.ready + ', no buy' : 'touched today, no READY'; nowr = a.buy ? 0 : 4; }
+        else if (q.status === 'flat') { now = 'EMA flat: a touch is no trade'; nowr = 6; }
+        else if (newer) {
+          if (a.off && !a.buy) { now = 'off: under the EP day\'s low'; nowr = 6; }
+          else if (a.buy) { now = 'BUY ' + a.buy + (a.lost ? ', stop hit ' + a.lost.at : ''); nowr = a.lost ? 3 : 0; }
+          else if (a.ready) { now = 'READY ' + a.ready; nowr = 1; }
+          else if (p && q.level && p <= q.level * (1 + near / 100)) { now = 'NEAR'; nowr = 2; }
+        }
+        out.push({ symbol: s, tv: d.tv, play: pl + ' EMA', level: q.level, px: p, vs: p && q.level ? Math.round((p / q.level - 1) * 1000) / 10 : null,
+          guard: pl === '10' ? d.c0 : d.l0, ep: d.ep, days: d.days, now, nowr, buy: a.buy ? fPrice(a.px) + ' / ' + fPrice(a.stop) : '',
+          group: r ? String(r.themes || '').split(' | ').filter(Boolean)[0] || r.industry_detail || r.industry || '' : '' });
+      });
+    });
+    return [out, newer];
+  };
+  const drawEpp = (lq) => {
+    eppLoad();
+    const T = $('#epp-table'), tb = T.querySelector('tbody'); tb.replaceChildren();
+    const [all, newer] = eppRows(), nowOnly = EPPNOW === null ? newer && marketOpen() : EPPNOW;
+    $('#epp-now').checked = nowOnly;
+    const rows = all.filter((r) => (!lq || r.symbol.includes(lq)) && (!nowOnly || r.nowr <= 3));
+    $('#epp-time').textContent = !EPPD ? '—' : newer ? (LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : 'The last close') + ' · plan from the ' + fDate(EPPD.date) + ' close' : 'After the ' + fDate(EPPD.date) + ' close: the plan for the next session';
+    const nb = all.filter((r) => r.nowr === 0).length, nr = all.filter((r) => r.nowr === 1).length, nn = all.filter((r) => r.nowr === 2).length;
+    $('#epp-note').textContent = !EPPD ? (EPPerr ? 'No data yet: the evening scan writes it after the close (about 4:30 PM ET).' : 'Loading…')
+      : (nowOnly ? rows.length + ' now (' + nb + ' BUY, ' + nr + ' READY, ' + nn + ' NEAR) of ' + all.length + ' plays in the plan.' : all.length + ' plays in the plan' + (newer ? ': ' + nb + ' BUY, ' + nr + ' READY, ' + nn + ' NEAR now.' : '.'))
+        + ' A BUY or READY also comes as a ⚡ alert.';
+    sortRows(T, rows, { key: 'nowr', dir: 1 }, ['symbol', 'play', 'ep', 'now', 'buy', 'group'], '');
+    S.eppShown = rows;
+    if (EPPD && !rows.length) noRows(tb, 11, lq ? 'No "' + lq + '" in this list.' : nowOnly ? 'Nothing at its EMA right now.' : 'No EP pullback in the plan tonight.');
+    rows.forEach((r) => {
+      const tr = h('tr'), key = tkCell(r.symbol, r.tv);
+      wlTags(key, r.symbol);
+      tr.append(key, (() => { const td = h('td', 'nw' + (r.nowr === 0 ? ' tgr-up' : ''), r.now); if (r.nowr <= 1) td.style.fontWeight = '600'; if (r.nowr === 1) td.style.color = 'var(--color-warn)'; return td; })(), h('td', 'nw', r.play), h('td', 'num', fPrice(r.level)), h('td', 'num', fPrice(r.px)),
+        h('td', 'num ' + tone(r.vs), p1(r.vs, true)), h('td', 'num', fPrice(r.guard)), h('td', 'nw', fDate(r.ep).replace(/, \d{4}$/, '')), h('td', 'num', String(r.days)),
+        h('td', 'nw', r.buy || '—'), h('td', 'c2', r.group || '—'));
+      tb.append(tr);
+    });
+    /* the buys, followed to their exit (the evening scan) */
+    const B = $('#epp-bt'), bb = B.querySelector('tbody'); bb.replaceChildren();
+    const bt = ((EPPD && EPPD.bought) || []).filter((x) => !lq || x.symbol.includes(lq));
+    $('#epp-bt-note').textContent = !EPPD ? '' : bt.length ? 'From the BUY alerts, updated each evening with your exits: 1/3 at +10%, then breakeven, the rest on a daily close under the 21 EMA; a closed trade stays 5 sessions.' : 'No EP pullback bought yet (the BUY alerts start with the first session after this went live).';
+    sortRows(B, bt, { key: 'date', dir: -1 }, ['symbol', 'play', 'date', 'first', 'status'], '');
+    bt.forEach((x) => {
+      const tr = h('tr');
+      tr.append(tkCell(x.symbol, x.tv), h('td', 'nw', x.play + ' EMA'), h('td', 'nw', fDate(x.date).replace(/, \d{4}$/, '') + ' ' + (x.time || '')), h('td', 'num', fPrice(x.entry)), h('td', 'num', fPrice(x.stop)),
+        h('td', 'nw', x.first ? fDate(x.first).replace(/, \d{4}$/, '') : '—'), h('td', 'nw' + (/^open|first sale/.test(x.status) ? ' tgr-up' : ''), x.status + (x.exit ? ' ' + fDate(x.exit).replace(/, \d{4}$/, '') : '')),
+        h('td', 'num ' + tone(x.r), num(x.r) === null ? '—' : (x.r > 0 ? '+' : '') + x.r.toFixed(2) + 'R'));
+      bb.append(tr);
+    });
+  };
+  $('#epp-now').addEventListener('change', (e) => { EPPNOW = e.target.checked; draw(); });
+  $('#epp-dl').addEventListener('click', () => {
+    const rows = S.eppShown || [];
+    if (!rows.length) { toast('No rows to save.'); return; }
+    const txt = '###EP pullbacks\n' + [...new Set(rows.map((r) => r.tv || r.symbol))].join('\n') + '\n';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
+    a.download = 'EP pullbacks ' + todayNY() + '.txt';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
   const drawWatchlist = (symMap) => {
     drawAlog(loadDay('log', '[]'));
     const table = $('#wl-table'), tb = table.querySelector('tbody'); tb.replaceChildren();
     setState('wl-table', ['setups']);
     /* START DAYS: its own table (below) in place of the list's table, rules and filters; the ticker box filters it */
-    const SD = S.wl === 'START DAYS', DP = S.wl === 'DIP';     /* DIP: its own card too (below) */
-    [$('#wl-note'), $('#wl-rules-box'), $('#wl-legend'), $('#wl-about-box'), table.closest('.tgr-scroll'), $('#wl-sec').closest('label'), document.querySelector('.tgr-flt[data-f="wl"]'), $('#wl-dl')].forEach((el) => { if (el) el.hidden = SD || DP; });
+    const SD = S.wl === 'START DAYS', DP = S.wl === 'DIP', EPV = S.wl === 'EP PULLBACKS';     /* DIP, EP PULLBACKS: their own cards too (below) */
+    [$('#wl-note'), $('#wl-rules-box'), $('#wl-legend'), $('#wl-about-box'), table.closest('.tgr-scroll'), $('#wl-sec').closest('label'), document.querySelector('.tgr-flt[data-f="wl"]'), $('#wl-dl')].forEach((el) => { if (el) el.hidden = SD || DP || EPV; });
     $('#ln-sd-card').hidden = !SD;
     if (SD) drawStartDays(symMap, S.wlq.toUpperCase());
     $('#dip-card').hidden = !DP;
     if (DP) drawDip(S.wlq.toUpperCase());
+    $('#epp-card').hidden = !EPV;
+    if (EPV) drawEpp(S.wlq.toUpperCase());
     const doc = st('setups').status === 'ok' ? st('setups').data : null;
     WLD = doc ? doc.date : null;
     const all = wlRows(symMap);
     /* today's triggers on a read from an earlier close: a 3-SETUPS row holding one moves to the triggered part */
     const LT = WLD && WLD < todayNY() ? liveTrigs() : new Map();
     all.forEach((r) => { const ts = LT.get(r.symbol); r.lt = ts || null; if (S.wl === '3-SETUPS' && ts && ts.some((t) => !t.lost)) r.section = 'Triggered today'; });
-    document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = b.dataset.v === 'DIP' ? (DIP && S.wl === 'DIP' ? (S.dipShown || []).length : null) : b.dataset.v === 'START DAYS' ? sdCount() : b.dataset.v === 'TREND' ? (doc ? (S.wl === 'TREND' ? all.length : trendSrc(doc).length) : null) : doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
+    document.querySelectorAll('.tgr-seg[data-k="wl"] button').forEach((b) => { const n = b.dataset.v === 'DIP' ? (DIP && S.wl === 'DIP' ? (S.dipShown || []).length : null) : b.dataset.v === 'EP PULLBACKS' ? (EPPD && S.wl === 'EP PULLBACKS' ? (S.eppShown || []).length : null) : b.dataset.v === 'START DAYS' ? sdCount() : b.dataset.v === 'TREND' ? (doc ? (S.wl === 'TREND' ? all.length : trendSrc(doc).length) : null) : doc && doc.counts ? doc.counts[b.dataset.v] : null; b.textContent = b.dataset.v + (n === null || n === undefined ? '' : ' (' + n + ')'); });
     $('#wl-time').textContent = doc ? 'Scan of the ' + fDate(doc.date) + ' close' : st('setups').status === 'error' ? 'Could not load the lists' : '—';
     const rules = wlRules(S.wl, doc && doc.settings), rbox = $('#wl-rules');
     $('#wl-rules-sum').textContent = 'The rules of ' + S.wl;
@@ -4441,7 +4590,7 @@ defCalc('industry_perf', {
      TRIGGERS: the 21 EMA retest alone is a heads-up ("not a strong sign by itself"), with the breakout level under it
      (ema21bl) or after 2 closes under the 21 EMA (the undercut & reclaim) a trigger */
   const TRIGGERS = new Set(['power', 'catalyst', 'basebreak', 'launch', 'reversal', 'laggard', 'breakout', 'retest', 'reclaimbo2',
-    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close', 'mbo', 'mbo2', 'ema21hold', 'ema50hold']);
+    'ema50', 'push', 'pop', 'gapbase', 'gob1', 'gob5', 'confirm', 's3', 'trend', 'ep', 'ema21bl', 'pmclaude', 'pmcode', 'w200', 'w200close', 'mbo', 'mbo2', 'ema21hold', 'ema50hold', 'epb10', 'epb21']);
   /* a ⚡ power day / EP or a 🎯 pattern breakout back in its box (the user, Nov 18 2026; radar/alerts.py BACK_RE): SYM:<kind>backHHMM */
   const BACKK = /^(power|ep|breakout|confirm|gapbase|gob1|gob5|basebreak|pop|s3)back\d{4}$/;
   const isTrigger = (key, title) => { if (/^(grp|thm):/.test(String(key)) || /^★/.test(title || '') || BACKK.test(String(key).split(':')[1] || '')) return true;   /* a starred alert (Nov 4 2026) too */ const kind = String(key).split(':')[1] || ''; return kind === 'ema21' ? /UNDERCUT/.test(title || '') : kind === 'retest' ? / \+ /.test(title || '') /* with an EMA at the level (Nov 10 2026); alone a heads-up */ : /^mbo2?back/.test(kind) /* a morning breakout back on (Nov 17 2026) */ || TRIGGERS.has(kind); };
@@ -4451,7 +4600,8 @@ defCalc('industry_perf', {
     launch: 'launch', reversal: 'reversal launch', laggard: 'laggard launch', reclaimbo: 'back over its breakout level', reclaimbo2: 'breakout undercut & reclaim',
     ema50back: 'back over the 50 EMA', ema50: '50 EMA undercut & reclaim', push: 'push', pop: 'pop', gapbase: 'gap out of base', gob1: 'gap out of base',
     gob5: 'gap out of base', s3: '3-SETUPS trigger', trend: 'TREND trigger', ep: 'episodic pivot', w200: 'W crossing the 200', w200now: 'W over the 200', w200close: 'W closed over the 200', early: 'early gap', near: 'gapping to the buy point', mbo: 'morning breakout', mbo2: 'breakout, not in trend', bolight: 'over the buy point on light volume', bowide: 'breakout, the day\'s low far',
-    ema21hold: '21 EMA hold (tight day)', ema50hold: '50 EMA hold (tight day)' };
+    ema21hold: '21 EMA hold (tight day)', ema50hold: '50 EMA hold (tight day)',
+    epr10: 'EP pullback ready (10 EMA)', epb10: 'EP pullback buy (10 EMA)', epr21: 'EP pullback ready (21 EMA)', epb21: 'EP pullback buy (21 EMA)' };
   const kindWords = (key, title) => { const k = String(key).split(':')[1] || ''; return k === 'ema21' && /UNDERCUT/.test(title || '') ? '21 EMA undercut & reclaim' : (KIND_WORDS[k] || k); };
   /* each box its own sound for a trigger (the user, Nov 4 2026), and a voice that says the box and the ticker ("Episodic
      pivot, C D W"); the browser plays them once you clicked on the page after opening it.
@@ -4539,6 +4689,8 @@ defCalc('industry_perf', {
     if (/^BREAKOUTS, NOT IN TREND \(/.test(b.title)) { const m = /\((\d+)\)/.exec(b.title); return 'Breakouts, not in trend, ' + (m ? m[1] : 'several') + ' stocks'; }
     if (b.box === 'g') { const m = / GROUP MOVE: ([^(]+)/.exec(b.title); return 'Group move' + (m ? ', ' + m[1].trim().replace(/&/g, 'and') : ''); }
     if (/^MORNING BREAKOUTS \(/.test(b.title)) { const m = /\((\d+)\)/.exec(b.title); return 'Morning breakouts, ' + (m ? m[1] : 'several') + ' stocks'; }   /* the batch (the user, Nov 9 2026) */
+    { const m = / EP PULLBACK (BUY|READY) - (10|21) EMA/.exec(String(b.title || ''));       /* "E P pullback buy, 10 E M A, D E L L" (the user, Nov 23 2026) */
+      if (m) return 'E P pullback ' + m[1].toLowerCase() + ', ' + m[2] + ' E M A' + (b.sym ? ', ' + b.sym.split('').join(' ') : ''); }
     const n = (/^★+/.exec(b.title) || [''])[0].length;
     const head = BOX_SAY[b.box] + (n ? ', ' + STARS_SAY[Math.min(n, 3)] : '') + (b.sym ? ', ' + b.sym.split('').join(' ') : '');
     if (b.box === 'p') return head + patternSay(b);
@@ -4616,6 +4768,7 @@ defCalc('industry_perf', {
     if (/^mbo2?(back|$)/.test(kind || '')) return 'O';                                                  /* the morning breakouts: any stock, their own filter */
     if (kind === 'w200' || kind === 'w200now' || kind === 'w200close') return 'G';   /* a W name: a laggard until it closes over the 200 */
     if (kind === 'laggard') return 'G';
+    if (/^ep[rb](10|21)$/.test(kind || '')) return 'W';                               /* EP pullbacks: the Watchlist's EP PULLBACKS */
     if (on('launches')) return 'L';
     if (on('laggards')) return 'G';
     if (launched && launched.has(sym)) return 'L';      /* a 3-SETUPS / TREND trigger of a stock launching today (ARLO Nov 4) */
@@ -4628,7 +4781,7 @@ defCalc('industry_perf', {
     ['b', '↩️', 'Pullback entries'], ['h', '👀', 'Heads-ups'], ['g', '👥', 'Groups & news']];
   const BOX_OF = { power: 'e', catalyst: 'l', launch: 'l', stars: 'l', reversal: 'l', laggard: 'l',
     breakout: 'p', confirm: 'p', gapbase: 'p', gob1: 'p', gob5: 'p', gob950: 'p', gob2x: 'p', basebreak: 'p', pop: 'p', s3: 'p', trend: 'p',
-    ep: 'e',
+    ep: 'e', epr10: 'e', epb10: 'e', epr21: 'e', epb21: 'e',     /* EP pullbacks in the ⚡ box (the user, Nov 23 2026: "same box") */
     retest: 'b', ema21: 'b', ema21bl: 'b', reclaimbo: 'b', reclaimbo2: 'b', push: 'b', ema50: 'b', ema50back: 'b', touch: 'b', ema21hold: 'b', ema50hold: 'b', bolight: 'h', bowide: 'h',
     early: 'h', near: 'h', zone: 'h', ema21zone: 'h', tight: 'g', grp: 'g', eodheld: 'g', eodlost: 'g', pmclaude: 'm', pmcode: 'm', w200: 'l', w200now: 'h', w200close: 'g', mbo: 'o', mbo2: 'n' };
   const boxOfKey = (key, title) => {
@@ -4951,10 +5104,11 @@ defCalc('industry_perf', {
     /* in ⚡ now: only a power day / EP the latest check found holding hides the stock's launch lines (no check yet today,
        e.g. a record from before Nov 6: nothing is hidden; Nov 5 night EWTX's and WRBY's catalyst gaps vanished from 🚀) */
     const HELD = new Set(((SRVd && SRVd.hold && SRVd.hold.keys) || []).concat(loadDay('pnow', '[]')));
-    const upSyms = new Set(trigs.filter((x) => boxOf0(x) === 'e' && HELD.has(lineKey(x))).map(symK));
+    const isEppB = (x) => /:epb(10|21)$/.test(lineKey(x));         /* an EP pullback BUY: its own rule in ⚡, not a gap-day EP */
+    const upSyms = new Set(trigs.filter((x) => boxOf0(x) === 'e' && !isEppB(x) && HELD.has(lineKey(x))).map(symK));
     const lSyms = new Set(trigs.filter((x) => boxOf0(x) === 'l' && !lostOf(lineKey(x))).map(symK));           /* in 🚀 now */
     const downOne = new Map();                                    /* one stepped-down ⚡ line per stock: the newest */
-    trigs.filter((x) => boxOf0(x) === 'e' && lostOf(lineKey(x))).forEach((x) => { if (!downOne.has(symK(x))) downOne.set(symK(x), x); });
+    trigs.filter((x) => boxOf0(x) === 'e' && !isEppB(x) && lostOf(lineKey(x))).forEach((x) => { if (!downOne.has(symK(x))) downOne.set(symK(x), x); });
     /* where a line sits now, and why (step: 'down-l' to 🚀, 'down-h' to 👀, 'up' shown in ⚡, '' its own box) */
     const place = (x) => {
       const b = boxOf0(x);
@@ -4964,8 +5118,9 @@ defCalc('industry_perf', {
          the log only (the stock's first line is the one in the box) */
       if (/:mbo2?back/.test(lineKey(x)) || BACKK.test(lineKey(x).split(':')[1] || '')) return ['', ''];
       if (!b || !'lepbon'.includes(b)) return [b, ''];
-      if (!x.startsWith('🔔 ')) return ['h', ''];                  /* a heads-up: 👀 */
+      if (!x.startsWith('🔔 ')) return /:epr(10|21)$/.test(lineKey(x)) ? ['e', ''] : ['h', ''];     /* a heads-up: 👀 (an EP pullback READY: ⚡, the user's "same box") */
       const k = lineKey(x), sym = symK(x), lost = !!lostOf(k);
+      if (b === 'e' && /:epb(10|21)$/.test(k)) return lost ? ['h', 'down-h'] : ['e', ''];      /* an EP pullback BUY: out of ⚡ once its stop is hit */
       if (b === 'e') {
         if (!lost) return ['e', ''];
         if (downOne.get(sym) !== x) return ['', 'down-l'];
@@ -4984,6 +5139,7 @@ defCalc('industry_perf', {
       if (!x.startsWith('🔔 ') || !'lepbon'.includes(boxOf0(x) || 'x') || /:mbo2?back/.test(lineKey(x)) || BACKK.test(lineKey(x).split(':')[1] || '')) return '';
       const k = lineKey(x), l = lostOf(k), bk = backOf(k), st = place(x)[1], when = (v) => hm12(v.at) + (v.price ? ' (' + fPrice(v.price) + ')' : '');
       if (st === 'up') return ' · ↑ now in ⚡ Episodic pivots';
+      if (l && /:epb(10|21)$/.test(k)) return ' · ↓ its stop (today\'s low at the buy) was hit at ' + when(l) + ': down to 👀 Heads-ups';
       if (l && st === 'ep') return ' · no longer meets the power day rules since ' + when(l) + ', still meets an episodic pivot\'s (volume pace 3x+): stays in ⚡';
       if (l && st === 'down-l') return ' · ↓ no longer meets the power day / EP rules since ' + when(l) + ': down to 🚀 Launching now (still meets a launch\'s rules)';
       if (l && boxOf0(x) === 'o') return ' · ↓ no longer meets your morning breakout settings since ' + when(l) + ': down to 👀 Heads-ups';
