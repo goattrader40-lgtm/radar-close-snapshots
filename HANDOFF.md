@@ -128,10 +128,25 @@ alone.
 - Data: long_bars.json on radar-data had only SPOT / SPY (another session's fetch); re-run `long` with the 24 example stocks +
   VERX (30 symbols now: the 153 of the morning are gone; re-fetch others when needed).
 
-## Status of the session "Radar: 1-UPDAY / 1-EP/GAP / START DAYS -> 3-SETUPS (Nov 21)" (Sat Nov 21 - Sun Nov 22 2026; session_01PkbDaj2rqMQ1qnsD48H7ev; in progress)
+## Status at the end of the session "Radar: 1-UPDAY / 1-EP/GAP / START DAYS -> 3-SETUPS (Nov 21)" (Sat Nov 21 - Sun Nov 22 2026 ~11:45 PM ET; session_01PkbDaj2rqMQ1qnsD48H7ev)
+
+**In one line: two changes live on main (the Watchlist tasks 1-3; EP PULLBACKS, the list and the READY / BUY alerts), a long EP
+trading study (the user's playbook, plays 1 / 1b / 4 / 3b, in their Excel), the study tools on the session branch only. NONE OF
+IT HAS RUN ON LIVE PRICES OR IN AN EVENING SCAN YET. FIRST THINGS MON NOV 23: during the day, alerts.json keys :epr10 / :epr21 /
+:epb10 / :epb21 (if a planned name touches: BRBR, ENR on the 10 EMA; BRBR, ENR, GKOS, HLF, PCOR, PGNY, REZI, UPBD, YOU on the
+21 EMA), the ⚡ box and the Watchlist's EP PULLBACKS "Watch now" view; after the evening scan, setups/ep_pullback.json dated
+Nov 23 (its bought list from the day's BUYs), setups/latest.json (1-UPDAY without the 1-EP/GAP names, no "15 trading days" in
+changes_today) and 3-SETUPS rows with source "START DAYS".**
+
+- **How it went with the user (for the next session)**: the study cost them patience: numbers changed between tables and
+  between Excel copies (different exit rules per table, an old file with the same name), and the user found a data flaw I
+  should have caught (DELL Feb 27 / Mar 10 / Mar 31 2026 read against their 15-minute chart: "you need to analyze and check your
+  datas"; "to much back and forth, you could have done way better"). So: one exit rule for every table, one file with a new
+  name per version, every number recomputed when a rule changes, and the user's own example charts checked against the data
+  before a table goes out.
 
 - **LIVE (the user's "go live", Sun Nov 22 2026 ~11:40 PM ET, 7ca443e on main; Launches rebuilt by picks.yml): EP PULLBACKS,
-  the 10 / 21 EMA first touch after an EP day, as a Watchlist list and live alerts** (the user, Nov 23 2026: "show this live,
+  the 10 / 21 EMA first touch after an EP day, as a Watchlist list and live alerts** (the user, Nov 22 2026 evening ET; the code comments say Nov 23: "show this live,
   this 10 ema and 21 ema things as they happen as alert, or current status when its true"; "we should get alert when its
   ready ... then when its in true state it could alert, buy point confirmed"; "it has to say in alert message ep pullback buy
   10 ema"; box: "shouldnt be good to be in same box with episodic pivot" -> the ⚡ box). The rules are the playbook's plays 4
@@ -141,7 +156,7 @@ alone.
      touch of the rising 10 EMA (today's low at or under its value at the last close); READY = touched it AND traded under the EP
      day's close (the dip; without it 64 trades -28R; a stop under the EP close only got them to ~0R); BUY = the first 15-minute
      candle from READY on closing over the 10 EMA and VWAP, not more than 5% under the EP close (268 trades 29% won +0.70R +187R
-     worst drop 24R; 5-minute candles +0.58R, 1-minute +0.33R, 10-minute +0.49R (asked Nov 23), 30-minute +0.58R, without VWAP +0.37R). **21 EMA**: within 30 sessions, never a trade
+     worst drop 24R; 5-minute candles +0.58R, 1-minute +0.33R, 10-minute +0.49R (asked Nov 22), 30-minute +0.58R, without VWAP +0.37R). **21 EMA**: within 30 sessions, never a trade
      under the EP day's low; READY = the first touch of the rising 21 EMA; BUY = the first 15-minute candle closing over the 21 EMA
      and VWAP while today's low holds over the EP low (276 trades 26% won +0.62R +171R; 5-minute +0.36R, 10-minute +0.35R, 30-minute +0.64R but 249 trades +158R); under the EP low first
      = off, silently (they made +68R but nearly all in 2025, -44R without the best 5: not in the rule, no alert). Stop = today's
@@ -186,6 +201,18 @@ alone.
   Skips: a stock under its 50 EMA but over its 200 SMA yesterday; play 2 (the close buy) is the close version of 1b. The Excel
   (EP_playbook_FINAL_Nov22.xlsx) was sent to the user (the scratchpad is not kept); the study's test tools stay on the session
   branch (radar/probe_orh.py, probe_raw.py, study.sh, history/orh_*.json), not on main.
+- **Answered, no change**: 10-minute candles for the EP pullback buy (the user, Nov 22: "have you tested 10 min?"): no better
+  (numbers in the EP PULLBACKS entry above), 15 stays; "BUY" is one event in three places: the phone push, the ⚡ box on the
+  Alerts tab, the "Now" column of the Watchlist's EP PULLBACKS list (then its Bought table). The user's own trading bot for
+  plays 1 / 1b (one bot rule for both; only play 1 has the 3-month room row): the rows were worded in chat, nothing built here.
+- **Test only** (branch claude/gifted-mendel-civxei, for the study, not for main): radar/probe_orh.py, probe_bars.py,
+  probe_raw.py, radar/study.sh and its `orh / bars6y / raw` line in radar-tools.yml, history/orh_*.json (1-minute SIP bars of
+  the EP days and the touch days); the branch radar-study holds the 1-minute data. The scratchpad scripts and the Excel's
+  builder are not kept (the Excel EP_playbook_FINAL_Nov22.xlsx is with the user).
+- **Open, each needs the user's go**: (1) the morning EP alert lined up with plays 1 / 1b (yesterday over / under the 50 EMA,
+  the 200 SMA and the 1-month high at the open, the 3-month room for play 1: offered as a separate change, not asked for);
+  (2) a phone push for NEAR on EP pullbacks (the list only now); (3) the study files on the public repo's branches (the session
+  branch, radar-study): keep or delete (asked, no answer).
 
 - **LIVE (the user's "tasks 1-3 go live", Sat Nov 21 2026, merge ee34096 on top of the other session's be57c80; Launches rebuilt
   by picks.yml): the three Watchlist changes agreed in the session "watchlist restructuring (Nov 21)". They show from the Mon
@@ -218,215 +245,6 @@ alone.
   +282R). The user's plan (1/3 at 2-3 ADR or 10-20% within 5 days, the rest breakeven, trail): the 21 EMA trail +256R to
   +317R, "the higher of the 10 / 21 EMA" +105R to +158R; best +20% / 3 ADR with the 21 EMA (+317R / +311R, +0.25R); +15% with
   the 21 EMA the only one positive in the last 12 months (+4R). Scripts were in the session's scratchpad (not kept).
-
-## Status at the end of the session "Radar: theme chips on Today's gainers (Nov 18)" (Wed Nov 18 ~10:55 AM ET - Sat Nov 21 2026 ~12:40 PM ET; session_01PkbDak4wNj9qyumu6CQx8R)
-
-**In one line: seven alert changes, all live on main, nothing left on a test branch (claude/compassionate-volta-5ichnh = main): the
-📊 "Breakouts, not in trend" box with its own settings, the 🔥 Theme moving up alert (3+ morning breakouts of one theme), GROUP
-MOVE from 9:40 with ADR 4%+ only, the 3-minute opening range, BACK ON alerts for ⚡ and (1.5x volume) 🎯, the morning boxes from
-their own From time (9:31 at the earliest), the EARLY gap heads-up for the followed names. NONE WAS SEEN ON LIVE PRICES BY THIS
-SESSION (stand-in levels only; the Thu Nov 19 and Fri Nov 20 opens ran the first six, unchecked). FIRST THING NEXT SESSION: Mon Nov
-23's alerts.json: `:mbo2` / `mbatch2` / `thm:` / `<kind>backHHMM` keys, `:early` keys with "gapping" in the title from 9:31, the
-first `grp:` at 9:40 or later, levels.json rows with 5 values from 9:33; and ask the user how the 📊 box and the 🔥 alerts
-behaved on Nov 19-20 (too many? the 📊 settings saved in alerts/morning2.json?).**
-
-- (The MBGL / AVEX session's wrap-up, a minute before this one, moved this section to HANDOFF_ARCHIVE.md with ten others while
-  it was still open; this wrap-up brought it back here, completed, and took that earlier copy out of the archive: one copy
-  only. The other sessions changed things on top of this work since Nov 18: a morning BACK ON
-  after the box's End time is silent (Nov 19), a context line on GROUP MOVE / THEME MOVING UP alerts (Nov 20), themes by
-  business line (Nov 20): their sections are in the archive.)
-- **How it went with the user (for the next session)**: two of my mistakes cost them time. (1) "move the GROUP MOVE time to
-  9:40" was built as "alerts before 9:40 don't count" and reported as "3 alerts instead of 8" before showing what was behind
-  the numbers (the user: "you cant do stuff without my confirmation... all i asked you change time", "you really messed me up
-  today"); the fix was a table of the 8 group alerts, the stocks behind each and what the change did to it, then their version.
-  (2) the first theme alert (3 stocks up 3%+) was built before measuring: 34 alerts a day. So: show the table of what changes,
-  by ticker and time, BEFORE building; a question ("do you still go live for this?", "what is this you asking me to do go
-  live?") is not a go.
-
-
-- **LIVE (the user's "ok go do what you gotta check adn go live", Wed Nov 18 2026 after the evening scan, commit c92c51e, branch
-  claude/compassionate-volta-5ichnh merged with main): five alert changes. NONE HAS RUN ON LIVE PRICES: FIRST CHECK Thu Nov 19
-  from 9:33 AM ET** (tested with stand-in levels: cloud sessions can't read Yahoo).
-  Started from: all 12 Cybersecurity stocks up 5-13% on Nov 18 (TENB first at 9:53, PANW 10:00, QLYS 10:03, ...) with no
-  important alert ("howcome we didnt get any important priority alert that all cybersecurity stocks moving up as a group").
-  Found: the GROUP MOVE alert counts stocks that ALERTED (2+), once a day per group; Cybersecurity's was spent at 9:35 on three
-  pullback heads-ups (NTSK, SAIL, RPD); PANW, CRWD, QLYS, TENB, S were under their 50 EMA, on no list, and could not alert.
-  1. **📊 Breakouts, not in trend: a second morning box** (the user: "another tab alerts for stocks not in trend, basically not
-     eligible for setups i have in morning breakout alerts"; "separate filters i can adjust"). radar/alerts.py: kind `mbo2`
-     (keys SYM:mbo2, SYM:mbo2backHHMM, mbatch2HHMM:mbo2), its own settings alerts/morning2.json (load_morning2: none saved = the
-     📈 settings with the five trend boxes off; NOT SAVED YET: the user will tighten it), its own levels (state mbo2_lv). A stock
-     that passes the trend boxes ticked in the 📈 settings at the live price is left out (morning_trend_ok: "good logic like
-     it"); one that fired in 📈 does not fire here. Same true state and BACK ON alert as 📈, portal only. day.py morning_args
-     passes --morning2; fast.py reads its candidates each minute too. docs/index.html: the two settings boxes side by side
-     (.mbo-split; MBI / MBC / withI: one code for both), the 📊 box (code n), its sound and voice ("Breakout, not in trend, P A
-     N W, volume 1.3 times"). Replay of Nov 18 with the copied settings (radar-tools `morning above200=0 above50=0 e10_e21=0
-     e21_e50=0`): 62 fire, 20 of them in 📈, so about 42 in 📊: **it rings a lot until the user tightens it (told them: before
-     9:25 the first morning)**.
-  2. **🔥 Theme moving up: 3+ morning breakouts of one theme** (from 📈 or 📊; tight members, fit 0.7+; themes and tight
-     industry groups, one alert for the same stocks, the theme names it): THEME MOVING UP, key thm:<theme>, once a day per
-     theme, a trigger, phone too, its own box (code t; the user: "just keep it with its own box, if i dont like then we can
-     move back to morning breakouts"), sound and voice ("Theme moving up, Cybersecurity, 3 breakouts"). alerts.py
-     theme_members / theme_breakouts. Nov 18 replay: PANW 9:53, CRWD 10:07, S 10:10 -> the alert at 10:10, the only theme
-     that day. **Dropped after measuring**: a first version, 3 tight members up 3%+ (the user's first pick): 34 alerts a day on
-     22 sessions (Oct 20 - Nov 18; 87 on Nov 9), 3 up 4%+ 23 a day, 5%+ with half the theme and themes only 3 a typical day
-     but 29 on Nov 9 (the user: "i m looking for real alerts"; they then proposed the morning-breakout route). The replay tool
-     (radar/probe_themeup.py, radar-tools `themeup`) was removed with it; the numbers are in the rules row.
-  3. **GROUP MOVE: the alert is sent from 9:40, and only ADR 4%+ stocks count** (GROUP_FROM, GROUP_MIN_ADR; the page's own
-     group tags use the ADR rule too). **My mistake, corrected with the user**: I first built "alerts before 9:40 don't count"
-     (5 of the day's 8 group alerts vanished); the user: "we are only changing alert time, still if something happened
-     between 930-940 it has to show". Now every alert of the day counts and a group made at 9:35 alerts at 9:40. Nov 18
-     replay: 8 group alerts -> 5 (MD 3.73%, WAT 3.42%, BSY 3.20% ADR not counted). The single-stock alerts are unchanged.
-  4. **3-minute opening range** (the user: "2min/3min/5min", keep 1min): ORH_START 3 = 9:33, morning_levels n=3; levels.py
-     keeps a 5th value (rows [high 5, low 5, high 1, high 2, high 3], read from 9:33); the picker in both settings boxes and
-     the + Filter "Above ORH" chip read 1min / 2min / 3min / 5min; probe_morning orh_min=3.
-  5. **BACK ON alert for ⚡ and 🎯** (the user: "i need sounds for episodic pivots as well for back on.... and pattern
-     breakouts with 1.5 volume"; "for now portal only"): a power day / EP that stopped holding and holds again gets one BACK
-     ON alert; a pattern breakout (breakout, confirm, gapbase, gob1, gob5, basebreak, pop, s3) only with a volume pace of
-     1.5x+; at most one every 15 minutes a stock; portal only (keys SYM:<kind>backHHMM, BACK_RE; update_holding returns
-     them). 🚀 and ↩️ still come back silently; 📈 / 📊 keep their own.
-  Tested: the alert job on the Nov 18 11:05 prices with stand-in levels (20 in 📈, 29 in 📊, none in both, one theme alert, no
-  repeat on a second run, lost / back and the 15-minute limit, 5 of 19 returning breakouts at 1.5x+ alerted); the page on
-  desktop / phone with that record (the split boxes, each box edited and reset alone, every voice line, 5 tabs, 0 page
-  errors), again after the merge with main. Rules workbook: 3 new rows, 3 changed. No `--regress`, no Launches rebuild
-  (launch.py untouched), no 2-year check (alerts and settings).
-- **LIVE (the user's "go live", Wed Nov 18 2026 ~4:55 PM ET, commit 8ba96bf): the two morning boxes run from their own From
-  time, 9:31 at the earliest** (the user: "if i choose 932 or 933 meaning 3 orh breakout it should sound around 934 or 935...
-  its every 1min"). Found: main() held the morning breakouts to 9:35 with every other alert (`not early`), though the Nov 17
-  change let the box take a 9:31 / 9:32 start: a 1- or 2-minute range never fired before 9:35. radar/alerts.py: that gate is
-  off for the morning boxes only (the 1-minute check runs them from 9:31); and a stock that fires gets its levels kept at once
-  (check_morning: before, one that fired in the range's first minute had none, so it could not leave / re-enter its box).
-  Tested (stand-in levels): 📊 at 3min / From 9:33 fires at 9:33, 📈 at 9:35 / 5min at 9:35, both at 9:35 = nothing before
-  9:35, out at 9:36 and back at 9:52. Told the user the Rel vol is rough before 9:35. Rules workbook: the 📈 row.
-  **Not seen on live prices: check Thu Nov 19** (the user's From times decide; both boxes are saved / default at 9:35 now).
-- **LIVE (the user's "go live", Sat Nov 21 2026, after a merge with main): the EARLY gap heads-up (9:31-9:34) also for the
-  followed names** (the user, Nov 18: "gap heads up can you include my wl (ep + trend + start + setups) too"; "i accept your
-  proposal... we are just adding correct?"). The regular one (find_early) reads launch.json `watch` (liquid stocks: $10+,
-  $20M+ and 700K+ a day, ADR 3.5%+; EP and power day alerts read the same list), which drops a stock launched in the last 20
-  sessions: 34 of 49 1-EP/GAP names, 38 of 94 3-SETUPS names, 13 of 44 Start days on Nov 18, all on Launches. radar/alerts.py
-  find_early_lists / list_names: a name on Launches (with the 50 EMA undercut tab and the laggards), 3-SETUPS, Start days or
-  a Watchlist list (setups/latest.json: 1-EP/GAP, 1-UPDAY, 2-POOL, the TREND names' sources) that is not on `watch`, gapping
-  up 5%+ (EARLY_LIST_GAP) and over its open: one quiet heads-up, key SYM:early, "AZTA EARLY: gapping +5.5% (on Launches,
-  3-SETUPS, 1-EP/GAP)", with its buy point cleared or not; none when the stock gets another alert in the same check (a gap
-  out of base). day.py lists_args passes --lists (setups/latest.json, read once a job) to fast.py (which now also reads the
-  Start days, every 3-SETUPS name and the lists' names each minute) and to the 1-minute alerts run. The 5% and the quiet
-  heads-up were my defaults: the user did not answer those two. Merge: day.py conflicted with the other session's
-  events_args (both kept: `*lists_args(), *events_args()`). Tested (stand-in 9:32 run): AZTA, ANET, HAWK, PRKS, SLS fire; ENR
-  (under its open), CDW (3% gap) don't; TMDX gets its gap out of base instead; no repeat the next minute; the Nov 18 tests
-  again on the merged code; the page on 5 tabs, 0 errors. Rules workbook: one row. **Not seen on live prices: check Mon Nov
-  23 at 9:31-9:34** (alerts.json `:early` keys with "gapping" in the title; the minute read's time with the extra names).
-- **Answered, no change**: the Gainers tab already has the theme buttons ("Group moves today", above the theme table; the user:
-  "if thats the way i dont need it"); the gainers table updates every minute for stocks up 2%+ (9:31-11:00 since the other
-  session's Nov 18 change, was 10:30), every 5 minutes for the rest.
-- **Check (was for Thu Nov 19; NOT DONE by this session, still to do)**: alerts.json keys :mbo2, mbatch2, thm:, <kind>backHHMM and their box / sound on the page; the first
-  GROUP MOVE at 9:40 or later; levels.json rows with 5 values from 9:33; the minute read's time with the 📊 candidates added
-  (687 stocks in the replay); alerts/morning2.json on main once the user saves.
-- **Open**: themes moving DOWN in their own box (the user: "lets do ups and see how it reacts, then we can do down ones"); the
-  BACK ON alerts on the phone ("you can add phone as well": later); a cap or a market filter if 🔥 fires too often on rally
-  days (not measured for the breakout version: only Nov 18 could be replayed).
-- **Test only**: nothing.
-
-## Status at the end of the session "Radar: MBGL / AVEX miss (Nov 12)" (Thu Nov 12 - Sat Nov 21 2026; session_01PkbDaiSjzGPJPtohD3UF2C)
-
-Its first part (Nov 12-13: the coil on Launches, the full + Filter list, the MBGL / AVEX findings) is in the archive under the title
-'Status of the session "Radar: MBGL / AVEX miss (Nov 12)"'. What came after (Nov 15 - 21):
-
-- **LIVE (the user's "go live", Sat Nov 21 2026 ~11:30 AM ET, branch test/resrange, merge d89b0d0; Launches rebuilt 11:32 AM,
-  4fcdacb): the Resistance column as ranges, the 1-month high, joined labels, broken support, and Resistance as a column to add.**
-  The user (VERX): "look at last feb 3rd and nov 10th 25 all the way to that, every day was trying to break that support, finally
-  that day broke down really bad ... that day is considered next big resistance for the ticker, that's why nov 5th it stalled at
-  that number"; "the way i see it 18.50-18.90 range was the support"; "do as range for all"; "yes add 1month"; "if 1month and
-  3month same then it has to show 1month/3month".
-  1. **Every level is a range** (scanner/launch.py resistance(): [label, top, bottom, ...], lowest first): the 1-, 3-, 6-, 9-month
-     and 52-week high (21 / 63 / 126 / 189 / 252 sessions) from the span's highest CLOSE (bottom) to its highest HIGH (top); a
-     level counts when its top is 0.5%+ over the close and the buy point (so the 1-month high does not repeat a base-top buy
-     point). Spans with the same range (both ends within 0.5%) share one entry, the labels joined ("1m/3m", "6m/9m/52w").
-  2. **Broken support** (broken_support(), settings BS): the breakdown day closes under the lowest close of the 40 sessions before
-     it, down 1.5+ ADRs on 1.5x+ volume; the range before it = back while the closes stay within 4 ADRs of each other, 20+
-     sessions; the zone = that range's lowest close to half an ADR over it; 3+ separate tests (a low in the zone or within a
-     quarter ADR over it, tests 4+ sessions apart); gone once a close is back over the zone's top; wicks under the floor that
-     closed back do not move it. Entry ["bs", top, bottom, range from, range to, breakdown day, tests]. **VERX**: closes
-     18.55-20.71 from Nov 3 2025 to Feb 2 2026, 5 tests; Feb 3 2026 -15.1% (4.2 ADRs) on 3.7x; zone 18.55-18.88; the highs of
-     Nov 5 2026 (18.53) and Nov 16 2026 (18.57) turned back at its bottom; its buy point 18.57 sits inside the zone. An older
-     VERX zone 23.87-24.24 (floor Aug 8 - Oct 28 2025, broke Oct 29 2025). **The thicknesses (half an ADR, 4 ADRs, a quarter ADR)
-     are Claude's, fitted on VERX alone.**
-  3. **The page** (docs/index.html resCell / resAway / resLo ...): "1M/3M $36.84-38.07 +1.6%", "Broken support $18.55-18.88
-     +7.7%"; one price when the two ends are within 0.5%; the % is to the BOTTOM of the range (was to the highest high), "in it"
-     when the price is inside; the cell shows the nearest level, the nearest broken support and the farthest high, the tooltip
-     all of them (with the floor's dates, tests and breakdown day). A level saved before this ([label, level]) shows as one
-     price, as before. **Resistance in Columns: + add** (catalog `res`, RESK: the Launches / laggards row, the 50 EMA undercut
-     row, the Start days row (start_days rows now carry `resistance`), launch.json `watch_resistance` for the 888 launch-watch
-     stocks, else the Watchlist row).
-  Tested: `--regress` "every agreed example reads the same"; radar-tools `setupsdry` on the branch (Nov 20 close): the same 134
-  launches, 12 in the 50 EMA undercut tab, 27 start days, no launch date / grade / buy point / status / read changed; broken
-  support overhead on 11 of 134 Launches rows (TTD 16.79-17.20, HGV 48.31-49.14, POOL 252.28-255.77, EPAM 200.00-203.54, PRKS
-  48.60-49.43, CHKP 214.03-216.49, INTA 52.76-53.47, PRMB 30.79-31.20, CRI 50.40-51.27, UPBD 28.44-28.81, VERX), 14 of 182
-  Watchlist stocks, 97 of the 888 watch stocks; the page with the dry files and with the old files (0 page errors; the column
-  added on the 50 EMA undercut and Start days tables). After the go live: the rebuilt launch.json identical to the evening's but
-  for the levels; VERX on Launches reads "Broken support $18.55-18.88 +7.7% | 52W $20.62-20.82 +19.7%". Rules workbook: the
-  Resistance row rewritten and a broken-support row. A display only: no launch rule, buy point or alert reads the levels.
-  **First checks**: (1) the Watchlist rows still carry the old single prices (latest.json is written by the evening scan only):
-  after the Mon Nov 23 scan, setups/latest.json `resistance` entries have 3+ elements and VERX reads the zone there too (the
-  evening scan was NOT re-run by hand: it may resend the phone's Ready list); (2) Launching today with the added Resistance
-  column (empty on a weekend, not tested); (3) the user was asked to check 2-3 of the 10 other zones on their charts.
-- **The start day's move (Nov 15, built here)**: "up 1 ADR+, or up 4%+ that is also 0.8 ADR+" (ZETA Nov 9 2026: +4.5% on 2.2x with a
-  5.39% ADR, missed 1 ADR; TTEK Oct 15 2026 +3.5% with a 2.8% ADR kept: the user's "start is 15th october"), branch
-  test/start4pct 3b9d5b4. **It went live on Nov 16 through the session "Start days stay on until they fail + 0.8 ADR start (BILL,
-  Nov 16)"** (see there). On Nov 21 this session twice told the user it was still waiting for a go live: wrong, corrected the
-  same day. test/start4pct and test/resrange can be deleted.
-- **Answered, no change** (Nov 13 - 21): FLY Nov 6 2026 was on 1-EP/GAP and 2-POOL, not on Launch laggards (closed 20.76 under its
-  1-month high 20.96 by the wicks, its AST SpaceMobile news never graded: the 8:45 list had dropped it) and came on Launches as
-  a first day when the chart reading went live Nov 12; the first-day rule is under the 200 SMA only (the user's WRBY Nov 5 read;
-  2 years: 127 under it 32% ran 20%+ / 38% failed, 73 over it 29% / 51%); the Watchlist's "Added: all" header is a day picker,
-  not a sort; "vs 200 SMA >= 0" = over the 200 SMA; VERX's highs on Nov 5 2026 (1- to 9-month 18.53 / close 17.59; 10-month
-  20.40; 52-week 20.86).
-- **Answered, no change (Nov 21, after the go live): TMDX's 95-97 and why broken support does not show it.** The user: "tmdx 97-95
-  range isnt it new resistance that you built we did for verx?", "tdmx that range 95 held it over 23 sessions?", "is it part of
-  resistance or it will throw some fake things?". TMDX held a floor 26 sessions (Mar 30 - May 5 2026: lows 93.08 Mar 30, 95.46
-  Mar 31, 96.01 Apr 2, then a bounce to 120.91 Apr 17, then 97.01 Apr 29, 97.20 Apr 30, 96.63 May 4, 94.61 May 5), gapped down
-  May 6 2026 (high 78.00, close 72.92, -23.2% = 4.8 ADRs on 8.1x) and every rally since stopped at 95-98 (Aug 19 94.99, Aug 21
-  95.18, Nov 9 95.30, Nov 10 97.55, Nov 18 98.78 close 96.43, Nov 19 97.19). The live rule misses it (2 visits, not 3; the
-  closes not within 4 ADRs: the 23% bounce). On Aug 19 the column would have read "1M/3M 93.97-94.99" and then "6M
-  148.00-151.00" (not a 120 level). **The test** (2 years, liquid stocks, ADR 3.5%+; after the price first comes back up to a
-  zone: rejected = a close 1.5 ADRs under it before a close 1.5 ADRs over it, within 20 sessions; vs a placebo zone of the same
-  thickness 3 ADRs higher): the live floor rule 180 zones, 51% rejected vs 36% placebo; a looser floor (2 visits, a bounce
-  allowed: catches TMDX) 362 zones, 48% vs 44%; a gap-down zone (the last close before a gap down) 380, 49% vs 45%; coming
-  back 20+ sessions later: live rule 48% vs 37% (66 zones), looser floor 41% vs 42%, gap down 43% vs 46%. **Advised and agreed:
-  no change** (the user: "so you advising no change correct?"). The VERX zone kept as a caution level (moderate confidence: a
-  first, rougher test "no close over the top in 10 sessions" showed no edge; this test was run AFTER the go live). Untested
-  idea, offered: count a zone only after it rejected the price once.
-- **Outside the portal: a TradingView script for the user's charts** (the user: "this is pinescript, dont change anything on these
-  stuff that i already have"; "you doing pinescript thats for tradingview it has nothing to do with our portal radar at all").
-  Their "Moving Averages For All Timeframes" (JohnMuchow, MPL 2.0, Pine v5) unchanged byte for byte, plus a section at the end:
-  boxes from DAILY bars on daily and intraday charts, labelled with their range: 1M / 3M / 6M / 9M / 52W / ATH (highest close to
-  highest high, joined labels) and broken support (the portal's rule, 3 nearest zones); a level shows while it was overhead at
-  the last daily close; alerts through "Any alert() function call": NEAR (within X% under a box, X a setting, 0 = off), INSIDE
-  (always), BREAKOUT (over the top of a box overhead at the last close, its own tick box), each once a day per box. NOT in the
-  repo (the license allows reuse only in open-source TradingView scripts); not compiled here (no TradingView in the session):
-  the user said it "looks good" after the first version; the alert version is not confirmed yet. Answered: TradingView has
-  watchlist alerts (paid plans, regular hours only); whether they accept a custom indicator's alert() is not confirmed.
-- **Open, each needs the user's go**:
-  - **The 15% / 3x exception** (the user, Nov 13: "if stock up 15%, volume over 300% it should automatically qualify for launch or
-    launch laggard depending of its 200 sma position ... and it should trigger that time ... and regarding news its big gap, do
-    that as well as a rule"; then interrupted by the first-day question). Explained, not built; unanswered: keep the liquidity
-    minimums (suggested yes), how big a "big gap" is (suggested 10%), and the 2-year check (a new rule: asked, with the reason).
-    FLY Nov 6 passes it; FLY Nov 9 (2.6x) and MBGL Nov 12 (2.0x) do not.
-  - First days over the 200 SMA too (the user asked "it could be above 200 sma as well?"; the numbers above; no decision).
-  - A click on "Added" sorting the Watchlist by date (offered Nov 13, no answer).
-  - Broken support: the buy-point tag "inside broken support: clear over $18.88" (offered, no answer); highs and floors older
-    than 52 weeks / 2 years (offered, no answer); "None: at highs" also shows when nothing sits over the buy point (THC, W in
-    the 50 EMA undercut tab, Nov 20: seen, not changed).
-  - **Desktop "Resistance alerts" on the Alerts tab** (the user, Nov 21: "can we something like that for our desktop alerts (with
-    settings) the way i have for my morning breakouts and breakouts not trend ones, with same settings, only thing you add there
-    1m/3m/6m/52w and ath, i choose which one ... combination of orh ... where it would feed itself from? ... i would need volume on
-    alerts sound for sure"). Not explained or built here: the user is taking it to a NEW session with a prompt given here (a
-    third box like 📈 / 📊: tick boxes per level incl. ATH and broken support, NEAR % / INSIDE / BREAKOUT, an ORH combination,
-    its own sound and the volume in the voice; to explain first: where it feeds from, levels for every stock it watches, the
-    ATH needing more than 2 years of bars, how often it checks).
-    **Done and live Nov 21 in the session "Radar: Resistance alerts box (Nov 21)"**: as tick boxes in the two existing boxes.
-  - Still open from the first part (archive): the coil alert to look at later, the pre-market blind spot 9:10-9:30, young
-    listings (52-week low / 200 SMA), the code grader's "no daily bars" bug.
-- Data: radar-tools `long` re-run on Nov 21 with the 135 symbols another session had fetched that morning plus the examples and
-  VERX (long_bars.json: 153 symbols).
 
 ## Status of the session "Radar: watchlist restructuring (Nov 21)" (Sat Nov 21 2026; session_01PkbDajfJpUeWXECPJeGVh4; in progress)
 
@@ -533,48 +351,6 @@ Its first part (Nov 12-13: the coil on Launches, the full + Filter list, the MBG
   asked, then left: "without checking anything, the way they are now"); **the 1-EP/GAP list rules stay as they are** ("i agree
   with your recommendation regarding ep list.. we keep it as is"): on 629 list EP days of 2026 no gap / volume number raised
   the 31% that ran 20%+, a 2.2x volume rule lost 12 winners (AEHR Mar 31 +176%) and a 21-day-closing-high rule 31.
-
-## Code grade next to Claude's (LIVE Nov 4 2026 ~6:15 PM, the user's "go live"; branches test/codegrade, test/lag50)
-
-- **What**: radar/codegrade.py grades every gapper on the pre-market list (not only Claude's top 12), no Claude, at
-  ~8:52 / 9:05 / 9:18 AM ET (.github/workflows/codegrade.yml -> radar-data codegrade.json + codegrade_log.json). The
-  Pre-market tab's graded gappers show a **Code grade** column after Claude's Grade (≠ = they differ; hover for why).
-  **Claude's grade stays the official one** (alerts, Launch laggards, the A/B news rules) for 1-2 weeks; then the user
-  decides (codegrade_log.json holds each day's code and Claude grades; outcomes from the bars).
-- **Stage** at the last close ("rising" = vs 5 sessions ago; one day only repeats the price test: NVDA May 5 2026):
-  2 uptrend = 21 EMA > 50 EMA > 200 SMA, the 21 and 50 rising; 3 pullback = over the 200, the 50 over it, not 2;
-  1 basing = over the 200 with the 50 under it, or under the 200 without 4; 4 downtrend = under the 200, the 21 under
-  the 50, both falling (ALAB Nov 4: a breakdown though its 50 is still over its 200). Not the Trend column (10/21/50,
-  day to day) and not the ★ stars: separate jobs.
-- **Eligible** gap-ups at the pre-market price: 30%+ over the 52-week low, ADR 3.5%+, over the 50 EMA, over the
-  highest **close** of the last 21 sessions (the user's #3; KD Nov 4 was 0.7% under it: "—", but the 9:32 EARLY alert
-  caught it), a laggard at most 20% under the 200; **no cap over the 200** (leaders run 200-300% over it).
-- **News** from the SEC filings since the last close (classify): F offering / ATM / delisting / reverse split / going
-  concern (debt offerings aren't dilution: HCA); earnings from the Earnings tab, else the release (earn_fields);
-  takeover / FDA / trial / contract vs market cap / executive change from the release.
-- **Grade**: stage 2 / 3 A / B news = A / B; stage 1 / 4 now over the 200 = **⤴ reversal** A+ (A news) / A (B news);
-  still under the 200 = **W** laggard watch (A / B news or earnings, the Launch laggards rule); else "—"; C / F as they
-  are. A 5-8% gap one grade lower (YOU Nov 4: an A reversal on a 6.3% gap, +23.8%); 15x+ ATR over the 50 SMA at most C,
-  10x+ flagged "extended" (the user's setting); A+ only in a leading / turning-up group (group_status, the backtest's
-  rule). Gap-downs: the news grade, B -> A when a stage-2 stock gaps under its 50 and 200.
-- **Backtest** (scanner/probe_codegrade.py, radar-tools `codegrade` -> radar-data probe_codegrade.json, every event saved
-  with its levels for re-scoring; 4,727 gap-ups Apr 2025 - Nov 2026): A+ 14: held 64%, ran 20%+ 62%, r20 +16%, trade
-  +18%; A / B didn't beat C (no estimates in history: the live side-by-side will tell); W crossed the 200 within 60
-  sessions 77%, +6.5% the 20 sessions after; excluded groups worst (28%+ over the 200 -> later replaced by the ATR rule;
-  under the 50; under the 21-day high); 15x+ ATR trade -7.2%; reversals in a leading group r20 +16% vs -3.5%.
-- **(a) live**: the pre-market list (premarket_build.py prepare, used by Claude and the code) drops stocks under 30% over
-  the 52-week low and gap-ups under the 50 EMA (Nov 4: 102 -> 59; FSLR, PLUG, CRWV, IREN, SPCX, RIOT, NVTS out).
-- **(b) live**: a laggard launch must close over its 50 EMA (launch.py laggard, alerts.py laggard alert). Backtest:
-  laggard-type gaps under the 50: 16, all broke the low, trade -5.2%; over it: 151, trade +2.5%, 72% crossed the 200.
-  Regress: every example the same; Launches rebuilt (RRX, NCLH stay).
-- Tools: radar-tools `codelive <asof>` (today's list -> codegrade_test.json), `runners` (today's 8%+ gainers vs the
-  21-day closing high), `reltext`, `earntest`.
-- **Open**: (1) after 1-2 weeks: compare the log (code vs Claude, by outcome) and decide; (2) a "W crossed the 200"
-  alert (where the laggard edge is); (3) a double beat (revenue and EPS) may deserve B (KD Nov 4 read C); (4) no
-  follow-up alert when KD cleared its base high after the 9:32 EARLY heads-up: answered Nov 4 night (it fired; the log
-  hid it: see "KD missing from the desktop alert log"); (5) stars x code grade, once
-  there's live history; (6) HELE missed the 700K average volume by 3%: the user's call; (7) Nov 4's codegrade.json /
-  log entry was made after the close (the first test run).
 
 ## The user's ground rules
 
@@ -800,12 +576,18 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 
 ## Open items: the to-do list for the next session (each needs the user's go)
 
-**Keep in this file until the Nov 18 check-in has run**: the section "Code grade next to Claude's (LIVE Nov 4)" (the
-Nov 11 and Nov 18 code-grade check-ins read HANDOFF.md); after that, /wrapup moves it to the archive.
-
-- In the status section "Radar: MBGL / AVEX miss (Nov 12)" above: the coil alert to look at later (the user's
-  request), the pre-market blind spot 9:10-9:30, young listings (52-week low / 200 SMA), the code grader's
-  "no daily bars" bug.
+- Moved to the archive on Nov 22 (check there before raising one):
+  - First checks Mon Nov 23 (its seven alert changes never seen on live prices): alerts.json `:mbo2` / `mbatch2` / `thm:` /
+    `<kind>backHHMM` keys, `:early` keys with "gapping" in the title from 9:31 (the followed names too), the first `grp:` at
+    9:40 or later, levels.json rows with 5 values from 9:33; ask the user how 📊 and 🔥 behaved, alerts/morning2.json once
+    saved ["Status at the end of the session "Radar: theme chips on Today's gainers (Nov 18)""].
+  - Still open there: the 15% / 3x launch exception (unanswered: keep the liquidity minimums, how big a "big gap" is, the
+    2-year check), first days over the 200 SMA too, a click on "Added" sorting the Watchlist, the broken-support buy-point
+    tag and highs older than 52 weeks (offered, no answer); from its first part: the coil alert to look at later, the
+    pre-market blind spot 9:10-9:30, young listings (52-week low / 200 SMA), the code grader's "no daily bars" bug
+    ["Status at the end of the session "Radar: MBGL / AVEX miss (Nov 12)" (Thu Nov 12 - Sat Nov 21 2026)"].
+  - The code grade next to Claude's: the 2-week check-in ran Nov 18, the user's decision is not recorded (see the line
+    further down); stars x code grade once there is history ["Code grade next to Claude's (LIVE Nov 4 2026 ...)"].
 - Moved to the archive on Nov 21 (from the sessions below; check there before raising one):
   - EPAM passed every morning-breakout filter at 10:35 on Nov 20 and did not alert (the box went ORH-3min -> ORH-5min at 10:14):
     replay it with radar-tools `morning` ["a chat session outside the Radar sessions (Fri Nov 20 2026 ...)"].
@@ -817,9 +599,8 @@ Nov 11 and Nov 18 code-grade check-ins read HANDOFF.md); after that, /wrapup mov
     links (Nov 17)"].
   - Themes moving DOWN in their own box; BACK ON alerts on the phone ("later"); a cap or market filter if 🔥 fires too often;
     the Nov 19 first checks of its five alert changes not confirmed ["Radar: theme chips on Today's gainers (Nov 18)"].
-  - (Added at that session's own wrap-up, Nov 21) its completed section is back in this file, above (not in the archive any
-    more). The BACK ON alert for ⚡ and, at 1.5x
-    volume, 🎯 was built there (the "offered, no answer" two lines below is done for those two boxes).
+  - The BACK ON alert for ⚡ and, at 1.5x volume, 🎯 was built in the session "theme chips on Today's gainers (Nov 18)" (the
+    "offered, no answer" two lines below is done for those two boxes).
   - Offered, no answer: Rel vol 0.7x, an 11:00 end, no 10 > 21, a group-move alert for the morning box; the user's neoclouds
     screenshot (4%+ not seen in our data) ["Radar: Cybertruck morning breakout alerts (Nov 18)"].
   - Offered, not taken up: dropping the 50 EMA test for 1-EP/GAP / 1-UPDAY; not seen: a real START DAY alert on live prices
@@ -929,7 +710,8 @@ open and the FCF backtest were dropped for good by the user on Nov 10):
   other alerts; today they come only from the open portal page. Offered, not decided.
 - **Earnings tab, EPAM Nov 5**: EPS -26% (GAAP) on the tab vs Claude's adjusted beat; check the reader pairs GAAP with
   GAAP and adjusted with adjusted.
-- Check-in still to run: Nov 18, 5:40 PM ET (code grade vs Claude grade; the Nov 11 one ran: see this session's status).
+- The Nov 18 5:40 PM ET check-in (code grade vs Claude grade, 2 weeks) ran; the user's decision (code only, code + Claude,
+  keep Claude) is not recorded here: ask.
 
 0. **Earnings tab, first live week**: check the reads with the user (Wed-Fri reports get estimates saved before
    the report); the guidance reader's misses go in as fixes with a GV bump. Not done: revenue from the release's
