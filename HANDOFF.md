@@ -128,7 +128,64 @@ alone.
 - Data: long_bars.json on radar-data had only SPOT / SPY (another session's fetch); re-run `long` with the 24 example stocks +
   VERX (30 symbols now: the 153 of the morning are gone; re-fetch others when needed).
 
-## Status of the session "Radar: 1-UPDAY / 1-EP/GAP / START DAYS -> 3-SETUPS (Nov 21)" (Sat Nov 21 2026; session_01PkbDaj2rqMQ1qnsD48H7ev; in progress)
+## Status of the session "Radar: 1-UPDAY / 1-EP/GAP / START DAYS -> 3-SETUPS (Nov 21)" (Sat Nov 21 - Sun Nov 22 2026; session_01PkbDaj2rqMQ1qnsD48H7ev; in progress)
+
+- **LIVE (the user's "go live", Sun Nov 22 2026 ~11:40 PM ET, 7ca443e on main; Launches rebuilt by picks.yml): EP PULLBACKS,
+  the 10 / 21 EMA first touch after an EP day, as a Watchlist list and live alerts** (the user, Nov 23 2026: "show this live,
+  this 10 ema and 21 ema things as they happen as alert, or current status when its true"; "we should get alert when its
+  ready ... then when its in true state it could alert, buy point confirmed"; "it has to say in alert message ep pullback buy
+  10 ema"; box: "shouldnt be good to be in same box with episodic pivot" -> the ⚡ box). The rules are the playbook's plays 4
+  and 3b of this session's EP study (below), one place: **radar/epp.py** (used by the alerts and the tests).
+  1. **The plays.** EP day = the 1-EP/GAP rule, gap at most 20%, no biotech / pharma (stocks.json industry), the newest EP of
+     the last 30 sessions. **10 EMA**: within 10 sessions, no daily close more than 5% under the EP day's close since; the first
+     touch of the rising 10 EMA (today's low at or under its value at the last close); READY = touched it AND traded under the EP
+     day's close (the dip; without it 64 trades -28R; a stop under the EP close only got them to ~0R); BUY = the first 15-minute
+     candle from READY on closing over the 10 EMA and VWAP, not more than 5% under the EP close (268 trades 29% won +0.70R +187R
+     worst drop 24R; 5-minute candles +0.58R, 1-minute +0.33R, without VWAP +0.37R). **21 EMA**: within 30 sessions, never a trade
+     under the EP day's low; READY = the first touch of the rising 21 EMA; BUY = the first 15-minute candle closing over the 21 EMA
+     and VWAP while today's low holds over the EP low (276 trades 26% won +0.62R +171R; 5-minute +0.36R); under the EP low first
+     = off, silently (they made +68R but nearly all in 2025, -44R without the best 5: not in the rule, no alert). Stop = today's
+     low at the buy; exits 1/3 at +10%, breakeven, the rest on a daily close under the 21 EMA. Not the 3:45-4:00 candle. One try
+     per EP and EMA. The user's base rule for the 10 EMA (no close under the base the EP broke) was tested: better alone
+     (+199R, drop 17R) but less money in the full set in 6 of 9 account setups: not used (the playbook's "Play 4 vs 4b").
+  2. **Evening**: scanner/launch.py write_ep_pullback -> **setups/ep_pullback.json** (the --watchlist run of scanner.yml; per
+     stock: ep, c0, l0, gap, days (counting the next session), p10 / p21 {level = the EMA at the close, up, floor, status
+     wait / flat (EMA not rising: a touch is no trade) / used (touched) / out / late}); ep_bought: the BUY alerts of the day
+     (scanner.yml now passes radar-data alerts.json, --alerts) and the last file's, followed with the daily bars to the exit
+     (the buy day's low under the stop = stopped; the +10% sale from the next day on: the daily bar can't order the buy day's
+     high), a closed trade kept 5 sessions. settings.json **ep_pullback** (e10_max_sessions 10, e10_floor_pct 5,
+     e21_max_sessions 30, max_gap_pct 20, skip_industries, near_pct 3, first_sale_pct 10). The committed file is the Nov 20
+     close's plan (Mon Nov 23): 10 EMA BRBR, ENR; 21 EMA BRBR, ENR, GKOS, HLF, PCOR, PGNY, REZI, UPBD, YOU.
+  3. **Live**: radar/alerts.py **find_epp** (day.py epp_args passes the file to the 5-minute and the 1-minute jobs): a name's
+     Yahoo 1-minute chart (chart_bars_today, with volume for VWAP) is read once its price is within 5% over the level (at most
+     40 a run; the 1-minute job only re-reads names already READY). Keys SYM:epr10 / epr21 (READY, heads-up) and SYM:epb10 /
+     epb21 (BUY, trigger, TRIGGERS): "SYM EP PULLBACK READY - 10 EMA" / "SYM EP PULLBACK BUY - 10 EMA $px" with the stop, the
+     risk, the first sale, the EP day; state["epp"] keeps each BUY (found again every run while the price is over its stop, so it
+     holds in its box; under it: lost) and SYM:off21. Exempt from the 3-SETUPS 200 SMA filter (an EP pullback can be under it).
+  4. **Page** (docs/index.html): the Watchlist list **EP PULLBACKS** (its own card like DIP): tonight's plan, "Watch now only"
+     (on by itself during market hours: BUY / READY from today's alerts.json, NEAR = within near_pct over the level from the live
+     price), the Bought table; the ⚡ box takes the READY and the BUY (isTrigger, BOX_OF, place(): a READY heads-up stays in ⚡,
+     a BUY whose stop is hit steps down to 👀 with its note), filed under the Watchlist tab, the voice "E P pullback buy, 10 E M A,
+     D E L L". Rules workbook: W1 and A1 rows.
+  Tested: epp.check vs the study's own logic on all 1,539 touch days (1,514 identical, 25 = a missing last minute of a 15-minute
+  candle: the live one uses the candle's last trade); the live job simulated every 5 minutes on DELL Mar 10 2026 (READY 9:45,
+  BUY 10:30 141.44 stop 137.50) and Mar 31 (READY 11:35, BUY 12:45 159.07 stop 155.37) = the study; the evening file on the Mar 9
+  / Mar 30 bars (DELL waiting at 140.56 / 156.73); ep_bought on DELL Mar 10 (1/3 Mar 16, out Jul 2, +44.0R vs the study's +43.9R);
+  alerts.py main twice on stand-in files (one push, holds, nothing repeated); launch.py --watchlist end to end (the file next to
+  dip.json); the page in Chromium with stand-in session data (plan, watch now, ⚡ box, a stopped BUY down to 👀, an off name):
+  0 page errors; `--regress` "every agreed example reads the same". No 2-year check (the study is its test).
+  **Check Mon Nov 23**: alerts.json items with :epr / :epb keys (if any name touches), the EP PULLBACKS list on the page; the
+  evening scan: setups/ep_pullback.json dated Nov 23, bought filled from Monday's BUYs. Not built: a phone push for NEAR (the
+  list only).
+- **The EP trading study (Nov 21-22, research; the user's playbook)**: Jan 2023 - Nov 2026 (2022 left out, a bear market), real
+  stops, the user's exits. The set to trade, all intraday: **play 1** morning 3-minute ORH (yesterday over the 50 EMA, gap
+  5-20% opening over the 1-month high and the 200 SMA, the ORH buy at least 5% under the 3-month high), **play 1b** (yesterday
+  under the 50 EMA and the 200 SMA, the gap opens over both and the 1-month high, no 3-month room), **play 4** (10 EMA) and
+  **play 3b** (21 EMA) as above; same stock: one open trade per type (EP-day buy, 10 EMA, 21 EMA), a third only after both
+  sold 1/3. 749 trades +0.82R +612R worst drop 29R; $50k at 0.5% a trade, 2% open-risk cap, cash: $158.6k (drop 11.2%).
+  Skips: a stock under its 50 EMA but over its 200 SMA yesterday; play 2 (the close buy) is the close version of 1b. The Excel
+  (EP_playbook_FINAL_Nov22.xlsx) was sent to the user (the scratchpad is not kept); the study's test tools stay on the session
+  branch (radar/probe_orh.py, probe_raw.py, study.sh, history/orh_*.json), not on main.
 
 - **LIVE (the user's "tasks 1-3 go live", Sat Nov 21 2026, merge ee34096 on top of the other session's be57c80; Launches rebuilt
   by picks.yml): the three Watchlist changes agreed in the session "watchlist restructuring (Nov 21)". They show from the Mon
