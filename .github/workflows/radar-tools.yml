@@ -223,12 +223,7 @@ jobs:
           esac
           case "$CMD" in long\ *) python3 radar/probe_long.py /tmp/long_bars.json ${CMD#long } && python3 radar/publish.py "long history" /tmp/long_bars.json;; esac
           case "$CMD" in replay\ *) python3 radar/probe_replay.py /tmp/probe_replay.json ${CMD#replay } && python3 radar/publish.py "alert replay" /tmp/probe_replay.json;; esac
-          if [ "${{ inputs.cmd }}" = "eppcheck" ]; then   # the EP pullback alerts replayed on today's exact minute bars (a check; after 4:16 PM ET) -> radar-data probe_epp.json
-            python3 radar/probe_epp.py setups/ep_pullback.json /tmp/probe_epp.json; python3 radar/publish.py "EP pullback check" /tmp/probe_epp.json
-          fi
-          if [ "${{ inputs.cmd }}" = "alertbars" ]; then   # today's 1-minute bars of every alerted stock, to score the alerts after the close (a check) -> radar-data probe_alertbars.json.gz
-            python3 radar/probe_alertbars.py /tmp/probe_alertbars.json.gz; python3 radar/publish.py "alert bars" /tmp/probe_alertbars.json.gz
-          fi
+          bash radar/tools_check.sh   # the session checks
           bash radar/tools_event.sh   # the event links
           if [ "${{ inputs.cmd }}" = "alerttest" ]; then
             if [ -z "$NTFY_TOPIC" ]; then echo "NTFY_TOPIC secret is not set"; exit 1; fi
