@@ -128,10 +128,25 @@ alone.
 - Data: long_bars.json on radar-data had only SPOT / SPY (another session's fetch); re-run `long` with the 24 example stocks +
   VERX (30 symbols now: the 153 of the morning are gone; re-fetch others when needed).
 
-## Status of the session "Radar: 1-UPDAY / 1-EP/GAP / START DAYS -> 3-SETUPS (Nov 21)" (Sat Nov 21 - Sun Nov 22 2026; session_01PkbDaj2rqMQ1qnsD48H7ev; in progress)
+## Status at the end of the session "Radar: 1-UPDAY / 1-EP/GAP / START DAYS -> 3-SETUPS (Nov 21)" (Sat Nov 21 - Sun Nov 22 2026 ~11:45 PM ET; session_01PkbDaj2rqMQ1qnsD48H7ev)
+
+**In one line: two changes live on main (the Watchlist tasks 1-3; EP PULLBACKS, the list and the READY / BUY alerts), a long EP
+trading study (the user's playbook, plays 1 / 1b / 4 / 3b, in their Excel), the study tools on the session branch only. NONE OF
+IT HAS RUN ON LIVE PRICES OR IN AN EVENING SCAN YET. FIRST THINGS MON NOV 23: during the day, alerts.json keys :epr10 / :epr21 /
+:epb10 / :epb21 (if a planned name touches: BRBR, ENR on the 10 EMA; BRBR, ENR, GKOS, HLF, PCOR, PGNY, REZI, UPBD, YOU on the
+21 EMA), the ⚡ box and the Watchlist's EP PULLBACKS "Watch now" view; after the evening scan, setups/ep_pullback.json dated
+Nov 23 (its bought list from the day's BUYs), setups/latest.json (1-UPDAY without the 1-EP/GAP names, no "15 trading days" in
+changes_today) and 3-SETUPS rows with source "START DAYS".**
+
+- **How it went with the user (for the next session)**: the study cost them patience: numbers changed between tables and
+  between Excel copies (different exit rules per table, an old file with the same name), and the user found a data flaw I
+  should have caught (DELL Feb 27 / Mar 10 / Mar 31 2026 read against their 15-minute chart: "you need to analyze and check your
+  datas"; "to much back and forth, you could have done way better"). So: one exit rule for every table, one file with a new
+  name per version, every number recomputed when a rule changes, and the user's own example charts checked against the data
+  before a table goes out.
 
 - **LIVE (the user's "go live", Sun Nov 22 2026 ~11:40 PM ET, 7ca443e on main; Launches rebuilt by picks.yml): EP PULLBACKS,
-  the 10 / 21 EMA first touch after an EP day, as a Watchlist list and live alerts** (the user, Nov 23 2026: "show this live,
+  the 10 / 21 EMA first touch after an EP day, as a Watchlist list and live alerts** (the user, Nov 22 2026 evening ET; the code comments say Nov 23: "show this live,
   this 10 ema and 21 ema things as they happen as alert, or current status when its true"; "we should get alert when its
   ready ... then when its in true state it could alert, buy point confirmed"; "it has to say in alert message ep pullback buy
   10 ema"; box: "shouldnt be good to be in same box with episodic pivot" -> the ⚡ box). The rules are the playbook's plays 4
@@ -141,7 +156,7 @@ alone.
      touch of the rising 10 EMA (today's low at or under its value at the last close); READY = touched it AND traded under the EP
      day's close (the dip; without it 64 trades -28R; a stop under the EP close only got them to ~0R); BUY = the first 15-minute
      candle from READY on closing over the 10 EMA and VWAP, not more than 5% under the EP close (268 trades 29% won +0.70R +187R
-     worst drop 24R; 5-minute candles +0.58R, 1-minute +0.33R, 10-minute +0.49R (asked Nov 23), 30-minute +0.58R, without VWAP +0.37R). **21 EMA**: within 30 sessions, never a trade
+     worst drop 24R; 5-minute candles +0.58R, 1-minute +0.33R, 10-minute +0.49R (asked Nov 22), 30-minute +0.58R, without VWAP +0.37R). **21 EMA**: within 30 sessions, never a trade
      under the EP day's low; READY = the first touch of the rising 21 EMA; BUY = the first 15-minute candle closing over the 21 EMA
      and VWAP while today's low holds over the EP low (276 trades 26% won +0.62R +171R; 5-minute +0.36R, 10-minute +0.35R, 30-minute +0.64R but 249 trades +158R); under the EP low first
      = off, silently (they made +68R but nearly all in 2025, -44R without the best 5: not in the rule, no alert). Stop = today's
@@ -186,6 +201,18 @@ alone.
   Skips: a stock under its 50 EMA but over its 200 SMA yesterday; play 2 (the close buy) is the close version of 1b. The Excel
   (EP_playbook_FINAL_Nov22.xlsx) was sent to the user (the scratchpad is not kept); the study's test tools stay on the session
   branch (radar/probe_orh.py, probe_raw.py, study.sh, history/orh_*.json), not on main.
+- **Answered, no change**: 10-minute candles for the EP pullback buy (the user, Nov 22: "have you tested 10 min?"): no better
+  (numbers in the EP PULLBACKS entry above), 15 stays; "BUY" is one event in three places: the phone push, the ⚡ box on the
+  Alerts tab, the "Now" column of the Watchlist's EP PULLBACKS list (then its Bought table). The user's own trading bot for
+  plays 1 / 1b (one bot rule for both; only play 1 has the 3-month room row): the rows were worded in chat, nothing built here.
+- **Test only** (branch claude/gifted-mendel-civxei, for the study, not for main): radar/probe_orh.py, probe_bars.py,
+  probe_raw.py, radar/study.sh and its `orh / bars6y / raw` line in radar-tools.yml, history/orh_*.json (1-minute SIP bars of
+  the EP days and the touch days); the branch radar-study holds the 1-minute data. The scratchpad scripts and the Excel's
+  builder are not kept (the Excel EP_playbook_FINAL_Nov22.xlsx is with the user).
+- **Open, each needs the user's go**: (1) the morning EP alert lined up with plays 1 / 1b (yesterday over / under the 50 EMA,
+  the 200 SMA and the 1-month high at the open, the 3-month room for play 1: offered as a separate change, not asked for);
+  (2) a phone push for NEAR on EP pullbacks (the list only now); (3) the study files on the public repo's branches (the session
+  branch, radar-study): keep or delete (asked, no answer).
 
 - **LIVE (the user's "tasks 1-3 go live", Sat Nov 21 2026, merge ee34096 on top of the other session's be57c80; Launches rebuilt
   by picks.yml): the three Watchlist changes agreed in the session "watchlist restructuring (Nov 21)". They show from the Mon
@@ -800,12 +827,6 @@ double breakouts 117 (24% / 30%), 3rd try 32 (28% / 31%), flags 428 (21% / 39%; 
 
 ## Open items: the to-do list for the next session (each needs the user's go)
 
-**Keep in this file until the Nov 18 check-in has run**: the section "Code grade next to Claude's (LIVE Nov 4)" (the
-Nov 11 and Nov 18 code-grade check-ins read HANDOFF.md); after that, /wrapup moves it to the archive.
-
-- In the status section "Radar: MBGL / AVEX miss (Nov 12)" above: the coil alert to look at later (the user's
-  request), the pre-market blind spot 9:10-9:30, young listings (52-week low / 200 SMA), the code grader's
-  "no daily bars" bug.
 - Moved to the archive on Nov 21 (from the sessions below; check there before raising one):
   - EPAM passed every morning-breakout filter at 10:35 on Nov 20 and did not alert (the box went ORH-3min -> ORH-5min at 10:14):
     replay it with radar-tools `morning` ["a chat session outside the Radar sessions (Fri Nov 20 2026 ...)"].
@@ -817,9 +838,8 @@ Nov 11 and Nov 18 code-grade check-ins read HANDOFF.md); after that, /wrapup mov
     links (Nov 17)"].
   - Themes moving DOWN in their own box; BACK ON alerts on the phone ("later"); a cap or market filter if 🔥 fires too often;
     the Nov 19 first checks of its five alert changes not confirmed ["Radar: theme chips on Today's gainers (Nov 18)"].
-  - (Added at that session's own wrap-up, Nov 21) its completed section is back in this file, above (not in the archive any
-    more). The BACK ON alert for ⚡ and, at 1.5x
-    volume, 🎯 was built there (the "offered, no answer" two lines below is done for those two boxes).
+  - The BACK ON alert for ⚡ and, at 1.5x volume, 🎯 was built in the session "theme chips on Today's gainers (Nov 18)" (the
+    "offered, no answer" two lines below is done for those two boxes).
   - Offered, no answer: Rel vol 0.7x, an 11:00 end, no 10 > 21, a group-move alert for the morning box; the user's neoclouds
     screenshot (4%+ not seen in our data) ["Radar: Cybertruck morning breakout alerts (Nov 18)"].
   - Offered, not taken up: dropping the 50 EMA test for 1-EP/GAP / 1-UPDAY; not seen: a real START DAY alert on live prices
@@ -929,7 +949,8 @@ open and the FCF backtest were dropped for good by the user on Nov 10):
   other alerts; today they come only from the open portal page. Offered, not decided.
 - **Earnings tab, EPAM Nov 5**: EPS -26% (GAAP) on the tab vs Claude's adjusted beat; check the reader pairs GAAP with
   GAAP and adjusted with adjusted.
-- Check-in still to run: Nov 18, 5:40 PM ET (code grade vs Claude grade; the Nov 11 one ran: see this session's status).
+- The Nov 18 5:40 PM ET check-in (code grade vs Claude grade, 2 weeks) ran; the user's decision (code only, code + Claude,
+  keep Claude) is not recorded here: ask.
 
 0. **Earnings tab, first live week**: check the reads with the user (Wed-Fri reports get estimates saved before
    the report); the guidance reader's misses go in as fixes with a GV bump. Not done: revenue from the release's
