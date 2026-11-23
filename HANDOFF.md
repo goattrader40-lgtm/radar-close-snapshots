@@ -49,6 +49,37 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: theme event NVDA (Nov 23)" (Mon Nov 23 2026 ~9:25 AM ET -; session_01PkbDamTXwjMVcVxZ5a25nk; in progress)
+
+- **LIVE (the user's "go live", Mon Nov 23 2026 afternoon; branch claude/trusting-wright-vet5st, fast-forward onto main): the
+  theme event's Why line names the source, and a CEO named / reinstated reads "Leadership change".** The user: "theme event
+  today is totally wrong. bcs board reinstated nvda why its not on theme event". NVDA was in the event (260 stocks, #1 leader,
+  +31.5% at 9:20, $165.06 vs the $125.53 close), but the Why line read "NVDA: Sector move: AI Chips & CPUs — NVIDIA Former CEO
+  Jensen Huang Agrees to Senate Testimony", MU's Nov 18 news, SNDK's Sat Nov 21 story, TSM "Sector move" (from NVDA). Causes:
+  the 8:45 grading wrote no pm_event.json, so the card read only pmnews.json (8:35, before the news); the 9:20 code grader
+  (codegrade.json) HAD read the 8-K 5.02 "NVIDIA Board Reinstates Jensen Huang as President, CEO and Board Director", but as
+  "Filing, not classified" = weak news, so sector_moves turned it into "Sector move".
+  1. **radar/codegrade.py classify**: on a gap UP, a CEO / president named, reinstated or returning (LEADER_IN: the release
+     headline or an 8-K 5.02's text; not a vice president, not a resignation) = catalyst "Leadership change", news C (grades
+     unchanged); not in weak_news, so never a sector move, the peers' "with their own news" names it, no headline / earlier
+     news replaces it. Gap-down resignations read as before ("Executive change", A/B). The alert news text (news_words) shows
+     it instead of "nothing of its own today".
+  2. **docs/index.html drawPmEvent** (when no pm_event.json): the newest news (codegrade.json rows / news, else pmnews.json:
+     the News column's order); own news only (not Sector move / Earlier news / After earnings / no news / routine / Executive
+     change, a "(headline)" only if its ts is today); the source = the first of the 8 leaders with own news ("Why: the source
+     looks like NVDA: Leadership change — ..."), up to 3 other event stocks with own news, "Following NVDA (no news of their
+     own): MU, AMD, SNDK, SPCX, TSM, NBIS, CRWV"; no leader with own news: "a market or sector move" + the event stocks with own
+     news. A first try named ZS (earnings) the source by $ volume: changed to leaders only. The card's legend note updated.
+  Tested: classify on NVDA's saved first line (-> Leadership change, C), a resignation down (Executive change, A), the pattern on
+  7 sentences; the page in Chromium on today's radar-data files (stored news: "none of the leaders ..."; NVDA's row as the fixed
+  code reads it: the line above), 0 page errors; `--regress` "every agreed example reads the same". Rules workbook: the news
+  row and the theme event row. No 2-year check, no Launches rebuild (no launch rule). Not tested: the real 8-K through the SEC
+  (blocked from the container), the Nov 11 semis day.
+  **Check the next pre-market with a theme event**: the card's Why line (code news time shown), any "Leadership change" in the
+  News column.
+- **Offered, no answer**: the metals miners (Gold / Silver Miners, Metals & Mining 40 of 44) as their own event line instead of
+  one 260-stock event with the AI names.
+
 ## Status of the session "Radar: 7-day-low pullback column question (Nov 21)" (Sat Nov 21 2026 ~4:25 PM ET -; session_01PkbDahohHKiAyA9NYCdZQ7; in progress)
 
 - **LIVE (the user's "go live", Sat Nov 21 2026 evening; branch claude/nice-maxwell-10pa6l merged with main): the DIP list on the
