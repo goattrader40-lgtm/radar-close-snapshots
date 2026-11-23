@@ -36,7 +36,7 @@ Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Laun
 | 24 | XERS | Triggered today: Breakout | A | Tight flag |  |  |  | 4.75% | 1-EP/GAP |
 | 25 | ENOV | Ready: Pop out of the consolidation (in base) | A | Pop out of the consolidation (in base) | 26.7 | +0.0% | flag trendline 27.72 | 5.95% | 1-EP/GAP |
 | 26 | HOG | Ready: Bull pennant (trendline) | A | Bull pennant (trendline) | 33.76 | +0.1% | flat top 34.84 | 3.84% | 1-UPDAY |
-| 27 | SARO | Ready: Bull flag (trendline) | A+ | Bull flag (trendline) | 27.35 | +0.4% | flag trendline 27.11 | 4.17% | 2-POOL |
+| 27 | SARO | Ready: Bull flag (trendline) | A+ | Bull flag (trendline) | 27.35 | +0.4% | flag trendline 27.12 | 4.17% | 2-POOL |
 | 28 | PRG | Ready: Base top | A+ | Base top | 41.02 | +1.5% | level 41.02, flat top 41.02 | 6.07% | 1-UPDAY |
 | 29 | TARS | Ready: Bull flag (trendline) | A+ | Bull flag (trendline) | 76.49 | +1.3% | flag line 76.49 | 5.44% | 2-POOL |
 | 30 | BSP | Ready: Base top |  | Base top | 48.13 | +1.8% | flat top 48.13 | 7.28% | 1-EP/GAP |
