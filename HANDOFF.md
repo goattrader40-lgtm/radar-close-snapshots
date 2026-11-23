@@ -141,9 +141,9 @@ alone.
      touch of the rising 10 EMA (today's low at or under its value at the last close); READY = touched it AND traded under the EP
      day's close (the dip; without it 64 trades -28R; a stop under the EP close only got them to ~0R); BUY = the first 15-minute
      candle from READY on closing over the 10 EMA and VWAP, not more than 5% under the EP close (268 trades 29% won +0.70R +187R
-     worst drop 24R; 5-minute candles +0.58R, 1-minute +0.33R, without VWAP +0.37R). **21 EMA**: within 30 sessions, never a trade
+     worst drop 24R; 5-minute candles +0.58R, 1-minute +0.33R, 10-minute +0.49R (asked Nov 23), 30-minute +0.58R, without VWAP +0.37R). **21 EMA**: within 30 sessions, never a trade
      under the EP day's low; READY = the first touch of the rising 21 EMA; BUY = the first 15-minute candle closing over the 21 EMA
-     and VWAP while today's low holds over the EP low (276 trades 26% won +0.62R +171R; 5-minute +0.36R); under the EP low first
+     and VWAP while today's low holds over the EP low (276 trades 26% won +0.62R +171R; 5-minute +0.36R, 10-minute +0.35R, 30-minute +0.64R but 249 trades +158R); under the EP low first
      = off, silently (they made +68R but nearly all in 2025, -44R without the best 5: not in the rule, no alert). Stop = today's
      low at the buy; exits 1/3 at +10%, breakeven, the rest on a daily close under the 21 EMA. Not the 3:45-4:00 candle. One try
      per EP and EMA. The user's base rule for the 10 EMA (no close under the base the EP broke) was tested: better alone
