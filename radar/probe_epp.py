@@ -147,6 +147,51 @@ def main():
                     o["daily"][name] = dd[t][0] if t is not None else None
             o["daily"]["tail"] = [[d, b["o"], b["h"], b["l"], b["c"], b["v"]] for d, b in dd[-25:]]
         out["rows"][s] = o
+    # the plan's completeness: every name on the 1-EP/GAP list that is NOT in the plan gets its plays' status worked out here
+    # from the daily bars (the same rules as scanner/launch.py write_ep_pullback, written again on purpose), so a name the
+    # plan should carry but doesn't would show
+    try:
+        lst = (json.load(open(os.path.join(os.path.dirname(os.path.abspath(plan_p)), "latest.json"))).get("lists") or {}).get("1-EP/GAP") or []
+        extra = {r["symbol"]: r for r in lst if r.get("symbol") and r["symbol"] not in rows}
+        P = plan.get("rules") or {}
+        n10, n21, fl = int(P.get("e10_max_sessions", 10)), int(P.get("e21_max_sessions", 30)), float(P.get("e10_floor_pct", 5))
+        xd = alpaca({"symbols": ",".join(sorted(extra)), "timeframe": "1Day", "feed": "sip", "adjustment": "split", "limit": 10000,
+                     "start": z(d0), "end": z(end)}) if extra else {}
+        audit = {}
+        for s, r in extra.items():
+            dd = [(datetime.datetime.fromisoformat(b["t"].replace("Z", "+00:00")).astimezone(NY).date().isoformat(), b) for b in xd.get(s) or []]
+            dd = [x for x in dd if x[0] <= str(plan.get("date"))]
+            a = {"added": r.get("added"), "why": r.get("why"), "n": len(dd)}
+            pos = {d: i for i, (d, _) in enumerate(dd)}
+            j = pos.get(r.get("added"))
+            if j is None or j < 1 or len(dd) < 60:
+                a["note"] = "no bars for its EP day"
+                audit[s] = a
+                continue
+            cl = [b["c"] for _, b in dd]
+            lo = [b["l"] for _, b in dd]
+            e10, e21 = ema(cl, 10), ema(cl, 21)
+            i = len(dd) - 1
+            c0, l0, days = cl[j], lo[j], i + 1 - j
+            a.update(ep=dd[j][0], c0=c0, l0=l0, gap=round(100 * (dd[j][1]["o"] / cl[j - 1] - 1), 2), days=days, close=cl[i])
+            for name, em, lim in (("p10", e10, n10), ("p21", e21, n21)):
+                t = next((q for q in range(j + 1, i + 1) if lo[q] <= em[q - 1]), None)
+                up = em[i] > em[i - 1]
+                if t is not None:
+                    stt = "used " + dd[t][0]
+                elif days > lim:
+                    stt = "late"
+                elif name == "p10" and i > j and min(cl[j + 1:i + 1]) < c0 * (1 - fl / 100):
+                    stt = "out"
+                elif name == "p21" and i > j and min(lo[j + 1:i + 1]) < l0:
+                    stt = "out"
+                else:
+                    stt = "wait" if up else "flat"
+                a[name] = {"level": round(em[i], 4), "up": up, "status": stt}
+            audit[s] = a
+        out["list_audit"] = audit
+    except Exception as e:
+        out["errors"].append(f"list audit: {e!r}")
     with open(out_p, "w") as f:
         json.dump(out, f, separators=(",", ":"))
     print("epp check:", len(out["rows"]), "stocks,", sum(1 for o in out["rows"].values() if o.get("n_bars")), "with minute bars; errors:", out["errors"])
