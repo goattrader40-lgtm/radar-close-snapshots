@@ -9,7 +9,8 @@ The request is {"date SYMBOL minute": [range low, the bar's low, the bar's high,
 after 9:30; prices as in the split-adjusted 1-minute bars). Saved per key: {"n": trades used, "lo": lowest, "hi": highest,
 "f": the factor from the trades' prices (as traded) to the bars' (1 unless the stock split since), "ok": 1 when the
 trades' high matches the bar's, "entry": seconds into the minute of the first trade under the range low (null if none),
-"stops": {stop: 1 if a trade at or over it came after that first trade, else 0}}.
+"pre_hi": the minute's highest trade before it, "stops": {stop: 1 if a trade at or over it came after that first trade,
+else 0}}.
 Trades used: 100 shares or more, without the sale conditions that don't set a bar's high and low."""
 import datetime, json, sys, time, urllib.error, urllib.parse, urllib.request, zoneinfo
 import probe_orh
@@ -72,6 +73,7 @@ def main():
             tt = datetime.datetime.fromisoformat(ts[j][0][:19] + "+00:00")
             sec = int((tt - t0.astimezone(datetime.timezone.utc)).total_seconds())
         out[key] = {"n": len(ts), "lo": lo, "hi": hi, "f": round(f, 5), "ok": 1 if abs(hi * f / bar_hi - 1) < 0.005 else 0, "entry": sec,
+                    "pre_hi": max((p for t, p in ts[:j]), default=None) if j is not None else None,   # the minute's high before that trade: the day's-high stop
                     "stops": {str(s): (1 if j is not None and any(p >= s for t, p in ts[j + 1:]) else 0) for s in stops}}
         if i % 25 == 0:
             print(i, key, out[key], flush=True)
