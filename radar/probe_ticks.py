@@ -44,7 +44,7 @@ def ticks(sym, date, minute):
         token = res.get("next_page_token")
         time.sleep(0.35)
         if not token:
-            return sorted(out), t0
+            return out, t0                   # the API's own order (by time): the timestamps' text doesn't sort (":05Z" vs ":05.5Z")
 
 
 def main():
