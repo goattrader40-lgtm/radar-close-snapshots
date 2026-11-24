@@ -3,8 +3,9 @@
 
   python3 make_xlsx.py trades_out.json OUT.xlsx"""
 import sys
-out_path = sys.argv[2]
-sys.argv = sys.argv[:2]
+if __name__ == "__main__":
+    out_path = sys.argv[2]
+    sys.argv = sys.argv[:2]
 import report as R                       # reads trades_out.json (sys.argv[1])
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill

@@ -16,4 +16,8 @@ python3 tools/gapdown/clean_gaps.py "$D/gaps.json" "$D/gapdown_daily.json.gz" "$
 python3 tools/gapdown/trades.py "$D/gaps_clean.json" history/gapdown_share5.json "$D/gapdown_ticks_out.json" "$D/trades.json" "$D"/raw_gapdown_20*.json.gz
 python3 tools/gapdown/report.py "$D/trades.json" > "$D/results.txt"
 (cd tools/gapdown && python3 make_xlsx.py "$D/trades.json" "$D/gapdown_short_study.xlsx")
-echo "results: $D/results.txt, $D/gapdown_short_study.xlsx"
+# part 2 (Nov 24 2026): the gap-up rules mirrored (yesterday vs the 50 EMA / 200 SMA, the open vs the 1- / 3-month lows ...)
+python3 tools/gapdown/features.py "$D/bars_6y.json.gz" "$D/gaps_clean.json" "$D/features.json"
+(cd tools/gapdown && python3 mirror.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" > "$D/results_mirrored.txt" \
+  && python3 make_xlsx_mirror.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/gapdown_short_study_mirrored_rules.xlsx")
+echo "results: $D/results.txt, $D/gapdown_short_study.xlsx, $D/results_mirrored.txt, $D/gapdown_short_study_mirrored_rules.xlsx"
