@@ -1,0 +1,214 @@
+stock-days with good bars 8856; opened at $10+ 8659; dates 2023-01-03 to 2026-11-20
+dropped by the data checks 3, no 1-minute bars 4, fetch errors 0
+per year: {'2023': 922, '2024': 1674, '2025': 2859, '2026': 3204}
+market-wide days (50+ gap-downs): 26 days = 2899 stock-days; the biggest [('2025-04-03', 425), ('2024-08-05', 359), ('2025-04-07', 245), ('2025-04-04', 216), ('2026-06-23', 135), ('2026-10-30', 133)]
+
+3-minute range: 8659 days, range low broken on 5970 (69%); first candle {'green': 4542, 'red': 4047, 'doji': 70}
+  early rel vol: p10 0.9x  p25 1.8x  median 3.6x  p75 8.0x  p90 15.3x
+  stop range high: entry minute also at / over the stop 135 {'high first': 63, 'stopped': 72}; stop under 0.5% away (left out) 77
+  stop day's high: entry minute also at / over the stop 101 {'high first': 39, 'stopped': 62}; stop under 0.5% away (left out) 54
+
+5-minute range: 8659 days, range low broken on 5629 (65%); first candle {'green': 4515, 'red': 4098, 'doji': 46}
+  early rel vol: p10 0.9x  p25 1.5x  median 3.1x  p75 7.0x  p90 13.1x
+  stop range high: entry minute also at / over the stop 37 {'high first': 17, 'stopped': 20}; stop under 0.5% away (left out) 32
+  stop day's high: entry minute also at / over the stop 33 {'high first': 14, 'stopped': 19}; stop under 0.5% away (left out) 19
+
+== the base: every 5%+ gap-down, either candle, any volume ==
+3-min range, stop range high                    5880  win  41.3%  avg +0.115R  total  +677.8R  stopped 45.1%  risk 2.78%  avg move +0.17%  after costs +0.072R /  +423.1R
+                                               by year: 2023 627/+0.07R/+45R  2024 1001/-0.02R/-22R  2025 2033/+0.33R/+680R  2026 2219/-0.01R/-25R
+                                               without the 26 market-wide days: 3911 trades 40.0% +0.013R +52.6R;  at most 4 trades a day: 2361 trades +0.052R +121.6R
+3-min range, stop day's high                    5910  win  42.7%  avg +0.101R  total  +596.2R  stopped 41.1%  risk 3.14%  avg move +0.19%  after costs +0.062R /  +367.8R
+                                               by year: 2023 631/+0.04R/+27R  2024 1004/-0.04R/-39R  2025 2048/+0.32R/+657R  2026 2227/-0.02R/-49R
+                                               without the 26 market-wide days: 3921 trades 41.0% -0.001R -2.4R;  at most 4 trades a day: 2362 trades +0.041R +97.2R
+5-min range, stop range high                    5594  win  44.5%  avg +0.089R  total  +498.2R  stopped 38.0%  risk 3.22%  avg move +0.17%  after costs +0.052R /  +291.1R
+                                               by year: 2023 597/+0.00R/+2R  2024 926/-0.06R/-56R  2025 1965/+0.30R/+597R  2026 2106/-0.02R/-46R
+                                               without the 26 market-wide days: 3697 trades 42.7% -0.025R -90.9R;  at most 4 trades a day: 2287 trades +0.008R +18.3R
+5-min range, stop day's high                    5607  win  45.3%  avg +0.083R  total  +466.3R  stopped 35.2%  risk 3.53%  avg move +0.18%  after costs +0.049R /  +275.8R
+                                               by year: 2023 600/-0.02R/-10R  2024 927/-0.07R/-61R  2025 1970/+0.30R/+589R  2026 2110/-0.02R/-52R
+                                               without the 26 market-wide days: 3701 trades 43.2% -0.031R -115.5R;  at most 4 trades a day: 2288 trades +0.001R +2.7R
+
+== first candle ==
+3-min, stop range high, candle either           5880  win  41.3%  avg +0.115R  total  +677.8R  stopped 45.1%  risk 2.78%  avg move +0.17%  after costs +0.072R /  +423.1R
+3-min, stop range high, candle red              3339  win  41.2%  avg +0.126R  total  +421.2R  stopped 45.9%  risk 2.92%  avg move +0.23%  after costs +0.085R /  +283.0R
+3-min, stop range high, candle green            2516  win  41.5%  avg +0.094R  total  +236.0R  stopped 44.1%  risk 2.65%  avg move +0.09%  after costs +0.048R /  +121.3R
+3-min, stop day's high, candle either           5910  win  42.7%  avg +0.101R  total  +596.2R  stopped 41.1%  risk 3.14%  avg move +0.19%  after costs +0.062R /  +367.8R
+3-min, stop day's high, candle red              3346  win  41.9%  avg +0.114R  total  +380.3R  stopped 43.6%  risk 3.12%  avg move +0.23%  after costs +0.075R /  +250.1R
+3-min, stop day's high, candle green            2533  win  43.7%  avg +0.076R  total  +191.5R  stopped 37.9%  risk 3.17%  avg move +0.11%  after costs +0.038R /   +95.6R
+5-min, stop range high, candle either           5594  win  44.5%  avg +0.089R  total  +498.2R  stopped 38.0%  risk 3.22%  avg move +0.17%  after costs +0.052R /  +291.1R
+5-min, stop range high, candle red              3335  win  44.0%  avg +0.087R  total  +290.8R  stopped 39.4%  risk 3.41%  avg move +0.17%  after costs +0.052R /  +173.3R
+5-min, stop range high, candle green            2229  win  45.2%  avg +0.087R  total  +193.3R  stopped 35.6%  risk 2.98%  avg move +0.16%  after costs +0.047R /  +105.8R
+5-min, stop day's high, candle either           5607  win  45.3%  avg +0.083R  total  +466.3R  stopped 35.2%  risk 3.53%  avg move +0.18%  after costs +0.049R /  +275.8R
+5-min, stop day's high, candle red              3338  win  44.3%  avg +0.081R  total  +270.0R  stopped 37.8%  risk 3.57%  avg move +0.17%  after costs +0.047R /  +157.8R
+5-min, stop day's high, candle green            2239  win  46.7%  avg +0.081R  total  +181.2R  stopped 31.2%  risk 3.47%  avg move +0.20%  after costs +0.047R /  +104.7R
+
+== gap size ==
+3-min, stop range high, gap 5%+                 5880  win  41.3%  avg +0.115R  total  +677.8R  stopped 45.1%  risk 2.78%  avg move +0.17%  after costs +0.072R /  +423.1R
+3-min, stop range high, gap 8%+                 1908  win  44.0%  avg +0.130R  total  +248.2R  stopped 41.1%  risk 3.72%  avg move +0.27%  after costs +0.097R /  +184.8R
+3-min, stop range high, gap 10%+                1155  win  45.3%  avg +0.117R  total  +134.6R  stopped 41.0%  risk 4.21%  avg move +0.18%  after costs +0.087R /  +100.2R
+3-min, stop day's high, gap 5%+                 5910  win  42.7%  avg +0.101R  total  +596.2R  stopped 41.1%  risk 3.14%  avg move +0.19%  after costs +0.062R /  +367.8R
+3-min, stop day's high, gap 8%+                 1913  win  45.3%  avg +0.113R  total  +216.3R  stopped 37.0%  risk 4.13%  avg move +0.31%  after costs +0.084R /  +159.7R
+3-min, stop day's high, gap 10%+                1157  win  46.8%  avg +0.112R  total  +129.5R  stopped 37.3%  risk 4.68%  avg move +0.24%  after costs +0.085R /   +98.5R
+5-min, stop range high, gap 5%+                 5594  win  44.5%  avg +0.089R  total  +498.2R  stopped 38.0%  risk 3.22%  avg move +0.17%  after costs +0.052R /  +291.1R
+5-min, stop range high, gap 8%+                 1795  win  47.5%  avg +0.101R  total  +181.5R  stopped 32.5%  risk 4.32%  avg move +0.31%  after costs +0.073R /  +131.6R
+5-min, stop range high, gap 10%+                1077  win  49.4%  avg +0.090R  total   +97.2R  stopped 32.1%  risk 4.99%  avg move +0.22%  after costs +0.066R /   +71.4R
+5-min, stop day's high, gap 5%+                 5607  win  45.3%  avg +0.083R  total  +466.3R  stopped 35.2%  risk 3.53%  avg move +0.18%  after costs +0.049R /  +275.8R
+5-min, stop day's high, gap 8%+                 1795  win  48.1%  avg +0.093R  total  +167.3R  stopped 30.1%  risk 4.73%  avg move +0.33%  after costs +0.068R /  +121.6R
+5-min, stop day's high, gap 10%+                1077  win  50.0%  avg +0.082R  total   +88.3R  stopped 30.0%  risk 5.39%  avg move +0.25%  after costs +0.060R /   +64.4R
+
+== gap bands ==
+3-min, stop range high, gap 5-8%                3972  win  40.1%  avg +0.108R  total  +429.7R  stopped 47.0%  risk 2.45%  avg move +0.12%  after costs +0.060R /  +238.3R
+3-min, stop range high, gap 8-10%                753  win  42.1%  avg +0.151R  total  +113.5R  stopped 41.3%  risk 3.11%  avg move +0.42%  after costs +0.112R /   +84.5R
+3-min, stop range high, gap 10-15%               685  win  45.3%  avg +0.156R  total  +106.7R  stopped 41.5%  risk 3.81%  avg move +0.36%  after costs +0.123R /   +84.1R
+3-min, stop range high, gap 15-100%              470  win  45.3%  avg +0.059R  total   +27.9R  stopped 40.2%  risk 5.06%  avg move -0.09%  after costs +0.034R /   +16.2R
+3-min, stop day's high, gap 5-8%                3997  win  41.5%  avg +0.095R  total  +379.9R  stopped 43.1%  risk 2.77%  avg move +0.13%  after costs +0.052R /  +208.0R
+3-min, stop day's high, gap 8-10%                756  win  43.1%  avg +0.115R  total   +86.8R  stopped 36.6%  risk 3.58%  avg move +0.42%  after costs +0.081R /   +61.3R
+3-min, stop day's high, gap 10-15%               687  win  47.0%  avg +0.161R  total  +110.8R  stopped 37.3%  risk 4.21%  avg move +0.41%  after costs +0.132R /   +90.4R
+3-min, stop day's high, gap 15-100%              470  win  46.4%  avg +0.040R  total   +18.7R  stopped 37.2%  risk 5.60%  avg move -0.01%  after costs +0.017R /    +8.1R
+5-min, stop range high, gap 5-8%                3799  win  43.1%  avg +0.083R  total  +316.7R  stopped 40.5%  risk 2.84%  avg move +0.10%  after costs +0.042R /  +159.5R
+5-min, stop range high, gap 8-10%                718  win  44.6%  avg +0.117R  total   +84.3R  stopped 33.1%  risk 3.62%  avg move +0.44%  after costs +0.084R /   +60.2R
+5-min, stop range high, gap 10-15%               640  win  49.1%  avg +0.126R  total   +80.8R  stopped 33.1%  risk 4.41%  avg move +0.36%  after costs +0.100R /   +63.8R
+5-min, stop range high, gap 15-100%              437  win  49.9%  avg +0.037R  total   +16.3R  stopped 30.7%  risk 5.94%  avg move -0.00%  after costs +0.017R /    +7.6R
+5-min, stop day's high, gap 5-8%                3812  win  43.9%  avg +0.078R  total  +299.0R  stopped 37.6%  risk 3.12%  avg move +0.11%  after costs +0.040R /  +154.2R
+5-min, stop day's high, gap 8-10%                718  win  45.1%  avg +0.110R  total   +79.0R  stopped 30.4%  risk 3.94%  avg move +0.45%  after costs +0.080R /   +57.2R
+5-min, stop day's high, gap 10-15%               640  win  49.8%  avg +0.115R  total   +73.5R  stopped 30.9%  risk 4.79%  avg move +0.40%  after costs +0.090R /   +57.7R
+5-min, stop day's high, gap 15-100%              437  win  50.3%  avg +0.034R  total   +14.8R  stopped 28.6%  risk 6.39%  avg move +0.04%  after costs +0.015R /    +6.7R
+
+== early relative volume (at least) ==
+3-min, stop range high, rel vol 0x+             5880  win  41.3%  avg +0.115R  total  +677.8R  stopped 45.1%  risk 2.78%  avg move +0.17%  after costs +0.072R /  +423.1R
+3-min, stop range high, rel vol 2x+             4018  win  42.2%  avg +0.072R  total  +287.3R  stopped 42.3%  risk 3.10%  avg move +0.12%  after costs +0.033R /  +133.1R
+3-min, stop range high, rel vol 3x+             3145  win  43.3%  avg +0.067R  total  +209.7R  stopped 40.3%  risk 3.33%  avg move +0.10%  after costs +0.031R /   +96.0R
+3-min, stop range high, rel vol 5x+             2181  win  44.8%  avg +0.080R  total  +173.8R  stopped 37.7%  risk 3.63%  avg move +0.13%  after costs +0.047R /  +102.1R
+3-min, stop range high, rel vol 10x+            1107  win  47.6%  avg +0.104R  total  +115.3R  stopped 34.1%  risk 3.93%  avg move +0.16%  after costs +0.075R /   +82.7R
+3-min, stop day's high, rel vol 0x+             5910  win  42.7%  avg +0.101R  total  +596.2R  stopped 41.1%  risk 3.14%  avg move +0.19%  after costs +0.062R /  +367.8R
+3-min, stop day's high, rel vol 2x+             4023  win  43.0%  avg +0.063R  total  +253.0R  stopped 39.2%  risk 3.43%  avg move +0.12%  after costs +0.028R /  +111.7R
+3-min, stop day's high, rel vol 3x+             3148  win  44.0%  avg +0.062R  total  +194.5R  stopped 37.7%  risk 3.63%  avg move +0.12%  after costs +0.028R /   +89.4R
+3-min, stop day's high, rel vol 5x+             2182  win  45.4%  avg +0.078R  total  +170.6R  stopped 35.3%  risk 3.93%  avg move +0.15%  after costs +0.048R /  +103.8R
+3-min, stop day's high, rel vol 10x+            1108  win  48.4%  avg +0.099R  total  +109.4R  stopped 31.3%  risk 4.19%  avg move +0.18%  after costs +0.071R /   +79.2R
+5-min, stop range high, rel vol 0x+             5594  win  44.5%  avg +0.089R  total  +498.2R  stopped 38.0%  risk 3.22%  avg move +0.17%  after costs +0.052R /  +291.1R
+5-min, stop range high, rel vol 2x+             3489  win  45.3%  avg +0.040R  total  +138.1R  stopped 34.5%  risk 3.72%  avg move +0.09%  after costs +0.007R /   +25.0R
+5-min, stop range high, rel vol 3x+             2716  win  46.3%  avg +0.050R  total  +136.2R  stopped 32.3%  risk 3.99%  avg move +0.14%  after costs +0.020R /   +54.3R
+5-min, stop range high, rel vol 5x+             1857  win  47.8%  avg +0.061R  total  +113.1R  stopped 29.8%  risk 4.30%  avg move +0.14%  after costs +0.033R /   +62.1R
+5-min, stop range high, rel vol 10x+             856  win  49.2%  avg +0.079R  total   +67.5R  stopped 27.8%  risk 4.56%  avg move +0.10%  after costs +0.053R /   +45.8R
+5-min, stop day's high, rel vol 0x+             5607  win  45.3%  avg +0.083R  total  +466.3R  stopped 35.2%  risk 3.53%  avg move +0.18%  after costs +0.049R /  +275.8R
+5-min, stop day's high, rel vol 2x+             3491  win  45.7%  avg +0.039R  total  +137.0R  stopped 32.5%  risk 3.96%  avg move +0.10%  after costs +0.009R /   +31.1R
+5-min, stop day's high, rel vol 3x+             2716  win  46.5%  avg +0.047R  total  +128.3R  stopped 30.7%  risk 4.18%  avg move +0.14%  after costs +0.019R /   +51.1R
+5-min, stop day's high, rel vol 5x+             1857  win  48.1%  avg +0.058R  total  +108.3R  stopped 28.2%  risk 4.54%  avg move +0.15%  after costs +0.032R /   +60.2R
+5-min, stop day's high, rel vol 10x+             856  win  49.5%  avg +0.074R  total   +63.8R  stopped 26.3%  risk 4.81%  avg move +0.12%  after costs +0.050R /   +43.2R
+
+== early relative volume bands ==
+3-min, stop range high, rel vol 0-2x            1862  win  39.6%  avg +0.210R  total  +390.5R  stopped 51.2%  risk 2.23%  avg move +0.29%  after costs +0.156R /  +290.0R
+3-min, stop range high, rel vol 2-3x             873  win  38.0%  avg +0.089R  total   +77.6R  stopped 49.5%  risk 2.51%  avg move +0.16%  after costs +0.042R /   +37.1R
+3-min, stop range high, rel vol 3-5x             964  win  40.0%  avg +0.037R  total   +35.9R  stopped 46.1%  risk 2.74%  avg move +0.03%  after costs -0.006R /    -6.1R
+3-min, stop range high, rel vol 5-10x           1074  win  41.8%  avg +0.055R  total   +58.5R  stopped 41.4%  risk 3.30%  avg move +0.11%  after costs +0.018R /   +19.4R
+3-min, stop range high, rel vol 10-20x           756  win  47.4%  avg +0.121R  total   +91.7R  stopped 34.3%  risk 3.81%  avg move +0.35%  after costs +0.091R /   +68.8R
+3-min, stop range high, rel vol 20-x             351  win  48.1%  avg +0.067R  total   +23.6R  stopped 33.6%  risk 4.30%  avg move -0.26%  after costs +0.040R /   +13.9R
+3-min, stop day's high, rel vol 0-2x            1887  win  42.1%  avg +0.182R  total  +343.2R  stopped 45.2%  risk 2.59%  avg move +0.33%  after costs +0.136R /  +256.0R
+3-min, stop day's high, rel vol 2-3x             875  win  39.3%  avg +0.067R  total   +58.5R  stopped 44.8%  risk 2.87%  avg move +0.13%  after costs +0.026R /   +22.4R
+3-min, stop day's high, rel vol 3-5x             966  win  40.8%  avg +0.025R  total   +23.9R  stopped 43.1%  risk 3.03%  avg move +0.05%  after costs -0.015R /   -14.5R
+3-min, stop day's high, rel vol 5-10x           1074  win  42.4%  avg +0.057R  total   +61.2R  stopped 39.4%  risk 3.60%  avg move +0.12%  after costs +0.023R /   +24.6R
+3-min, stop day's high, rel vol 10-20x           757  win  47.7%  avg +0.105R  total   +79.6R  stopped 31.7%  risk 4.06%  avg move +0.34%  after costs +0.077R /   +58.2R
+3-min, stop day's high, rel vol 20-x             351  win  49.9%  avg +0.085R  total   +29.8R  stopped 30.5%  risk 4.55%  avg move -0.16%  after costs +0.060R /   +21.0R
+5-min, stop range high, rel vol 0-2x            2105  win  43.2%  avg +0.171R  total  +360.1R  stopped 43.7%  risk 2.60%  avg move +0.29%  after costs +0.126R /  +266.1R
+5-min, stop range high, rel vol 2-3x             773  win  41.7%  avg +0.002R  total    +1.8R  stopped 42.4%  risk 2.93%  avg move -0.06%  after costs -0.038R /   -29.2R
+5-min, stop range high, rel vol 3-5x             859  win  43.1%  avg +0.027R  total   +23.2R  stopped 37.5%  risk 3.37%  avg move +0.14%  after costs -0.009R /    -7.9R
+5-min, stop range high, rel vol 5-10x           1001  win  46.6%  avg +0.046R  total   +45.6R  stopped 31.6%  risk 4.10%  avg move +0.17%  after costs +0.016R /   +16.3R
+5-min, stop range high, rel vol 10-20x           607  win  48.1%  avg +0.072R  total   +43.8R  stopped 29.2%  risk 4.36%  avg move +0.19%  after costs +0.046R /   +27.9R
+5-min, stop range high, rel vol 20-x             249  win  51.8%  avg +0.095R  total   +23.7R  stopped 24.5%  risk 4.92%  avg move -0.11%  after costs +0.072R /   +17.9R
+5-min, stop day's high, rel vol 0-2x            2116  win  44.6%  avg +0.156R  total  +329.3R  stopped 39.7%  risk 2.97%  avg move +0.31%  after costs +0.116R /  +244.7R
+5-min, stop day's high, rel vol 2-3x             775  win  42.6%  avg +0.011R  total    +8.7R  stopped 38.8%  risk 3.27%  avg move -0.02%  after costs -0.026R /   -20.0R
+5-min, stop day's high, rel vol 3-5x             859  win  43.2%  avg +0.023R  total   +20.0R  stopped 36.1%  risk 3.54%  avg move +0.12%  after costs -0.011R /    -9.1R
+5-min, stop day's high, rel vol 5-10x           1001  win  46.9%  avg +0.045R  total   +44.6R  stopped 29.9%  risk 4.30%  avg move +0.17%  after costs +0.017R /   +17.0R
+5-min, stop day's high, rel vol 10-20x           607  win  48.1%  avg +0.061R  total   +37.0R  stopped 27.5%  risk 4.59%  avg move +0.18%  after costs +0.036R /   +21.9R
+5-min, stop day's high, rel vol 20-x             249  win  53.0%  avg +0.107R  total   +26.7R  stopped 23.3%  risk 5.18%  avg move -0.05%  after costs +0.085R /   +21.2R
+
+== entry time ==
+3-min, stop range high, entry 9:30-9:45         4183  win  38.3%  avg +0.101R  total  +420.8R  stopped 52.0%  risk 2.70%  avg move +0.12%  after costs +0.056R /  +233.8R
+3-min, stop range high, entry 9:45-10:00         494  win  52.2%  avg +0.289R  total  +142.8R  stopped 32.8%  risk 2.96%  avg move +0.57%  after costs +0.248R /  +122.6R
+3-min, stop range high, entry 10:00-10:30        456  win  47.4%  avg +0.116R  total   +53.0R  stopped 37.9%  risk 2.76%  avg move +0.21%  after costs +0.074R /   +34.0R
+3-min, stop range high, entry 10:30-11:30        331  win  46.5%  avg +0.108R  total   +35.6R  stopped 28.4%  risk 3.06%  avg move +0.06%  after costs +0.069R /   +22.9R
+3-min, stop range high, entry after 11:30        416  win  47.8%  avg +0.062R  total   +25.6R  stopped 11.1%  risk 2.98%  avg move +0.24%  after costs +0.024R /    +9.9R
+3-min, stop day's high, entry 9:30-9:45         4197  win  38.9%  avg +0.094R  total  +394.6R  stopped 50.9%  risk 2.78%  avg move +0.12%  after costs +0.051R /  +213.4R
+3-min, stop day's high, entry 9:45-10:00         501  win  55.1%  avg +0.260R  total  +130.1R  stopped 25.0%  risk 3.45%  avg move +0.63%  after costs +0.226R /  +113.4R
+3-min, stop day's high, entry 10:00-10:30        462  win  52.6%  avg +0.078R  total   +35.9R  stopped 25.1%  risk 3.86%  avg move +0.31%  after costs +0.049R /   +22.6R
+3-min, stop day's high, entry 10:30-11:30        333  win  50.8%  avg +0.065R  total   +21.6R  stopped 13.5%  risk 4.46%  avg move +0.16%  after costs +0.040R /   +13.4R
+3-min, stop day's high, entry after 11:30        417  win  48.4%  avg +0.034R  total   +14.0R  stopped  1.9%  risk 5.24%  avg move +0.22%  after costs +0.012R /    +5.0R
+5-min, stop range high, entry 9:30-9:45         3446  win  41.0%  avg +0.074R  total  +256.0R  stopped 46.4%  risk 3.13%  avg move +0.09%  after costs +0.036R /  +123.5R
+5-min, stop range high, entry 9:45-10:00         665  win  51.4%  avg +0.198R  total  +131.7R  stopped 31.7%  risk 3.23%  avg move +0.47%  after costs +0.161R /  +107.2R
+5-min, stop range high, entry 10:00-10:30        596  win  50.0%  avg +0.085R  total   +50.5R  stopped 31.9%  risk 3.24%  avg move +0.24%  after costs +0.049R /   +29.3R
+5-min, stop range high, entry 10:30-11:30        395  win  49.9%  avg +0.104R  total   +41.2R  stopped 20.8%  risk 3.63%  avg move +0.14%  after costs +0.072R /   +28.3R
+5-min, stop range high, entry after 11:30        492  win  48.2%  avg +0.038R  total   +18.8R  stopped  8.3%  risk 3.45%  avg move +0.18%  after costs +0.006R /    +2.8R
+5-min, stop day's high, entry 9:30-9:45         3449  win  41.2%  avg +0.071R  total  +245.5R  stopped 46.1%  risk 3.15%  avg move +0.09%  after costs +0.033R /  +114.4R
+5-min, stop day's high, entry 9:45-10:00         668  win  53.0%  avg +0.197R  total  +131.5R  stopped 27.4%  risk 3.49%  avg move +0.51%  after costs +0.164R /  +109.4R
+5-min, stop day's high, entry 10:00-10:30        601  win  52.6%  avg +0.072R  total   +43.0R  stopped 23.8%  risk 3.90%  avg move +0.32%  after costs +0.043R /   +26.0R
+5-min, stop day's high, entry 10:30-11:30        396  win  52.3%  avg +0.081R  total   +32.0R  stopped 12.4%  risk 4.47%  avg move +0.21%  after costs +0.056R /   +22.3R
+5-min, stop day's high, entry after 11:30        493  win  48.9%  avg +0.029R  total   +14.3R  stopped  2.0%  risk 5.31%  avg move +0.19%  after costs +0.008R /    +3.7R
+
+== the stop's distance from the entry ==
+3-min, stop range high, risk 0-0.5%               77  win  22.1%  avg +22.534R  total +1735.1R  stopped 77.9%  risk 0.39%  avg move +0.66%  after costs +21.917R / +1687.6R
+3-min, stop range high, risk 0.5-1%              307  win  28.0%  avg +0.266R  total   +81.6R  stopped 70.4%  risk 0.83%  avg move +0.24%  after costs +0.137R /   +42.1R
+3-min, stop range high, risk 1-1.5%              575  win  40.3%  avg +0.543R  total  +312.4R  stopped 55.3%  risk 1.27%  avg move +0.66%  after costs +0.463R /  +266.3R
+3-min, stop range high, risk 1.5-2.5%           1633  win  38.9%  avg +0.128R  total  +209.7R  stopped 52.2%  risk 2.03%  avg move +0.26%  after costs +0.078R /  +127.2R
+3-min, stop range high, risk 2.5-4%             1828  win  42.4%  avg +0.026R  total   +46.8R  stopped 43.3%  risk 3.13%  avg move +0.09%  after costs -0.007R /   -12.0R
+3-min, stop range high, risk 4-100%             1537  win  45.7%  avg +0.018R  total   +27.4R  stopped 30.8%  risk 5.33%  avg move -0.02%  after costs -0.000R /    -0.6R
+3-min, stop day's high, risk 0-0.5%               54  win  20.4%  avg +32.249R  total +1741.4R  stopped 79.6%  risk 0.39%  avg move +0.94%  after costs +31.513R / +1701.7R
+3-min, stop day's high, risk 0.5-1%              225  win  26.2%  avg +0.154R  total   +34.6R  stopped 72.0%  risk 0.84%  avg move +0.14%  after costs +0.026R /    +5.8R
+3-min, stop day's high, risk 1-1.5%              433  win  39.5%  avg +0.542R  total  +234.5R  stopped 57.5%  risk 1.28%  avg move +0.68%  after costs +0.462R /  +199.9R
+3-min, stop day's high, risk 1.5-2.5%           1411  win  39.4%  avg +0.152R  total  +213.8R  stopped 53.0%  risk 2.05%  avg move +0.31%  after costs +0.101R /  +143.1R
+3-min, stop day's high, risk 2.5-4%             1854  win  44.0%  avg +0.037R  total   +68.4R  stopped 41.6%  risk 3.17%  avg move +0.12%  after costs +0.005R /    +9.3R
+3-min, stop day's high, risk 4-100%             1987  win  46.5%  avg +0.023R  total   +44.9R  stopped 25.2%  risk 5.46%  avg move +0.07%  after costs +0.005R /    +9.7R
+5-min, stop range high, risk 0-0.5%               32  win  25.0%  avg +1.296R  total   +41.5R  stopped 75.0%  risk 0.39%  avg move +0.63%  after costs +0.865R /   +27.7R
+5-min, stop range high, risk 0.5-1%              153  win  31.4%  avg +0.304R  total   +46.5R  stopped 68.0%  risk 0.83%  avg move +0.25%  after costs +0.174R /   +26.6R
+5-min, stop range high, risk 1-1.5%              346  win  44.5%  avg +0.581R  total  +201.1R  stopped 49.4%  risk 1.28%  avg move +0.77%  after costs +0.501R /  +173.4R
+5-min, stop range high, risk 1.5-2.5%           1337  win  42.4%  avg +0.161R  total  +214.8R  stopped 47.5%  risk 2.05%  avg move +0.32%  after costs +0.110R /  +147.7R
+5-min, stop range high, risk 2.5-4%             1816  win  43.4%  avg -0.009R  total   -16.6R  stopped 39.6%  risk 3.18%  avg move -0.01%  after costs -0.041R /   -74.4R
+5-min, stop range high, risk 4-100%             1942  win  47.9%  avg +0.027R  total   +52.4R  stopped 25.4%  risk 5.47%  avg move +0.11%  after costs +0.009R /   +17.8R
+5-min, stop day's high, risk 0-0.5%               19  win  15.8%  avg +1.113R  total   +21.2R  stopped 84.2%  risk 0.38%  avg move +0.72%  after costs +0.572R /   +10.9R
+5-min, stop day's high, risk 0.5-1%              114  win  28.1%  avg +0.222R  total   +25.4R  stopped 71.1%  risk 0.83%  avg move +0.20%  after costs +0.093R /   +10.6R
+5-min, stop day's high, risk 1-1.5%              290  win  45.2%  avg +0.599R  total  +173.8R  stopped 51.4%  risk 1.30%  avg move +0.78%  after costs +0.520R /  +150.7R
+5-min, stop day's high, risk 1.5-2.5%           1128  win  41.8%  avg +0.169R  total  +190.2R  stopped 48.7%  risk 2.06%  avg move +0.34%  after costs +0.119R /  +133.8R
+5-min, stop day's high, risk 2.5-4%             1775  win  44.6%  avg +0.003R  total    +4.8R  stopped 38.9%  risk 3.22%  avg move +0.01%  after costs -0.029R /   -51.3R
+5-min, stop day's high, risk 4-100%             2300  win  48.3%  avg +0.031R  total   +72.2R  stopped 22.0%  risk 5.56%  avg move +0.17%  after costs +0.014R /   +32.0R
+
+== all 180 combinations: top 15 by total R ==
+3-min range high either gap 5%+ vol 0x+         5880  win  41.3%  avg +0.115R  total  +677.8R  stopped 45.1%  risk 2.78%  avg move +0.17%  after costs +0.072R /  +423.1R | years {'2023': [627, 0.071, 44.8], '2024': [1001, -0.022, -21.9], '2025': [2033, 0.334, 679.8], '2026': [2219, -0.011, -24.8]} | ex market days [3911, 40.0, 0.013, 52.6] | cap4 {'n': 2361, 'avg': 0.052, 'total': 121.6}
+3-min day's high either gap 5%+ vol 0x+         5910  win  42.7%  avg +0.101R  total  +596.2R  stopped 41.1%  risk 3.14%  avg move +0.19%  after costs +0.062R /  +367.8R | years {'2023': [631, 0.043, 26.9], '2024': [1004, -0.039, -39.0], '2025': [2048, 0.321, 656.9], '2026': [2227, -0.022, -48.6]} | ex market days [3921, 41.0, -0.001, -2.4] | cap4 {'n': 2362, 'avg': 0.041, 'total': 97.2}
+5-min range high either gap 5%+ vol 0x+         5594  win  44.5%  avg +0.089R  total  +498.2R  stopped 38.0%  risk 3.22%  avg move +0.17%  after costs +0.052R /  +291.1R | years {'2023': [597, 0.004, 2.3], '2024': [926, -0.06, -55.7], '2025': [1965, 0.304, 597.1], '2026': [2106, -0.022, -45.6]} | ex market days [3697, 42.7, -0.025, -90.9] | cap4 {'n': 2287, 'avg': 0.008, 'total': 18.3}
+5-min day's high either gap 5%+ vol 0x+         5607  win  45.3%  avg +0.083R  total  +466.3R  stopped 35.2%  risk 3.53%  avg move +0.18%  after costs +0.049R /  +275.8R | years {'2023': [600, -0.016, -9.5], '2024': [927, -0.066, -61.2], '2025': [1970, 0.299, 588.7], '2026': [2110, -0.024, -51.6]} | ex market days [3701, 43.2, -0.031, -115.5] | cap4 {'n': 2288, 'avg': 0.001, 'total': 2.7}
+3-min range high red gap 5%+ vol 0x+            3339  win  41.2%  avg +0.126R  total  +421.2R  stopped 45.9%  risk 2.92%  avg move +0.23%  after costs +0.085R /  +283.0R | years {'2023': [388, 0.049, 18.9], '2024': [577, -0.006, -3.6], '2025': [1074, 0.365, 391.8], '2026': [1300, 0.011, 14.1]} | ex market days [2257, 39.4, 0.023, 51.4] | cap4 {'n': 1728, 'avg': 0.056, 'total': 97.0}
+3-min day's high red gap 5%+ vol 0x+            3346  win  41.9%  avg +0.114R  total  +380.3R  stopped 43.6%  risk 3.12%  avg move +0.23%  after costs +0.075R /  +250.1R | years {'2023': [390, 0.048, 18.7], '2024': [577, -0.016, -9.0], '2025': [1079, 0.336, 362.7], '2026': [1300, 0.006, 7.9]} | ex market days [2260, 39.9, 0.017, 38.9] | cap4 {'n': 1730, 'avg': 0.048, 'total': 83.7}
+5-min range high red gap 5%+ vol 0x+            3335  win  44.0%  avg +0.087R  total  +290.8R  stopped 39.4%  risk 3.41%  avg move +0.17%  after costs +0.052R /  +173.3R | years {'2023': [379, -0.001, -0.5], '2024': [551, -0.1, -55.3], '2025': [1096, 0.32, 350.6], '2026': [1309, -0.003, -4.0]} | ex market days [2269, 41.2, -0.049, -111.3] | cap4 {'n': 1704, 'avg': 0.002, 'total': 3.8}
+3-min range high either gap 5%+ vol 2x+         4018  win  42.2%  avg +0.072R  total  +287.3R  stopped 42.3%  risk 3.10%  avg move +0.12%  after costs +0.033R /  +133.1R | years {'2023': [543, 0.09, 48.6], '2024': [793, -0.006, -4.5], '2025': [1282, 0.174, 223.6], '2026': [1400, 0.014, 19.7]} | ex market days [3081, 42.0, 0.027, 84.5] | cap4 {'n': 2167, 'avg': 0.062, 'total': 135.1}
+5-min day's high red gap 5%+ vol 0x+            3338  win  44.3%  avg +0.081R  total  +270.0R  stopped 37.8%  risk 3.57%  avg move +0.17%  after costs +0.047R /  +157.8R | years {'2023': [379, 0.002, 0.6], '2024': [551, -0.1, -55.2], '2025': [1098, 0.309, 339.8], '2026': [1310, -0.012, -15.2]} | ex market days [2269, 41.4, -0.05, -114.4] | cap4 {'n': 1704, 'avg': -0.0, 'total': -0.0}
+3-min day's high either gap 5%+ vol 2x+         4023  win  43.0%  avg +0.063R  total  +253.0R  stopped 39.2%  risk 3.43%  avg move +0.12%  after costs +0.028R /  +111.7R | years {'2023': [545, 0.071, 38.9], '2024': [793, -0.014, -11.5], '2025': [1283, 0.174, 223.1], '2026': [1402, 0.002, 2.5]} | ex market days [3084, 42.8, 0.02, 61.5] | cap4 {'n': 2167, 'avg': 0.058, 'total': 126.6}
+3-min range high either gap 8%+ vol 0x+         1908  win  44.0%  avg +0.130R  total  +248.2R  stopped 41.1%  risk 3.72%  avg move +0.27%  after costs +0.097R /  +184.8R | years {'2023': [256, 0.255, 65.3], '2024': [394, 0.032, 12.6], '2025': [634, 0.192, 121.6], '2026': [624, 0.078, 48.7]} | ex market days [1558, 43.6, 0.108, 168.7] | cap4 {'n': 1349, 'avg': 0.078, 'total': 104.9}
+3-min range high green gap 5%+ vol 0x+          2516  win  41.5%  avg +0.094R  total  +236.0R  stopped 44.1%  risk 2.65%  avg move +0.09%  after costs +0.048R /  +121.3R | years {'2023': [238, 0.1, 23.7], '2024': [417, -0.04, -16.9], '2025': [946, 0.28, 265.3], '2026': [915, -0.04, -36.2]} | ex market days [1644, 40.8, 0.002, 2.7] | cap4 {'n': 1375, 'avg': 0.019, 'total': 26.1}
+3-min day's high either gap 8%+ vol 0x+         1913  win  45.3%  avg +0.113R  total  +216.3R  stopped 37.0%  risk 4.13%  avg move +0.31%  after costs +0.084R /  +159.7R | years {'2023': [256, 0.19, 48.7], '2024': [394, 0.022, 8.7], '2025': [637, 0.178, 113.3], '2026': [626, 0.073, 45.6]} | ex market days [1559, 44.7, 0.093, 145.1] | cap4 {'n': 1349, 'avg': 0.072, 'total': 96.6}
+3-min range high red gap 5%+ vol 2x+            2441  win  42.4%  avg +0.087R  total  +212.2R  stopped 43.0%  risk 3.27%  avg move +0.17%  after costs +0.050R /  +122.1R | years {'2023': [353, 0.09, 31.7], '2024': [471, 0.03, 14.3], '2025': [767, 0.194, 148.9], '2026': [850, 0.02, 17.2]} | ex market days [1857, 41.5, 0.039, 72.3] | cap4 {'n': 1574, 'avg': 0.073, 'total': 115.6}
+3-min range high either gap 5%+ vol 3x+         3145  win  43.3%  avg +0.067R  total  +209.7R  stopped 40.3%  risk 3.33%  avg move +0.10%  after costs +0.031R /   +96.0R | years {'2023': [479, 0.091, 43.6], '2024': [682, 0.014, 9.3], '2025': [974, 0.136, 132.1], '2026': [1010, 0.024, 24.7]} | ex market days [2620, 43.1, 0.041, 108.0] | cap4 {'n': 2014, 'avg': 0.063, 'total': 126.8}
+
+== top 15 by average R (200+ trades) ==
+3-min range high green gap 8%+ vol 10x+          244  win  49.6%  avg +0.163R  total   +39.7R  stopped 32.4%  risk 3.93%  avg move +0.16%  after costs +0.134R /   +32.7R | years {'2023': [42, 0.407, 17.1], '2024': [72, 0.062, 4.5], '2025': [72, 0.23, 16.5], '2026': [58, 0.028, 1.6]} | ex market days [236, 48.7, 0.15, 35.3] | cap4 {'n': 244, 'avg': 0.163, 'total': 39.7}
+5-min range high green gap 5%+ vol 10x+          265  win  52.8%  avg +0.163R  total   +43.2R  stopped 22.6%  risk 3.91%  avg move +0.38%  after costs +0.134R /   +35.6R | years {'2023': [54, 0.27, 14.6], '2024': [96, 0.086, 8.2], '2025': [62, 0.205, 12.7], '2026': [53, 0.145, 7.7]} | ex market days [256, 52.0, 0.145, 37.0] | cap4 {'n': 265, 'avg': 0.163, 'total': 43.2}
+5-min range high green gap 10%+ vol 0x+          408  win  52.0%  avg +0.158R  total   +64.3R  stopped 28.9%  risk 4.50%  avg move +0.55%  after costs +0.132R /   +54.0R | years {'2023': [59, 0.163, 9.6], '2024': [104, 0.239, 24.9], '2025': [129, 0.215, 27.7], '2026': [116, 0.018, 2.1]} | ex market days [349, 51.6, 0.13, 45.3] | cap4 {'n': 375, 'avg': 0.135, 'total': 50.8}
+5-min day's high green gap 5%+ vol 10x+          265  win  54.0%  avg +0.156R  total   +41.4R  stopped 19.2%  risk 4.40%  avg move +0.41%  after costs +0.131R /   +34.6R | years {'2023': [54, 0.227, 12.3], '2024': [96, 0.073, 7.0], '2025': [62, 0.214, 13.3], '2026': [53, 0.166, 8.8]} | ex market days [256, 53.1, 0.14, 35.8] | cap4 {'n': 265, 'avg': 0.156, 'total': 41.4}
+3-min day's high green gap 8%+ vol 10x+          244  win  51.6%  avg +0.150R  total   +36.6R  stopped 27.0%  risk 4.46%  avg move +0.27%  after costs +0.126R /   +30.6R | years {'2023': [42, 0.292, 12.2], '2024': [72, 0.039, 2.8], '2025': [72, 0.255, 18.4], '2026': [58, 0.055, 3.2]} | ex market days [236, 50.8, 0.138, 32.5] | cap4 {'n': 244, 'avg': 0.15, 'total': 36.6}
+5-min day's high green gap 10%+ vol 0x+          408  win  53.4%  avg +0.145R  total   +59.2R  stopped 25.5%  risk 5.15%  avg move +0.62%  after costs +0.123R /   +50.0R | years {'2023': [59, 0.047, 2.8], '2024': [104, 0.212, 22.1], '2025': [129, 0.226, 29.1], '2026': [116, 0.045, 5.2]} | ex market days [349, 53.0, 0.116, 40.4] | cap4 {'n': 375, 'avg': 0.125, 'total': 46.9}
+5-min range high green gap 10%+ vol 3x+          323  win  53.3%  avg +0.144R  total   +46.4R  stopped 25.4%  risk 4.59%  avg move +0.51%  after costs +0.119R /   +38.5R | years {'2023': [48, 0.177, 8.5], '2024': [90, 0.24, 21.6], '2025': [92, 0.111, 10.2], '2026': [93, 0.065, 6.1]} | ex market days [289, 52.6, 0.139, 40.1] | cap4 {'n': 310, 'avg': 0.142, 'total': 44.0}
+5-min day's high green gap 10%+ vol 3x+          323  win  54.5%  avg +0.142R  total   +45.9R  stopped 23.2%  risk 5.24%  avg move +0.53%  after costs +0.120R /   +38.7R | years {'2023': [48, 0.123, 5.9], '2024': [90, 0.224, 20.1], '2025': [92, 0.146, 13.4], '2026': [93, 0.069, 6.5]} | ex market days [289, 54.0, 0.14, 40.5] | cap4 {'n': 310, 'avg': 0.14, 'total': 43.5}
+3-min range high green gap 5%+ vol 10x+          356  win  50.0%  avg +0.139R  total   +49.4R  stopped 31.7%  risk 3.50%  avg move +0.22%  after costs +0.106R /   +37.7R | years {'2023': [66, 0.221, 14.6], '2024': [109, 0.063, 6.8], '2025': [98, 0.246, 24.2], '2026': [83, 0.046, 3.8]} | ex market days [341, 49.3, 0.124, 42.1] | cap4 {'n': 354, 'avg': 0.145, 'total': 51.2}
+3-min range high green gap 10%+ vol 5x+          292  win  48.6%  avg +0.132R  total   +38.5R  stopped 34.9%  risk 4.15%  avg move +0.10%  after costs +0.104R /   +30.5R | years {'2023': [46, -0.006, -0.3], '2024': [74, 0.326, 24.1], '2025': [90, 0.074, 6.6], '2026': [82, 0.098, 8.0]} | ex market days [266, 48.5, 0.134, 35.7] | cap4 {'n': 284, 'avg': 0.118, 'total': 33.4}
+3-min range high green gap 8%+ vol 0x+           824  win  44.9%  avg +0.131R  total  +108.1R  stopped 39.8%  risk 3.44%  avg move +0.25%  after costs +0.096R /   +78.8R | years {'2023': [99, 0.339, 33.6], '2024': [172, 0.076, 13.1], '2025': [283, 0.208, 58.8], '2026': [270, 0.01, 2.6]} | ex market days [650, 45.4, 0.105, 68.3] | cap4 {'n': 664, 'avg': 0.094, 'total': 62.6}
+3-min range high either gap 8%+ vol 0x+         1908  win  44.0%  avg +0.130R  total  +248.2R  stopped 41.1%  risk 3.72%  avg move +0.27%  after costs +0.097R /  +184.8R | years {'2023': [256, 0.255, 65.3], '2024': [394, 0.032, 12.6], '2025': [634, 0.192, 121.6], '2026': [624, 0.078, 48.7]} | ex market days [1558, 43.6, 0.108, 168.7] | cap4 {'n': 1349, 'avg': 0.078, 'total': 104.9}
+3-min range high red gap 8%+ vol 0x+            1079  win  43.4%  avg +0.129R  total  +139.3R  stopped 42.2%  risk 3.94%  avg move +0.29%  after costs +0.098R /  +105.3R | years {'2023': [156, 0.189, 29.5], '2024': [220, -0.003, -0.7], '2025': [349, 0.184, 64.4], '2026': [354, 0.13, 46.1]} | ex market days [906, 42.2, 0.108, 97.9] | cap4 {'n': 902, 'avg': 0.082, 'total': 73.6}
+3-min range high green gap 10%+ vol 0x+          460  win  45.9%  avg +0.129R  total   +59.5R  stopped 40.2%  risk 3.96%  avg move +0.28%  after costs +0.098R /   +45.2R | years {'2023': [68, 0.074, 5.1], '2024': [108, 0.254, 27.4], '2025': [147, 0.207, 30.4], '2026': [137, -0.024, -3.3]} | ex market days [396, 45.2, 0.088, 34.7] | cap4 {'n': 422, 'avg': 0.111, 'total': 47.0}
+3-min range high red gap 5%+ vol 0x+            3339  win  41.2%  avg +0.126R  total  +421.2R  stopped 45.9%  risk 2.92%  avg move +0.23%  after costs +0.085R /  +283.0R | years {'2023': [388, 0.049, 18.9], '2024': [577, -0.006, -3.6], '2025': [1074, 0.365, 391.8], '2026': [1300, 0.011, 14.1]} | ex market days [2257, 39.4, 0.023, 51.4] | cap4 {'n': 1728, 'avg': 0.056, 'total': 97.0}
+
+== worst 8 by total R ==
+5-min day's high red gap 10%+ vol 10x+           335  win  48.4%  avg -0.029R  total    -9.6R  stopped 30.1%  risk 5.76%  avg move -0.51%  after costs -0.048R /   -16.1R | years {'2023': [75, -0.166, -12.4], '2024': [74, 0.017, 1.3], '2025': [107, -0.019, -2.1], '2026': [79, 0.046, 3.6]}
+5-min range high red gap 10%+ vol 10x+           335  win  48.4%  avg -0.026R  total    -8.8R  stopped 30.7%  risk 5.58%  avg move -0.52%  after costs -0.046R /   -15.5R | years {'2023': [75, -0.166, -12.5], '2024': [74, 0.015, 1.1], '2025': [107, -0.014, -1.5], '2026': [79, 0.051, 4.0]}
+5-min day's high red gap 8%+ vol 10x+            430  win  48.1%  avg -0.003R  total    -1.5R  stopped 30.2%  risk 5.55%  avg move -0.27%  after costs -0.024R /   -10.3R | years {'2023': [94, -0.074, -6.9], '2024': [99, -0.083, -8.2], '2025': [140, 0.058, 8.1], '2026': [97, 0.057, 5.5]}
+5-min range high red gap 8%+ vol 10x+            430  win  48.1%  avg +0.001R  total    +0.3R  stopped 31.2%  risk 5.43%  avg move -0.28%  after costs -0.020R /    -8.8R | years {'2023': [94, -0.074, -7.0], '2024': [99, -0.089, -8.8], '2025': [140, 0.076, 10.7], '2026': [97, 0.056, 5.4]}
+5-min day's high red gap 10%+ vol 5x+            527  win  48.2%  avg +0.003R  total    +1.6R  stopped 31.1%  risk 5.80%  avg move -0.22%  after costs -0.017R /    -8.9R | years {'2023': [101, -0.088, -8.9], '2024': [112, 0.003, 0.3], '2025': [171, 0.004, 0.7], '2026': [143, 0.066, 9.5]}
+5-min range high red gap 10%+ vol 5x+            527  win  48.2%  avg +0.004R  total    +2.3R  stopped 31.9%  risk 5.63%  avg move -0.23%  after costs -0.016R /    -8.5R | years {'2023': [101, -0.097, -9.8], '2024': [112, 0.01, 1.1], '2025': [171, 0.011, 1.8], '2026': [143, 0.064, 9.2]}
+5-min day's high red gap 10%+ vol 3x+            592  win  47.8%  avg +0.007R  total    +4.4R  stopped 31.9%  risk 5.63%  avg move -0.15%  after costs -0.013R /    -7.8R | years {'2023': [107, -0.088, -9.4], '2024': [122, -0.023, -2.8], '2025': [191, 0.014, 2.6], '2026': [172, 0.081, 14.0]}
+5-min range high red gap 10%+ vol 3x+            592  win  47.8%  avg +0.008R  total    +4.8R  stopped 33.1%  risk 5.49%  avg move -0.16%  after costs -0.013R /    -7.7R | years {'2023': [107, -0.097, -10.4], '2024': [122, -0.008, -1.0], '2025': [191, 0.015, 2.8], '2026': [172, 0.078, 13.4]}
