@@ -11,6 +11,7 @@ Per stock-day, from the daily bars up to the session before (Yahoo's prices, the
                                    52-week lows: the mirror of the Resistance column's highs, scanner/launch.py RES_SPANS)
   clow21                           the lowest CLOSE of the 21 sessions before (the mirror of the 21-day closing high)
   high252                          the highest high of the 252 sessions before
+  pc / plow / phigh                yesterday's close, low and high
   n                                sessions of history before the gap day"""
 import gzip, json, sys
 
@@ -43,7 +44,7 @@ def main():
             j = i - 1                                    # yesterday
             lo = lambda n: min(x[3] for x in bs[max(0, i - n):i])
             out[f"{b[0]} {s}"] = {
-                "n": i, "pc": c[j], "ema10": round(e10[j], 4), "ema21": round(e21[j], 4), "ema50": round(e50[j], 4),
+                "n": i, "pc": c[j], "plow": bs[j][3], "phigh": bs[j][2], "ema10": round(e10[j], 4), "ema21": round(e21[j], 4), "ema50": round(e50[j], 4),
                 "sma200": round(sum(c[i - 200:i]) / 200, 4) if i >= 200 else None,
                 "low21": lo(21), "low63": lo(63) if i >= 63 else None, "low126": lo(126) if i >= 126 else None,
                 "low252": lo(252) if i >= 252 else None, "clow21": min(c[i - 21:i]),

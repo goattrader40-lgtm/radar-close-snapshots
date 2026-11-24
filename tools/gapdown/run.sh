@@ -26,4 +26,8 @@ python3 tools/gapdown/news.py "$D/gapdown_news.json.gz" history/gapdown_news_req
 (cd tools/gapdown && python3 part3.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" > "$D/results_part3.txt" \
   && python3 swing.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/bars_6y.json.gz" >> "$D/results_part3.txt" \
   && python3 make_xlsx_part3.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" "$D/gapdown_short_study_part3_earnings.xlsx")
-echo "results in $D: results.txt, results_mirrored.txt, results_part3.txt and the three spreadsheets"
+# part 4 (Nov 24 2026): the pop-then-fail scenarios (pop to VWAP, to a broken level, a retest of the opening low ...) and the two plays
+(cd tools/gapdown && python3 scenarios.py "$D/trades.json" "$D/features.json" "$D/scen.json" "$D"/raw_gapdown_20*.json.gz \
+  && python3 scen_report.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" "$D/scen.json" > "$D/results_part4.txt" \
+  && python3 make_xlsx_part4.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" "$D/scen.json" "$D/gapdown_short_study_part4_plays.xlsx")
+echo "results in $D: results.txt, results_mirrored.txt, results_part3.txt, results_part4.txt and the four spreadsheets"
