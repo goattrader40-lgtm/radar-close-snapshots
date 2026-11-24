@@ -20,4 +20,10 @@ python3 tools/gapdown/report.py "$D/trades.json" > "$D/results.txt"
 python3 tools/gapdown/features.py "$D/bars_6y.json.gz" "$D/gaps_clean.json" "$D/features.json"
 (cd tools/gapdown && python3 mirror.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" > "$D/results_mirrored.txt" \
   && python3 make_xlsx_mirror.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/gapdown_short_study_mirrored_rules.xlsx")
-echo "results: $D/results.txt, $D/gapdown_short_study.xlsx, $D/results_mirrored.txt, $D/gapdown_short_study_mirrored_rules.xlsx"
+# part 3 (Nov 24 2026): earnings days (radar-tools "gapnews" -> radar-study gapdown_news.json.gz), other exits, the short held past the close
+git show origin/radar-study:gapdown_news.json.gz > "$D/gapdown_news.json.gz"
+python3 tools/gapdown/news.py "$D/gapdown_news.json.gz" history/gapdown_news_request.json "$D/reasons.json"
+(cd tools/gapdown && python3 part3.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" > "$D/results_part3.txt" \
+  && python3 swing.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/bars_6y.json.gz" >> "$D/results_part3.txt" \
+  && python3 make_xlsx_part3.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" "$D/gapdown_short_study_part3_earnings.xlsx")
+echo "results in $D: results.txt, results_mirrored.txt, results_part3.txt and the three spreadsheets"

@@ -57,6 +57,97 @@ def walk(later, entry, stop, close):
     return close, 0
 
 
+def swing_day1(later, entry, stop, target=0.10, part=1 / 3):
+    """the entry day when the short is held past the close, the EP playbook's management mirrored: 1/3 bought back
+    10% under the entry, the stop of the rest then at the entry (breakeven). {took, pos left, pnl per share so far, stop}"""
+    pos, pnl, took, tgt = 1.0, 0.0, 0, entry * (1 - target)
+    for x in later:
+        if x[2] >= stop:
+            pnl += pos * (entry - max(x[1], stop))
+            pos = 0.0
+            break
+        if not took and x[3] <= tgt:
+            pnl += part * (entry - min(x[1], tgt))
+            pos -= part
+            took, stop = 1, min(stop, entry)
+    return {"took": took, "pos": round(pos, 4), "pnl": round(pnl, 4), "stop": round(stop, 4)}
+
+
+MARKS = ((29, "10:00"), (59, "10:30"), (89, "11:00"), (149, "12:00"), (209, "13:00"), (269, "14:00"), (329, "15:00"))
+
+
+def other_exits(later, entry, stop, close):
+    """other ways out of the same short (the user, Nov 24 2026: "most of the gap downs during the day, it moves a lot"),
+    each in R; the stop comes first inside a minute. mfe = the furthest the price fell under the entry before the stop
+    or the close, in %.  t<HH:MM> out at that time; r<k> a target k times the risk; p<k> a target k% under the entry;
+    be = the stop to the entry once it is 1R ahead; half2 = half out at 2R, the rest with the stop at the entry"""
+    risk = stop - entry
+    R = lambda px: round((entry - px) / risk, 4)
+    out, lo = {}, entry
+    levels = {f"r{k}": entry - k * risk for k in (1, 2, 3, 5)}
+    levels.update({f"p{k}": entry * (1 - k / 100) for k in (3, 5, 8, 10, 15)})
+    marks = list(MARKS)
+    be_on, half_on, half_pnl, prev_c = False, False, 0.0, entry
+    for x in later:
+        while marks and x[0] > marks[0][0]:                  # the mark passed between two bars: the last price before it
+            out.setdefault("t" + marks.pop(0)[1], R(prev_c))
+        if "be" not in out and be_on and x[2] >= entry:      # the stop already at the entry: it is hit before the first stop
+            out["be"] = R(max(x[1], entry))
+        if "half2" not in out and half_on and x[2] >= entry:
+            out["half2"] = round(half_pnl + 0.5 * R(max(x[1], entry)), 4)
+        if x[2] >= stop:
+            px = max(x[1], stop)
+            for k in levels:
+                out.setdefault(k, R(px))
+            for m, nm in marks:
+                out.setdefault("t" + nm, R(px))
+            out.setdefault("be", R(px))
+            out.setdefault("half2", R(px))
+            break
+        lo = min(lo, x[3])
+        for k, lv in levels.items():
+            if k not in out and x[3] <= lv:
+                out[k] = R(min(x[1], lv))
+        if x[3] <= entry - risk:
+            be_on = True
+        if not half_on and x[3] <= entry - 2 * risk:
+            half_on, half_pnl = True, 0.5 * R(min(x[1], entry - 2 * risk))
+        while marks and x[0] >= marks[0][0]:
+            out.setdefault("t" + marks.pop(0)[1], R(x[4]))
+        prev_c = x[4]
+    for k in levels:
+        out.setdefault(k, R(close))
+    for m, nm in MARKS:
+        out.setdefault("t" + nm, R(close))
+    out.setdefault("be", R(close))
+    out.setdefault("half2", round(half_pnl + 0.5 * R(close), 4) if half_on else R(close))
+    out["mfe"] = round((entry - lo) / entry * 100, 3)
+    return out
+
+
+def late_short(bs, n, start_min):
+    """the range low broken from above at start_min or later (the bar before closed at or over it): a first break then, or
+    a stock that broke earlier, came back over the low and breaks again. Stop = the range high. None when the entry's own
+    minute also traded at the stop (no trades read for these)"""
+    start = bs[0][0] // n * n
+    rng = [b for b in bs if b[0] < start + n]
+    after = [b for b in bs if b[0] >= start + n]
+    if not rng or not after:
+        return None
+    rh, rl = max(b[2] for b in rng), min(b[3] for b in rng)
+    for j, b in enumerate(after):
+        prev_close = after[j - 1][4] if j else rng[-1][4]
+        if b[0] >= start_min and b[3] < rl and prev_close >= rl:
+            entry = min(b[1], rl)
+            if rh <= entry or b[2] >= rh:
+                return None
+            exit_, stopped = walk(after[j + 1:], entry, rh, bs[-1][4])
+            t = 570 + b[0]
+            return {"t": f"{t // 60:02d}:{t % 60:02d}", "m": b[0], "entry": round(entry, 4), "stop": rh, "exit": round(exit_, 4), "stopped": stopped,
+                    "r": round((entry - exit_) / (rh - entry), 4), "risk_pct": round((rh - entry) / entry * 100, 3)}
+    return None
+
+
 def short(bs, n, tick=None):
     """tick: {minute: the probe_ticks row} for this stock-day"""
     start = bs[0][0] // n * n                # the first 3- / 5-minute candle that traded
@@ -93,12 +184,20 @@ def short(bs, n, tick=None):
                         same = "stopped" if hit == 1 else "stopped (no trades read)"
                 if same and same.startswith("stopped"):
                     exit_, stopped = stop, 1
+                    sw = {"took": 0, "pos": 0.0, "pnl": round(entry - stop, 4), "stop": round(stop, 4)}
                 else:
                     exit_, stopped = walk(after[j + 1:], entry, stop, bs[-1][4])
+                    sw = swing_day1(after[j + 1:], entry, stop)
+                ox = None
+                if name == "rh" and stop > entry:
+                    if same and same.startswith("stopped"):
+                        ox = {"mfe": 0.0}
+                    else:
+                        ox = other_exits(after[j + 1:], entry, stop, bs[-1][4])
                 risk = stop - entry
                 out[name] = {"stop": round(stop, 4), "exit": round(exit_, 4), "stopped": stopped,
                              "r": round((entry - exit_) / risk, 4), "amb": amb, "same": same,
-                             "risk_pct": round(risk / entry * 100, 3)}
+                             "risk_pct": round(risk / entry * 100, 3), "sw": sw, "ox": ox}
             return out
         hi = max(hi, b[2])
     return out
@@ -141,6 +240,8 @@ def main():
                     tr["rvol"] = round(tr["rv"] / (g["av20"] * s5 * n / 5), 3)
                     tr["pct_adv"] = round(tr["rv"] / g["av20"] * 100, 3)
                 row[str(n)] = tr
+                for m0 in (15, 30):                                   # the later break: from 9:45, from 10:00
+                    row[f"{n}L{m0}"] = late_short(bs, n, m0)
             rows[key] = row
     missing = sorted(k for k in gaps if k not in seen and k.split()[0] not in SKIP_DATES and k not in SKIP_KEYS)
     json.dump({"rows": rows, "bad": bad, "missing": missing, "errors": errors}, open(sys.argv[4], "w"), separators=(",", ":"))
