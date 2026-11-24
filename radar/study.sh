@@ -8,6 +8,8 @@
 #                 5%+ gap-down day since Jan 2023 in the liquid universe) -> radar-study, raw_gapdown_YEAR.json.gz, a year at a time
 #   gapticks      the trades of the minutes where an entry's own bar also touched the stop (history/gapdown_ticks.json):
 #                 which came first -> radar-study, gapdown_ticks_out.json
+#   gapnews       why each gap-down happened: the SEC's 8-Ks (item 2.02 = earnings) and the morning's headlines
+#                 (history/gapdown_news_request.json) -> radar-study, gapdown_news.json.gz
 #   gapdaily      the same stock-days' daily bars from Alpaca, to check Yahoo's (the gap, the close before) -> radar-study, gapdown_daily.json.gz
 set -e
 CMD="$1"
@@ -31,6 +33,9 @@ case "$CMD" in
   gapticks)
     python3 radar/probe_ticks.py history/gapdown_ticks.json /tmp/gapdown_ticks_out.json
     python3 radar/publish.py --branch radar-study "trades inside the entry minute: gap-down days (study check)" /tmp/gapdown_ticks_out.json;;
+  gapnews)
+    python3 radar/probe_gapnews.py history/gapdown_news_request.json /tmp/gapdown_news.json.gz
+    python3 radar/publish.py --branch radar-study "the news behind the gap-down days (study)" /tmp/gapdown_news.json.gz;;
   gapdaily)
     python3 radar/probe_daily.py /tmp/gapdown_daily.json.gz history/gapdown_2023.json history/gapdown_2024.json history/gapdown_2025.json history/gapdown_2026.json
     python3 radar/publish.py --branch radar-study "daily bars from Alpaca: gap-down days (study check)" /tmp/gapdown_daily.json.gz;;
