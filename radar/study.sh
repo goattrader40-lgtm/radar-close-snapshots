@@ -6,6 +6,7 @@
 #   raw NAME      the 1-minute bars of the stock-days in history/NAME.json -> the scratch branch radar-study, raw_NAME.json.gz
 #   gapdown       the gap-down short study's 1-minute bars (the user, Nov 23 2026): history/gapdown_2023 ... 2026.json (every
 #                 5%+ gap-down day since Jan 2023 in the liquid universe) -> radar-study, raw_gapdown_YEAR.json.gz, a year at a time
+#   gapdaily      the same stock-days' daily bars from Alpaca, to check Yahoo's (the gap, the close before) -> radar-study, gapdown_daily.json.gz
 set -e
 CMD="$1"
 case "$CMD" in
@@ -25,4 +26,7 @@ case "$CMD" in
       python3 radar/probe_raw.py "history/gapdown_$Y.json" "/tmp/raw_gapdown_$Y.json.gz"
       python3 radar/publish.py --branch radar-study "1-minute bars: gap-down days $Y (study)" "/tmp/raw_gapdown_$Y.json.gz"
     done;;
+  gapdaily)
+    python3 radar/probe_daily.py /tmp/gapdown_daily.json.gz history/gapdown_2023.json history/gapdown_2024.json history/gapdown_2025.json history/gapdown_2026.json
+    python3 radar/publish.py --branch radar-study "daily bars from Alpaca: gap-down days (study check)" /tmp/gapdown_daily.json.gz;;
 esac
