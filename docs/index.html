@@ -1009,21 +1009,26 @@
       </div>
       <div class="tgr-bar">
         <label class="tgr-f" title="Only what matters now: BUY (the 15-minute reclaim came), READY (touched and dipped, waiting for the reclaim) and NEAR (within 3% of its EMA level). Off: the whole plan from the last evening scan. On by itself during market hours"><input type="checkbox" id="epp-now"> Watch now only (BUY / READY / NEAR)</label>
+        <label class="tgr-f" title="Also lists the plays that are no longer valid, in grey, each with its reason: out (its rule broke, with the day and the price), used (it already had its one touch) or past its sessions. For answering 'why is this stock not on the list?'"><input type="checkbox" id="epp-all"> Show the plays that are out, with the reason</label>
       </div>
       <p class="tgr-note" id="epp-note"></p>
-      <details class="tgr-legend tgr-more" data-key="epp"><summary>What this list is</summary><p class="tgr-note">Your EP pullback plays (Nov 23 2026), from the EP study (Jan 2023 – Nov 2026 on 1-minute bars, the 2022 bear market left out). The EP day = the 1-EP/GAP rule (5%+ gap, 2×+ volume, closes up 5%+, the main filters), a gap of at most 20%, no biotech or pharma. <b>10 EMA</b> (play 4): within 10 sessions of the EP day, no daily close more than 5% under the EP day's close since; the first day its low reaches the rising 10 EMA (its value at the last close) and it trades under the EP day's close = READY; BUY = the first 15-minute candle after that closing over the 10 EMA and VWAP, not more than 5% under the EP close (268 trades, 29% won, +0.70R a trade, +187R, worst drop 24R). <b>21 EMA</b> (play 3b): within 30 sessions, never a trade under the EP day's low; the first touch of the rising 21 EMA = READY; BUY = the first 15-minute candle closing over the 21 EMA and VWAP while today's low holds over the EP day's low (276 trades, 26% won, +0.62R, +171R, worst drop 34R). Going under the EMA during the day is fine. One try per EP and EMA: a touch with no buy uses it. Stop: today's low at the buy. Exits: 1/3 at +10%, then breakeven, the rest on a daily close under the 21 EMA. NEAR = within 3% over the EMA level (scanner/settings.json ep_pullback). READY and BUY come as ⚡ alerts (phone and this page); a BUY stays in the box while the price holds over its stop. Status: EMA flat = not rising at the last close: a touch tomorrow is no trade. The evening scan writes setups/ep_pullback.json (scanner/launch.py write_ep_pullback); the intraday rule is radar/epp.py.</p></details>
+      <details class="tgr-legend tgr-more" data-key="epp"><summary>The rules of this list (what counts, what is out, and why)</summary><p class="tgr-note">Your EP pullback plays (Nov 23 2026; the 21 EMA filters Nov 24 2026). <b>The EP day</b> = the 1-EP/GAP rule (5%+ gap, 2×+ volume, closes up 5%+, the main filters), a gap of at most 20%, no biotech or pharma; the newest one counts.</p>
+      <p class="tgr-note"><b>10 EMA play</b> — valid when all are true: (1) within 10 sessions of the EP day; (2) since the EP day no daily close more than 5% under the EP day's close; (3) the 10 EMA rising; (4) it is the first touch of the 10 EMA (the day's low reaches the EMA's value at the last close). <b>READY</b> = touched it and traded under the EP day's close (the dip). <b>BUY</b> = the first 15-minute candle after that closing over the 10 EMA and VWAP, not more than 5% under the EP day's close. Tested Jan 2023 – Nov 2026: about 270 trades, 28% won, +0.6R a trade, about +170R. The trades rule (2) keeps out: 47 trades, +1R.</p>
+      <p class="tgr-note"><b>21 EMA play</b> — valid when all are true: (1) within <b>15 sessions</b> of the EP day (was 30: the touches of sessions 16–30 made 121 trades, 17% won, −2R; sessions 16–20 lost on every single day); (2) since the EP day never a trade under the EP day's low; (3) the 21 EMA rising; (4) the 21 EMA <b>not in the bottom quarter of the EP day's range</b>, measured from the EP day's low to its close (there the stock has given the EP day back: 225 such touches made 30 trades and +2R; YOU Nov 23 2026: EP close 59.08, low 51.27, the 21 EMA 52.39); (5) it is the first touch of the 21 EMA. <b>READY</b> = touched it with today's low still over the EP day's low. <b>BUY</b> = the first 15-minute candle closing over the 21 EMA and VWAP while today's low holds over the EP day's low. Tested Jan 2023 – Nov 2026 with these rules: 105 trades, 35% won, +1.6R a trade, +171R, worst drop 16R (before the two filters: 254 trades, 25% won, +0.7R, +174R, worst drop 35R).</p>
+      <p class="tgr-note"><b>Both plays</b>: going under the EMA during the day is fine. One try per EP and EMA: the first touch uses it, buy or no buy. Stop: today's low at the buy. Exits: 1/3 at +10%, then breakeven, the rest on a daily close under the 21 EMA. Not the 3:45–4:00 candle.</p>
+      <p class="tgr-note"><b>The Now column</b>: BUY / READY (also ⚡ alerts on the phone and this page; a BUY stays in the box while the price holds over its stop) · NEAR = within 3% over the EMA level · — = waiting, not near · <i>EMA flat</i> = the EMA is not rising: a touch tomorrow is no trade · <i>no trade yet</i> = the 21 EMA is still in the bottom quarter of the EP day's range · <i>touched: …</i> = today's touch and why it was no trade · <i>out</i> = a rule broke before any touch, with the day and the price · <i>used</i> = it already had its one touch. Out and used plays are hidden: tick "Show the plays that are out, with the reason" to see them. The evening scan writes setups/ep_pullback.json (scanner/launch.py write_ep_pullback, the numbers in scanner/settings.json ep_pullback); the intraday rule is radar/epp.py.</p></details>
       <div class="tgr-scroll tall">
         <table class="tgr-table" id="epp-table">
           <thead><tr>
             <th><button class="tgr-th" data-sort="symbol">Ticker</button></th>
-            <th><button class="tgr-th" data-sort="nowr" title="BUY (the 15-minute reclaim came: the ⚡ alert's time), READY (touched and dipped, waiting for the reclaim), NEAR (within 3% of its EMA level); after the close: what today's touch did">Now</button></th>
+            <th><button class="tgr-th" data-sort="nowr" title="BUY (the 15-minute reclaim came: the ⚡ alert's time), READY (touched, waiting for the reclaim), NEAR (within 3% of its EMA level), — (waiting); EMA flat / no trade yet = a touch would be no trade; touched / out / used = with the reason. The rules are under 'The rules of this list'">Now</button></th>
             <th><button class="tgr-th" data-sort="play">Play</button></th>
             <th class="num"><button class="tgr-th" data-sort="level" title="The EMA's value at the last close: the touch is read against it">EMA level</button></th>
             <th class="num"><button class="tgr-th" data-sort="px" title="Live during market hours, else the last close">Price</button></th>
             <th class="num"><button class="tgr-th" data-sort="vs" title="The price vs the EMA level">vs level</button></th>
             <th class="num"><button class="tgr-th" data-sort="guard" title="10 EMA: the EP day's close (the touch day has to trade under it; no buy more than 5% under it). 21 EMA: the EP day's low (never a trade under it)">EP close / low</button></th>
             <th><button class="tgr-th" data-sort="ep">EP day</button></th>
-            <th class="num"><button class="tgr-th" data-sort="days" title="Sessions after the EP day, counting the next session (the 10 EMA: at most 10; the 21 EMA: at most 30)">Day</button></th>
+            <th class="num"><button class="tgr-th" data-sort="days" title="Sessions after the EP day, counting the next session (the 10 EMA: at most 10; the 21 EMA: at most 15)">Day</button></th>
             <th><button class="tgr-th" data-sort="buy" title="Today's BUY alert: the price and the stop (today's low at the buy)">Buy / stop</button></th>
             <th class="c2"><button class="tgr-th" data-sort="group">Theme / industry</button></th>
           </tr></thead>
@@ -3704,7 +3709,7 @@ defCalc('industry_perf', {
      evening scan (setups/ep_pullback.json, scanner/launch.py write_ep_pullback), and during the session what matters now:
      BUY / READY from the live job's ⚡ alerts (radar-data alerts.json, radar/alerts.py find_epp), NEAR from the live price
      (within the file's near_pct over the EMA level). The buys are followed to their exit by the evening scan (bought) */
-  let EPPD = null, EPPat = 0, EPPbusy = false, EPPerr = false, EPPNOW = null;
+  let EPPD = null, EPPat = 0, EPPbusy = false, EPPerr = false, EPPNOW = null, EPPALL = false;
   const eppLoad = () => {
     if (EPPbusy || Date.now() - EPPat < 5 * 60 * 1000) return;
     EPPbusy = true; EPPat = Date.now();
@@ -3736,10 +3741,13 @@ defCalc('industry_perf', {
       [['p10', '10'], ['p21', '21']].forEach(([pk, pl]) => {
         const q = d[pk]; if (!q) return;
         const a = al.get(s + ':' + pl) || {}, touchedNow = !newer && q.touched && q.touched === EPPD.date;
-        if (!['wait', 'flat'].includes(q.status) && !touchedNow) return;
+        const live = ['wait', 'flat', 'low'].includes(q.status);
+        if (!live && !touchedNow && !EPPALL) return;
         let now = '—', nowr = 5;
-        if (touchedNow) { now = a.buy ? 'BUY ' + a.buy + (a.lost ? ', stop hit ' + a.lost.at : '') : a.ready ? 'READY ' + a.ready + ', no buy' : 'touched today, no READY'; nowr = a.buy ? 0 : 4; }
+        if (touchedNow) { now = a.buy ? 'BUY ' + a.buy + (a.lost ? ', stop hit ' + a.lost.at : '') : a.off ? 'touched, then under the EP day\'s low: off' : a.ready ? 'READY ' + a.ready + ', no buy' : q.why ? 'touched: ' + q.why : 'touched, no buy'; nowr = a.buy ? 0 : 4; }
+        else if (!live) { now = (q.status === 'used' ? 'used: touched ' + fDate(q.touched).replace(/, \d{4}$/, '') + (q.why ? ' (' + q.why + ')' : '') : q.status === 'late' ? 'out: ' + (q.why || 'past its sessions') : 'out: ' + (q.why || 'its rule broke')); nowr = 7; }
         else if (q.status === 'flat') { now = 'EMA flat: a touch is no trade'; nowr = 6; }
+        else if (q.status === 'low') { now = 'no trade yet: ' + (q.why || 'the 21 EMA is near the EP day\'s low'); nowr = 6; }
         else if (newer) {
           if (a.off && !a.buy) { now = 'off: under the EP day\'s low'; nowr = 6; }
           else if (a.buy) { now = 'BUY ' + a.buy + (a.lost ? ', stop hit ' + a.lost.at : ''); nowr = a.lost ? 3 : 0; }
@@ -3760,9 +3768,10 @@ defCalc('industry_perf', {
     $('#epp-now').checked = nowOnly;
     const rows = all.filter((r) => (!lq || r.symbol.includes(lq)) && (!nowOnly || r.nowr <= 3));
     $('#epp-time').textContent = !EPPD ? '—' : newer ? (LIVE_ON ? 'Live at ' + fTime(LIVE.saved_at) + ' ET' : 'The last close') + ' · plan from the ' + fDate(EPPD.date) + ' close' : 'After the ' + fDate(EPPD.date) + ' close: the plan for the next session';
-    const nb = all.filter((r) => r.nowr === 0).length, nr = all.filter((r) => r.nowr === 1).length, nn = all.filter((r) => r.nowr === 2).length;
+    const nb = all.filter((r) => r.nowr === 0).length, nr = all.filter((r) => r.nowr === 1).length, nn = all.filter((r) => r.nowr === 2).length, plan = all.filter((r) => r.nowr < 7).length;
+    $('#epp-all').checked = EPPALL;
     $('#epp-note').textContent = !EPPD ? (EPPerr ? 'No data yet: the evening scan writes it after the close (about 4:30 PM ET).' : 'Loading…')
-      : (nowOnly ? rows.length + ' now (' + nb + ' BUY, ' + nr + ' READY, ' + nn + ' NEAR) of ' + all.length + ' plays in the plan.' : all.length + ' plays in the plan' + (newer ? ': ' + nb + ' BUY, ' + nr + ' READY, ' + nn + ' NEAR now.' : '.'))
+      : (nowOnly ? rows.length + ' now (' + nb + ' BUY, ' + nr + ' READY, ' + nn + ' NEAR) of ' + plan + ' plays in the plan.' : plan + ' plays in the plan' + (newer ? ': ' + nb + ' BUY, ' + nr + ' READY, ' + nn + ' NEAR now.' : '.') + (EPPALL ? ' ' + (all.length - plan) + ' more are out or used (grey, with the reason).' : ''))
         + ' A BUY or READY also comes as a ⚡ alert.';
     sortRows(T, rows, { key: 'nowr', dir: 1 }, ['symbol', 'play', 'ep', 'now', 'buy', 'group'], '');
     S.eppShown = rows;
@@ -3770,7 +3779,8 @@ defCalc('industry_perf', {
     rows.forEach((r) => {
       const tr = h('tr'), key = tkCell(r.symbol, r.tv);
       wlTags(key, r.symbol);
-      tr.append(key, (() => { const td = h('td', 'nw' + (r.nowr === 0 ? ' tgr-up' : ''), r.now); if (r.nowr <= 1) td.style.fontWeight = '600'; if (r.nowr === 1) td.style.color = 'var(--color-warn)'; return td; })(), h('td', 'nw', r.play), h('td', 'num', fPrice(r.level)), h('td', 'num', fPrice(r.px)),
+      if (r.nowr === 7) tr.style.opacity = '0.6';
+      tr.append(key, (() => { const td = h('td', (r.now.length > 40 ? '' : 'nw') + (r.nowr === 0 ? ' tgr-up' : ''), r.now); if (r.nowr <= 1) td.style.fontWeight = '600'; if (r.nowr === 1) td.style.color = 'var(--color-warn)'; return td; })(), h('td', 'nw', r.play), h('td', 'num', fPrice(r.level)), h('td', 'num', fPrice(r.px)),
         h('td', 'num ' + tone(r.vs), p1(r.vs, true)), h('td', 'num', fPrice(r.guard)), h('td', 'nw', fDate(r.ep).replace(/, \d{4}$/, '')), h('td', 'num', String(r.days)),
         h('td', 'nw', r.buy || '—'), h('td', 'c2', r.group || '—'));
       tb.append(tr);
@@ -3789,6 +3799,7 @@ defCalc('industry_perf', {
     });
   };
   $('#epp-now').addEventListener('change', (e) => { EPPNOW = e.target.checked; draw(); });
+  $('#epp-all').addEventListener('change', (e) => { EPPALL = e.target.checked; if (EPPALL) EPPNOW = false; draw(); });
   $('#epp-dl').addEventListener('click', () => {
     const rows = S.eppShown || [];
     if (!rows.length) { toast('No rows to save.'); return; }

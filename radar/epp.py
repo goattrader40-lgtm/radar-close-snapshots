@@ -11,12 +11,20 @@ confirmed"; "it has to say in alert message ep pullback buy 10 ema"). The rules 
                    BUY   = the first 15-minute candle from READY on that closes over the 10 EMA and VWAP, not more than 5%
                            under the EP day's close: 268 trades, 29% won, +0.70R a trade, +187R, worst drop 24R
                            (5-minute candles: +0.58R; 1-minute: +0.33R; without VWAP: +0.37R).
-  21 EMA (play 3b) the EP day up to 30 sessions back; since then never under the EP day's low; today is the first touch
-                   of the 21 EMA, rising at the last close.
+  21 EMA (play 3b) the EP day up to 15 sessions back (30 until Nov 24 2026); since then never under the EP day's low; today
+                   is the first touch of the 21 EMA, rising at the last close and not in the bottom quarter of the EP
+                   day's range (its low to its close).
                    READY = touched it, today's low still over the EP day's low.
                    BUY   = the first 15-minute candle from READY on that closes over the 21 EMA and VWAP with today's low
-                           still over the EP day's low: 276 trades, 26% won, +0.62R, +171R, worst drop 34R
-                           (5-minute: +0.36R). Under the EP day's low first: no buy (not part of the rule).
+                           still over the EP day's low. Under the EP day's low first: no buy (not part of the rule).
+                   The two filters of Nov 24 2026 (the user, YOU Nov 23 2026: the 21 EMA 52.39 just over the EP low
+                   51.27, "since the episodic pivot day this was just breaking down"), replayed Jan 2023 - Nov 2026:
+                     the 21 EMA in the bottom quarter of the EP day's range: 225 touches, 30 trades, +2R        -> no trade
+                     a touch in sessions 16-30: 121 trades, 17% won, -2R (16-20: -31R, a loss on every day)     -> no trade
+                     what is left: 105 trades, 35% won, +1.63R, +171R, worst drop 16R (before: 254 trades, 25% won,
+                     +0.68R, +174R, worst drop 35R; the study's own count was 276 trades, +0.62R, +171R).
+                   The evening scan applies both (setups/ep_pullback.json: status "low" / "late"); this module's check()
+                   is unchanged.
   Stop = today's low at the buy. Exits: 1/3 at +10%, the rest breakeven, then a daily close under the 21 EMA.
   The last candle (3:45-4:00 PM) is no buy (the study's: that is a buy at the close).
 

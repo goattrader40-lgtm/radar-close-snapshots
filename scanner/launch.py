@@ -2888,10 +2888,17 @@ def write_ep_pullback(path, A, cal, stocks_path, alerts_path=None):
       wait    tomorrow can be its first touch: the 10 EMA within e10_max_sessions of the EP day with no close more than
               e10_floor_pct % under its close; the 21 EMA within e21_max_sessions with no trade under its low; the EMA rising
       flat    as wait, but the EMA is not rising tonight: a touch tomorrow is no trade (the study's rule)
-      used    the first touch came (touched = its date): one try per EP and EMA
-      out     the guard broke (a close more than 5% under the EP close / a trade under the EP day's low)
-      late    past the sessions limit without a touch
-    Only stocks with a play waiting, or touched today (for tonight's list), are written. radar/epp.py has the intraday rule
+      low     the 21 EMA only: as wait, but the EMA sits in the bottom e21_min_range_pos of the EP day's range (its low to its
+              close): the stock would have given the EP day back by the time it gets there; a touch tomorrow is no trade
+              (the user, Nov 24 2026, YOU Nov 23: "since the episodic pivot day this was just breaking down"; 225 such
+              touches made 30 trades and +2R in Jan 2023 - Nov 2026)
+      used    the first touch came (touched = its date): one try per EP and EMA; why = when that touch was no trade
+      out     the guard broke before any touch (a close more than 5% under the EP close / a trade under the EP day's low);
+              why = the day and the price
+      late    past the sessions limit without a touch (the 21 EMA: 15 sessions since Nov 24 2026, was 30: the touches of
+              sessions 16-30 made 121 trades, 17% won, -2R; sessions 16-20 lost on every single day)
+    Every stock with an EP day in the window is written, the ones with both plays over too: the page hides those unless
+    "Show the plays that are out, with the reason" is ticked (the user, Nov 24 2026: "so I can see it there myself"). radar/epp.py has the intraday rule
     (READY / BUY), radar/alerts.py find_epp the live alerts, docs/index.html the Watchlist's EP PULLBACKS.
     bought: today's BUY alerts (alerts_path, radar-data alerts.json) and the earlier ones from the last file, followed to the
     exit with the daily bars: stopped (a low under the stop; on the buy day a low under the day's low at the buy), 1/3 sold
@@ -2899,8 +2906,8 @@ def write_ep_pullback(path, A, cal, stocks_path, alerts_path=None):
     buy), then the stop at the buy price, the rest out on a close under the 21 EMA (from session 6 without the sale). A closed
     trade stays 5 sessions"""
     cfg = json.load(open(os.path.join(HERE, "settings.json")))
-    P = dict(e10_max_sessions=10, e10_floor_pct=5, e21_max_sessions=30, max_gap_pct=20, skip_industries=["Biotechnology", "Pharmaceuticals"],
-             near_pct=3, first_sale_pct=10)
+    P = dict(e10_max_sessions=10, e10_floor_pct=5, e21_max_sessions=15, e21_min_range_pos=0.25, max_gap_pct=20,
+             skip_industries=["Biotechnology", "Pharmaceuticals"], near_pct=3, first_sale_pct=10)
     P.update({k: v for k, v in (cfg.get("ep_pullback") or {}).items() if not k.startswith("_")})
     X = cfg["screeners"]["EP-GAPUP-BREAKOUT"]
     try:
@@ -2909,6 +2916,7 @@ def write_ep_pullback(path, A, cal, stocks_path, alerts_path=None):
         S = {}
     skip = set(P["skip_industries"] or [])
     n10, n21, fl = int(P["e10_max_sessions"]), int(P["e21_max_sessions"]), float(P["e10_floor_pct"])
+    minpos = float(P.get("e21_min_range_pos") or 0)
     today, rows = cal[-1], {}
     for s, a in A.items():
         st = a.st
@@ -2916,7 +2924,7 @@ def write_ep_pullback(path, A, cal, stocks_path, alerts_path=None):
         if st.dates[i] != today or i < 40 or (S.get(s) or {}).get("industry") in skip:
             continue
         j, gap = None, None
-        for q in range(i, max(i - n21, 1), -1):          # the newest EP day: tomorrow is 1 to n21 sessions after it
+        for q in range(i, max(i - max(n21, 30), 1), -1):  # the newest EP day of the last 30 sessions (past n21: listed as late)
             g = 100 * (st.o[q] / st.c[q - 1] - 1)
             if X["gap_pct"] < g <= P["max_gap_pct"] and "EP-GAPUP-BREAKOUT" in st.screens(q, cfg):
                 j, gap = q, g
@@ -2929,25 +2937,44 @@ def write_ep_pullback(path, A, cal, stocks_path, alerts_path=None):
         def touch(em):
             return next((q for q in range(j + 1, i + 1) if st.l[q] <= em[q - 1]), None)
 
+        def pos21(level):                                # where the 21 EMA sits in the EP day: 0 = its low, 1 = its close
+            return (level - L0) / (C0 - L0) if C0 > L0 else 1.0
+
         plays = {}
         for name, em, lim in (("p10", a.e10, n10), ("p21", a.e21, n21)):
             p = dict(level=fnum(em[i], 4), up=bool(em[i] > em[i - 1]))
             t = touch(em)
             if name == "p10":
                 p["floor"] = fnum(floor, 4)
-            if t is not None:
+            # the guard is read on the days before the touch (all of them when no touch came): a play that broke it first is
+            # out, whatever touches later (AZTA Nov 12 2026: a close of 43.86 under the 46.46 floor, the touch only on Nov 20)
+            end = t if t is not None else i + 1
+            br = next((q for q in range(j + 1, end) if (st.c[q] < floor if name == "p10" else st.l[q] < L0)), None)
+            if br is not None:
+                on = datetime.date.fromisoformat(st.dates[br]).strftime("%b %-d")
+                p.update(status="out", why=(f"closed {st.c[br]:.2f} on {on}, more than {fl:g}% under the EP day's close {C0:.2f}" if name == "p10"
+                                            else f"traded {st.l[br]:.2f} on {on}, under the EP day's low {L0:.2f}"))
+            elif t is not None:
                 p.update(status="used", touched=st.dates[t])
+                if t - j > lim:
+                    p["why"] = f"touched after session {lim}: no trade"
+                elif not em[t - 1] > em[t - 2]:
+                    p["why"] = "the EMA was not rising at the touch: no trade"
+                elif name == "p21" and pos21(float(em[t - 1])) <= minpos:
+                    p["why"] = f"the 21 EMA was in the bottom {100 * minpos:.0f}% of the EP day's range at the touch: no trade"
+                elif name == "p10" and not st.l[t] < C0:
+                    p["why"] = "touched without trading under the EP day's close: no trade"
+                elif name == "p21" and st.l[t] < L0:
+                    p["why"] = "went under the EP day's low on the touch day: off"
             elif days > lim:
-                p["status"] = "late"
-            elif name == "p10" and i > j and float(st.c[j + 1:i + 1].min()) < floor:
-                p["status"] = "out"
-            elif name == "p21" and i > j and float(st.l[j + 1:i + 1].min()) < L0:
-                p["status"] = "out"
+                p.update(status="late", why=f"past session {lim} without a touch")
+            elif not p["up"]:
+                p["status"] = "flat"
+            elif name == "p21" and pos21(float(em[i])) <= minpos:
+                p.update(status="low", why=f"the 21 EMA is in the bottom {100 * minpos:.0f}% of the EP day's range (over ${L0 + minpos * (C0 - L0):.2f} to count)")
             else:
-                p["status"] = "wait" if p["up"] else "flat"
+                p["status"] = "wait"
             plays[name] = p
-        if not any(p["status"] in ("wait", "flat") or p.get("touched") == today for p in plays.values()):
-            continue
         r_ = S.get(s) or {}
         rows[s] = dict(ep=st.dates[j], c0=fnum(C0, 4), l0=fnum(L0, 4), gap=fnum(gap, 1), days=days, close=fnum(float(st.c[i]), 4),
                        tv=r_.get("tv_symbol"), adr=fnum(r_.get("adr_20"), 1), **plays)
