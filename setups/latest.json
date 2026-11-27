@@ -1938,7 +1938,7 @@
     "resistance": [
      [
       "1m/3m/6m/9m/52w",
-      23.54,
+      23.55,
       23.26
      ]
     ]
@@ -3231,7 +3231,7 @@
     "resistance": [
      [
       "1m",
-      34.31,
+      34.32,
       34.02
      ],
      [
@@ -3533,7 +3533,7 @@
     "resistance": [
      [
       "1m/3m/6m",
-      35.66,
+      35.67,
       35.41
      ],
      [
@@ -15551,7 +15551,7 @@
     "resistance": [
      [
       "1m/3m/6m",
-      21.65,
+      21.66,
       21.47
      ],
      [
@@ -15919,6 +15919,7 @@
     "added": "2026-11-04",
     "first_day": "2026-11-04",
     "support_low": 155.0,
+    "resistance": [],
     "section": "Triggered today",
     "setup": "Breakout",
     "setups": [],
@@ -15970,8 +15971,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 0.4
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "STGW",
@@ -16004,6 +16004,13 @@
     "twenty_day_high": 12.26,
     "days_since_20d_high": 12,
     "added": "2026-11-06",
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      12.26,
+      11.64
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Bull flag breakout",
     "setups": [],
@@ -16052,14 +16059,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 10.2
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      12.26,
-      11.64
-     ]
-    ]
+    }
    },
    {
     "symbol": "SKY",
@@ -16070,8 +16070,8 @@
     "higher_high_low": false,
     "pullback_from_20d_high_pct": 5.0,
     "pattern": "Qullamaggie breakout",
-    "buy_point": 98.0,
-    "to_buy_point_pct": 0.2,
+    "buy_point": 98.02,
+    "to_buy_point_pct": 0.3,
     "base_bars": 16.0,
     "base_depth_pct": 10.8,
     "msf_score": 80,
@@ -16093,6 +16093,13 @@
     "added": "2026-11-04",
     "first_day": "2026-11-04",
     "support_low": 87.4,
+    "resistance": [
+     [
+      "52w",
+      99.17,
+      97.76
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
@@ -16108,7 +16115,7 @@
     "leg": 1,
     "live": {
      "adr_pct": 4.29,
-     "buy_point": 98.0,
+     "buy_point": 98.02,
      "buy_point_top_date": null,
      "day_open": 95.72,
      "price": 97.76,
@@ -16128,7 +16135,7 @@
      "retest_away": false,
      "retest_level": 96.5,
      "retest_level_wick": 97.56,
-     "retest_need_low": 91.7,
+     "retest_need_low": 91.72,
      "retest_zone": [
       90.3,
       97.56
@@ -16140,18 +16147,11 @@
      "breakouts": 1,
      "sessions": 15,
      "vol_build": 1.19,
-     "gap_base_level": 98.0,
+     "gap_base_level": 98.02,
      "gap_base_pattern": "Qullamaggie breakout",
      "gap_base_ok": null,
-     "off_high_pct": 0.2
-    },
-    "resistance": [
-     [
-      "52w",
-      99.17,
-      97.76
-     ]
-    ]
+     "off_high_pct": 0.3
+    }
    },
    {
     "symbol": "SARO",
@@ -16167,7 +16167,7 @@
     "base_bars": 13.0,
     "base_depth_pct": 10.0,
     "msf_score": 70,
-    "adr_pct": 4.29,
+    "adr_pct": 4.3,
     "rel_vol": 0.6,
     "dollar_vol_30d_m": 109.0,
     "perf_1m_pct": 23.0,
@@ -16184,6 +16184,23 @@
     "twenty_day_high": 29.35,
     "days_since_20d_high": 11,
     "added": "2026-11-06",
+    "resistance": [
+     [
+      "1m/3m",
+      29.35,
+      28.97
+     ],
+     [
+      "6m/9m",
+      31.64,
+      31.01
+     ],
+     [
+      "52w",
+      34.48,
+      33.12
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Bull flag breakout",
     "setups": [],
@@ -16198,7 +16215,7 @@
     "vol_dryup": 0.82,
     "leg": 1,
     "live": {
-     "adr_pct": 4.29,
+     "adr_pct": 4.3,
      "buy_point": 27.71,
      "buy_point_top_date": null,
      "day_open": 26.66,
@@ -16232,24 +16249,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 5.9
-    },
-    "resistance": [
-     [
-      "1m/3m",
-      29.35,
-      28.97
-     ],
-     [
-      "6m/9m",
-      31.64,
-      31.01
-     ],
-     [
-      "52w",
-      34.48,
-      33.12
-     ]
-    ]
+    }
    },
    {
     "symbol": "RKT",
@@ -16283,6 +16283,23 @@
     "added": "2026-11-25",
     "first_day": "2026-11-20",
     "support_low": 13.14,
+    "resistance": [
+     [
+      "6m",
+      16.39,
+      15.85
+     ],
+     [
+      "9m",
+      18.49,
+      18.19
+     ],
+     [
+      "52w",
+      24.36,
+      23.44
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Breakout",
     "setups": [],
@@ -16331,24 +16348,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 0.6
-    },
-    "resistance": [
-     [
-      "6m",
-      16.39,
-      15.85
-     ],
-     [
-      "9m",
-      18.49,
-      18.19
-     ],
-     [
-      "52w",
-      24.36,
-      23.44
-     ]
-    ]
+    }
    },
    {
     "symbol": "AXGN",
@@ -16393,6 +16393,13 @@
     },
     "support_low": 43.5,
     "pre_gap_close": 37.46,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      60.11,
+      59.83
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Breakout",
     "setups": [],
@@ -16404,7 +16411,7 @@
     "base_day": 11,
     "base_depth_adr": 2.9,
     "tight_days": 1,
-    "vol_dryup": 0.63,
+    "vol_dryup": 0.65,
     "leg": 2,
     "live": {
      "adr_pct": 5.26,
@@ -16439,19 +16446,12 @@
      "retest_testing": false,
      "breakouts": 2,
      "sessions": 20,
-     "vol_build": 0.59,
+     "vol_build": 0.6,
      "gap_base_level": 59.72,
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.3
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      60.11,
-      59.83
-     ]
-    ]
+    }
    },
    {
     "symbol": "BOBS",
@@ -16487,6 +16487,18 @@
     "added": "2026-11-18",
     "first_day": "2026-11-18",
     "support_low": 19.5,
+    "resistance": [
+     [
+      "1m/3m/6m/9m",
+      21.75,
+      21.41
+     ],
+     [
+      "52w",
+      23.49,
+      22.53
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Bull flag breakout",
     "setups": [],
@@ -16535,19 +16547,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.5
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m",
-      21.75,
-      21.41
-     ],
-     [
-      "52w",
-      23.49,
-      22.53
-     ]
-    ]
+    }
    },
    {
     "symbol": "NTSK",
@@ -16581,6 +16581,13 @@
     "added": "2026-11-23",
     "first_day": "2026-11-18",
     "support_low": 20.76,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      27.09,
+      26.52
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Breakout",
     "setups": [],
@@ -16592,7 +16599,7 @@
     "base_day": 21,
     "base_depth_adr": 2.8,
     "tight_days": 0,
-    "vol_dryup": 1.14,
+    "vol_dryup": 1.15,
     "leg": 0,
     "live": {
      "adr_pct": 8.7,
@@ -16629,14 +16636,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.4
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      27.09,
-      26.52
-     ]
-    ]
+    }
    },
    {
     "symbol": "NAVN",
@@ -16670,6 +16670,23 @@
     "added": "2026-11-23",
     "first_day": "2026-11-23",
     "support_low": 24.6801,
+    "resistance": [
+     [
+      "1m",
+      27.96,
+      27.11
+     ],
+     [
+      "3m",
+      30.83,
+      29.06
+     ],
+     [
+      "6m/9m/52w",
+      30.88,
+      30.58
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Breakout",
     "setups": [],
@@ -16687,7 +16704,7 @@
      "adr_pct": 6.15,
      "buy_point": 27.61,
      "buy_point_top_date": "2026-10-28",
-     "day_open": 25.77,
+     "day_open": 25.83,
      "price": 27.11,
      "ema10": 25.79,
      "ema21": 25.59,
@@ -16718,24 +16735,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 3.0
-    },
-    "resistance": [
-     [
-      "1m",
-      27.96,
-      27.11
-     ],
-     [
-      "3m",
-      30.83,
-      29.06
-     ],
-     [
-      "6m/9m/52w",
-      30.88,
-      30.58
-     ]
-    ]
+    }
    },
    {
     "symbol": "LION",
@@ -16769,6 +16769,18 @@
     "added": "2026-11-06",
     "first_day": "2026-11-06",
     "support_low": 12.49,
+    "resistance": [
+     [
+      "1m/3m",
+      14.52,
+      14.51
+     ],
+     [
+      "6m/9m/52w",
+      16.7,
+      16.4
+     ]
+    ],
     "section": "Triggered today",
     "setup": "21 EMA retest",
     "setups": [],
@@ -16820,19 +16832,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 6.1
-    },
-    "resistance": [
-     [
-      "1m/3m",
-      14.52,
-      14.51
-     ],
-     [
-      "6m/9m/52w",
-      16.7,
-      16.4
-     ]
-    ]
+    }
    },
    {
     "symbol": "ATMU",
@@ -16867,6 +16867,23 @@
     "added": "2026-11-09",
     "first_day": "2026-11-09",
     "support_low": 51.455,
+    "resistance": [
+     [
+      "1m/3m/6m",
+      57.1,
+      56.48
+     ],
+     [
+      "9m",
+      65.84,
+      65.57
+     ],
+     [
+      "52w",
+      66.5,
+      65.57
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -16918,24 +16935,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 4.7
-    },
-    "resistance": [
-     [
-      "1m/3m/6m",
-      57.1,
-      56.48
-     ],
-     [
-      "9m",
-      65.84,
-      65.57
-     ],
-     [
-      "52w",
-      66.5,
-      65.57
-     ]
-    ]
+    }
    },
    {
     "symbol": "AZTA",
@@ -16982,6 +16982,13 @@
     },
     "support_low": 43.67,
     "pre_gap_close": 40.48,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      50.06,
+      48.9
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -17033,14 +17040,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 6.6
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      50.06,
-      48.9
-     ]
-    ]
+    }
    },
    {
     "symbol": "PRGO",
@@ -17074,6 +17074,17 @@
     "added": "2026-11-18",
     "first_day": "2026-11-18",
     "support_low": 15.75,
+    "resistance": [
+     [
+      "bs",
+      26.45,
+      26.17,
+      "2025-06-09",
+      "2025-08-05",
+      "2025-08-06",
+      3
+     ]
+    ],
     "section": "Triggered today",
     "setup": "21 EMA undercut & reclaim",
     "setups": [],
@@ -17122,18 +17133,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 4.5
-    },
-    "resistance": [
-     [
-      "bs",
-      26.45,
-      26.17,
-      "2025-06-09",
-      "2025-08-05",
-      "2025-08-06",
-      3
-     ]
-    ]
+    }
    },
    {
     "symbol": "PCOR",
@@ -17180,6 +17180,13 @@
     },
     "support_low": 67.25,
     "pre_gap_close": 63.17,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      79.8,
+      77.62
+     ]
+    ],
     "section": "Triggered today",
     "setup": "21 EMA retest",
     "setups": [],
@@ -17226,19 +17233,12 @@
      "retest_testing": false,
      "breakouts": 0,
      "sessions": 15,
-     "vol_build": 0.6,
+     "vol_build": 0.61,
      "gap_base_level": 79.8,
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 6.6
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      79.8,
-      77.62
-     ]
-    ]
+    }
    },
    {
     "symbol": "DXC",
@@ -17273,6 +17273,18 @@
     "added": "2026-10-19",
     "first_day": "2026-10-05",
     "support_low": 10.99,
+    "resistance": [
+     [
+      "1m",
+      16.21,
+      16.09
+     ],
+     [
+      "3m/6m/9m/52w",
+      16.38,
+      16.3
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Bull flag breakout",
     "setups": [],
@@ -17321,19 +17333,7 @@
      "gap_base_pattern": "Inner base (last 20 days)",
      "gap_base_ok": null,
      "off_high_pct": 8.7
-    },
-    "resistance": [
-     [
-      "1m",
-      16.21,
-      16.09
-     ],
-     [
-      "3m/6m/9m/52w",
-      16.38,
-      16.3
-     ]
-    ]
+    }
    },
    {
     "symbol": "LFTO",
@@ -17379,6 +17379,13 @@
     },
     "support_low": 21.19,
     "pre_gap_close": 18.71,
+    "resistance": [
+     [
+      "6m/9m/52w",
+      30.1,
+      28.45
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Bull pennant breakout",
     "setups": [],
@@ -17396,7 +17403,7 @@
      "adr_pct": 7.95,
      "buy_point": 25.96,
      "buy_point_top_date": "2026-11-16",
-     "day_open": 22.47,
+     "day_open": 22.46,
      "price": 23.79,
      "ema10": 22.43,
      "ema21": 20.7,
@@ -17430,14 +17437,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 8.4
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      30.1,
-      28.45
-     ]
-    ]
+    }
    },
    {
     "symbol": "OKTA",
@@ -17469,6 +17469,18 @@
     "added": "2026-11-19",
     "first_day": "2026-11-18",
     "support_low": 174.54,
+    "resistance": [
+     [
+      "1m",
+      228.72,
+      222.66
+     ],
+     [
+      "3m/6m/9m/52w",
+      235.0,
+      232.13
+     ]
+    ],
     "section": "Triggered today",
     "setup": "21 EMA retest",
     "setups": [],
@@ -17517,19 +17529,7 @@
      "gap_base_pattern": "Inner base (last 20 days)",
      "gap_base_ok": null,
      "off_high_pct": 6.1
-    },
-    "resistance": [
-     [
-      "1m",
-      228.72,
-      222.66
-     ],
-     [
-      "3m/6m/9m/52w",
-      235.0,
-      232.13
-     ]
-    ]
+    }
    },
    {
     "symbol": "ATEN",
@@ -17561,6 +17561,13 @@
     "added": "2026-11-18",
     "first_day": "2026-11-09",
     "support_low": 24.3,
+    "resistance": [
+     [
+      "6m/9m/52w",
+      38.49,
+      38.11
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -17603,7 +17610,7 @@
      ],
      "retest_from": "2026-11-18",
      "retest_tried": "2026-11-25",
-     "retest_low": 29.59,
+     "retest_low": 29.56,
      "retest_testing": true,
      "breakouts": 0,
      "sessions": 5,
@@ -17612,14 +17619,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 8.4
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      38.49,
-      38.11
-     ]
-    ]
+    }
    },
    {
     "symbol": "PANW",
@@ -17649,18 +17649,30 @@
     "twenty_day_high": 390.0,
     "days_since_20d_high": 18,
     "added": "2026-11-19",
+    "resistance": [
+     [
+      "1m",
+      406.88,
+      394.49
+     ],
+     [
+      "3m/6m/9m/52w",
+      432.33,
+      419.91
+     ]
+    ],
     "section": "Triggered today",
     "setup": "21 EMA retest",
     "setups": [],
     "source": "2-POOL",
     "last_hit": null,
     "why": "21 EMA retest (from 2-POOL 2026-11-19)",
-    "stage": "50 EMA undercut & reclaim (entry): 1 close under the 50 EMA (2026-11-24), today down to 337.41, closed 356.14 back over 353.39 in the upper half of the day",
+    "stage": "50 EMA undercut & reclaim (entry): 1 close under the 50 EMA (2026-11-24), today down to 337.23, closed 356.14 back over 353.39 in the upper half of the day",
     "away_adr": 1.69,
     "base_day": 4,
     "base_depth_adr": 4.0,
     "tight_days": 0,
-    "vol_dryup": 1.63,
+    "vol_dryup": 1.64,
     "leg": 0,
     "live": {
      "adr_pct": 5.64,
@@ -17692,24 +17704,12 @@
      "retest_testing": false,
      "breakouts": 0,
      "sessions": 4,
-     "vol_build": 1.73,
+     "vol_build": 1.75,
      "gap_base_level": 390.0,
      "gap_base_pattern": "Inner base (last 20 days)",
      "gap_base_ok": null,
      "off_high_pct": 3.7
-    },
-    "resistance": [
-     [
-      "1m",
-      406.88,
-      394.49
-     ],
-     [
-      "3m/6m/9m/52w",
-      432.33,
-      419.91
-     ]
-    ]
+    }
    },
    {
     "symbol": "HAWK",
@@ -17752,6 +17752,23 @@
     },
     "support_low": 16.06,
     "pre_gap_close": 14.67,
+    "resistance": [
+     [
+      "3m",
+      20.71,
+      19.38
+     ],
+     [
+      "6m",
+      33.99,
+      33.01
+     ],
+     [
+      "9m/52w",
+      35.73,
+      34.66
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -17763,7 +17780,7 @@
     "base_day": 8,
     "base_depth_adr": 2.3,
     "tight_days": 0,
-    "vol_dryup": 0.86,
+    "vol_dryup": 0.87,
     "leg": 1,
     "live": {
      "adr_pct": 7.97,
@@ -17787,7 +17804,7 @@
      "retest_away": true,
      "retest_level": 15.64,
      "retest_level_wick": 15.79,
-     "retest_need_low": 16.98,
+     "retest_need_low": 16.97,
      "retest_zone": [
       13.77,
       15.95
@@ -17803,24 +17820,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 12.0
-    },
-    "resistance": [
-     [
-      "3m",
-      20.71,
-      19.38
-     ],
-     [
-      "6m",
-      33.99,
-      33.01
-     ],
-     [
-      "9m/52w",
-      35.73,
-      34.66
-     ]
-    ]
+    }
    },
    {
     "symbol": "FROG",
@@ -17863,6 +17863,7 @@
     },
     "support_low": 89.3172,
     "pre_gap_close": 74.62,
+    "resistance": [],
     "section": "Triggered today",
     "setup": "21 EMA retest",
     "setups": [],
@@ -17914,8 +17915,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 14.0
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "SLS",
@@ -17958,6 +17958,7 @@
     },
     "support_low": 16.72,
     "pre_gap_close": 7.47,
+    "resistance": [],
     "section": "Triggered today",
     "setup": "Retest held",
     "setups": [],
@@ -17975,7 +17976,7 @@
      "adr_pct": 14.14,
      "buy_point": 24.89,
      "buy_point_top_date": "2026-11-17",
-     "day_open": 12.73,
+     "day_open": 12.74,
      "price": 12.77,
      "ema10": 12.79,
      "ema21": 11.87,
@@ -18009,8 +18010,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 48.7
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "ADMA",
@@ -18053,6 +18053,23 @@
     },
     "support_low": 11.9,
     "pre_gap_close": 10.48,
+    "resistance": [
+     [
+      "1m/3m/6m",
+      14.31,
+      14.23
+     ],
+     [
+      "9m",
+      17.16,
+      16.58
+     ],
+     [
+      "52w",
+      20.46,
+      20.38
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
@@ -18104,24 +18121,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 0.6
-    },
-    "resistance": [
-     [
-      "1m/3m/6m",
-      14.31,
-      14.23
-     ],
-     [
-      "9m",
-      17.16,
-      16.58
-     ],
-     [
-      "52w",
-      20.46,
-      20.38
-     ]
-    ]
+    }
    },
    {
     "symbol": "ANF",
@@ -18164,6 +18164,13 @@
     },
     "support_low": 156.58,
     "pre_gap_close": 140.45,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      178.38,
+      176.96
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
@@ -18215,14 +18222,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 0.8
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      178.38,
-      176.96
-     ]
-    ]
+    }
    },
    {
     "symbol": "BAX",
@@ -18254,6 +18254,18 @@
     "added": "2026-11-03",
     "first_day": "2026-11-03",
     "support_low": 23.9,
+    "resistance": [
+     [
+      "1m/3m",
+      27.59,
+      27.26
+     ],
+     [
+      "6m/9m/52w",
+      30.0,
+      28.35
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
@@ -18305,19 +18317,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 1.2
-    },
-    "resistance": [
-     [
-      "1m/3m",
-      27.59,
-      27.26
-     ],
-     [
-      "6m/9m/52w",
-      30.0,
-      28.35
-     ]
-    ]
+    }
    },
    {
     "symbol": "BMRN",
@@ -18349,6 +18349,18 @@
     "added": "2026-11-24",
     "first_day": "2026-11-24",
     "support_low": 62.785,
+    "resistance": [
+     [
+      "1m/3m",
+      69.61,
+      68.86
+     ],
+     [
+      "6m/9m/52w",
+      70.98,
+      70.24
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
@@ -18360,7 +18372,7 @@
     "base_day": 1,
     "base_depth_adr": 6.6,
     "tight_days": 0,
-    "vol_dryup": 1.96,
+    "vol_dryup": 1.97,
     "leg": 1,
     "live": {
      "adr_pct": 4.06,
@@ -18384,7 +18396,7 @@
      "retest_away": false,
      "retest_level": 67.7,
      "retest_level_wick": 67.7,
-     "retest_need_low": 65.36,
+     "retest_need_low": 65.37,
      "retest_zone": [
       63.57,
       68.39
@@ -18400,19 +18412,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 1.1
-    },
-    "resistance": [
-     [
-      "1m/3m",
-      69.6,
-      68.86
-     ],
-     [
-      "6m/9m/52w",
-      70.98,
-      70.24
-     ]
-    ]
+    }
    },
    {
     "symbol": "FLYW",
@@ -18457,6 +18457,13 @@
     },
     "support_low": 19.68,
     "pre_gap_close": 19.15,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      23.55,
+      23.26
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
@@ -18492,9 +18499,9 @@
      "retest_away": false,
      "retest_level": 22.35,
      "retest_level_wick": 22.59,
-     "retest_need_low": 21.86,
+     "retest_need_low": 21.87,
      "retest_zone": [
-      20.76,
+      20.75,
       22.62
      ],
      "retest_from": "2026-11-25",
@@ -18508,14 +18515,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 1.2
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      23.54,
-      23.26
-     ]
-    ]
+    }
    },
    {
     "symbol": "GKOS",
@@ -18560,6 +18560,13 @@
     },
     "support_low": 207.41,
     "pre_gap_close": 181.43,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      263.01,
+      259.9
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Breakout",
     "setups": [],
@@ -18611,14 +18618,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 1.2
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      263.01,
-      259.9
-     ]
-    ]
+    }
    },
    {
     "symbol": "HLF",
@@ -18650,13 +18650,25 @@
     "added": "2026-11-04",
     "first_day": "2026-11-03",
     "support_low": 13.61,
+    "resistance": [
+     [
+      "9m",
+      19.76,
+      19.52
+     ],
+     [
+      "52w",
+      20.4,
+      19.96
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
     "source": "1-UPDAY",
     "last_hit": null,
     "why": "Base breakout (from 1-UPDAY 2026-11-04)",
-    "stage": "Base breakout (leg 2), closed 2.8% (0.6 ADR) over the base high 16.30 (a 6-month high), on light volume (1.00x)",
+    "stage": "Base breakout (leg 2), closed 2.8% (0.6 ADR) over the base high 16.30 (a 6-month high)",
     "away_adr": null,
     "base_day": 0,
     "base_depth_adr": null,
@@ -18701,19 +18713,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 0.0
-    },
-    "resistance": [
-     [
-      "9m",
-      19.76,
-      19.52
-     ],
-     [
-      "52w",
-      20.4,
-      19.96
-     ]
-    ]
+    }
    },
    {
     "symbol": "KSS",
@@ -18729,7 +18729,7 @@
     "base_bars": null,
     "base_depth_pct": null,
     "msf_score": 75,
-    "adr_pct": 6.09,
+    "adr_pct": 6.1,
     "rel_vol": 2.2,
     "dollar_vol_30d_m": 121.0,
     "perf_1m_pct": 12.0,
@@ -18747,6 +18747,13 @@
     "added": "2026-11-25",
     "first_day": "2026-11-24",
     "support_low": 22.21,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      27.28,
+      26.7
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Breakout",
     "setups": [],
@@ -18761,7 +18768,7 @@
     "vol_dryup": 1.72,
     "leg": 1,
     "live": {
-     "adr_pct": 6.09,
+     "adr_pct": 6.1,
      "buy_point": null,
      "buy_point_top_date": null,
      "day_open": 25.3,
@@ -18782,7 +18789,7 @@
      "retest_away": false,
      "retest_level": 25.36,
      "retest_level_wick": 25.6,
-     "retest_need_low": 24.79,
+     "retest_need_low": 24.78,
      "retest_zone": [
       23.04,
       25.75
@@ -18798,14 +18805,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 2.1
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      27.28,
-      26.7
-     ]
-    ]
+    }
    },
    {
     "symbol": "PRG",
@@ -18839,6 +18839,13 @@
     "added": "2026-11-02",
     "first_day": "2026-11-02",
     "support_low": 35.4,
+    "resistance": [
+     [
+      "6m/9m/52w",
+      47.73,
+      47.53
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
@@ -18890,14 +18897,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 0.5
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      47.73,
-      47.53
-     ]
-    ]
+    }
    },
    {
     "symbol": "VERX",
@@ -18942,6 +18942,27 @@
     },
     "support_low": 17.05,
     "pre_gap_close": 15.92,
+    "resistance": [
+     [
+      "1m/3m/6m/9m",
+      19.26,
+      18.95
+     ],
+     [
+      "52w",
+      20.82,
+      20.62
+     ],
+     [
+      "bs",
+      24.24,
+      23.87,
+      "2025-08-08",
+      "2025-10-28",
+      "2025-10-29",
+      3
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
@@ -18993,28 +19014,7 @@
      "gap_base_pattern": null,
      "gap_base_ok": null,
      "off_high_pct": 1.6
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m",
-      19.26,
-      18.95
-     ],
-     [
-      "52w",
-      20.82,
-      20.62
-     ],
-     [
-      "bs",
-      24.24,
-      23.87,
-      "2025-08-08",
-      "2025-10-28",
-      "2025-10-29",
-      3
-     ]
-    ]
+    }
    },
    {
     "symbol": "VFC",
@@ -19046,6 +19046,18 @@
     "twenty_day_high": 21.65,
     "days_since_20d_high": 0,
     "added": "2026-10-30",
+    "resistance": [
+     [
+      "1m/3m/6m",
+      21.66,
+      21.47
+     ],
+     [
+      "9m/52w",
+      22.27,
+      21.55
+     ]
+    ],
     "section": "Triggered today",
     "setup": "Base breakout",
     "setups": [],
@@ -19081,7 +19093,7 @@
      "retest_away": false,
      "retest_level": 21.0,
      "retest_level_wick": 21.25,
-     "retest_need_low": 20.26,
+     "retest_need_low": 20.27,
      "retest_zone": [
       19.65,
       21.25
@@ -19096,20 +19108,8 @@
      "gap_base_level": null,
      "gap_base_pattern": null,
      "gap_base_ok": null,
-     "off_high_pct": 0.8
-    },
-    "resistance": [
-     [
-      "1m/3m/6m",
-      21.65,
-      21.47
-     ],
-     [
-      "9m/52w",
-      22.27,
-      21.55
-     ]
-    ]
+     "off_high_pct": 0.9
+    }
    },
    {
     "symbol": "PPLI",
@@ -19141,6 +19141,13 @@
     "added": "2026-11-04",
     "first_day": "2026-11-04",
     "support_low": 38.55,
+    "resistance": [
+     [
+      "6m/9m/52w",
+      48.32,
+      47.62
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -19176,7 +19183,7 @@
      "retest_away": true,
      "retest_level": 41.96,
      "retest_level_wick": 42.29,
-     "retest_need_low": 41.71,
+     "retest_need_low": 41.72,
      "retest_zone": [
       39.3,
       42.4
@@ -19192,14 +19199,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 0.4
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      48.32,
-      47.62
-     ]
-    ]
+    }
    },
    {
     "symbol": "CRI",
@@ -19231,6 +19231,18 @@
     "added": "2026-11-18",
     "first_day": "2026-11-18",
     "support_low": 34.28,
+    "resistance": [
+     [
+      "6m/9m",
+      44.28,
+      43.35
+     ],
+     [
+      "52w",
+      44.44,
+      44.37
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -19266,9 +19278,9 @@
      "retest_away": false,
      "retest_level": 35.1,
      "retest_level_wick": 35.42,
-     "retest_need_low": 34.52,
+     "retest_need_low": 34.55,
      "retest_zone": [
-      32.68,
+      32.67,
       35.5
      ],
      "retest_from": "2026-11-18",
@@ -19277,24 +19289,12 @@
      "retest_testing": false,
      "breakouts": 0,
      "sessions": 5,
-     "vol_build": 0.99,
+     "vol_build": 1.0,
      "gap_base_level": 37.08,
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
-     "off_high_pct": 0.1
-    },
-    "resistance": [
-     [
-      "6m/9m",
-      44.28,
-      43.35
-     ],
-     [
-      "52w",
-      44.44,
-      44.37
-     ]
-    ]
+     "off_high_pct": 0.2
+    }
    },
    {
     "symbol": "GDYN",
@@ -19326,6 +19326,13 @@
     "twenty_day_high": 14.32,
     "days_since_20d_high": 0,
     "added": "2026-11-06",
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      14.32,
+      14.12
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -19343,7 +19350,7 @@
      "adr_pct": 6.98,
      "buy_point": 14.14,
      "buy_point_top_date": "2026-11-11",
-     "day_open": 14.02,
+     "day_open": 13.93,
      "price": 14.12,
      "ema10": 13.37,
      "ema21": 12.61,
@@ -19374,14 +19381,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.4
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      14.32,
-      14.12
-     ]
-    ]
+    }
    },
    {
     "symbol": "SN",
@@ -19413,6 +19413,13 @@
     "twenty_day_high": 235.23,
     "days_since_20d_high": 0,
     "added": "2026-11-06",
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      235.23,
+      232.5
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -19461,14 +19468,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.2
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      235.23,
-      232.5
-     ]
-    ]
+    }
    },
    {
     "symbol": "KVYO",
@@ -19511,6 +19511,18 @@
     },
     "support_low": 18.6,
     "pre_gap_close": 17.52,
+    "resistance": [
+     [
+      "1m/3m/6m/9m",
+      24.03,
+      23.74
+     ],
+     [
+      "52w",
+      33.35,
+      33.26
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -19522,7 +19534,7 @@
     "base_day": 8,
     "base_depth_adr": 2.1,
     "tight_days": 0,
-    "vol_dryup": 1.06,
+    "vol_dryup": 1.07,
     "leg": 3,
     "live": {
      "adr_pct": 6.16,
@@ -19562,19 +19574,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.2
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m",
-      24.03,
-      23.74
-     ],
-     [
-      "52w",
-      33.35,
-      33.26
-     ]
-    ]
+    }
    },
    {
     "symbol": "RBLX",
@@ -19606,6 +19606,32 @@
     "added": "2026-11-23",
     "first_day": "2026-11-23",
     "support_low": 50.415,
+    "resistance": [
+     [
+      "6m",
+      58.43,
+      57.95
+     ],
+     [
+      "9m",
+      71.19,
+      68.66
+     ],
+     [
+      "52w",
+      99.98,
+      99.0
+     ],
+     [
+      "bs",
+      125.21,
+      122.69,
+      "2025-08-25",
+      "2025-10-29",
+      "2025-10-30",
+      3
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -19654,33 +19680,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 0.1
-    },
-    "resistance": [
-     [
-      "6m",
-      58.43,
-      57.95
-     ],
-     [
-      "9m",
-      71.19,
-      68.66
-     ],
-     [
-      "52w",
-      99.98,
-      99.0
-     ],
-     [
-      "bs",
-      125.21,
-      122.69,
-      "2025-08-25",
-      "2025-10-29",
-      "2025-10-30",
-      3
-     ]
-    ]
+    }
    },
    {
     "symbol": "BRBR",
@@ -19723,6 +19723,23 @@
     },
     "support_low": 12.83,
     "pre_gap_close": 11.01,
+    "resistance": [
+     [
+      "1m/3m/6m",
+      15.9,
+      15.66
+     ],
+     [
+      "9m",
+      19.11,
+      18.68
+     ],
+     [
+      "52w",
+      33.56,
+      33.3
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -19774,24 +19791,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.5
-    },
-    "resistance": [
-     [
-      "1m/3m/6m",
-      15.9,
-      15.66
-     ],
-     [
-      "9m",
-      19.11,
-      18.68
-     ],
-     [
-      "52w",
-      33.56,
-      33.3
-     ]
-    ]
+    }
    },
    {
     "symbol": "ASO",
@@ -19823,6 +19823,7 @@
     "added": "2026-11-18",
     "first_day": "2026-11-16",
     "support_low": 68.13,
+    "resistance": [],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -19874,8 +19875,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 0.7
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "ROIV",
@@ -19907,6 +19907,7 @@
     "added": "2026-11-24",
     "first_day": "2026-11-04",
     "support_low": 35.705,
+    "resistance": [],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -19958,8 +19959,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.2
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "OLLI",
@@ -19994,6 +19994,23 @@
     "added": "2026-11-24",
     "first_day": "2026-11-24",
     "support_low": 89.0,
+    "resistance": [
+     [
+      "1m/3m/6m",
+      99.66,
+      97.62
+     ],
+     [
+      "9m",
+      112.0,
+      109.25
+     ],
+     [
+      "52w",
+      126.31,
+      125.22
+     ]
+    ],
     "section": "Ready",
     "setup": "Bull flag (trendline)",
     "setups": [],
@@ -20011,7 +20028,7 @@
      "adr_pct": 4.69,
      "buy_point": 94.4,
      "buy_point_top_date": null,
-     "day_open": 94.5,
+     "day_open": 94.53,
      "price": 93.31,
      "ema10": 93.19,
      "ema21": 92.52,
@@ -20042,24 +20059,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.1
-    },
-    "resistance": [
-     [
-      "1m/3m/6m",
-      99.66,
-      97.62
-     ],
-     [
-      "9m",
-      112.0,
-      109.25
-     ],
-     [
-      "52w",
-      126.31,
-      125.22
-     ]
-    ]
+    }
    },
    {
     "symbol": "RYTM",
@@ -20091,6 +20091,13 @@
     "added": "2026-11-17",
     "first_day": "2026-11-04",
     "support_low": 85.04,
+    "resistance": [
+     [
+      "52w",
+      122.2,
+      119.36
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -20139,14 +20146,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.1
-    },
-    "resistance": [
-     [
-      "52w",
-      122.2,
-      119.36
-     ]
-    ]
+    }
    },
    {
     "symbol": "AEO",
@@ -20178,6 +20178,32 @@
     "added": "2026-11-09",
     "first_day": "2026-11-09",
     "support_low": 20.17,
+    "resistance": [
+     [
+      "1m/3m/6m",
+      23.76,
+      22.79
+     ],
+     [
+      "bs",
+      23.64,
+      23.09,
+      "2026-01-09",
+      "2026-02-27",
+      "2026-03-02",
+      3
+     ],
+     [
+      "9m",
+      24.63,
+      24.57
+     ],
+     [
+      "52w",
+      28.46,
+      28.19
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -20215,7 +20241,7 @@
      "retest_level_wick": 22.16,
      "retest_need_low": 22.08,
      "retest_zone": [
-      20.23,
+      20.22,
       22.16
      ],
      "retest_from": "2026-11-23",
@@ -20229,33 +20255,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 6.6
-    },
-    "resistance": [
-     [
-      "1m/3m/6m",
-      23.76,
-      22.79
-     ],
-     [
-      "bs",
-      23.64,
-      23.09,
-      "2026-01-09",
-      "2026-02-27",
-      "2026-03-02",
-      3
-     ],
-     [
-      "9m",
-      24.63,
-      24.57
-     ],
-     [
-      "52w",
-      28.46,
-      28.19
-     ]
-    ]
+    }
    },
    {
     "symbol": "COGT",
@@ -20287,6 +20287,18 @@
     "first_day": "2026-11-25",
     "added": "2026-11-25",
     "support_low": 33.07,
+    "resistance": [
+     [
+      "6m/9m",
+      43.39,
+      42.84
+     ],
+     [
+      "52w",
+      43.73,
+      42.84
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -20338,19 +20350,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 0.7
-    },
-    "resistance": [
-     [
-      "6m/9m",
-      43.39,
-      42.84
-     ],
-     [
-      "52w",
-      43.73,
-      42.84
-     ]
-    ]
+    }
    },
    {
     "symbol": "WAY",
@@ -20366,7 +20366,7 @@
     "base_bars": 15.0,
     "base_depth_pct": 14.0,
     "msf_score": 60,
-    "adr_pct": 5.06,
+    "adr_pct": 5.07,
     "rel_vol": 0.6,
     "dollar_vol_30d_m": 52.0,
     "perf_1m_pct": -1.0,
@@ -20383,6 +20383,18 @@
     "days_since_20d_high": 14,
     "flag_top": 30.23,
     "added": "2026-11-25",
+    "resistance": [
+     [
+      "1m/3m/6m/9m",
+      30.23,
+      29.69
+     ],
+     [
+      "52w",
+      37.51,
+      37.04
+     ]
+    ],
     "section": "Ready",
     "setup": "Bull flag (trendline)",
     "setups": [],
@@ -20397,7 +20409,7 @@
     "vol_dryup": 0.74,
     "leg": 0,
     "live": {
-     "adr_pct": 5.06,
+     "adr_pct": 5.07,
      "buy_point": 28.13,
      "buy_point_top_date": null,
      "day_open": 26.98,
@@ -20431,19 +20443,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.4
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m",
-      30.23,
-      29.69
-     ],
-     [
-      "52w",
-      37.51,
-      37.04
-     ]
-    ]
+    }
    },
    {
     "symbol": "EWTX",
@@ -20459,7 +20459,7 @@
     "base_bars": 50.0,
     "base_depth_pct": 27.0,
     "msf_score": 80,
-    "adr_pct": 7.8,
+    "adr_pct": 7.82,
     "rel_vol": 0.7,
     "dollar_vol_30d_m": 76.0,
     "perf_1m_pct": 20.0,
@@ -20475,6 +20475,7 @@
     "added": "2026-11-23",
     "first_day": "2026-11-23",
     "support_low": 40.61,
+    "resistance": [],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -20489,7 +20490,7 @@
     "vol_dryup": 0.83,
     "leg": 0,
     "live": {
-     "adr_pct": 7.8,
+     "adr_pct": 7.82,
      "buy_point": 48.78,
      "buy_point_top_date": "2026-11-09",
      "day_open": 46.09,
@@ -20522,9 +20523,8 @@
      "gap_base_level": 48.78,
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
-     "off_high_pct": 1.0
-    },
-    "resistance": []
+     "off_high_pct": 1.3
+    }
    },
    {
     "symbol": "PENN",
@@ -20556,6 +20556,13 @@
     "twenty_day_high": 18.84,
     "days_since_20d_high": 5,
     "added": "2026-11-02",
+    "resistance": [
+     [
+      "6m/9m/52w",
+      22.36,
+      22.06
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -20573,7 +20580,7 @@
      "adr_pct": 4.48,
      "buy_point": 18.84,
      "buy_point_top_date": "2026-11-18",
-     "day_open": 17.64,
+     "day_open": 17.82,
      "price": 18.56,
      "ema10": 18.13,
      "ema21": 17.58,
@@ -20591,7 +20598,7 @@
      "retest_away": true,
      "retest_level": 15.92,
      "retest_level_wick": 16.04,
-     "retest_need_low": 17.58,
+     "retest_need_low": 17.57,
      "retest_zone": [
       14.85,
       16.1
@@ -20607,14 +20614,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.5
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      22.36,
-      22.06
-     ]
-    ]
+    }
    },
    {
     "symbol": "VGNT",
@@ -20646,6 +20646,18 @@
     "twenty_day_high": 45.0,
     "days_since_20d_high": 15,
     "added": "2026-11-23",
+    "resistance": [
+     [
+      "3m",
+      50.25,
+      50.22
+     ],
+     [
+      "6m/9m/52w",
+      50.89,
+      50.22
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -20694,19 +20706,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 0.5
-    },
-    "resistance": [
-     [
-      "3m",
-      50.25,
-      50.22
-     ],
-     [
-      "6m/9m/52w",
-      50.89,
-      50.22
-     ]
-    ]
+    }
    },
    {
     "symbol": "ADPT",
@@ -20742,6 +20742,13 @@
     "added": "2026-11-09",
     "first_day": "2026-11-06",
     "support_low": 26.54,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      32.21,
+      30.26
+     ]
+    ],
     "section": "Ready",
     "setup": "Bull flag (trendline)",
     "setups": [],
@@ -20777,9 +20784,9 @@
      "retest_away": false,
      "retest_level": 28.37,
      "retest_level_wick": 29.05,
-     "retest_need_low": 29.2,
+     "retest_need_low": 29.19,
      "retest_zone": [
-      25.72,
+      25.71,
       29.05
      ],
      "retest_from": "2026-11-09",
@@ -20793,14 +20800,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 11.9
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      32.21,
-      30.26
-     ]
-    ]
+    }
    },
    {
     "symbol": "BSP",
@@ -20845,6 +20845,18 @@
     },
     "support_low": 43.05,
     "pre_gap_close": 41.05,
+    "resistance": [
+     [
+      "1m",
+      48.12,
+      47.27
+     ],
+     [
+      "3m/6m/9m/52w",
+      59.5,
+      55.77
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -20856,7 +20868,7 @@
     "base_day": 20,
     "base_depth_adr": 2.4,
     "tight_days": 0,
-    "vol_dryup": 2.19,
+    "vol_dryup": 2.21,
     "leg": 0,
     "live": {
      "adr_pct": 8.11,
@@ -20888,24 +20900,12 @@
      "retest_testing": false,
      "breakouts": 0,
      "sessions": 2,
-     "vol_build": 2.46,
+     "vol_build": 2.49,
      "gap_base_level": 47.84,
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 3.8
-    },
-    "resistance": [
-     [
-      "1m",
-      48.12,
-      47.27
-     ],
-     [
-      "3m/6m/9m/52w",
-      59.5,
-      55.77
-     ]
-    ]
+    }
    },
    {
     "symbol": "LTH",
@@ -20940,6 +20940,7 @@
     "added": "2026-11-04",
     "first_day": "2026-11-04",
     "support_low": 44.28,
+    "resistance": [],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -20991,8 +20992,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.6
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "PAR",
@@ -21024,6 +21024,13 @@
     "added": "2026-11-09",
     "first_day": "2026-11-09",
     "support_low": 20.53,
+    "resistance": [
+     [
+      "52w",
+      40.54,
+      39.72
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -21075,127 +21082,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.6
-    },
-    "resistance": [
-     [
-      "52w",
-      40.54,
-      39.72
-     ]
-    ]
-   },
-   {
-    "symbol": "EPAM",
-    "tv": "NYSE:EPAM",
-    "close": 164.63,
-    "chg_pct": 2.0,
-    "grade": "A+",
-    "higher_high_low": false,
-    "pullback_from_20d_high_pct": 11.1,
-    "pattern": "Bull flag (trendline)",
-    "buy_point": 167.85,
-    "to_buy_point_pct": 2.0,
-    "base_bars": 15.0,
-    "base_depth_pct": 11.1,
-    "msf_score": 65,
-    "adr_pct": 4.47,
-    "rel_vol": 0.6,
-    "dollar_vol_30d_m": 224.0,
-    "perf_1m_pct": 23.0,
-    "perf_3m_pct": 46.0,
-    "perf_6m_pct": 62.0,
-    "off_52w_high_pct": 26.0,
-    "ema21": 152.19,
-    "ema50": 138.36,
-    "sma200": 117.59,
-    "entries": {
-     "breakout": 168.56,
-     "flat_top": 168.56
-    },
-    "twenty_day_high": 168.56,
-    "days_since_20d_high": 14,
-    "added": "2026-11-05",
-    "pre_close": 137.36,
-    "ep_day": {
-     "open": 156.2,
-     "close": 165.7,
-     "high": 168.56,
-     "low": 154.1,
-     "range_pos": 0.8,
-     "close_high_21": 143.8,
-     "faded": false,
-     "under_21d": false
-    },
-    "support_low": 154.1,
-    "pre_gap_close": 137.36,
-    "section": "Ready",
-    "setup": "Bull flag (trendline)",
-    "setups": [],
-    "source": "1-EP/GAP",
-    "last_hit": null,
-    "why": "Bull flag (trendline) 167.85, 0.4 ADR away (from 1-EP/GAP 2026-11-05)",
-    "stage": "END OF CYCLE WARNING since 2026-11-17: stalled at the highs, the high 167.86 (2026-11-13) was only -0.4% vs the 2026-11-05 peak 168.56 and it broke back under it. Off the list on a close under the 21 EMA 152.19 \u00b7 In the base, day 15, 2% under the top 168.56 (set 2026-11-05) \u00b7 the 3rd try of the top 168.56 today (tried 2026-11-05, 2026-11-13): a heads-up",
-    "away_adr": 0.44,
-    "base_day": 15,
-    "base_depth_adr": 2.5,
-    "tight_days": 1,
-    "vol_dryup": 0.91,
-    "leg": 1,
-    "live": {
-     "adr_pct": 4.47,
-     "buy_point": 167.85,
-     "buy_point_top_date": null,
-     "day_open": 161.5,
-     "price": 164.63,
-     "ema10": 157.91,
-     "ema21": 152.19,
-     "ema50": 138.36,
-     "ema21_watch": null,
-     "last_breakout_days_ago": null,
-     "last_breakout_top": null,
-     "last_breakout_date": null,
-     "late": false,
-     "leg": 1,
-     "pattern": "Bull flag (trendline)",
-     "flag_shape": "bull flag",
-     "push_level": null,
-     "reclaim_level": null,
-     "retest_away": true,
-     "retest_level": 143.8,
-     "retest_level_wick": 145.89,
-     "retest_need_low": 157.27,
-     "retest_zone": [
-      134.17,
-      145.89
-     ],
-     "retest_from": "2026-11-05",
-     "retest_tried": null,
-     "retest_low": 149.89,
-     "retest_testing": false,
-     "breakouts": 0,
-     "sessions": 14,
-     "vol_build": 0.89,
-     "gap_base_level": 168.56,
-     "gap_base_pattern": "Base top",
-     "gap_base_ok": null,
-     "off_high_pct": 2.3
-    },
-    "resistance": [
-     [
-      "bs",
-      203.54,
-      200.0,
-      "2025-12-03",
-      "2026-02-02",
-      "2026-02-03",
-      5
-     ],
-     [
-      "52w",
-      222.53,
-      221.4
-     ]
-    ]
+    }
    },
    {
     "symbol": "SAIL",
@@ -21227,6 +21114,7 @@
     "added": "2026-11-25",
     "first_day": "2026-11-09",
     "support_low": 19.02,
+    "resistance": [],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -21275,8 +21163,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 0.1
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "TARS",
@@ -21306,6 +21193,13 @@
     "twenty_day_high": 81.35,
     "days_since_20d_high": 7,
     "added": "2026-11-10",
+    "resistance": [
+     [
+      "3m/6m/9m/52w",
+      91.53,
+      90.78
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -21354,14 +21248,120 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.4
+    }
+   },
+   {
+    "symbol": "EPAM",
+    "tv": "NYSE:EPAM",
+    "close": 164.63,
+    "chg_pct": 2.0,
+    "grade": "A+",
+    "higher_high_low": false,
+    "pullback_from_20d_high_pct": 11.1,
+    "pattern": "Bull flag (trendline)",
+    "buy_point": 168.02,
+    "to_buy_point_pct": 2.1,
+    "base_bars": 15.0,
+    "base_depth_pct": 11.1,
+    "msf_score": 65,
+    "adr_pct": 4.47,
+    "rel_vol": 0.6,
+    "dollar_vol_30d_m": 224.0,
+    "perf_1m_pct": 23.0,
+    "perf_3m_pct": 46.0,
+    "perf_6m_pct": 62.0,
+    "off_52w_high_pct": 26.0,
+    "ema21": 152.19,
+    "ema50": 138.36,
+    "sma200": 117.59,
+    "entries": {
+     "breakout": 168.56,
+     "flat_top": 168.56
     },
+    "twenty_day_high": 168.56,
+    "days_since_20d_high": 14,
+    "added": "2026-11-05",
+    "pre_close": 137.36,
+    "ep_day": {
+     "open": 156.2,
+     "close": 165.7,
+     "high": 168.56,
+     "low": 154.1,
+     "range_pos": 0.8,
+     "close_high_21": 143.8,
+     "faded": false,
+     "under_21d": false
+    },
+    "support_low": 154.1,
+    "pre_gap_close": 137.36,
     "resistance": [
      [
-      "3m/6m/9m/52w",
-      91.53,
-      90.78
+      "bs",
+      203.54,
+      200.0,
+      "2025-12-03",
+      "2026-02-02",
+      "2026-02-03",
+      5
+     ],
+     [
+      "52w",
+      222.53,
+      221.4
      ]
-    ]
+    ],
+    "section": "Ready",
+    "setup": "Bull flag (trendline)",
+    "setups": [],
+    "source": "1-EP/GAP",
+    "last_hit": null,
+    "why": "Bull flag (trendline) 168.02, 0.5 ADR away (from 1-EP/GAP 2026-11-05)",
+    "stage": "END OF CYCLE WARNING since 2026-11-17: stalled at the highs, the high 167.86 (2026-11-13) was only -0.4% vs the 2026-11-05 peak 168.56 and it broke back under it. Off the list on a close under the 21 EMA 152.19 \u00b7 In the base, day 15, 2% under the top 168.56 (set 2026-11-05) \u00b7 the 3rd try of the top 168.56 today (tried 2026-11-05, 2026-11-13): a heads-up",
+    "away_adr": 0.46,
+    "base_day": 15,
+    "base_depth_adr": 2.5,
+    "tight_days": 1,
+    "vol_dryup": 0.91,
+    "leg": 1,
+    "live": {
+     "adr_pct": 4.47,
+     "buy_point": 168.02,
+     "buy_point_top_date": null,
+     "day_open": 161.5,
+     "price": 164.63,
+     "ema10": 157.91,
+     "ema21": 152.19,
+     "ema50": 138.36,
+     "ema21_watch": null,
+     "last_breakout_days_ago": null,
+     "last_breakout_top": null,
+     "last_breakout_date": null,
+     "late": false,
+     "leg": 1,
+     "pattern": "Bull flag (trendline)",
+     "flag_shape": "bull flag",
+     "push_level": null,
+     "reclaim_level": null,
+     "retest_away": true,
+     "retest_level": 143.8,
+     "retest_level_wick": 145.89,
+     "retest_need_low": 157.25,
+     "retest_zone": [
+      134.15,
+      145.89
+     ],
+     "retest_from": "2026-11-05",
+     "retest_tried": null,
+     "retest_low": 149.89,
+     "retest_testing": false,
+     "breakouts": 0,
+     "sessions": 14,
+     "vol_build": 0.89,
+     "gap_base_level": 168.56,
+     "gap_base_pattern": "Base top",
+     "gap_base_ok": null,
+     "off_high_pct": 2.3
+    }
    },
    {
     "symbol": "SIBN",
@@ -21377,7 +21377,7 @@
     "base_bars": 16.0,
     "base_depth_pct": 12.3,
     "msf_score": 80,
-    "adr_pct": 6.04,
+    "adr_pct": 6.08,
     "rel_vol": 0.8,
     "dollar_vol_30d_m": 23.0,
     "perf_1m_pct": 16.0,
@@ -21397,6 +21397,13 @@
     "added": "2026-11-23",
     "first_day": "2026-11-23",
     "support_low": 23.893,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      25.92,
+      25.6
+     ]
+    ],
     "section": "Ready",
     "setup": "Bull flag (trendline)",
     "setups": [],
@@ -21411,7 +21418,7 @@
     "vol_dryup": 1.18,
     "leg": 0,
     "live": {
-     "adr_pct": 6.04,
+     "adr_pct": 6.08,
      "buy_point": 25.5,
      "buy_point_top_date": null,
      "day_open": 24.67,
@@ -21445,14 +21452,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 3.0
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      25.92,
-      25.6
-     ]
-    ]
+    }
    },
    {
     "symbol": "HOG",
@@ -21487,6 +21487,7 @@
     "added": "2026-11-02",
     "first_day": "2026-11-02",
     "support_low": 31.6,
+    "resistance": [],
     "section": "Ready",
     "setup": "Ascending triangle",
     "setups": [],
@@ -21538,8 +21539,7 @@
      "gap_base_pattern": "Ascending triangle",
      "gap_base_ok": null,
      "off_high_pct": 1.8
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "FIGS",
@@ -21572,6 +21572,13 @@
     "twenty_day_high": 23.77,
     "days_since_20d_high": 10,
     "added": "2026-10-09",
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      23.77,
+      23.4
+     ]
+    ],
     "section": "Ready",
     "setup": "Bull flag (trendline)",
     "setups": [],
@@ -21620,14 +21627,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 12.1
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      23.77,
-      23.4
-     ]
-    ]
+    }
    },
    {
     "symbol": "WWW",
@@ -21661,6 +21661,13 @@
     "added": "2026-11-18",
     "first_day": "2026-11-12",
     "support_low": 20.69,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      26.25,
+      25.87
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -21712,14 +21719,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 3.5
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      26.25,
-      25.87
-     ]
-    ]
+    }
    },
    {
     "symbol": "AMLX",
@@ -21753,6 +21753,18 @@
     "added": "2026-11-25",
     "first_day": "2026-11-24",
     "support_low": 27.57,
+    "resistance": [
+     [
+      "3m",
+      37.68,
+      34.74
+     ],
+     [
+      "6m/9m/52w",
+      41.14,
+      39.66
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -21801,19 +21813,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.1
-    },
-    "resistance": [
-     [
-      "3m",
-      37.68,
-      34.74
-     ],
-     [
-      "6m/9m/52w",
-      41.14,
-      39.66
-     ]
-    ]
+    }
    },
    {
     "symbol": "COMP",
@@ -21847,6 +21847,23 @@
     "first_day": "2026-11-25",
     "added": "2026-11-25",
     "support_low": 9.505,
+    "resistance": [
+     [
+      "3m",
+      11.39,
+      11.12
+     ],
+     [
+      "6m/9m",
+      13.6,
+      13.35
+     ],
+     [
+      "52w",
+      13.96,
+      13.58
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -21895,24 +21912,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.9
-    },
-    "resistance": [
-     [
-      "3m",
-      11.39,
-      11.12
-     ],
-     [
-      "6m/9m",
-      13.6,
-      13.35
-     ],
-     [
-      "52w",
-      13.96,
-      13.58
-     ]
-    ]
+    }
    },
    {
     "symbol": "CNXC",
@@ -21947,6 +21947,27 @@
     "first_day": "2026-11-25",
     "added": "2026-11-25",
     "support_low": 30.95,
+    "resistance": [
+     [
+      "bs",
+      35.92,
+      34.76,
+      "2025-11-21",
+      "2026-02-11",
+      "2026-02-12",
+      4
+     ],
+     [
+      "9m",
+      35.28,
+      35.16
+     ],
+     [
+      "52w",
+      44.78,
+      44.07
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -21995,28 +22016,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.5
-    },
-    "resistance": [
-     [
-      "bs",
-      35.92,
-      34.76,
-      "2025-11-21",
-      "2026-02-11",
-      "2026-02-12",
-      4
-     ],
-     [
-      "9m",
-      35.28,
-      35.16
-     ],
-     [
-      "52w",
-      44.78,
-      44.07
-     ]
-    ]
+    }
    },
    {
     "symbol": "KTB",
@@ -22050,6 +22050,13 @@
     "added": "2026-11-18",
     "first_day": "2026-11-18",
     "support_low": 79.45,
+    "resistance": [
+     [
+      "6m/9m/52w",
+      88.96,
+      88.17
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -22098,14 +22105,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.6
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      88.96,
-      88.17
-     ]
-    ]
+    }
    },
    {
     "symbol": "VIK",
@@ -22137,6 +22137,13 @@
     "added": "2026-11-18",
     "first_day": "2026-11-17",
     "support_low": 87.1,
+    "resistance": [
+     [
+      "6m/9m/52w",
+      110.09,
+      108.26
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -22148,7 +22155,7 @@
     "base_day": 6,
     "base_depth_adr": 1.9,
     "tight_days": 0,
-    "vol_dryup": 1.17,
+    "vol_dryup": 1.18,
     "leg": 1,
     "live": {
      "adr_pct": 4.39,
@@ -22183,19 +22190,12 @@
      "retest_testing": true,
      "breakouts": 0,
      "sessions": 5,
-     "vol_build": 1.19,
+     "vol_build": 1.2,
      "gap_base_level": 101.56,
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.3
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      110.09,
-      108.26
-     ]
-    ]
+    }
    },
    {
     "symbol": "ELVN",
@@ -22229,6 +22229,18 @@
     "added": "2026-11-24",
     "first_day": "2026-11-24",
     "support_low": 48.43,
+    "resistance": [
+     [
+      "3m",
+      61.18,
+      59.65
+     ],
+     [
+      "6m/9m/52w",
+      62.32,
+      61.15
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -22277,19 +22289,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.4
-    },
-    "resistance": [
-     [
-      "3m",
-      61.18,
-      59.65
-     ],
-     [
-      "6m/9m/52w",
-      62.32,
-      61.15
-     ]
-    ]
+    }
    },
    {
     "symbol": "GPGI",
@@ -22323,6 +22323,23 @@
     "added": "2026-11-25",
     "first_day": "2026-11-23",
     "support_low": 13.47,
+    "resistance": [
+     [
+      "6m",
+      17.33,
+      17.0
+     ],
+     [
+      "9m",
+      23.67,
+      23.5
+     ],
+     [
+      "52w",
+      26.5,
+      26.0
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -22332,7 +22349,7 @@
     "stage": "In the base, day 10, 4% under the top 15.90 (set 2026-11-12) \u00b7 RANGE STOCK: the close crossed the 50 EMA 13 times in the 60 sessions before the launch, not a clean trend",
     "away_adr": 0.56,
     "base_day": 10,
-    "base_depth_adr": 2.8,
+    "base_depth_adr": 2.7,
     "tight_days": 0,
     "vol_dryup": 1.09,
     "leg": 0,
@@ -22370,25 +22387,8 @@
      "gap_base_level": 15.9,
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
-     "off_high_pct": 1.3
-    },
-    "resistance": [
-     [
-      "6m",
-      17.33,
-      17.0
-     ],
-     [
-      "9m",
-      23.67,
-      23.5
-     ],
-     [
-      "52w",
-      26.5,
-      26.0
-     ]
-    ]
+     "off_high_pct": 1.4
+    }
    },
    {
     "symbol": "APPN",
@@ -22421,6 +22421,7 @@
     "twenty_day_high": 57.26,
     "days_since_20d_high": 7,
     "added": "2026-10-05",
+    "resistance": [],
     "section": "Ready",
     "setup": "Ascending triangle",
     "setups": [],
@@ -22469,8 +22470,7 @@
      "gap_base_pattern": "Ascending triangle",
      "gap_base_ok": null,
      "off_high_pct": 3.8
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "INTA",
@@ -22503,6 +22503,22 @@
     "twenty_day_high": 47.33,
     "days_since_20d_high": 7,
     "added": "2026-11-06",
+    "resistance": [
+     [
+      "3m/6m/9m/52w",
+      48.19,
+      47.99
+     ],
+     [
+      "bs",
+      53.47,
+      52.76,
+      "2025-04-24",
+      "2025-06-24",
+      "2025-06-25",
+      4
+     ]
+    ],
     "section": "Ready",
     "setup": "Inner base (last 20 days)",
     "setups": [],
@@ -22551,23 +22567,7 @@
      "gap_base_pattern": "Inner base (last 20 days)",
      "gap_base_ok": null,
      "off_high_pct": 3.2
-    },
-    "resistance": [
-     [
-      "3m/6m/9m/52w",
-      48.19,
-      47.99
-     ],
-     [
-      "bs",
-      53.47,
-      52.76,
-      "2025-04-24",
-      "2025-06-24",
-      "2025-06-25",
-      4
-     ]
-    ]
+    }
    },
    {
     "symbol": "TNDM",
@@ -22583,7 +22583,7 @@
     "base_bars": null,
     "base_depth_pct": null,
     "msf_score": 0,
-    "adr_pct": 8.17,
+    "adr_pct": 8.18,
     "rel_vol": 1.3,
     "dollar_vol_30d_m": 53.0,
     "perf_1m_pct": 0.0,
@@ -22597,6 +22597,28 @@
     "twenty_day_high": 20.26,
     "days_since_20d_high": 8,
     "added": "2026-11-23",
+    "resistance": [
+     [
+      "3m",
+      22.3,
+      22.01
+     ],
+     [
+      "6m",
+      24.81,
+      23.73
+     ],
+     [
+      "9m",
+      26.38,
+      25.3
+     ],
+     [
+      "52w",
+      29.65,
+      28.26
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -22604,14 +22626,14 @@
     "last_hit": null,
     "why": "Base top 20.26, 0.6 ADR away (from 2-POOL 2026-11-23)",
     "stage": "In the base, day 9, 5% under the top 20.26 (set 2026-11-13) \u00b7 RANGE STOCK: the close crossed the 50 EMA 10 times in the 60 sessions before the launch, not a clean trend",
-    "away_adr": 0.64,
+    "away_adr": 0.63,
     "base_day": 9,
     "base_depth_adr": 2.3,
     "tight_days": 1,
     "vol_dryup": 1.1,
     "leg": 0,
     "live": {
-     "adr_pct": 8.17,
+     "adr_pct": 8.18,
      "buy_point": 20.26,
      "buy_point_top_date": "2026-11-13",
      "day_open": 18.7,
@@ -22644,30 +22666,8 @@
      "gap_base_level": 20.26,
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
-     "off_high_pct": 1.3
-    },
-    "resistance": [
-     [
-      "3m",
-      22.3,
-      22.01
-     ],
-     [
-      "6m",
-      24.81,
-      23.73
-     ],
-     [
-      "9m",
-      26.38,
-      25.3
-     ],
-     [
-      "52w",
-      29.65,
-      28.26
-     ]
-    ]
+     "off_high_pct": 1.4
+    }
    },
    {
     "symbol": "PRKS",
@@ -22702,6 +22702,27 @@
     "added": "2026-11-09",
     "first_day": "2026-11-05",
     "support_low": 34.91,
+    "resistance": [
+     [
+      "1m/3m",
+      43.84,
+      43.21
+     ],
+     [
+      "6m/9m/52w",
+      50.0,
+      48.44
+     ],
+     [
+      "bs",
+      49.43,
+      48.6,
+      "2025-08-07",
+      "2025-10-28",
+      "2025-10-29",
+      4
+     ]
+    ],
     "section": "Ready",
     "setup": "Bull flag (trendline)",
     "setups": [],
@@ -22750,28 +22771,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 10.4
-    },
-    "resistance": [
-     [
-      "1m/3m",
-      43.84,
-      43.21
-     ],
-     [
-      "6m/9m/52w",
-      50.0,
-      48.44
-     ],
-     [
-      "bs",
-      49.43,
-      48.6,
-      "2025-08-07",
-      "2025-10-28",
-      "2025-10-29",
-      4
-     ]
-    ]
+    }
    },
    {
     "symbol": "PRCH",
@@ -22819,6 +22819,13 @@
     },
     "support_low": 18.75,
     "pre_gap_close": 16.3,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      22.66,
+      22.14
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -22836,7 +22843,7 @@
      "adr_pct": 6.01,
      "buy_point": 22.36,
      "buy_point_top_date": "2026-11-10",
-     "day_open": 21.34,
+     "day_open": 21.51,
      "price": 21.49,
      "ema10": 20.99,
      "ema21": 20.44,
@@ -22867,14 +22874,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 5.2
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      22.66,
-      22.14
-     ]
-    ]
+    }
    },
    {
     "symbol": "TRVI",
@@ -22908,6 +22908,18 @@
     "added": "2026-11-24",
     "first_day": "2026-11-24",
     "support_low": 13.7,
+    "resistance": [
+     [
+      "3m",
+      18.09,
+      17.26
+     ],
+     [
+      "6m/9m/52w",
+      20.22,
+      19.5
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -22919,7 +22931,7 @@
     "base_day": 13,
     "base_depth_adr": 2.5,
     "tight_days": 0,
-    "vol_dryup": 1.03,
+    "vol_dryup": 1.04,
     "leg": 1,
     "live": {
      "adr_pct": 6.77,
@@ -22951,24 +22963,12 @@
      "retest_testing": false,
      "breakouts": 0,
      "sessions": 1,
-     "vol_build": 1.05,
+     "vol_build": 1.06,
      "gap_base_level": 15.48,
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 3.8
-    },
-    "resistance": [
-     [
-      "3m",
-      18.09,
-      17.26
-     ],
-     [
-      "6m/9m/52w",
-      20.22,
-      19.5
-     ]
-    ]
+    }
    },
    {
     "symbol": "TNGX",
@@ -22998,6 +22998,18 @@
     "twenty_day_high": 26.41,
     "days_since_20d_high": 10,
     "added": "2026-11-23",
+    "resistance": [
+     [
+      "3m",
+      27.98,
+      27.93
+     ],
+     [
+      "6m/9m/52w",
+      34.39,
+      32.9
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -23046,19 +23058,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 3.3
-    },
-    "resistance": [
-     [
-      "3m",
-      27.98,
-      27.93
-     ],
-     [
-      "6m/9m/52w",
-      34.39,
-      32.9
-     ]
-    ]
+    }
    },
    {
     "symbol": "ENOV",
@@ -23103,6 +23103,13 @@
     },
     "support_low": 26.885,
     "pre_gap_close": 24.42,
+    "resistance": [
+     [
+      "6m/9m/52w",
+      31.67,
+      31.42
+     ]
+    ],
     "section": "Ready",
     "setup": "Base top",
     "setups": [],
@@ -23151,14 +23158,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 4.0
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      31.67,
-      31.42
-     ]
-    ]
+    }
    },
    {
     "symbol": "MMYT",
@@ -23188,6 +23188,28 @@
     "twenty_day_high": 53.11,
     "days_since_20d_high": 11,
     "added": "2026-11-23",
+    "resistance": [
+     [
+      "1m",
+      53.11,
+      52.87
+     ],
+     [
+      "3m",
+      59.66,
+      59.02
+     ],
+     [
+      "6m/9m",
+      65.0,
+      63.22
+     ],
+     [
+      "52w",
+      86.94,
+      86.39
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -23236,29 +23258,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.0
-    },
-    "resistance": [
-     [
-      "1m",
-      53.11,
-      52.87
-     ],
-     [
-      "3m",
-      59.66,
-      59.02
-     ],
-     [
-      "6m/9m",
-      65.0,
-      63.22
-     ],
-     [
-      "52w",
-      86.94,
-      86.39
-     ]
-    ]
+    }
    },
    {
     "symbol": "LQDA",
@@ -23292,6 +23292,18 @@
     "added": "2026-11-12",
     "first_day": "2026-11-10",
     "support_low": 46.21,
+    "resistance": [
+     [
+      "3m",
+      74.74,
+      73.67
+     ],
+     [
+      "6m/9m/52w",
+      93.61,
+      91.03
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -23343,19 +23355,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 5.4
-    },
-    "resistance": [
-     [
-      "3m",
-      74.74,
-      73.67
-     ],
-     [
-      "6m/9m/52w",
-      93.61,
-      91.03
-     ]
-    ]
+    }
    },
    {
     "symbol": "CYRX",
@@ -23391,6 +23391,13 @@
     "added": "2026-11-09",
     "first_day": "2026-11-09",
     "support_low": 18.55,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      21.78,
+      20.74
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -23442,14 +23449,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 13.8
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      21.78,
-      20.74
-     ]
-    ]
+    }
    },
    {
     "symbol": "PRCT",
@@ -23481,6 +23481,18 @@
     "added": "2026-11-18",
     "first_day": "2026-11-09",
     "support_low": 20.585,
+    "resistance": [
+     [
+      "6m/9m",
+      29.74,
+      29.09
+     ],
+     [
+      "52w",
+      38.11,
+      36.1
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -23532,19 +23544,7 @@
      "gap_base_pattern": "Inner base (last 20 days)",
      "gap_base_ok": null,
      "off_high_pct": 7.0
-    },
-    "resistance": [
-     [
-      "6m/9m",
-      29.74,
-      29.09
-     ],
-     [
-      "52w",
-      38.11,
-      36.1
-     ]
-    ]
+    }
    },
    {
     "symbol": "GPN",
@@ -23576,6 +23576,7 @@
     "added": "2026-11-20",
     "first_day": "2026-11-20",
     "support_low": 83.33,
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -23624,8 +23625,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 1.4
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "ELAN",
@@ -23657,6 +23657,13 @@
     "added": "2026-11-09",
     "first_day": "2026-11-06",
     "support_low": 23.97,
+    "resistance": [
+     [
+      "6m/9m/52w",
+      27.98,
+      26.84
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -23708,14 +23715,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 4.5
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      27.98,
-      26.84
-     ]
-    ]
+    }
    },
    {
     "symbol": "GME",
@@ -23749,6 +23749,7 @@
     "added": "2026-11-18",
     "first_day": "2026-11-18",
     "support_low": 25.29,
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -23797,8 +23798,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.8
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "ARHS",
@@ -23831,6 +23831,13 @@
     "twenty_day_high": 15.17,
     "days_since_20d_high": 12,
     "added": "2026-10-30",
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      15.17,
+      15.02
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -23879,14 +23886,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 14.0
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      15.17,
-      15.02
-     ]
-    ]
+    }
    },
    {
     "symbol": "U",
@@ -23932,6 +23932,13 @@
     },
     "support_low": 44.82,
     "pre_gap_close": 42.46,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      54.27,
+      52.81
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -23983,14 +23990,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 11.1
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      54.27,
-      52.81
-     ]
-    ]
+    }
    },
    {
     "symbol": "ACHC",
@@ -24025,6 +24025,13 @@
     "added": "2026-11-06",
     "first_day": "2026-11-04",
     "support_low": 30.11,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      39.7,
+      38.8
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -24073,14 +24080,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 10.9
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      39.7,
-      38.8
-     ]
-    ]
+    }
    },
    {
     "symbol": "SG",
@@ -24115,6 +24115,13 @@
     "added": "2026-11-18",
     "first_day": "2026-10-27",
     "support_low": 9.72,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      13.89,
+      13.36
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull pennant forming",
     "setups": [],
@@ -24163,14 +24170,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 13.7
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      13.89,
-      13.36
-     ]
-    ]
+    }
    },
    {
     "symbol": "XMTR",
@@ -24205,6 +24205,13 @@
     "added": "2026-11-06",
     "first_day": "2026-11-03",
     "support_low": 87.0,
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      127.49,
+      122.47
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -24253,14 +24260,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 15.9
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      127.49,
-      122.47
-     ]
-    ]
+    }
    },
    {
     "symbol": "CAKE",
@@ -24276,7 +24276,7 @@
     "base_bars": null,
     "base_depth_pct": null,
     "msf_score": 0,
-    "adr_pct": 4.66,
+    "adr_pct": 4.67,
     "rel_vol": 0.7,
     "dollar_vol_30d_m": 172.0,
     "perf_1m_pct": 1.0,
@@ -24290,6 +24290,7 @@
     "twenty_day_high": 120.78,
     "days_since_20d_high": 5,
     "added": "2026-11-13",
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA undercut & reclaim setup",
     "setups": [],
@@ -24297,17 +24298,17 @@
     "last_hit": null,
     "why": "21 EMA undercut & reclaim setup: the 21 EMA 110.54, the close -0.2 ADR over it (from 2-POOL 2026-11-13)",
     "stage": "END OF CYCLE WARNING since 2026-11-20: stalled at the highs, the high 120.78 (2026-11-18) was only +1.8% vs the 2026-10-16 peak 118.63 and it broke back under it. Off the list on a close under the 21 EMA 110.54 \u00b7 Below the 21 EMA",
-    "away_adr": 2.18,
+    "away_adr": 2.17,
     "base_day": 5,
     "base_depth_adr": 2.4,
     "tight_days": 0,
     "vol_dryup": 1.01,
     "leg": 1,
     "live": {
-     "adr_pct": 4.66,
+     "adr_pct": 4.67,
      "buy_point": 120.78,
      "buy_point_top_date": "2026-11-18",
-     "day_open": 108.8,
+     "day_open": 108.75,
      "price": 109.66,
      "ema10": 110.49,
      "ema21": 110.54,
@@ -24338,8 +24339,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 9.2
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "MGNI",
@@ -24385,6 +24385,7 @@
     },
     "support_low": 25.75,
     "pre_gap_close": 22.79,
+    "resistance": [],
     "section": "Setting up",
     "setup": "Near the retest zone",
     "setups": [],
@@ -24396,13 +24397,13 @@
     "base_day": 9,
     "base_depth_adr": 3.3,
     "tight_days": 0,
-    "vol_dryup": 0.98,
+    "vol_dryup": 0.99,
     "leg": 1,
     "live": {
      "adr_pct": 5.31,
      "buy_point": 29.78,
      "buy_point_top_date": "2026-11-13",
-     "day_open": 25.59,
+     "day_open": 25.75,
      "price": 26.44,
      "ema10": 26.72,
      "ema21": 26.3,
@@ -24436,8 +24437,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 11.2
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "BTSG",
@@ -24470,6 +24470,13 @@
     "days_since_20d_high": 10,
     "flag_top": 73.53,
     "added": "2026-11-24",
+    "resistance": [
+     [
+      "1m/3m/6m/9m/52w",
+      73.53,
+      72.62
+     ]
+    ],
     "section": "Setting up",
     "setup": "Bull flag forming",
     "setups": [],
@@ -24518,14 +24525,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 2.4
-    },
-    "resistance": [
-     [
-      "1m/3m/6m/9m/52w",
-      73.53,
-      72.62
-     ]
-    ]
+    }
    },
    {
     "symbol": "EVER",
@@ -24560,6 +24560,7 @@
     "twenty_day_high": 31.2,
     "days_since_20d_high": 14,
     "added": "2026-11-20",
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA retest setup",
     "setups": [],
@@ -24608,8 +24609,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 9.0
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "PTRN",
@@ -24639,6 +24639,13 @@
     "twenty_day_high": 22.19,
     "days_since_20d_high": 9,
     "added": "2026-11-09",
+    "resistance": [
+     [
+      "6m/9m/52w",
+      29.8,
+      29.4
+     ]
+    ],
     "section": "Setting up",
     "setup": "Near the retest zone",
     "setups": [],
@@ -24690,14 +24697,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 13.0
-    },
-    "resistance": [
-     [
-      "6m/9m/52w",
-      29.8,
-      29.4
-     ]
-    ]
+    }
    },
    {
     "symbol": "EXTR",
@@ -24732,6 +24732,22 @@
     "added": "2026-11-06",
     "first_day": "2026-11-06",
     "support_low": 23.5,
+    "resistance": [
+     [
+      "bs",
+      29.24,
+      28.58,
+      "2026-06-08",
+      "2026-08-04",
+      "2026-08-05",
+      4
+     ],
+     [
+      "6m/9m/52w",
+      33.73,
+      33.71
+     ]
+    ],
     "section": "Setting up",
     "setup": "21 EMA undercut & reclaim setup",
     "setups": [],
@@ -24780,23 +24796,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 13.0
-    },
-    "resistance": [
-     [
-      "bs",
-      29.24,
-      28.58,
-      "2026-06-08",
-      "2026-08-04",
-      "2026-08-05",
-      4
-     ],
-     [
-      "6m/9m/52w",
-      33.73,
-      33.71
-     ]
-    ]
+    }
    },
    {
     "symbol": "RVTY",
@@ -24830,6 +24830,7 @@
     "twenty_day_high": 171.74,
     "days_since_20d_high": 16,
     "added": "2026-11-18",
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA undercut & reclaim setup",
     "setups": [],
@@ -24878,8 +24879,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 3.9
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "SBH",
@@ -24895,7 +24895,7 @@
     "base_bars": 12.0,
     "base_depth_pct": 16.5,
     "msf_score": 75,
-    "adr_pct": 4.71,
+    "adr_pct": 4.72,
     "rel_vol": 0.8,
     "dollar_vol_30d_m": 26.0,
     "perf_1m_pct": 5.0,
@@ -24909,6 +24909,7 @@
     "twenty_day_high": 21.06,
     "days_since_20d_high": 11,
     "added": "2026-11-13",
+    "resistance": [],
     "section": "Setting up",
     "setup": "21 EMA undercut & reclaim setup",
     "setups": [],
@@ -24916,14 +24917,14 @@
     "last_hit": null,
     "why": "21 EMA undercut & reclaim setup: the 21 EMA 18.21, the close -0.3 ADR over it (from 2-POOL 2026-11-13)",
     "stage": "Below the 21 EMA",
-    "away_adr": 3.65,
+    "away_adr": 3.64,
     "base_day": 8,
     "base_depth_adr": 3.5,
     "tight_days": 0,
     "vol_dryup": 0.9,
     "leg": 0,
     "live": {
-     "adr_pct": 4.71,
+     "adr_pct": 4.72,
      "buy_point": 21.06,
      "buy_point_top_date": "2026-11-10",
      "day_open": 17.99,
@@ -24957,8 +24958,7 @@
      "gap_base_pattern": "Base top",
      "gap_base_ok": null,
      "off_high_pct": 6.7
-    },
-    "resistance": []
+    }
    },
    {
     "symbol": "CPRI",
@@ -25003,6 +25003,18 @@
     },
     "support_low": 17.6,
     "pre_gap_close": 16.06,
+    "resistance": [
+     [
+      "6m/9m",
+      21.95,
+      21.73
+     ],
+     [
+      "52w",
+      28.27,
+      27.66
+     ]
+    ],
     "section": "Setting up",
     "setup": "Near the retest zone",
     "setups": [],
@@ -25054,19 +25066,7 @@
      "gap_base_pattern": "Base breakout",
      "gap_base_ok": null,
      "off_high_pct": 17.3
-    },
-    "resistance": [
-     [
-      "6m/9m",
-      21.95,
-      21.73
-     ],
-     [
-      "52w",
-      28.27,
-      27.66
-     ]
-    ]
+    }
    }
   ]
  },

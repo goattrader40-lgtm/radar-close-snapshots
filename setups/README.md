@@ -12,8 +12,8 @@ Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Laun
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | CDW | Triggered today: Breakout | A | Base top | 175.19 | +0.1% |  | 5.52% | 1-UPDAY |
 | 2 | STGW | Triggered today: Bull flag breakout | A | Bull flag (trendline) | 11.02 | +0.1% | flag trendline 11.02 | 6.03% | 2-POOL |
-| 3 | SKY | Triggered today: Base breakout | A | Qullamaggie breakout | 98.0 | +0.2% |  | 4.29% | 1-UPDAY |
-| 4 | SARO | Triggered today: Bull flag breakout | A+ | Bull flag (trendline) | 27.71 | +0.4% | flag trendline 27.73 | 4.29% | 2-POOL |
+| 3 | SKY | Triggered today: Base breakout | A | Qullamaggie breakout | 98.02 | +0.3% |  | 4.29% | 1-UPDAY |
+| 4 | SARO | Triggered today: Bull flag breakout | A+ | Bull flag (trendline) | 27.71 | +0.4% | flag trendline 27.73 | 4.3% | 2-POOL |
 | 5 | RKT | Triggered today: Breakout | A | Base top | 15.38 | +0.5% |  | 4.68% | 1-UPDAY |
 | 6 | AXGN | Triggered today: Breakout | A | Base top | 59.72 | +0.6% |  | 5.26% | 1-EP/GAP |
 | 7 | BOBS | Triggered today: Bull flag breakout | A+ | Bull flag (trendline) | 20.81 | +0.7% | flag trendline 20.82, flat top 21.75 | 5.63% | 1-UPDAY |
@@ -39,7 +39,7 @@ Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Laun
 | 27 | FLYW | Triggered today: Base breakout | A | Ascending triangle |  |  |  | 4.76% | 1-EP/GAP |
 | 28 | GKOS | Triggered today: Breakout | A | Base breakout |  |  |  | 5.67% | 1-EP/GAP |
 | 29 | HLF | Triggered today: Base breakout | A |  |  |  |  | 4.88% | 1-UPDAY |
-| 30 | KSS | Triggered today: Breakout | A | Base breakout |  |  |  | 6.09% | 1-UPDAY |
+| 30 | KSS | Triggered today: Breakout | A | Base breakout |  |  |  | 6.1% | 1-UPDAY |
 | 31 | PRG | Triggered today: Base breakout | A | Qullamaggie breakout |  |  |  | 5.25% | 1-UPDAY |
 | 32 | VERX | Triggered today: Base breakout | A | Ascending triangle |  |  |  | 4.47% | 1-EP/GAP |
 | 33 | VFC | Triggered today: Base breakout | A | Base breakout |  |  |  | 4.27% | 2-POOL |
@@ -56,18 +56,18 @@ Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Laun
 | 44 | RYTM | Ready: Base top | A | Base top | 121.41 | +1.7% |  | 6.82% | 1-UPDAY |
 | 45 | AEO | Ready: Base top | A | Base top | 22.5 | +1.4% |  | 4.7% | 1-UPDAY |
 | 46 | COGT | Ready: Base top |  | Base top | 36.84 | +2.1% |  | 6.86% | 1-UPDAY |
-| 47 | WAY | Ready: Bull flag (trendline) |  | Bull flag (trendline) | 28.13 | +1.6% | flag line 28.13 | 5.06% | 2-POOL |
-| 48 | EWTX | Ready: Base top | A | Base top | 48.78 | +2.6% |  | 7.8% | 1-UPDAY |
+| 47 | WAY | Ready: Bull flag (trendline) |  | Bull flag (trendline) | 28.13 | +1.6% | flag line 28.13 | 5.07% | 2-POOL |
+| 48 | EWTX | Ready: Base top | A | Base top | 48.78 | +2.6% |  | 7.82% | 1-UPDAY |
 | 49 | PENN | Ready: Base top | A | Base top | 18.84 | +1.5% |  | 4.48% | 2-POOL |
 | 50 | VGNT | Ready: Base top |  | Base top | 45.0 | +1.6% | flat top 45.58 | 4.33% | 2-POOL |
 | 51 | ADPT | Ready: Bull flag (trendline) | A | Bull flag (trendline) | 29.09 | +2.5% | level 32.21, flat top 29.94 | 6.24% | 1-UPDAY |
 | 52 | BSP | Ready: Base top |  | Base top | 47.84 | +3.3% | flat top 48.13 | 8.11% | 1-EP/GAP |
 | 53 | LTH | Ready: Base top | A | Base top | 48.61 | +1.7% | flat top 48.61 | 4.05% | 1-UPDAY |
 | 54 | PAR | Ready: Base top | A | Base top | 24.29 | +2.6% |  | 6.44% | 1-UPDAY |
-| 55 | EPAM | Ready: Bull flag (trendline) | A+ | Bull flag (trendline) | 167.85 | +2.0% | flat top 168.56 | 4.47% | 1-EP/GAP |
-| 56 | SAIL | Ready: Base top | A+ | Base top | 23.54 | +2.9% |  | 6.66% | 1-UPDAY |
-| 57 | TARS | Ready: Base top | A+ | Base top | 81.35 | +2.5% |  | 5.62% | 2-POOL |
-| 58 | SIBN | Ready: Bull flag (trendline) | A+ | Bull flag (trendline) | 25.5 | +2.9% | level 25.92, flat top 25.92 | 6.04% | 1-UPDAY |
+| 55 | SAIL | Ready: Base top | A+ | Base top | 23.54 | +2.9% |  | 6.66% | 1-UPDAY |
+| 56 | TARS | Ready: Base top | A+ | Base top | 81.35 | +2.5% |  | 5.62% | 2-POOL |
+| 57 | EPAM | Ready: Bull flag (trendline) | A+ | Bull flag (trendline) | 168.02 | +2.1% | flat top 168.56 | 4.47% | 1-EP/GAP |
+| 58 | SIBN | Ready: Bull flag (trendline) | A+ | Bull flag (trendline) | 25.5 | +2.9% | level 25.92, flat top 25.92 | 6.08% | 1-UPDAY |
 | 59 | HOG | Ready: Ascending triangle | A | Ascending triangle | 34.84 | +1.9% | flat top 34.84 | 3.88% | 1-UPDAY |
 | 60 | FIGS | Ready: Bull flag (trendline) | A | Bull flag (trendline) | 21.51 | +3.0% | flag trendline 20.61 | 6.12% | 2-POOL |
 | 61 | WWW | Ready: Base top | A | Base top | 25.99 | +2.6% |  | 5.17% | 1-UPDAY |
@@ -80,7 +80,7 @@ Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Laun
 | 68 | GPGI | Ready: Base top |  | Base top | 15.9 | +4.3% |  | 7.55% | 1-UPDAY |
 | 69 | APPN | Ready: Ascending triangle | A+ | Ascending triangle | 57.26 | +4.0% | level 57.26 | 6.5% | 2-POOL |
 | 70 | INTA | Ready: Inner base (last 20 days) | A+ | Inner base (last 20 days) | 47.33 | +3.3% | flat top 48.19 | 5.25% | 2-POOL |
-| 71 | TNDM | Ready: Base top | A | Base top | 20.26 | +5.2% |  | 8.17% | 2-POOL |
+| 71 | TNDM | Ready: Base top | A | Base top | 20.26 | +5.2% |  | 8.18% | 2-POOL |
 | 72 | PRKS | Ready: Bull flag (trendline) | A | Bull flag (trendline) | 40.78 | +3.9% | flag trendline 39.62 | 5.99% | 1-UPDAY |
 | 73 | PRCH | Ready: Base top | A | Base top | 22.36 | +4.0% | pullback tight day 21.87, level 22.66 | 6.01% | 1-EP/GAP |
 | 74 | TRVI | Ready: Base top |  | Base top | 15.48 | +4.6% | level 15.48 | 6.77% | 1-UPDAY |
@@ -98,14 +98,14 @@ Triggered today / Ready (the trigger within 0.7 ADR) / Setting up, from the Laun
 | 86 | ACHC | Setting up: Bull flag forming | A+ | Bull flag (trendline) | 38.36 | +8.5% | flag trendline 35.44 | 5.39% | 1-UPDAY |
 | 87 | SG | Setting up: Bull pennant forming | A | Bull pennant (trendline) | 12.73 | +10.8% | flag trendline 12.73 | 6.55% | 1-UPDAY |
 | 88 | XMTR | Setting up: Bull flag forming | B | Bull flag (trendline) | 124.8 | +16.4% | flag line 124.8 | 9.28% | 1-UPDAY |
-| 89 | CAKE | Setting up: 21 EMA undercut & reclaim setup |  | Base top | 120.78 | +10.1% |  | 4.66% | 2-POOL |
+| 89 | CAKE | Setting up: 21 EMA undercut & reclaim setup |  | Base top | 120.78 | +10.1% |  | 4.67% | 2-POOL |
 | 90 | MGNI | Setting up: Near the retest zone | A | Base top | 29.78 | +12.6% | flag trendline 28.05 | 5.31% | 1-EP/GAP |
 | 91 | BTSG | Setting up: Bull flag forming |  | Bull flag (trendline) | 71.6 | +11.5% | flag line 71.6 | 4.64% | 2-POOL |
 | 92 | EVER | Setting up: 21 EMA retest setup | A+ | Base top | 31.2 | +14.2% | pullback tight day 27.79, flat top 30.31 | 5.74% | 2-POOL |
 | 93 | PTRN | Setting up: Near the retest zone | A | Base top | 22.19 | +15.0% |  | 5.73% | 2-POOL |
 | 94 | EXTR | Setting up: 21 EMA undercut & reclaim setup | A | Base top | 27.92 | +15.0% | flag trendline 24.14 | 5.71% | 1-UPDAY |
 | 95 | RVTY | Setting up: 21 EMA undercut & reclaim setup |  | Base top | 171.74 | +13.9% | pullback tight day 152.0 | 4.64% | 2-POOL |
-| 96 | SBH | Setting up: 21 EMA undercut & reclaim setup | A | Base top | 21.06 | +17.2% |  | 4.71% | 2-POOL |
+| 96 | SBH | Setting up: 21 EMA undercut & reclaim setup | A | Base top | 21.06 | +17.2% |  | 4.72% | 2-POOL |
 | 97 | CPRI | Setting up: Near the retest zone | A | Base breakout | 21.76 | +21.0% |  | 4.98% | 1-EP/GAP |
 
 ## Changes today
