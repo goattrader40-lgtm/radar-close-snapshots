@@ -345,6 +345,7 @@
   .al-box li { padding: 3px 0; border-top: 1px solid var(--color-border-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .al-box li:first-child { border-top: 0; }
   .al-box li.al-star { font-weight: 600; }
+  .al-box li.al-wrap { white-space: normal; }       /* 🔻 lines: the prices are at the end of the title, shown whole */
   .al-box li.al-click { cursor: pointer; }
   .al-box li.al-click:hover { text-decoration: underline; }
   .al-box li.al-trig::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--color-fg-danger, #d1242f); margin-right: 5px; vertical-align: middle; }
@@ -5560,7 +5561,9 @@ defCalc('industry_perf', {
         const box = h('div', 'al-box' + (code === 'm' ? ' al-wide' : '')), hd = h('h3', '', icon + ' ' + name);
         hd.append(h('span', 'al-n', String(lines.length)));
         const list = h('ul', '');
-        lines.forEach((o) => list.append(lineEl(code === 'm' ? Object.assign({}, o, { tab: '' }) : o, boxTag(o.x) + o.head, o.star ? 'al-star' : '', code === 'm')));
+        /* 🔻: the box's name says "Earnings breakdown"; the line says the rest whole ("KEYS READY -11.2% · SHORT UNDER $244.46 · TIGHT STOP"), not cut after the name */
+        lines.forEach((o) => list.append(lineEl(code === 'm' ? Object.assign({}, o, { tab: '' }) : o, code === 'd' ? (boxTag(o.x) + o.head).replace(' EARNINGS BREAKDOWN', '') : boxTag(o.x) + o.head,
+          (o.star ? 'al-star' : '') + (code === 'd' ? ' al-wrap' : ''), code === 'm')));
         if (!lines.length) list.append(h('li', 'al-none', 'None yet'));
         box.append(hd, list); bx.append(box);
       });
