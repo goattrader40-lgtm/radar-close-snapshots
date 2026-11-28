@@ -30,4 +30,7 @@ python3 tools/gapdown/news.py "$D/gapdown_news.json.gz" history/gapdown_news_req
 (cd tools/gapdown && python3 scenarios.py "$D/trades.json" "$D/features.json" "$D/scen.json" "$D"/raw_gapdown_20*.json.gz \
   && python3 scen_report.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" "$D/scen.json" > "$D/results_part4.txt" \
   && python3 make_xlsx_part4.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" "$D/scen.json" "$D/gapdown_short_study_part4_plays.xlsx")
-echo "results in $D: results.txt, results_mirrored.txt, results_part3.txt, results_part4.txt and the four spreadsheets"
+# part 5 (Nov 27 2026): the retest short (Play 2) on 1- / 2- / 3- / 5- / 10- / 15-minute candles
+(cd tools/gapdown && python3 vwap_tf.py "$D/trades.json" "$D/vwap_tf.json" "$D"/raw_gapdown_20*.json.gz \
+  && python3 vwap_tf_report.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" "$D/scen.json" "$D/vwap_tf.json" > "$D/results_part5.txt")
+echo "results in $D: results.txt, results_mirrored.txt, results_part3.txt, results_part4.txt, results_part5.txt and the four spreadsheets"

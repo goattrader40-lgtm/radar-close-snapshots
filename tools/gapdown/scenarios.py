@@ -30,12 +30,16 @@ TOUCH, WAIT = 0.999, 2
 
 
 def five(bs):
-    """[(start minute, o, h, l, c, VWAP at its end, index of its last 1-minute bar)]"""
+    return candles(bs, 5)
+
+
+def candles(bs, n):
+    """n-minute candles: [(start minute, o, h, l, c, VWAP at its end, index of its last 1-minute bar)]"""
     out, cur, pv, vol = [], None, 0.0, 0.0
     for idx, b in enumerate(bs):
         pv += (b[2] + b[3] + b[4]) / 3 * b[5]
         vol += b[5]
-        k = b[0] // 5 * 5
+        k = b[0] // n * n
         if cur is None or cur[0] != k:
             if cur:
                 out.append(tuple(cur))
@@ -65,9 +69,9 @@ def result(bs, idx, m, entry, stop, at_close=True):
             "r": round((entry - exit_) / (stop - entry), 4), "risk_pct": round((stop - entry) / entry * 100, 3)}
 
 
-def reject(F, bs, i0, level_of, ready):
-    """the first 5-minute candle from i0 that reaches its level from below (ready(i) says the set-up before it is there),
-    then closes red back under it within WAIT candles: (candle index, the pop's high)"""
+def reject(F, bs, i0, level_of, ready, patience=WAIT):
+    """the first candle from i0 that reaches its level from below (ready(i) says the set-up before it is there),
+    then closes red back under it within `patience` candles: (candle index, the pop's high)"""
     hi, wait = None, 0
     for i in range(i0, len(F)):
         k, o, h, l, c, vw, idx = F[i]
@@ -82,9 +86,28 @@ def reject(F, bs, i0, level_of, ready):
             hi, wait = max(hi, h), wait + 1
         if c < lv and c < o:
             return i, hi
-        if wait >= WAIT:
+        if wait >= patience:
             hi = None
     return None
+
+
+def vwap_fail(bs, n, patience=WAIT):
+    """the pop to VWAP that fails, on n-minute candles (the user, Nov 27 2026: "why not 3 mins?"): after a leg down (a
+    candle close under VWAP and a low 1%+ under it) a candle touches VWAP from below; that candle or one of the next
+    `patience` closes red back under VWAP: short at that close, stop at the pop's high. From the third candle of the day"""
+    F = candles(bs, n)
+    if len(F) < 6:
+        return None
+    leg, under, dn = [False] * len(F), False, False
+    for i, f in enumerate(F):
+        leg[i] = under and dn
+        under = under or f[4] < f[5]
+        dn = dn or f[3] < f[5] * 0.99
+    r = reject(F, bs, 2, lambda i: F[i][5], lambda i: leg[i], patience)
+    if not r:
+        return None
+    i, hi = r
+    return result(bs, F[i][6], F[i][0] + n - 1, F[i][4], hi)
 
 
 def scenarios(bs, row, feat):
