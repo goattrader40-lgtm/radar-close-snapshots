@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """1-minute quotes for the stocks that can alert, between the 5-minute live updates.
 
-  python3 radar/fast.py <launch.json> <stocks.json> <volprofile.json> <sipcal.json> <out.json> [--morning <settings.json>]
+  python3 radar/fast.py <launch.json> <stocks.json> <volprofile.json> <sipcal.json> <out.json> [--morning <settings.json>] [--earnings <earnings.json>]
 
 The launch watch list (setups/launch.json, a few hundred stocks), so a big gap-up on volume (a catalyst gap, a power
 day, an A+/A launch) alerts within a minute (and the names only the EP / power day alert reads: launch.json ep_watch) instead of up to five (HRI crossed its 200 SMA between the 9:35 and the
@@ -10,13 +10,14 @@ day, an A+/A launch) alerts within a minute (and the names only the EP / power d
 with the volume correction the last live update measured (radar/sipcal.py). radar/alerts.py reads it like live.json.
 In the morning breakout window (radar/alerts.py, the user's settings: 9:35-10:30 by default) also every stock that can
 pass those settings (the liquidity and the ADR, the price rules on the last close with 30% room), so a morning breakout of
-any stock alerts within a minute (the user, Nov 9 2026: "usually they alert at 9:36-9:45").
+any stock alerts within a minute (the user, Nov 9 2026: "usually they alert at 9:36-9:45"). And the stocks reacting to
+earnings today (the Earnings tab's rows), for the earnings breakdown, the short side (the user, Nov 28 2026).
 """
 import datetime, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sipcal  # noqa: E402
 from live import NY, Yahoo, fill_opens, rvol_at, yahoo_sym  # noqa: E402
-from alerts import load_morning, load_morning2, in_morning, morning_static, res_setup  # noqa: E402
+from alerts import load_morning, load_morning2, in_morning, morning_static, res_setup, EBD_LIQ, EBD_TO, ebd_reacts, ebd_rows, find_ebd  # noqa: E402
 
 
 def main():
@@ -48,6 +49,20 @@ def main():
         for M_ in (M, M2):
             if in_morning(M_, now) or in_morning(M_, now + datetime.timedelta(minutes=1)):
                 syms = sorted(set(syms) | {r["symbol"] for r in SL if morning_static(r, M_, slack=0.3)})
+    # + today's earnings gap-downs, for the earnings breakdown, the short side (alerts.py find_ebd; the user, Nov 28 2026): the
+    # Earnings tab's rows reacting today (--earnings) and the ones the last full update saw gapping down 8%+ on earnings
+    # (a stock the tab doesn't list), so the break of the first 3-minute candle's low alerts within a minute
+    if (now.hour, now.minute) < EBD_TO:
+        try:
+            S_, today = {r["symbol"]: r for r in SL}, now.date().isoformat()
+            E_ = ebd_rows(sys.argv[sys.argv.index("--earnings") + 1]) if "--earnings" in sys.argv else {}
+            rep = {s_ for s_, r in E_.items() if ebd_reacts(r, today, doc.get("date"))}
+            lp = os.path.join(os.path.dirname(os.path.abspath(out_p)), "live.json")
+            if os.path.exists(lp):
+                rep |= set(find_ebd(json.load(open(lp)), S_, E_, doc, now))
+            syms = sorted(set(syms) | {s_ for s_ in rep if s_ in S_ and morning_static(S_[s_], EBD_LIQ)})
+        except Exception as e:
+            print(f"fast: today's earnings gap-downs not read: {e!r}", file=sys.stderr)
     off = sipcal.saved(cal_p, now.date())
     ymap = {yahoo_sym(s): s for s in syms}
     y = Yahoo()

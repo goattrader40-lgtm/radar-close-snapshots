@@ -299,7 +299,7 @@ def fast_once():
     out = os.path.join(OUT, "live_fast.json")
     load_opens()
     mo = morning_args()
-    r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, *mo[:4], *lists_args(), *resistance_args(), check=False)
+    r = sh(sys.executable, os.path.join(HERE, "fast.py"), *need[:3], os.path.join(OUT, "sipcal.json"), out, *mo, *lists_args(), *resistance_args(), check=False)   # mo: + the Earnings tab's rows (today's reporters, the earnings breakdown)
     if r.returncode:
         log("fast:", (r.stderr or r.stdout).strip()[-300:])
         return
