@@ -341,6 +341,11 @@
   .al-box { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 10px; min-width: 0; background: var(--color-panel); }
   .al-box h3 { margin: 0 0 6px; font-size: var(--cds-font-size-body); font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
   .al-box h3 .al-n { color: var(--color-fg-muted); font-weight: 400; }
+  .al-box h3 .al-rt { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+  .al-box h3 .al-mute { appearance: none; border: 0; background: none; cursor: pointer; font: inherit; line-height: 1; padding: 2px 5px; border-radius: 6px; }
+  .al-box h3 .al-mute:hover { background: var(--color-bg); }
+  .al-box.al-muted h3 { color: var(--color-fg-muted); }
+  .al-box.al-muted { border-style: dashed; }
   .al-box ul { margin: 0; padding: 0; list-style: none; font-size: var(--cds-font-size-body); min-height: 10.5rem; max-height: 21rem; overflow: auto; }
   .al-box li { padding: 3px 0; border-top: 1px solid var(--color-border-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .al-box li:first-child { border-top: 0; }
@@ -4929,7 +4934,24 @@ defCalc('industry_perf', {
     if (!m) return false;
     try { const e = withI(MBI[m[1] === 'mbo' ? 0 : 1], mboSaved).end; return tOk(e) && m[2] + ':' + m[3] > e; } catch (x) { return false; }
   };
+  /* a muted box (the user, Nov 28 2026: "sound sign for each alert box, whatever i muted so the alerts belongs to that box
+     wont make any sounds"; "no pop up either, sometimes im trying to focus on some setups only"): the speaker in a box's
+     header; muted = no sound, no voice, no pop-up, no flashing tab title for every alert of that box (its BACK ON too:
+     "follows boxes rule"; START DAY with 👀). The line still goes into its box and the log. Kept in this browser
+     (radar-alerts-muted: the muted boxes' codes); the phone pushes are GitHub's job, not the page: unchanged.
+     The box = the one the line sits in when it fires (fireBox: a heads-up of a trigger box and a 🔻 READY line are in 👀,
+     an EP pullback READY in ⚡; a BACK ON, whose line is in the log only, its trigger's box) */
+  let MUTED = new Set();
+  try { MUTED = new Set(String(localStorage.getItem('radar-alerts-muted') || '').split('')); } catch (e) { MUTED = new Set(); }
+  const fireBox = (key, title) => {
+    const b = boxOfKey(key, title), kind = String(key).split(':')[1] || '';
+    if (/^ebdr2?$/.test(kind)) return 'h';
+    if ('lepbond'.includes(b) && !isTrigger(key, title)) return /^epr(10|21)$/.test(kind) ? 'e' : 'h';
+    return b;
+  };
+  const mutedKey = (key, title) => { try { return String(key) !== 'test' && MUTED.has(fireBox(key, title)); } catch (e) { return false; } };
   const notify = (title, body, tvs, key, speak) => {
+    if (mutedKey(key, title)) return;
     const quiet = quietBack(key), trig = isTrigger(key, title) && !quiet, sum = String(key).startsWith('summary:');
     try {
       /* a trigger stays on the screen until you close it; a heads-up fades as before */
@@ -5560,7 +5582,16 @@ defCalc('industry_perf', {
         /* a ticker search filters the boxes too, across every tab (the user, Nov 5 2026) */
         const lines = (q ? shown : mine).filter((x) => boxOf(x) === code).map(parse).sort(order);
         const box = h('div', 'al-box' + (code === 'm' ? ' al-wide' : '')), hd = h('h3', '', icon + ' ' + name);
-        hd.append(h('span', 'al-n', String(lines.length)));
+        const mt = MUTED.has(code), sp = h('button', 'al-mute', mt ? '🔇' : '🔊'), rt = h('span', 'al-rt');
+        sp.type = 'button'; sp.setAttribute('aria-pressed', String(mt)); sp.setAttribute('aria-label', name + ': ' + (mt ? 'muted, click for sound' : 'sound on, click to mute'));
+        sp.title = mt ? 'Muted: no sound, voice or pop-up for this box\'s alerts (they still show here). Click for sound' : 'Sound on. Click to mute this box: no sound, voice or pop-up';
+        sp.addEventListener('click', () => {
+          if (MUTED.has(code)) { MUTED.delete(code); chime(code); } else MUTED.add(code);
+          try { localStorage.setItem('radar-alerts-muted', [...MUTED].join('')); } catch (e) { /* private window */ }
+          drawAlog(loadDay('log', '[]'));
+        });
+        if (mt) box.classList.add('al-muted');
+        rt.append(sp, h('span', 'al-n', String(lines.length))); hd.append(rt);
         const list = h('ul', '');
         /* 🔻: the box's name says "Earnings breakdown"; the line says the rest whole ("KEYS READY -11.2% · SHORT UNDER $244.46 · TIGHT STOP"), not cut after the name */
         const isEbd = (o) => / EARNINGS BREAKDOWN /.test(o.head);       /* also a READY line or a stepped-down short in 👀 */
@@ -5626,7 +5657,7 @@ defCalc('industry_perf', {
       ['n', 'PANW BREAKOUT, NOT IN TREND +3.3%', '$318.40 · +3.3% · vol 1.3x for the time of day', 'PANW:mbo2'],
       ['t', 'THEME MOVING UP: Cybersecurity (#22/98): 3 morning breakouts: PANW, CRWD, S', '', 'thm:Cybersecurity'],
       ['h', 'AAL EARLY: catalyst gap', '', 'AAL:early'], ['g', 'grp', '', 'grp:x']];
-    EX.forEach(([bx, ti, bo, k], i) => setTimeout(() => {
+    EX.filter(([bx]) => !MUTED.has(bx)).forEach(([bx, ti, bo, k], i) => setTimeout(() => {
       chime(sndOf({ box: bx, title: ti }));
       setTimeout(() => say((bx === 'h' || bx === 'g') && !isStart({ title: ti }) ? BOX_SAY[bx] : sayOf({ box: bx, title: ti, body: bo, key: k, sym: tickerOfTitle(ti) })), 600);
     }, 400 + i * 5200));
