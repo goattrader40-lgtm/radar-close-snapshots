@@ -87,7 +87,7 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               that candle's high, out at the close; the alert says the Earnings tab's grade, the candle's size in ADRs
               (TIGHT STOP under 0.8 ADR) and whether the stock was strong yesterday. Any liquid stock, from 9:33, each
               once a day, on the phone too; in the portal's 🔻 box while under that low (the EBD_ section below).
-              Before it, at 9:33, a READY heads-up with the two prices (ebdr; test branch)
+              Before it, at 9:33, a READY heads-up with the two prices (ebdr), in 👀 until the alert fires
   parabolic   PARABOLIC SHORTS (the user, Nov 28 2026: CAR Apr 22 2026, BYND Oct 22 2025; the rule and its study in
               radar/para.py): the stocks of last night's setups/parabolic.json (3+ up closes adding 50%+; every US stock,
               scanner/parabolic.py), read on today's 1-minute chart, not on the live quotes (most are not in the radar's
@@ -2032,7 +2032,7 @@ def find_para(now, sent, state, bars_of=None, early=False):
 #               (tight 272 alerts +0.32R, wide 599 +0.01R); the study's +0.19R is a short AT the candle's low. No alert
 #               for the 64 breaks that never held under the low at a check (-53R in the study) nor for the 31 already
 #               back at the candle's high (-31R). tools/gapdown/test_ebd.py keeps 8 of those days as the test.
-#   READY       (the user, Nov 28 2026: "yes ready"; TEST BRANCH) a heads-up as soon as that candle is complete (9:33) and
+#   READY       (the user, Nov 28 2026: "yes ready"; live that evening) a heads-up as soon as that candle is complete (9:33) and
 #               its low not broken yet: "SHORT UNDER $45.36", the stop, tight or wide; on the phone too, so the order can
 #               wait at the candle's low (the study's entry). 1,469 READY lines in the replay (every earnings gap-down of
 #               8%+; the low then breaks on 2 of 3). 326 of the 970 study trades break in the 9:33 minute itself, before a

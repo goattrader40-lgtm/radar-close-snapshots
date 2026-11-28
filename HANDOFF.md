@@ -120,7 +120,7 @@ alone.
 
 ## Status of the session "Radar: gap-down short study (Nov 24)" (Mon Nov 23 2026 ~10:45 PM ET -; session_01PkbDahsWyTNNEcBMNkusmG; in progress)
 
-- **LIVE (the user's "Go live yes ready", Sat Nov 28 2026; branch ccr-6aff3af8-d8oyc0 onto main; first session Mon Nov 30): the 🔻
+- **LIVE (the user's "Go live yes ready", Fri Nov 27 2026 ~10:10 PM ET; branch ccr-6aff3af8-d8oyc0 onto main; first session Mon Nov 30): the 🔻
   earnings breakdown alert, the short side.** The user's choices from the study below: "what strategy you see has best edge for
   earnings gap down... 1# break of opening range low"; "u mean in alers tab short box? and same logic of other boxes?"; the stop
   "did you measure to their adr, dont you thinks its better judgmeent?"; "I go with your option b" (every setup alerts, the alert
@@ -158,14 +158,43 @@ alone.
   0.8 ADR 284 trades +0.46R (0.8 ADR or more: 639 trades +0.05R). High opening volume raises the win rate, not the result. The
   pop that fails at VWAP (the user's #2): 433 trades +0.27R (before 10:00: +0.37R), fewer wins (35%). Limits: no costs, no
   borrow, today's listings only; 369 of the 424 strong ones were already down 10%+ (the uptick rule).
-- **Agreed, being built next on the test branch (the user's "yes ready", Nov 28): a 9:33 "get ready" line** in the 🔻 box and
-  on the phone, before the break: "short under X, stop Y, tight or wide", so the order can sit at the candle's low (the
-  study's entry). To test and show before it goes live.
+- **LIVE (the user's "Do it", Sat Nov 28 2026 ~1:00 AM ET; branch ccr-6aff3af8-d8oyc0 onto main): the 9:33 READY line.** The
+  user: "Go live yes ready", then "Ok" to building it on the test branch after the numbers below, then "Do it".
+  - As soon as the first 3-minute candle of an earnings gap-down of 8%+ is complete (9:33; a late open: its own candle) and
+    its low is not broken yet: one READY heads-up a stock a day, "W EARNINGS BREAKDOWN READY -8.0% · SHORT UNDER $45.36 · TIGHT
+    STOP", with the stop, the candle's size in ADRs, strong or not, the Earnings tab's grade, the uptick-rule note; on the phone
+    too (normal priority); desktop: sound and voice, the pop-up fades (radar/alerts.py ebd_ready / check_ebd; keys SYM:ebdr,
+    SYM:ebdr2 = levels corrected when the candle read a minute later differs).
+  - **The box rule (the user, Nov 28: "i thought it would be in its own box meaning its triggered, if its true state doesnt
+    match trade it wont be in ... mirror episodic pivot or others same apply?"): 🔻 holds only the triggered shorts, while
+    they hold.** A READY line is a heads-up, in 👀 Heads-ups, until its SHORT alert fires, the break was skipped (broke the low
+    and back at the candle's high before a check saw it; the chart is read at most every 5 minutes while the price is at
+    that high) or 3:00 PM (alerts.json lost.why: fired / skip / corrected / late). The 🔻 lines are shown whole (the box cut
+    them before the price).
+  - What READY can and cannot do (the replay, 7,197 stock-days): 1,469 READY lines, none on a non-earnings day, the low then
+    breaks on about 2 of 3; the 871 SHORT alerts unchanged. Shorting at the candle's low: the break in the READY minute
+    itself 328 trades +0.31R (READY is too late for these), 1 minute after 93 trades +0.34R, 2+ minutes after 538 trades
+    +0.11R (tight 147: +0.39R). Told to the user before the build: it mainly helps the tight ones.
+  - Tested: tools/gapdown/test_ebd.py (W Feb 23 2023 READY 9:33 "short under $45.36", alert 9:35; VSTS May 2 2024 READY 9:39,
+    alert 9:40; KEYS Feb 22 2023 READY 9:33 then skipped), the stand-in morning through the whole alert job, the page in
+    Chromium at 9:34 / 9:37 / 9:55 (🔻 empty then 4 triggered then 3 holding; READY lines in 👀; no page errors).
+- **Answered, no change (Nov 28):** "it shows grading from earnings tab correct?" yes: the SHORT / READY text and the SHORT
+  SETUP mark's hover carry the Earnings tab's grade and reason; the A/B/C badge on the gap-downs list is the 8:45 pre-market
+  grading. Alert timing: the job checks prices once a minute at about :20 (radar/day.py), so an alert comes at the first
+  check after the break, up to about a minute and a half later; the page looks for new alerts every 20 seconds (8:45-10:00).
+  The user: "I understood"; a 30-second price check in the first half hour was offered, not asked for.
+- **The go-live rebuilds (picks.yml):** the first one (Nov 27 10:12 PM ET) dropped VOR from Launches (171 -> 170): it had come
+  back on the list in Friday's evening scan on a borderline 1.2x volume reading and the rebuild's slightly revised Friday
+  numbers no longer qualified it (my reading, the exact rule not confirmed; nothing in scanner/ was changed).
+- **Another session went live the same night: PARABOLIC SHORTS (📉 box; its own section above).** Checked together: both
+  boxes on the same page, tools/gapdown/test_ebd.py and the page test pass on the merged code.
 - **Left out for now, by agreement:** the second alert (the pop that fails at VWAP / a previous day's low) and an end-of-day
   result log for the shorts.
-- **First things to check (Mon Nov 30, 9:33 AM ET on):** an earnings gap-down of 8%+ alerts within a minute or two of breaking
-  its first 3-minute candle's low (Yahoo's 1-minute chart at 9:33 is the untested part), the phone push arrives, the text shows
-  the Earnings tab's grade, and the 🔻 box steps a stopped one down with its note.
+- **First things to check (Mon Nov 30, 9:33 AM ET on):** the READY lines arrive at 9:33-9:34 with the right candle prices
+  (Yahoo's 1-minute chart seconds after 9:33 is the untested part: a "levels corrected" line means it was still filling); an
+  earnings gap-down of 8%+ alerts within about a minute of breaking its first 3-minute candle's low; the phone pushes arrive
+  (falling-chart tag); the text shows the Earnings tab's grade; 🔻 holds only the ones under their low and steps a stopped
+  one down with its note; on a busy earnings morning, whether READY + SHORT pushes are too many.
 
 ## Status of the session "Radar: theme event NVDA (Nov 23)" (Mon Nov 23 2026 ~9:25 AM ET -; session_01PkbDamTXwjMVcVxZ5a25nk; in progress)
 
