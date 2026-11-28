@@ -49,6 +49,55 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: gap-down short study (Nov 24)" (Mon Nov 23 2026 ~10:45 PM ET -; session_01PkbDahsWyTNNEcBMNkusmG; in progress)
+
+- **LIVE (the user's "Go live yes ready", Sat Nov 28 2026; branch ccr-6aff3af8-d8oyc0 onto main; first session Mon Nov 30): the 🔻
+  earnings breakdown alert, the short side.** The user's choices from the study below: "what strategy you see has best edge for
+  earnings gap down... 1# break of opening range low"; "u mean in alers tab short box? and same logic of other boxes?"; the stop
+  "did you measure to their adr, dont you thinks its better judgmeent?"; "I go with your option b" (every setup alerts, the alert
+  says the risk in ADRs); "it shows grading from earnings tab corrcet?" (yes).
+  - The rule (radar/alerts.py, the EBD_ section): a stock that reported since the last close (the Earnings tab's row reacting
+    today: its grade and reason are in the alert, "Bearish: revenue miss -3.8%, EPS miss -11.0%"; not graded yet: "reports
+    today"; a stock the tab doesn't list: Yahoo's earnings time) and gaps down 8%+ at the open; open $10+, cap $700M+, 700K+
+    shares and $20M+ a day. The alert: the price under the low of its first 3-minute candle (9:30-9:33; a late open: the candle
+    it opened in). Stop = that candle's high; out at the close. It says the candle's size in ADRs (TIGHT STOP in the title = under
+    0.8 ADR), how far the stop is from the price now, strong yesterday or not (last close over the 50 EMA and 200 SMA), and the
+    uptick rule when down 10%+. One alert a stock a day, on the phone too (falling-chart tag); every minute 9:33-12:00, every 5
+    minutes after, no first alert from 3:00 PM. No alert for a break already back at the candle's high before a check saw it.
+    Never part of a GROUP MOVE. No 52-week-low or ADR rule (those are for the buys).
+  - The portal (docs/index.html): the 🔻 Earnings breakdowns (short) box on the Alerts tab with the other boxes' logic (in the
+    box while under the low; back over it = down to 👀 with a note; under it again = back in 🔻 with one BACK ON, the portal
+    only; the stop hit = out for the day), its sound (three falling notes), voice ("Earnings breakdown, short, W, tight stop,
+    volume 2.1 times") and a Short filter; a red SHORT SETUP mark (· STRONG) on both gap-down lists of the Pre-market tab
+    (the scanner's default "to 5%" box hides 8%+ gap-downs there until cleared; the graded list shows them).
+  - radar/fast.py, radar/day.py: today's reporters and the earnings gap-downs of the last full update get 1-minute quotes.
+  - Tested: tools/gapdown/test_ebd.py (8 study days: W Feb 23 2023 alert 9:35 at $45.03, short under $45.36, stop $46.00, tight;
+    INTC Jan 27 2023 alert 9:36, stopped 9:47; RIVN Mar 1 2023 BACK ON 9:36; KEYS Feb 22 2023 skipped; VSTS May 2 2024 late open;
+    BILL Feb 3 2023 a wick, ARWR Jan 9 2023 no earnings, AKAM Feb 15 2023 gap under 8%: no alert); the whole alert job on a
+    stand-in morning; the page in Chromium (no page errors). The minute-by-minute replay on the study's 7,197 stock-days
+    (tools/gapdown/sim_ebd.py): 871 alerts on 369 days, none on a non-earnings day; 2 of 3 at the first check after the break,
+    the price then a median 0.4% under the candle's low. Shorting AT the candle's low (the study): 970 trades, 46.7%, +0.19R;
+    at the ALERT's price: 871 trades, 49.3%, +0.11R (tight 272 +0.32R; tight and strong 126 +0.45R; wide 599 +0.01R).
+  - NOT run: tools/replay.py --regress (numba is not installed in the cloud session and installing it was denied; the change
+    touches no file under scanner/, so the Launches reads can't change). No 2-year check (no Launches pattern or buy point).
+  - Rules workbook: A1 Alerts "🔻 Earnings breakdown" and P3 "SHORT SETUP mark" (rules/make_rules.py, rebuilt).
+- **The gap-down short study (research; tools/gapdown with run.sh, the results_*.txt files and 4 spreadsheets in tools/).** Every
+  5%+ gap-down of the liquid universe ($10+, 700K, $20M, $700M+ cap), Jan 2023 - Nov 2026, 1-minute Alpaca bars; short the break
+  of the first 3-minute candle's low, stop its high, out at the close. The plain short: 5,880 trades, +0.115R, but +697R of
+  +678R is Apr 3 2025 alone; gaps of 5-8%: nothing works; non-earnings days: -0.11R outside the 26 market-wide days. Earnings
+  days with a gap of 8%+: 970 trades, 46.7%, +0.19R, each year up; strong yesterday 424 trades +0.31R; the first candle under
+  0.8 ADR 284 trades +0.46R (0.8 ADR or more: 639 trades +0.05R). High opening volume raises the win rate, not the result. The
+  pop that fails at VWAP (the user's #2): 433 trades +0.27R (before 10:00: +0.37R), fewer wins (35%). Limits: no costs, no
+  borrow, today's listings only; 369 of the 424 strong ones were already down 10%+ (the uptick rule).
+- **Agreed, being built next on the test branch (the user's "yes ready", Nov 28): a 9:33 "get ready" line** in the 🔻 box and
+  on the phone, before the break: "short under X, stop Y, tight or wide", so the order can sit at the candle's low (the
+  study's entry). To test and show before it goes live.
+- **Left out for now, by agreement:** the second alert (the pop that fails at VWAP / a previous day's low) and an end-of-day
+  result log for the shorts.
+- **First things to check (Mon Nov 30, 9:33 AM ET on):** an earnings gap-down of 8%+ alerts within a minute or two of breaking
+  its first 3-minute candle's low (Yahoo's 1-minute chart at 9:33 is the untested part), the phone push arrives, the text shows
+  the Earnings tab's grade, and the 🔻 box steps a stopped one down with its note.
+
 ## Status of the session "Radar: theme event NVDA (Nov 23)" (Mon Nov 23 2026 ~9:25 AM ET -; session_01PkbDamTXwjMVcVxZ5a25nk; in progress)
 
 - **LIVE (the user's "go live", Mon Nov 23 2026 afternoon; branch claude/trusting-wright-vet5st, fast-forward onto main): the
