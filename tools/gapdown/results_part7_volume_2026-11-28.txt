@@ -1,0 +1,33 @@
+### the first 3-minute candle's volume vs normal
+| Set | Trades | Win | Avg win | Avg loss | Expected value (R a trade) | Total R | After costs | R by year 23/24/25/26 | Stop distance | Top 10 R |
+|---|---|---|---|---|---|---|---|---|---|---|
+| rel vol 0-5x | 262 | 43.1% | +2.05R | -0.84R | +0.41 | +106 | +0.37 | +12/+18/+35/+41 | 3.3% | +80 |
+| rel vol 5-10x | 233 | 43.3% | +1.17R | -0.78R | +0.07 | +16 | +0.04 | +9/-4/-8/+19 | 4.3% | +36 |
+| rel vol 10-20x | 293 | 48.8% | +1.04R | -0.75R | +0.12 | +37 | +0.10 | +19/-0/+12/+6 | 4.3% | +41 |
+| rel vol 20-x | 182 | 52.7% | +0.97R | -0.74R | +0.16 | +29 | +0.14 | +3/+6/+13/+7 | 4.5% | +31 |
+### the same, strong yesterday
+| Set | Trades | Win | Avg win | Avg loss | Expected value (R a trade) | Total R | After costs | R by year 23/24/25/26 | Stop distance | Top 10 R |
+|---|---|---|---|---|---|---|---|---|---|---|
+| rel vol 0-5x | 128 | 47.7% | +2.09R | -0.82R | +0.57 | +73 | +0.53 | +14/+5/+15/+39 | 2.9% | +62 |
+| rel vol 5-10x | 101 | 44.6% | +1.23R | -0.68R | +0.17 | +17 | +0.14 | +4/-4/+3/+14 | 4.1% | +32 |
+| rel vol 10-20x | 119 | 52.9% | +0.91R | -0.74R | +0.13 | +16 | +0.11 | +13/+2/+6/-5 | 4.3% | +27 |
+| rel vol 20-x | 76 | 61.8% | +0.98R | -0.67R | +0.35 | +27 | +0.32 | +3/+8/+13/+2 | 4.2% | +22 |
+### the stop distance = the first candle's size (full first candles)
+| Set | Trades | Win | Avg win | Avg loss | Expected value (R a trade) | Total R | After costs | R by year 23/24/25/26 | Stop distance | Top 10 R |
+|---|---|---|---|---|---|---|---|---|---|---|
+| stop 0.5-2% away | 92 | 33.7% | +3.33R | -0.97R | +0.48 | +44 | +0.41 | +16/+6/+20/+2 | 1.7% | +63 |
+| stop 2-3.5% away | 264 | 53.4% | +1.52R | -0.85R | +0.42 | +110 | +0.38 | +27/+3/+48/+31 | 2.8% | +47 |
+| stop 3.5-5% away | 241 | 45.2% | +1.05R | -0.78R | +0.05 | +11 | +0.02 | +0/-2/+4/+9 | 4.2% | +31 |
+| stop 5-8% away | 231 | 49.8% | +0.71R | -0.67R | +0.01 | +3 | -0.00 | -2/-1/-15/+20 | 6.2% | +23 |
+| stop 8-100% away | 95 | 44.2% | +0.61R | -0.56R | -0.05 | -4 | -0.06 | -2/+0/+0/-3 | 9.4% | +13 |
+| stop up to 3.5% away | 356 | 48.3% | +1.85R | -0.89R | +0.43 | +154 | +0.39 | +43/+9/+68/+33 | 2.6% | +68 |
+| stop 3.5%+ away | 567 | 46.9% | +0.83R | -0.70R | +0.02 | +10 | -0.00 | -4/-2/-11/+27 | 5.5% | +33 |
+| stop up to 3.5% away, strong yesterday | 177 | 50.3% | +1.76R | -0.87R | +0.45 | +80 | +0.41 | +31/+7/+34/+10 | 2.6% | +59 |
+| stop 3.5%+ away, strong yesterday | 229 | 53.3% | +0.88R | -0.60R | +0.19 | +43 | +0.17 | +4/+9/+7/+24 | 5.7% | +30 |
+| thin first candle (a late open or a minute without a trade) | 47 | 31.9% | +3.60R | -0.94R | +0.51 | +24 | +0.46 | +4/+12/-5/+13 | 3.0% | +52 |
+### hindsight: the whole day's volume vs the 20-day average
+| Set | Trades | Win | Avg win | Avg loss | Expected value (R a trade) | Total R | After costs | R by year 23/24/25/26 | Stop distance | Top 10 R |
+|---|---|---|---|---|---|---|---|---|---|---|
+| day volume 0-3x | 235 | 33.2% | +1.21R | -0.81R | -0.14 | -32 | -0.17 | -5/-8/-19/-1 | 4.1% | +43 |
+| day volume 3-5x | 338 | 41.7% | +1.30R | -0.78R | +0.09 | +29 | +0.05 | +8/-21/+5/+37 | 4.0% | +62 |
+| day volume 5-x | 397 | 58.9% | +1.35R | -0.76R | +0.48 | +192 | +0.45 | +40/+48/+66/+38 | 4.2% | +63 |
