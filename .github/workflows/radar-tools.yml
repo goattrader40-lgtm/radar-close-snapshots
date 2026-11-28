@@ -240,9 +240,5 @@ jobs:
             for id in $(gh run list --workflow radar-day.yml --status in_progress --json databaseId -q '.[].databaseId'); do gh run cancel $id; done
             sleep 20; gh workflow run radar-day.yml --ref main -f mode=day
           fi
-          if [ "${{ inputs.cmd }}" = "paradry" ]; then   # the parabolic shorts list of the last close without saving (scanner/parabolic.py) -> radar-data parabolic_dry.json
-            git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && git show origin/radar-data:alerts.json > /tmp/alerts_now.json || true
-            python3 scanner/parabolic.py --out /tmp/parabolic_dry.json --alerts /tmp/alerts_now.json && python3 radar/publish.py "parabolic shorts dry run" /tmp/parabolic_dry.json
-          fi
           if [ "${{ inputs.cmd }}" = "alpaca" ]; then python3 radar/probe_alpaca.py /tmp/probe_alpaca.json AAPL,NVDA,CRWD,CIEN,TSLA,BE,AAOI,MU,AMD,PLTR && python3 radar/publish.py "alpaca probe" /tmp/probe_alpaca.json; fi
           if [ "${{ inputs.cmd }}" = "rvol" ]; then python3 radar/probe_rvol.py /tmp/probe_rvol.json CRWD TSLA CIEN BE AAOI NVDA && python3 radar/publish.py "rvol probe" /tmp/probe_rvol.json; fi

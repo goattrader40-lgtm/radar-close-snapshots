@@ -18,4 +18,8 @@ case "$CMD" in
     rd stocks.json
     A=${CMD#links}; python3 radar/probe_links.py /tmp/rd/stocks.json /tmp/probe_links.json ${A# }
     python3 radar/publish.py "links probe" /tmp/probe_links.json;;
+  paradry)          # the parabolic shorts list of the last close without saving (scanner/parabolic.py) -> radar-data parabolic_dry.json
+    rd alerts.json
+    python3 scanner/parabolic.py --out /tmp/parabolic_dry.json --alerts /tmp/rd/alerts.json
+    python3 radar/publish.py "parabolic shorts dry run" /tmp/parabolic_dry.json;;
 esac
