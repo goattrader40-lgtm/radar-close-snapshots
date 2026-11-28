@@ -2037,7 +2037,8 @@ def find_para(now, sent, state, bars_of=None, early=False):
 #               wait at the candle's low (the study's entry). 1,469 READY lines in the replay (every earnings gap-down of
 #               8%+; the low then breaks on 2 of 3). 326 of the 970 study trades break in the 9:33 minute itself, before a
 #               READY line can help; the breaks from 9:35 on: 551 trades +0.11R at the candle's low (tight 152: +0.39R).
-#               The line leaves its box when the SHORT alert fires, when the break was skipped, or at 3:00 PM.
+#               A heads-up, in 👀 (🔻 holds only the triggered shorts, the user: "in its own box meaning its triggered");
+#               it leaves when the SHORT alert fires, when the break was skipped, or at 3:00 PM.
 #   strong      yesterday's close over the 50 EMA and the 200 SMA: said in the alert (+0.31R vs +0.10R).
 #   the box     🔻 on the Alerts tab, one alert a stock a day; in the box while the price is under that low; back over the
 #               low = out (BACK ON once when under it again); the stop hit = out for the day. Out at the close.
