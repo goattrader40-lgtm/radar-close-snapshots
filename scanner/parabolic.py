@@ -97,7 +97,7 @@ def build(bars, meta, asof, prev=None, alerts=None):
         if not b or b[-1][0] != asof:
             continue
         r = para.list_row(b[-25:])
-        if r:
+        if r and r["gap_need"] <= para.RULES["max_gap_need_pct"]:
             m = meta.get(s) or {}
             r.pop("high", None)
             rows[s] = {"tv": f"{m.get('exchange', 'NASDAQ')}:{s}", "name": m.get("name", ""), **r}

@@ -38,6 +38,7 @@ RULES = {
     "range_min": 5,          # minutes of the opening candle
     "last_entry_min": 360,   # no new short from 3:30 PM (minutes after 9:30)
     "reentry": True,         # one re-entry after a stop-out the same day
+    "max_gap_need_pct": 150.0,   # the list leaves out a stock that would need a bigger gap than this to qualify (a $0.86 close can't open at $5)
 }
 
 
