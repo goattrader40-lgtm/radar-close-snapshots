@@ -49,6 +49,31 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: work session (Nov 28)" (Sat Nov 28 2026 ~7:35 AM ET -; session_01PkbDaki6mxjCDEeS8czxNh; in progress)
+
+- **LIVE (the user's "Go live", Sat Nov 28 2026; branch ccr-3bb3f559-7bra97 merged with main): a speaker on every alert box
+  mutes that box. NOT SEEN ON A LIVE SESSION: first one Mon Nov 30.** The user: "sound sign for each alert box, whatever i
+  muted so the alerts belongs to that box wont make any sounds, when i click on it makes sound"; "no pop up either, sometimes
+  im trying to focus on some setups only"; BACK ON: "whatever alert box they belong to automatically simple logic it follows
+  boxes rule (mute on and off)"; START DAY in 👀: "then it would apply to it as well".
+  - docs/index.html only (MUTED, fireBox, mutedKey, the first line of notify; the header of each box in drawAlog): 🔊 / 🔇
+    next to the box's count, a muted box has a dashed border and a grey title. Muted = no sound, no voice, no pop-up, no
+    flashing tab title for every alert of that box; the line still goes into its box and the log. A click again = sound on,
+    the box's chime once. Kept in the browser (localStorage `radar-alerts-muted` = the muted boxes' codes), so the desktop
+    and the phone can differ; the phone pushes (GitHub's job) are unchanged; the Test button skips muted boxes' sounds.
+  - The box = the one the line sits in when it fires: a BACK ON its trigger's box; START DAY, a 🔻 READY line, a parabolic
+    GAP UP / STOPPED and the heads-ups of a trigger box = 👀 (muting 👀 silences them; muting 🔻 only the triggered shorts:
+    told the user for READY); an EP pullback READY = ⚡.
+  - Tested in Chromium, desktop and phone, before and after the merge with main (the other session's shared 🔻 Shorts box
+    had gone live: 11 boxes): 4 stand-in alerts all on = 4 pop-ups, sounds and voice; 📈 and 👀 muted = only the power day
+    popped up and sounded (the morning breakout, its BACK ON, the start day silent); kept after a reload; unmute plays the
+    chime; 0 page errors; tools/gapdown/test_ebd.py "all passed". No `--regress` (nothing under scanner/), no 2-year check,
+    no Launches rebuild (no launch rule). Rules workbook: A1 "Mute a box".
+  - Seen, not changed: in my stand-in test a "SYM:start" START DAY alert popped up without a bell or voice (the real key
+    may differ: not checked).
+- **Open, the user's idea (Nov 28)**: "maybe after i test few days we make maybe new box for start days": ask after a few
+  sessions; nothing built.
+
 ## Status of the session "Radar: parabolic short setups (Nov 27)" (Fri Nov 27 2026 ~6:30 PM ET - Sat Nov 28; session_01PkbDanM1KXkPZRoVthrhVt; in progress)
 
 - **LIVE (the user's "go live", Sat Nov 28 2026; branch ccr-dc9ac29f-m09ym4 merged with main; first session Mon Nov 30): PARABOLIC
