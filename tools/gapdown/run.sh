@@ -33,4 +33,7 @@ python3 tools/gapdown/news.py "$D/gapdown_news.json.gz" history/gapdown_news_req
 # part 5 (Nov 27 2026): the retest short (Play 2) on 1- / 2- / 3- / 5- / 10- / 15-minute candles
 (cd tools/gapdown && python3 vwap_tf.py "$D/trades.json" "$D/vwap_tf.json" "$D"/raw_gapdown_20*.json.gz \
   && python3 vwap_tf_report.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" "$D/scen.json" "$D/vwap_tf.json" > "$D/results_part5.txt")
-echo "results in $D: results.txt, results_mirrored.txt, results_part3.txt, results_part4.txt, results_part5.txt and the four spreadsheets"
+# part 6 (Nov 28 2026): the user's second short head to head with the first: opens, goes up, fades, closes under VWAP
+(cd tools/gapdown && python3 vwap_bd.py "$D/trades.json" "$D/features.json" "$D/vwap_bd.json" "$D"/raw_gapdown_20*.json.gz \
+  && python3 vwap_bd_report.py "$D/trades.json" "$D/features.json" "$D/gaps_clean.json" "$D/reasons.json" "$D/scen.json" "$D/vwap_bd.json" > "$D/results_part6.txt")
+echo "results in $D: results.txt, results_mirrored.txt, results_part3.txt ... results_part6.txt and the four spreadsheets"
