@@ -49,6 +49,75 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: parabolic short setups (Nov 27)" (Fri Nov 27 2026 ~6:30 PM ET - Sat Nov 28; session_01PkbDanM1KXkPZRoVthrhVt; in progress)
+
+- **LIVE (the user's "go live", Sat Nov 28 2026; branch ccr-dc9ac29f-m09ym4 merged with main; first session Mon Nov 30): PARABOLIC
+  SHORTS, a Watchlist list with live alerts in their own 📉 box. NOT SEEN ON LIVE PRICES.** The user: "build something for me in
+  our radar to catch parabolic short setups"; their examples "check $car 2026, check nmax 2026, bynd 2025" ("i provided those 3
+  as an example so you understand.. so many others out there happened as well"); "find me good setup for this kind of runs when
+  we should short"; "trade day has to be only gap day"; the run size: "you have historically data you need to be helpful here";
+  results "that we close same day or next day closing"; then "Ok. do it" and "So re entry is vwap breakdown? go live".
+  1. **The rule, one place: radar/para.py** (the list, the alerts and the tests use it; RULES holds the numbers).
+     The list (evening, for the next session only): closed up 3+ sessions in a row, those 3 adding 50%+, $20M+ traded.
+     The trade day: it opens 3%+ over that close AND 130%+ over its lowest close of the 20 sessions before, at $5+.
+     The short: the first trade under the opening 5-minute candle's low (to 3:30 PM); stop = the day's high then; ONE
+     re-entry after a stop-out the same day = the next 5-minute candle closing under VWAP after one closed over it (stop
+     the new high); cover = the next session's close (the stop stays that day).
+  2. **The study behind it** (Alpaca: 6,429 common stocks on NASDAQ / NYSE / AMEX, Dec 2020 - Nov 2026, 1-minute SIP bars of
+     the trade days; mostly today's listings, only 25 of 2,310 days from delisted names). $5+: the opening-low short 400
+     trades, 55% won, +1.77R / -0.97R, **+0.56R (+6.7%) at the next close** (same-day close +0.32R), every year 2021-2026
+     positive, longest run of losers 8; the first VWAP break as the first short 425 trades, 48%, +0.55R; with one re-entry
+     +0.65R a trade day, with two +0.70R (the second re-entries alone: 23 trades, 65% won, +0.89R). Outside the rule (run
+     under 130% or gap under 3%): +0.17R; under $5: +0.06R; a run of only 30-50% in 3 days: nothing. Not in the test: the
+     borrow, halts, fills (counted at the trigger price). CAR Apr 22 2026: short 770.31 at 9:51, stop 847.70, close 443.94,
+     next close 229.14 (+70%, 7R); CAR Apr 21 (gap 2.2%): no trade under the rule; **BYND Oct 22 2025: the 9:39 short AND
+     the 9:55 re-entry were both stopped** before it broke for good near 11:05 (I first told the user the re-entry "would
+     have caught BYND": wrong for this rule, corrected; a second re-entry would). NMAX Apr 1 2025 = an IPO's 2nd day: no 3
+     up closes, not in the rule.
+  3. **Evening**: scanner/parabolic.py -> **setups/parabolic.json** {date, rules, rows {SYM: tv, name, close, gain3, up_days,
+     dvol_m, lo20, run20, need_open, gap_need}, shorts [...]}. Its own Alpaca read (the asset list on paper-api, ~3 months of
+     daily bars, end = 16 minutes ago for the free plan), a step of scanner.yml with continue-on-error after the Launches
+     step: a failure leaves the file and the other steps alone. A stock that would need a gap over 150% is left off (NXAT
+     closed $0.86 on Nov 27). shorts = the SHORT / RE-ENTRY alerts of the day (radar-data alerts.json state `para`),
+     followed: open -> covered (the next close) / stopped next day; a closed one 10 sessions. The file on main now is the
+     dry run of the Nov 27 close (radar-tools `paradry` -> radar-data parabolic_dry.json): 5,299 stocks read, 1 name, AEHL
+     (close 12.90, needs an open of 14.43).
+  4. **Live**: radar/alerts.py find_para (day.py para_args passes the file to the 5-minute and the 1-minute runs). Each list
+     stock is read on Yahoo's 1-minute chart (not the live quotes: most are not in the radar's stocks) every run until
+     decided. Keys SYM:parag (GAP UP, heads-up, from 9:31), :paras (SHORT, trigger), :parax (STOPPED), :parar (RE-ENTRY,
+     trigger), :parax2; the next session :parac (COVER at the close, trigger, from 3:45 PM) or :parax1 (STOPPED day 2).
+     state["para"][SYM] = what happened (the page's Now column, the evening's shorts). A short is found again every run
+     while its stop is not traded (holds in its box); never part of a GROUP MOVE; the phone push carries the falling-chart
+     tag like the earnings breakdown's.
+  5. **Page** (docs/index.html): the Watchlist list PARABOLIC (its own card: Now, Close, 3 days, Up days, 20-day run, Open
+     needed, Gap needed, $ vol, Name; "Shorts: followed to the cover"); the 📉 Parabolic shorts box (code x; four falling
+     notes; "Parabolic short, C A R, opening low broken"), filed under the Watchlist tab; a stopped short steps down to 👀,
+     the STOPPED line stays in 📉. The other session's 🔻 Earnings breakdowns (short) box (code d) went live the same day:
+     two short boxes now (offered to the user: one shared box; no answer yet). **Also touched**: the Watchlist's list
+     buttons wrap to a second row on a narrow screen (9 lists; the tab ran 118px past a phone screen, now 42-65px).
+  Tested: para.check against the study on every setup day (396 shorts, 55%, +0.553R; with the re-entry +0.653R); the live
+  job minute by minute on CAR Apr 21 / 22 2026 and BYND Oct 22 2025 (GAP UP 9:31, SHORT 9:52; BYND 9:40 / 9:47 / 9:55 /
+  10:12), a no-gap day (silent), day 2 (COVER 15:45, STOPPED); alerts.py main() on stand-in files with and without the list
+  (every other alert identical); the evening build on CAR's dates (on the list Apr 21, the short covered Apr 23 at 229.14,
+  +6.99R) and live against Alpaca (`paradry`); the page in Chromium, desktop and phone, every Now status, 0 page errors;
+  `--regress` "every agreed example reads the same" (numba installed in this session); the other session's
+  tools/gapdown/test_ebd.py "all passed" after the merge. Rules workbook: W1 PARABOLIC, 4 A1 rows. No 2-year check (no
+  Launches pattern or buy point; the study is its test), no Launches rebuild.
+  **Check Mon Nov 30**: from 9:31 alerts.json `para` (AEHL: off with its reason, or armed) and any :parag / :paras key, the
+  phone push, the 📉 box and the list's Now column; Mon evening: setups/parabolic.json dated Nov 30 (the scan's own step:
+  not yet run inside scanner.yml), its rows and shorts. Yahoo's 1-minute chart for small stocks is the untested part (the
+  replays used Alpaca's bars); the alert comes up to a minute after the break.
+- **Open, the user to decide**: (1) one re-entry (live) or two (+0.70R a day vs +0.65R; asked twice, the user asked what a
+  re-entry is, then "go live": one stays); (2) one shared short box for 🔻 and 📉 or two.
+- **How it went with the user (for the next session)**: I lost them twice. First with plans and questions when they wanted
+  numbers ("I didnt get it", "Come on you gotta do better", "You gotta stop and listen", "You misisng points"); then by
+  reading "3 gap-ups in a row" literally (each open 1%+ over the last close) on runs of only 30%+, which threw out CAR's own
+  crash day and showed "no edge" three times. Their three tickers fixed it. So: ask for 2-3 example charts FIRST, replay
+  them before any table, and say plainly when the first definition excludes their examples. Short answers, one table.
+- **Study tools** (not live code): radar/probe_para.py + `paraall` in radar/study.sh (the whole-market trade days and their
+  1-minute bars -> radar-study para_all_cases.json, raw_para_all.json.gz), history/para*.json (the earlier request
+  lists), radar-study raw_para*.json.gz. The scratchpad scripts (the 16-trigger and entry x stop x exit grids) are not kept.
+
 ## Status of the session "Radar: gap-down short study (Nov 24)" (Mon Nov 23 2026 ~10:45 PM ET -; session_01PkbDahsWyTNNEcBMNkusmG; in progress)
 
 - **LIVE (the user's "Go live yes ready", Sat Nov 28 2026; branch ccr-6aff3af8-d8oyc0 onto main; first session Mon Nov 30): the 🔻
@@ -486,6 +555,7 @@ changes_today) and 3-SETUPS rows with source "START DAYS".**
 | Desktop alerts | the portal (docs/index.html) while it is open: launches, breakouts, and every 3-SETUPS trigger |
 | 📈 Morning breakouts (portal only) | radar/alerts.py check_morning (any stock, 9:35-10:30 by default); the user's settings and + Filters: alerts/morning.json on main (Alerts tab, Save); the level ticks read setups/resistance.json (evening scan) and radar-data ath.json (ath.yml, Saturdays); replay: radar-tools `morning` |
 | Opening ranges (+ Filter "Above ORH" 1min / 2min / 5min) | radar/levels.py from day.py's live updates and minute reads, 9:31 on -> radar-data levels.json (stocks up 2%+) |
+| 📉 Parabolic shorts (list + alerts) | scanner/parabolic.py (a step of scanner.yml, Alpaca, every US stock) → setups/parabolic.json; radar/alerts.py find_para on each list stock's 1-minute chart; the rule: radar/para.py; dry run: radar-tools `paradry` |
 | Data branch | `radar-data`: stocks.json, long_bars.json, probe_catalyst.json, alerts.json, gradelog.json |
 
 GitHub jobs: `scanner.yml` (4:40 PM ET: Watchlist + Launches), `picks.yml` "Follow picks" (rebuilds Launches; run it
