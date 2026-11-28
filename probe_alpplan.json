@@ -1,0 +1,12 @@
+{
+ "now": "2026-10-26T20:34:39+00:00",
+ "sip": {
+  "ok": false,
+  "status": 403,
+  "body": "{\"message\":\"subscription does not permit querying recent SIP data\"}\n"
+ },
+ "iex": {
+  "ok": true,
+  "bars": {}
+ }
+}

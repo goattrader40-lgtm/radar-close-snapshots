@@ -1,0 +1,954 @@
+{
+ "day": "2026-11-16",
+ "alerts": [
+  {
+   "time": "09:35",
+   "key": "grp:Small & Mid-cap Biotech",
+   "title": "GROUP MOVE: Small & Mid-cap Biotech (#36/99, 16 stocks): CGON, DNTH",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "09:35",
+   "key": "grp:Managed Care",
+   "title": "GROUP MOVE: Managed Care (#22/99, 8 stocks): HUM, CNC",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "09:35",
+   "key": "grp:IT Services & Consulting",
+   "title": "GROUP MOVE: IT Services & Consulting (\u2605 Top #1/99, 15 stocks): TYL, ACN",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "09:35",
+   "key": "grp:Analog & Auto Semis",
+   "title": "GROUP MOVE: Analog & Auto Semis (#71/99, 14 stocks): MPWR, TXN",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "09:36",
+   "key": "grp:Cybersecurity",
+   "title": "GROUP MOVE: Cybersecurity (#28/99, 14 stocks): NTSK, RPD",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "09:38",
+   "key": "MOH:mbo",
+   "title": "MOH MORNING BREAKOUT +5.4%",
+   "was": " \u00b7 news: Earlier news (Thu Nov 12): Deal / contract: Molina Healthcare Enters Partnership with Duet Network (Fiscal.ai Nov 12 9:32 AM ET); today: No company news: No news since the last close, only routine filings (144, 4, 4/A) \u00b7 \ud83d\udcf0 https://insurancenewsnet.com/oarticle/duet-raises-15m-to-scale-nurse-practitioner-owned-clinics-filling-critical-primary-care-gap",
+   "now": " \u00b7 news: Earlier news (Thu Nov 12): Deal / contract: Molina Healthcare Enters Partnership with Duet Network (Fiscal.ai Nov 12 9:32 AM ET); today: No company news: No news since the last close, only routine filings (144, 4, 4/A) \u00b7 \ud83d\udcf0 https://insurancenewsnet.com/oarticle/duet-raises-15m-to-scale-nurse-practitioner-owned-clinics-filling-critical-primary-care-gap \u00b7 no reason in today's news yet: re-checked every 15 min"
+  },
+  {
+   "time": "09:39",
+   "key": "CNC:mbo",
+   "title": "CNC MORNING BREAKOUT +5.6%",
+   "was": " \u00b7 news: Earlier news (Thu Nov 12): Deal / contract: Centene and Other Insurers Partner with Duet to Expand Network Access (Fiscal.ai Nov 12 9:32 AM ET); today: No company news: No SEC filing or company release since the last close \u00b7 \ud83d\udcf0 https://insurancenewsnet.com/oarticle/duet-raises-15m-to-scale-nurse-practitioner-owned-clinics-filling-critical-primary-care-gap",
+   "now": " \u00b7 news: Earlier news (Thu Nov 12): Deal / contract: Centene and Other Insurers Partner with Duet to Expand Network Access (Fiscal.ai Nov 12 9:32 AM ET); today: No company news: No SEC filing or company release since the last close \u00b7 \ud83d\udcf0 https://insurancenewsnet.com/oarticle/duet-raises-15m-to-scale-nurse-practitioner-owned-clinics-filling-critical-primary-care-gap \u00b7 no reason in today's news yet: re-checked every 15 min"
+  },
+  {
+   "time": "09:51",
+   "key": "grp:Diagnostics & Research",
+   "title": "GROUP MOVE: Diagnostics & Research (#27/219, 11 stocks): CRL, ICLR",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "09:52",
+   "key": "TSCO:mbo",
+   "title": "TSCO MORNING BREAKOUT +5.0%",
+   "was": " \u00b7 news: Earlier news (Thu Nov 12): Deal / contract: Uber Technologies, Tractor Supply Launch Nationwide Delivery Partnership (Benzinga Nov 12 9:06 AM ET); today: No company news: No SEC filing or company release since the last close \u00b7 \ud83d\udcf0 https://www.benzinga.com/news/26/11/63185605/uber-technologies-tractor-supply-launch-nationwide-delivery-partnership",
+   "now": " \u00b7 news: Earlier news (Thu Nov 12): Deal / contract: Tractor Supply Joins Uber Marketplace, Expanding On-Demand Shopping Across Rural and Suburban America (Business wire Nov 12 9:00 AM ET); today: No company news: No SEC filing or company release since the last close \u00b7 \ud83d\udcf0 https://finance.yahoo.com/small-business/articles/tractor-supply-joins-uber-marketplace-140000986.html \u00b7 no reason in today's news yet: re-checked every 15 min"
+  },
+  {
+   "time": "10:00",
+   "key": "grp:Medical Care Facilities",
+   "title": "GROUP MOVE: Medical Care Facilities (#42/219, 10 stocks): UHS, MD",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "11:07",
+   "key": "grp:Enterprise SaaS",
+   "title": "GROUP MOVE: Enterprise SaaS (#30/99, 47 stocks): KVYO, ADBE",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "11:29",
+   "key": "grp:Software: Collaboration & Communications",
+   "title": "GROUP MOVE: Software: Collaboration & Communications (#99/219, 13 stocks): DOCU, FRSH",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "11:37",
+   "key": "grp:Software: Vertical & Industry",
+   "title": "GROUP MOVE: Software: Vertical & Industry (#25/219, 15 stocks): TYL, IOT",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  },
+  {
+   "time": "12:10",
+   "key": "grp:Software: Marketing & Ad Tech",
+   "title": "GROUP MOVE: Software: Marketing & Ad Tech (#3/219, 7 stocks): KVYO, HUBS",
+   "was": "(no news line)",
+   "now": " \u00b7 news: none about the group yet: re-checked every 15 min"
+  }
+ ],
+ "followups": [
+  {
+   "time": "13:10",
+   "key": "grp:news:Managed Care",
+   "title": "NEWS: Managed Care: CNC, ELV, HUM, MOH",
+   "msg": "Medicaid Work Requirement Delay Pushes Molina, Centene Stocks Higher (Barrons.com 1:01 PM ET) \u00b7 \ud83d\udcf0 https://finance.yahoo.com/m/9463b4e2-df38-3ec7-8d67-04299cd77d4f/medicaid-work-requirement.html \u00b7 the reason behind today's GROUP MOVE 09:35 (HUM, CNC) \u00b7 MOH morning breakout 09:38 \u00b7 CNC morning breakout 09:39",
+   "phone": true
+  }
+ ],
+ "headlines": {
+  "CNC": [
+   {
+    "at": "Nov 13 6:01 PM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Health Net Invests $3 Million in San Joaquin Regional Housing Fund",
+    "tags": [
+     "CNC"
+    ],
+    "story": false
+   },
+   {
+    "at": "9:23 AM ET",
+    "source": "Zacks",
+    "via": "yahoo",
+    "title": "Can Medicaid Rate Improvements Drive Elevance's 2027 Margin Recovery?",
+    "tags": [
+     "ELV",
+     "MOH",
+     "CNC"
+    ],
+    "story": false
+   },
+   {
+    "at": "9:32 AM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Bernstein Adjusts Price Target on Centene to $90 From $79",
+    "tags": [
+     "CNC"
+    ],
+    "story": false
+   },
+   {
+    "at": "1:01 PM ET",
+    "source": "Barrons.com",
+    "via": "yahoo",
+    "title": "Medicaid Work Requirement Delay Pushes Molina, Centene Stocks Higher",
+    "tags": [
+     "CNC",
+     "ELV",
+     "MOH"
+    ],
+    "story": true
+   }
+  ],
+  "MOH": [
+   {
+    "at": "Nov 13 5:43 PM ET",
+    "source": "MT Newswires",
+    "via": "yahoo",
+    "title": "Molina Healthcare Insider Sold Shares Worth $1,624,560, According to a Recent SEC Filing",
+    "tags": [
+     "MOH"
+    ],
+    "story": false
+   },
+   {
+    "at": "Nov 13 6:02 PM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Molina Healthcare Insider Sold Shares Worth $1,624,560",
+    "tags": [
+     "MOH"
+    ],
+    "story": false
+   },
+   {
+    "at": "7:31 AM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Molina Healthcare of Ohio to Exit State Health Insurance Marketplace",
+    "tags": [
+     "MOH"
+    ],
+    "story": false
+   },
+   {
+    "at": "9:23 AM ET",
+    "source": "Zacks",
+    "via": "yahoo",
+    "title": "Can Medicaid Rate Improvements Drive Elevance's 2027 Margin Recovery?",
+    "tags": [
+     "ELV",
+     "MOH",
+     "CNC"
+    ],
+    "story": false
+   },
+   {
+    "at": "1:01 PM ET",
+    "source": "Barrons.com",
+    "via": "yahoo",
+    "title": "Medicaid Work Requirement Delay Pushes Molina, Centene Stocks Higher",
+    "tags": [
+     "CNC",
+     "ELV",
+     "MOH"
+    ],
+    "story": true
+   }
+  ],
+  "HUM": [
+   {
+    "at": "Nov 13 10:01 PM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "UHealth Adjusts Medicare Advantage Network for 2027",
+    "tags": [
+     "HUM"
+    ],
+    "story": false
+   },
+   {
+    "at": "Nov 14 9:01 AM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Senators Launch Inquiry into Health Insurers' Prior Authorization Pledges",
+    "tags": [
+     "HUM"
+    ],
+    "story": false
+   },
+   {
+    "at": "Nov 15 1:07 AM ET",
+    "source": "Simply Wall St.",
+    "via": "yahoo",
+    "title": "Humana (HUM) Launched A New Cancer Care Model",
+    "tags": [
+     "HUM",
+     "EVH",
+     "AONC"
+    ],
+    "story": false
+   },
+   {
+    "at": "9:32 AM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Bernstein Adjusts Price Target on Humana to $515 From $425",
+    "tags": [
+     "HUM"
+    ],
+    "story": false
+   },
+   {
+    "at": "9:53 AM ET",
+    "source": "The Fly",
+    "via": "yahoo",
+    "title": "Yeti downgraded, Humana upgraded: Wall Street's top analyst calls",
+    "tags": [
+     "HPE",
+     "ABNB",
+     "NKE",
+     "ABT",
+     "TXRH",
+     "USAR",
+     "CCOI",
+     "BILI",
+     "PVLA",
+     "STIM"
+    ],
+    "story": false
+   },
+   {
+    "at": "11:00 AM ET",
+    "source": "Zacks",
+    "via": "yahoo",
+    "title": "Are You Looking for a Top Momentum Pick? Why Humana (HUM) is a Great Choice",
+    "tags": [
+     "HUM"
+    ],
+    "story": false
+   },
+   {
+    "at": "3:02 PM ET",
+    "source": "GuruFocus.com",
+    "via": "yahoo",
+    "title": "Alan Fournier's Top Q3 2026 Move: Humana Inc at a 5.79% Portfolio Impact",
+    "tags": [
+     "HUM",
+     "MSFT"
+    ],
+    "story": false
+   }
+  ],
+  "RPD": [
+   {
+    "at": "Nov 13 9:10 PM ET",
+    "source": "Simply Wall St.",
+    "via": "yahoo",
+    "title": "Is Rapid7 (RPD) Overvalued After Its Q3 Earnings Beat?",
+    "tags": [
+     "RPD"
+    ],
+    "story": false
+   },
+   {
+    "at": "Nov 14 9:02 PM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "SIG Maintains Rapid7 Hold Rating and Raises Price Target to $16",
+    "tags": [
+     "RPD"
+    ],
+    "story": false
+   }
+  ],
+  "ADBE": [
+   {
+    "at": "Nov 13 4:45 PM ET",
+    "source": "Zacks",
+    "via": "yahoo",
+    "title": "Adobe Systems (ADBE) Rises As Market Takes a Dip: Key Facts",
+    "tags": [
+     "ADBE"
+    ],
+    "story": false
+   },
+   {
+    "at": "Nov 14 11:00 AM ET",
+    "source": "The Wall Street Journal",
+    "via": "yahoo",
+    "title": "How I Used AI to Make My Grandson a Children\u2019s Book for Less Than $200",
+    "tags": [
+     "ADBE"
+    ],
+    "story": false
+   },
+   {
+    "at": "Nov 14 2:02 PM ET",
+    "source": "Motley Fool",
+    "via": "yahoo",
+    "title": "Accenture vs. Adobe: Which Technology Stock Is a Better Buy for 2027?",
+    "tags": [
+     "ACN",
+     "ADBE"
+    ],
+    "story": false
+   },
+   {
+    "at": "6:31 AM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Adobe Highlights C2PA Standards at Adobe MAX 2026",
+    "tags": [
+     "ADBE"
+    ],
+    "story": false
+   },
+   {
+    "at": "8:05 AM ET",
+    "source": "PR Newswire",
+    "via": "yahoo",
+    "title": "Holiday Shipping Tests Where AI Should Hand Off to Human Support",
+    "tags": [
+     "ADBE"
+    ],
+    "story": false
+   },
+   {
+    "at": "1:59 PM ET",
+    "source": "Trefis",
+    "via": "yahoo",
+    "title": "How Much Should One Lagging Number Worry Autodesk Stock Holders?",
+    "tags": [
+     "ADSK",
+     "PTC",
+     "TRMB",
+     "BSY",
+     "ADBE",
+     "SNPS",
+     "QTWO"
+    ],
+    "story": false
+   },
+   {
+    "at": "2:01 PM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Monotype Launches Brand Font Panel for Adobe Creative Apps",
+    "tags": [
+     "ADBE"
+    ],
+    "story": false
+   },
+   {
+    "at": "3:13 PM ET",
+    "source": "TheStreet",
+    "via": "yahoo",
+    "title": "BTIG sends blunt message on Adobe stock after MAX event",
+    "tags": [
+     "ADBE"
+    ],
+    "story": false
+   }
+  ],
+  "TXN": [
+   {
+    "at": "Nov 13 8:03 PM ET",
+    "source": "Trefis",
+    "via": "yahoo",
+    "title": "Why Did Texas Instruments Stock Beat NXP Over Five Years?",
+    "tags": [
+     "NXPI",
+     "TXN",
+     "AMKR",
+     "ADI",
+     "MCHP",
+     "ON",
+     "QCOM"
+    ],
+    "story": false
+   },
+   {
+    "at": "6:42 AM ET",
+    "source": "Trefis",
+    "via": "yahoo",
+    "title": "If Phone Sales Keep Shrinking, What Happens To Your Qualcomm Stock?",
+    "tags": [
+     "QCOM",
+     "AVGO",
+     "NVDA",
+     "INTC",
+     "TXN",
+     "AMD"
+    ],
+    "story": false
+   },
+   {
+    "at": "7:31 AM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Texas Instruments Launches TCAN6062 CAN XL Transceivers",
+    "tags": [
+     "TXN"
+    ],
+    "story": false
+   },
+   {
+    "at": "8:30 AM ET",
+    "source": "Zacks",
+    "via": "yahoo",
+    "title": "Is Texas Instruments (TXN) a Buy as Wall Street Analysts Look Optimistic?",
+    "tags": [
+     "TXN"
+    ],
+    "story": false
+   },
+   {
+    "at": "1:26 PM ET",
+    "source": "PR Newswire",
+    "via": "yahoo",
+    "title": "TI CEO Haviv Ilan to speak at UBS investor conference",
+    "tags": [
+     "TXN"
+    ],
+    "story": false
+   },
+   {
+    "at": "2:01 PM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Texas Instruments CEO Haviv Ilan to Speak at UBS Investor Conference",
+    "tags": [
+     "TXN"
+    ],
+    "story": false
+   },
+   {
+    "at": "2:01 PM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Mubadala Investment Co. Increases Stake in Texas Instruments",
+    "tags": [
+     "TXN"
+    ],
+    "story": false
+   }
+  ],
+  "IOT": [
+   {
+    "at": "6:29 AM ET",
+    "source": "MT Newswires",
+    "via": "yahoo",
+    "title": "Truist Securities Adjusts Price Target on Samsara to $41 From $48, Keeps Hold Rating",
+    "tags": [
+     "IOT"
+    ],
+    "story": false
+   },
+   {
+    "at": "7:33 AM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "Truist Securities Adjusts Price Target on Samsara to $41 From $48",
+    "tags": [
+     "IOT"
+    ],
+    "story": false
+   },
+   {
+    "at": "1:21 PM ET",
+    "source": "Insider Monkey",
+    "via": "yahoo",
+    "title": "Strong Demand for Sensor-Based Tools Drove Samsara\u2019s (IOT) Outperformance",
+    "tags": [
+     "IOT"
+    ],
+    "story": false
+   }
+  ],
+  "CGON": [
+   {
+    "at": "8:00 AM ET",
+    "source": "GlobeNewswire",
+    "via": "yahoo",
+    "title": "PIVOT-006 Phase 3 Registrational Trial Demonstrates Unprecedented Improvement in Recurrence-Free Survival (RFS) for Intermediate-Risk and High-Grade Ta Non-Muscle Invasive Bladder Cancer (NMIBC)",
+    "tags": [
+     "CGON"
+    ],
+    "story": false
+   },
+   {
+    "at": "9:06 AM ET",
+    "source": "MT Newswires",
+    "via": "yahoo",
+    "title": "CG Oncology Says Phase 3 Trial in Intermediate Risk, High Grade Ta Bladder Cancer Meets Primary Endpoint",
+    "tags": [
+     "CGON"
+    ],
+    "story": false
+   },
+   {
+    "at": "9:32 AM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "CG Oncology Announces Positive Topline Results from Phase 3 PIVOT-006 Trial",
+    "tags": [
+     "CGON"
+    ],
+    "story": false
+   },
+   {
+    "at": "11:02 AM ET",
+    "source": "InvestorsHub",
+    "via": "yahoo",
+    "title": "CG Oncology Reports 68% Reduction in Bladder Cancer Recurrence Risk in Phase 3 PIVOT-006 Trial",
+    "tags": [
+     "CGON"
+    ],
+    "story": false
+   },
+   {
+    "at": "11:03 AM ET",
+    "source": "Clinical Trials Arena",
+    "via": "yahoo",
+    "title": "CG Oncology\u2019s stock up as gene therapy gains second win in NMIBC",
+    "tags": [
+     "CGON"
+    ],
+    "story": true
+   },
+   {
+    "at": "12:00 PM ET",
+    "source": "BioPharma Dive",
+    "via": "yahoo",
+    "title": "CG Oncology drug delivers \u2018exceptional\u2019 results in key bladder cancer trial",
+    "tags": [
+     "CGON"
+    ],
+    "story": false
+   },
+   {
+    "at": "12:37 PM ET",
+    "source": "Barrons.com",
+    "via": "yahoo",
+    "title": "This Biotech Stock Is Up 291% From Its IPO Price. It\u2019s On Pace for a Record Closing High.",
+    "tags": [
+     "CGON"
+    ],
+    "story": false
+   },
+   {
+    "at": "1:01 PM ET",
+    "source": "Schaeffer's Investment Research",
+    "via": "yahoo",
+    "title": "2 Cancer-Drug Developers Seeing Unusual Options Volume",
+    "tags": [
+     "SMMT",
+     "CGON"
+    ],
+    "story": false
+   },
+   {
+    "at": "2:15 PM ET",
+    "source": "MT Newswires",
+    "via": "yahoo",
+    "title": "Top Midday Gainers",
+    "tags": [
+     "GMM",
+     "TSN",
+     "ANT",
+     "CGON"
+    ],
+    "story": false
+   }
+  ],
+  "NTSK": [
+   {
+    "at": "8:20 AM ET",
+    "source": "Zacks",
+    "via": "yahoo",
+    "title": "Perion Network (PERI) Misses Q3 Earnings and Revenue Estimates",
+    "tags": [
+     "PERI",
+     "NTSK"
+    ],
+    "story": false
+   },
+   {
+    "at": "2:02 PM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "TD Cowen Raises Netskope Price Target to $25.00",
+    "tags": [
+     "NTSK"
+    ],
+    "story": false
+   }
+  ],
+  "HUBS": [
+   {
+    "at": "6:00 AM ET",
+    "source": "Bloomberg",
+    "via": "yahoo",
+    "title": "AI Startup Dreamteam Raises Capital to Challenge Salesforce, SAP",
+    "tags": [
+     "CRM",
+     "SAP",
+     "HUBS"
+    ],
+    "story": false
+   },
+   {
+    "at": "7:30 AM ET",
+    "source": "TechCrunch",
+    "via": "yahoo",
+    "title": "Freshworks alums raise $53M to take on Salesforce, HubSpot with AI-native CRM",
+    "tags": [
+     "CRM",
+     "HUBS"
+    ],
+    "story": false
+   },
+   {
+    "at": "2:02 PM ET",
+    "source": "fiscal.ai",
+    "via": "alpaca",
+    "title": "HubSpot Director Brian Halligan Increases Stake in Company Stock",
+    "tags": [
+     "HUBS"
+    ],
+    "story": false
+   },
+   {
+    "at": "2:46 PM ET",
+    "source": "GuruFocus.com",
+    "via": "yahoo",
+    "title": "CEO Halligan Backs His HubSpot Turnaround With $5 Million of Stock",
+    "tags": [
+     "HUBS",
+     "TFC"
+    ],
+    "story": false
+   }
+  ],
+  "ACN": [
+   {
+    "at": "Nov 14 4:12 AM ET",
+    "source": "Simply Wall St.",
+    "via": "yahoo",
+    "title": "Cadence Stock And 2 AI Software Names With Stronger Governance Profiles",
+    "tags": [
+     "CDNS",
+     "NVDA",
+     "IBM",
+     "ACN"
+    ],
+    "story": false
+   },
+   {
+    "at": "Nov 14 2:02 PM ET",
+    "source": "Motley Fool",
+    "via": "yahoo",
+    "title": "Accenture vs. Adobe: Which Technology Stock Is a Better Buy for 2027?",
+    "tags": [
+     "ACN",
+     "ADBE"
+    ],
+    "story": false
+   },
+   {
+    "at": "6:02 AM ET",
+    "source": "GuruFocus.com",
+    "via": "yahoo",
+    "title": "ETFs Are Net Sellers of Accenture (ACN) on Nov. 12",
+    "tags": [
+     "ACN",
+     "SPY"
+    ],
+    "story": false
+   },
+   {
+    "at": "6:05 AM ET",
+    "source": "GuruFocus.com",
+    "via": "yahoo",
+    "title": "What Invesco S&P 500 Equal Weight ETF (RSP) Bought: Moderna Leads on Nov. 12",
+    "tags": [
+     "MRNA",
+     "PTC",
+     "RSP",
+     "NVR",
+     "ACN",
+     "HAS"
+    ],
+    "story": false
+   },
+   {
+    "at": "9:00 AM ET",
+    "source": "Fortune",
+    "via": "yahoo",
+    "title": "Most work doesn\u2019t need the Ferrari of AI, Wharton and Accenture find, but companies may be paying for it anyway",
+    "tags": [
+     "ACN"
+    ],
+    "story": false
+   },
+   {
+    "at": "10:35 AM ET",
+    "source": "GlobeNewswire",
+    "via": "yahoo",
+    "title": "Value-Added Reseller (VAR) Market 2026-2030: Size, Trends and Forecast | Capitalize on AI, Cloud, Cybersecurity and Managed Services with Accenture, NTT DATA, TCS and Capgemini",
+    "tags": [
+     "ACN",
+     "TCS.NS",
+     "CAP.PA"
+    ],
+    "story": false
+   }
+  ],
+  "CRL": [
+   {
+    "at": "10:40 AM ET",
+    "source": "GlobeNewswire",
+    "via": "yahoo",
+    "title": "Mice Model - Global Strategic Business Report 2026: Capitalize on a $3.4 Billion Market by 2032 as Charles River, LabCorp, Taconic Biosciences and The Jackson Laboratory Accelerate CRISPR",
+    "tags": [
+     "CRL"
+    ],
+    "story": false
+   },
+   {
+    "at": "10:41 AM ET",
+    "source": "GlobeNewswire",
+    "via": "yahoo",
+    "title": "Humanized Mouse and Rat Model - Global Strategic Business Report 2026: Capitalize on 9.7% CAGR to $231.6M by 2032 as Charles River, Biocytogen, Taconic and The Jackson Laboratory reshape drug R&D",
+    "tags": [
+     "CRL"
+    ],
+    "story": false
+   },
+   {
+    "at": "10:45 AM ET",
+    "source": "GlobeNewswire",
+    "via": "yahoo",
+    "title": "Non-Animal Alternative Testing - Global Strategic Business Report 2026: Capitalize on 13.3% CAGR and $4.7B by 2032 as Abbott, Charles River, Emulate, Evotec, and Bio-Rad Reshape Testing",
+    "tags": [
+     "ABT",
+     "CRL",
+     "EVO"
+    ],
+    "story": false
+   },
+   {
+    "at": "1:00 PM ET",
+    "source": "PR Newswire",
+    "via": "yahoo",
+    "title": "Frontage Announces Proposed Privatization and Asset Restructuring to Unlock Shareholder Value and Fuel Strategic Growth",
+    "tags": [
+     "1521.HK",
+     "CRL"
+    ],
+    "story": false
+   }
+  ],
+  "DNTH": [],
+  "FRSH": [
+   {
+    "at": "Nov 15 7:19 PM ET",
+    "source": "Simply Wall St.",
+    "via": "yahoo",
+    "title": "Freshworks And 2 Other AI Stocks To Watch",
+    "tags": [
+     "HTFL",
+     "FRSH",
+     "INTA"
+    ],
+    "story": false
+   }
+  ],
+  "DOCU": [
+   {
+    "at": "12:16 AM ET",
+    "source": "Simply Wall St.",
+    "via": "yahoo",
+    "title": "3 Stocks Tied To Governance Spending As Nvidia Fallout Puts Compliance In Focus",
+    "tags": [
+     "NVDA",
+     "BL",
+     "LZ",
+     "DOCU"
+    ],
+    "story": false
+   }
+  ],
+  "ICLR": [
+   {
+    "at": "2:00 PM ET",
+    "source": "GuruFocus.com",
+    "via": "yahoo",
+    "title": "Glenn Greenberg's Top Q3 2026 Move: Intuit Inc at a 6.49% Portfolio Impact",
+    "tags": [
+     "ICLR"
+    ],
+    "story": false
+   }
+  ],
+  "KVYO": [],
+  "MD": [
+   {
+    "at": "Nov 13 4:10 PM ET",
+    "source": "Insider Monkey",
+    "via": "yahoo",
+    "title": "Pediatrix (MD) Raised Its Outlook Floor. Why Did Mizuho Downgrade?",
+    "tags": [
+     "MD",
+     "^GSPC",
+     "^IXIC",
+     "CL=F",
+     "^DJI"
+    ],
+    "story": false
+   }
+  ],
+  "MPWR": [
+   {
+    "at": "Nov 14 2:50 PM ET",
+    "source": "Motley Fool",
+    "via": "yahoo",
+    "title": "Monolithic Power: 3 Key Takeaways for Long-Term Investors",
+    "tags": [
+     "MPWR"
+    ],
+    "story": false
+   },
+   {
+    "at": "6:03 AM ET",
+    "source": "GuruFocus.com",
+    "via": "yahoo",
+    "title": "Monolithic Power (MPWR) Sees $56.7 Million in Net ETF Selling on Nov. 12",
+    "tags": [
+     "MPWR",
+     "SOXX",
+     "SPY"
+    ],
+    "story": false
+   }
+  ],
+  "TSCO": [],
+  "UHS": [
+   {
+    "at": "Nov 15 11:12 AM ET",
+    "source": "MarketBeat",
+    "via": "yahoo",
+    "title": "Universal Health Services Bets on Hospital Recovery as Medicaid Payments Fall in 2027",
+    "tags": [
+     "UHS"
+    ],
+    "story": false
+   }
+  ],
+  "TYL": [
+   {
+    "at": "Nov 13 4:06 PM ET",
+    "source": "Trefis",
+    "via": "yahoo",
+    "title": "Why Did Axon Stock Fall?",
+    "tags": [
+     "AXON",
+     "^GSPC",
+     "MSI",
+     "TYL",
+     "CDRE",
+     "BYRN",
+     "WRAP",
+     "SPGI"
+    ],
+    "story": false
+   }
+  ]
+ },
+ "waiting_after_alerts": [
+  "CNC",
+  "MOH",
+  "TSCO",
+  "grp:Analog & Auto Semis",
+  "grp:Cybersecurity",
+  "grp:Diagnostics & Research",
+  "grp:Enterprise SaaS",
+  "grp:IT Services & Consulting",
+  "grp:Managed Care",
+  "grp:Medical Care Facilities",
+  "grp:Small & Mid-cap Biotech",
+  "grp:Software: Collaboration & Communications",
+  "grp:Software: Marketing & Ad Tech",
+  "grp:Software: Vertical & Industry"
+ ],
+ "never_found": [
+  "TSCO",
+  "grp:Analog & Auto Semis",
+  "grp:Cybersecurity",
+  "grp:Diagnostics & Research",
+  "grp:Enterprise SaaS",
+  "grp:IT Services & Consulting",
+  "grp:Medical Care Facilities",
+  "grp:Small & Mid-cap Biotech",
+  "grp:Software: Collaboration & Communications",
+  "grp:Software: Marketing & Ad Tech",
+  "grp:Software: Vertical & Industry"
+ ]
+}

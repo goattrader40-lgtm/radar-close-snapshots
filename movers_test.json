@@ -1,0 +1,456 @@
+{
+ "full_update": "2026-11-17T10:30:21-05:00",
+ "levels_before": 509,
+ "rounds": [
+  {
+   "movers_s": 0.6,
+   "levels_s": 0.1,
+   "movers": "movers: 518 of 518 movers read, 518 rows fresher than the 10:30 update",
+   "levels": "levels: 0 opening ranges read (0 asked, 5 min finished), 509 today",
+   "fast_at": "2026-11-17T10:33:27-05:00",
+   "fast_n": 518,
+   "changed": 517,
+   "biggest": [
+    {
+     "sym": "SLS",
+     "price_full": 19.19,
+     "price_now": 19.715,
+     "chg_full": 156.894,
+     "chg_now": 163.922
+    },
+    {
+     "sym": "SWRD",
+     "price_full": 2.83,
+     "price_now": 2.69,
+     "chg_full": 2.166,
+     "chg_now": -2.888
+    },
+    {
+     "sym": "BRUN",
+     "price_full": 4.79,
+     "price_now": 4.6714,
+     "chg_full": 0.63,
+     "chg_now": -1.854
+    },
+    {
+     "sym": "ENHA",
+     "price_full": 6.3,
+     "price_now": 6.155,
+     "chg_full": 7.509,
+     "chg_now": 5.034
+    },
+    {
+     "sym": "NUAI",
+     "price_full": 3.205,
+     "price_now": 3.135,
+     "chg_full": 3.055,
+     "chg_now": 0.804
+    },
+    {
+     "sym": "ASPE",
+     "price_full": 12.42,
+     "price_now": 12.15,
+     "chg_full": 1.554,
+     "chg_now": -0.652
+    },
+    {
+     "sym": "XTND",
+     "price_full": 1.46,
+     "price_now": 1.43,
+     "chg_full": -0.68,
+     "chg_now": -2.721
+    },
+    {
+     "sym": "ACMR",
+     "price_full": 43.74,
+     "price_now": 42.9,
+     "chg_full": -0.591,
+     "chg_now": -2.5
+    },
+    {
+     "sym": "IESC",
+     "price_full": 166.22,
+     "price_now": 163.2201,
+     "chg_full": 0.193,
+     "chg_now": -1.615
+    },
+    {
+     "sym": "TSAT",
+     "price_full": 44.54,
+     "price_now": 43.77,
+     "chg_full": 3.294,
+     "chg_now": 1.5
+    },
+    {
+     "sym": "KEEL",
+     "price_full": 1.76,
+     "price_now": 1.73,
+     "chg_full": 1.149,
+     "chg_now": -0.575
+    },
+    {
+     "sym": "WOLF",
+     "price_full": 23.245,
+     "price_now": 22.8582,
+     "chg_full": 2.627,
+     "chg_now": 0.919
+    }
+   ]
+  },
+  {
+   "movers_s": 0.6,
+   "levels_s": 0.1,
+   "movers": "movers: 517 of 517 movers read, 517 rows fresher than the 10:30 update",
+   "levels": "levels: 0 opening ranges read (0 asked, 5 min finished), 509 today",
+   "fast_at": "2026-11-17T10:34:27-05:00",
+   "fast_n": 517,
+   "changed": 516,
+   "biggest": [
+    {
+     "sym": "SLS",
+     "price_full": 19.19,
+     "price_now": 19.845,
+     "chg_full": 156.894,
+     "chg_now": 165.663
+    },
+    {
+     "sym": "SWRD",
+     "price_full": 2.83,
+     "price_now": 2.69,
+     "chg_full": 2.166,
+     "chg_now": -2.888
+    },
+    {
+     "sym": "NUAI",
+     "price_full": 3.205,
+     "price_now": 3.0886,
+     "chg_full": 3.055,
+     "chg_now": -0.688
+    },
+    {
+     "sym": "TOP",
+     "price_full": 16.8325,
+     "price_now": 17.26,
+     "chg_full": 1.584,
+     "chg_now": 4.164
+    },
+    {
+     "sym": "ENHA",
+     "price_full": 6.3,
+     "price_now": 6.155,
+     "chg_full": 7.509,
+     "chg_now": 5.034
+    },
+    {
+     "sym": "ASPE",
+     "price_full": 12.42,
+     "price_now": 12.15,
+     "chg_full": 1.554,
+     "chg_now": -0.654
+    },
+    {
+     "sym": "BRUN",
+     "price_full": 4.79,
+     "price_now": 4.69,
+     "chg_full": 0.63,
+     "chg_now": -1.471
+    },
+    {
+     "sym": "PROK",
+     "price_full": 1.05,
+     "price_now": 1.07,
+     "chg_full": 0.962,
+     "chg_now": 2.912
+    },
+    {
+     "sym": "TSAT",
+     "price_full": 44.54,
+     "price_now": 43.77,
+     "chg_full": 3.294,
+     "chg_now": 1.507
+    },
+    {
+     "sym": "KEEL",
+     "price_full": 1.76,
+     "price_now": 1.73,
+     "chg_full": 1.149,
+     "chg_now": -0.573
+    },
+    {
+     "sym": "RCEL",
+     "price_full": 16.195,
+     "price_now": 15.94,
+     "chg_full": 6.404,
+     "chg_now": 4.731
+    },
+    {
+     "sym": "NWCL",
+     "price_full": 3.93,
+     "price_now": 3.865,
+     "chg_full": 0.899,
+     "chg_now": -0.77
+    }
+   ]
+  },
+  {
+   "movers_s": 0.6,
+   "levels_s": 0.1,
+   "movers": "movers: 518 of 518 movers read, 518 rows fresher than the 10:30 update",
+   "levels": "levels: 0 opening ranges read (0 asked, 5 min finished), 509 today",
+   "fast_at": "2026-11-17T10:35:27-05:00",
+   "fast_n": 518,
+   "changed": 517,
+   "biggest": [
+    {
+     "sym": "SLS",
+     "price_full": 19.19,
+     "price_now": 19.68,
+     "chg_full": 156.894,
+     "chg_now": 163.454
+    },
+    {
+     "sym": "SWRD",
+     "price_full": 2.83,
+     "price_now": 2.69,
+     "chg_full": 2.166,
+     "chg_now": -2.888
+    },
+    {
+     "sym": "NUAI",
+     "price_full": 3.205,
+     "price_now": 3.07,
+     "chg_full": 3.055,
+     "chg_now": -1.286
+    },
+    {
+     "sym": "BRUN",
+     "price_full": 4.79,
+     "price_now": 4.64,
+     "chg_full": 0.63,
+     "chg_now": -2.521
+    },
+    {
+     "sym": "TOP",
+     "price_full": 16.8325,
+     "price_now": 17.26,
+     "chg_full": 1.584,
+     "chg_now": 4.164
+    },
+    {
+     "sym": "ENHA",
+     "price_full": 6.3,
+     "price_now": 6.155,
+     "chg_full": 7.509,
+     "chg_now": 5.034
+    },
+    {
+     "sym": "NWCL",
+     "price_full": 3.93,
+     "price_now": 3.85,
+     "chg_full": 0.899,
+     "chg_now": -1.155
+    },
+    {
+     "sym": "TSAT",
+     "price_full": 44.54,
+     "price_now": 43.7,
+     "chg_full": 3.294,
+     "chg_now": 1.345
+    },
+    {
+     "sym": "MFP",
+     "price_full": 44.735,
+     "price_now": 43.89,
+     "chg_full": 3.005,
+     "chg_now": 1.059
+    },
+    {
+     "sym": "AEVA",
+     "price_full": 10.305,
+     "price_now": 10.11,
+     "chg_full": 2.742,
+     "chg_now": 0.798
+    },
+    {
+     "sym": "PROK",
+     "price_full": 1.05,
+     "price_now": 1.07,
+     "chg_full": 0.962,
+     "chg_now": 2.885
+    },
+    {
+     "sym": "RZLV",
+     "price_full": 1.095,
+     "price_now": 1.075,
+     "chg_full": 1.389,
+     "chg_now": -0.465
+    }
+   ]
+  }
+ ],
+ "fresh_levels": {
+  "seconds": 3.2,
+  "out": "levels: 209 opening ranges read (214 asked, 5 min finished), 209 today",
+  "rows": 209,
+  "in_both": 205,
+  "high5_differs": 16,
+  "differs": [
+   [
+    "SMWB",
+    8.9,
+    9.0
+   ],
+   [
+    "BRSP",
+    3.39,
+    3.41
+   ],
+   [
+    "NEWP",
+    4.86,
+    4.87
+   ],
+   [
+    "THM",
+    1.28,
+    1.29
+   ],
+   [
+    "SSMR",
+    13.3,
+    13.405
+   ],
+   [
+    "LUXE",
+    11.305,
+    11.38
+   ],
+   [
+    "HUYA",
+    2.18,
+    2.21
+   ],
+   [
+    "ECG",
+    84.855,
+    85.35
+   ],
+   [
+    "AVAL",
+    3.9,
+    3.95
+   ],
+   [
+    "BKV",
+    19.426,
+    19.44
+   ],
+   [
+    "OGC",
+    26.425,
+    26.64
+   ],
+   [
+    "BWXT",
+    118.375,
+    118.5513
+   ],
+   [
+    "TGS",
+    20.655,
+    20.71
+   ],
+   [
+    "GGB",
+    4.305,
+    4.31
+   ],
+   [
+    "NUE",
+    256.79,
+    256.99
+   ],
+   [
+    "WRBY",
+    27.34,
+    27.4
+   ]
+  ],
+  "no_1min": 2,
+  "no_2min": 0,
+  "sample": {
+   "SLS": [
+    24.89,
+    21.0,
+    24.17,
+    24.17
+   ],
+   "LUCK": [
+    4.48,
+    4.0,
+    4.35,
+    4.48
+   ],
+   "SCZM": [
+    7.495,
+    6.81,
+    7.13,
+    7.3751
+   ],
+   "RMIX": [
+    5.865,
+    5.331,
+    5.435,
+    5.435
+   ],
+   "FUBO": [
+    8.1845,
+    7.5353,
+    7.95,
+    7.998
+   ],
+   "SMWB": [
+    9.0,
+    8.5,
+    9.0,
+    9.0
+   ],
+   "ACM": [
+    83.55,
+    78.4006,
+    82.68,
+    83.55
+   ],
+   "PCT": [
+    1.9,
+    1.79,
+    1.89,
+    1.89
+   ],
+   "UNFI": [
+    52.3,
+    50.82,
+    51.76,
+    51.76
+   ],
+   "ESLT": [
+    732.6981,
+    723.26,
+    728.0,
+    728.0
+   ],
+   "AS": [
+    31.0761,
+    29.63,
+    30.5,
+    30.5
+   ],
+   "IAM": [
+    12.516,
+    11.98,
+    12.465,
+    12.516
+   ]
+  }
+ }
+}

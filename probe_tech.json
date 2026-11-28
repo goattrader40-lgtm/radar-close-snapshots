@@ -1,0 +1,10073 @@
+{
+ "window": [
+  "2026-05-14",
+  "2026-11-03"
+ ],
+ "floor": 0.6,
+ "tech_total": 561,
+ "uncovered": 231,
+ "too_short": [
+  "BSP",
+  "CSQR",
+  "HONA",
+  "IOND",
+  "LFTO",
+  "QNT",
+  "SKHY",
+  "SPCX"
+ ],
+ "new_groups": [
+  {
+   "members": [
+    [
+     0.75,
+     "GE"
+    ],
+    [
+     0.73,
+     "HWM"
+    ],
+    [
+     0.68,
+     "WWD"
+    ],
+    [
+     0.67,
+     "SARO"
+    ],
+    [
+     0.67,
+     "HEI"
+    ],
+    [
+     0.62,
+     "VSEC"
+    ],
+    [
+     0.61,
+     "HXL"
+    ]
+   ],
+   "strength": 0.52,
+   "industries": [
+    [
+     "Aerospace",
+     2
+    ],
+    [
+     "Metal Fabrications",
+     1
+    ],
+    [
+     "Industrial Machinery/Components",
+     1
+    ]
+   ]
+  },
+  {
+   "members": [
+    [
+     0.75,
+     "ATEN"
+    ],
+    [
+     0.71,
+     "NTCT"
+    ],
+    [
+     0.67,
+     "FSLY"
+    ],
+    [
+     0.66,
+     "RDWR"
+    ],
+    [
+     0.66,
+     "FFIV"
+    ],
+    [
+     0.62,
+     "AKAM"
+    ]
+   ],
+   "strength": 0.54,
+   "industries": [
+    [
+     "Computer Communications Equipment",
+     2
+    ],
+    [
+     "Business Services",
+     2
+    ],
+    [
+     "EDP Services",
+     1
+    ]
+   ]
+  },
+  {
+   "members": [
+    [
+     0.69,
+     "ALGN"
+    ],
+    [
+     0.67,
+     "NVST"
+    ],
+    [
+     0.63,
+     "XRAY"
+    ]
+   ],
+   "strength": 0.59,
+   "industries": [
+    [
+     "Medical/Dental Instruments",
+     2
+    ],
+    [
+     "Industrial Specialties",
+     1
+    ]
+   ]
+  }
+ ],
+ "stocks": {
+  "META": {
+   "name": "Meta Platforms Inc.",
+   "mcap_b": 1587.5,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.21,
+     "theme: Crypto & Digital Assets"
+    ],
+    [
+     0.19,
+     "group: Crypto Treasuries"
+    ],
+    [
+     0.18,
+     "theme: Apparel & Mall Retail"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.35,
+     "PSUS"
+    ],
+    [
+     0.33,
+     "CVNA"
+    ],
+    [
+     0.32,
+     "RDDT"
+    ],
+    [
+     0.31,
+     "APP"
+    ],
+    [
+     0.3,
+     "SNAP"
+    ]
+   ],
+   "new_group": null
+  },
+  "ORCL": {
+   "name": "Oracle Corporation",
+   "mcap_b": 381.63,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.48,
+     "theme: AI Servers & ODMs"
+    ],
+    [
+     0.48,
+     "group: AI Servers"
+    ],
+    [
+     0.48,
+     "group: AI Cloud & Data-Center Hosting"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.6,
+     "CRWV"
+    ],
+    [
+     0.54,
+     "NBIS"
+    ],
+    [
+     0.51,
+     "DOCN"
+    ],
+    [
+     0.49,
+     "CLS"
+    ],
+    [
+     0.49,
+     "HPE"
+    ]
+   ],
+   "new_group": null
+  },
+  "GE": {
+   "name": "GE Aerospace",
+   "mcap_b": 331.34,
+   "sector": "Industrials",
+   "industry": "Consumer Electronics/Appliances",
+   "best": [
+    [
+     0.45,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.44,
+     "theme: Airlines"
+    ],
+    [
+     0.43,
+     "group: Airlines"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.63,
+     "SARO"
+    ],
+    [
+     0.62,
+     "HWM"
+    ],
+    [
+     0.61,
+     "TDG"
+    ],
+    [
+     0.61,
+     "VSEC"
+    ],
+    [
+     0.6,
+     "HEI"
+    ]
+   ],
+   "new_group": 0
+  },
+  "NFLX": {
+   "name": "Netflix Inc.",
+   "mcap_b": 260.42,
+   "sector": "Communication Services",
+   "industry": "Consumer Electronics/Video Chains",
+   "best": [
+    [
+     0.53,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.52,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.52,
+     "group: Online Marketplaces & Listings"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.58,
+     "SPOT"
+    ],
+    [
+     0.53,
+     "DIS"
+    ],
+    [
+     0.52,
+     "CSGP"
+    ],
+    [
+     0.52,
+     "MNTN"
+    ],
+    [
+     0.51,
+     "MRSH"
+    ]
+   ],
+   "new_group": null
+  },
+  "IBM": {
+   "name": "International Business Machines Corporation",
+   "mcap_b": 236.11,
+   "sector": "Information Technology",
+   "industry": "Computer Manufacturing",
+   "best": [
+    [
+     0.55,
+     "group: IT Consulting & Outsourcing"
+    ],
+    [
+     0.54,
+     "theme: IT Services & Consulting"
+    ],
+    [
+     0.51,
+     "group: Software: Majors"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.55,
+     "CRM"
+    ],
+    [
+     0.54,
+     "KD"
+    ],
+    [
+     0.53,
+     "DXC"
+    ],
+    [
+     0.53,
+     "TDC"
+    ],
+    [
+     0.51,
+     "CDW"
+    ]
+   ],
+   "new_group": null
+  },
+  "CCZ": {
+   "name": "Comcast Holdings ZONES",
+   "mcap_b": 225.17,
+   "sector": "Communication Services",
+   "industry": "Cable & Other Pay Television Services",
+   "best": [
+    [
+     0.27,
+     "group: Lumber & Wood Production"
+    ],
+    [
+     0.25,
+     "theme: Biotech"
+    ],
+    [
+     0.25,
+     "group: Drug Manufacturers - General"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.35,
+     "KMX"
+    ],
+    [
+     0.31,
+     "RVLV"
+    ],
+    [
+     0.3,
+     "PAHC"
+    ],
+    [
+     0.29,
+     "SLBT"
+    ],
+    [
+     0.29,
+     "ELF"
+    ]
+   ],
+   "new_group": null
+  },
+  "DIS": {
+   "name": "Walt Disney Company (The)",
+   "mcap_b": 197.25,
+   "sector": "Communication Services",
+   "industry": "Services-Misc. Amusement & Recreation",
+   "best": [
+    [
+     0.54,
+     "theme: Tobacco"
+    ],
+    [
+     0.53,
+     "theme: Beverages"
+    ],
+    [
+     0.5,
+     "group: Tobacco"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.58,
+     "DEO"
+    ],
+    [
+     0.53,
+     "NFLX"
+    ],
+    [
+     0.51,
+     "BKNG"
+    ],
+    [
+     0.5,
+     "UL"
+    ],
+    [
+     0.49,
+     "VSNT"
+    ]
+   ],
+   "new_group": null
+  },
+  "SHOP": {
+   "name": "Shopify Inc.",
+   "mcap_b": 184.74,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.52,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.52,
+     "group: Software: Marketing & Ad Tech"
+    ],
+    [
+     0.51,
+     "theme: Enterprise SaaS"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.55,
+     "DT"
+    ],
+    [
+     0.51,
+     "PCTY"
+    ],
+    [
+     0.49,
+     "LSPD"
+    ],
+    [
+     0.48,
+     "RNG"
+    ],
+    [
+     0.48,
+     "TEAM"
+    ]
+   ],
+   "new_group": null
+  },
+  "SONY": {
+   "name": "Sony Group Corporation",
+   "mcap_b": 149.64,
+   "sector": "Consumer Discretionary",
+   "industry": "Consumer Electronics/Appliances",
+   "best": [
+    [
+     0.53,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.5,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.49,
+     "group: Software: Majors"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.5,
+     "DSGX"
+    ],
+    [
+     0.49,
+     "ADBE"
+    ],
+    [
+     0.49,
+     "ADP"
+    ],
+    [
+     0.48,
+     "SAP"
+    ],
+    [
+     0.48,
+     "LYFT"
+    ]
+   ],
+   "new_group": null
+  },
+  "MNST": {
+   "name": "Monster Beverage Corporation",
+   "mcap_b": 138.64,
+   "sector": "Consumer Staples",
+   "industry": "Beverages (Production/Distribution)",
+   "best": [
+    [
+     0.6,
+     "group: Beverages - Non-Alcoholic"
+    ],
+    [
+     0.53,
+     "theme: Beverages"
+    ],
+    [
+     0.46,
+     "group: Household & Personal Products"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "KDP"
+    ],
+    [
+     0.55,
+     "KO"
+    ],
+    [
+     0.51,
+     "CCEP"
+    ],
+    [
+     0.49,
+     "UL"
+    ],
+    [
+     0.48,
+     "BALL"
+    ]
+   ],
+   "new_group": null
+  },
+  "BA": {
+   "name": "Boeing Company (The)",
+   "mcap_b": 137.33,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.38,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.35,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.33,
+     "theme: Consumer Lending"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "SARO"
+    ],
+    [
+     0.38,
+     "HII"
+    ],
+    [
+     0.37,
+     "RTX"
+    ],
+    [
+     0.36,
+     "EMBJ"
+    ],
+    [
+     0.36,
+     "COF"
+    ]
+   ],
+   "new_group": null
+  },
+  "SPOT": {
+   "name": "Spotify Technology S.A.",
+   "mcap_b": 126.48,
+   "sector": "Communication Services",
+   "industry": "Broadcasting",
+   "best": [
+    [
+     0.51,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.51,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.51,
+     "group: Online Marketplaces & Listings"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.58,
+     "NFLX"
+    ],
+    [
+     0.53,
+     "BRO"
+    ],
+    [
+     0.52,
+     "CSGP"
+    ],
+    [
+     0.51,
+     "MRSH"
+    ],
+    [
+     0.5,
+     "AJG"
+    ]
+   ],
+   "new_group": null
+  },
+  "CDNS": {
+   "name": "Cadence Design Systems Inc.",
+   "mcap_b": 88.83,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.44,
+     "theme: AI Networking"
+    ],
+    [
+     0.43,
+     "group: Networking Equipment"
+    ],
+    [
+     0.39,
+     "theme: AI Servers & ODMs"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.77,
+     "SNPS"
+    ],
+    [
+     0.45,
+     "NOK"
+    ],
+    [
+     0.41,
+     "ANET"
+    ],
+    [
+     0.4,
+     "AMBA"
+    ],
+    [
+     0.39,
+     "CEVA"
+    ]
+   ],
+   "new_group": null
+  },
+  "SNPS": {
+   "name": "Synopsys Inc.",
+   "mcap_b": 88.7,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.44,
+     "theme: AI Networking"
+    ],
+    [
+     0.44,
+     "group: Networking Equipment"
+    ],
+    [
+     0.43,
+     "group: Optical Networking & Photonics"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.77,
+     "CDNS"
+    ],
+    [
+     0.5,
+     "NOK"
+    ],
+    [
+     0.44,
+     "MTSI"
+    ],
+    [
+     0.44,
+     "SANM"
+    ],
+    [
+     0.43,
+     "VIAV"
+    ]
+   ],
+   "new_group": null
+  },
+  "HWM": {
+   "name": "Howmet Aerospace Inc.",
+   "mcap_b": 88.7,
+   "sector": "Industrials",
+   "industry": "Metal Fabrications",
+   "best": [
+    [
+     0.43,
+     "group: Specialty Industrial Machinery"
+    ],
+    [
+     0.39,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.38,
+     "theme: Industrial Automation"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.65,
+     "WWD"
+    ],
+    [
+     0.62,
+     "GE"
+    ],
+    [
+     0.61,
+     "CW"
+    ],
+    [
+     0.6,
+     "ATI"
+    ],
+    [
+     0.58,
+     "HXL"
+    ]
+   ],
+   "new_group": 0
+  },
+  "MELI": {
+   "name": "MercadoLibre Inc.",
+   "mcap_b": 84.27,
+   "sector": "Consumer Discretionary",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.47,
+     "theme: LatAm Fintech & Banks"
+    ],
+    [
+     0.44,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.35,
+     "theme: Fintech & Payments"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.5,
+     "DLO"
+    ],
+    [
+     0.49,
+     "PAGS"
+    ],
+    [
+     0.47,
+     "INTR"
+    ],
+    [
+     0.43,
+     "STNE"
+    ],
+    [
+     0.41,
+     "SE"
+    ]
+   ],
+   "new_group": null
+  },
+  "APP": {
+   "name": "Applovin Corporation",
+   "mcap_b": 82.16,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.3,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.27,
+     "group: Solar"
+    ],
+    [
+     0.27,
+     "group: Software: Cloud, Data & Observability"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.45,
+     "RDDT"
+    ],
+    [
+     0.43,
+     "OPRA"
+    ],
+    [
+     0.4,
+     "PUBM"
+    ],
+    [
+     0.36,
+     "UPST"
+    ],
+    [
+     0.36,
+     "APPS"
+    ]
+   ],
+   "new_group": null
+  },
+  "MSI": {
+   "name": "Motorola Solutions Inc.",
+   "mcap_b": 81.26,
+   "sector": "Information Technology",
+   "industry": "Radio And Television Broadcasting And Communications Equipment",
+   "best": [
+    [
+     0.5,
+     "group: Insurance Brokers"
+    ],
+    [
+     0.48,
+     "group: Government IT & Defense Services"
+    ],
+    [
+     0.44,
+     "group: Consulting Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.51,
+     "ERIE"
+    ],
+    [
+     0.47,
+     "AJG"
+    ],
+    [
+     0.46,
+     "CACI"
+    ],
+    [
+     0.46,
+     "BRO"
+    ],
+    [
+     0.45,
+     "OMC"
+    ]
+   ],
+   "new_group": null
+  },
+  "CVNA": {
+   "name": "Carvana Co.",
+   "mcap_b": 78.68,
+   "sector": "Consumer Discretionary",
+   "industry": "Retail-Auto Dealers and Gas Stations",
+   "best": [
+    [
+     0.35,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.33,
+     "group: Auto & Truck Dealerships"
+    ],
+    [
+     0.31,
+     "theme: Online Listings & Marketplaces"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.41,
+     "RKT"
+    ],
+    [
+     0.39,
+     "GPI"
+    ],
+    [
+     0.36,
+     "AN"
+    ],
+    [
+     0.35,
+     "CRH"
+    ],
+    [
+     0.35,
+     "DASH"
+    ]
+   ],
+   "new_group": null
+  },
+  "AMX": {
+   "name": "America Movil S.A.B. de C.V.",
+   "mcap_b": 74.54,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.3,
+     "theme: LatAm Energy"
+    ],
+    [
+     0.28,
+     "theme: Agribusiness & Fertilizer"
+    ],
+    [
+     0.26,
+     "group: Airports & Air Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.43,
+     "FMX"
+    ],
+    [
+     0.43,
+     "TIMB"
+    ],
+    [
+     0.43,
+     "VIV"
+    ],
+    [
+     0.39,
+     "TIGO"
+    ],
+    [
+     0.36,
+     "VOD"
+    ]
+   ],
+   "new_group": null
+  },
+  "NTES": {
+   "name": "NetEase Inc.",
+   "mcap_b": 74.17,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.54,
+     "theme: China Internet"
+    ],
+    [
+     0.43,
+     "group: Internet Retail"
+    ],
+    [
+     0.39,
+     "theme: China EV"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.51,
+     "BILI"
+    ],
+    [
+     0.43,
+     "WB"
+    ],
+    [
+     0.43,
+     "EDU"
+    ],
+    [
+     0.43,
+     "TME"
+    ],
+    [
+     0.42,
+     "YMM"
+    ]
+   ],
+   "new_group": null
+  },
+  "HON": {
+   "name": "Honeywell International Inc.",
+   "mcap_b": 71.1,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.39,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.36,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.33,
+     "group: Building Materials"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "MIDD"
+    ],
+    [
+     0.38,
+     "KAI"
+    ],
+    [
+     0.38,
+     "LMT"
+    ],
+    [
+     0.36,
+     "RTX"
+    ],
+    [
+     0.35,
+     "EMR"
+    ]
+   ],
+   "new_group": null
+  },
+  "TEL": {
+   "name": "TE Connectivity plc",
+   "mcap_b": 63.61,
+   "sector": "Information Technology",
+   "industry": "Electronic Components",
+   "best": [
+    [
+     0.52,
+     "group: Test, Measurement & Sensors"
+    ],
+    [
+     0.5,
+     "theme: Electronic Components & Instruments"
+    ],
+    [
+     0.48,
+     "group: Specialty Industrial Machinery"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.58,
+     "JCI"
+    ],
+    [
+     0.56,
+     "ST"
+    ],
+    [
+     0.53,
+     "AME"
+    ],
+    [
+     0.51,
+     "TT"
+    ],
+    [
+     0.5,
+     "EMR"
+    ]
+   ],
+   "new_group": null
+  },
+  "GRMN": {
+   "name": "Garmin Ltd.",
+   "mcap_b": 52.32,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.3,
+     "theme: Waste Management"
+    ],
+    [
+     0.3,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.3,
+     "group: Grocery Stores"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.4,
+     "ZWS"
+    ],
+    [
+     0.37,
+     "RUSHA"
+    ],
+    [
+     0.34,
+     "SONO"
+    ],
+    [
+     0.33,
+     "PKG"
+    ],
+    [
+     0.33,
+     "STE"
+    ]
+   ],
+   "new_group": null
+  },
+  "EBAY": {
+   "name": "eBay Inc.",
+   "mcap_b": 52.07,
+   "sector": "Consumer Discretionary",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.37,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.36,
+     "group: Tobacco"
+    ],
+    [
+     0.35,
+     "theme: Tobacco"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "ETSY"
+    ],
+    [
+     0.4,
+     "MO"
+    ],
+    [
+     0.38,
+     "EG"
+    ],
+    [
+     0.35,
+     "KMB"
+    ],
+    [
+     0.34,
+     "WMG"
+    ]
+   ],
+   "new_group": null
+  },
+  "HEI": {
+   "name": "Heico Corporation",
+   "mcap_b": 47.19,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.58,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.5,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.35,
+     "group: Home Improvement Retail"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.62,
+     "TDG"
+    ],
+    [
+     0.6,
+     "SARO"
+    ],
+    [
+     0.6,
+     "GE"
+    ],
+    [
+     0.58,
+     "RTX"
+    ],
+    [
+     0.53,
+     "LOAR"
+    ]
+   ],
+   "new_group": 0
+  },
+  "SE": {
+   "name": "Sea Limited",
+   "mcap_b": 47.02,
+   "sector": "Communication Services",
+   "industry": "Other Consumer Services",
+   "best": [
+    [
+     0.34,
+     "theme: China Internet"
+    ],
+    [
+     0.33,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.32,
+     "group: Internet Retail"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "GRAB"
+    ],
+    [
+     0.41,
+     "MELI"
+    ],
+    [
+     0.41,
+     "DV"
+    ],
+    [
+     0.38,
+     "FUBO"
+    ],
+    [
+     0.36,
+     "MMYT"
+    ]
+   ],
+   "new_group": null
+  },
+  "XYZ": {
+   "name": "Block Inc.",
+   "mcap_b": 45.64,
+   "sector": "Financials",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.51,
+     "group: Payments"
+    ],
+    [
+     0.5,
+     "theme: Fintech & Payments"
+    ],
+    [
+     0.48,
+     "theme: Internet Platforms"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.58,
+     "AFRM"
+    ],
+    [
+     0.51,
+     "INTU"
+    ],
+    [
+     0.5,
+     "DAVE"
+    ],
+    [
+     0.48,
+     "LSPD"
+    ],
+    [
+     0.46,
+     "BILL"
+    ]
+   ],
+   "new_group": null
+  },
+  "MDLN": {
+   "name": "Medline Inc.",
+   "mcap_b": 44.82,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.42,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.39,
+     "theme: Medtech"
+    ],
+    [
+     0.37,
+     "group: Medical Devices"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.43,
+     "IPAR"
+    ],
+    [
+     0.43,
+     "LIVN"
+    ],
+    [
+     0.41,
+     "XRAY"
+    ],
+    [
+     0.4,
+     "BAX"
+    ],
+    [
+     0.39,
+     "STE"
+    ]
+   ],
+   "new_group": null
+  },
+  "FMX": {
+   "name": "Fomento Economico Mexicano S.A.B. de C.V.",
+   "mcap_b": 43.27,
+   "sector": "Consumer Staples",
+   "industry": "Beverages (Production/Distribution)",
+   "best": [
+    [
+     0.36,
+     "group: Utilities - Latin America & Asia"
+    ],
+    [
+     0.31,
+     "group: Beverages - Non-Alcoholic"
+    ],
+    [
+     0.28,
+     "theme: LatAm Fintech & Banks"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.43,
+     "AMX"
+    ],
+    [
+     0.42,
+     "VIV"
+    ],
+    [
+     0.38,
+     "TIMB"
+    ],
+    [
+     0.37,
+     "CCEP"
+    ],
+    [
+     0.36,
+     "ABEV"
+    ]
+   ],
+   "new_group": null
+  },
+  "ABEV": {
+   "name": "Ambev S.A.",
+   "mcap_b": 41.69,
+   "sector": "Consumer Staples",
+   "industry": "Beverages (Production/Distribution)",
+   "best": [
+    [
+     0.71,
+     "group: Utilities - Latin America & Asia"
+    ],
+    [
+     0.69,
+     "theme: LatAm Fintech & Banks"
+    ],
+    [
+     0.63,
+     "group: Banks: Latin America"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.71,
+     "ELPC"
+    ],
+    [
+     0.71,
+     "BBD"
+    ],
+    [
+     0.68,
+     "CIG"
+    ],
+    [
+     0.68,
+     "PAGS"
+    ],
+    [
+     0.66,
+     "ITUB"
+    ]
+   ],
+   "new_group": null
+  },
+  "SKYD": {
+   "name": "Skydance Corporation",
+   "mcap_b": 40.74,
+   "sector": "Communication Services",
+   "industry": "Broadcasting",
+   "best": [
+    [
+     0.24,
+     "group: Telecom Services"
+    ],
+    [
+     0.17,
+     "group: Packaged Foods"
+    ],
+    [
+     0.17,
+     "group: Government IT & Defense Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.32,
+     "NMAX"
+    ],
+    [
+     0.31,
+     "DIS"
+    ],
+    [
+     0.3,
+     "VSNT"
+    ],
+    [
+     0.3,
+     "JJSF"
+    ],
+    [
+     0.28,
+     "TDOC"
+    ]
+   ],
+   "new_group": null
+  },
+  "IX": {
+   "name": "ORIX Corporation",
+   "mcap_b": 39.74,
+   "sector": "Financials",
+   "industry": "Diversified Financial Services",
+   "best": [
+    [
+     0.61,
+     "theme: International Banks"
+    ],
+    [
+     0.61,
+     "group: Banks: Japan & Korea"
+    ],
+    [
+     0.55,
+     "group: Banks: Europe"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.73,
+     "SMFG"
+    ],
+    [
+     0.69,
+     "MFG"
+    ],
+    [
+     0.65,
+     "MUFG"
+    ],
+    [
+     0.61,
+     "NMR"
+    ],
+    [
+     0.58,
+     "ING"
+    ]
+   ],
+   "new_group": null
+  },
+  "CHT": {
+   "name": "Chunghwa Telecom Co. Ltd.",
+   "mcap_b": 37.7,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.36,
+     "theme: Telecom"
+    ],
+    [
+     0.3,
+     "group: Beverages - Non-Alcoholic"
+    ],
+    [
+     0.29,
+     "theme: Tobacco"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.38,
+     "MD"
+    ],
+    [
+     0.37,
+     "REPX"
+    ],
+    [
+     0.36,
+     "T"
+    ],
+    [
+     0.36,
+     "VZ"
+    ],
+    [
+     0.35,
+     "UVV"
+    ]
+   ],
+   "new_group": null
+  },
+  "ERIC": {
+   "name": "Ericsson",
+   "mcap_b": 36.71,
+   "sector": "Information Technology",
+   "industry": "Radio And Television Broadcasting And Communications Equipment",
+   "best": [
+    [
+     0.34,
+     "group: Networking Equipment"
+    ],
+    [
+     0.32,
+     "group: Semis: Mobile & RF"
+    ],
+    [
+     0.28,
+     "theme: AI Networking"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.39,
+     "NOK"
+    ],
+    [
+     0.36,
+     "LOGI"
+    ],
+    [
+     0.33,
+     "HIMX"
+    ],
+    [
+     0.32,
+     "CSCO"
+    ],
+    [
+     0.31,
+     "IBM"
+    ]
+   ],
+   "new_group": null
+  },
+  "TTWO": {
+   "name": "Take-Two Interactive Software Inc.",
+   "mcap_b": 36.46,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.36,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.31,
+     "group: Software: Majors"
+    ],
+    [
+     0.3,
+     "group: Software: Marketing & Ad Tech"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.35,
+     "ABNB"
+    ],
+    [
+     0.35,
+     "RDDT"
+    ],
+    [
+     0.34,
+     "UBER"
+    ],
+    [
+     0.34,
+     "CLBT"
+    ],
+    [
+     0.34,
+     "RBLX"
+    ]
+   ],
+   "new_group": null
+  },
+  "VOD": {
+   "name": "Vodafone Group Plc",
+   "mcap_b": 36.15,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.48,
+     "theme: Telecom"
+    ],
+    [
+     0.43,
+     "group: Telecom Services"
+    ],
+    [
+     0.36,
+     "group: Utilities - Regulated Gas"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.46,
+     "T"
+    ],
+    [
+     0.44,
+     "VZ"
+    ],
+    [
+     0.43,
+     "TIGO"
+    ],
+    [
+     0.41,
+     "WPP"
+    ],
+    [
+     0.4,
+     "NWN"
+    ]
+   ],
+   "new_group": null
+  },
+  "TKO": {
+   "name": "TKO Group Holdings Inc.",
+   "mcap_b": 35.43,
+   "sector": "Communication Services",
+   "industry": "Services-Misc. Amusement & Recreation",
+   "best": [
+    [
+     0.38,
+     "group: Entertainment"
+    ],
+    [
+     0.35,
+     "theme: Telecom"
+    ],
+    [
+     0.33,
+     "theme: Packaged Food"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.4,
+     "RCI"
+    ],
+    [
+     0.39,
+     "FLUT"
+    ],
+    [
+     0.37,
+     "SBGI"
+    ],
+    [
+     0.37,
+     "LLYVA"
+    ],
+    [
+     0.37,
+     "HRL"
+    ]
+   ],
+   "new_group": null
+  },
+  "ESLT": {
+   "name": "Elbit Systems Ltd.",
+   "mcap_b": 35.19,
+   "sector": "Industrials",
+   "industry": "Military/Government/Technical",
+   "best": [
+    [
+     0.55,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.52,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.4,
+     "theme: Defense Tech & Drones"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "DRS"
+    ],
+    [
+     0.5,
+     "GD"
+    ],
+    [
+     0.47,
+     "TDY"
+    ],
+    [
+     0.47,
+     "LMT"
+    ],
+    [
+     0.46,
+     "HII"
+    ]
+   ],
+   "new_group": null
+  },
+  "AXON": {
+   "name": "Axon Enterprise Inc.",
+   "mcap_b": 33.84,
+   "sector": "Industrials",
+   "industry": "Ordnance And Accessories",
+   "best": [
+    [
+     0.49,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.47,
+     "group: Software: Cloud, Data & Observability"
+    ],
+    [
+     0.42,
+     "group: Software: Vertical & Industry"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.49,
+     "RPD"
+    ],
+    [
+     0.45,
+     "PD"
+    ],
+    [
+     0.45,
+     "MDB"
+    ],
+    [
+     0.45,
+     "SAIL"
+    ],
+    [
+     0.44,
+     "HUBS"
+    ]
+   ],
+   "new_group": null
+  },
+  "UI": {
+   "name": "Ubiquiti Inc.",
+   "mcap_b": 32.68,
+   "sector": "Information Technology",
+   "industry": "Radio And Television Broadcasting And Communications Equipment",
+   "best": [
+    [
+     0.44,
+     "group: Electronics & Computer Distribution"
+    ],
+    [
+     0.39,
+     "group: Networking Equipment"
+    ],
+    [
+     0.38,
+     "theme: AI Servers & ODMs"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.41,
+     "KEYS"
+    ],
+    [
+     0.39,
+     "SNX"
+    ],
+    [
+     0.39,
+     "AVT"
+    ],
+    [
+     0.39,
+     "ARW"
+    ],
+    [
+     0.37,
+     "NVT"
+    ]
+   ],
+   "new_group": null
+  },
+  "RBLX": {
+   "name": "Roblox Corporation",
+   "mcap_b": 32.54,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.32,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.32,
+     "group: Crypto Platforms"
+    ],
+    [
+     0.31,
+     "group: Software: Cloud, Data & Observability"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.47,
+     "RDDT"
+    ],
+    [
+     0.36,
+     "NOW"
+    ],
+    [
+     0.35,
+     "COIN"
+    ],
+    [
+     0.35,
+     "TTD"
+    ],
+    [
+     0.34,
+     "MDB"
+    ]
+   ],
+   "new_group": null
+  },
+  "TDY": {
+   "name": "Teledyne Technologies Incorporated",
+   "mcap_b": 30.54,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.59,
+     "group: Specialty Industrial Machinery"
+    ],
+    [
+     0.57,
+     "group: Test, Measurement & Sensors"
+    ],
+    [
+     0.55,
+     "theme: Industrial Automation"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "CMI"
+    ],
+    [
+     0.54,
+     "ESE"
+    ],
+    [
+     0.51,
+     "JCI"
+    ],
+    [
+     0.51,
+     "AME"
+    ],
+    [
+     0.51,
+     "CR"
+    ]
+   ],
+   "new_group": null
+  },
+  "SN": {
+   "name": "SharkNinja Inc.",
+   "mcap_b": 29.68,
+   "sector": "Consumer Discretionary",
+   "industry": "Consumer Electronics/Appliances",
+   "best": [
+    [
+     0.39,
+     "group: Home Improvement Retail"
+    ],
+    [
+     0.38,
+     "theme: Building Products"
+    ],
+    [
+     0.38,
+     "group: Building Products & Equipment"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.41,
+     "FND"
+    ],
+    [
+     0.4,
+     "TREX"
+    ],
+    [
+     0.36,
+     "WSM"
+    ],
+    [
+     0.36,
+     "SHW"
+    ],
+    [
+     0.35,
+     "MAS"
+    ]
+   ],
+   "new_group": null
+  },
+  "OTIS": {
+   "name": "Otis Worldwide Corporation",
+   "mcap_b": 29.24,
+   "sector": "Industrials",
+   "industry": "Consumer Electronics/Appliances",
+   "best": [
+    [
+     0.62,
+     "theme: Waste Management"
+    ],
+    [
+     0.59,
+     "theme: Beverages"
+    ],
+    [
+     0.58,
+     "theme: Tobacco"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.63,
+     "ITW"
+    ],
+    [
+     0.62,
+     "AOS"
+    ],
+    [
+     0.6,
+     "ATR"
+    ],
+    [
+     0.6,
+     "XYL"
+    ],
+    [
+     0.59,
+     "WY"
+    ]
+   ],
+   "new_group": null
+  },
+  "WST": {
+   "name": "West Pharmaceutical Services Inc.",
+   "mcap_b": 28.36,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.47,
+     "group: Diagnostics & Research"
+    ],
+    [
+     0.45,
+     "theme: Life Science Tools & CROs"
+    ],
+    [
+     0.39,
+     "theme: Genomics & Diagnostics"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.47,
+     "TMO"
+    ],
+    [
+     0.44,
+     "RGEN"
+    ],
+    [
+     0.44,
+     "MTD"
+    ],
+    [
+     0.41,
+     "WAT"
+    ],
+    [
+     0.41,
+     "RVTY"
+    ]
+   ],
+   "new_group": null
+  },
+  "FOXA": {
+   "name": "Fox Corporation",
+   "mcap_b": 28.29,
+   "sector": "Communication Services",
+   "industry": "Broadcasting",
+   "best": [
+    [
+     0.41,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.41,
+     "group: Online Marketplaces & Listings"
+    ],
+    [
+     0.4,
+     "group: Insurance Brokers"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.99,
+     "FOX"
+    ],
+    [
+     0.57,
+     "SBGI"
+    ],
+    [
+     0.52,
+     "ROKU"
+    ],
+    [
+     0.47,
+     "VSNT"
+    ],
+    [
+     0.43,
+     "YELP"
+    ]
+   ],
+   "new_group": null
+  },
+  "VRSN": {
+   "name": "VeriSign Inc.",
+   "mcap_b": 28.16,
+   "sector": "Information Technology",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.51,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.51,
+     "group: Specialty Business Services"
+    ],
+    [
+     0.51,
+     "group: Software: HR & Payroll"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "APPF"
+    ],
+    [
+     0.52,
+     "GDDY"
+    ],
+    [
+     0.52,
+     "ADP"
+    ],
+    [
+     0.51,
+     "SSNC"
+    ],
+    [
+     0.5,
+     "DBX"
+    ]
+   ],
+   "new_group": null
+  },
+  "PHG": {
+   "name": "Koninklijke Philips N.V. NY Registry Shares",
+   "mcap_b": 27.98,
+   "sector": "Health Care",
+   "industry": "Medical Electronics",
+   "best": [
+    [
+     0.56,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.55,
+     "theme: Medtech"
+    ],
+    [
+     0.54,
+     "group: Medical Devices"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.57,
+     "ALC"
+    ],
+    [
+     0.54,
+     "GEHC"
+    ],
+    [
+     0.5,
+     "HLN"
+    ],
+    [
+     0.49,
+     "SNN"
+    ],
+    [
+     0.49,
+     "GMED"
+    ]
+   ],
+   "new_group": null
+  },
+  "CPNG": {
+   "name": "Coupang Inc.",
+   "mcap_b": 27.41,
+   "sector": "Consumer Discretionary",
+   "industry": "Catalog/Specialty Distribution",
+   "best": [
+    [
+     0.24,
+     "group: Biotech: Gene Editing & Gene Therapy"
+    ],
+    [
+     0.21,
+     "theme: Gene Editing"
+    ],
+    [
+     0.21,
+     "group: Biotech: Oncology"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.33,
+     "MRNA"
+    ],
+    [
+     0.32,
+     "MELI"
+    ],
+    [
+     0.32,
+     "DLO"
+    ],
+    [
+     0.3,
+     "PRME"
+    ],
+    [
+     0.28,
+     "SE"
+    ]
+   ],
+   "new_group": null
+  },
+  "BIDU": {
+   "name": "Baidu Inc.",
+   "mcap_b": 26.19,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.48,
+     "theme: China Internet"
+    ],
+    [
+     0.42,
+     "group: Internet Retail"
+    ],
+    [
+     0.4,
+     "theme: China EV"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.53,
+     "KC"
+    ],
+    [
+     0.51,
+     "GDS"
+    ],
+    [
+     0.48,
+     "BABA"
+    ],
+    [
+     0.44,
+     "VNET"
+    ],
+    [
+     0.43,
+     "ATHM"
+    ]
+   ],
+   "new_group": null
+  },
+  "HPQ": {
+   "name": "HP Inc.",
+   "mcap_b": 25.48,
+   "sector": "Information Technology",
+   "industry": "Computer Manufacturing",
+   "best": [
+    [
+     0.39,
+     "group: Software: Collaboration & Communications"
+    ],
+    [
+     0.38,
+     "group: Software: Majors"
+    ],
+    [
+     0.36,
+     "theme: Enterprise SaaS"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.61,
+     "LOGI"
+    ],
+    [
+     0.5,
+     "CDW"
+    ],
+    [
+     0.47,
+     "NTAP"
+    ],
+    [
+     0.46,
+     "WDAY"
+    ],
+    [
+     0.42,
+     "TTD"
+    ]
+   ],
+   "new_group": null
+  },
+  "FOX": {
+   "name": "Fox Corporation",
+   "mcap_b": 25.14,
+   "sector": "Communication Services",
+   "industry": "Broadcasting",
+   "best": [
+    [
+     0.43,
+     "group: Insurance Brokers"
+    ],
+    [
+     0.42,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.42,
+     "group: Online Marketplaces & Listings"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.99,
+     "FOXA"
+    ],
+    [
+     0.61,
+     "SBGI"
+    ],
+    [
+     0.5,
+     "VSNT"
+    ],
+    [
+     0.49,
+     "ROKU"
+    ],
+    [
+     0.48,
+     "NWS"
+    ]
+   ],
+   "new_group": null
+  },
+  "AFRM": {
+   "name": "Affirm Holdings Inc.",
+   "mcap_b": 24.39,
+   "sector": "Financials",
+   "industry": "Finance: Consumer Services",
+   "best": [
+    [
+     0.33,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.24,
+     "theme: Fintech & Payments"
+    ],
+    [
+     0.23,
+     "theme: Consumer Lending"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.6,
+     "UPST"
+    ],
+    [
+     0.58,
+     "XYZ"
+    ],
+    [
+     0.5,
+     "SEZL"
+    ],
+    [
+     0.46,
+     "SOFI"
+    ],
+    [
+     0.4,
+     "MELI"
+    ]
+   ],
+   "new_group": null
+  },
+  "ROKU": {
+   "name": "Roku Inc.",
+   "mcap_b": 23.8,
+   "sector": "Communication Services",
+   "industry": "Cable & Other Pay Television Services",
+   "best": [
+    [
+     0.26,
+     "group: Telecom Services"
+    ],
+    [
+     0.26,
+     "group: Financial Tech Processors"
+    ],
+    [
+     0.25,
+     "theme: Fintech & Payments"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.52,
+     "FOXA"
+    ],
+    [
+     0.49,
+     "FOX"
+    ],
+    [
+     0.47,
+     "VSNT"
+    ],
+    [
+     0.31,
+     "SBGI"
+    ],
+    [
+     0.31,
+     "TSN"
+    ]
+   ],
+   "new_group": null
+  },
+  "CBRS": {
+   "name": "Cerebras Systems Inc.",
+   "mcap_b": 23.24,
+   "sector": "Information Technology",
+   "industry": "Semiconductors",
+   "best": [
+    [
+     0.47,
+     "theme: Semi Subsystems"
+    ],
+    [
+     0.47,
+     "theme: Optics & CPO"
+    ],
+    [
+     0.46,
+     "group: Optical Networking & Photonics"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.52,
+     "RKLB"
+    ],
+    [
+     0.47,
+     "LITE"
+    ],
+    [
+     0.47,
+     "ICHR"
+    ],
+    [
+     0.46,
+     "AAOI"
+    ],
+    [
+     0.45,
+     "LWLG"
+    ]
+   ],
+   "new_group": null
+  },
+  "OMC": {
+   "name": "Omnicom Group Inc.",
+   "mcap_b": 22.69,
+   "sector": "Communication Services",
+   "industry": "Advertising",
+   "best": [
+    [
+     0.65,
+     "group: Consulting Services"
+    ],
+    [
+     0.64,
+     "group: Financial Data & Stock Exchanges"
+    ],
+    [
+     0.63,
+     "theme: Payroll & HR Software"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.64,
+     "WPP"
+    ],
+    [
+     0.62,
+     "EFX"
+    ],
+    [
+     0.62,
+     "BR"
+    ],
+    [
+     0.61,
+     "RELX"
+    ],
+    [
+     0.59,
+     "TYL"
+    ]
+   ],
+   "new_group": null
+  },
+  "ARXS": {
+   "name": "Arxis Inc.",
+   "mcap_b": 22.39,
+   "sector": "Industrials",
+   "industry": "Military/Government/Technical",
+   "best": [
+    [
+     0.47,
+     "theme: Electronic Components & Instruments"
+    ],
+    [
+     0.44,
+     "group: Test, Measurement & Sensors"
+    ],
+    [
+     0.43,
+     "theme: Defense Tech & Drones"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.51,
+     "AMPX"
+    ],
+    [
+     0.48,
+     "IESC"
+    ],
+    [
+     0.47,
+     "PLPC"
+    ],
+    [
+     0.46,
+     "FLS"
+    ],
+    [
+     0.45,
+     "POWI"
+    ]
+   ],
+   "new_group": null
+  },
+  "WIT": {
+   "name": "Wipro Limited",
+   "mcap_b": 21.38,
+   "sector": "Information Technology",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.43,
+     "group: IT Consulting & Outsourcing"
+    ],
+    [
+     0.41,
+     "theme: IT Services & Consulting"
+    ],
+    [
+     0.38,
+     "group: Consulting Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.48,
+     "GIB"
+    ],
+    [
+     0.48,
+     "INFY"
+    ],
+    [
+     0.39,
+     "EXLS"
+    ],
+    [
+     0.39,
+     "G"
+    ],
+    [
+     0.39,
+     "CTSH"
+    ]
+   ],
+   "new_group": null
+  },
+  "FTV": {
+   "name": "Fortive Corporation",
+   "mcap_b": 19.89,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.44,
+     "theme: Industrial Automation"
+    ],
+    [
+     0.43,
+     "group: Farm & Heavy Construction Machinery"
+    ],
+    [
+     0.4,
+     "group: Specialty Chemicals"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.61,
+     "ITW"
+    ],
+    [
+     0.54,
+     "LECO"
+    ],
+    [
+     0.49,
+     "SNA"
+    ],
+    [
+     0.47,
+     "GATX"
+    ],
+    [
+     0.47,
+     "FAST"
+    ]
+   ],
+   "new_group": null
+  },
+  "BBY": {
+   "name": "Best Buy Co. Inc.",
+   "mcap_b": 19.68,
+   "sector": "Consumer Discretionary",
+   "industry": "Consumer Electronics/Video Chains",
+   "best": [
+    [
+     0.44,
+     "theme: Retail"
+    ],
+    [
+     0.4,
+     "group: Grocery Stores"
+    ],
+    [
+     0.38,
+     "group: Home Improvement Retail"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.49,
+     "DLTR"
+    ],
+    [
+     0.48,
+     "HRL"
+    ],
+    [
+     0.41,
+     "DG"
+    ],
+    [
+     0.41,
+     "THO"
+    ],
+    [
+     0.41,
+     "M"
+    ]
+   ],
+   "new_group": null
+  },
+  "WWD": {
+   "name": "Woodward Inc.",
+   "mcap_b": 19.64,
+   "sector": "Industrials",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.53,
+     "group: Specialty Industrial Machinery"
+    ],
+    [
+     0.5,
+     "theme: Industrial Automation"
+    ],
+    [
+     0.44,
+     "theme: Data Center Power & Cooling"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.65,
+     "HWM"
+    ],
+    [
+     0.63,
+     "CRS"
+    ],
+    [
+     0.6,
+     "HXL"
+    ],
+    [
+     0.6,
+     "PH"
+    ],
+    [
+     0.59,
+     "ESE"
+    ]
+   ],
+   "new_group": 0
+  },
+  "FFIV": {
+   "name": "F5 Inc.",
+   "mcap_b": 18.75,
+   "sector": "Information Technology",
+   "industry": "Computer Communications Equipment",
+   "best": [
+    [
+     0.56,
+     "group: Networking Equipment"
+    ],
+    [
+     0.48,
+     "theme: Cybersecurity"
+    ],
+    [
+     0.48,
+     "theme: AI Networking"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.65,
+     "NTCT"
+    ],
+    [
+     0.57,
+     "ATEN"
+    ],
+    [
+     0.57,
+     "FTNT"
+    ],
+    [
+     0.51,
+     "ANET"
+    ],
+    [
+     0.5,
+     "HPE"
+    ]
+   ],
+   "new_group": 1
+  },
+  "CDW": {
+   "name": "CDW Corporation",
+   "mcap_b": 18.72,
+   "sector": "Information Technology",
+   "industry": "Catalog/Specialty Distribution",
+   "best": [
+    [
+     0.48,
+     "group: IT Consulting & Outsourcing"
+    ],
+    [
+     0.47,
+     "theme: IT Services & Consulting"
+    ],
+    [
+     0.47,
+     "group: Software: Collaboration & Communications"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.57,
+     "NSIT"
+    ],
+    [
+     0.55,
+     "KD"
+    ],
+    [
+     0.53,
+     "OTEX"
+    ],
+    [
+     0.52,
+     "TDC"
+    ],
+    [
+     0.51,
+     "IBM"
+    ]
+   ],
+   "new_group": null
+  },
+  "RDDT": {
+   "name": "Reddit Inc.",
+   "mcap_b": 18.5,
+   "sector": "Communication Services",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.27,
+     "theme: Managed Care"
+    ],
+    [
+     0.27,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.27,
+     "theme: AI Software & Data"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.49,
+     "SNAP"
+    ],
+    [
+     0.48,
+     "PUBM"
+    ],
+    [
+     0.47,
+     "RBLX"
+    ],
+    [
+     0.45,
+     "PINS"
+    ],
+    [
+     0.45,
+     "APP"
+    ]
+   ],
+   "new_group": null
+  },
+  "RCI": {
+   "name": "Rogers Communication Inc.",
+   "mcap_b": 18.04,
+   "sector": "Communication Services",
+   "industry": "Cable & Other Pay Television Services",
+   "best": [
+    [
+     0.64,
+     "theme: Telecom"
+    ],
+    [
+     0.52,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.48,
+     "group: Software: HR & Payroll"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.71,
+     "BCE"
+    ],
+    [
+     0.56,
+     "TU"
+    ],
+    [
+     0.56,
+     "CSGP"
+    ],
+    [
+     0.54,
+     "KFY"
+    ],
+    [
+     0.52,
+     "TMUS"
+    ]
+   ],
+   "new_group": null
+  },
+  "U": {
+   "name": "Unity Software Inc.",
+   "mcap_b": 17.82,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.44,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.39,
+     "group: Software: Cloud, Data & Observability"
+    ],
+    [
+     0.34,
+     "group: Software: Marketing & Ad Tech"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.46,
+     "SNOW"
+    ],
+    [
+     0.41,
+     "RDDT"
+    ],
+    [
+     0.4,
+     "TEAM"
+    ],
+    [
+     0.38,
+     "NTNX"
+    ],
+    [
+     0.38,
+     "PAYS"
+    ]
+   ],
+   "new_group": null
+  },
+  "GEN": {
+   "name": "Gen Digital Inc.",
+   "mcap_b": 17.63,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.65,
+     "theme: Enterprise SaaS"
+    ],
+    [
+     0.62,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.62,
+     "group: Software: Vertical & Industry"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.66,
+     "DBX"
+    ],
+    [
+     0.65,
+     "BOX"
+    ],
+    [
+     0.64,
+     "VERX"
+    ],
+    [
+     0.62,
+     "PAYX"
+    ],
+    [
+     0.6,
+     "INTU"
+    ]
+   ],
+   "new_group": null
+  },
+  "VIV": {
+   "name": "Telefonica Brasil S.A.",
+   "mcap_b": 17.54,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.66,
+     "group: Utilities - Latin America & Asia"
+    ],
+    [
+     0.57,
+     "group: Banks: Latin America"
+    ],
+    [
+     0.55,
+     "theme: LatAm Fintech & Banks"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.83,
+     "TIMB"
+    ],
+    [
+     0.64,
+     "ITUB"
+    ],
+    [
+     0.64,
+     "SBS"
+    ],
+    [
+     0.61,
+     "BBD"
+    ],
+    [
+     0.6,
+     "ELPC"
+    ]
+   ],
+   "new_group": null
+  },
+  "KSPI": {
+   "name": "Joint Stock Company Kaspi.kz American Depository Shares",
+   "mcap_b": 17.45,
+   "sector": "Information Technology",
+   "industry": "Other",
+   "best": [
+    [
+     0.26,
+     "group: Banks: Europe"
+    ],
+    [
+     0.22,
+     "group: Restaurants"
+    ],
+    [
+     0.21,
+     "theme: International Banks"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.33,
+     "ASR"
+    ],
+    [
+     0.27,
+     "FER"
+    ],
+    [
+     0.26,
+     "HSBC"
+    ],
+    [
+     0.26,
+     "SE"
+    ],
+    [
+     0.26,
+     "SG"
+    ]
+   ],
+   "new_group": null
+  },
+  "NWS": {
+   "name": "News Corporation",
+   "mcap_b": 17.33,
+   "sector": "Communication Services",
+   "industry": "Newspapers/Magazines",
+   "best": [
+    [
+     0.6,
+     "theme: Info Services & Staffing"
+    ],
+    [
+     0.6,
+     "group: Software: HR & Payroll"
+    ],
+    [
+     0.58,
+     "theme: Payroll & HR Software"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.98,
+     "NWSA"
+    ],
+    [
+     0.59,
+     "ADP"
+    ],
+    [
+     0.58,
+     "G"
+    ],
+    [
+     0.57,
+     "PCTY"
+    ],
+    [
+     0.56,
+     "V"
+    ]
+   ],
+   "new_group": null
+  },
+  "WMG": {
+   "name": "Warner Music Group Corp.",
+   "mcap_b": 16.28,
+   "sector": "Communication Services",
+   "industry": "Services-Misc. Amusement & Recreation",
+   "best": [
+    [
+     0.49,
+     "theme: IT Services & Consulting"
+    ],
+    [
+     0.48,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.48,
+     "theme: P&C Insurance & Brokers"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.55,
+     "PSO"
+    ],
+    [
+     0.53,
+     "MRSH"
+    ],
+    [
+     0.51,
+     "AJG"
+    ],
+    [
+     0.5,
+     "BRO"
+    ],
+    [
+     0.5,
+     "EXLS"
+    ]
+   ],
+   "new_group": null
+  },
+  "NWSA": {
+   "name": "News Corporation",
+   "mcap_b": 15.92,
+   "sector": "Communication Services",
+   "industry": "Newspapers/Magazines",
+   "best": [
+    [
+     0.61,
+     "group: Software: HR & Payroll"
+    ],
+    [
+     0.6,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.59,
+     "group: Insurance Brokers"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.98,
+     "NWS"
+    ],
+    [
+     0.6,
+     "ADP"
+    ],
+    [
+     0.59,
+     "G"
+    ],
+    [
+     0.58,
+     "PCTY"
+    ],
+    [
+     0.57,
+     "AJG"
+    ]
+   ],
+   "new_group": null
+  },
+  "FICO": {
+   "name": "Fair Isaac Corporation",
+   "mcap_b": 15.64,
+   "sector": "Information Technology",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.54,
+     "group: Consulting Services"
+    ],
+    [
+     0.53,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.51,
+     "theme: IT Services & Consulting"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "EFX"
+    ],
+    [
+     0.57,
+     "MANH"
+    ],
+    [
+     0.56,
+     "TRU"
+    ],
+    [
+     0.51,
+     "EXLS"
+    ],
+    [
+     0.51,
+     "TYL"
+    ]
+   ],
+   "new_group": null
+  },
+  "ZBRA": {
+   "name": "Zebra Technologies Corporation",
+   "mcap_b": 15.59,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.29,
+     "group: Networking Equipment"
+    ],
+    [
+     0.23,
+     "theme: AI Networking"
+    ],
+    [
+     0.21,
+     "theme: AI Software & Data"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.34,
+     "DT"
+    ],
+    [
+     0.33,
+     "MSA"
+    ],
+    [
+     0.3,
+     "CSCO"
+    ],
+    [
+     0.3,
+     "VGNT"
+    ],
+    [
+     0.3,
+     "SHOP"
+    ]
+   ],
+   "new_group": null
+  },
+  "W": {
+   "name": "Wayfair Inc.",
+   "mcap_b": 15.26,
+   "sector": "Consumer Discretionary",
+   "industry": "Catalog/Specialty Distribution",
+   "best": [
+    [
+     0.34,
+     "group: Building Products & Equipment"
+    ],
+    [
+     0.33,
+     "theme: Building Products"
+    ],
+    [
+     0.33,
+     "group: Home Improvement Retail"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.45,
+     "WSM"
+    ],
+    [
+     0.39,
+     "MAS"
+    ],
+    [
+     0.37,
+     "UFPT"
+    ],
+    [
+     0.35,
+     "HLMN"
+    ],
+    [
+     0.35,
+     "CAAP"
+    ]
+   ],
+   "new_group": null
+  },
+  "TXT": {
+   "name": "Textron Inc.",
+   "mcap_b": 14.85,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.56,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.56,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.35,
+     "group: Building Products & Equipment"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "GD"
+    ],
+    [
+     0.5,
+     "LMT"
+    ],
+    [
+     0.49,
+     "RTX"
+    ],
+    [
+     0.48,
+     "LHX"
+    ],
+    [
+     0.44,
+     "NOC"
+    ]
+   ],
+   "new_group": null
+  },
+  "FLUT": {
+   "name": "Flutter Entertainment plc",
+   "mcap_b": 14.67,
+   "sector": "Consumer Discretionary",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.54,
+     "group: Consulting Services"
+    ],
+    [
+     0.53,
+     "group: Insurance Brokers"
+    ],
+    [
+     0.52,
+     "theme: Payroll & HR Software"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.76,
+     "DKNG"
+    ],
+    [
+     0.55,
+     "APPF"
+    ],
+    [
+     0.53,
+     "CSGP"
+    ],
+    [
+     0.51,
+     "BRO"
+    ],
+    [
+     0.51,
+     "ADP"
+    ]
+   ],
+   "new_group": null
+  },
+  "SOLV": {
+   "name": "Solventum Corporation",
+   "mcap_b": 14.42,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.58,
+     "theme: Medtech"
+    ],
+    [
+     0.58,
+     "group: Medical Devices"
+    ],
+    [
+     0.54,
+     "group: Medical Instruments & Supplies"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.55,
+     "ZBH"
+    ],
+    [
+     0.53,
+     "STE"
+    ],
+    [
+     0.51,
+     "SNN"
+    ],
+    [
+     0.51,
+     "MAA"
+    ],
+    [
+     0.51,
+     "PRK"
+    ]
+   ],
+   "new_group": null
+  },
+  "TU": {
+   "name": "Telus Corporation",
+   "mcap_b": 14.16,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.53,
+     "theme: Telecom"
+    ],
+    [
+     0.52,
+     "group: Consulting Services"
+    ],
+    [
+     0.47,
+     "theme: Payroll & HR Software"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.63,
+     "BCE"
+    ],
+    [
+     0.56,
+     "RCI"
+    ],
+    [
+     0.51,
+     "EXLS"
+    ],
+    [
+     0.5,
+     "G"
+    ],
+    [
+     0.5,
+     "KFY"
+    ]
+   ],
+   "new_group": null
+  },
+  "GKOS": {
+   "name": "Glaukos Corporation",
+   "mcap_b": 13.79,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.26,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.26,
+     "group: Medical Devices"
+    ],
+    [
+     0.24,
+     "theme: Medtech"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.38,
+     "VCEL"
+    ],
+    [
+     0.32,
+     "BHC"
+    ],
+    [
+     0.31,
+     "ALC"
+    ],
+    [
+     0.29,
+     "TLX"
+    ],
+    [
+     0.29,
+     "BVS"
+    ]
+   ],
+   "new_group": null
+  },
+  "EMBJ": {
+   "name": "Embraer S.A.",
+   "mcap_b": 13.65,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.32,
+     "theme: Consumer Lending"
+    ],
+    [
+     0.32,
+     "group: Specialty Industrial Machinery"
+    ],
+    [
+     0.32,
+     "group: Credit Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.4,
+     "PH"
+    ],
+    [
+     0.39,
+     "HWM"
+    ],
+    [
+     0.37,
+     "DB"
+    ],
+    [
+     0.36,
+     "BA"
+    ],
+    [
+     0.36,
+     "CW"
+    ]
+   ],
+   "new_group": null
+  },
+  "WSE": {
+   "name": "Wise Group plc",
+   "mcap_b": 13.19,
+   "sector": "Financials",
+   "industry": "Diversified Commercial Services",
+   "best": [
+    [
+     0.36,
+     "theme: Fintech & Payments"
+    ],
+    [
+     0.36,
+     "group: Payments"
+    ],
+    [
+     0.35,
+     "theme: Info Services & Staffing"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.4,
+     "V"
+    ],
+    [
+     0.37,
+     "GRND"
+    ],
+    [
+     0.37,
+     "PAY"
+    ],
+    [
+     0.37,
+     "QTWO"
+    ],
+    [
+     0.35,
+     "RHI"
+    ]
+   ],
+   "new_group": null
+  },
+  "LOGI": {
+   "name": "Logitech International S.A.",
+   "mcap_b": 13.17,
+   "sector": "Information Technology",
+   "industry": "Computer peripheral equipment",
+   "best": [
+    [
+     0.38,
+     "group: Semis: Mobile & RF"
+    ],
+    [
+     0.26,
+     "group: Software: Collaboration & Communications"
+    ],
+    [
+     0.25,
+     "group: AI Servers"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.61,
+     "HPQ"
+    ],
+    [
+     0.37,
+     "NTAP"
+    ],
+    [
+     0.37,
+     "QCOM"
+    ],
+    [
+     0.36,
+     "ERIC"
+    ],
+    [
+     0.36,
+     "CDW"
+    ]
+   ],
+   "new_group": null
+  },
+  "TIGO": {
+   "name": "Millicom International Cellular S.A.",
+   "mcap_b": 12.99,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.29,
+     "theme: LatAm Energy"
+    ],
+    [
+     0.28,
+     "group: Utilities - Latin America & Asia"
+    ],
+    [
+     0.25,
+     "group: Telecom Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "TIMB"
+    ],
+    [
+     0.43,
+     "VOD"
+    ],
+    [
+     0.41,
+     "VIV"
+    ],
+    [
+     0.39,
+     "AMX"
+    ],
+    [
+     0.36,
+     "LILAK"
+    ]
+   ],
+   "new_group": null
+  },
+  "CSGP": {
+   "name": "CoStar Group Inc.",
+   "mcap_b": 12.6,
+   "sector": "Real Estate",
+   "industry": "Real Estate",
+   "best": [
+    [
+     0.72,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.68,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.68,
+     "group: Software: HR & Payroll"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.73,
+     "ADP"
+    ],
+    [
+     0.71,
+     "Z"
+    ],
+    [
+     0.7,
+     "ZG"
+    ],
+    [
+     0.69,
+     "BRO"
+    ],
+    [
+     0.69,
+     "PAYX"
+    ]
+   ],
+   "new_group": null
+  },
+  "AKAM": {
+   "name": "Akamai Technologies Inc.",
+   "mcap_b": 12.44,
+   "sector": "Information Technology",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.52,
+     "theme: AI Servers & ODMs"
+    ],
+    [
+     0.48,
+     "group: AI Servers"
+    ],
+    [
+     0.45,
+     "theme: AI Networking"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.6,
+     "FSLY"
+    ],
+    [
+     0.54,
+     "DOCN"
+    ],
+    [
+     0.54,
+     "SNX"
+    ],
+    [
+     0.53,
+     "NTCT"
+    ],
+    [
+     0.49,
+     "NET"
+    ]
+   ],
+   "new_group": 1
+  },
+  "GME": {
+   "name": "GameStop Corporation",
+   "mcap_b": 12.26,
+   "sector": "Consumer Discretionary",
+   "industry": "Electronics Distribution",
+   "best": [
+    [
+     0.24,
+     "theme: Genomics & Diagnostics"
+    ],
+    [
+     0.23,
+     "group: Diagnostics & Research"
+    ],
+    [
+     0.21,
+     "theme: Life Science Tools & CROs"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.36,
+     "IBRX"
+    ],
+    [
+     0.35,
+     "VCYT"
+    ],
+    [
+     0.34,
+     "EBAY"
+    ],
+    [
+     0.34,
+     "MRNA"
+    ],
+    [
+     0.33,
+     "ODD"
+    ]
+   ],
+   "new_group": null
+  },
+  "BWXT": {
+   "name": "BWX Technologies Inc.",
+   "mcap_b": 12.08,
+   "sector": "Industrials",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.57,
+     "theme: Data Center Power & Cooling"
+    ],
+    [
+     0.57,
+     "group: Engineering & Construction"
+    ],
+    [
+     0.56,
+     "theme: Data Center Builders & REITs"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.65,
+     "CW"
+    ],
+    [
+     0.57,
+     "EME"
+    ],
+    [
+     0.56,
+     "ECG"
+    ],
+    [
+     0.56,
+     "PWR"
+    ],
+    [
+     0.54,
+     "FIX"
+    ]
+   ],
+   "new_group": null
+  },
+  "SKM": {
+   "name": "SK Telecom Co. Ltd.",
+   "mcap_b": 11.72,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.52,
+     "group: Memory & Storage Chips"
+    ],
+    [
+     0.5,
+     "theme: Memory & Storage"
+    ],
+    [
+     0.5,
+     "group: Semis: AI Accelerators & CPUs"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.51,
+     "AMKR"
+    ],
+    [
+     0.51,
+     "AVGO"
+    ],
+    [
+     0.5,
+     "SNDK"
+    ],
+    [
+     0.5,
+     "ARW"
+    ],
+    [
+     0.49,
+     "SANM"
+    ]
+   ],
+   "new_group": null
+  },
+  "PINS": {
+   "name": "Pinterest Inc.",
+   "mcap_b": 11.68,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.54,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.45,
+     "group: Payments"
+    ],
+    [
+     0.44,
+     "theme: Online Listings & Marketplaces"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.58,
+     "LYFT"
+    ],
+    [
+     0.53,
+     "SNAP"
+    ],
+    [
+     0.52,
+     "UBER"
+    ],
+    [
+     0.47,
+     "TBLA"
+    ],
+    [
+     0.47,
+     "SPT"
+    ]
+   ],
+   "new_group": null
+  },
+  "GSAT": {
+   "name": "Globalstar Inc.",
+   "mcap_b": 10.85,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.49,
+     "group: Satellite Communications"
+    ],
+    [
+     0.45,
+     "theme: Space"
+    ],
+    [
+     0.45,
+     "theme: Semi Subsystems"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.47,
+     "FORM"
+    ],
+    [
+     0.47,
+     "ACMR"
+    ],
+    [
+     0.45,
+     "RKLB"
+    ],
+    [
+     0.45,
+     "ICHR"
+    ],
+    [
+     0.43,
+     "SITM"
+    ]
+   ],
+   "new_group": null
+  },
+  "NYT": {
+   "name": "New York Times Company (The)",
+   "mcap_b": 10.78,
+   "sector": "Communication Services",
+   "industry": "Newspapers/Magazines",
+   "best": [
+    [
+     0.49,
+     "group: Software: Finance & Banking"
+    ],
+    [
+     0.49,
+     "group: Health Information Services"
+    ],
+    [
+     0.48,
+     "theme: IT Services & Consulting"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.54,
+     "NWSA"
+    ],
+    [
+     0.53,
+     "NWS"
+    ],
+    [
+     0.52,
+     "PAY"
+    ],
+    [
+     0.51,
+     "MTCH"
+    ],
+    [
+     0.48,
+     "EXLS"
+    ]
+   ],
+   "new_group": null
+  },
+  "ALGN": {
+   "name": "Align Technology Inc.",
+   "mcap_b": 10.77,
+   "sector": "Health Care",
+   "industry": "Industrial Specialties",
+   "best": [
+    [
+     0.37,
+     "theme: Medtech"
+    ],
+    [
+     0.37,
+     "group: Staffing & Employment Services"
+    ],
+    [
+     0.37,
+     "group: Medical Instruments & Supplies"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.63,
+     "NVST"
+    ],
+    [
+     0.58,
+     "XRAY"
+    ],
+    [
+     0.39,
+     "TECH"
+    ],
+    [
+     0.38,
+     "SOLV"
+    ],
+    [
+     0.38,
+     "DECK"
+    ]
+   ],
+   "new_group": 2
+  },
+  "SIRI": {
+   "name": "SiriusXM Holdings Inc.",
+   "mcap_b": 10.36,
+   "sector": "Communication Services",
+   "industry": "Broadcasting",
+   "best": [
+    [
+     0.38,
+     "group: Online Marketplaces & Listings"
+    ],
+    [
+     0.37,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.35,
+     "theme: Fintech & Payments"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.42,
+     "WMG"
+    ],
+    [
+     0.39,
+     "EEFT"
+    ],
+    [
+     0.37,
+     "MAX"
+    ],
+    [
+     0.37,
+     "SLDE"
+    ],
+    [
+     0.37,
+     "SPOT"
+    ]
+   ],
+   "new_group": null
+  },
+  "TLK": {
+   "name": "PT Telekomunikasi Indonesia Tbk",
+   "mcap_b": 10.31,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.3,
+     "group: Waste Management"
+    ],
+    [
+     0.29,
+     "theme: Info Services & Staffing"
+    ],
+    [
+     0.27,
+     "theme: Waste Management"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.36,
+     "RSG"
+    ],
+    [
+     0.34,
+     "KR"
+    ],
+    [
+     0.33,
+     "SEB"
+    ],
+    [
+     0.33,
+     "WLTH"
+    ],
+    [
+     0.33,
+     "NYT"
+    ]
+   ],
+   "new_group": null
+  },
+  "PAYP": {
+   "name": "PayPay Corporation American Depository Shares",
+   "mcap_b": 9.96,
+   "sector": "Financials",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.39,
+     "group: Utilities - Latin America & Asia"
+    ],
+    [
+     0.39,
+     "group: Banks: Europe"
+    ],
+    [
+     0.32,
+     "theme: International Banks"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.42,
+     "PUK"
+    ],
+    [
+     0.41,
+     "HSBC"
+    ],
+    [
+     0.4,
+     "LYG"
+    ],
+    [
+     0.38,
+     "SBS"
+    ],
+    [
+     0.37,
+     "ELPC"
+    ]
+   ],
+   "new_group": null
+  },
+  "SNAP": {
+   "name": "Snap Inc.",
+   "mcap_b": 9.47,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.37,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.34,
+     "group: Specialty Business Services"
+    ],
+    [
+     0.33,
+     "theme: IT Services & Consulting"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.53,
+     "PINS"
+    ],
+    [
+     0.49,
+     "RDDT"
+    ],
+    [
+     0.43,
+     "WIX"
+    ],
+    [
+     0.41,
+     "COUR"
+    ],
+    [
+     0.4,
+     "UBER"
+    ]
+   ],
+   "new_group": null
+  },
+  "HNGE": {
+   "name": "Hinge Health Inc.",
+   "mcap_b": 9.43,
+   "sector": "Information Technology",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.44,
+     "group: Software: Cloud, Data & Observability"
+    ],
+    [
+     0.41,
+     "theme: Cybersecurity"
+    ],
+    [
+     0.4,
+     "theme: AI Software & Data"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "OMDA"
+    ],
+    [
+     0.47,
+     "FROG"
+    ],
+    [
+     0.42,
+     "HUM"
+    ],
+    [
+     0.39,
+     "FIVN"
+    ],
+    [
+     0.39,
+     "GTLB"
+    ]
+   ],
+   "new_group": null
+  },
+  "CHWY": {
+   "name": "Chewy Inc.",
+   "mcap_b": 8.87,
+   "sector": "Consumer Discretionary",
+   "industry": "Catalog/Specialty Distribution",
+   "best": [
+    [
+     0.53,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.53,
+     "group: Online Marketplaces & Listings"
+    ],
+    [
+     0.5,
+     "theme: Payroll & HR Software"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.53,
+     "EFX"
+    ],
+    [
+     0.49,
+     "BKNG"
+    ],
+    [
+     0.48,
+     "TRU"
+    ],
+    [
+     0.48,
+     "YELP"
+    ],
+    [
+     0.46,
+     "JKHY"
+    ]
+   ],
+   "new_group": null
+  },
+  "MTCH": {
+   "name": "Match Group Inc.",
+   "mcap_b": 8.84,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.53,
+     "group: Online Marketplaces & Listings"
+    ],
+    [
+     0.52,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.49,
+     "theme: Internet Platforms"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.51,
+     "NYT"
+    ],
+    [
+     0.5,
+     "YELP"
+    ],
+    [
+     0.49,
+     "LZ"
+    ],
+    [
+     0.48,
+     "NRDS"
+    ],
+    [
+     0.47,
+     "PAY"
+    ]
+   ],
+   "new_group": null
+  },
+  "AUR": {
+   "name": "Aurora Innovation Inc.",
+   "mcap_b": 8.63,
+   "sector": "Information Technology",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.41,
+     "theme: Quantum Computing"
+    ],
+    [
+     0.41,
+     "group: Quantum Computing"
+    ],
+    [
+     0.37,
+     "theme: Optics & CPO"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.42,
+     "OUST"
+    ],
+    [
+     0.41,
+     "LWLG"
+    ],
+    [
+     0.4,
+     "QUBT"
+    ],
+    [
+     0.39,
+     "QS"
+    ],
+    [
+     0.38,
+     "IONQ"
+    ]
+   ],
+   "new_group": null
+  },
+  "CAE": {
+   "name": "CAE Inc.",
+   "mcap_b": 8.56,
+   "sector": "Industrials",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.33,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.28,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.25,
+     "theme: Hotels"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.39,
+     "HEI"
+    ],
+    [
+     0.34,
+     "RTX"
+    ],
+    [
+     0.33,
+     "TDG"
+    ],
+    [
+     0.33,
+     "ATAT"
+    ],
+    [
+     0.32,
+     "GE"
+    ]
+   ],
+   "new_group": null
+  },
+  "KT": {
+   "name": "KT Corporation",
+   "mcap_b": 8.54,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.22,
+     "theme: Telecom"
+    ],
+    [
+     0.18,
+     "group: Real Estate Services"
+    ],
+    [
+     0.16,
+     "group: Banks: Japan & Korea"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.38,
+     "SKM"
+    ],
+    [
+     0.3,
+     "IEP"
+    ],
+    [
+     0.29,
+     "CBRE"
+    ],
+    [
+     0.28,
+     "WF"
+    ],
+    [
+     0.28,
+     "T"
+    ]
+   ],
+   "new_group": null
+  },
+  "TIMB": {
+   "name": "TIM S.A.",
+   "mcap_b": 8.49,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.59,
+     "group: Utilities - Latin America & Asia"
+    ],
+    [
+     0.44,
+     "group: Banks: Latin America"
+    ],
+    [
+     0.4,
+     "theme: LatAm Fintech & Banks"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.83,
+     "VIV"
+    ],
+    [
+     0.56,
+     "SBS"
+    ],
+    [
+     0.56,
+     "ELPC"
+    ],
+    [
+     0.54,
+     "CIG"
+    ],
+    [
+     0.51,
+     "ITUB"
+    ]
+   ],
+   "new_group": null
+  },
+  "SARO": {
+   "name": "StandardAero Inc.",
+   "mcap_b": 8.35,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.53,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.47,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.42,
+     "group: Building Materials"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.63,
+     "GE"
+    ],
+    [
+     0.6,
+     "HEI"
+    ],
+    [
+     0.55,
+     "RTX"
+    ],
+    [
+     0.54,
+     "TDG"
+    ],
+    [
+     0.52,
+     "VSEC"
+    ]
+   ],
+   "new_group": 0
+  },
+  "BZ": {
+   "name": "KANZHUN LIMITED American Depository Shares",
+   "mcap_b": 8.08,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.56,
+     "theme: China Internet"
+    ],
+    [
+     0.52,
+     "group: Internet Retail"
+    ],
+    [
+     0.31,
+     "theme: China EV"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.5,
+     "YMM"
+    ],
+    [
+     0.47,
+     "PDD"
+    ],
+    [
+     0.43,
+     "VIPS"
+    ],
+    [
+     0.42,
+     "JD"
+    ],
+    [
+     0.42,
+     "TAL"
+    ]
+   ],
+   "new_group": null
+  },
+  "IDCC": {
+   "name": "InterDigital Inc.",
+   "mcap_b": 8.08,
+   "sector": "Information Technology",
+   "industry": "Multi-Sector Companies",
+   "best": [
+    [
+     0.31,
+     "group: Test, Measurement & Sensors"
+    ],
+    [
+     0.3,
+     "group: Semi Equipment: Front-End"
+    ],
+    [
+     0.3,
+     "group: Electrical Equipment & Parts"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.37,
+     "UBS"
+    ],
+    [
+     0.37,
+     "GEV"
+    ],
+    [
+     0.35,
+     "FER"
+    ],
+    [
+     0.34,
+     "BDC"
+    ],
+    [
+     0.34,
+     "NVT"
+    ]
+   ],
+   "new_group": null
+  },
+  "RAL": {
+   "name": "Ralliant Corporation",
+   "mcap_b": 7.88,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.64,
+     "group: Connectors & Passive Components"
+    ],
+    [
+     0.62,
+     "group: Contract Electronics Manufacturing"
+    ],
+    [
+     0.6,
+     "theme: Electronic Components & Instruments"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.63,
+     "NPO"
+    ],
+    [
+     0.61,
+     "BHE"
+    ],
+    [
+     0.61,
+     "KEYS"
+    ],
+    [
+     0.61,
+     "AEIS"
+    ],
+    [
+     0.6,
+     "PDFS"
+    ]
+   ],
+   "new_group": null
+  },
+  "ETSY": {
+   "name": "Etsy Inc.",
+   "mcap_b": 7.75,
+   "sector": "Consumer Discretionary",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.43,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.4,
+     "group: Specialty Business Services"
+    ],
+    [
+     0.39,
+     "theme: Online Listings & Marketplaces"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.45,
+     "EXPE"
+    ],
+    [
+     0.44,
+     "EBAY"
+    ],
+    [
+     0.43,
+     "EFX"
+    ],
+    [
+     0.4,
+     "VRSK"
+    ],
+    [
+     0.4,
+     "KMB"
+    ]
+   ],
+   "new_group": null
+  },
+  "CELH": {
+   "name": "Celsius Holdings Inc.",
+   "mcap_b": 7.59,
+   "sector": "Consumer Staples",
+   "industry": "Beverages (Production/Distribution)",
+   "best": [
+    [
+     0.39,
+     "group: Beverages - Non-Alcoholic"
+    ],
+    [
+     0.34,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.33,
+     "theme: Restaurants"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.4,
+     "EL"
+    ],
+    [
+     0.37,
+     "IPAR"
+    ],
+    [
+     0.36,
+     "MCO"
+    ],
+    [
+     0.35,
+     "ELF"
+    ],
+    [
+     0.35,
+     "KO"
+    ]
+   ],
+   "new_group": null
+  },
+  "PRMB": {
+   "name": "Primo Brands Corporation",
+   "mcap_b": 7.46,
+   "sector": "Consumer Staples",
+   "industry": "Beverages (Production/Distribution)",
+   "best": [
+    [
+     0.45,
+     "group: Specialty Chemicals"
+    ],
+    [
+     0.44,
+     "theme: Paints & Coatings"
+    ],
+    [
+     0.4,
+     "theme: Packaging"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.42,
+     "SHW"
+    ],
+    [
+     0.41,
+     "REYN"
+    ],
+    [
+     0.41,
+     "RYN"
+    ],
+    [
+     0.4,
+     "KTB"
+    ],
+    [
+     0.4,
+     "UL"
+    ]
+   ],
+   "new_group": null
+  },
+  "SLAB": {
+   "name": "Silicon Laboratories Inc.",
+   "mcap_b": 7.42,
+   "sector": "Information Technology",
+   "industry": "Semiconductors",
+   "best": [
+    [
+     0.46,
+     "theme: GaN & SiC Power"
+    ],
+    [
+     0.46,
+     "group: Semis: Analog, Auto & Power"
+    ],
+    [
+     0.45,
+     "theme: Analog & Auto Semis"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "STM"
+    ],
+    [
+     0.44,
+     "ON"
+    ],
+    [
+     0.43,
+     "ADI"
+    ],
+    [
+     0.41,
+     "RMBS"
+    ],
+    [
+     0.41,
+     "MPWR"
+    ]
+   ],
+   "new_group": null
+  },
+  "BLCO": {
+   "name": "Bausch + Lomb Corporation",
+   "mcap_b": 7.16,
+   "sector": "Health Care",
+   "industry": "Ophthalmic Goods",
+   "best": [
+    [
+     0.44,
+     "theme: Biotech"
+    ],
+    [
+     0.43,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.41,
+     "group: Drug Manufacturers - General"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.47,
+     "BHC"
+    ],
+    [
+     0.44,
+     "BMY"
+    ],
+    [
+     0.44,
+     "ALC"
+    ],
+    [
+     0.43,
+     "VRTX"
+    ],
+    [
+     0.43,
+     "AMGN"
+    ]
+   ],
+   "new_group": null
+  },
+  "COMP": {
+   "name": "Compass Inc.",
+   "mcap_b": 7.07,
+   "sector": "Information Technology",
+   "industry": "Real Estate",
+   "best": [
+    [
+     0.48,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.47,
+     "group: Online Marketplaces & Listings"
+    ],
+    [
+     0.41,
+     "group: Real Estate Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.5,
+     "RKT"
+    ],
+    [
+     0.46,
+     "Z"
+    ],
+    [
+     0.46,
+     "ZG"
+    ],
+    [
+     0.45,
+     "BKNG"
+    ],
+    [
+     0.44,
+     "PFSI"
+    ]
+   ],
+   "new_group": null
+  },
+  "GLBE": {
+   "name": "Global-E Online Ltd.",
+   "mcap_b": 6.97,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.52,
+     "theme: Enterprise SaaS"
+    ],
+    [
+     0.52,
+     "group: Software: Collaboration & Communications"
+    ],
+    [
+     0.51,
+     "group: Software: Vertical & Industry"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.54,
+     "NICE"
+    ],
+    [
+     0.54,
+     "AGYS"
+    ],
+    [
+     0.52,
+     "PCTY"
+    ],
+    [
+     0.52,
+     "MNDY"
+    ],
+    [
+     0.5,
+     "SPT"
+    ]
+   ],
+   "new_group": null
+  },
+  "FSV": {
+   "name": "FirstService Corporation",
+   "mcap_b": 6.5,
+   "sector": "Real Estate",
+   "industry": "Real Estate",
+   "best": [
+    [
+     0.57,
+     "theme: Beverages"
+    ],
+    [
+     0.57,
+     "group: Household & Personal Products"
+    ],
+    [
+     0.56,
+     "group: Real Estate Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "CIGI"
+    ],
+    [
+     0.58,
+     "AVY"
+    ],
+    [
+     0.57,
+     "HD"
+    ],
+    [
+     0.57,
+     "POOL"
+    ],
+    [
+     0.56,
+     "VICI"
+    ]
+   ],
+   "new_group": null
+  },
+  "YOU": {
+   "name": "Clear Secure Inc.",
+   "mcap_b": 6.47,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.35,
+     "group: Software: Collaboration & Communications"
+    ],
+    [
+     0.34,
+     "theme: Enterprise SaaS"
+    ],
+    [
+     0.34,
+     "group: Software: Marketing & Ad Tech"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.38,
+     "BOX"
+    ],
+    [
+     0.38,
+     "PEGA"
+    ],
+    [
+     0.36,
+     "NXST"
+    ],
+    [
+     0.36,
+     "LZ"
+    ],
+    [
+     0.36,
+     "KVYO"
+    ]
+   ],
+   "new_group": null
+  },
+  "NAVN": {
+   "name": "Navan Inc.",
+   "mcap_b": 6.46,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.44,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.41,
+     "group: Software: Collaboration & Communications"
+    ],
+    [
+     0.41,
+     "group: Software: Cloud, Data & Observability"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.43,
+     "FIVN"
+    ],
+    [
+     0.42,
+     "NSP"
+    ],
+    [
+     0.41,
+     "FIG"
+    ],
+    [
+     0.41,
+     "AVPT"
+    ],
+    [
+     0.41,
+     "BOX"
+    ]
+   ],
+   "new_group": null
+  },
+  "LOAR": {
+   "name": "Loar Holdings Inc.",
+   "mcap_b": 6.4,
+   "sector": "Industrials",
+   "industry": "Military/Government/Technical",
+   "best": [
+    [
+     0.41,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.36,
+     "group: Building Products & Equipment"
+    ],
+    [
+     0.34,
+     "group: Aerospace & Defense"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "VSEC"
+    ],
+    [
+     0.53,
+     "HEI"
+    ],
+    [
+     0.5,
+     "TDG"
+    ],
+    [
+     0.49,
+     "SARO"
+    ],
+    [
+     0.48,
+     "CR"
+    ]
+   ],
+   "new_group": null
+  },
+  "XMTR": {
+   "name": "Xometry Inc.",
+   "mcap_b": 6.38,
+   "sector": "Information Technology",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.27,
+     "theme: Neoclouds & AI Hosting"
+    ],
+    [
+     0.27,
+     "theme: AI Chips & CPUs"
+    ],
+    [
+     0.27,
+     "group: AI Cloud & Data-Center Hosting"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.32,
+     "CLSK"
+    ],
+    [
+     0.3,
+     "BHE"
+    ],
+    [
+     0.3,
+     "TH"
+    ],
+    [
+     0.29,
+     "ATEN"
+    ],
+    [
+     0.29,
+     "MTRN"
+    ]
+   ],
+   "new_group": null
+  },
+  "M": {
+   "name": "Macy's Inc",
+   "mcap_b": 6.24,
+   "sector": "Consumer Discretionary",
+   "industry": "Department/Specialty Retail Stores",
+   "best": [
+    [
+     0.46,
+     "group: Apparel Retail"
+    ],
+    [
+     0.44,
+     "theme: Apparel & Mall Retail"
+    ],
+    [
+     0.39,
+     "theme: Retail"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.55,
+     "KSS"
+    ],
+    [
+     0.51,
+     "AEO"
+    ],
+    [
+     0.41,
+     "BBY"
+    ],
+    [
+     0.4,
+     "WSM"
+    ],
+    [
+     0.39,
+     "HRL"
+    ]
+   ],
+   "new_group": null
+  },
+  "HXL": {
+   "name": "Hexcel Corporation",
+   "mcap_b": 6.2,
+   "sector": "Industrials",
+   "industry": "Major Chemicals",
+   "best": [
+    [
+     0.38,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.38,
+     "group: Specialty Industrial Machinery"
+    ],
+    [
+     0.37,
+     "group: Test, Measurement & Sensors"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.6,
+     "WWD"
+    ],
+    [
+     0.58,
+     "HWM"
+    ],
+    [
+     0.53,
+     "CRS"
+    ],
+    [
+     0.5,
+     "ATI"
+    ],
+    [
+     0.5,
+     "ESE"
+    ]
+   ],
+   "new_group": 0
+  },
+  "INGM": {
+   "name": "Ingram Micro Holding Corporation",
+   "mcap_b": 6.1,
+   "sector": "Information Technology",
+   "industry": "Retail: Computer Software & Peripheral Equipment",
+   "best": [
+    [
+     0.51,
+     "group: Electronics & Computer Distribution"
+    ],
+    [
+     0.5,
+     "theme: AI Servers & ODMs"
+    ],
+    [
+     0.48,
+     "group: AI Servers"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "SNX"
+    ],
+    [
+     0.49,
+     "HPE"
+    ],
+    [
+     0.45,
+     "NTAP"
+    ],
+    [
+     0.45,
+     "SCSC"
+    ],
+    [
+     0.42,
+     "CLS"
+    ]
+   ],
+   "new_group": null
+  },
+  "DUOL": {
+   "name": "Duolingo Inc.",
+   "mcap_b": 5.99,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.57,
+     "theme: Enterprise SaaS"
+    ],
+    [
+     0.57,
+     "group: Software: Marketing & Ad Tech"
+    ],
+    [
+     0.57,
+     "group: Software: Collaboration & Communications"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "HUBS"
+    ],
+    [
+     0.57,
+     "FIG"
+    ],
+    [
+     0.56,
+     "NICE"
+    ],
+    [
+     0.55,
+     "LZ"
+    ],
+    [
+     0.55,
+     "MNDY"
+    ]
+   ],
+   "new_group": null
+  },
+  "WEX": {
+   "name": "WEX Inc.",
+   "mcap_b": 5.98,
+   "sector": "Information Technology",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.65,
+     "group: Financial Tech Processors"
+    ],
+    [
+     0.6,
+     "group: Software: Finance & Banking"
+    ],
+    [
+     0.59,
+     "theme: Payroll & HR Software"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.58,
+     "ROP"
+    ],
+    [
+     0.57,
+     "CPAY"
+    ],
+    [
+     0.57,
+     "PEGA"
+    ],
+    [
+     0.56,
+     "FIS"
+    ],
+    [
+     0.56,
+     "BR"
+    ]
+   ],
+   "new_group": null
+  },
+  "DLB": {
+   "name": "Dolby Laboratories",
+   "mcap_b": 5.93,
+   "sector": "Information Technology",
+   "industry": "Multi-Sector Companies",
+   "best": [
+    [
+     0.32,
+     "group: Internet Retail"
+    ],
+    [
+     0.29,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.27,
+     "theme: Internet Platforms"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.4,
+     "BLKB"
+    ],
+    [
+     0.35,
+     "LSPD"
+    ],
+    [
+     0.35,
+     "ITGR"
+    ],
+    [
+     0.34,
+     "SPSC"
+    ],
+    [
+     0.34,
+     "OLED"
+    ]
+   ],
+   "new_group": null
+  },
+  "TFX": {
+   "name": "Teleflex Incorporated",
+   "mcap_b": 5.93,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.62,
+     "theme: Medtech"
+    ],
+    [
+     0.58,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.58,
+     "group: Medical Devices"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.58,
+     "BDX"
+    ],
+    [
+     0.55,
+     "ZTS"
+    ],
+    [
+     0.52,
+     "STE"
+    ],
+    [
+     0.51,
+     "IDXX"
+    ],
+    [
+     0.51,
+     "PODD"
+    ]
+   ],
+   "new_group": null
+  },
+  "WPP": {
+   "name": "WPP plc",
+   "mcap_b": 5.93,
+   "sector": "Communication Services",
+   "industry": "Advertising",
+   "best": [
+    [
+     0.53,
+     "group: Software: HR & Payroll"
+    ],
+    [
+     0.51,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.51,
+     "group: Consulting Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.64,
+     "OMC"
+    ],
+    [
+     0.54,
+     "RELX"
+    ],
+    [
+     0.52,
+     "EXLS"
+    ],
+    [
+     0.51,
+     "PAYC"
+    ],
+    [
+     0.5,
+     "G"
+    ]
+   ],
+   "new_group": null
+  },
+  "NIQ": {
+   "name": "NIQ Global Intelligence plc",
+   "mcap_b": 5.91,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.52,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.51,
+     "group: Software: HR & Payroll"
+    ],
+    [
+     0.51,
+     "group: Consulting Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.52,
+     "ADP"
+    ],
+    [
+     0.51,
+     "EXLS"
+    ],
+    [
+     0.5,
+     "FDS"
+    ],
+    [
+     0.5,
+     "PCTY"
+    ],
+    [
+     0.5,
+     "TRI"
+    ]
+   ],
+   "new_group": null
+  },
+  "DOCS": {
+   "name": "Doximity Inc.",
+   "mcap_b": 5.81,
+   "sector": "Information Technology",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.61,
+     "group: Software: Collaboration & Communications"
+    ],
+    [
+     0.59,
+     "theme: Enterprise SaaS"
+    ],
+    [
+     0.58,
+     "group: Software: Marketing & Ad Tech"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.67,
+     "SPT"
+    ],
+    [
+     0.64,
+     "TEAM"
+    ],
+    [
+     0.62,
+     "PHR"
+    ],
+    [
+     0.6,
+     "MNDY"
+    ],
+    [
+     0.56,
+     "FDS"
+    ]
+   ],
+   "new_group": null
+  },
+  "OCTV": {
+   "name": "Octave Intelligence plc",
+   "mcap_b": 5.71,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.41,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.4,
+     "group: Software: Collaboration & Communications"
+    ],
+    [
+     0.39,
+     "group: Software: Cloud, Data & Observability"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.42,
+     "NOW"
+    ],
+    [
+     0.42,
+     "ZM"
+    ],
+    [
+     0.4,
+     "MDB"
+    ],
+    [
+     0.4,
+     "TDC"
+    ],
+    [
+     0.39,
+     "PTC"
+    ]
+   ],
+   "new_group": null
+  },
+  "PI": {
+   "name": "Impinj Inc.",
+   "mcap_b": 5.69,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.45,
+     "theme: Analog & Auto Semis"
+    ],
+    [
+     0.44,
+     "group: Semis: IoT, Edge & FPGA"
+    ],
+    [
+     0.43,
+     "group: Semis: Analog, Auto & Power"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.46,
+     "GFS"
+    ],
+    [
+     0.44,
+     "STM"
+    ],
+    [
+     0.42,
+     "DIOD"
+    ],
+    [
+     0.42,
+     "KEYS"
+    ],
+    [
+     0.42,
+     "Q"
+    ]
+   ],
+   "new_group": null
+  },
+  "VRNS": {
+   "name": "Varonis Systems Inc.",
+   "mcap_b": 5.62,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.56,
+     "theme: Cybersecurity"
+    ],
+    [
+     0.56,
+     "group: Software: Cybersecurity"
+    ],
+    [
+     0.45,
+     "group: Software: Cloud, Data & Observability"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.55,
+     "TENB"
+    ],
+    [
+     0.55,
+     "RPD"
+    ],
+    [
+     0.52,
+     "OKTA"
+    ],
+    [
+     0.51,
+     "AVPT"
+    ],
+    [
+     0.5,
+     "RBRK"
+    ]
+   ],
+   "new_group": null
+  },
+  "NOVT": {
+   "name": "Novanta Inc.",
+   "mcap_b": 5.58,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.6,
+     "group: Connectors & Passive Components"
+    ],
+    [
+     0.57,
+     "group: Contract Electronics Manufacturing"
+    ],
+    [
+     0.56,
+     "theme: Electronic Components & Instruments"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.6,
+     "PLXS"
+    ],
+    [
+     0.56,
+     "BELFB"
+    ],
+    [
+     0.56,
+     "AEIS"
+    ],
+    [
+     0.55,
+     "LFUS"
+    ],
+    [
+     0.55,
+     "MTSI"
+    ]
+   ],
+   "new_group": null
+  },
+  "BETA": {
+   "name": "Beta Technologies Inc.",
+   "mcap_b": 5.54,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.31,
+     "theme: Defense Tech & Drones"
+    ],
+    [
+     0.29,
+     "theme: Quantum Computing"
+    ],
+    [
+     0.29,
+     "group: Quantum Computing"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.57,
+     "ACHR"
+    ],
+    [
+     0.45,
+     "JOBY"
+    ],
+    [
+     0.36,
+     "LUNR"
+    ],
+    [
+     0.35,
+     "XE"
+    ],
+    [
+     0.31,
+     "IONQ"
+    ]
+   ],
+   "new_group": null
+  },
+  "NXST": {
+   "name": "Nexstar Media Group Inc.",
+   "mcap_b": 5.5,
+   "sector": "Communication Services",
+   "industry": "Broadcasting",
+   "best": [
+    [
+     0.54,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.53,
+     "group: Online Marketplaces & Listings"
+    ],
+    [
+     0.49,
+     "theme: Payroll & HR Software"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.57,
+     "SBGI"
+    ],
+    [
+     0.5,
+     "MORN"
+    ],
+    [
+     0.49,
+     "EXLS"
+    ],
+    [
+     0.48,
+     "BRO"
+    ],
+    [
+     0.48,
+     "EFX"
+    ]
+   ],
+   "new_group": null
+  },
+  "AMTM": {
+   "name": "Amentum Holdings Inc.",
+   "mcap_b": 5.47,
+   "sector": "Industrials",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.57,
+     "group: Government IT & Defense Services"
+    ],
+    [
+     0.41,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.4,
+     "theme: Aerospace & Defense"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.54,
+     "KBR"
+    ],
+    [
+     0.48,
+     "BAH"
+    ],
+    [
+     0.48,
+     "LDOS"
+    ],
+    [
+     0.47,
+     "SAIC"
+    ],
+    [
+     0.46,
+     "CACI"
+    ]
+   ],
+   "new_group": null
+  },
+  "HAE": {
+   "name": "Haemonetics Corporation",
+   "mcap_b": 5.47,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.37,
+     "group: Medical Devices"
+    ],
+    [
+     0.36,
+     "theme: Medtech"
+    ],
+    [
+     0.36,
+     "group: Medical Instruments & Supplies"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.41,
+     "ICUI"
+    ],
+    [
+     0.41,
+     "LINE"
+    ],
+    [
+     0.38,
+     "REXR"
+    ],
+    [
+     0.37,
+     "PODD"
+    ],
+    [
+     0.35,
+     "GMED"
+    ]
+   ],
+   "new_group": null
+  },
+  "VEON": {
+   "name": "VEON Ltd.",
+   "mcap_b": 5.38,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.31,
+     "theme: Rare Earths"
+    ],
+    [
+     0.31,
+     "theme: Nuclear & Uranium"
+    ],
+    [
+     0.3,
+     "group: Uranium"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "KYIV"
+    ],
+    [
+     0.34,
+     "DNN"
+    ],
+    [
+     0.32,
+     "CEPU"
+    ],
+    [
+     0.32,
+     "TIGO"
+    ],
+    [
+     0.31,
+     "AUGO"
+    ]
+   ],
+   "new_group": null
+  },
+  "RELY": {
+   "name": "Remitly Global Inc.",
+   "mcap_b": 5.37,
+   "sector": "Information Technology",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.45,
+     "group: Payments"
+    ],
+    [
+     0.4,
+     "theme: Fintech & Payments"
+    ],
+    [
+     0.36,
+     "group: Financial Tech Processors"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.48,
+     "FLYW"
+    ],
+    [
+     0.44,
+     "MQ"
+    ],
+    [
+     0.4,
+     "EVTC"
+    ],
+    [
+     0.38,
+     "CHYM"
+    ],
+    [
+     0.37,
+     "NWSA"
+    ]
+   ],
+   "new_group": null
+  },
+  "MMED": {
+   "name": "MiniMed Group Inc.",
+   "mcap_b": 5.3,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.28,
+     "theme: Medtech"
+    ],
+    [
+     0.26,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.26,
+     "group: Medical Devices"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.32,
+     "IRTC"
+    ],
+    [
+     0.31,
+     "DXCM"
+    ],
+    [
+     0.3,
+     "COO"
+    ],
+    [
+     0.29,
+     "PODD"
+    ],
+    [
+     0.28,
+     "DLTR"
+    ]
+   ],
+   "new_group": null
+  },
+  "OLLI": {
+   "name": "Ollie's Bargain Outlet Holdings Inc.",
+   "mcap_b": 5.29,
+   "sector": "Consumer Discretionary",
+   "industry": "Department/Specialty Retail Stores",
+   "best": [
+    [
+     0.43,
+     "group: Restaurants"
+    ],
+    [
+     0.41,
+     "theme: Casual Dining"
+    ],
+    [
+     0.39,
+     "group: Home Improvement Retail"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.53,
+     "SVV"
+    ],
+    [
+     0.45,
+     "FIVE"
+    ],
+    [
+     0.41,
+     "DG"
+    ],
+    [
+     0.4,
+     "HELE"
+    ],
+    [
+     0.4,
+     "SHOO"
+    ]
+   ],
+   "new_group": null
+  },
+  "KRMN": {
+   "name": "Karman Holdings Inc.",
+   "mcap_b": 5.24,
+   "sector": "Industrials",
+   "industry": "Military/Government/Technical",
+   "best": [
+    [
+     0.47,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.47,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.41,
+     "theme: Defense Tech & Drones"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.57,
+     "KTOS"
+    ],
+    [
+     0.46,
+     "LMT"
+    ],
+    [
+     0.46,
+     "AVAV"
+    ],
+    [
+     0.43,
+     "GD"
+    ],
+    [
+     0.43,
+     "MRCY"
+    ]
+   ],
+   "new_group": null
+  },
+  "VNT": {
+   "name": "Vontier Corporation",
+   "mcap_b": 4.95,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.41,
+     "theme: Paints & Coatings"
+    ],
+    [
+     0.4,
+     "theme: Homebuilders & Housing"
+    ],
+    [
+     0.4,
+     "group: Specialty Chemicals"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.54,
+     "MWA"
+    ],
+    [
+     0.51,
+     "ITW"
+    ],
+    [
+     0.5,
+     "ESAB"
+    ],
+    [
+     0.5,
+     "OTIS"
+    ],
+    [
+     0.48,
+     "AOS"
+    ]
+   ],
+   "new_group": null
+  },
+  "HASI": {
+   "name": "HA Sustainable Infrastructure Capital Inc.",
+   "mcap_b": 4.94,
+   "sector": "Financials",
+   "industry": "Finance/Investors Services",
+   "best": [
+    [
+     0.41,
+     "theme: Solar & Clean Energy"
+    ],
+    [
+     0.4,
+     "group: Solar"
+    ],
+    [
+     0.33,
+     "group: Utilities - Regulated Gas"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.43,
+     "BKH"
+    ],
+    [
+     0.41,
+     "NWE"
+    ],
+    [
+     0.37,
+     "CNP"
+    ],
+    [
+     0.37,
+     "ETR"
+    ],
+    [
+     0.36,
+     "RUN"
+    ]
+   ],
+   "new_group": null
+  },
+  "NSIT": {
+   "name": "Insight Enterprises Inc.",
+   "mcap_b": 4.91,
+   "sector": "Information Technology",
+   "industry": "Catalog/Specialty Distribution",
+   "best": [
+    [
+     0.36,
+     "theme: AI Servers & ODMs"
+    ],
+    [
+     0.35,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.34,
+     "group: Software: Cloud, Data & Observability"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.57,
+     "CDW"
+    ],
+    [
+     0.51,
+     "CNXN"
+    ],
+    [
+     0.45,
+     "SCSC"
+    ],
+    [
+     0.43,
+     "SNX"
+    ],
+    [
+     0.43,
+     "NTAP"
+    ]
+   ],
+   "new_group": null
+  },
+  "LUMN": {
+   "name": "Lumen Technologies Inc.",
+   "mcap_b": 4.9,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.43,
+     "theme: Solar & Clean Energy"
+    ],
+    [
+     0.43,
+     "group: Solar"
+    ],
+    [
+     0.34,
+     "group: AI Cloud & Data-Center Hosting"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.45,
+     "SEDG"
+    ],
+    [
+     0.43,
+     "AMRC"
+    ],
+    [
+     0.39,
+     "PRIM"
+    ],
+    [
+     0.38,
+     "IREN"
+    ],
+    [
+     0.38,
+     "MTZ"
+    ]
+   ],
+   "new_group": null
+  },
+  "JOBY": {
+   "name": "Joby Aviation Inc.",
+   "mcap_b": 4.82,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.57,
+     "theme: Rare Earths"
+    ],
+    [
+     0.54,
+     "theme: Quantum Computing"
+    ],
+    [
+     0.54,
+     "theme: Defense Tech & Drones"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.69,
+     "ACHR"
+    ],
+    [
+     0.58,
+     "USAR"
+    ],
+    [
+     0.57,
+     "MP"
+    ],
+    [
+     0.56,
+     "RGTI"
+    ],
+    [
+     0.53,
+     "SMR"
+    ]
+   ],
+   "new_group": null
+  },
+  "BB": {
+   "name": "BlackBerry Limited",
+   "mcap_b": 4.81,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.47,
+     "group: Networking Equipment"
+    ],
+    [
+     0.45,
+     "theme: Cybersecurity"
+    ],
+    [
+     0.45,
+     "theme: AI Networking"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.53,
+     "NTCT"
+    ],
+    [
+     0.51,
+     "FTNT"
+    ],
+    [
+     0.48,
+     "NOK"
+    ],
+    [
+     0.47,
+     "FFIV"
+    ],
+    [
+     0.45,
+     "AIP"
+    ]
+   ],
+   "new_group": null
+  },
+  "MBLY": {
+   "name": "Mobileye Global Inc.",
+   "mcap_b": 4.75,
+   "sector": "Consumer Discretionary",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.29,
+     "theme: AI Networking"
+    ],
+    [
+     0.29,
+     "group: Networking Equipment"
+    ],
+    [
+     0.26,
+     "group: Copper"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.39,
+     "OPRA"
+    ],
+    [
+     0.32,
+     "FORTY"
+    ],
+    [
+     0.31,
+     "GAM"
+    ],
+    [
+     0.31,
+     "HIMX"
+    ],
+    [
+     0.3,
+     "MRVL"
+    ]
+   ],
+   "new_group": null
+  },
+  "MIR": {
+   "name": "Mirion Technologies Inc.",
+   "mcap_b": 4.68,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.41,
+     "theme: Data Center Power & Cooling"
+    ],
+    [
+     0.38,
+     "theme: Data Center Builders & REITs"
+    ],
+    [
+     0.37,
+     "group: Electrical Equipment & Parts"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.5,
+     "BWXT"
+    ],
+    [
+     0.43,
+     "FTAI"
+    ],
+    [
+     0.43,
+     "VRT"
+    ],
+    [
+     0.43,
+     "FPS"
+    ],
+    [
+     0.42,
+     "RRX"
+    ]
+   ],
+   "new_group": null
+  },
+  "VSEC": {
+   "name": "VSE Corporation",
+   "mcap_b": 4.57,
+   "sector": "Industrials",
+   "industry": "Military/Government/Technical",
+   "best": [
+    [
+     0.44,
+     "group: Specialty Industrial Machinery"
+    ],
+    [
+     0.4,
+     "theme: Industrial Automation"
+    ],
+    [
+     0.35,
+     "theme: Data Center Power & Cooling"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.65,
+     "AIR"
+    ],
+    [
+     0.61,
+     "GE"
+    ],
+    [
+     0.56,
+     "LOAR"
+    ],
+    [
+     0.54,
+     "PH"
+    ],
+    [
+     0.53,
+     "DCO"
+    ]
+   ],
+   "new_group": 0
+  },
+  "HHH": {
+   "name": "Howard Hughes Holdings Inc.",
+   "mcap_b": 4.56,
+   "sector": "Real Estate",
+   "industry": "Real Estate Investment Trusts",
+   "best": [
+    [
+     0.42,
+     "group: Residential Construction"
+    ],
+    [
+     0.4,
+     "theme: Net Lease & Diversified REITs"
+    ],
+    [
+     0.39,
+     "group: REIT - Residential"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.46,
+     "IBP"
+    ],
+    [
+     0.45,
+     "UMH"
+    ],
+    [
+     0.41,
+     "PHM"
+    ],
+    [
+     0.39,
+     "SHW"
+    ],
+    [
+     0.38,
+     "PBH"
+    ]
+   ],
+   "new_group": null
+  },
+  "CCC": {
+   "name": "CCC Intelligent Solutions Holdings Inc.",
+   "mcap_b": 4.54,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.54,
+     "group: Software: Vertical & Industry"
+    ],
+    [
+     0.52,
+     "group: Software: Majors"
+    ],
+    [
+     0.5,
+     "theme: Enterprise SaaS"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "VEEV"
+    ],
+    [
+     0.54,
+     "CRM"
+    ],
+    [
+     0.49,
+     "SAP"
+    ],
+    [
+     0.49,
+     "FDS"
+    ],
+    [
+     0.48,
+     "PCTY"
+    ]
+   ],
+   "new_group": null
+  },
+  "VSNT": {
+   "name": "Versant Media Group Inc.",
+   "mcap_b": 4.54,
+   "sector": "Communication Services",
+   "industry": "Broadcasting",
+   "best": [
+    [
+     0.49,
+     "group: Telecom Services"
+    ],
+    [
+     0.44,
+     "theme: Telecom"
+    ],
+    [
+     0.4,
+     "group: Packaged Foods"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "SBGI"
+    ],
+    [
+     0.5,
+     "FOX"
+    ],
+    [
+     0.49,
+     "DIS"
+    ],
+    [
+     0.47,
+     "FOXA"
+    ],
+    [
+     0.47,
+     "ROKU"
+    ]
+   ],
+   "new_group": null
+  },
+  "TEO": {
+   "name": "Telecom Argentina SA",
+   "mcap_b": 4.48,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.66,
+     "group: Banks: Latin America"
+    ],
+    [
+     0.52,
+     "theme: LatAm Energy"
+    ],
+    [
+     0.49,
+     "theme: LatAm Fintech & Banks"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.68,
+     "GGAL"
+    ],
+    [
+     0.65,
+     "TGS"
+    ],
+    [
+     0.65,
+     "CEPU"
+    ],
+    [
+     0.65,
+     "BMA"
+    ],
+    [
+     0.63,
+     "BBAR"
+    ]
+   ],
+   "new_group": null
+  },
+  "CNK": {
+   "name": "Cinemark Holdings Inc Cinemark Holdings Inc.",
+   "mcap_b": 4.47,
+   "sector": "Communication Services",
+   "industry": "Movies/Entertainment",
+   "best": [
+    [
+     0.25,
+     "group: Entertainment"
+    ],
+    [
+     0.22,
+     "theme: Hotel REITs"
+    ],
+    [
+     0.22,
+     "group: REIT - Hotel & Motel"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.71,
+     "MCS"
+    ],
+    [
+     0.55,
+     "AMC"
+    ],
+    [
+     0.54,
+     "IMAX"
+    ],
+    [
+     0.34,
+     "SPHR"
+    ],
+    [
+     0.33,
+     "TKO"
+    ]
+   ],
+   "new_group": null
+  },
+  "SRAD": {
+   "name": "Sportradar Group AG",
+   "mcap_b": 4.43,
+   "sector": "Industrials",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.26,
+     "group: Consulting Services"
+    ],
+    [
+     0.24,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.24,
+     "group: Software: Vertical & Industry"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.52,
+     "DKNG"
+    ],
+    [
+     0.51,
+     "GENI"
+    ],
+    [
+     0.5,
+     "SGHC"
+    ],
+    [
+     0.49,
+     "FLUT"
+    ],
+    [
+     0.38,
+     "TME"
+    ]
+   ],
+   "new_group": null
+  },
+  "LIVN": {
+   "name": "LivaNova PLC",
+   "mcap_b": 4.4,
+   "sector": "Health Care",
+   "industry": "Biotechnology: Electromedical & Electrotherapeutic Apparatus",
+   "best": [
+    [
+     0.55,
+     "group: Medical Devices"
+    ],
+    [
+     0.53,
+     "theme: Medtech"
+    ],
+    [
+     0.49,
+     "group: Medical Instruments & Supplies"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.49,
+     "LMAT"
+    ],
+    [
+     0.48,
+     "BSX"
+    ],
+    [
+     0.48,
+     "HSTM"
+    ],
+    [
+     0.46,
+     "ATEC"
+    ],
+    [
+     0.45,
+     "SYK"
+    ]
+   ],
+   "new_group": null
+  },
+  "GDS": {
+   "name": "GDS Holdings Limited",
+   "mcap_b": 4.38,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.43,
+     "group: AI Cloud & Data-Center Hosting"
+    ],
+    [
+     0.4,
+     "theme: Neoclouds & AI Hosting"
+    ],
+    [
+     0.39,
+     "theme: AI Networking"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.67,
+     "VNET"
+    ],
+    [
+     0.51,
+     "BIDU"
+    ],
+    [
+     0.48,
+     "KC"
+    ],
+    [
+     0.4,
+     "WULF"
+    ],
+    [
+     0.39,
+     "SHAZ"
+    ]
+   ],
+   "new_group": null
+  },
+  "AIR": {
+   "name": "AAR Corp.",
+   "mcap_b": 4.37,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.45,
+     "group: Specialty Industrial Machinery"
+    ],
+    [
+     0.41,
+     "theme: Industrial Automation"
+    ],
+    [
+     0.38,
+     "group: Test, Measurement & Sensors"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.65,
+     "VSEC"
+    ],
+    [
+     0.52,
+     "DCO"
+    ],
+    [
+     0.52,
+     "GE"
+    ],
+    [
+     0.48,
+     "ESE"
+    ],
+    [
+     0.46,
+     "GRC"
+    ]
+   ],
+   "new_group": null
+  },
+  "BMI": {
+   "name": "Badger Meter Inc.",
+   "mcap_b": 4.35,
+   "sector": "Information Technology",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.37,
+     "theme: Homebuilders & Housing"
+    ],
+    [
+     0.35,
+     "group: Home Improvement Retail"
+    ],
+    [
+     0.33,
+     "theme: Paints & Coatings"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.55,
+     "XYL"
+    ],
+    [
+     0.5,
+     "AOS"
+    ],
+    [
+     0.47,
+     "OTIS"
+    ],
+    [
+     0.46,
+     "MWA"
+    ],
+    [
+     0.45,
+     "ITW"
+    ]
+   ],
+   "new_group": null
+  },
+  "ITRI": {
+   "name": "Itron Inc.",
+   "mcap_b": 4.31,
+   "sector": "Information Technology",
+   "industry": "Electrical Products",
+   "best": [
+    [
+     0.41,
+     "group: Lumber & Wood Production"
+    ],
+    [
+     0.37,
+     "group: Recreational Vehicles"
+    ],
+    [
+     0.36,
+     "group: Residential Construction"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.53,
+     "SSD"
+    ],
+    [
+     0.48,
+     "FELE"
+    ],
+    [
+     0.45,
+     "EPAC"
+    ],
+    [
+     0.43,
+     "LECO"
+    ],
+    [
+     0.43,
+     "VLTO"
+    ]
+   ],
+   "new_group": null
+  },
+  "ITGR": {
+   "name": "Integer Holdings Corporation",
+   "mcap_b": 4.3,
+   "sector": "Health Care",
+   "industry": "Biotechnology: Electromedical & Electrotherapeutic Apparatus",
+   "best": [
+    [
+     0.41,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.37,
+     "theme: Medtech"
+    ],
+    [
+     0.36,
+     "group: Lumber & Wood Production"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "DSGR"
+    ],
+    [
+     0.43,
+     "MMSI"
+    ],
+    [
+     0.42,
+     "FAST"
+    ],
+    [
+     0.41,
+     "HNI"
+    ],
+    [
+     0.41,
+     "TFX"
+    ]
+   ],
+   "new_group": null
+  },
+  "IRTC": {
+   "name": "iRhythm Holdings Inc.",
+   "mcap_b": 4.17,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.53,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.52,
+     "theme: Medtech"
+    ],
+    [
+     0.52,
+     "group: Medical Devices"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.5,
+     "MAA"
+    ],
+    [
+     0.5,
+     "STE"
+    ],
+    [
+     0.5,
+     "GEHC"
+    ],
+    [
+     0.5,
+     "BDX"
+    ],
+    [
+     0.5,
+     "IRT"
+    ]
+   ],
+   "new_group": null
+  },
+  "TKC": {
+   "name": "Turkcell Iletisim Hizmetleri AS",
+   "mcap_b": 4.11,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.22,
+     "group: Semis: IoT, Edge & FPGA"
+    ],
+    [
+     0.22,
+     "group: Farm & Heavy Construction Machinery"
+    ],
+    [
+     0.21,
+     "group: Electronics & Computer Distribution"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.35,
+     "ZTO"
+    ],
+    [
+     0.3,
+     "CET"
+    ],
+    [
+     0.28,
+     "TMUS"
+    ],
+    [
+     0.27,
+     "BABA"
+    ],
+    [
+     0.27,
+     "GPGI"
+    ]
+   ],
+   "new_group": null
+  },
+  "TDS": {
+   "name": "Telephone and Data Systems Inc.",
+   "mcap_b": 4.1,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.35,
+     "theme: Telecom"
+    ],
+    [
+     0.34,
+     "group: Telecom Services"
+    ],
+    [
+     0.34,
+     "group: Banks: US Community"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "AD"
+    ],
+    [
+     0.38,
+     "DCOM"
+    ],
+    [
+     0.38,
+     "MCBS"
+    ],
+    [
+     0.37,
+     "PFIS"
+    ],
+    [
+     0.37,
+     "EQBK"
+    ]
+   ],
+   "new_group": null
+  },
+  "OLED": {
+   "name": "Universal Display Corporation",
+   "mcap_b": 4.03,
+   "sector": "Information Technology",
+   "industry": "Electrical Products",
+   "best": [
+    [
+     0.39,
+     "theme: Analog & Auto Semis"
+    ],
+    [
+     0.37,
+     "group: Semis: Mobile & RF"
+    ],
+    [
+     0.36,
+     "group: Semis: Analog, Auto & Power"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.42,
+     "SWKS"
+    ],
+    [
+     0.38,
+     "SYNA"
+    ],
+    [
+     0.36,
+     "POWI"
+    ],
+    [
+     0.36,
+     "MCHP"
+    ],
+    [
+     0.36,
+     "NXPI"
+    ]
+   ],
+   "new_group": null
+  },
+  "NVST": {
+   "name": "Envista Holdings Corporation",
+   "mcap_b": 3.98,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.46,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.43,
+     "theme: Medtech"
+    ],
+    [
+     0.41,
+     "theme: Casual Dining"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.63,
+     "ALGN"
+    ],
+    [
+     0.55,
+     "XRAY"
+    ],
+    [
+     0.51,
+     "HSIC"
+    ],
+    [
+     0.46,
+     "STE"
+    ],
+    [
+     0.45,
+     "COO"
+    ]
+   ],
+   "new_group": 2
+  },
+  "CAAP": {
+   "name": "Corporacion America Airports SA",
+   "mcap_b": 3.92,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.45,
+     "group: Airports & Air Services"
+    ],
+    [
+     0.37,
+     "group: Banks: Latin America"
+    ],
+    [
+     0.34,
+     "group: Banks: Europe"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.43,
+     "OMAB"
+    ],
+    [
+     0.42,
+     "GGAL"
+    ],
+    [
+     0.41,
+     "IRS"
+    ],
+    [
+     0.41,
+     "LTM"
+    ],
+    [
+     0.4,
+     "LOMA"
+    ]
+   ],
+   "new_group": null
+  },
+  "DLO": {
+   "name": "DLocal Limited",
+   "mcap_b": 3.89,
+   "sector": "Financials",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.49,
+     "theme: LatAm Fintech & Banks"
+    ],
+    [
+     0.43,
+     "group: Banks: Latin America"
+    ],
+    [
+     0.35,
+     "group: Payments"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.5,
+     "MELI"
+    ],
+    [
+     0.49,
+     "PICS"
+    ],
+    [
+     0.47,
+     "STNE"
+    ],
+    [
+     0.46,
+     "PAGS"
+    ],
+    [
+     0.45,
+     "INTR"
+    ]
+   ],
+   "new_group": null
+  },
+  "JOYY": {
+   "name": "JOYY Inc.",
+   "mcap_b": 3.88,
+   "sector": "Communication Services",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.38,
+     "theme: China Internet"
+    ],
+    [
+     0.29,
+     "group: Internet Retail"
+    ],
+    [
+     0.2,
+     "group: Banks: Latin America"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.37,
+     "FUTU"
+    ],
+    [
+     0.36,
+     "WB"
+    ],
+    [
+     0.36,
+     "TCOM"
+    ],
+    [
+     0.35,
+     "NTES"
+    ],
+    [
+     0.35,
+     "YMM"
+    ]
+   ],
+   "new_group": null
+  },
+  "STVN": {
+   "name": "Stevanato Group S.p.A.",
+   "mcap_b": 3.85,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.35,
+     "group: Furnishings, Fixtures & Appliances"
+    ],
+    [
+     0.3,
+     "theme: Life Science Tools & CROs"
+    ],
+    [
+     0.29,
+     "group: Packaging & Containers"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.36,
+     "SHC"
+    ],
+    [
+     0.33,
+     "HNI"
+    ],
+    [
+     0.32,
+     "RGEN"
+    ],
+    [
+     0.32,
+     "CBT"
+    ],
+    [
+     0.32,
+     "MLKN"
+    ]
+   ],
+   "new_group": null
+  },
+  "JOE": {
+   "name": "St. Joe Company (The)",
+   "mcap_b": 3.79,
+   "sector": "Real Estate",
+   "industry": "Homebuilding",
+   "best": [
+    [
+     0.45,
+     "group: Lumber & Wood Production"
+    ],
+    [
+     0.41,
+     "group: Building Products & Equipment"
+    ],
+    [
+     0.36,
+     "theme: Homebuilders & Housing"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.45,
+     "UFPI"
+    ],
+    [
+     0.45,
+     "IBP"
+    ],
+    [
+     0.44,
+     "MWA"
+    ],
+    [
+     0.43,
+     "BCC"
+    ],
+    [
+     0.42,
+     "AWI"
+    ]
+   ],
+   "new_group": null
+  },
+  "PHI": {
+   "name": "PLDT Inc.",
+   "mcap_b": 3.78,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.4,
+     "theme: Waste Management"
+    ],
+    [
+     0.38,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.36,
+     "group: Waste Management"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.4,
+     "RSG"
+    ],
+    [
+     0.39,
+     "WM"
+    ],
+    [
+     0.37,
+     "BRO"
+    ],
+    [
+     0.36,
+     "OTIS"
+    ],
+    [
+     0.36,
+     "EFX"
+    ]
+   ],
+   "new_group": null
+  },
+  "MSGE": {
+   "name": "Madison Square Garden Entertainment Corp.",
+   "mcap_b": 3.77,
+   "sector": "Communication Services",
+   "industry": "Services-Misc. Amusement & Recreation",
+   "best": [
+    [
+     0.32,
+     "group: Entertainment"
+    ],
+    [
+     0.21,
+     "group: Restaurants"
+    ],
+    [
+     0.21,
+     "group: Networking Equipment"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.6,
+     "MSGK"
+    ],
+    [
+     0.45,
+     "SPHR"
+    ],
+    [
+     0.37,
+     "LLYVK"
+    ],
+    [
+     0.35,
+     "LLYVA"
+    ],
+    [
+     0.35,
+     "LYV"
+    ]
+   ],
+   "new_group": null
+  },
+  "PLSE": {
+   "name": "Pulse Biosciences Inc",
+   "mcap_b": 3.72,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.24,
+     "theme: Crypto & Digital Assets"
+    ],
+    [
+     0.23,
+     "group: Crypto Platforms"
+    ],
+    [
+     0.22,
+     "group: Crypto Treasuries"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.29,
+     "ARWR"
+    ],
+    [
+     0.28,
+     "ISRG"
+    ],
+    [
+     0.28,
+     "SLN"
+    ],
+    [
+     0.27,
+     "HMC"
+    ],
+    [
+     0.27,
+     "BNTX"
+    ]
+   ],
+   "new_group": null
+  },
+  "LION": {
+   "name": "Lionsgate Studios Corp",
+   "mcap_b": 3.71,
+   "sector": "Communication Services",
+   "industry": "Movies/Entertainment",
+   "best": [
+    [
+     0.2,
+     "theme: Hotel REITs"
+    ],
+    [
+     0.2,
+     "group: Tobacco"
+    ],
+    [
+     0.2,
+     "group: REIT - Hotel & Motel"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.3,
+     "LBTYK"
+    ],
+    [
+     0.29,
+     "AKTS"
+    ],
+    [
+     0.28,
+     "LBTYA"
+    ],
+    [
+     0.25,
+     "ENR"
+    ],
+    [
+     0.25,
+     "MSGE"
+    ]
+   ],
+   "new_group": null
+  },
+  "LBTYB": {
+   "name": "Liberty Global Ltd.",
+   "mcap_b": 3.67,
+   "sector": "Communication Services",
+   "industry": "Cable & Other Pay Television Services",
+   "best": [
+    [
+     0.23,
+     "theme: Biotech"
+    ],
+    [
+     0.22,
+     "group: Insurance: Florida Homeowners"
+    ],
+    [
+     0.21,
+     "group: Medical Instruments & Supplies"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.31,
+     "HCSG"
+    ],
+    [
+     0.28,
+     "TEAM"
+    ],
+    [
+     0.27,
+     "INMD"
+    ],
+    [
+     0.27,
+     "BIIB"
+    ],
+    [
+     0.27,
+     "WMG"
+    ]
+   ],
+   "new_group": null
+  },
+  "LIF": {
+   "name": "Life360 Inc.",
+   "mcap_b": 3.67,
+   "sector": "Information Technology",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.38,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.36,
+     "group: Health Information Services"
+    ],
+    [
+     0.35,
+     "group: Software: Marketing & Ad Tech"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.46,
+     "PINS"
+    ],
+    [
+     0.41,
+     "LYFT"
+    ],
+    [
+     0.38,
+     "HSTM"
+    ],
+    [
+     0.38,
+     "TOST"
+    ],
+    [
+     0.37,
+     "DSP"
+    ]
+   ],
+   "new_group": null
+  },
+  "BATRA": {
+   "name": "Atlanta Braves Holdings Inc. Series A",
+   "mcap_b": 3.62,
+   "sector": "Communication Services",
+   "industry": "Services-Misc. Amusement & Recreation",
+   "best": [
+    [
+     0.43,
+     "group: Entertainment"
+    ],
+    [
+     0.33,
+     "group: REIT - Diversified"
+    ],
+    [
+     0.3,
+     "theme: Net Lease & Diversified REITs"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.9,
+     "BATRK"
+    ],
+    [
+     0.38,
+     "LLYVA"
+    ],
+    [
+     0.38,
+     "SPNT"
+    ],
+    [
+     0.38,
+     "IGIC"
+    ],
+    [
+     0.38,
+     "LLYVK"
+    ]
+   ],
+   "new_group": null
+  },
+  "CXT": {
+   "name": "Crane NXT Co.",
+   "mcap_b": 3.46,
+   "sector": "Information Technology",
+   "industry": "Metal Fabrications",
+   "best": [
+    [
+     0.31,
+     "theme: Packaging"
+    ],
+    [
+     0.31,
+     "group: Packaging & Containers"
+    ],
+    [
+     0.3,
+     "theme: Aerospace & Defense"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "TDG"
+    ],
+    [
+     0.43,
+     "JBTM"
+    ],
+    [
+     0.39,
+     "PH"
+    ],
+    [
+     0.39,
+     "HEI"
+    ],
+    [
+     0.38,
+     "MWA"
+    ]
+   ],
+   "new_group": null
+  },
+  "FIGS": {
+   "name": "FIGS Inc.",
+   "mcap_b": 3.46,
+   "sector": "Health Care",
+   "industry": "Apparel",
+   "best": [
+    [
+     0.47,
+     "theme: Internet Platforms"
+    ],
+    [
+     0.42,
+     "theme: Retail"
+    ],
+    [
+     0.42,
+     "theme: Beverages"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.49,
+     "ABNB"
+    ],
+    [
+     0.43,
+     "BKNG"
+    ],
+    [
+     0.41,
+     "DEO"
+    ],
+    [
+     0.41,
+     "SVV"
+    ],
+    [
+     0.39,
+     "NRDS"
+    ]
+   ],
+   "new_group": null
+  },
+  "NATL": {
+   "name": "NCR Atleos Corporation",
+   "mcap_b": 3.45,
+   "sector": "Information Technology",
+   "industry": "Office Equipment/Supplies/Services",
+   "best": [
+    [
+     0.49,
+     "theme: Office REITs"
+    ],
+    [
+     0.49,
+     "group: REIT - Office"
+    ],
+    [
+     0.45,
+     "theme: Net Lease & Diversified REITs"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.96,
+     "BCO"
+    ],
+    [
+     0.5,
+     "HIW"
+    ],
+    [
+     0.46,
+     "PDM"
+    ],
+    [
+     0.45,
+     "VNO"
+    ],
+    [
+     0.44,
+     "BANR"
+    ]
+   ],
+   "new_group": null
+  },
+  "COCO": {
+   "name": "The Vita Coco Company Inc.",
+   "mcap_b": 3.41,
+   "sector": "Consumer Staples",
+   "industry": "Beverages (Production/Distribution)",
+   "best": [
+    [
+     0.27,
+     "theme: Hotels"
+    ],
+    [
+     0.26,
+     "group: Lodging"
+    ],
+    [
+     0.18,
+     "group: Airports & Air Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.27,
+     "HLT"
+    ],
+    [
+     0.26,
+     "MNST"
+    ],
+    [
+     0.26,
+     "ARDX"
+    ],
+    [
+     0.26,
+     "UNFI"
+    ],
+    [
+     0.25,
+     "RGC"
+    ]
+   ],
+   "new_group": null
+  },
+  "FSLY": {
+   "name": "Fastly Inc.",
+   "mcap_b": 3.36,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.58,
+     "theme: Cybersecurity"
+    ],
+    [
+     0.57,
+     "group: Software: Cybersecurity"
+    ],
+    [
+     0.52,
+     "group: Software: Cloud, Data & Observability"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.62,
+     "DDOG"
+    ],
+    [
+     0.61,
+     "NET"
+    ],
+    [
+     0.61,
+     "ATEN"
+    ],
+    [
+     0.6,
+     "AKAM"
+    ],
+    [
+     0.57,
+     "CRWD"
+    ]
+   ],
+   "new_group": 1
+  },
+  "BATRK": {
+   "name": "Atlanta Braves Holdings Inc. Series C",
+   "mcap_b": 3.32,
+   "sector": "Communication Services",
+   "industry": "Services-Misc. Amusement & Recreation",
+   "best": [
+    [
+     0.43,
+     "group: Entertainment"
+    ],
+    [
+     0.32,
+     "group: REIT - Diversified"
+    ],
+    [
+     0.29,
+     "theme: Net Lease & Diversified REITs"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.9,
+     "BATRA"
+    ],
+    [
+     0.4,
+     "LLYVA"
+    ],
+    [
+     0.4,
+     "LLYVK"
+    ],
+    [
+     0.4,
+     "BWIN"
+    ],
+    [
+     0.39,
+     "LYV"
+    ]
+   ],
+   "new_group": null
+  },
+  "ACHR": {
+   "name": "Archer Aviation Inc.",
+   "mcap_b": 3.23,
+   "sector": "Industrials",
+   "industry": "Aerospace",
+   "best": [
+    [
+     0.46,
+     "theme: Quantum Computing"
+    ],
+    [
+     0.46,
+     "theme: Nuclear & Uranium"
+    ],
+    [
+     0.46,
+     "group: Quantum Computing"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.69,
+     "JOBY"
+    ],
+    [
+     0.57,
+     "BETA"
+    ],
+    [
+     0.5,
+     "BBAI"
+    ],
+    [
+     0.48,
+     "MP"
+    ],
+    [
+     0.48,
+     "RGTI"
+    ]
+   ],
+   "new_group": null
+  },
+  "MGNI": {
+   "name": "Magnite Inc.",
+   "mcap_b": 3.2,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.39,
+     "group: Health Information Services"
+    ],
+    [
+     0.38,
+     "group: Payments"
+    ],
+    [
+     0.34,
+     "theme: Internet Platforms"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.61,
+     "PUBM"
+    ],
+    [
+     0.49,
+     "TBLA"
+    ],
+    [
+     0.49,
+     "MNTN"
+    ],
+    [
+     0.44,
+     "DV"
+    ],
+    [
+     0.43,
+     "SBGI"
+    ]
+   ],
+   "new_group": null
+  },
+  "VTMX": {
+   "name": "Corporacion Inmobiliaria Vesta S.A.B de C.V.",
+   "mcap_b": 3.19,
+   "sector": "Real Estate",
+   "industry": "Real Estate",
+   "best": [
+    [
+     0.27,
+     "group: Airports & Air Services"
+    ],
+    [
+     0.21,
+     "group: Food Distribution"
+    ],
+    [
+     0.21,
+     "group: Farm & Heavy Construction Machinery"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.31,
+     "HSBC"
+    ],
+    [
+     0.3,
+     "TM"
+    ],
+    [
+     0.3,
+     "CX"
+    ],
+    [
+     0.29,
+     "ASR"
+    ],
+    [
+     0.27,
+     "CMP"
+    ]
+   ],
+   "new_group": null
+  },
+  "IPGP": {
+   "name": "IPG Photonics Corporation",
+   "mcap_b": 3.17,
+   "sector": "Information Technology",
+   "industry": "Semiconductors",
+   "best": [
+    [
+     0.75,
+     "theme: Semi Test & Packaging"
+    ],
+    [
+     0.75,
+     "theme: Optics & CPO"
+    ],
+    [
+     0.75,
+     "group: Semis: AI Connectivity & Interconnect"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.74,
+     "MKSI"
+    ],
+    [
+     0.73,
+     "LSCC"
+    ],
+    [
+     0.73,
+     "ENTG"
+    ],
+    [
+     0.72,
+     "AEIS"
+    ],
+    [
+     0.72,
+     "COHR"
+    ]
+   ],
+   "new_group": null
+  },
+  "OSIS": {
+   "name": "OSI Systems Inc.",
+   "mcap_b": 3.16,
+   "sector": "Information Technology",
+   "industry": "Semiconductors",
+   "best": [
+    [
+     0.33,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.32,
+     "group: Semis: Mobile & RF"
+    ],
+    [
+     0.3,
+     "group: Aerospace & Defense"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.42,
+     "TDY"
+    ],
+    [
+     0.41,
+     "MRCY"
+    ],
+    [
+     0.39,
+     "DRS"
+    ],
+    [
+     0.37,
+     "HII"
+    ],
+    [
+     0.35,
+     "CXT"
+    ]
+   ],
+   "new_group": null
+  },
+  "TDC": {
+   "name": "Teradata Corporation",
+   "mcap_b": 3.13,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.63,
+     "group: Software: Collaboration & Communications"
+    ],
+    [
+     0.62,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.61,
+     "theme: Enterprise SaaS"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.66,
+     "FRSH"
+    ],
+    [
+     0.58,
+     "PD"
+    ],
+    [
+     0.58,
+     "KD"
+    ],
+    [
+     0.56,
+     "CRM"
+    ],
+    [
+     0.56,
+     "AVPT"
+    ]
+   ],
+   "new_group": null
+  },
+  "KYIV": {
+   "name": "Kyivstar Group Ltd.",
+   "mcap_b": 3.09,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.37,
+     "group: Banks: Europe"
+    ],
+    [
+     0.36,
+     "theme: International Banks"
+    ],
+    [
+     0.35,
+     "theme: Fuel Cells & On-site Power"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "VEON"
+    ],
+    [
+     0.39,
+     "BE"
+    ],
+    [
+     0.39,
+     "MDA"
+    ],
+    [
+     0.38,
+     "LYG"
+    ],
+    [
+     0.36,
+     "PUK"
+    ]
+   ],
+   "new_group": null
+  },
+  "CLBT": {
+   "name": "Cellebrite DI Ltd.",
+   "mcap_b": 3.08,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.56,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.55,
+     "group: Software: Vertical & Industry"
+    ],
+    [
+     0.54,
+     "group: Software: Majors"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "NOW"
+    ],
+    [
+     0.57,
+     "BOX"
+    ],
+    [
+     0.54,
+     "IOT"
+    ],
+    [
+     0.52,
+     "AVPT"
+    ],
+    [
+     0.52,
+     "MANH"
+    ]
+   ],
+   "new_group": null
+  },
+  "ATRC": {
+   "name": "AtriCure Inc.",
+   "mcap_b": 3.07,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.43,
+     "group: Medical Devices"
+    ],
+    [
+     0.39,
+     "theme: Medtech"
+    ],
+    [
+     0.39,
+     "group: Medical Instruments & Supplies"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.49,
+     "SIBN"
+    ],
+    [
+     0.44,
+     "STE"
+    ],
+    [
+     0.38,
+     "GMED"
+    ],
+    [
+     0.38,
+     "USPH"
+    ],
+    [
+     0.38,
+     "MDT"
+    ]
+   ],
+   "new_group": null
+  },
+  "PTRN": {
+   "name": "Pattern Group Inc. Series A",
+   "mcap_b": 3.0,
+   "sector": "Information Technology",
+   "industry": "Catalog/Specialty Distribution",
+   "best": [
+    [
+     0.26,
+     "group: Software: Marketing & Ad Tech"
+    ],
+    [
+     0.24,
+     "theme: AI Software & Data"
+    ],
+    [
+     0.24,
+     "group: Software: Cloud, Data & Observability"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.32,
+     "TENB"
+    ],
+    [
+     0.32,
+     "DV"
+    ],
+    [
+     0.31,
+     "BBSI"
+    ],
+    [
+     0.3,
+     "RPD"
+    ],
+    [
+     0.3,
+     "NAVN"
+    ]
+   ],
+   "new_group": null
+  },
+  "VIA": {
+   "name": "Via Transportation Inc.",
+   "mcap_b": 2.97,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.62,
+     "group: Software: Marketing & Ad Tech"
+    ],
+    [
+     0.61,
+     "theme: Enterprise SaaS"
+    ],
+    [
+     0.57,
+     "theme: AI Software & Data"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "AMPL"
+    ],
+    [
+     0.59,
+     "WDAY"
+    ],
+    [
+     0.58,
+     "FRSH"
+    ],
+    [
+     0.56,
+     "NOW"
+    ],
+    [
+     0.55,
+     "BSY"
+    ]
+   ],
+   "new_group": null
+  },
+  "AXGN": {
+   "name": "Axogen Inc.",
+   "mcap_b": 2.96,
+   "sector": "Health Care",
+   "industry": "Biotechnology: Electromedical & Electrotherapeutic Apparatus",
+   "best": [
+    [
+     0.31,
+     "group: Medical Devices"
+    ],
+    [
+     0.29,
+     "theme: Medtech"
+    ],
+    [
+     0.28,
+     "group: Medical Instruments & Supplies"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.31,
+     "ISRG"
+    ],
+    [
+     0.3,
+     "GMAB"
+    ],
+    [
+     0.29,
+     "REPL"
+    ],
+    [
+     0.28,
+     "RDY"
+    ],
+    [
+     0.27,
+     "MDT"
+    ]
+   ],
+   "new_group": null
+  },
+  "AD": {
+   "name": "Array Digital Infrastructure Inc.",
+   "mcap_b": 2.88,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.36,
+     "group: REIT - Specialty"
+    ],
+    [
+     0.32,
+     "theme: Telecom"
+    ],
+    [
+     0.32,
+     "group: Telecom Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "TDS"
+    ],
+    [
+     0.4,
+     "FCBC"
+    ],
+    [
+     0.4,
+     "AMT"
+    ],
+    [
+     0.39,
+     "FMNB"
+    ],
+    [
+     0.36,
+     "CSGP"
+    ]
+   ],
+   "new_group": null
+  },
+  "PPLI": {
+   "name": "People Incorporated",
+   "mcap_b": 2.87,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.39,
+     "group: Payments"
+    ],
+    [
+     0.35,
+     "group: Online Marketplaces & Listings"
+    ],
+    [
+     0.34,
+     "theme: Online Listings & Marketplaces"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.42,
+     "ZD"
+    ],
+    [
+     0.41,
+     "TTD"
+    ],
+    [
+     0.41,
+     "YELP"
+    ],
+    [
+     0.4,
+     "PINS"
+    ],
+    [
+     0.4,
+     "GENI"
+    ]
+   ],
+   "new_group": null
+  },
+  "PRCH": {
+   "name": "Porch Group Inc.",
+   "mcap_b": 2.85,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.17,
+     "theme: Rare Earths"
+    ],
+    [
+     0.17,
+     "group: Insurance: Florida Homeowners"
+    ],
+    [
+     0.16,
+     "group: Entertainment"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.38,
+     "STGW"
+    ],
+    [
+     0.36,
+     "HAPN"
+    ],
+    [
+     0.29,
+     "HIPO"
+    ],
+    [
+     0.29,
+     "APP"
+    ],
+    [
+     0.29,
+     "MCS"
+    ]
+   ],
+   "new_group": null
+  },
+  "IHS": {
+   "name": "IHS Holding Limited",
+   "mcap_b": 2.83,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.28,
+     "group: Telecom Services"
+    ],
+    [
+     0.24,
+     "theme: Telecom"
+    ],
+    [
+     0.23,
+     "theme: BDCs & Private Credit"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.34,
+     "SBR"
+    ],
+    [
+     0.31,
+     "AMTM"
+    ],
+    [
+     0.31,
+     "LCLN"
+    ],
+    [
+     0.3,
+     "FDUS"
+    ],
+    [
+     0.29,
+     "RYZ"
+    ]
+   ],
+   "new_group": null
+  },
+  "ENHA": {
+   "name": "Enhanced Group Inc.",
+   "mcap_b": 2.78,
+   "sector": "Communication Services",
+   "industry": "Services-Misc. Amusement & Recreation",
+   "best": [
+    [
+     0.24,
+     "group: Crypto Platforms"
+    ],
+    [
+     0.2,
+     "group: Semis: AI Accelerators & CPUs"
+    ],
+    [
+     0.19,
+     "theme: Crypto & Digital Assets"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.29,
+     "HQ"
+    ],
+    [
+     0.25,
+     "EQPT"
+    ],
+    [
+     0.25,
+     "INTC"
+    ],
+    [
+     0.24,
+     "GLXY"
+    ],
+    [
+     0.24,
+     "BLSH"
+    ]
+   ],
+   "new_group": null
+  },
+  "IMAX": {
+   "name": "Imax Corporation",
+   "mcap_b": 2.77,
+   "sector": "Communication Services",
+   "industry": "Industrial Machinery/Components",
+   "best": [
+    [
+     0.28,
+     "group: Entertainment"
+    ],
+    [
+     0.15,
+     "theme: Life Science Tools & CROs"
+    ],
+    [
+     0.15,
+     "group: Diagnostics & Research"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.54,
+     "CNK"
+    ],
+    [
+     0.34,
+     "LLYVA"
+    ],
+    [
+     0.31,
+     "LLYVK"
+    ],
+    [
+     0.3,
+     "SONO"
+    ],
+    [
+     0.29,
+     "LYV"
+    ]
+   ],
+   "new_group": null
+  },
+  "NTCT": {
+   "name": "NetScout Systems Inc.",
+   "mcap_b": 2.76,
+   "sector": "Information Technology",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.59,
+     "group: Networking Equipment"
+    ],
+    [
+     0.52,
+     "theme: AI Networking"
+    ],
+    [
+     0.48,
+     "theme: AI Servers & ODMs"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.65,
+     "FFIV"
+    ],
+    [
+     0.6,
+     "ATEN"
+    ],
+    [
+     0.56,
+     "EXTR"
+    ],
+    [
+     0.56,
+     "RDWR"
+    ],
+    [
+     0.56,
+     "DGII"
+    ]
+   ],
+   "new_group": 1
+  },
+  "AMBA": {
+   "name": "Ambarella Inc.",
+   "mcap_b": 2.74,
+   "sector": "Information Technology",
+   "industry": "Semiconductors",
+   "best": [
+    [
+     0.6,
+     "group: Semis: AI Connectivity & Interconnect"
+    ],
+    [
+     0.59,
+     "group: Semis: IoT, Edge & FPGA"
+    ],
+    [
+     0.56,
+     "group: Semi Materials & Subsystems"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "CEVA"
+    ],
+    [
+     0.58,
+     "AMBQ"
+    ],
+    [
+     0.58,
+     "MPWR"
+    ],
+    [
+     0.57,
+     "RMBS"
+    ],
+    [
+     0.55,
+     "HLIT"
+    ]
+   ],
+   "new_group": null
+  },
+  "DGII": {
+   "name": "Digi International Inc.",
+   "mcap_b": 2.73,
+   "sector": "Information Technology",
+   "industry": "Computer Communications Equipment",
+   "best": [
+    [
+     0.53,
+     "group: Semis: AI Connectivity & Interconnect"
+    ],
+    [
+     0.51,
+     "group: Semis: IoT, Edge & FPGA"
+    ],
+    [
+     0.5,
+     "theme: Electronic Components & Instruments"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.56,
+     "NTCT"
+    ],
+    [
+     0.54,
+     "AIP"
+    ],
+    [
+     0.53,
+     "PENG"
+    ],
+    [
+     0.52,
+     "ANET"
+    ],
+    [
+     0.51,
+     "OUST"
+    ]
+   ],
+   "new_group": null
+  },
+  "KSS": {
+   "name": "Kohl's Corporation",
+   "mcap_b": 2.68,
+   "sector": "Consumer Discretionary",
+   "industry": "Department/Specialty Retail Stores",
+   "best": [
+    [
+     0.39,
+     "group: Apparel Retail"
+    ],
+    [
+     0.35,
+     "theme: Apparel & Mall Retail"
+    ],
+    [
+     0.34,
+     "theme: Retail"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.55,
+     "M"
+    ],
+    [
+     0.42,
+     "HRL"
+    ],
+    [
+     0.42,
+     "AEO"
+    ],
+    [
+     0.42,
+     "BKE"
+    ],
+    [
+     0.38,
+     "BBY"
+    ]
+   ],
+   "new_group": null
+  },
+  "STGW": {
+   "name": "Stagwell Inc.",
+   "mcap_b": 2.67,
+   "sector": "Communication Services",
+   "industry": "Advertising",
+   "best": [
+    [
+     0.45,
+     "theme: IT Services & Consulting"
+    ],
+    [
+     0.44,
+     "group: Financial Tech Processors"
+    ],
+    [
+     0.43,
+     "group: IT Consulting & Outsourcing"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.48,
+     "GDYN"
+    ],
+    [
+     0.47,
+     "GIB"
+    ],
+    [
+     0.47,
+     "BLKB"
+    ],
+    [
+     0.46,
+     "TYL"
+    ],
+    [
+     0.45,
+     "FIS"
+    ]
+   ],
+   "new_group": null
+  },
+  "WLYB": {
+   "name": "John Wiley & Sons Inc.",
+   "mcap_b": 2.64,
+   "sector": "Communication Services",
+   "industry": "Books",
+   "best": [
+    [
+     0.21,
+     "group: Beverages - Non-Alcoholic"
+    ],
+    [
+     0.19,
+     "group: Insurance - Property & Casualty"
+    ],
+    [
+     0.19,
+     "group: Education & Training Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.3,
+     "WLY"
+    ],
+    [
+     0.27,
+     "PLTR"
+    ],
+    [
+     0.26,
+     "DT"
+    ],
+    [
+     0.26,
+     "PGR"
+    ],
+    [
+     0.25,
+     "NUTX"
+    ]
+   ],
+   "new_group": null
+  },
+  "ATRO": {
+   "name": "Astronics Corporation",
+   "mcap_b": 2.62,
+   "sector": "Industrials",
+   "industry": "Military/Government/Technical",
+   "best": [
+    [
+     0.52,
+     "theme: Data Center Builders & REITs"
+    ],
+    [
+     0.52,
+     "group: Engineering & Construction"
+    ],
+    [
+     0.49,
+     "theme: Semi Test & Packaging"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.52,
+     "ECG"
+    ],
+    [
+     0.52,
+     "BHE"
+    ],
+    [
+     0.51,
+     "MYRG"
+    ],
+    [
+     0.5,
+     "FIX"
+    ],
+    [
+     0.5,
+     "ESE"
+    ]
+   ],
+   "new_group": null
+  },
+  "WLY": {
+   "name": "John Wiley & Sons Inc.",
+   "mcap_b": 2.58,
+   "sector": "Communication Services",
+   "industry": "Books",
+   "best": [
+    [
+     0.56,
+     "theme: Payroll & HR Software"
+    ],
+    [
+     0.55,
+     "theme: Info Services & Staffing"
+    ],
+    [
+     0.55,
+     "group: Software: HR & Payroll"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.57,
+     "AGYS"
+    ],
+    [
+     0.56,
+     "ADP"
+    ],
+    [
+     0.56,
+     "PSO"
+    ],
+    [
+     0.55,
+     "BRO"
+    ],
+    [
+     0.54,
+     "ROP"
+    ]
+   ],
+   "new_group": null
+  },
+  "RUM": {
+   "name": "RUM Group Inc.",
+   "mcap_b": 2.54,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.47,
+     "group: AI Cloud & Data-Center Hosting"
+    ],
+    [
+     0.46,
+     "theme: Neoclouds & AI Hosting"
+    ],
+    [
+     0.43,
+     "theme: Quantum Computing"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.52,
+     "IREN"
+    ],
+    [
+     0.46,
+     "APLD"
+    ],
+    [
+     0.42,
+     "ASST"
+    ],
+    [
+     0.42,
+     "RIOT"
+    ],
+    [
+     0.41,
+     "GLXY"
+    ]
+   ],
+   "new_group": null
+  },
+  "VVX": {
+   "name": "V2X Inc.",
+   "mcap_b": 2.53,
+   "sector": "Industrials",
+   "industry": "Diversified Commercial Services",
+   "best": [
+    [
+     0.58,
+     "theme: Aerospace & Defense"
+    ],
+    [
+     0.55,
+     "group: Aerospace & Defense"
+    ],
+    [
+     0.5,
+     "group: Government IT & Defense Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.57,
+     "DRS"
+    ],
+    [
+     0.52,
+     "GD"
+    ],
+    [
+     0.52,
+     "CACI"
+    ],
+    [
+     0.48,
+     "LHX"
+    ],
+    [
+     0.48,
+     "NOC"
+    ]
+   ],
+   "new_group": null
+  },
+  "DCO": {
+   "name": "Ducommun Incorporated",
+   "mcap_b": 2.52,
+   "sector": "Industrials",
+   "industry": "Military/Government/Technical",
+   "best": [
+    [
+     0.5,
+     "group: Engineering & Construction"
+    ],
+    [
+     0.47,
+     "group: Test, Measurement & Sensors"
+    ],
+    [
+     0.47,
+     "group: Specialty Industrial Machinery"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.59,
+     "CW"
+    ],
+    [
+     0.57,
+     "ESE"
+    ],
+    [
+     0.53,
+     "VSEC"
+    ],
+    [
+     0.52,
+     "ATI"
+    ],
+    [
+     0.52,
+     "AIR"
+    ]
+   ],
+   "new_group": null
+  },
+  "PAYO": {
+   "name": "Payoneer Global Inc.",
+   "mcap_b": 2.43,
+   "sector": "Information Technology",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.22,
+     "group: Payments"
+    ],
+    [
+     0.18,
+     "group: Entertainment"
+    ],
+    [
+     0.17,
+     "group: Banks: Latin America"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.34,
+     "ASH"
+    ],
+    [
+     0.33,
+     "AMC"
+    ],
+    [
+     0.32,
+     "ACEL"
+    ],
+    [
+     0.32,
+     "DLO"
+    ],
+    [
+     0.3,
+     "AVAL"
+    ]
+   ],
+   "new_group": null
+  },
+  "DAO": {
+   "name": "Youdao Inc.",
+   "mcap_b": 2.39,
+   "sector": "Communication Services",
+   "industry": "Other Consumer Services",
+   "best": [
+    [
+     0.25,
+     "theme: Managed Care"
+    ],
+    [
+     0.24,
+     "group: Healthcare Plans"
+    ],
+    [
+     0.22,
+     "group: Government IT & Defense Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.29,
+     "CHDN"
+    ],
+    [
+     0.28,
+     "AMTM"
+    ],
+    [
+     0.26,
+     "ELV"
+    ],
+    [
+     0.25,
+     "KC"
+    ],
+    [
+     0.24,
+     "MDB"
+    ]
+   ],
+   "new_group": null
+  },
+  "PLUS": {
+   "name": "ePlus inc.",
+   "mcap_b": 2.34,
+   "sector": "Information Technology",
+   "industry": "Retail: Computer Software & Peripheral Equipment",
+   "best": [
+    [
+     0.29,
+     "group: Banks: Digital & Specialty"
+    ],
+    [
+     0.26,
+     "group: Auto Parts"
+    ],
+    [
+     0.23,
+     "group: Grocery Stores"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.51,
+     "SCSC"
+    ],
+    [
+     0.49,
+     "CNXN"
+    ],
+    [
+     0.37,
+     "SONO"
+    ],
+    [
+     0.33,
+     "DORM"
+    ],
+    [
+     0.33,
+     "TBBK"
+    ]
+   ],
+   "new_group": null
+  },
+  "TMDX": {
+   "name": "TransMedics Group Inc.",
+   "mcap_b": 2.34,
+   "sector": "Health Care",
+   "industry": "Biotechnology: Electromedical & Electrotherapeutic Apparatus",
+   "best": [
+    [
+     0.4,
+     "group: Medical Devices"
+    ],
+    [
+     0.39,
+     "theme: Medtech"
+    ],
+    [
+     0.36,
+     "group: Medical Instruments & Supplies"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.39,
+     "ICUI"
+    ],
+    [
+     0.39,
+     "DXCM"
+    ],
+    [
+     0.38,
+     "ZTS"
+    ],
+    [
+     0.35,
+     "PODD"
+    ],
+    [
+     0.35,
+     "SNN"
+    ]
+   ],
+   "new_group": null
+  },
+  "FLYW": {
+   "name": "Flywire Corporation Voting",
+   "mcap_b": 2.33,
+   "sector": "Information Technology",
+   "industry": "Business Services",
+   "best": [
+    [
+     0.56,
+     "theme: Fintech & Payments"
+    ],
+    [
+     0.5,
+     "group: Financial Tech Processors"
+    ],
+    [
+     0.48,
+     "theme: Payroll & HR Software"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.49,
+     "PCTY"
+    ],
+    [
+     0.49,
+     "TOST"
+    ],
+    [
+     0.49,
+     "ACIW"
+    ],
+    [
+     0.48,
+     "RELY"
+    ],
+    [
+     0.48,
+     "CRCT"
+    ]
+   ],
+   "new_group": null
+  },
+  "ATHM": {
+   "name": "Autohome Inc.",
+   "mcap_b": 2.3,
+   "sector": "Communication Services",
+   "industry": "EDP Services",
+   "best": [
+    [
+     0.48,
+     "theme: China Internet"
+    ],
+    [
+     0.41,
+     "theme: China EV"
+    ],
+    [
+     0.41,
+     "group: Internet Retail"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "BILI"
+    ],
+    [
+     0.44,
+     "PONY"
+    ],
+    [
+     0.43,
+     "BIDU"
+    ],
+    [
+     0.41,
+     "VIPS"
+    ],
+    [
+     0.39,
+     "WB"
+    ]
+   ],
+   "new_group": null
+  },
+  "KC": {
+   "name": "Kingsoft Cloud Holdings Limited",
+   "mcap_b": 2.28,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Prepackaged Software",
+   "best": [
+    [
+     0.5,
+     "group: Internet Retail"
+    ],
+    [
+     0.48,
+     "theme: China Internet"
+    ],
+    [
+     0.36,
+     "theme: China EV"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.58,
+     "BABA"
+    ],
+    [
+     0.53,
+     "BIDU"
+    ],
+    [
+     0.48,
+     "GDS"
+    ],
+    [
+     0.44,
+     "ZM"
+    ],
+    [
+     0.43,
+     "HSAI"
+    ]
+   ],
+   "new_group": null
+  },
+  "GRND": {
+   "name": "Grindr Inc.",
+   "mcap_b": 2.27,
+   "sector": "Communication Services",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.45,
+     "theme: Online Listings & Marketplaces"
+    ],
+    [
+     0.44,
+     "group: Online Marketplaces & Listings"
+    ],
+    [
+     0.42,
+     "theme: Fintech & Payments"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.49,
+     "CARG"
+    ],
+    [
+     0.45,
+     "NFLX"
+    ],
+    [
+     0.42,
+     "MGNI"
+    ],
+    [
+     0.42,
+     "JKHY"
+    ],
+    [
+     0.42,
+     "YELP"
+    ]
+   ],
+   "new_group": null
+  },
+  "CNXN": {
+   "name": "PC Connection Inc.",
+   "mcap_b": 2.21,
+   "sector": "Information Technology",
+   "industry": "Catalog/Specialty Distribution",
+   "best": [
+    [
+     0.31,
+     "group: Staffing & Employment Services"
+    ],
+    [
+     0.29,
+     "group: Software: HR & Payroll"
+    ],
+    [
+     0.28,
+     "group: Banks: Digital & Specialty"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.66,
+     "SCSC"
+    ],
+    [
+     0.51,
+     "NSIT"
+    ],
+    [
+     0.49,
+     "PLUS"
+    ],
+    [
+     0.46,
+     "CDW"
+    ],
+    [
+     0.34,
+     "NTNX"
+    ]
+   ],
+   "new_group": null
+  },
+  "UFPT": {
+   "name": "UFP Technologies Inc.",
+   "mcap_b": 2.17,
+   "sector": "Health Care",
+   "industry": "Medical/Dental Instruments",
+   "best": [
+    [
+     0.51,
+     "group: Medical Instruments & Supplies"
+    ],
+    [
+     0.41,
+     "theme: Medtech"
+    ],
+    [
+     0.39,
+     "group: Medical Devices"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "RMD"
+    ],
+    [
+     0.44,
+     "ICUI"
+    ],
+    [
+     0.44,
+     "LMAT"
+    ],
+    [
+     0.43,
+     "INSP"
+    ],
+    [
+     0.43,
+     "GMED"
+    ]
+   ],
+   "new_group": null
+  },
+  "DV": {
+   "name": "DoubleVerify Holdings Inc.",
+   "mcap_b": 2.1,
+   "sector": "Information Technology",
+   "industry": "Computer Software: Programming Data Processing",
+   "best": [
+    [
+     0.61,
+     "group: Health Information Services"
+    ],
+    [
+     0.57,
+     "group: Software: Collaboration & Communications"
+    ],
+    [
+     0.56,
+     "group: Software: Majors"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.64,
+     "PHR"
+    ],
+    [
+     0.63,
+     "SPT"
+    ],
+    [
+     0.6,
+     "SAP"
+    ],
+    [
+     0.57,
+     "TEAM"
+    ],
+    [
+     0.56,
+     "PUBM"
+    ]
+   ],
+   "new_group": null
+  },
+  "CALX": {
+   "name": "Calix Inc",
+   "mcap_b": 2.09,
+   "sector": "Information Technology",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.28,
+     "group: Alternative Asset Managers"
+    ],
+    [
+     0.27,
+     "theme: Alt Asset Managers"
+    ],
+    [
+     0.27,
+     "group: Health Information Services"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.34,
+     "DUOL"
+    ],
+    [
+     0.32,
+     "LDOS"
+    ],
+    [
+     0.29,
+     "WIX"
+    ],
+    [
+     0.28,
+     "PATH"
+    ],
+    [
+     0.28,
+     "ZG"
+    ]
+   ],
+   "new_group": null
+  },
+  "PLBL": {
+   "name": "Polibeli Group Ltd",
+   "mcap_b": 2.07,
+   "sector": "Consumer Discretionary",
+   "industry": "Consumer Electronics/Appliances",
+   "best": [
+    [
+     0.23,
+     "group: Traditional Asset Managers"
+    ],
+    [
+     0.2,
+     "theme: International Banks"
+    ],
+    [
+     0.2,
+     "group: Banks: Europe"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.31,
+     "GPGI"
+    ],
+    [
+     0.3,
+     "KEP"
+    ],
+    [
+     0.26,
+     "DD"
+    ],
+    [
+     0.25,
+     "IDA"
+    ],
+    [
+     0.25,
+     "ALM"
+    ]
+   ],
+   "new_group": null
+  },
+  "IDT": {
+   "name": "IDT Corporation",
+   "mcap_b": 2.02,
+   "sector": "Communication Services",
+   "industry": "Telecommunications Equipment",
+   "best": [
+    [
+     0.43,
+     "group: Health Information Services"
+    ],
+    [
+     0.42,
+     "theme: Fintech & Payments"
+    ],
+    [
+     0.4,
+     "group: Payments"
+    ]
+   ],
+   "moves_with": [
+    [
+     0.44,
+     "MQ"
+    ],
+    [
+     0.42,
+     "GLBE"
+    ],
+    [
+     0.41,
+     "PAY"
+    ],
+    [
+     0.38,
+     "QTWO"
+    ],
+    [
+     0.38,
+     "BRO"
+    ]
+   ],
+   "new_group": null
+  }
+ }
+}

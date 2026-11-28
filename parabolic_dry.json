@@ -1,0 +1,32 @@
+{
+ "date": "2026-11-27",
+ "made_at": "2026-11-28T00:04:03-05:00",
+ "rules": {
+  "up_days": 3,
+  "gain3_pct": 50.0,
+  "min_dvol_m": 20.0,
+  "run20_pct": 130.0,
+  "gap_pct": 3.0,
+  "min_price": 5.0,
+  "range_min": 5,
+  "last_entry_min": 360,
+  "reentry": true,
+  "max_gap_need_pct": 150.0
+ },
+ "rows": {
+  "AEHL": {
+   "tv": "NASDAQ:AEHL",
+   "name": "Antelope Enterprise Holdings Limited Class A Ordinary Shares",
+   "close": 12.9,
+   "gain3": 90.5,
+   "up_days": 4,
+   "dvol_m": 66.1,
+   "lo20": 6.27,
+   "run20": 105.7,
+   "need_open": 14.43,
+   "gap_need": 11.8
+  }
+ },
+ "shorts": [],
+ "stocks": 5299
+}
