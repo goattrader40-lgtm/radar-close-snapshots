@@ -95,7 +95,8 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               SHORT (trigger) at the first trade under the opening 5-minute candle's low, with its stop (the day's high);
               STOPPED (heads-up); one RE-ENTRY (trigger) on the next 5-minute close under VWAP after one over it; the next
               session COVER at the close (trigger, from 3:45 PM) or STOPPED when its high reaches the stop. A SHORT holds
-              in its box while its stop is not traded. In the portal's own box, 📉 Parabolic shorts
+              in its box while its stop is not traded. In the portal's 🔻 Shorts box, with the earnings breakdowns (the user, Nov 28 2026:
+              "lets do shared box"), its own sound and voice
 Triggers (the buys, TRIGGERS) always get their own push, up to MAX_TRIGGERS a run, after today's 1-minute chart checks;
 heads-ups fill the rest of MAX_PER_RUN and the others are grouped into one push naming each. Every alert's full text
 is saved in alerts.json items (kind trigger / heads-up / summary, grouped) for the portal's log.

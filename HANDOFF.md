@@ -49,10 +49,35 @@ fewer when they are screenshot- and replay-heavy). Wrap up early when Claude Cod
 Claude starts asking again about agreed things or gets them wrong. The 8:45 AM grading has its own session: leave it
 alone.
 
+## Status of the session "Radar: work session (Nov 28)" (Sat Nov 28 2026 ~7:35 AM ET -; session_01PkbDaki6mxjCDEeS8czxNh; in progress)
+
+- **LIVE (the user's "Go live", Sat Nov 28 2026; branch ccr-3bb3f559-7bra97 merged with main): a speaker on every alert box
+  mutes that box. NOT SEEN ON A LIVE SESSION: first one Mon Nov 30.** The user: "sound sign for each alert box, whatever i
+  muted so the alerts belongs to that box wont make any sounds, when i click on it makes sound"; "no pop up either, sometimes
+  im trying to focus on some setups only"; BACK ON: "whatever alert box they belong to automatically simple logic it follows
+  boxes rule (mute on and off)"; START DAY in 👀: "then it would apply to it as well".
+  - docs/index.html only (MUTED, fireBox, mutedKey, the first line of notify; the header of each box in drawAlog): 🔊 / 🔇
+    next to the box's count, a muted box has a dashed border and a grey title. Muted = no sound, no voice, no pop-up, no
+    flashing tab title for every alert of that box; the line still goes into its box and the log. A click again = sound on,
+    the box's chime once. Kept in the browser (localStorage `radar-alerts-muted` = the muted boxes' codes), so the desktop
+    and the phone can differ; the phone pushes (GitHub's job) are unchanged; the Test button skips muted boxes' sounds.
+  - The box = the one the line sits in when it fires: a BACK ON its trigger's box; START DAY, a 🔻 READY line, a parabolic
+    GAP UP / STOPPED and the heads-ups of a trigger box = 👀 (muting 👀 silences them; muting 🔻 only the triggered shorts:
+    told the user for READY); an EP pullback READY = ⚡.
+  - Tested in Chromium, desktop and phone, before and after the merge with main (the other session's shared 🔻 Shorts box
+    had gone live: 11 boxes): 4 stand-in alerts all on = 4 pop-ups, sounds and voice; 📈 and 👀 muted = only the power day
+    popped up and sounded (the morning breakout, its BACK ON, the start day silent); kept after a reload; unmute plays the
+    chime; 0 page errors; tools/gapdown/test_ebd.py "all passed". No `--regress` (nothing under scanner/), no 2-year check,
+    no Launches rebuild (no launch rule). Rules workbook: A1 "Mute a box".
+  - Seen, not changed: in my stand-in test a "SYM:start" START DAY alert popped up without a bell or voice (the real key
+    may differ: not checked).
+- **Open, the user's idea (Nov 28)**: "maybe after i test few days we make maybe new box for start days": ask after a few
+  sessions; nothing built.
+
 ## Status of the session "Radar: parabolic short setups (Nov 27)" (Fri Nov 27 2026 ~6:30 PM ET - Sat Nov 28; session_01PkbDanM1KXkPZRoVthrhVt; in progress)
 
 - **LIVE (the user's "go live", Sat Nov 28 2026; branch ccr-dc9ac29f-m09ym4 merged with main; first session Mon Nov 30): PARABOLIC
-  SHORTS, a Watchlist list with live alerts in their own 📉 box. NOT SEEN ON LIVE PRICES.** The user: "build something for me in
+  SHORTS, a Watchlist list with live alerts in the shared 🔻 Shorts box. NOT SEEN ON LIVE PRICES.** The user: "build something for me in
   our radar to catch parabolic short setups"; their examples "check $car 2026, check nmax 2026, bynd 2025" ("i provided those 3
   as an example so you understand.. so many others out there happened as well"); "find me good setup for this kind of runs when
   we should short"; "trade day has to be only gap day"; the run size: "you have historically data you need to be helpful here";
@@ -90,10 +115,14 @@ alone.
      while its stop is not traded (holds in its box); never part of a GROUP MOVE; the phone push carries the falling-chart
      tag like the earnings breakdown's.
   5. **Page** (docs/index.html): the Watchlist list PARABOLIC (its own card: Now, Close, 3 days, Up days, 20-day run, Open
-     needed, Gap needed, $ vol, Name; "Shorts: followed to the cover"); the 📉 Parabolic shorts box (code x; four falling
-     notes; "Parabolic short, C A R, opening low broken"), filed under the Watchlist tab; a stopped short steps down to 👀,
-     the STOPPED line stays in 📉. The other session's 🔻 Earnings breakdowns (short) box (code d) went live the same day:
-     two short boxes now (offered to the user: one shared box; no answer yet). **Also touched**: the Watchlist's list
+     needed, Gap needed, $ vol, Name; "Shorts: followed to the cover"). **One shared box (the user, Nov 28: "lets do shared
+     box", then "Go live"): 🔻 Shorts** = the other session's 🔻 box (code d, renamed from "Earnings breakdowns (short)")
+     now also holds the parabolic alerts; the first go-live's own 📉 box (code x) is gone. A parabolic alert keeps its own
+     sound (four falling notes, TONES.x by its title: sndOf) and voice ("Parabolic short, C A R, opening low broken"); it is
+     filed under the Short filter (tab code S), and the Watchlist tab's alert bar shows it too. The box rule the user set in
+     the other session ("🔻 holds only the triggered shorts, while they hold") applies: SHORT / RE-ENTRY / COVER in 🔻 while
+     their stop is not traded (then down to 👀 with a note); GAP UP and STOPPED are heads-ups in 👀 (the GAP UP line only
+     until its SHORT fires). **Also touched**: the Watchlist's list
      buttons wrap to a second row on a narrow screen (9 lists; the tab ran 118px past a phone screen, now 42-65px).
   Tested: para.check against the study on every setup day (396 shorts, 55%, +0.553R; with the re-entry +0.653R); the live
   job minute by minute on CAR Apr 21 / 22 2026 and BYND Oct 22 2025 (GAP UP 9:31, SHORT 9:52; BYND 9:40 / 9:47 / 9:55 /
@@ -104,11 +133,12 @@ alone.
   tools/gapdown/test_ebd.py "all passed" after the merge. Rules workbook: W1 PARABOLIC, 4 A1 rows. No 2-year check (no
   Launches pattern or buy point; the study is its test), no Launches rebuild.
   **Check Mon Nov 30**: from 9:31 alerts.json `para` (AEHL: off with its reason, or armed) and any :parag / :paras key, the
-  phone push, the 📉 box and the list's Now column; Mon evening: setups/parabolic.json dated Nov 30 (the scan's own step:
+  phone push, the 🔻 Shorts box (only the SHORT in it; GAP UP in 👀) and the list's Now column; Mon evening: setups/parabolic.json dated Nov 30 (the scan's own step:
   not yet run inside scanner.yml), its rows and shorts. Yahoo's 1-minute chart for small stocks is the untested part (the
   replays used Alpaca's bars); the alert comes up to a minute after the break.
-- **Open, the user to decide**: (1) one re-entry (live) or two (+0.70R a day vs +0.65R; asked twice, the user asked what a
-  re-entry is, then "go live": one stays); (2) one shared short box for 🔻 and 📉 or two.
+- **Decided by the user (Nov 28), don't raise again**: ONE re-entry stays ("No not needed" to a second one, after the numbers:
+  +0.70R a day vs +0.65R; the first short = the opening-low break, every re-entry = a VWAP breakdown); one shared short box
+  (done, above).
 - **How it went with the user (for the next session)**: I lost them twice. First with plans and questions when they wanted
   numbers ("I didnt get it", "Come on you gotta do better", "You gotta stop and listen", "You misisng points"); then by
   reading "3 gap-ups in a row" literally (each open 1%+ over the last close) on runs of only 30%+, which threw out CAR's own
@@ -186,8 +216,10 @@ alone.
 - **The go-live rebuilds (picks.yml):** the first one (Nov 27 10:12 PM ET) dropped VOR from Launches (171 -> 170): it had come
   back on the list in Friday's evening scan on a borderline 1.2x volume reading and the rebuild's slightly revised Friday
   numbers no longer qualified it (my reading, the exact rule not confirmed; nothing in scanner/ was changed).
-- **Another session went live the same night: PARABOLIC SHORTS (📉 box; its own section above).** Checked together: both
-  boxes on the same page, tools/gapdown/test_ebd.py and the page test pass on the merged code.
+- **Another session went live the same night: PARABOLIC SHORTS (its own section above).** Checked together: both on the same
+  page, tools/gapdown/test_ebd.py and the page test pass on the merged code. **Since then (the user, Nov 28: "lets do shared
+  box", "Go live"): this 🔻 box is named Shorts and holds the parabolic shorts too** (the 📉 box is gone; the box rule above
+  applies to them; their own sound and voice): see that section before changing the box.
 - **Left out for now, by agreement:** the second alert (the pop that fails at VWAP / a previous day's low) and an end-of-day
   result log for the shorts.
 - **First things to check (Mon Nov 30, 9:33 AM ET on):** the READY lines arrive at 9:33-9:34 with the right candle prices
@@ -584,7 +616,7 @@ changes_today) and 3-SETUPS rows with source "START DAYS".**
 | Desktop alerts | the portal (docs/index.html) while it is open: launches, breakouts, and every 3-SETUPS trigger |
 | 📈 Morning breakouts (portal only) | radar/alerts.py check_morning (any stock, 9:35-10:30 by default); the user's settings and + Filters: alerts/morning.json on main (Alerts tab, Save); the level ticks read setups/resistance.json (evening scan) and radar-data ath.json (ath.yml, Saturdays); replay: radar-tools `morning` |
 | Opening ranges (+ Filter "Above ORH" 1min / 2min / 5min) | radar/levels.py from day.py's live updates and minute reads, 9:31 on -> radar-data levels.json (stocks up 2%+) |
-| 📉 Parabolic shorts (list + alerts) | scanner/parabolic.py (a step of scanner.yml, Alpaca, every US stock) → setups/parabolic.json; radar/alerts.py find_para on each list stock's 1-minute chart; the rule: radar/para.py; dry run: radar-tools `paradry` |
+| Parabolic shorts (list + alerts, 🔻 Shorts box) | scanner/parabolic.py (a step of scanner.yml, Alpaca, every US stock) → setups/parabolic.json; radar/alerts.py find_para on each list stock's 1-minute chart; the rule: radar/para.py; dry run: radar-tools `paradry` |
 | Data branch | `radar-data`: stocks.json, long_bars.json, probe_catalyst.json, alerts.json, gradelog.json |
 
 GitHub jobs: `scanner.yml` (4:40 PM ET: Watchlist + Launches), `picks.yml` "Follow picks" (rebuilds Launches; run it
