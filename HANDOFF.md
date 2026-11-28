@@ -109,8 +109,14 @@ alone.
      (close 12.90, needs an open of 14.43).
   4. **Live**: radar/alerts.py find_para (day.py para_args passes the file to the 5-minute and the 1-minute runs). Each list
      stock is read on Yahoo's 1-minute chart (not the live quotes: most are not in the radar's stocks) every run until
-     decided. Keys SYM:parag (GAP UP, heads-up, from 9:31), :paras (SHORT, trigger), :parax (STOPPED), :parar (RE-ENTRY,
-     trigger), :parax2; the next session :parac (COVER at the close, trigger, from 3:45 PM) or :parax1 (STOPPED day 2).
+     decided. Keys SYM:parag (GAP UP, heads-up, from 9:31), :paras (SHORT, trigger), :parar (RE-ENTRY, trigger); the next
+     session :parac (COVER at the close, trigger, from 3:45 PM). **No STOPPED alerts (the user, Nov 28, third go-live:
+     "Stopped, re entry stopped we dont need those at all, if something disappeared (meaning doesnt belong to that box) it
+     means it failed its trigger state ... thats how other alert boxes behave", "look how ep acts"): a traded stop sends
+     nothing, that day or the next; the SHORT / RE-ENTRY is no longer found, so it leaves 🔻 (down to 👀 with a note); the
+     one RE-ENTRY puts the stock back in the box.** BYND Oct 22 2025 = 3 alerts (GAP UP 9:31, SHORT 9:40, RE-ENTRY 9:55).
+     GAP UP as built is right for the user ("it acts the way it should"): a quiet heads-up in 👀 (a fading pop-up, no sound
+     or voice; a normal-priority push), gone from 👀 once its SHORT fires.
      state["para"][SYM] = what happened (the page's Now column, the evening's shorts). A short is found again every run
      while its stop is not traded (holds in its box); never part of a GROUP MOVE; the phone push carries the falling-chart
      tag like the earnings breakdown's.
@@ -121,8 +127,8 @@ alone.
      sound (four falling notes, TONES.x by its title: sndOf) and voice ("Parabolic short, C A R, opening low broken"); it is
      filed under the Short filter (tab code S), and the Watchlist tab's alert bar shows it too. The box rule the user set in
      the other session ("🔻 holds only the triggered shorts, while they hold") applies: SHORT / RE-ENTRY / COVER in 🔻 while
-     their stop is not traded (then down to 👀 with a note); GAP UP and STOPPED are heads-ups in 👀 (the GAP UP line only
-     until its SHORT fires). **Also touched**: the Watchlist's list
+     their stop is not traded (then down to 👀 with a note, no alert); GAP UP is a heads-up in 👀 (only until its SHORT
+     fires). **Also touched**: the Watchlist's list
      buttons wrap to a second row on a narrow screen (9 lists; the tab ran 118px past a phone screen, now 42-65px).
   Tested: para.check against the study on every setup day (396 shorts, 55%, +0.553R; with the re-entry +0.653R); the live
   job minute by minute on CAR Apr 21 / 22 2026 and BYND Oct 22 2025 (GAP UP 9:31, SHORT 9:52; BYND 9:40 / 9:47 / 9:55 /
@@ -139,7 +145,9 @@ alone.
 - **Decided by the user (Nov 28), don't raise again**: ONE re-entry stays ("No not needed" to a second one, after the numbers:
   +0.70R a day vs +0.65R; the first short = the opening-low break, every re-entry = a VWAP breakdown); one shared short box
   (done, above).
-- **How it went with the user (for the next session)**: I lost them twice. First with plans and questions when they wanted
+- **How it went with the user (for the next session)**: on the box behaviour too I asked three follow-up questions where
+  they had already said it ("i already told you how i want it, you tell me what you read"): when they describe a behaviour,
+  say back what you read in numbered lines and stop; don't answer with new questions. I lost them twice before that. First with plans and questions when they wanted
   numbers ("I didnt get it", "Come on you gotta do better", "You gotta stop and listen", "You misisng points"); then by
   reading "3 gap-ups in a row" literally (each open 1%+ over the last close) on runs of only 30%+, which threw out CAR's own
   crash day and showed "no edge" three times. Their three tickers fixed it. So: ask for 2-3 example charts FIRST, replay
