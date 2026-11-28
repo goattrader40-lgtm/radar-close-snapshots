@@ -15,7 +15,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -36,7 +36,6 @@ jobs:
             python3 radar/publish.py "volume probe" /tmp/probe_vol.json
           fi
           if [ "${{ inputs.cmd }}" = "volprofile" ]; then python3 radar/day.py volprofile; fi
-          case "$CMD" in orh|orh\ *|bars6y|raw\ *|paraall) bash radar/study.sh "$CMD";; esac   # study tools (test only)
           if [ "${{ inputs.cmd }}" = "moverstest" ]; then   # the movers' 1-minute read on a copy of the live files (market hours) -> radar-data movers_test.json
             git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && mkdir -p /tmp/mv
             for f in live.json levels.json volprofile.json stocks.json; do git show origin/radar-data:$f > /tmp/mv/$f; done
@@ -224,6 +223,7 @@ jobs:
           esac
           case "$CMD" in long\ *) python3 radar/probe_long.py /tmp/long_bars.json ${CMD#long } && python3 radar/publish.py "long history" /tmp/long_bars.json;; esac
           case "$CMD" in replay\ *) python3 radar/probe_replay.py /tmp/probe_replay.json ${CMD#replay } && python3 radar/publish.py "alert replay" /tmp/probe_replay.json;; esac
+          case "$CMD" in orh|orh\ *|bars6y|raw\ *|gapdown|gapdaily|gapticks|gapnews|paraall) bash radar/study.sh "$CMD";; esac   # test-only study commands
           bash radar/tools_event.sh   # the event links
           if [ "${{ inputs.cmd }}" = "alerttest" ]; then
             if [ -z "$NTFY_TOPIC" ]; then echo "NTFY_TOPIC secret is not set"; exit 1; fi
