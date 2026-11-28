@@ -191,8 +191,10 @@ alone.
 - **The go-live rebuilds (picks.yml):** the first one (Nov 27 10:12 PM ET) dropped VOR from Launches (171 -> 170): it had come
   back on the list in Friday's evening scan on a borderline 1.2x volume reading and the rebuild's slightly revised Friday
   numbers no longer qualified it (my reading, the exact rule not confirmed; nothing in scanner/ was changed).
-- **Another session went live the same night: PARABOLIC SHORTS (📉 box; its own section above).** Checked together: both
-  boxes on the same page, tools/gapdown/test_ebd.py and the page test pass on the merged code.
+- **Another session went live the same night: PARABOLIC SHORTS (its own section above).** Checked together: both on the same
+  page, tools/gapdown/test_ebd.py and the page test pass on the merged code. **Since then (the user, Nov 28: "lets do shared
+  box", "Go live"): this 🔻 box is named Shorts and holds the parabolic shorts too** (the 📉 box is gone; the box rule above
+  applies to them; their own sound and voice): see that section before changing the box.
 - **Left out for now, by agreement:** the second alert (the pop that fails at VWAP / a previous day's low) and an end-of-day
   result log for the shorts.
 - **First things to check (Mon Nov 30, 9:33 AM ET on):** the READY lines arrive at 9:33-9:34 with the right candle prices
