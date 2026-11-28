@@ -93,9 +93,11 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               scanner/parabolic.py), read on today's 1-minute chart, not on the live quotes (most are not in the radar's
               stocks). GAP UP (heads-up, from 9:31) when it opens 3%+ up, 130%+ over its 20-session low close, at $5+;
               SHORT (trigger) at the first trade under the opening 5-minute candle's low, with its stop (the day's high);
-              STOPPED (heads-up); one RE-ENTRY (trigger) on the next 5-minute close under VWAP after one over it; the next
-              session COVER at the close (trigger, from 3:45 PM) or STOPPED when its high reaches the stop. A SHORT holds
-              in its box while its stop is not traded. In the portal's 🔻 Shorts box, with the earnings breakdowns (the user, Nov 28 2026:
+              one RE-ENTRY (trigger) on the next 5-minute close under VWAP after one over it; the next session COVER at
+              the close (trigger, from 3:45 PM). A SHORT / RE-ENTRY holds in its box while its stop is not traded; a
+              traded stop sends NO alert (the user, Nov 28 2026: "Stopped, re entry stopped we dont need those at all, if
+              something disappeared ... it means it failed its trigger state", "look how ep acts"): the line just leaves
+              the box, as an EP that stops meeting its rules does. In the portal's 🔻 Shorts box, with the earnings breakdowns (the user, Nov 28 2026:
               "lets do shared box"), its own sound and voice
 Triggers (the buys, TRIGGERS) always get their own push, up to MAX_TRIGGERS a run, after today's 1-minute chart checks;
 heads-ups fill the rest of MAX_PER_RUN and the others are grouped into one push naming each. Every alert's full text
@@ -164,9 +166,8 @@ KIND_WORDS = {"ebd": "earnings breakdown (short)", "ebdr": "earnings breakdown r
               "push": "push", "pop": "pop", "gapbase": "gap out of base", "gob1": "gap out of base", "gob5": "gap out of base",
               "s3": "3-SETUPS trigger", "early": "early gap", "near": "gapping to the buy point", "ep": "episodic pivot",
               "mbo": "morning breakout", "mbo2": "breakout, not in trend",
-              "parag": "parabolic gap up (short watch)", "paras": "parabolic short", "parax": "parabolic short stopped",
-              "parar": "parabolic short re-entry", "parax2": "parabolic re-entry stopped", "parac": "parabolic short: cover",
-              "parax1": "parabolic short stopped (day 2)"}
+              "parag": "parabolic gap up (short watch)", "paras": "parabolic short", "parar": "parabolic short re-entry",
+              "parac": "parabolic short: cover"}
 
 
 def kind_words(key, title=""):
@@ -1897,13 +1898,14 @@ PARA_MAX_FETCH = 30                # charts read a run (the list is a few names 
 
 
 def find_para(now, sent, state, bars_of=None, early=False):
-    """PARABOLIC GAP UP / SHORT / STOPPED / RE-ENTRY / COVER (radar/para.py has the rule and the study's numbers): each
+    """PARABOLIC GAP UP / SHORT / RE-ENTRY / COVER (radar/para.py has the rule and the study's numbers): each
     stock of last night's list is read on today's 1-minute chart every run until it is decided: no gap (off, silently), or
     armed -> the short at the break of the opening 5-minute low -> stopped -> one re-entry on a 5-minute close under VWAP.
     A SHORT / RE-ENTRY is found again every run while its stop is not traded, so it holds in its box (update_holding).
     Before 9:35 (early) only the GAP UP heads-up. state["para"][SYM] keeps what happened (the portal's Now column, and the
-    evening file's shorts). The open shorts of the last session: COVER at the close from 3:45 PM, or STOPPED once today's
-    high reaches the stop"""
+    evening file's shorts). A traded stop is no alert: the short is no longer found, so it leaves its box (the user, Nov 28
+    2026: the box is the state, like an EP). The open shorts of the last session: COVER at the close from 3:45 PM, unless
+    today's high reached the stop (silently out)"""
     out, rows = [], PARA.get("rows") or {}
     bars_of = bars_of or chart_bars_today
     nowm = now.hour * 60 + now.minute - 570
@@ -1946,7 +1948,7 @@ def find_para(now, sent, state, bars_of=None, early=False):
             if nowm >= R["last_entry_min"]:
                 m["done"] = True                              # no short today
             continue
-        ks, kx, kr, kx2 = f"{sym}:paras", f"{sym}:parax", f"{sym}:parar", f"{sym}:parax2"
+        ks, kr = f"{sym}:paras", f"{sym}:parar"
         if "short" not in m:
             risk = 100 * (s["stop"] / s["px"] - 1)
             m["short"] = {"time": para.hhmm(s["min"]), "px": round(s["px"], 4), "stop": round(s["stop"], 4), "orl": round(s["orl"], 4),
@@ -1959,12 +1961,6 @@ def find_para(now, sent, state, bars_of=None, early=False):
             continue
         m["stopped"] = para.hhmm(res["stopped"])
         e = res["re"]
-        if kx not in sent and not e:
-            out.append((kx, f"{sym} PARABOLIC SHORT STOPPED ${s['stop']:.2f}",
-                        f"the {m['short']['time']} short ${s['px']:.2f} was stopped at {m['stopped']}: the day's high ${s['stop']:.2f} was traded"
-                        + (" (it came and went between two checks: no SHORT alert was sent)" if ks not in sent else "")
-                        + (f" · one re-entry: the next 5-minute candle closing under VWAP (now ${res['vwap']:.2f}) after one closed over it, stop the day's new high"
-                           if R.get("reentry") and nowm < R["last_entry_min"] else ""), "default", tvs))
         if not e:
             if nowm >= R["last_entry_min"] or not R.get("reentry"):
                 m["done"] = True
@@ -1980,17 +1976,13 @@ def find_para(now, sent, state, bars_of=None, early=False):
             out.append((kr, m["re"]["title"], m["re"]["msg"], "high", tvs))
             continue
         m["stopped2"], m["done"] = para.hhmm(res["stopped2"]), True
-        if kx2 not in sent:
-            out.append((kx2, f"{sym} PARABOLIC RE-ENTRY STOPPED ${e['stop']:.2f}",
-                        f"the {m['re']['time']} re-entry ${e['px']:.2f} was stopped at {m['stopped2']} (the day's high ${e['stop']:.2f})"
-                        + (" (it came and went between two checks: no RE-ENTRY alert was sent)" if kr not in sent else "") + " · no more shorts in it today", "default", tvs))
     # the open shorts of the last session (the evening file followed them): cover at the close, or stopped today
     for x in PARA.get("shorts") or []:
         if x.get("status") != "open" or x.get("date") != PARA.get("date") or fetched >= PARA_MAX_FETCH:
             continue
         sym, tvs = x["symbol"], x.get("tv") or x["symbol"]
         tag = "re" if x.get("kind") == "re-entry" else "s"
-        mk, kc, k1 = f"{sym}:open:{tag}", f"{sym}:parac" + ("" if tag == "s" else "2"), f"{sym}:parax1" + ("" if tag == "s" else "r")
+        mk, kc = f"{sym}:open:{tag}", f"{sym}:parac" + ("" if tag == "s" else "2")
         m = memo.setdefault(mk, {})
         if m.get("stopped"):
             continue
@@ -2002,10 +1994,8 @@ def find_para(now, sent, state, bars_of=None, early=False):
             continue
         hi, last = max(b[2] for b in done), done[-1][4]
         what = f"the {x['date']} {x.get('time') or ''} short ${x['entry']:.2f} ({x.get('kind')})"
-        if hi >= x["stop"]:
+        if hi >= x["stop"]:                                  # its stop was traded today: out, silently (no COVER alert will come)
             m["stopped"] = para.hhmm(next(b[0] for b in done if b[2] >= x["stop"]))
-            out.append((k1, f"{sym} PARABOLIC SHORT STOPPED ${x['stop']:.2f} (day 2)",
-                        f"{what}: its stop ${x['stop']:.2f} was traded at {m['stopped']} today · out", "default", tvs))
         elif nowm >= 375:
             pct = 100 * (x["entry"] - last) / x["entry"]
             out.append((kc, f"{sym} PARABOLIC SHORT - COVER at the close ${last:.2f}",
