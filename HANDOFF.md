@@ -79,6 +79,26 @@ alone.
   News column.
 - **Offered, no answer**: the metals miners (Gold / Silver Miners, Metals & Mining 40 of 44) as their own event line instead of
   one 260-stock event with the AI names.
+- **The audit (the user, Mon Nov 23 evening: "do the audit of my portal ... we had so many alerts")**: no job failed (the 9
+  "cancelled" Radar day runs = newer backup starts replacing waiting ones; the day job handed over at 1:05 PM as designed);
+  all 8 tabs load on desktop with today's data, 0 page errors; the evening scan of Nov 23 wrote dip.json (2,838 stocks),
+  resistance.json (2,832 levels; report 8 broke out e.g. KYMR, 17 inside, 14 rejected), ep_pullback.json (10 plans, BSP new;
+  no BUY that day; YOU READY 10:20 then under its EP low $51.27 -> off, as agreed), latest.json (no EP names on 1-UPDAY, no
+  15-day removals), 3-SETUPS 79 (0 from START DAYS: GOLD / POWL / PWR / SPHR under the 200 SMA, ZIM ADR 2.6%, GEO under the
+  50 EMA, COMP no setup), 6M % on 171 of 173 2-POOL rows. No res_* ticked in the 📈 / 📊 boxes yet (no ABOVE alerts).
+  Alerts Nov 23: 650 items, ~138 phone pushes (76 before 10 AM), 435 from the 📈 / 📊 boxes (portal only), 272 of them BACK ON.
+  Found, not fixed (pre-existing, told the user): on a phone the Theme event card's text runs past the screen (752px in a
+  358px card) and Launches / Watchlist scroll sideways a little; the 8:45 grading graded 12 but wrote no pm_event.json (no
+  event yet at 8:45, or skipped: not known). Dropped: my idea of a trend rule for 📊 (it is the not-in-trend box).
+- **LIVE (the user's "Go live!", Mon Nov 23 2026 evening): the 📈 / 📊 morning boxes' BACK ON once a stock a day, only inside
+  the box's own From-End window** (the user: "stop the morning's boxes back on after the boxes end time ... at most one back
+  on per stock per day in their time frame"). radar/alerts.py morning_holding: the alert needs in_morning(M, now) and no
+  earlier BACK ON of that stock in that box today (state mbo_back / mbo2_back); MORNING_BACK_EVERY (15 minutes) removed.
+  Outside the window the stock still moves in and out of its box silently. The ⚡ / 🎯 BACK ON rules are unchanged. Tested: a
+  stand-in stock flipping in and out 9:45-16:06 (one BACK ON at 9:50, the rest silent); Nov 23's alerts replayed: BACK ON 272
+  -> 75, all alerts 650 -> 453 (TTAN's 8, THC 4:05 PM, SN 4:00 PM silent); `--regress` "every agreed example reads the
+  same". Rules workbook: the "Alert boxes hold what holds" row. **Check Tue Nov 24**: alerts.json mbobackHHMM / mbo2backHHMM
+  keys only between the box's From and End, one per stock.
 
 ## Status of the session "Radar: 7-day-low pullback column question (Nov 21)" (Sat Nov 21 2026 ~4:25 PM ET -; session_01PkbDahohHKiAyA9NYCdZQ7; in progress)
 

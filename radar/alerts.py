@@ -1216,7 +1216,6 @@ _RES = {"lv": None, "lists": None}       # main() / fast.py fill them: {sym: lev
 # 5min it does 5min"; alerts/morning.json "orh_min", 5 when not saved) and the first minute it is complete
 ORH_START = {1: (9, 31), 2: (9, 32), 3: (9, 33), 5: (9, 35)}     # 3: the user, Nov 18 2026
 PAGE_ONLY = ("mbo",)            # kinds shown on the portal only (no phone push): mbo, and mboback... (back in its box)
-MORNING_BACK_EVERY = 15         # minutes between two "back on" alerts of one stock (the user, Nov 17 2026)
 MORNING_FETCH = 80              # new stocks' levels (yesterday's high, the opening range) read a run, the biggest movers first
 MORNING_NEWS_BUDGET = 35        # seconds a run for the alerts' news
 # + Filter (the user, Nov 9 2026: "add filter to that part so I can add other filters as well, let's say above the 21-day
@@ -1651,11 +1650,10 @@ def morning_holding(state, M, live, S, now, kind="mbo"):
     criterion of the box the user chose ("whatever i choose in that filters"): % up, Rel vol, the levels, the price and
     trend rules, the + Filters; not the time window. state lost / back, as update_holding keeps them for the other boxes
     (the portal moves a lost one to Heads-ups and back). A stock back on gets one alert (key SYM:mbobackHHMM, portal
-    only), at most one every MORNING_BACK_EVERY minutes. A stock without a live row, a stocks row or its kept levels in
+    only), at most one a stock a day and only inside the box's time window (Nov 23 2026). A stock without a live row, a stocks row or its kept levels in
     this run stays as it was. Returns the back-on alerts [(key, title, msg, 'high', tv)]"""
     lost, back, lvs = state.setdefault("lost", {}), state.setdefault("back", {}), state.get(f"{kind}_lv") or {}
     last, t, out, seen = state.setdefault(f"{kind}_back", {}), f"{now:%H:%M}", [], set()
-    mins = lambda x: int(x[:2]) * 60 + int(x[3:5])
     for it in state.get("items", []):
         key = it.get("key", "")
         if not key.endswith(f":{kind}") or key.startswith("mbatch") or key in seen:
@@ -1670,7 +1668,11 @@ def morning_holding(state, M, live, S, now, kind="mbo"):
         if a and key in lost:
             back[key] = {"at": t, "price": px}
             del lost[key]
-            if sym not in last or mins(t) - mins(last[sym]) >= MORNING_BACK_EVERY:
+            # one BACK ON a stock a day, and only inside the box's own time window (the user, Nov 23 2026, after 286 BACK ON
+            # repeats that day, TTAN 9 times, THC at 4:05 PM: "stop the morning's boxes back on after the boxes end time
+            # ... at most one back on per stock per day in their time frame"); out of the window it still moves in and out
+            # of the box silently
+            if sym not in last and in_morning(M, now):
                 last[sym] = t
                 out.append((f"{sym}:{kind}back{now:%H%M}", f"{sym} {MORNING_NAME[kind]}{',' if kind == 'mbo2' else ''} BACK ON {q[1]:+.1f}%",
                             f"meets your {'morning breakout' if kind == 'mbo' else 'not-in-trend breakout'} settings again (first alert {it.get('time', '')}) · " + a[1],
