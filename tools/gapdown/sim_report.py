@@ -65,3 +65,20 @@ print("box says stopped, bars say no:", len(wrong), wrong[:10])
 per_day = collections.Counter(k.split()[0] for k in al)
 days = sorted(per_day.values())
 print(f"alert days {len(per_day)}; alerts a day on those: median {days[len(days) // 2]}, most {days[-1]} ({per_day.most_common(3)})")
+rd = {k: v for k, v in sim.items() if v.get("ready")}
+if rd:
+    print()
+    ends = collections.Counter((v.get("ready_end") or {}).get("ebdr", {}).get("why", "open at the close") for v in rd.values())
+    print("READY lines", len(rd), "| on non-earnings days", sum(1 for v in rd.values() if v["earn"] != 1), "| how they ended:", dict(ends))
+    lag = collections.defaultdict(lambda: ([], []))
+    for k, (tr, rh) in study.items():
+        if k not in rd:
+            continue
+        d = tr["m"] - rd[k]["ready"][0]["m"]
+        name = "the break in the READY minute itself" if d <= 0 else "the break 1 minute after READY" if d == 1 else "the break 2+ minutes after READY"
+        lag[name][0].append(rh["r"])
+        if rh["risk_pct"] / rows[k]["adr"] < 0.8:
+            lag[name][1].append(rh["r"])
+    for name in sorted(lag):
+        print(f"{name:<38} at the candle's low: {st(lag[name][0])}   |  tight: {st(lag[name][1])}")
+

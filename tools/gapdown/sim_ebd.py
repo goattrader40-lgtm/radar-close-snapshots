@@ -28,7 +28,7 @@ def polls(last):
 def replay_day(date, sym, st, bars, earn, last_day):
     """one stock-day through alerts.ebd_run: st = its stocks.json row at the last close (price, ema50, sma200, adr_20,
     mcap_b, avg_vol_20, dvol_20_m), bars = the day's 1-minute bars [(minute after 9:30, o, h, l, c, v)], earn = the
-    Earnings tab's row for it (or None). Returns {alert, back, stopped, lost, skip, close}"""
+    Earnings tab's row for it (or None). Returns {alert, ready, ready_end, back, stopped, lost, skip, close}"""
     d, pc = datetime.date.fromisoformat(date), st["price"]
     S, E = {sym: st}, ({sym: earn} if earn else {})
     state, res = {"date": date, "sent": [], "items": []}, {"alert": None}
@@ -45,11 +45,14 @@ def replay_day(date, sym, st, bars, earn, last_day):
             state["sent"].append(a[0])
             if a[0].endswith(":ebd"):
                 res["alert"] = {"m": m, "t": f"{now:%H:%M}", "price": price, "title": a[1], "msg": a[2], "lv": dict(state["ebd_lv"][sym])}
+            elif a[0].endswith((":ebdr", ":ebdr2")):          # the READY line (and its corrected one)
+                res.setdefault("ready", []).append({"m": m, "t": f"{now:%H:%M}", "key": a[0].split(":")[1], "title": a[1], "msg": a[2], **(state["ebd_ready"][sym])})
             else:
                 res.setdefault("back", []).append(f"{now:%H:%M}")
     res["stopped"] = (state.get("ebd_stopped") or {}).get(f"{sym}:ebd")
     res["lost"] = (state.get("lost") or {}).get(f"{sym}:ebd")
     res["skip"] = (state.get("ebd_skip") or {}).get(sym)
+    res["ready_end"] = {k.split(":")[1]: v for k, v in (state.get("lost") or {}).items() if k.split(":")[1] in ("ebdr", "ebdr2")}   # how the READY line left its box
     res["close"] = bars[-1][4]
     if res["alert"]:
         a = res["alert"]
@@ -97,6 +100,8 @@ def main():
     json.dump(out, open(out_path, "w"), separators=(",", ":"))
     al = [v for v in out.values() if v["alert"]]
     print("stock-days replayed", len(out), "| alerts", len(al), "| on earnings days", sum(1 for v in al if v["earn"] == 1), "| on non-earnings days", sum(1 for v in al if v["earn"] == 0))
+    rd = [v for v in out.values() if v.get("ready")]
+    print("READY lines", len(rd), "| on non-earnings days", sum(1 for v in rd if v["earn"] != 1), "| corrected", sum(1 for v in rd if len(v["ready"]) > 1))
 
 
 if __name__ == "__main__":
