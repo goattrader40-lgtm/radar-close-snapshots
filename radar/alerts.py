@@ -86,7 +86,8 @@ Alerts, each stock and kind once a day (alerts.json keeps what was sent, on the 
               reported since the last close and gaps down 8%+ trades under the low of its first 3-minute candle; stop =
               that candle's high, out at the close; the alert says the Earnings tab's grade, the candle's size in ADRs
               (TIGHT STOP under 0.8 ADR) and whether the stock was strong yesterday. Any liquid stock, from 9:33, each
-              once a day, on the phone too; in the portal's 🔻 box while under that low (the EBD_ section below)
+              once a day, on the phone too; in the portal's 🔻 box while under that low (the EBD_ section below).
+              Before it, at 9:33, a READY heads-up with the two prices (ebdr), in 👀 until the alert fires
   parabolic   PARABOLIC SHORTS (the user, Nov 28 2026: CAR Apr 22 2026, BYND Oct 22 2025; the rule and its study in
               radar/para.py): the stocks of last night's setups/parabolic.json (3+ up closes adding 50%+; every US stock,
               scanner/parabolic.py), read on today's 1-minute chart, not on the live quotes (most are not in the radar's
@@ -154,7 +155,7 @@ def short(a):
 
 
 # a few words for each kind, for the group-move lines (RPD 21 EMA + breakout level 3:46)
-KIND_WORDS = {"ebd": "earnings breakdown (short)", "epr10": "EP pullback ready (10 EMA)", "epb10": "EP pullback buy (10 EMA)", "epr21": "EP pullback ready (21 EMA)",
+KIND_WORDS = {"ebd": "earnings breakdown (short)", "ebdr": "earnings breakdown ready (short)", "ebdr2": "earnings breakdown ready (short)", "epr10": "EP pullback ready (10 EMA)", "epb10": "EP pullback buy (10 EMA)", "epr21": "EP pullback ready (21 EMA)",
               "epb21": "EP pullback buy (21 EMA)", "retest": "retest holding", "zone": "in the retest zone", "ema21": "21 EMA retest", "ema21bl": "21 EMA + breakout level",
               "ema21zone": "at the 21 EMA", "breakout": "breakout", "touch": "touched the buy point", "confirm": "breakout confirmed",
               "power": "power day", "catalyst": "catalyst gap", "basebreak": "base high cleared", "launch": "launch",
@@ -188,7 +189,7 @@ def group_moves(doc, state, alerts_now, now):
     loose = {r["group"] for r in (doc.get("group_rank") or {}).get("rows", []) if r.get("loose")}
     seen = {}
     past = [(it["key"], it.get("title"), it.get("time")) for it in state.get("items", [])
-            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith((":mbo", ":mbo2", ":ebd")) and ":mbo2back" not in it["key"] and ":ebdback" not in it["key"]]       # (a short is no group move)
+            if ":" in it.get("key", "") and not it["key"].startswith(("summary:", "grp:", "thm:")) and not it["key"].endswith((":mbo", ":mbo2", ":ebd", ":ebdr", ":ebdr2")) and ":mbo2back" not in it["key"] and ":ebdback" not in it["key"]]       # (a short is no group move)
     for key, title, t in past + [(a[0], a[1], f"{now:%H:%M}") for a in alerts_now]:
         sym = key.split(":")[0]
         if key.split(":", 1)[-1].startswith("para"):      # a parabolic short is no stock moving up with its group
@@ -2032,6 +2033,13 @@ def find_para(now, sent, state, bars_of=None, early=False):
 #               (tight 272 alerts +0.32R, wide 599 +0.01R); the study's +0.19R is a short AT the candle's low. No alert
 #               for the 64 breaks that never held under the low at a check (-53R in the study) nor for the 31 already
 #               back at the candle's high (-31R). tools/gapdown/test_ebd.py keeps 8 of those days as the test.
+#   READY       (the user, Nov 28 2026: "yes ready"; live that evening) a heads-up as soon as that candle is complete (9:33) and
+#               its low not broken yet: "SHORT UNDER $45.36", the stop, tight or wide; on the phone too, so the order can
+#               wait at the candle's low (the study's entry). 1,469 READY lines in the replay (every earnings gap-down of
+#               8%+; the low then breaks on 2 of 3). 326 of the 970 study trades break in the 9:33 minute itself, before a
+#               READY line can help; the breaks from 9:35 on: 551 trades +0.11R at the candle's low (tight 152: +0.39R).
+#               A heads-up, in 👀 (🔻 holds only the triggered shorts, the user: "in its own box meaning its triggered");
+#               it leaves when the SHORT alert fires, when the break was skipped, or at 3:00 PM.
 #   strong      yesterday's close over the 50 EMA and the 200 SMA: said in the alert (+0.31R vs +0.10R).
 #   the box     🔻 on the Alerts tab, one alert a stock a day; in the box while the price is under that low; back over the
 #               low = out (BACK ON once when under it again); the stop hit = out for the day. Out at the close.
@@ -2044,6 +2052,7 @@ EBD_TIGHT = 0.8               # the stop under 0.8 ADR away = tight
 EBD_SSR = 10.0                # down 10%+ on the day: the uptick rule (a short only fills on an uptick)
 EBD_FROM, EBD_TO = (9, 33), (15, 0)       # no first alert from 3:00 PM (the box still follows the ones it holds)
 EBD_FETCH = 40                # 1-minute charts read a run
+EBD_RECHECK = 5               # a READY stock at its candle's high: its chart is read again at most every 5 minutes
 EBD_NAME = "EARNINGS BREAKDOWN"
 
 
@@ -2109,7 +2118,8 @@ def ebd_levels(sym, now, bars_of=None):
     """the first 3-minute candle that traded today and what happened since, from the 1-minute chart: {orh, orl, start (its
     first minute after 9:30), broke (the minute the price first went under its low, or None), stopped (the minute it went
     back to its high after that, or None), hi (the day's high so far), final (read a minute or more after the candle
-    closed: Yahoo's last minute can still be filling)}; None before the candle is complete or without a chart"""
+    closed: Yahoo's last minute can still be filling), full (the chart holds the candle's last minute or a later one)};
+    None before the candle is complete or without a chart"""
     bars = sorted((bars_of or chart_bars_today)(sym))
     if not bars:
         return None
@@ -2132,31 +2142,60 @@ def ebd_levels(sym, now, bars_of=None):
             stopped = b[0]
             break
     return {"orh": round(orh, 4), "orl": round(orl, 4), "start": start, "broke": broke, "stopped": stopped,
-            "hi": round(max(b[2] for b in bars), 4), "final": nowm >= start + EBD_MIN + 1}
+            "hi": round(max(b[2] for b in bars), 4), "final": nowm >= start + EBD_MIN + 1,
+            "full": bars[-1][0] >= start + EBD_MIN - 1}
+
+
+def ebd_words(st, lv):
+    """(tight, the candle's size in words, the strong-yesterday words, the candle's name): shared by the READY line and
+    the alert. Tight / wide is the candle's own size (its low to its high, the study's stop distance) in ADRs"""
+    adr = st.get("adr_20") or 0
+    size = 100 * (lv["orh"] / lv["orl"] - 1)
+    sadr = size / adr if adr else None
+    tight = sadr is not None and sadr < EBD_TIGHT
+    cw = (f"the candle is {size:.1f}% = {sadr:.1f} ADR: " + (f"TIGHT (under {EBD_TIGHT:g} ADR: where the short paid)" if tight
+                                                           else f"wide ({EBD_TIGHT:g} ADR or more made about nothing)")) if sadr is not None \
+        else f"the candle is {size:.1f}%"
+    strong = ebd_strong(st)
+    sw = (" · strong yesterday (over its 50 EMA and 200 SMA): the better ones" if strong
+          else " · not strong yesterday (under its 50 EMA or 200 SMA)" if strong is False else "")
+    t0 = 570 + lv.get("start", 0)
+    candle = f"{EBD_MIN}-minute candle" if not lv.get("start") else f"{EBD_MIN}-minute candle ({t0 // 60}:{t0 % 60:02d}, a late open)"
+    return tight, cw, sw, candle
+
+
+def ebd_ready(sym, st, q, lv, why, fixed=False):
+    """(title, msg) of the READY line, a heads-up before the break (the user, Nov 28 2026: "yes ready"): the first
+    3-minute candle is complete and its low not broken yet, so the order can wait at that low (the study's entry).
+    fixed: the same line again when the candle read a minute later differs (Yahoo's last minute was still filling)"""
+    price, chg = q[0], q[1]
+    adr, gap = st.get("adr_20") or 0, gap_of(q)
+    tight, cw, sw, candle = ebd_words(st, lv)
+    prev = price / (1 + chg / 100) if chg is not None and chg > -100 else None
+    at_low = 100 * (lv["orl"] / prev - 1) if prev else None
+    msg = (f"${price:.2f} · {chg:+.1f}% · gap {gap:+.1f}% on earnings ({why}) · its first {candle}: ${lv['orl']:.2f} to ${lv['orh']:.2f}"
+           + f" · SHORT UNDER ${lv['orl']:.2f} · stop ${lv['orh']:.2f} (that candle's high) · " + cw + sw
+           + (f" · ADR {adr:.1f}%" if adr else "")
+           + (f" · at that low it is down {-at_low:.1f}%: the uptick rule will be on, a short only fills on an uptick"
+              if at_low is not None and at_low <= -EBD_SSR else "")
+           + " · the SHORT alert comes when the low breaks · out at the close")
+    return (f"{sym} {EBD_NAME} READY" + (" (levels corrected)" if fixed else "") + f" {chg:+.1f}% · SHORT UNDER ${lv['orl']:.2f}"
+            + (" · TIGHT STOP" if tight else "")), msg
 
 
 def ebd_alert(sym, st, q, lv, why):
     """(title, msg) of one earnings breakdown, or None while the price is not under the first candle's low. Tight / wide
-    is the candle's own size (its low to its high, the study's stop distance) in ADRs, the same all day; the stop's
-    distance from the price now is said next to it (an alert a minute after the break is already further from the stop)"""
+    is the candle's own size, the same all day; the stop's distance from the price now is said next to it (an alert a
+    minute after the break is already further from the stop)"""
     price, chg, rv = q[0], q[1], q[4] if len(q) > 4 else None
     if not (lv and lv.get("orl") and lv.get("orh") and price < lv["orl"]):
         return None
     adr, gap = st.get("adr_20") or 0, gap_of(q)
-    size, risk = 100 * (lv["orh"] / lv["orl"] - 1), 100 * (lv["orh"] / price - 1)
-    sadr = size / adr if adr else None
-    tight = sadr is not None and sadr < EBD_TIGHT
-    strong = ebd_strong(st)
-    t0 = 570 + lv.get("start", 0)
-    candle = f"{EBD_MIN}-minute candle" if not lv.get("start") else f"{EBD_MIN}-minute candle ({t0 // 60}:{t0 % 60:02d}, a late open)"
+    risk = 100 * (lv["orh"] / price - 1)
+    tight, cw, sw, candle = ebd_words(st, lv)
     msg = (f"${price:.2f} · {chg:+.1f}% · gap {gap:+.1f}% on earnings ({why}) · short under the low of its first {candle} ${lv['orl']:.2f}"
-           + f" · stop: that candle's high ${lv['orh']:.2f}"
-           + (f" · the candle is {size:.1f}% = {sadr:.1f} ADR: " + (f"TIGHT (under {EBD_TIGHT:g} ADR: where the short paid)" if tight
-                                                                  else f"wide ({EBD_TIGHT:g} ADR or more made about nothing)") if sadr is not None
-              else f" · the candle is {size:.1f}%")
-           + f" · from the price now the stop is {risk:.1f}% away" + (f" ({risk / adr:.1f} ADR)" if adr else "")
-           + (" · strong yesterday (over its 50 EMA and 200 SMA): the better ones" if strong
-              else " · not strong yesterday (under its 50 EMA or 200 SMA)" if strong is False else "")
+           + f" · stop: that candle's high ${lv['orh']:.2f} · " + cw
+           + f" · from the price now the stop is {risk:.1f}% away" + (f" ({risk / adr:.1f} ADR)" if adr else "") + sw
            + (f" · vol {rv:.1f}x for the time of day" if rv is not None else "")
            + (f" · ADR {adr:.1f}%" if adr else "")
            + (f" · down {EBD_SSR:g}%+: the uptick rule is on, a short only fills on an uptick" if chg <= -EBD_SSR else "")
@@ -2165,13 +2204,18 @@ def ebd_alert(sym, st, q, lv, why):
 
 
 def check_ebd(cands, state, live, S, now, sent, bars_of=None):
-    """today's earnings gap-downs whose first 3-minute candle's low is broken: [(key, title, msg, 'high', tv)], each stock
-    once a day. The candle is read once a stock, a minute after it closed (kept in alerts.json ebd_lv; a read in its
-    closing minute is used but read again); a stock about to fire has its chart read again: one that already went back
-    to the candle's high after breaking the low (between two checks) is not alerted (the study's trade was stopped;
-    ebd_skip says so)"""
+    """today's earnings gap-downs: the READY line when the first 3-minute candle is complete and its low not broken yet,
+    then the alert when the price is under that low: [(key, title, msg, prio, tv)], each once a stock a day (SYM:ebdr,
+    SYM:ebd). The candle is read once a stock, a minute after it closed (kept in alerts.json ebd_lv; a read in its
+    closing minute is used, for the READY line too, and read again: READY (levels corrected), SYM:ebdr2, when it
+    differs); a stock about to fire has its chart read again: one that already went back to the candle's high after
+    breaking the low (between two checks) is not alerted (the study's trade was stopped; ebd_skip says so).
+    A READY line leaves its box (alerts.json lost, with why) when the alert fires, when the break was skipped (also seen
+    on the chart when the price is at the candle's high: read at most every EBD_RECHECK minutes), or when corrected"""
     import concurrent.futures
     lvs, skip = state.setdefault("ebd_lv", {}), state.setdefault("ebd_skip", {})
+    ready, lost = state.setdefault("ebd_ready", {}), state.setdefault("lost", {})
+    t, nowm = f"{now:%H:%M}", now.hour * 60 + now.minute - 570
     todo = [s for s in cands if f"{s}:ebd" not in sent and s not in skip]
     need = [s for s in todo if not (lvs.get(s) or {}).get("final")][:EBD_FETCH]
     if need:
@@ -2179,23 +2223,54 @@ def check_ebd(cands, state, live, S, now, sent, bars_of=None):
             for s_, lv_ in zip(need, ex.map(lambda x: ebd_levels(x, now, bars_of), need)):
                 if lv_:
                     lvs[s_] = lv_
+
+    def close_ready(sym, why_, px):
+        for k in (f"{sym}:ebdr", f"{sym}:ebdr2"):
+            if k in sent and k not in lost:
+                lost[k] = {"at": t, "price": px, "why": why_}
+
+    def skipped(sym, lv, px):
+        t_ = 570 + lv["stopped"]
+        skip[sym] = f"broke its first candle's low and went back to its high by {t_ // 60}:{t_ % 60:02d}, before a check saw it"
+        print(f"{sym}:ebd: {skip[sym]}, not sent")
+        close_ready(sym, "skip", px)
     out = []
     for sym in todo:
         lv, q = lvs.get(sym), live["rows"][sym]
-        if not lv or not (q[0] < lv["orl"]):
+        if not lv:
             continue
-        fresh = ebd_levels(sym, now, bars_of)             # the chart now: was the stop already hit after the break?
-        if fresh:
-            lvs[sym] = lv = fresh
-        if lv.get("stopped") is not None:
-            t_ = 570 + lv["stopped"]
-            skip[sym] = f"broke its first candle's low and went back to its high by {t_ // 60}:{t_ % 60:02d}, before a check saw it"
-            print(f"{sym}:ebd: {skip[sym]}, not sent")
+        px, tv = round(q[0], 2), S[sym].get("tv_symbol") or sym
+        if q[0] < lv["orl"]:
+            fresh = ebd_levels(sym, now, bars_of)             # the chart now: was the stop already hit after the break?
+            if fresh:
+                lvs[sym] = lv = fresh
+            if lv.get("stopped") is not None:
+                skipped(sym, lv, px)
+                continue
+            a = ebd_alert(sym, S[sym], q, lv, cands[sym])
+            if a:
+                state.setdefault("ebd_why", {})[sym] = cands[sym]        # the earnings words, for its BACK ON alert
+                close_ready(sym, "fired", px)
+                out.append((f"{sym}:ebd", a[0], a[1], "high", tv))
             continue
-        a = ebd_alert(sym, S[sym], q, lv, cands[sym])
-        if a:
-            state.setdefault("ebd_why", {})[sym] = cands[sym]        # the earnings words, for its BACK ON alert
-            out.append((f"{sym}:ebd", a[0], a[1], "high", S[sym].get("tv_symbol") or sym))
+        rd = ready.get(sym)
+        if rd is None:
+            if lv.get("broke") is None and lv.get("full"):   # the candle is complete, its low not broken yet: READY
+                title, msg = ebd_ready(sym, S[sym], q, lv, cands[sym])
+                ready[sym] = {"orl": lv["orl"], "orh": lv["orh"], "at": t}
+                out.append((f"{sym}:ebdr", title, msg, "default", tv))
+        elif lv.get("final") and "fixed" not in rd and (abs(lv["orl"] / rd["orl"] - 1) > 0.0005 or abs(lv["orh"] / rd["orh"] - 1) > 0.0005):
+            rd.update(orl=lv["orl"], orh=lv["orh"], fixed=t)  # the READY line's candle was read while still filling
+            if lv.get("broke") is None:
+                title, msg = ebd_ready(sym, S[sym], q, lv, cands[sym], fixed=True)
+                lost[f"{sym}:ebdr"] = {"at": t, "price": px, "why": "corrected"}
+                out.append((f"{sym}:ebdr2", title, msg, "default", tv))
+        elif q[0] >= lv["orh"] and nowm - rd.get("chk", -99) >= EBD_RECHECK:
+            rd["chk"] = nowm                                  # at the candle's high: did it break the low first, unseen?
+            fresh = ebd_levels(sym, now, bars_of)
+            if fresh and fresh.get("stopped") is not None:
+                lvs[sym] = fresh
+                skipped(sym, fresh, px)
     return out
 
 
@@ -2254,6 +2329,12 @@ def ebd_run(live, launch_p, doc, state, now, sent, S_all, E_all, bars_of=None):
     (--earnings; without it E_all, a test's rows)"""
     if (now.hour, now.minute) < EBD_FROM:
         return [], []
+    if (now.hour, now.minute) >= EBD_TO:                 # no first alert from 3:00 PM: the READY lines still open leave the box
+        lost_ = state.setdefault("lost", {})
+        for sym in state.get("ebd_ready") or {}:
+            for k in (f"{sym}:ebdr", f"{sym}:ebdr2"):
+                if k in sent and k not in lost_:
+                    lost_[k] = {"at": f"{now:%H:%M}", "price": None, "why": "late"}
     S = S_all
     if not S:
         for name in ("base_stocks.json", "stocks.json"):
@@ -2650,7 +2731,7 @@ def main():
         state.setdefault("items", []).append(it)
         if topic and not is_grouped and not key.split(":", 1)[-1].startswith(PAGE_ONLY):     # the morning breakouts: the portal only
             try:
-                if key.endswith(":ebd") or key.split(":", 1)[-1].startswith("para"):      # the short side (the earnings breakdown, the parabolic shorts): a falling chart as its tag, plain dashes in the phone's title
+                if key.endswith((":ebd", ":ebdr", ":ebdr2")) or key.split(":", 1)[-1].startswith("para"):      # the short side (the earnings breakdown, the parabolic shorts): a falling chart as its tag, plain dashes in the phone's title
                     send(topic, title.replace(" · ", " - "), msg, prio, tvs, "chart_with_downwards_trend")
                 else:
                     send(topic, title, msg, prio, tvs)

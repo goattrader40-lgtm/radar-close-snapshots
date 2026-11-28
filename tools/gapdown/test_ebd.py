@@ -13,7 +13,9 @@ A = M.A
 def run_case(c):
     r = M.replay_day(c["date"], c["sym"], c["stock"], [tuple(b) for b in c["bars"]], c["earnings"], c["last_day"])
     a = r["alert"]
-    return r, {"alert": a["t"] if a else None, "price": a["price"] if a else None, "tight": ("TIGHT STOP" in a["title"]) if a else None,
+    rd = (r.get("ready") or [None])[0]
+    return r, {"ready": rd["t"] if rd else None, "ready_low": rd["orl"] if rd else None, "ready_end": (r.get("ready_end") or {}).get("ebdr", {}).get("why"),
+               "alert": a["t"] if a else None, "price": a["price"] if a else None, "tight": ("TIGHT STOP" in a["title"]) if a else None,
                "orl": a["lv"]["orl"] if a else None, "orh": a["lv"]["orh"] if a else None, "start": a["lv"]["start"] if a else None,
                "back": r.get("back") or [], "stopped": r["stopped"]["at"] if r["stopped"] else None, "lost": r["lost"]["why"] if r["lost"] else None,
                "skip": bool(r["skip"])}
@@ -27,6 +29,8 @@ def main():
         bad += not ok
         a = r["alert"]
         print(("ok   " if ok else "FAIL ") + f"{c['date']} {c['sym']:<5} {c['note']}")
+        rd = (r.get("ready") or [None])[0]
+        print("       " + (f"READY {rd['t']}: short under ${rd['orl']:.2f}, stop ${rd['orh']:.2f}" + (f" (left the box: {got['ready_end']})" if got["ready_end"] else " (still open at the close)") if rd else "no READY line"))
         print("       " + (f"alert {a['t']} at ${a['price']:.2f}, short under ${a['lv']['orl']:.2f}, stop ${a['lv']['orh']:.2f}" + (", TIGHT" if got["tight"] else ", wide")
                            + (f", BACK ON {', '.join(got['back'])}" if got["back"] else "") + (f", stopped {got['stopped']}" if got["stopped"] else "")
                            + (f", as a trade from the alert's price {a['r']:+.2f}R" if a.get("r") is not None else "") if a else "no alert" + (f" ({r['skip']})" if r["skip"] else "")))
@@ -46,6 +50,7 @@ def main():
          and A.ebd_earnings("X", [0, 0, 0, 0, 0, 0, 50, 0], {}, "d", "p", 100, 1000) is None),
         ("a stock under $700M, 700K shares or $20M a day is left out", A.morning_static(st, A.EBD_LIQ) and not A.morning_static(dict(st, mcap_b=0.5), A.EBD_LIQ)
          and not A.morning_static(dict(st, avg_vol_20=5e5), A.EBD_LIQ) and not A.morning_static(dict(st, dvol_20_m=15.0), A.EBD_LIQ)),
+        ("the READY line is a heads-up, on the phone too", not A.is_trigger("X:ebdr", "") and not "ebdr".startswith(A.PAGE_ONLY) and not "ebdr2".startswith(A.PAGE_ONLY)),
         ("a short alert is a trigger; its BACK ON stays on the portal", A.is_trigger("X:ebd", "") and A.is_trigger("X:ebdback0940", "") and "ebdback0940".startswith(A.PAGE_ONLY) and not "ebd".startswith(A.PAGE_ONLY)),
     ]
     for name, ok in checks:
