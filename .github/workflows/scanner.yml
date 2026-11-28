@@ -104,6 +104,17 @@ jobs:
           git show origin/radar-data:alerts.json > /tmp/rd/alerts.json || true    # today's EP pullback BUY alerts, followed in setups/ep_pullback.json
           python3 scanner/launch.py --bars /tmp/bars.json.gz --stocks /tmp/rd/stocks.json --out setups/launch.json --backtest setups/launch_backtest.json --gradelog /tmp/rd/gradelog.json --live /tmp/rd/live.json --picks setups/picks.json --watchlist setups/latest.json --alerts /tmp/rd/alerts.json
 
+      - name: Parabolic shorts list (every US stock from Alpaca; radar/para.py). May fail without touching the steps above
+        if: steps.gate.outputs.go == 'yes'
+        continue-on-error: true
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET: ${{ secrets.ALPACA_SECRET }}
+        run: |
+          mkdir -p /tmp/rd
+          [ -s /tmp/rd/alerts.json ] || { git fetch -q --depth 1 origin +refs/heads/radar-data:refs/remotes/origin/radar-data && git show origin/radar-data:alerts.json > /tmp/rd/alerts.json; } || true
+          python3 scanner/parabolic.py --out setups/parabolic.json --alerts /tmp/rd/alerts.json
+
       - name: After-close heads-ups to the phone (tight under a buy point, retest held)
         if: steps.gate.outputs.go == 'yes'
         continue-on-error: true
